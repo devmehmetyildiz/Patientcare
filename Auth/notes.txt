@@ -1,0 +1,36 @@
+    string Username 
+    string NormalizedUsername 
+    string Email 
+    bool EmailConfirmed 
+    string PasswordHash 
+    int AccessFailedCount 
+    string Name 
+    string Surname 
+    string PhoneNumber 
+    bool PhoneNumberConfirmed 
+    string Town 
+    string City 
+    string Address 
+    string Language 
+    int UserID 
+    string Defaultdepartment 
+    List<DepartmentModel> Departments 
+    List<RoleModel> Roles 
+    List<StationsModel> Stations 
+
+         int Id 
+         string UserID 
+         string RoleID 
+        
+        int Id 
+         string UserID 
+         string Salt 
+
+
+         int Id 
+         string UserID 
+         string StationID 
+
+         int Id 
+         string UserID 
+         string DepartmanID 
