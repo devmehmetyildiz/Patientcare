@@ -13,7 +13,6 @@ require("./Middlewares/Databaseconnector")()
     const routes = require('./Routes')
     const MemoryStore = require('session-memory-store')(session)
     const errorHandlers = require('./Middlewares/Errorhandlers')
-    const authorizationChecker = require('./Middlewares/Authorizationchecker');
 
     app.use(express.static('./dist'))
     app.set('views', __dirname + '/views/')
@@ -30,7 +29,6 @@ require("./Middlewares/Databaseconnector")()
 
     app.use(bodyParser.json())
     app.use(crossDomainEnabler)
-    app.use(authorizationChecker)
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/`, controllerFileSuffix: '-controller.js', logRoutesList: false })
 
     errorHandlers.init(app)

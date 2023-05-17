@@ -2,7 +2,7 @@ const messages = require('../Constants/Messages')
 const createValidationError = require('../Utilities/Error').createValidation
 const crypto = require('crypto')
 const uuid = require('uuid').v4
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, createAccessDenied, createAutherror } = require("../Utilities/Error")
 const priveleges = require('../Constants/Privileges')
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 
@@ -25,106 +25,28 @@ function Login(req, res, next) {
     }
 }
 
-async function Register(req, res, next) {
+async function ValidateToken(req, res, next) {
+    let validationErrors = []
+    let accessToken = {}
+    let bearerToken = req.body.accessToken || req.body.accessToken || req.query.accessToken || req.query.accessToken
 
-    try {
-        const usercount = await db.userModel.count({
-            where: {
-                Isactive: true
-            }
-        });
-        if (usercount > 0) {
-            return next(createValidationError([messages.ERROR.ADMIN_USER_ALREADY_ACTIVE], req.language))
-        }
-        const {
-            Username,
-            Email,
-            Password,
-        } = req.body
-        let validationErrors = []
-        if (Username === undefined) {
-            validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
-        }
-        if (Password === undefined) {
-            validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED, req.language)
-        }
-        if (Email === undefined) {
-            validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED, req.language)
-        }
-
-        if (validationErrors.length > 0) {
-            return next(createValidationError(validationErrors, req.language))
-        }
-
-        const salt = crypto.randomBytes(16).toString('hex');
-        const hash = crypto.pbkdf2Sync(Password, salt, 1000, 64, 'sha512').toString('hex');
-        let useruuid = uuid()
-        let adminRoleuuid = uuid()
-
-        const t = await db.sequelize.transaction();
-        try {
-            const createadminRolePromise = db.roleModel.create({
-                Uuid: adminRoleuuid,
-                Name: "Admin",
-                Createduser: "System",
-                Createtime: new Date(),
-                Isactive: true
-            }, { transaction: t })
-
-            const createadminRoleprivelegesPromise = db.roleprivilegeModel.create({
-                RoleID: adminRoleuuid,
-                PrivilegeID: "admin"
-            }, { transaction: t })
-
-            const createUserPromise = db.userModel.create({
-                Uuid: useruuid,
-                NormalizedUsername: Username.toUpperCase(),
-                Name: "",
-                Surname: "",
-                EmailConfirmed: false,
-                PhoneNumber: "",
-                PhoneNumberConfirmed: false,
-                AccessFailedCount: 0,
-                Town: "",
-                City: "",
-                Address: "",
-                Language: "en",
-                UserID: 0,
-                Defaultdepartment: "",
-                PasswordHash: hash,
-                Createduser: "System",
-                Createtime: new Date(),
-                Isactive: true,
-                ...req.body
-            }, { transaction: t })
-
-            const createUserSaltPromise = db.usersaltModel.create({
-                UserID: useruuid,
-                Salt: salt
-            }, { transaction: t })
-
-            const createUserrolePromise = db.userroleModel.create({
-                UserID: useruuid,
-                RoleID: adminRoleuuid
-            }, { transaction: t })
-
-            await Promise.all([createadminRolePromise, createadminRoleprivelegesPromise,
-                createUserPromise, createUserSaltPromise, createUserrolePromise])
-            await t.commit()
-
-
-            res.status(200).json({
-                messages: "Admin User Created Successfully"
-            })
-        } catch (err) {
-            await t.rollback()
-            next(err)
-        }
-
-    } catch (error) {
-
+    if (!bearerToken) {
+        validationErrors.push(messages.ERROR.ACCESS_TOKEN_NOT_FOUND)
     }
 
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    accessToken = await db.accesstokenModel.findOne({ where: { Accesstoken: bearerToken, Isactive: true } })
+    if (!accessToken) {
+        return next(createNotfounderror(messages.ERROR.ACCESS_TOKEN_NOT_FOUND, req.language))
+    }
+    if (accessToken.ExpiresAt <= new Date()) {
+        console.log('createAutherror: ');
+        return next(createAutherror(messages.ERROR.ACCESS_TOKEN_INVALID, req.language))
+    }
+    return res.status(200).json(accessToken)
 }
 
 async function responseToGetTokenByGrantPassword(req, res, next) {
@@ -261,5 +183,5 @@ async function ValidatePassword(UserPassword, DbPassword, salt) {
 
 module.exports = {
     Login,
-    Register
+    ValidateToken
 }

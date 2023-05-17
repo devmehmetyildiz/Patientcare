@@ -1,0 +1,35 @@
+{
+  "name": "warehouseapp",
+  "version": "1.0.0",
+  "description": "warehouse express app",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "nodemon src/app.js",
+    "build": "esbuild src/app.js --bundle --minify --platform=node --outfile=dist/bundle.js"
+  },
+  "author": "mehmetyildiz",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.17.15",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.0.3",
+    "env": "^0.0.2",
+    "expect": "^29.5.0",
+    "express-session": "^1.17.3",
+    "mysql2": "^3.2.0",
+    "pg": "^8.11.0",
+    "pg-hstore": "^2.3.4",
+    "randomatic": "^3.1.1",
+    "request-promise-native": "^1.0.9",
+    "sequelize": "^6.31.1",
+    "session-memory-store": "^1.0.0",
+    "uuid": "^9.0.0",
+    "xpress-router": "^1.0.11"
+  }
+}
