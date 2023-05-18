@@ -6,29 +6,30 @@ const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
 
-async function GetCases(req, res, next) {
+async function GetTodogroupdefines(req, res, next) {
     try {
-        const cases = await db.caseModel.findAll({ where: { Isactive: true } })
-        for (const casedata of cases) {
-            let departmentuuids = await db.casedepartmentModel.findAll({
+        const todogroupdefines = await db.todogroupdefineModel.findAll({ where: { Isactive: true } })
+        for (const todogroupdefine of todogroupdefines) {
+            let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
                 where: {
-                    CaseID: casedata.Uuid,
+                    GroupID: todogroupdefine.Uuid,
                 }
             });
-            casedata.Departments = await db.departmentModel.findAll({
+            todogroupdefine.Tododefines = await db.tododefineModel.findAll({
                 where: {
-                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                    Uuid: tododefineuuids.map(u => { return u.TodoID })
                 }
             })
+            todogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: todogroupdefine.DepartmentID } })
         }
-        res.status(200).json(cases)
+        res.status(200).json(todogroupdefines)
     } catch (error) {
         sequelizeErrorCatcher(error)
         next()
     }
 }
 
-async function GetCase(req, res, next) {
+async function GetTodogroupdefine(req, res, next) {
 
     let validationErrors = []
     if (!req.params.caseId) {
@@ -42,23 +43,24 @@ async function GetCase(req, res, next) {
     }
 
     try {
-        const casedata = await db.caseModel.findOne({ where: { Uuid: req.params.caseId } });
-        if (!casedata) {
+        const todogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: req.params.caseId } });
+        if (!todogroupdefine) {
             return createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language)
         }
-        if (!casedata.Isactive) {
+        if (!todogroupdefine.Isactive) {
             return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE], req.language)
         }
-        let departmentuuids = await db.casedepartmentModel.findAll({
+        let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
             where: {
-                CaseID: casedata.Uuid,
+                GroupID: todogroupdefine.Uuid,
             }
         });
-        casedata.Departments = await db.departmentModel.findAll({
+        todogroupdefine.Tododefines = await db.tododefineModel.findAll({
             where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                Uuid: tododefineuuids.map(u => { return u.TodoID })
             }
         })
+        todogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: todogroupdefine.DepartmentID } })
         res.status(200).json(casedata)
     } catch (error) {
         sequelizeErrorCatcher(error)
@@ -67,15 +69,15 @@ async function GetCase(req, res, next) {
 }
 
 
-async function AddCase(req, res, next) {
+async function AddTodogroupdefine(req, res, next) {
 
     let validationErrors = []
     const {
         Name,
         Shortname,
         Casecolor,
-        CaseStatus,
-        Departments,
+        Tododefines,
+        DepartmentID,
     } = req.body
 
     if (!Name || !validator.isString(Name)) {
@@ -141,7 +143,7 @@ async function AddCase(req, res, next) {
     }
 }
 
-async function UpdateCase(req, res, next) {
+async function UpdateTodogroupdefine(req, res, next) {
 
     let validationErrors = []
     const {
@@ -226,7 +228,7 @@ async function UpdateCase(req, res, next) {
 
 }
 
-async function DeleteCase(req, res, next) {
+async function DeleteTodogroupdefine(req, res, next) {
 
     let validationErrors = []
     const {
@@ -267,9 +269,9 @@ async function DeleteCase(req, res, next) {
 }
 
 module.exports = {
-    GetCases,
-    GetCase,
-    AddCase,
-    UpdateCase,
-    DeleteCase,
+    GetTodogroupdefines,
+    GetTodogroupdefine,
+    AddTodogroupdefine,
+    UpdateTodogroupdefine,
+    DeleteTodogroupdefine,
 }

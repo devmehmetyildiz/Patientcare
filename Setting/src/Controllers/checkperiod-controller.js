@@ -8,20 +8,20 @@ const uuid = require('uuid').v4
 
 async function GetCheckperiods(req, res, next) {
     try {
-        const cases = await db.caseModel.findAll({ where: { Isactive: true } })
-        for (const casedata of cases) {
-            let departmentuuids = await db.casedepartmentModel.findAll({
+        const checkperiods = await db.checkperiodModel.findAll({ where: { Isactive: true } })
+        for (const checkperiod of checkperiods) {
+            let perioduuids = await db.checkperiodperiodModel.findAll({
                 where: {
-                    CaseID: casedata.Uuid,
+                    CheckperiodID: checkperiod.Uuid,
                 }
             });
-            casedata.departments = await db.departmentModel.findAll({
+            checkperiod.Periods = await db.periodModel.findAll({
                 where: {
-                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                    Uuid: perioduuids.map(u => { return u.PeriodID })
                 }
             })
         }
-        res.status(200).json(cases)
+        res.status(200).json(checkperiods)
     } catch (error) {
         sequelizeErrorCatcher(error)
         next()
@@ -31,35 +31,35 @@ async function GetCheckperiods(req, res, next) {
 async function GetCheckperiod(req, res, next) {
 
     let validationErrors = []
-    if (!req.params.caseId) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+    if (!req.params.CheckperiodId) {
+        validationErrors.push(messages.VALIDATION_ERROR.CHECKPERIODID_REQUIRED)
     }
-    if (!validator.isUUID(req.params.caseId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID)
+    if (!validator.isUUID(req.params.CheckperiodId)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CHECKPERIODID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const casedata = await db.caseModel.findOne({ where: { Uuid: req.params.caseId } });
-        if (!casedata) {
-            return createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language)
+        const checkperiod = await db.checkperiodModel.findOne({ where: { Uuid: req.params.CheckperiodId } });
+        if (!checkperiod) {
+            return createNotfounderror([messages.ERROR.CHECKPERIOD_NOT_FOUND], req.language)
         }
-        if (!casedata.Isactive) {
-            return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE], req.language)
+        if (!checkperiod.Isactive) {
+            return createNotfounderror([messages.ERROR.CHECKPERIOD_NOT_ACTIVE], req.language)
         }
-        let departmentuuids = await db.casedepartmentModel.findAll({
+        let perioduuids = await db.checkperiodperiodModel.findAll({
             where: {
-                CaseID: casedata.Uuid,
+                CheckperiodID: checkperioduuid,
             }
         });
-        casedata.departments = await db.departmentModel.findAll({
+        checkperiod.Periods = await db.periodModel.findAll({
             where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                Uuid: perioduuids.map(u => { return u.PeriodID })
             }
         })
-        res.status(200).json(casedata)
+        res.status(200).json(checkperiod)
     } catch (error) {
         sequelizeErrorCatcher(error)
         next()
@@ -72,75 +72,63 @@ async function AddCheckperiod(req, res, next) {
     let validationErrors = []
     const {
         Name,
-        Shortname,
-        Casecolor,
-        CaseStatus,
-        Departments,
-        Uuid
+        Periodtype,
+        Occureddays,
+        Periods
     } = req.body
-
-    if (!Name) {
+    if (!Name || !validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Shortname) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHORTNAME_REQUIRED, req.language)
+    if (!Periodtype || !validator.isNumber(Periodtype)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PERIODTYPE_REQUIRED, req.language)
     }
-    if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
+    if (!Occureddays || !validator.isString(Occureddays)) {
+        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDDAYS_REQUIRED, req.language)
     }
-    if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID, req.language)
-    }
-    if (!Casecolor) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
-    }
-    if (!CaseStatus && !isNumber(CaseStatus)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASECOLOR_REQUIRED, req.language)
-    }
-    if (!Departments || !Array.isArray(Departments) || Departments.length <= 0) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
+    if (!Periods || !Array.isArray(Periods) || Periods.length <= 0) {
+        validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED, req.language)
     }
 
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
-    let caseuuid = uuid()
+    let checkperioduuid = uuid()
 
     const t = await db.sequelize.transaction();
 
     try {
-        await db.caseModel.create({
+        await db.checkperiodModel.create({
             ...req.body,
-            Uuid: caseuuid,
+            Uuid: checkperioduuid,
             Createduser: "System",
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
-        for (const department of Departments) {
-            if (!department.Uuid || !validator.isUUID(department.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
+        for (const period of Periods) {
+            if (!period.Uuid || !validator.isUUID(period.Uuid)) {
+                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID, req.language))
             }
-            await db.casedepartmentModel.create({
-                CaseID: roleuuid,
-                DepartmentID: department.Uuid
+            await db.checkperiodperiodModel.create({
+                CheckperiodID: checkperioduuid,
+                PeriodID: period.Uuid
             }, { transaction: t });
         }
 
         await t.commit()
-        const createdCase = await db.caseModel.findOne({ where: { Uuid: caseuuid } })
-        let departmentuuids = await db.casedepartmentModel.findAll({
+        const createdCheckperiod = await db.checkperiodModel.findOne({ where: { Uuid: checkperioduuid } })
+        let perioduuids = await db.checkperiodperiodModel.findAll({
             where: {
-                CaseID: caseuuid,
+                CheckperiodID: checkperioduuid,
             }
         });
-        createdCase.departments = await db.departmentModel.findAll({
+        createdCheckperiod.Periods = await db.periodModel.findAll({
             where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                Uuid: perioduuids.map(u => { return u.PeriodID })
             }
         })
-        res.status(200).json(createdCase)
+        res.status(200).json(createdCheckperiod)
     } catch (err) {
         await t.rollback()
         sequelizeErrorCatcher(err)
@@ -148,83 +136,81 @@ async function AddCheckperiod(req, res, next) {
     }
 }
 
-async function UpdateCase(req, res, next) {
+async function UpdateCheckperiod(req, res, next) {
 
     let validationErrors = []
     const {
         Name,
-        Shortname,
-        Casecolor,
-        CaseStatus,
-        Departments,
-        Uuid
+        Periodtype,
+        Occureddays,
+        Uuid,
+        Periods
     } = req.body
 
-    if (!Name) {
+    if (!Name || !validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Shortname) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHORTNAME_REQUIRED, req.language)
+    if (!Periodtype || !validator.isNumber(Periodtype)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PERIODTYPE_REQUIRED, req.language)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CHECKPERIODID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CHECKPERIODID, req.language)
     }
-    if (!Casecolor) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+    if (!Occureddays || !validator.isString(Occureddays)) {
+        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDDAYS_REQUIRED, req.language)
     }
-    if (!CaseStatus && !isNumber(CaseStatus)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASECOLOR_REQUIRED, req.language)
+    if (!Periods || !Array.isArray(Periods) || Periods.length <= 0) {
+        validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED, req.language)
     }
-    if (!Departments || !Array.isArray(Departments) || Departments.length <= 0) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
-    }
+
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const casedata = db.caseModel.findOne({ where: { Uuid: Uuid } })
-        if (!casedata) {
-            return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
+        const checkperiod = db.checkperiodModel.findOne({ where: { Uuid: Uuid } })
+        if (!checkperiod) {
+            return next(createNotfounderror([messages.ERROR.CHECKPERIOD_NOT_FOUND], req.language))
         }
-        if (casedata.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CASE_NOT_ACTIVE], req.language))
+        if (checkperiod.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.CHECKPERIOD_NOT_ACTIVE], req.language))
         }
 
         const t = await db.sequelize.transaction();
 
-        await db.caseModel.update({
+        await db.checkperiodModel.update({
             ...req.body,
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
-        await db.casedepartmentModel.destroy({ where: { CaseID: Uuid }, transaction: t });
-        for (const department of Departments) {
-            if (!department.Uuid || !validator.isUUID(department.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
+        await db.checkperiodperiodModel.destroy({ where: { CheckperiodID: Uuid }, transaction: t });
+        for (const period of Periods) {
+            if (!period.Uuid || !validator.isUUID(period.Uuid)) {
+                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID, req.language))
             }
-            await db.casedepartmentModel.create({
-                CaseID: roleuuid,
-                DepartmentID: department.Uuid
+            await db.checkperiodperiodModel.create({
+                CheckperiodID: Uuid,
+                PeriodID: period.Uuid
             }, { transaction: t });
         }
+
         await t.commit()
-        const updatedCase = await db.caseModel.findOne({ where: { Uuid: Uuid } })
-        let departmentuuids = await db.casedepartmentModel.findAll({
+        const updatedCheckperiod = await db.checkperiodModel.findOne({ where: { Uuid: Uuid } })
+        let perioduuids = await db.checkperiodperiodModel.findAll({
             where: {
-                CaseID: caseuuid,
+                CheckperiodID: Uuid,
             }
         });
-        updatedCase.departments = await db.departmentModel.findAll({
+        updatedCheckperiod.Periods = await db.periodModel.findAll({
             where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                Uuid: perioduuids.map(u => { return u.PeriodID })
             }
         })
-        res.status(200).json(updatedCase)
+        res.status(200).json(updatedCheckperiod)
     } catch (error) {
         sequelizeErrorCatcher(error)
         next()
@@ -233,7 +219,7 @@ async function UpdateCase(req, res, next) {
 
 }
 
-async function DeleteCase(req, res, next) {
+async function DeleteCheckperiod(req, res, next) {
 
     let validationErrors = []
     const {
@@ -241,27 +227,27 @@ async function DeleteCase(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CHECKPERIODID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CHECKPERIODID, req.language)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const casedata = db.caseModel.findOne({ where: { Uuid: Uuid } })
-        if (!casedata) {
-            return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
+        const checkperiod = db.checkperiodModel.findOne({ where: { Uuid: Uuid } })
+        if (!checkperiod) {
+            return next(createNotfounderror([messages.ERROR.CHECKPERIOD_NOT_FOUND], req.language))
         }
-        if (casedata.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CASE_NOT_ACTIVE], req.language))
+        if (checkperiod.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.CHECKPERIOD_NOT_ACTIVE], req.language))
         }
         const t = await db.sequelize.transaction();
 
-        await db.casedepartmentModel.destroy({ where: { CaseID: Uuid }, transaction: t });
-        await db.caseModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.checkperiodperiodModel.destroy({ where: { CheckperiodID: Uuid }, transaction: t });
+        await db.checkperiodModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
 
         res.status(200).json({ messages: "deleted", Uuid: Uuid })
@@ -274,14 +260,10 @@ async function DeleteCase(req, res, next) {
 }
 
 
-function isNumber(value) {
-    return typeof value === 'number' && !isNaN(value);
-}
-
 module.exports = {
-    GetCases,
-    GetCase,
-    AddCase,
-    UpdateCase,
-    DeleteCase,
+    GetCheckperiods,
+    GetCheckperiod,
+    AddCheckperiod,
+    UpdateCheckperiod,
+    DeleteCheckperiod,
 }
