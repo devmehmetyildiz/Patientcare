@@ -13,7 +13,14 @@ const config = {
     password: process.env.APP_MYSQL_DB_PASSWORD,
     database: process.env.APP_MYSQL_DB_NAME,
   },
-
+  services: {
+    Auth: process.env.AUTH_URL,
+    Business: process.env.BUSINESS_URL,
+    Setting: process.env.SETTING_URL,
+    System: process.env.SYSTEM_URL,
+    Userrole: process.env.USERROLE_URL,
+    Warehouse: process.env.WAREHOUSE_URL
+  }
 }
 
 function parseBoolean(str) {

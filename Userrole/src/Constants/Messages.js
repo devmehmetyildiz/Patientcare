@@ -61,6 +61,12 @@ const messages = {
         tr: 'Kullanıcı rolü bulunamadı',
       }
     },
+    USERSALT_NOT_FOUND: {
+      code: 'USERSALT_NOT_FOUND', description: {
+        en: 'User salt not found',
+        tr: 'Kullanıcı tuzu bulunamadı',
+      }
+    },
   },
   VALIDATION_ERROR: {
     NAME_REQUIRED: {

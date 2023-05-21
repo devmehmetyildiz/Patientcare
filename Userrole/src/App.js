@@ -47,7 +47,8 @@ require("./Middlewares/Databaseconnector")()
 
     module.exports = app
   })
-  .catch(() => {
+  .catch((error) => {
+    console.log('error: ', error);
     console.log("Closing App")
     process.exit(500)
   })

@@ -21,7 +21,6 @@ const PUBLIC_URLS = [
 ]
 
 async function authorizationChecker(req, res, next) {
-
     try {
         if (req.identity === undefined) req.identity = {}
         let accessToken = {}

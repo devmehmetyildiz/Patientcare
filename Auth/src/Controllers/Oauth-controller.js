@@ -2,9 +2,15 @@ const messages = require('../Constants/Messages')
 const createValidationError = require('../Utilities/Error').createValidation
 const crypto = require('crypto')
 const uuid = require('uuid').v4
-const { sequelizeErrorCatcher, createAccessDenied, createAutherror } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, createAccessDenied, createAutherror, requestErrorCatcher } = require("../Utilities/Error")
 const priveleges = require('../Constants/Privileges')
+const request = require('request-promise-native')
+const config = require('../../../Setting/src/Config')
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
+
+function Testserver(req, res, next) {
+    res.status(200).json({ message: "success" })
+}
 
 function Login(req, res, next) {
     let validationErrors = []
@@ -43,7 +49,6 @@ async function ValidateToken(req, res, next) {
         return next(createNotfounderror(messages.ERROR.ACCESS_TOKEN_NOT_FOUND, req.language))
     }
     if (accessToken.ExpiresAt <= new Date()) {
-        console.log('createAutherror: ');
         return next(createAutherror(messages.ERROR.ACCESS_TOKEN_INVALID, req.language))
     }
     return res.status(200).json(accessToken)
@@ -63,17 +68,32 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-
-    const user = await db.userModel.findOne({ where: { Username: req.body.Username } });
-    if (!user) {
-        return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+    const user = null
+    const usersalt = null
+    try {
+        user = await request({
+            method: 'GET',
+            uri: config.services.Userrole + `Users/Getbyusername/${req.body.Username}`,
+            headers: {
+                secret_key: config.session.secret
+            }
+        })
+    } catch (error) {
+        return requestErrorCatcher(error, "USERROLE")
     }
-    const userSalt = await db.usersaltModel.findOne({ where: { UserID: user.Uuid } })
-    if (!userSalt) {
-        return next(createNotfounderror([messages.ERROR.USERSALT_NOT_FOUND], req.language))
+    try {
+        usersalt = await request({
+            method: 'GET',
+            uri: config.services.Userrole + `Users/Getusersalt/${req.body.Username}`,
+            headers: {
+                secret_key: config.session.secret
+            }
+        })
+    } catch (error) {
+        return requestErrorCatcher(error, "USERROLE")
     }
 
-    if (!await ValidatePassword(req.body.Password, user.PasswordHash, userSalt.Salt)) {
+    if (!await ValidatePassword(req.body.Password, user.PasswordHash, usersalt.Salt)) {
         return next(createNotfounderror([messages.ERROR.PASSWORD_DIDNT_MATCH], req.language))
     }
 
@@ -128,10 +148,17 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
     if (token.ExpiresAt <= new Date()) {
         return next(createValidationError([messages.ERROR.REFRESH_TOKEN_EXPIRED], req.language))
     }
-
-    const user = await db.userModel.findOne({ where: { Uuid: token.Userid } });
-    if (!user) {
-        return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+    const user = null
+    try {
+        user = await request({
+            method: 'GET',
+            uri: config.services.Userrole + `Users/${token.Userid}`,
+            headers: {
+                secret_key: config.session.secret
+            }
+        })
+    } catch (error) {
+        return requestErrorCatcher(error, "USERROLE")
     }
 
     let accessToken = {
@@ -183,5 +210,6 @@ async function ValidatePassword(UserPassword, DbPassword, salt) {
 
 module.exports = {
     Login,
-    ValidateToken
+    ValidateToken,
+    Testserver
 }

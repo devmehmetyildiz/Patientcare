@@ -165,7 +165,7 @@ async function AddUser(req, res, next) {
     if (Email === undefined) {
         validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED, req.language)
     }
-    const usernamecheck = GetUserByUsername(next, Username, req.language)
+    const usernamecheck = FetchUserByUsername(next, Username, req.language)
         .then(user => {
             if (user && Object.keys(user).length > 0) {
                 validationErrors.push(messages.VALIDATION_ERROR.USERNAME_DUPLICATE, req.language)
@@ -318,6 +318,53 @@ async function DeleteUser(req, res, next) {
     }
 }
 
+async function GetUserByUsername(req, res, next) {
+    let validationErrors = []
+    if (!req.params.username || validator.isString(req.params.username)) {
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    try {
+        const user = await db.userModel.findOne({ where: { Username: req.params.username } })
+        if (!user) {
+            return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+        }
+        if (!user.Isactive) {
+            return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+        }
+        user.PasswordHash && delete user.PasswordHash
+        res.status(200).json(user)
+    } catch (error) {
+        sequelizeErrorCatcher(err)
+        next()
+    }
+}
+
+async function GetUserSalt(req, res, next) {
+    let validationErrors = []
+    if (req.params.userId === undefined) {
+        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+    }
+    if (!validator.isUUID(req.params.userId)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    try {
+        const usersalt = await db.usersaltModel.findOne({ where: { UserID: req.params.userId } })
+        if (!usersalt) {
+            return next(createNotfounderror([messages.ERROR.USERROLE_NOT_FOUND], req.language))
+        }
+        res.status(200).json(usersalt)
+    } catch (error) {
+        sequelizeErrorCatcher(err)
+        next()
+    }
+}
+
 function GetUserByEmail(next, Email, language) {
     return new Promise((resolve, reject) => {
         db.userModel.findOne({ where: { Email: Email } })
@@ -329,7 +376,7 @@ function GetUserByEmail(next, Email, language) {
     })
 }
 
-function GetUserByUsername(next, Username, language) {
+function FetchUserByUsername(next, Username, language) {
     return new Promise((resolve, reject) => {
         db.userModel.findOne({ where: { Username: Username } })
             .then(user => {
@@ -347,5 +394,7 @@ module.exports = {
     AddUser,
     UpdateUser,
     DeleteUser,
-    Register
+    Register,
+    GetUserByUsername,
+    GetUserSalt
 }

@@ -1,4 +1,3 @@
-const accesstokenModel = require('./AccesstokenModel')
 const roleModel = require('./RoleModel')
 const roleprivilegeModel = require('./RoleprivilegeModel')
 const userModel = require('./UserModel')
@@ -8,7 +7,6 @@ const usersaltModel = require('./UsersaltModel')
 const userstationModel = require('./UserstationModel')
 
 module.exports = {
-    accesstokenModel,
     roleModel,
     roleprivilegeModel,
     userModel,
