@@ -145,25 +145,36 @@ function isValidationError(error) {
 }
 
 function requestErrorCatcher(err, serviceName = null) {
-  if (err && err.error && ((err.error.errno && err.error.errno === "ECONNREFUSED") || (err.error.code && err.error.code === "ECONNREFUSED"))) {
+  if (err && ((err.errno && err.errno === "ECONNREFUSED") || (err.code && err.code === "ECONNREFUSED"))) {
     if (serviceName && typeof (serviceName) === 'string') {
-      throw create('UNAVAILABLE', `${serviceName.toUpperCase()}_SERVICE_UNAVAILABLE`, `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} service is unavailable`)
+      return create('UNAVAILABLE', `${serviceName.toUpperCase()}_SERVICE_UNAVAILABLE`, `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} service is unavailable`)
     } else {
-      throw create('UNAVAILABLE', 'UNKNOWN_SERVICE_UNAVAILABLE', 'The unknown service is unavailable')
+      return create('UNAVAILABLE', 'UNKNOWN_SERVICE_UNAVAILABLE', 'The unknown service is unavailable')
     }
   }
   else if (err && err.error && ((err.error.errno && err.error.errno === "ECONNRESET") || (err.error.code && err.error.code === "ECONNRESET"))) {
     if (serviceName && typeof (serviceName) === 'string') {
-      throw create('REQUEST_TIMEOUT', `${serviceName.toUpperCase()}_SERVICE_REQUEST_TIMEOUT`, `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} service responding timeout`)
+      return create('REQUEST_TIMEOUT', `${serviceName.toUpperCase()}_SERVICE_REQUEST_TIMEOUT`, `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} service responding timeout`)
     } else {
-      throw create('REQUEST_TIMEOUT', 'UNKNOWN_SERVICE_REQUEST_TIMEOUT', 'The unknown service responding timeout')
+      return create('REQUEST_TIMEOUT', 'UNKNOWN_SERVICE_REQUEST_TIMEOUT', 'The unknown service responding timeout')
     }
   }
-  else if (err && err.error && ((err.error.errno && err.error.errno === "SERVER_ERROR") || (err.error.code && err.error.code === "SERVER_ERROR"))) {
+  else if (err && ((err.errno && err.errno === "ERR_BAD_RESPONSE") || (err.code && err.code === "ERR_BAD_RESPONSE"))) {
     if (serviceName && typeof (serviceName) === 'string') {
-      throw create('SERVER_ERROR', `${serviceName.toUpperCase()}_SERVICE_SERVER_ERROR`, err.error.description ? err.error.description : `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} service has ${err.statusCode ? err.statusCode + ' error' : 'error'}`)
+      return create('MICROSERVICE_INTERNALERROR', `${serviceName.toUpperCase()}_SERVICE_HAS_INTERNAL_ERROR`, (err.response && err.response.data) ? err.response.data.description ? err.response.data.description : err.response.data
+        : `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} has internal error`)
     } else {
-      throw create('SERVER_ERROR', 'UNKNOWN_SERVICE_SERVER_ERROR', 'The unknown service has server error')
+      return create('MICROSERVICE_INTERNALERROR', 'UNKNOWN_SERVICE_HAS_INTERNAL_ERROR', 'The unknown service has internal error')
+    }
+  }
+  else if (err && ((err.errno && err.errno === "ERR_BAD_REQUEST") || (err.code && err.code === "ERR_BAD_REQUEST"))) {
+    if (serviceName && typeof (serviceName) === 'string') {
+      return (err.response && err.response.data && err.response.data.type && err.response.data.code && err.response.description) ? 
+      err.response.data : 
+      create('MICROSERVICE_ERROR', `${serviceName.toUpperCase()}_SERVICE_HAS_ERROR`, (err.response && err.response.data) ? err.response.data.description ? err.response.data.description : err.response.data
+          : `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} gaved error`)
+    } else {
+      return create('MICROSERVICE_ERROR', 'UNKNOWN_SERVICE_GAVED_ERROR', 'The unknown service gaved error')
     }
   }
   else if (err.error && typeof (err.error) === "string") {

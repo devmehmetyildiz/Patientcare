@@ -112,6 +112,9 @@ async function Register(req, res, next) {
 async function GetUsers(req, res, next) {
     try {
         const users = await db.userModel.findAll({ where: { Isactive: true } })
+        users.forEach(element => {
+            element.PasswordHash && delete element.PasswordHash
+        });
         res.status(200).json(users)
     } catch (error) {
         sequelizeErrorCatcher(error)
@@ -141,6 +144,52 @@ async function GetUser(req, res, next) {
         }
         user.PasswordHash && delete user.PasswordHash
         res.status(200).json(user)
+    } catch (error) {
+        sequelizeErrorCatcher(err)
+        next()
+    }
+}
+async function Getbyusername(req, res, next) {
+
+    let validationErrors = []
+    if (req.params.username === undefined) {
+        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    try {
+        const user = await db.userModel.findOne({ where: { Username: req.params.username } })
+        if (!user) {
+            return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+        }
+        if (!user.Isactive) {
+            return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+        }
+        res.status(200).json(user)
+    } catch (error) {
+        sequelizeErrorCatcher(err)
+        next()
+    }
+}
+async function Getusersalt(req, res, next) {
+
+    let validationErrors = []
+    if (req.params.userId === undefined) {
+        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+    }
+    if (!validator.isUUID(req.params.userId)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    try {
+        const usersalt = await db.usersaltModel.findOne({ where: { UserID: req.params.userId } })
+        if (!usersalt) {
+            return next(createNotfounderror([messages.ERROR.USERSALT_NOT_FOUND], req.language))
+        }
+        res.status(200).json(usersalt)
     } catch (error) {
         sequelizeErrorCatcher(err)
         next()
@@ -348,4 +397,6 @@ module.exports = {
     UpdateUser,
     DeleteUser,
     Register,
+    Getbyusername,
+    Getusersalt
 }

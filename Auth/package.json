@@ -2,10 +2,10 @@
   "name": "authapp",
   "version": "1.0.0",
   "description": "auth express app ",
-  "main": "src/app.js",
+  "main": "src/App.js",
   "scripts": {
-    "start": "nodemon src/app.js",
-    "build": "esbuild src/app.js --bundle --minify --platform=node --outfile=dist/bundle.js",
+    "start": "nodemon src/App.js",
+    "build": "esbuild src/App.js --bundle --minify --platform=node --outfile=dist/bundle.js",
     "stop": "echo 'Stopping the application...'"
   },
   "author": "mehmetyildiz",
@@ -25,10 +25,10 @@
     "expect": "^29.5.0",
     "express-session": "^1.17.3",
     "mysql2": "^3.2.0",
-    "pg": "^8.10.0",
+    "pg": "^8.11.0",
     "pg-hstore": "^2.3.4",
     "randomatic": "^3.1.1",
-    "sequelize": "^6.31.0",
+    "sequelize": "^6.31.1",
     "session-memory-store": "^1.0.0",
     "uuid": "^9.0.0",
     "xpress-router": "^1.0.11"

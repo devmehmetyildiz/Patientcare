@@ -3,7 +3,7 @@ const messages = require('../Constants/Messages')
 const { sequelizeErrorCatcher, createAutherror, requestErrorCatcher } = require('../Utilities/Error')
 const createValidationError = require('../Utilities/Error').createValidation
 const createErrorList = require('../Utilities/Error').createList
-const request = require('request-promise-native')
+const axios = require('axios');
 
 const INVALID_AUTHORIZATION_HEADER = createErrorList('FORBIDDEN', 'INVALID_AUTHORIZATION_HEADER', {
     en: 'Access denied. Invalid authorization header',
@@ -16,8 +16,7 @@ const INVALID_ACCESS_TOKEN = createErrorList('FORBIDDEN', 'INVALID_ACCESS_TOKEN'
 
 
 const PUBLIC_URLS = [
-    { method: 'post', url: '/oauth/Login' },
-    { method: 'post', url: '/oauth/Register' }
+    { method: 'post', url: '/Users/Register' }
 ]
 
 async function authorizationChecker(req, res, next) {
@@ -44,19 +43,20 @@ async function authorizationChecker(req, res, next) {
                     let bearerToken = getBearerToken(req.headers)
                     if (bearerToken) {
                         try {
-                            accessToken = await request(
+                            
+                            const accessTokenresponse = await axios(
                                 {
                                     method: 'POST',
-                                    uri: config.services.Auth + 'oauth/ValidateToken',
-                                    json: true,
-                                    body: {
+                                    url: config.services.Auth + 'oauth/ValidateToken',
+                                    data: {
                                         accessToken: bearerToken
                                     }
                                 }
                             )
+                            accessToken = accessTokenresponse.data
                             isTokenValid = true
                         } catch (err) {
-                            return requestErrorCatcher(err, 'AUTH')
+                            return next(requestErrorCatcher(err, 'AUTH'))
                         }
                     }
 

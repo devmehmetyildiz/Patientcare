@@ -4,8 +4,8 @@ const crypto = require('crypto')
 const uuid = require('uuid').v4
 const { sequelizeErrorCatcher, createAccessDenied, createAutherror, requestErrorCatcher } = require("../Utilities/Error")
 const priveleges = require('../Constants/Privileges')
-const request = require('request-promise-native')
-const config = require('../../../Setting/src/Config')
+const axios = require('axios')
+const config = require('../Config')
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 
 function Testserver(req, res, next) {
@@ -68,29 +68,31 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-    const user = null
-    const usersalt = null
+    let user = null
+    let usersalt = null
     try {
-        user = await request({
+        const userresponse = await axios({
             method: 'GET',
-            uri: config.services.Userrole + `Users/Getbyusername/${req.body.Username}`,
+            url: config.services.Userrole + `Users/Getbyusername/${req.body.Username}`,
             headers: {
-                secret_key: config.session.secret
+                session_key: config.session.secret
             }
         })
+        user = userresponse.data
     } catch (error) {
-        return requestErrorCatcher(error, "USERROLE")
+        return next(requestErrorCatcher(error, "USERROLE") )
     }
     try {
-        usersalt = await request({
+        const usersaltreponse = await axios({
             method: 'GET',
-            uri: config.services.Userrole + `Users/Getusersalt/${req.body.Username}`,
+            url: config.services.Userrole + `Users/Getusersalt/${user.Uuid}`,
             headers: {
-                secret_key: config.session.secret
+                session_key: config.session.secret
             }
         })
+        usersalt = usersaltreponse.data
     } catch (error) {
-        return requestErrorCatcher(error, "USERROLE")
+        return next(requestErrorCatcher(error, "USERROLE"))
     }
 
     if (!await ValidatePassword(req.body.Password, user.PasswordHash, usersalt.Salt)) {
@@ -150,11 +152,11 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
     }
     const user = null
     try {
-        user = await request({
+        user = await axios({
             method: 'GET',
-            uri: config.services.Userrole + `Users/${token.Userid}`,
+            url: config.services.Userrole + `Users/${token.Userid}`,
             headers: {
-                secret_key: config.session.secret
+                session_key: config.session.secret
             }
         })
     } catch (error) {

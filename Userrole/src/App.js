@@ -32,7 +32,7 @@ require("./Middlewares/Databaseconnector")()
     app.use(crossDomainEnabler)
     app.use(authorizationChecker)
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/`, controllerFileSuffix: '-controller.js', logRoutesList: false })
-
+    
     errorHandlers.init(app)
 
     if (config.env === 'development' || config.env === 'production') {

@@ -64,6 +64,14 @@ module.exports.init = function (app) {
           res.status(524)
           res.json(result)
           break
+        case 'MICROSERVICE_INTERNALERROR':
+          res.status(500)
+          res.json(result)
+          break
+        case 'MICROSERVICE_ERROR':
+          res.status(500)
+          res.json(result)
+          break
 
         default:
           if (isBodyParseError(err)) {
