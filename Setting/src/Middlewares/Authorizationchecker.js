@@ -3,7 +3,7 @@ const messages = require('../Constants/Messages')
 const { sequelizeErrorCatcher, createAutherror, requestErrorCatcher } = require('../Utilities/Error')
 const createValidationError = require('../Utilities/Error').createValidation
 const createErrorList = require('../Utilities/Error').createList
-const request = require('request-promise-native')
+const axios = require('axios')
 
 const INVALID_AUTHORIZATION_HEADER = createErrorList('FORBIDDEN', 'INVALID_AUTHORIZATION_HEADER', {
     en: 'Access denied. Invalid authorization header',
@@ -16,8 +16,7 @@ const INVALID_ACCESS_TOKEN = createErrorList('FORBIDDEN', 'INVALID_ACCESS_TOKEN'
 
 
 const PUBLIC_URLS = [
-    { method: 'post', url: '/oauth/Login' },
-    { method: 'post', url: '/oauth/Register' }
+
 ]
 
 async function authorizationChecker(req, res, next) {
@@ -45,22 +44,19 @@ async function authorizationChecker(req, res, next) {
                     let bearerToken = getBearerToken(req.headers)
                     if (bearerToken) {
                         try {
-                            accessToken = await request(
+                            const accessTokenresponse = await axios(
                                 {
                                     method: 'POST',
-                                    uri: config.services.Auth + 'oauth/ValidateToken',
-                                    json: true,
-                                    body: {
+                                    url: config.services.Auth + 'oauth/ValidateToken',
+                                    data: {
                                         accessToken: bearerToken
-                                    },
-                                    headers: {
-                                        secret_key: config.session.secret
                                     }
                                 }
                             )
+                            accessToken = accessTokenresponse.data
                             isTokenValid = true
                         } catch (err) {
-                            return requestErrorCatcher(err, 'AUTH')
+                            return next(requestErrorCatcher(err, 'AUTH'))
                         }
                     }
 
@@ -70,33 +66,28 @@ async function authorizationChecker(req, res, next) {
                         req.identity.privileges = null
 
                         try {
-                            const user = await request({
+                            let user = null
+                            let userprivileges = null
+                            const userresponse = await axios({
                                 method: 'GET',
-                                uri: config.services.Userrole + `Users/${accessToken.Userid}`,
-                                json: true,
+                                url: config.services.Userrole + `Users/${accessToken.Userid}`,
                                 headers: {
-                                    secret_key: config.session.secret
+                                    session_key: config.session.secret
                                 }
                             })
-                            if (!user) {
-                                return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
-                            }
-                            if (!user.Isactive) {
-                                return next(USER_IS_DISABLED[req.language])
-                            }
+                            user = userresponse.data
                             req.identity.user = user
-                            const userprivileges = await request({
+                            const userprivilegesreponse = await axios({
                                 method: 'GET',
-                                uri: config.services.Userrole + `Roles/Getprivilegesbyuserid/${user.Uuid}`,
-                                json: true,
+                                url: config.services.Userrole + `Roles/Getprivilegesbyuserid/${user.Uuid}`,
                                 headers: {
-                                    secret_key: config.session.secret
+                                    session_key: config.session.secret
                                 }
                             })
+                            userprivileges = userprivilegesreponse.data
                             req.identity.privileges = userprivileges
                         } catch (error) {
-                            requestErrorCatcher(error, 'USERROLE')
-                            next()
+                            return next(requestErrorCatcher(error, 'USERROLE'))
                         }
                     }
                 }
