@@ -86,14 +86,26 @@ const messages = {
     },
     TODODEFINE_NOT_FOUND: {
       code: 'TODODEFINE_NOT_FOUND', description: {
-        en: 'Station not found',
-        tr: 'İstasyon bulunamadı',
+        en: 'Todo define not found',
+        tr: 'Yapılacaklar tanımı bulunamadı',
       }
     },
     TODODEFINE_NOT_ACTIVE: {
       code: 'TODODEFINE_NOT_ACTIVE', description: {
-        en: 'Station not active',
-        tr: 'İstasyon aktif değil',
+        en: 'Todo define not active',
+        tr: 'Yapılacaklar tanımı aktif değil',
+      }
+    },
+    TODOGROUPDEFINE_NOT_FOUND: {
+      code: 'TODOGROUPDEFINE_NOT_FOUND', description: {
+        en: 'Todogroup define not found',
+        tr: 'Yapılacak grup tanımı bulunamadı',
+      }
+    },
+    TODOGROUPDEFINE_NOT_ACTIVE: {
+      code: 'TODOGROUPDEFINE_NOT_ACTIVE', description: {
+        en: 'Todogroup define not active',
+        tr: 'Yapılacak grup tanımı aktif değil',
       }
     },
 
@@ -157,6 +169,12 @@ const messages = {
       code: 'OCCUREDDAYS_REQUIRED', description: {
         en: 'The Occureddays is required',
         tr: 'Gerçekleşme günleri gereklidir',
+      }
+    },
+    TODODEFINES_REQUIRED: {
+      code: 'TODODEFINES_REQUIRED', description: {
+        en: 'The Todo defines are required',
+        tr: 'Yapılacaklar gereklidir',
       }
     },
     PERIODS_REQUIRED: {
@@ -271,6 +289,18 @@ const messages = {
       code: 'TODODEFINEID_REQUIRED', description: {
         en: 'The tododefineid is required',
         tr: 'Bu işlem için tododefineid gerekli',
+      }
+    },
+    UNSUPPORTED_TODOGROUPDEFINEID: {
+      code: 'UNSUPPORTED_TODOGROUPDEFINEID', description: {
+        en: 'The todogroupdefineid is unsupported',
+        tr: 'Geçersiz todogroupdefineid',
+      }
+    },
+    TODOGROUPDEFINEID_REQUIRED: {
+      code: 'TODOGROUPDEFINEID_REQUIRED', description: {
+        en: 'The todogroupdefineid is required',
+        tr: 'Bu işlem için todogroupdefineid gerekli',
       }
     },
     INFO_REQUIRED: {
