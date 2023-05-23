@@ -169,7 +169,7 @@ function requestErrorCatcher(err, serviceName = null) {
   }
   else if (err && ((err.errno && err.errno === "ERR_BAD_REQUEST") || (err.code && err.code === "ERR_BAD_REQUEST"))) {
     if (serviceName && typeof (serviceName) === 'string') {
-      return (err.response && err.response.data && err.response.data.type && err.response.data.code && err.response.description) ? 
+      return (err.response && err.response.data && err.response.data.type && err.response.data.code && err.response.data.description) ? 
       err.response.data : 
       create('MICROSERVICE_ERROR', `${serviceName.toUpperCase()}_SERVICE_HAS_ERROR`, (err.response && err.response.data) ? err.response.data.description ? err.response.data.description : err.response.data
           : `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} gaved error`)

@@ -1,7 +1,7 @@
 const accesstokenModel = require('./AccesstokenModel')
-const applogModel = require('./ApplogModel')
+const authlogModel = require('./AuthlogModel')
 
 module.exports = {
     accesstokenModel,
-    applogModel
+    authlogModel
 }

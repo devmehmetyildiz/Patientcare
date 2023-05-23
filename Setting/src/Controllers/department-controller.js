@@ -66,7 +66,6 @@ async function GetDepartment(req, res, next) {
     }
 }
 
-
 async function AddDepartment(req, res, next) {
 
     let validationErrors = []

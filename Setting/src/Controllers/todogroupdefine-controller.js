@@ -68,7 +68,6 @@ async function GetTodogroupdefine(req, res, next) {
     }
 }
 
-
 async function AddTodogroupdefine(req, res, next) {
 
     let validationErrors = []

@@ -1,6 +1,6 @@
 const casedepartmentModel = require('./CasedepartmentModel')
 const caseModel = require('./CaseModel')
-const checkperiodModel = require('./checkperiodModel')
+const checkperiodModel = require('./CheckperiodModel')
 const checkperiodperiodModel = require('./CheckperiodperiodModel')
 const costumertypedepartmentModel = require('./CostumertypedepartmentModel')
 const costumertypeModel = require('./CostumertypeModel')
@@ -15,6 +15,7 @@ const todogroupdefineModel = require('./TodogroupdefineModel')
 const todogroupdefinetododefineModel = require('./TodogroupdefinetododefineModel')
 const unitdepartmentModel = require('./UnitdepartmentModel')
 const unitModel = require('./UnitModel')
+const settinglogModel = require('./SettinglogModel')
 
 
 module.exports = {
@@ -34,5 +35,6 @@ module.exports = {
     todogroupdefineModel,
     todogroupdefinetododefineModel,
     unitdepartmentModel,
-    unitModel
+    unitModel,
+    settinglogModel
 }

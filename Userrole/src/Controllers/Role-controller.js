@@ -66,7 +66,7 @@ async function Getprivilegesbyuserid(req, res, next) {
         if (validationErrors.length > 0) {
             return next(createValidationError(validationErrors, req.language))
         }
-        const userroles = await db.userroleModel.findAll({ where: { UserID: user.Uuid } })
+        const userroles = await db.userroleModel.findAll({ where: { UserID: req.params.userId } })
         if (!userroles) {
             return next(createNotfounderror([messages.ERROR.USERROLE_NOT_FOUND], req.language))
         }

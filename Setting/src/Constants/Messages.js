@@ -12,6 +12,18 @@ const messages = {
         tr: 'Durum aktif değil',
       }
     },
+    UNIT_NOT_FOUND: {
+      code: 'UNIT_NOT_FOUND', description: {
+        en: 'Unit not found',
+        tr: 'Birim bulunamadı',
+      }
+    },
+    UNIT_NOT_ACTIVE: {
+      code: 'UNIT_NOT_ACTIVE', description: {
+        en: 'Unit not active',
+        tr: 'Birim aktif değil',
+      }
+    },
     DEPARTMENT_NOT_FOUND: {
       code: 'DEPARTMENT_NOT_FOUND', description: {
         en: 'Department not found',
@@ -141,16 +153,34 @@ const messages = {
         tr: 'Bu işlem için caseid bilgisi gerekli',
       }
     },
+    UNITID_REQUIRED: {
+      code: 'UNITID_REQUIRED', description: {
+        en: 'The unitID required',
+        tr: 'Bu işlem için unitId bilgisi gerekli',
+      }
+    },
     DEPARTMENTID_REQUIRED: {
       code: 'DEPARTMENTID_REQUIRED', description: {
         en: 'The departmentId required',
         tr: 'Bu işlem için departmentId bilgisi gerekli',
       }
     },
+    UNITTYPE_REQUIRED: {
+      code: 'UNITTYPE_REQUIRED', description: {
+        en: 'The unit type required',
+        tr: 'Bu işlem için birim türü bilgisi gerekli',
+      }
+    },
     UNSUPPORTED_CASEID: {
-      code: 'UNSTUPPORTED_CASEID', description: {
+      code: 'UNSUPPORTED_CASEID', description: {
         en: 'The caseId is not supported',
         tr: 'geçersiz durum numarası',
+      }
+    },
+    UNSUPPORTED_UNITID: {
+      code: 'UNSUPPORTED_UNITID', description: {
+        en: 'The unitId is not supported',
+        tr: 'geçersiz birim numarası',
       }
     },
     UNSUPPORTED_DEPARTMENTID: {
@@ -211,18 +241,6 @@ const messages = {
       code: 'UNSUPPORTED_PATIENTTYPEID', description: {
         en: 'The patienttypeid is unsupported',
         tr: 'Geçersiz  patienttypeid',
-      }
-    },
-    UNSUPPORTED_STATIONID: {
-      code: 'UNSUPPORTED_COSTUMERTYPEID', description: {
-        en: 'The costumertypeid is unsupported',
-        tr: 'Geçersiz  costumertypeid',
-      }
-    },
-    UNSUPPORTED_PERIODID: {
-      code: 'UNSUPPORTED_PERIODID', description: {
-        en: 'The periodid is unsupported',
-        tr: 'Geçersiz  periodid',
       }
     },
     UNSUPPORTED_STATIONID: {

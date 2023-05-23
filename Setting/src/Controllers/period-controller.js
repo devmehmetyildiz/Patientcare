@@ -38,7 +38,6 @@ async function GetPeriod(req, res, next) {
     }
 }
 
-
 async function AddPeriod(req, res, next) {
 
     let validationErrors = []

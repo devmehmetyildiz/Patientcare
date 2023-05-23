@@ -1,19 +1,21 @@
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser')
-const cors = require('cors');
 const config = require('./Config');
-const crossDomainEnabler = require('./Middlewares/Crossdomainenabler');
-app.use(cors());
 
 require("./Middlewares/Databaseconnector")()
   .then(() => {
+    
+    const cors = require('cors');
+    const bodyParser = require('body-parser')
     const session = require('express-session')
     const router = require('xpress-router')
     const routes = require('./Routes')
     const MemoryStore = require('session-memory-store')(session)
     const errorHandlers = require('./Middlewares/Errorhandlers')
+    const authorizationChecker = require('./Middlewares/Authorizationchecker');
+    const crossDomainEnabler = require('./Middlewares/Crossdomainenabler');
 
+    app.use(cors());
     app.use(express.static('./dist'))
     app.set('views', __dirname + '/views/')
     app.set('view engine', 'pug')
@@ -29,6 +31,7 @@ require("./Middlewares/Databaseconnector")()
 
     app.use(bodyParser.json())
     app.use(crossDomainEnabler)
+    app.use(authorizationChecker)
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/`, controllerFileSuffix: '-controller.js', logRoutesList: false })
 
     errorHandlers.init(app)
@@ -39,7 +42,7 @@ require("./Middlewares/Databaseconnector")()
       httpServer.listen(config.port, () => {
         if (config.env === 'development') {
           console.log(`${config.session.name} service is running at http://localhost:${httpServer.address().port} for public usage`)
-          db.applogModel.create({
+          db.authlogModel.create({
             Event: "App opened at: " + new Date()
           }).catch(() => {
 

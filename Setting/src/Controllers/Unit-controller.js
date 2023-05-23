@@ -6,76 +6,80 @@ const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
 
-async function GetCostumertypes(req, res, next) {
+async function GetUnits(req, res, next) {
     try {
-        const costumertypes = await db.costumertypeModel.findAll({ where: { Isactive: true } })
-        for (const costumertype of costumertypes) {
-            let departmentuuids = await db.costumertypedepartmentModel.findAll({
+        const units = await db.unitModel.findAll({ where: { Isactive: true } })
+        for (const unit of units) {
+            let departmentuuids = await db.unitdepartmentModel.findAll({
                 where: {
-                    CostumertypeID: costumertype.Uuid,
+                    UnitId: unit.Uuid,
                 }
             });
-            costumertype.Departments = await db.departmentModel.findAll({
+            unit.Departments = await db.departmentModel.findAll({
                 where: {
                     Uuid: departmentuuids.map(u => { return u.DepartmentID })
                 }
             })
         }
-        res.status(200).json(costumertypes)
+        res.status(200).json(units)
     } catch (error) {
         sequelizeErrorCatcher(error)
         next()
     }
 }
 
-async function GetCostumertype(req, res, next) {
+async function GetUnit(req, res, next) {
 
     let validationErrors = []
-    if (!req.params.costumertypeId) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED)
+    if (!req.params.unitId) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)
     }
-    if (!validator.isUUID(req.params.costumertypeId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_COSTUMERTYPEID)
+    if (!validator.isUUID(req.params.unitId)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_UNITID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const costumertpe = await db.costumertypeModel.findOne({ where: { Uuid: req.params.costumertypeId } });
-        if (!costumertpe) {
-            return createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND], req.language)
+        const unit = await db.unitModel.findOne({ where: { Uuid: req.params.unitId } });
+        if (!unit) {
+            return createNotfounderror([messages.ERROR.UNIT_NOT_FOUND], req.language)
         }
-        if (!costumertpe.Isactive) {
-            return createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_ACTIVE], req.language)
+        if (!unit.Isactive) {
+            return createNotfounderror([messages.ERROR.UNIT_NOT_ACTIVE], req.language)
         }
-        let departmentuuids = await db.costumertypedepartmentModel.findAll({
+        let departmentuuids = await db.unitdepartmentModel.findAll({
             where: {
-                CostumertypeID: costumertpe.Uuid,
+                UnitID: unit.Uuid,
             }
         });
-        costumertpe.Departments = await db.departmentModel.findAll({
+        unit.Departments = await db.departmentModel.findAll({
             where: {
                 Uuid: departmentuuids.map(u => { return u.DepartmentID })
             }
         })
-        res.status(200).json(costumertpe)
+        res.status(200).json(unit)
     } catch (error) {
         sequelizeErrorCatcher(error)
         next()
     }
 }
 
-async function AddCostumertype(req, res, next) {
+async function AddUnit(req, res, next) {
 
     let validationErrors = []
     const {
         Name,
+        Unittype,
         Departments,
     } = req.body
 
     if (!Name || !validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+    }
+    if (!Unittype && !validator.isNumber(Unittype)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNITTYPE_REQUIRED, req.language)
     }
     if (!Departments || !Array.isArray(Departments) || Departments.length <= 0) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
@@ -85,14 +89,14 @@ async function AddCostumertype(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
-    let costumertypeuuid = uuid()
+    let unituuid = uuid()
 
     const t = await db.sequelize.transaction();
 
     try {
-        await db.costumertypeModel.create({
+        await db.unitModel.create({
             ...req.body,
-            Uuid: costumertypeuuid,
+            Uuid: unituuid,
             Createduser: "System",
             Createtime: new Date(),
             Isactive: true
@@ -102,25 +106,25 @@ async function AddCostumertype(req, res, next) {
             if (!department.Uuid || !validator.isUUID(department.Uuid)) {
                 return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
             }
-            await db.costumertypedepartmentModel.create({
-                CostumertypeID: costumertypeuuid,
+            await db.unitdepartmentModel.create({
+                UnitId: unituuid,
                 DepartmentID: department.Uuid
             }, { transaction: t });
         }
 
         await t.commit()
-        const createdCostumertype = await db.costumertypeModel.findOne({ where: { Uuid: costumertypeuuid } })
-        let departmentuuids = await db.costumertypedepartmentModel.findAll({
+        const createdUnit = await db.unitModel.findOne({ where: { Uuid: unituuid } })
+        let departmentuuids = await db.unitdepartmentModel.findAll({
             where: {
-                CostumertypeID: costumertypeuuid,
+                UnitId: unituuid,
             }
         });
-        createdCostumertype.Departments = await db.departmentModel.findAll({
+        createdUnit.Departments = await db.departmentModel.findAll({
             where: {
                 Uuid: departmentuuids.map(u => { return u.DepartmentID })
             }
         })
-        res.status(200).json(createdCostumertype)
+        res.status(200).json(createdUnit)
     } catch (err) {
         await t.rollback()
         sequelizeErrorCatcher(err)
@@ -128,11 +132,12 @@ async function AddCostumertype(req, res, next) {
     }
 }
 
-async function UpdateCostumertype(req, res, next) {
+async function UpdateUnit(req, res, next) {
 
     let validationErrors = []
     const {
         Name,
+        Unittype,
         Departments,
         Uuid
     } = req.body
@@ -140,59 +145,62 @@ async function UpdateCostumertype(req, res, next) {
     if (!Name || !validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED, req.language)
-    }
-    if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_COSTUMERTYPEID, req.language)
+    if (!Unittype && !validator.isNumber(Unittype)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNITTYPE_REQUIRED, req.language)
     }
     if (!Departments || !Array.isArray(Departments) || Departments.length <= 0) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
+    }
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED, req.language)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_UNITID, req.language)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const costumertype = db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
-        if (!costumertype) {
-            return next(createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND], req.language))
+        const unit = db.unitModel.findOne({ where: { Uuid: Uuid } })
+        if (!unit) {
+            return next(createNotfounderror([messages.ERROR.UNIT_NOT_FOUND], req.language))
         }
-        if (costumertype.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.COSTUMERTYPE_NOT_ACTIVE], req.language))
+        if (unit.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.UNIT_NOT_ACTIVE], req.language))
         }
 
         const t = await db.sequelize.transaction();
 
-        await db.costumertypeModel.update({
+        await db.unitModel.update({
             ...req.body,
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
-        await db.costumertypedepartmentModel.destroy({ where: { CostumertypeID: Uuid }, transaction: t });
+        await db.unitdepartmentModel.destroy({ where: { UnitId: Uuid }, transaction: t });
         for (const department of Departments) {
             if (!department.Uuid || !validator.isUUID(department.Uuid)) {
                 return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
             }
-            await db.costumertypedepartmentModel.create({
-                CostumertypeID: Uuid,
+            await db.unitdepartmentModel.create({
+                UnitId: Uuid,
                 DepartmentID: department.Uuid
             }, { transaction: t });
         }
         await t.commit()
-        const updatedCostumertype = await db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
-        let departmentuuids = await db.costumertypedepartmentModel.findAll({
+        const updatedUnit = await db.unitModel.findOne({ where: { Uuid: Uuid } })
+        let departmentuuids = await db.unitdepartmentModel.findAll({
             where: {
-                CostumertypeID: Uuid,
+                UnitId: Uuid,
             }
         });
-        updatedCostumertype.Departments = await db.departmentModel.findAll({
+        updatedUnit.Departments = await db.departmentModel.findAll({
             where: {
                 Uuid: departmentuuids.map(u => { return u.DepartmentID })
             }
         })
-        res.status(200).json(UpdateCostumertype)
+        res.status(200).json(updatedUnit)
     } catch (error) {
         sequelizeErrorCatcher(error)
         next()
@@ -201,7 +209,7 @@ async function UpdateCostumertype(req, res, next) {
 
 }
 
-async function DeleteCostumertype(req, res, next) {
+async function DeleteUnit(req, res, next) {
 
     let validationErrors = []
     const {
@@ -209,27 +217,27 @@ async function DeleteCostumertype(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_COSTUMERTYPEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_UNITID, req.language)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const costumertype = db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
-        if (!costumertype) {
-            return next(createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND], req.language))
+        const unit = db.unitModel.findOne({ where: { Uuid: Uuid } })
+        if (!unit) {
+            return next(createNotfounderror([messages.ERROR.UNIT_NOT_FOUND], req.language))
         }
-        if (costumertype.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.COSTUMERTYPE_NOT_ACTIVE], req.language))
+        if (unit.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.UNIT_NOT_ACTIVE], req.language))
         }
         const t = await db.sequelize.transaction();
 
-        await db.costumertypedepartmentModel.destroy({ where: { CostumertypeID: Uuid }, transaction: t });
-        await db.costumertypeModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.unitdepartmentModel.destroy({ where: { UnitID: Uuid }, transaction: t });
+        await db.unitModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
 
         res.status(200).json({ messages: "deleted", Uuid: Uuid })
@@ -242,9 +250,9 @@ async function DeleteCostumertype(req, res, next) {
 }
 
 module.exports = {
-    GetCostumertypes,
-    GetCostumertype,
-    AddCostumertype,
-    UpdateCostumertype,
-    DeleteCostumertype,
+    GetUnits,
+    GetUnit,
+    AddUnit,
+    UpdateUnit,
+    DeleteUnit,
 }

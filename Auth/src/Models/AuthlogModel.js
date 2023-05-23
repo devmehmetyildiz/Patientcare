@@ -1,4 +1,4 @@
-module.exports = sequelize.define('applogModel', {
+module.exports = sequelize.define('authlogModel', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -8,6 +8,6 @@ module.exports = sequelize.define('applogModel', {
         type: Sequelize.STRING,
     },
 }, {
-    tableName: 'applogs', // replace with the name of your existing table
+    tableName: 'authlogs', // replace with the name of your existing table
     timestamps: false
 });
