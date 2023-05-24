@@ -1,9 +1,9 @@
 const Routes = [
-    { method: 'get', path: '/Cases', controller: 'Case', action: 'GetCases' },
-    { method: 'get', path: '/Cases/:caseId', controller: 'Case', action: 'GetCase' },
-    { method: 'post', path: '/Cases', controller: 'Case', action: 'AddCase' },
-    { method: 'put', path: '/Cases', controller: 'Case', action: 'UpdateCase' },
-    { method: 'delete', path: '/Cases', controller: 'Case', action: 'DeleteCase' },
+    { method: 'get', path: '/Warehouses', controller: 'Warehouse', action: 'GetWarehouses' },
+    { method: 'get', path: '/Warehouses/:warehouseId', controller: 'Warehouse', action: 'GetWarehouse' },
+    { method: 'post', path: '/Warehouses', controller: 'Warehouse', action: 'AddWarehouse' },
+    { method: 'put', path: '/Warehouses', controller: 'Warehouse', action: 'UpdateWarehouse' },
+    { method: 'delete', path: '/Warehouses', controller: 'Warehouse', action: 'DeleteWarehouse' },
 
     
   ]

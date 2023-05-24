@@ -89,10 +89,10 @@ async function AddRole(req, res, next) {
         Privileges
     } = req.body
 
-    if (Name === undefined) {
+    if (validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (Privileges === undefined || !Array.isArray(Privileges) || Privileges.length <= 0) {
+    if (validator.isArray(Privileges)) {
         validationErrors.push(messages.VALIDATION_ERROR.PRIVILEGES_REQUIRED, req.language)
     }
 
@@ -140,13 +140,13 @@ async function UpdateRole(req, res, next) {
         Privileges
     } = req.body
 
-    if (Uuid === undefined) {
+    if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.ROLEID_REQUIRED, req.language)
     }
-    if (Name === undefined) {
+    if (validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (Privileges === undefined || !Array.isArray(Privileges) || Privileges.length <= 0) {
+    if (validator.isArray(Privileges)) {
         validationErrors.push(messages.VALIDATION_ERROR.PRIVILEGES_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
@@ -199,7 +199,7 @@ async function DeleteRole(req, res, next) {
         Uuid
     } = req.body
 
-    if (Uuid === undefined) {
+    if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {

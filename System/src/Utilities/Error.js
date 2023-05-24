@@ -1,4 +1,5 @@
 const expect = require('expect')
+const config = require('../Config')
 function create(type, code) {
   let errorList = null
   let message = null
@@ -145,18 +146,36 @@ function isValidationError(error) {
 }
 
 function requestErrorCatcher(err, serviceName = null) {
-  if (err && err.error && ((err.error.errno && err.error.errno === "ECONNREFUSED") || (err.error.code && err.error.code === "ECONNREFUSED"))) {
+  if (err && ((err.errno && err.errno === "ECONNREFUSED") || (err.code && err.code === "ECONNREFUSED"))) {
     if (serviceName && typeof (serviceName) === 'string') {
-      throw create('UNAVAILABLE', `${serviceName.toUpperCase()}_SERVICE_UNAVAILABLE`, `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} service is unavailable`)
+      return create('UNAVAILABLE', `${serviceName.toUpperCase()}_SERVICE_UNAVAILABLE`, `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} service is unavailable`)
     } else {
-      throw create('UNAVAILABLE', 'UNKNOWN_SERVICE_UNAVAILABLE', 'The unknown service is unavailable')
+      return create('UNAVAILABLE', 'UNKNOWN_SERVICE_UNAVAILABLE', 'The unknown service is unavailable')
     }
   }
   else if (err && err.error && ((err.error.errno && err.error.errno === "ECONNRESET") || (err.error.code && err.error.code === "ECONNRESET"))) {
     if (serviceName && typeof (serviceName) === 'string') {
-      throw create('REQUEST_TIMEOUT', `${serviceName.toUpperCase()}_SERVICE_REQUEST_TIMEOUT`, `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} service responding timeout`)
+      return create('REQUEST_TIMEOUT', `${serviceName.toUpperCase()}_SERVICE_REQUEST_TIMEOUT`, `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} service responding timeout`)
     } else {
-      throw create('REQUEST_TIMEOUT', 'UNKNOWN_SERVICE_REQUEST_TIMEOUT', 'The unknown service responding timeout')
+      return create('REQUEST_TIMEOUT', 'UNKNOWN_SERVICE_REQUEST_TIMEOUT', 'The unknown service responding timeout')
+    }
+  }
+  else if (err && ((err.errno && err.errno === "ERR_BAD_RESPONSE") || (err.code && err.code === "ERR_BAD_RESPONSE"))) {
+    if (serviceName && typeof (serviceName) === 'string') {
+      return create('MICROSERVICE_INTERNALERROR', `${serviceName.toUpperCase()}_SERVICE_HAS_INTERNAL_ERROR`, (err.response && err.response.data) ? err.response.data.description ? err.response.data.description : err.response.data
+        : `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} has internal error`)
+    } else {
+      return create('MICROSERVICE_INTERNALERROR', 'UNKNOWN_SERVICE_HAS_INTERNAL_ERROR', 'The unknown service has internal error')
+    }
+  }
+  else if (err && ((err.errno && err.errno === "ERR_BAD_REQUEST") || (err.code && err.code === "ERR_BAD_REQUEST"))) {
+    if (serviceName && typeof (serviceName) === 'string') {
+      return (err.response && err.response.data && err.response.data.type && err.response.data.code && err.response.data.description) ?
+        err.response.data :
+        create('MICROSERVICE_ERROR', `${serviceName.toUpperCase()}_SERVICE_HAS_ERROR`, (err.response && err.response.data) ? err.response.data.description ? err.response.data.description : err.response.data
+          : `The ${serviceName.toLocaleLowerCase().replace(/_/g, '-')} gaved error`)
+    } else {
+      return create('MICROSERVICE_ERROR', 'UNKNOWN_SERVICE_GAVED_ERROR', 'The unknown service gaved error')
     }
   }
   else if (err.error && typeof (err.error) === "string") {
@@ -179,17 +198,8 @@ function requestErrorCatcher(err, serviceName = null) {
 }
 
 function sequelizeErrorCatcher(err, errHelper) {
-  if (err && err.name === 'SequelizeDatabaseError' || err.name === 'SequelizeUniqueConstraintError') {
-    switch (err.parent.code) {
-      case 'ER_NO_SUCH_TABLE':
-        throw create('VALIDATION', 'ER_NO_SUCH_TABLE', err.parent.sqlMessage)
-      case 'ER_DUP_ENTRY':
-        throw create('VALIDATION', 'ER_DUP_ENTRY', err.parent.sqlMessage)
-      case 'ER_BAD_FIELD_ERROR':
-        throw create('VALIDATION', 'ER_BAD_FIELD_ERROR', err.parent.sqlMessage)
-      default:
-        throw err;
-    }
+  if (err && err.name) {
+    return create('VALIDATION', err.name, (err.parent && err.parent.code && err.parent.sqlMessage) ? `${err.parent.code} ${err.parent.sqlMessage} on ${config.session.name} service` : `Undefines error on Sequileze on ${config.session.name} service`)
   } else {
     throw err;
   }

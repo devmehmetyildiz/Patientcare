@@ -78,19 +78,19 @@ async function AddCase(req, res, next) {
         Departments,
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Shortname || !validator.isString(Shortname)) {
+    if (!validator.isString(Shortname)) {
         validationErrors.push(messages.VALIDATION_ERROR.SHORTNAME_REQUIRED, req.language)
     }
-    if (!Casecolor || !validator.isString(Casecolor)) {
+    if (!validator.isString(Casecolor)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!CaseStatus && !validator.isNumber(CaseStatus)) {
+    if (!validator.isNumber(CaseStatus)) {
         validationErrors.push(messages.VALIDATION_ERROR.CASECOLOR_REQUIRED, req.language)
     }
-    if (!Departments || !Array.isArray(Departments) || Departments.length <= 0) {
+    if (!validator.isArray(Departments)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
     }
 
@@ -153,10 +153,10 @@ async function UpdateCase(req, res, next) {
         Uuid
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Shortname || !validator.isString(Shortname)) {
+    if (!validator.isString(Shortname)) {
         validationErrors.push(messages.VALIDATION_ERROR.SHORTNAME_REQUIRED, req.language)
     }
     if (!Uuid) {
@@ -165,13 +165,13 @@ async function UpdateCase(req, res, next) {
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID, req.language)
     }
-    if (!Casecolor || !validator.isString(Casecolor)) {
+    if (!validator.isString(Casecolor)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!CaseStatus && !validator.isNumber(CaseStatus)) {
+    if (!validator.isNumber(CaseStatus)) {
         validationErrors.push(messages.VALIDATION_ERROR.CASECOLOR_REQUIRED, req.language)
     }
-    if (!Departments || !Array.isArray(Departments) || Departments.length <= 0) {
+    if (!validator.isArray(Departments)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
     }
     if (validationErrors.length > 0) {

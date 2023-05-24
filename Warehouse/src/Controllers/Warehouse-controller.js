@@ -1,6 +1,6 @@
 const config = require("../Config")
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -13,21 +13,27 @@ async function GetWarehouses(req, res, next) {
         let departments = null
         let units = null
         if (warehouses && Array.isArray(warehouses) && warehouses.length > 0) {
-            const departmentresponse = axios({
-                method: 'GET',
-                url: config.services.Setting + 'Departments',
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            const unitresponse = axios({
-                method: 'GET',
-                url: config.services.Setting + 'Units',
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            await Promise.all([departmentresponse, unitresponse])
+            try {
+                const departmentresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + 'Departments',
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const unitresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + 'Units',
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                await Promise.all([departmentresponse, unitresponse])
+                departments = departmentresponse
+                units = unitresponse
+            } catch (err) {
+                return next(requestErrorCatcher(err, 'Setting'))
+            }
         }
         for (const warehouse of warehouses) {
             let stocks = await db.stockModel.findAll({ where: { WarehouseID: warehouse.Uuid } })
@@ -39,28 +45,24 @@ async function GetWarehouses(req, res, next) {
                 }
                 stock.Amount = amount;
                 stock.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: stock.StockdefineID } })
-
-
-                stock.Department = await db.departmentModel.findAll({ where: { Uuid: stock.DepartmentID } })
-                stock.Stockdefine && (stock.Stockdefine.Unit = await db.unitModel.findAll({ where: { Uuid: stock.StockdefineID } }))
+                stock.Department = departments.find(u => u.Uuid === stock.DepartmentID)
+                stock.Stockdefine && (stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID))
             }
         }
-        todogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: todogroupdefine.DepartmentID } })
-        res.status(200).json(todogroupdefines)
+        res.status(200).json(warehouses)
     }
     catch (error) {
         return next(sequelizeErrorCatcher(error))
-
     }
 }
 
 async function GetWarehouse(req, res, next) {
 
     let validationErrors = []
-    if (!req.params.todogroupdefineId) {
+    if (!req.params.warehouseId) {
         validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED)
     }
-    if (!validator.isUUID(req.params.todogroupdefineId)) {
+    if (!validator.isUUID(req.params.warehouseId)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID)
     }
     if (validationErrors.length > 0) {
@@ -68,7 +70,7 @@ async function GetWarehouse(req, res, next) {
     }
 
     try {
-        const todogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: req.params.todogroupdefineId } });
+        const warehouse = await db.warehouseModel.findOne({ where: { Uuid: req.params.warehouseId } });
         if (!todogroupdefine) {
             return createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language)
         }

@@ -75,13 +75,13 @@ async function AddUnit(req, res, next) {
         Departments,
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Unittype && !validator.isNumber(Unittype)) {
+    if (!validator.isNumber(Unittype)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNITTYPE_REQUIRED, req.language)
     }
-    if (!Departments || !Array.isArray(Departments) || Departments.length <= 0) {
+    if (!validator.isArray(Departments)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
     }
 

@@ -76,16 +76,16 @@ async function AddCheckperiod(req, res, next) {
         Occureddays,
         Periods
     } = req.body
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Periodtype || !validator.isNumber(Periodtype)) {
+    if (!validator.isNumber(Periodtype)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERIODTYPE_REQUIRED, req.language)
     }
-    if (!Occureddays || !validator.isString(Occureddays)) {
+    if (!validator.isString(Occureddays)) {
         validationErrors.push(messages.VALIDATION_ERROR.OCCUREDDAYS_REQUIRED, req.language)
     }
-    if (!Periods || !Array.isArray(Periods) || Periods.length <= 0) {
+    if (!validator.isArray(Periods)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED, req.language)
     }
 
@@ -147,10 +147,10 @@ async function UpdateCheckperiod(req, res, next) {
         Periods
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Periodtype || !validator.isNumber(Periodtype)) {
+    if (!validator.isNumber(Periodtype)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERIODTYPE_REQUIRED, req.language)
     }
     if (!Uuid) {
@@ -159,10 +159,10 @@ async function UpdateCheckperiod(req, res, next) {
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CHECKPERIODID, req.language)
     }
-    if (!Occureddays || !validator.isString(Occureddays)) {
+    if (!validator.isString(Occureddays)) {
         validationErrors.push(messages.VALIDATION_ERROR.OCCUREDDAYS_REQUIRED, req.language)
     }
-    if (!Periods || !Array.isArray(Periods) || Periods.length <= 0) {
+    if (!validator.isArray(Periods)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED, req.language)
     }
 

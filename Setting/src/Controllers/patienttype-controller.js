@@ -46,7 +46,7 @@ async function AddPatienttype(req, res, next) {
         Name
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
    
@@ -85,7 +85,7 @@ async function UpdatePatienttype(req, res, next) {
         Uuid
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
     if (!Uuid) {

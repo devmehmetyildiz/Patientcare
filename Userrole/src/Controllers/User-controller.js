@@ -24,13 +24,13 @@ async function Register(req, res, next) {
             Password,
         } = req.body
         let validationErrors = []
-        if (Username === undefined) {
+        if (validator.isString(Username)) {
             validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
         }
-        if (Password === undefined) {
+        if (validator.isString(Password)) {
             validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED, req.language)
         }
-        if (Email === undefined) {
+        if (validator.isString(Email)) {
             validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED, req.language)
         }
 
@@ -205,13 +205,13 @@ async function AddUser(req, res, next) {
         Password,
     } = req.body
 
-    if (Username === undefined) {
+    if (validator.isString(Username)) {
         validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
     }
-    if (Password === undefined) {
+    if (validator.isString(Password)) {
         validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED, req.language)
     }
-    if (Email === undefined) {
+    if (validator.isString(Email)) {
         validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED, req.language)
     }
     const usernamecheck = GetUserByUsername(next, Username, req.language)
@@ -283,7 +283,7 @@ async function UpdateUser(req, res, next) {
         Uuid
     } = req.body
 
-    if (Uuid === undefined) {
+    if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
@@ -335,7 +335,7 @@ async function DeleteUser(req, res, next) {
         Uuid
     } = req.body
 
-    if (Uuid === undefined) {
+    if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {

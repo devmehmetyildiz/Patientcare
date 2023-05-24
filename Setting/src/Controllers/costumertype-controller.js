@@ -74,10 +74,10 @@ async function AddCostumertype(req, res, next) {
         Departments,
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Departments || !Array.isArray(Departments) || Departments.length <= 0) {
+    if (!validator.isArray(Departments)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
     }
 
@@ -137,7 +137,7 @@ async function UpdateCostumertype(req, res, next) {
         Uuid
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
     if (!Uuid) {
@@ -146,7 +146,7 @@ async function UpdateCostumertype(req, res, next) {
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_COSTUMERTYPEID, req.language)
     }
-    if (!Departments || !Array.isArray(Departments) || Departments.length <= 0) {
+    if (!validator.isArray(Departments)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
     }
     if (validationErrors.length > 0) {

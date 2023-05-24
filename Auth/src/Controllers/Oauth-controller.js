@@ -80,7 +80,7 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
         })
         user = userresponse.data
     } catch (error) {
-        return next(requestErrorCatcher(error, "USERROLE") )
+        return next(requestErrorCatcher(error, "USERROLE"))
     }
     try {
         const usersaltreponse = await axios({
@@ -106,7 +106,6 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
         ExpiresAt: new Date(new Date().getTime() + 5 * 60000),
     }
 
-
     try {
         await db.accesstokenModel.destroy({ where: { Userid: user.Uuid } })
 
@@ -128,7 +127,10 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
         next()
     }
 
-    res.status(200).json(accessToken)
+    res.cookie("patientcare", accessToken.accessToken, {
+        httpOnly: false,
+        secure: false,
+    }).status(200).json(accessToken)
 }
 
 async function responseToGetTokenByRefreshToken(req, res, next) {
@@ -208,7 +210,9 @@ async function ValidatePassword(UserPassword, DbPassword, salt) {
     }
 }
 
-
+async function GetUsernamebyAccesstoken(req,res,next){
+    
+}
 
 module.exports = {
     Login,

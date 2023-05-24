@@ -48,16 +48,16 @@ async function AddTododefine(req, res, next) {
         IsNeedactivation
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Info || !validator.isString(Info)) {
+    if (!validator.isString(Info)) {
         validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
     }
-    if (!IsRequired || !validator.isBoolean(IsRequired)) {
+    if (!validator.isBoolean(IsRequired)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISREQUIRED_REQUIRED, req.language)
     }
-    if (!IsNeedactivation || !validator.isBoolean(IsNeedactivation)) {
+    if (!validator.isBoolean(IsNeedactivation)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISNEEDACTIVATION_REQUIRED, req.language)
     }
 
@@ -99,16 +99,16 @@ async function UpdateTododefine(req, res, next) {
         IsNeedactivation
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Info || !validator.isString(Info)) {
+    if (!validator.isString(Info)) {
         validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
     }
-    if (!IsRequired || !validator.isBoolean(IsRequired)) {
+    if (!validator.isBoolean(IsRequired)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISREQUIRED_REQUIRED, req.language)
     }
-    if (!IsNeedactivation || !validator.isBoolean(IsNeedactivation)) {
+    if (!validator.isBoolean(IsNeedactivation)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISNEEDACTIVATION_REQUIRED, req.language)
     }
     if (!Uuid) {

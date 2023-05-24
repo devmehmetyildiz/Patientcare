@@ -47,13 +47,13 @@ async function AddPeriod(req, res, next) {
         Checktime
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Occuredtime || !validator.isString(Occuredtime)) {
+    if (!validator.isString(Occuredtime)) {
         validationErrors.push(messages.VALIDATION_ERROR.OCCUREDTIME_REQUIRED, req.language)
     }
-    if (!Checktime || !validator.isString(Checktime)) {
+    if (!validator.isString(Checktime)) {
         validationErrors.push(messages.VALIDATION_ERROR.CHECKTIME_REQUIRED, req.language)
     }
 

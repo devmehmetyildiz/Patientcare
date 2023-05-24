@@ -18,8 +18,18 @@ exports.isString = function (value) {
   return (typeof (value) === 'string')
 }
 
+exports.isArray = function (value) {
+  return (typeof (value) === 'array' && Array.isArray(value) && value.length > 0)
+}
+
 exports.isBoolean = function (value) {
-  return (typeof (value) === 'boolean')
+  if (typeof (value) === 'boolean') {
+    return true
+  }
+  if (typeof (value) === 'number' && (value === 0 || value === 1)) {
+    return true
+  }
+  return false
 }
 
 exports.isQueryBoolean = function (value) {

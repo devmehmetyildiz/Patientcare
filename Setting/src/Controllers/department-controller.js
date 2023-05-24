@@ -15,7 +15,7 @@ async function GetDepartments(req, res, next) {
                     DepartmentID: department.Uuid,
                 }
             });
-            departments.Stations = await db.stationModel.findAll({
+            department.Stations = await db.stationModel.findAll({
                 where: {
                     Uuid: stationuuids.map(u => { return u.StationID })
                 }
@@ -75,13 +75,14 @@ async function AddDepartment(req, res, next) {
         Stations,
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Ishavepatients || !validator.isBoolean(Ishavepatients)) {
+
+    if (!validator.isBoolean(Ishavepatients)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISHAVEPATIENTS_REQUIRED, req.language)
     }
-    if (!Stations || !Array.isArray(Stations) || Stations.length <= 0) {
+    if (!validator.isArray(Stations)) {
         validationErrors.push(messages.VALIDATION_ERROR.STATIONS_REQUIRED, req.language)
     }
 
@@ -107,7 +108,7 @@ async function AddDepartment(req, res, next) {
                 return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_STATIONID, req.language))
             }
             await db.departmentstationModel.create({
-                DepartmentID: caseuuid,
+                DepartmentID: departmentuuid,
                 StationID: station.Uuid
             }, { transaction: t });
         }
@@ -127,8 +128,8 @@ async function AddDepartment(req, res, next) {
         res.status(200).json(createdDepartment)
     } catch (err) {
         await t.rollback()
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(err))
+
     }
 }
 
@@ -142,10 +143,10 @@ async function UpdateDepartment(req, res, next) {
         Uuid
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!Ishavepatients || !validator.isBoolean(Ishavepatients)) {
+    if (!validator.isBoolean(Ishavepatients)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISHAVEPATIENTS_REQUIRED, req.language)
     }
     if (!Uuid) {
@@ -154,7 +155,7 @@ async function UpdateDepartment(req, res, next) {
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language)
     }
-    if (!Stations || !Array.isArray(Stations) || Stations.length <= 0) {
+    if (!validator.isArray(Stations)) {
         validationErrors.push(messages.VALIDATION_ERROR.STATIONS_REQUIRED, req.language)
     }
     if (validationErrors.length > 0) {

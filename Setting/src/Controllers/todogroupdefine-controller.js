@@ -77,13 +77,13 @@ async function AddTodogroupdefine(req, res, next) {
         DepartmentID,
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    if (!DepartmentID || !validator.isUUID(DepartmentID)) {
+    if (!validator.isUUID(DepartmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
     }
-    if (!Tododefines || !Array.isArray(Tododefines) || Tododefines.length <= 0) {
+    if (!validator.isArray(Tododefines)) {
         validationErrors.push(messages.VALIDATION_ERROR.TODODEFINES_REQUIRED, req.language)
     }
 
@@ -144,7 +144,7 @@ async function UpdateTodogroupdefine(req, res, next) {
         DepartmentID,
         Uuid
     } = req.body
-    if (!Name || !validator.isString(Name)) {
+    if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
     if (!Uuid) {
@@ -153,10 +153,10 @@ async function UpdateTodogroupdefine(req, res, next) {
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID, req.language)
     }
-    if (!DepartmentID || !validator.isUUID(DepartmentID)) {
+    if (!validator.isUUID(DepartmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
     }
-    if (!Tododefines || !Array.isArray(Tododefines) || Tododefines.length <= 0) {
+    if (!validator.isArray(Tododefines)) {
         validationErrors.push(messages.VALIDATION_ERROR.TODODEFINES_REQUIRED, req.language)
     }
     if (validationErrors.length > 0) {
