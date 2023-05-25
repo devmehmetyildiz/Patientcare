@@ -5,21 +5,28 @@ export default function AxiosErrorHelper(error) {
         if (error.code === 'ERR_NETWORK') {
             return { type: 'Error', code: 'ERR_NETWORK', description: 'Server Kapalı yada Erişim Yok' }
         }
-        if (error.code === 'ERR_BAD_REQUEST' && error.response) {
-            console.log('error.response.status: ', error.response.status);
+        if (error.code === 'ERR_BAD_REQUEST') {
+            console.log('error: ', error);
             switch (error.response.status) {
                 case 401:
                     return handle401Error(error)
-                case 404:
-                    return handle404Error(error)
-                case 400:
-                    return handle400Error(error)
-                case 500:
-                    return { type: 'Error', code: error.code, description: 'SERVER HATASI' }
-                case 403:
-                    return { type: 'Error', code: error.response.data.status, description: error.response.data.massage }
                 default:
-                    return { type: 'Error', code: error.code, description: 'Tanımsız hata' }
+                    let title = (error.response && error.response.data && error.response.data.description) ? error.response.data.description : 'Undefined Error From Server'
+                    let notifications = []
+                    if (error.response && error.response.data) {
+                        if (error.response.data.list) {
+                            let listoferror = error.response.data.list
+                            listoferror.forEach(err => {
+                                notifications.push({ type: 'Error', code: err.code ? err.code : 'Server hatası', description: err.description ? err.description : 'Tanımlanamayan hata' })
+                            });
+                        } else {
+                            notifications.push({ type: 'Error', code: error.response.data.code, description: error.response.data.description })
+                        }
+                    } else {
+                        notifications.push({ type: 'Error', code: title, description: 'Undefines Error From Server' })
+                    }
+                    console.log('notifications: ', notifications);
+                    return notifications
             }
         }
     }

@@ -80,7 +80,7 @@ export const Passwordresetrequest = (data, historyPusher, redirecturl) => {
 export const logIn = (data, historyPusher, redirecturl) => {
   return (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.LOGIN_REQUEST_INIT })
-    instanse.post(config.services.Auth,`oauth/Login`, data)
+    instanse.post(config.services.Auth,`Oauth/Login`, data)
       .then(result => {
         dispatch({ type: ACTION_TYPES.LOGIN_REQUEST_SUCCESS })
         redirecturl ? window.location = (redirecturl) : window.location = ('Home')
@@ -110,7 +110,7 @@ export const register = (data, historyPusher) => {
 
 export const GetActiveUser = () => async (dispatch, getState) => {
   dispatch({ type: ACTION_TYPES.GET_ACTIVEUSER_INIT })
-  await instanse.get("Auth/GetActiveUser")
+  await instanse.get(config.services.Userrole,'Users/GetActiveUsername')
     .then(response => {
       dispatch({ type: ACTION_TYPES.GET_ACTIVEUSER_SUCCESS, payload: response.data })
     })
@@ -122,18 +122,19 @@ export const GetActiveUser = () => async (dispatch, getState) => {
 
 export const GetUserMeta = () => async (dispatch, getState) => {
   dispatch({ type: ACTION_TYPES.GET_USERMETA_INIT })
-  await instanse.get("Auth/GetUserMeta")
+  await instanse.get(config.services.Userrole,'Users/GetActiveUserMeta')
     .then(response => {
       dispatch({ type: ACTION_TYPES.GET_USERMETA_SUCCESS, payload: response.data })
     })
     .catch(error => {
+      console.log('error: ', error);
       dispatch({ type: ACTION_TYPES.FILL_USER_NOTIFICATION, payload: AxiosErrorHelper(error) })
       dispatch({ type: ACTION_TYPES.GET_USERMETA_ERROR, payload: AxiosErrorHelper(error) })
     })
 }
 export const GetUserRoles = () => async (dispatch, getState) => {
   dispatch({ type: ACTION_TYPES.GET_USERSROLES_INIT })
-  await instanse.get("Auth/GetUserRoles")
+  await instanse.get(config.services.Userrole,'Roles/GetActiveuserprivileges')
     .then(response => {
       dispatch({ type: ACTION_TYPES.GET_USERSROLES_SUCCESS, payload: response.data })
     })

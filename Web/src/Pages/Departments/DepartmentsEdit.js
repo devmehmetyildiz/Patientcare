@@ -27,10 +27,10 @@ export default class DepartmentsEdit extends Component {
   componentDidUpdate() {
     const { Departments, Stations, removeDepartmentnotification, removeStationnotification } = this.props
     const { selected_record, isLoading } = Departments
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0 && Stations.list.length > 0 && !Stations.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Stations.list.length > 0 && !Stations.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedstations: selected_record.stations.map(station => {
-          return station.concurrencyStamp
+        selectedstations: selected_record.Stations.map(station => {
+          return station.Uuid
         }), isDatafetched: true
       })
     }
@@ -43,7 +43,7 @@ export default class DepartmentsEdit extends Component {
     const { Departments, Stations } = this.props
 
     const Stationoptions = Stations.list.map(station => {
-      return { key: station.concurrencyStamp, text: station.name, value: station.concurrencyStamp }
+      return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
 
     return (
@@ -64,7 +64,7 @@ export default class DepartmentsEdit extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input label="Departman Adı" placeholder="Departman Adı" name="name" fluid defaultValue={Departments.selected_record.name} />
+                <Form.Input label="Departman Adı" placeholder="Departman Adı" name="Name" fluid defaultValue={Departments.selected_record.Name} />
               </Form.Field>
               <Form.Field>
                 <label className='text-[#000000de]'>Tanımlı İstasyonlar</label>
@@ -89,15 +89,15 @@ export default class DepartmentsEdit extends Component {
     const { EditDepartments, history, fillDepartmentnotification, Stations, Departments } = this.props
     const { list } = Stations
     const data = formToObject(e.target)
-    data.stations = this.state.selectedstations.map(station => {
-      return list.find(u => u.concurrencyStamp === station)
+    data.Stations = this.state.selectedstations.map(station => {
+      return list.find(u => u.Uuid === station)
     })
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Departmanlar', description: 'İsim Boş Olamaz' })
     }
-    if (!data.stations || data.stations.length <= 0) {
+    if (!data.Stations || data.Stations.length <= 0) {
       errors.push({ type: 'Error', code: 'Departmanlar', description: 'Hiç Bir İstasyon seçili değil' })
     }
     if (errors.length > 0) {
@@ -105,6 +105,7 @@ export default class DepartmentsEdit extends Component {
         fillDepartmentnotification(error)
       })
     } else {
+      console.log('{ ...Departments.selected_record, ...data }: ', { ...Departments.selected_record, ...data });
       EditDepartments({ ...Departments.selected_record, ...data }, history)
     }
   }

@@ -19,7 +19,7 @@ exports.isString = function (value) {
 }
 
 exports.isArray = function (value) {
-  return (typeof (value) === 'array' && Array.isArray(value) && value.length > 0)
+  return (Array.isArray(value) && value.length > 0)
 }
 
 exports.isBoolean = function (value) {

@@ -33,14 +33,14 @@ export class Departments extends Component {
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'İsim', accessor: 'name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'İsim', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'İstasyonlar', accessor: 'stationstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
-      { Header: 'Oluşturan Kullanıcı', accessor: 'createdUser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleyen Kullanıcı', accessor: 'updatedUser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Oluşturma Zamanı', accessor: 'createTime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleme Zamanı', accessor: 'updateTime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Güncelleme Zamanı', accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
       { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
@@ -53,18 +53,18 @@ export class Departments extends Component {
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.config).filter(u => u.isVisible === false).map(item => {
         return item.key
-      }) : ["concurrencyStamp", "createdUser", "updatedUser", "createTime", "updateTime"],
+      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
       columnOrder: tableMeta ? JSON.parse(tableMeta.config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
       }) : []
     };
 
     (list || []).forEach(item => {
-      var text = item.stations.map((station) => {
-        return station.name;
+      var text = item.Stations.map((station) => {
+        return station.Name;
       }).join(", ")
       item.stationstxt = text;
-      item.edit = <Link to={`/Departments/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.edit = <Link to={`/Departments/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -152,8 +152,8 @@ export class Departments extends Component {
   stationCellhandler = (col) => {
     if (col.value) {
       if (!col.cell.isGrouped) {
-        const itemId = col.row.original.id
-        const itemStations = col.row.original.stations
+        const itemId = col.row.original.Id
+        const itemStations = col.row.original.Stations
         return col.value.length - 35 > 20 ?
           (
             !this.state.stationsStatus.includes(itemId) ?

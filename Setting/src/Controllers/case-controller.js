@@ -23,8 +23,7 @@ async function GetCases(req, res, next) {
         }
         res.status(200).json(cases)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -122,22 +121,23 @@ async function AddCase(req, res, next) {
         }
 
         await t.commit()
-        const createdCase = await db.caseModel.findOne({ where: { Uuid: caseuuid } })
-        let departmentuuids = await db.casedepartmentModel.findAll({
-            where: {
-                CaseID: caseuuid,
-            }
-        });
-        createdCase.Departments = await db.departmentModel.findAll({
-            where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
-            }
-        })
-        res.status(200).json(createdCase)
+        const cases = await db.caseModel.findAll({ where: { Isactive: true } })
+        for (const casedata of cases) {
+            let departmentuuids = await db.casedepartmentModel.findAll({
+                where: {
+                    CaseID: casedata.Uuid,
+                }
+            });
+            casedata.Departments = await db.departmentModel.findAll({
+                where: {
+                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                }
+            })
+        }
+        res.status(200).json(cases)
     } catch (err) {
         await t.rollback()
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(err))
     }
 }
 
@@ -206,21 +206,22 @@ async function UpdateCase(req, res, next) {
             }, { transaction: t });
         }
         await t.commit()
-        const updatedCase = await db.caseModel.findOne({ where: { Uuid: Uuid } })
-        let departmentuuids = await db.casedepartmentModel.findAll({
-            where: {
-                CaseID: Uuid,
-            }
-        });
-        updatedCase.Departments = await db.departmentModel.findAll({
-            where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
-            }
-        })
-        res.status(200).json(updatedCase)
+        const cases = await db.caseModel.findAll({ where: { Isactive: true } })
+        for (const casedata of cases) {
+            let departmentuuids = await db.casedepartmentModel.findAll({
+                where: {
+                    CaseID: casedata.Uuid,
+                }
+            });
+            casedata.Departments = await db.departmentModel.findAll({
+                where: {
+                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                }
+            })
+        }
+        res.status(200).json(cases)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 
@@ -256,12 +257,23 @@ async function DeleteCase(req, res, next) {
         await db.casedepartmentModel.destroy({ where: { CaseID: Uuid }, transaction: t });
         await db.caseModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const cases = await db.caseModel.findAll({ where: { Isactive: true } })
+        for (const casedata of cases) {
+            let departmentuuids = await db.casedepartmentModel.findAll({
+                where: {
+                    CaseID: casedata.Uuid,
+                }
+            });
+            casedata.Departments = await db.departmentModel.findAll({
+                where: {
+                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                }
+            })
+        }
+        res.status(200).json(cases)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }

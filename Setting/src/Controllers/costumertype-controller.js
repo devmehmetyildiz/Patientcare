@@ -23,8 +23,7 @@ async function GetCostumertypes(req, res, next) {
         }
         res.status(200).json(costumertypes)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -61,8 +60,7 @@ async function GetCostumertype(req, res, next) {
         })
         res.status(200).json(costumertpe)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -109,22 +107,23 @@ async function AddCostumertype(req, res, next) {
         }
 
         await t.commit()
-        const createdCostumertype = await db.costumertypeModel.findOne({ where: { Uuid: costumertypeuuid } })
-        let departmentuuids = await db.costumertypedepartmentModel.findAll({
-            where: {
-                CostumertypeID: costumertypeuuid,
-            }
-        });
-        createdCostumertype.Departments = await db.departmentModel.findAll({
-            where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
-            }
-        })
-        res.status(200).json(createdCostumertype)
+        const costumertypes = await db.costumertypeModel.findAll({ where: { Isactive: true } })
+        for (const costumertype of costumertypes) {
+            let departmentuuids = await db.costumertypedepartmentModel.findAll({
+                where: {
+                    CostumertypeID: costumertype.Uuid,
+                }
+            });
+            costumertype.Departments = await db.departmentModel.findAll({
+                where: {
+                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                }
+            })
+        }
+        res.status(200).json(costumertypes)
     } catch (err) {
         await t.rollback()
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(err))
     }
 }
 
@@ -181,21 +180,22 @@ async function UpdateCostumertype(req, res, next) {
             }, { transaction: t });
         }
         await t.commit()
-        const updatedCostumertype = await db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
-        let departmentuuids = await db.costumertypedepartmentModel.findAll({
-            where: {
-                CostumertypeID: Uuid,
-            }
-        });
-        updatedCostumertype.Departments = await db.departmentModel.findAll({
-            where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
-            }
-        })
-        res.status(200).json(UpdateCostumertype)
+        const costumertypes = await db.costumertypeModel.findAll({ where: { Isactive: true } })
+        for (const costumertype of costumertypes) {
+            let departmentuuids = await db.costumertypedepartmentModel.findAll({
+                where: {
+                    CostumertypeID: costumertype.Uuid,
+                }
+            });
+            costumertype.Departments = await db.departmentModel.findAll({
+                where: {
+                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                }
+            })
+        }
+        res.status(200).json(costumertypes)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 
@@ -231,12 +231,23 @@ async function DeleteCostumertype(req, res, next) {
         await db.costumertypedepartmentModel.destroy({ where: { CostumertypeID: Uuid }, transaction: t });
         await db.costumertypeModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const costumertypes = await db.costumertypeModel.findAll({ where: { Isactive: true } })
+        for (const costumertype of costumertypes) {
+            let departmentuuids = await db.costumertypedepartmentModel.findAll({
+                where: {
+                    CostumertypeID: costumertype.Uuid,
+                }
+            });
+            costumertype.Departments = await db.departmentModel.findAll({
+                where: {
+                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                }
+            })
+        }
+        res.status(200).json(costumertypes)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }

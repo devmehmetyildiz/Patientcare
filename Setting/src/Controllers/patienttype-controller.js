@@ -11,8 +11,7 @@ async function GetPatienttypes(req, res, next) {
         const patienttypes = await db.patienttypeModel.findAll({ where: { Isactive: true } })
         res.status(200).json(patienttypes)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -33,8 +32,7 @@ async function GetPatienttype(req, res, next) {
         const patienttype = await db.patienttypeModel.findOne({ where: { Uuid: req.params.patienttypeId } });
         res.status(200).json(patienttype)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -49,7 +47,7 @@ async function AddPatienttype(req, res, next) {
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-   
+
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
@@ -68,12 +66,11 @@ async function AddPatienttype(req, res, next) {
         }, { transaction: t })
 
         await t.commit()
-        const createdPatienttype = await db.patienttypeModel.findOne({ where: { Uuid: patienttypeuuid } })
-        res.status(200).json(createdPatienttype)
+        const patienttypes = await db.patienttypeModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(patienttypes)
     } catch (err) {
         await t.rollback()
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(err))
     }
 }
 
@@ -116,11 +113,10 @@ async function UpdatePatienttype(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
-        const updatedPatienttype = await db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
-        res.status(200).json(updatedPatienttype)
+        const patienttypes = await db.patienttypeModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(patienttypes)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 
@@ -155,12 +151,11 @@ async function DeletePatienttype(req, res, next) {
 
         await db.patienttypeModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const patienttypes = await db.patienttypeModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(patienttypes)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }

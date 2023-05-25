@@ -17,7 +17,7 @@ export const ROUTES = {
     CASE: 'Case',
     DEPARTMENT: 'Department',
     FILE: 'File',
-    STATION: 'Station',
+    STATION: 'Stations',
     STOCKDEFINE: 'Stockdefine',
     UNIT: 'Unit',
 

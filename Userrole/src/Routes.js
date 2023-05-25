@@ -1,5 +1,7 @@
 const Routes = [
   { method: 'get', path: '/Users', controller: 'user', action: 'GetUsers' },
+  { method: 'get', path: '/Users/GetActiveUsername', controller: 'user', action: 'GetActiveUsername' },
+  { method: 'get', path: '/Users/GetActiveUserMeta', controller: 'user', action: 'GetActiveUserMeta' },
   { method: 'get', path: '/Users/:userId', controller: 'user', action: 'GetUser' },
   { method: 'get', path: '/Users/Getbyusername/:username', controller: 'user', action: 'Getbyusername' },
   { method: 'get', path: '/Users/Getusersalt/:userId', controller: 'user', action: 'Getusersalt' },
@@ -8,12 +10,13 @@ const Routes = [
   { method: 'put', path: '/Users', controller: 'user', action: 'UpdateUser' },
   { method: 'delete', path: '/Users', controller: 'user', action: 'DeleteUser' },
 
-  { method: 'get', path: '/Roles', controller: 'role', action: 'GetRoles' },
-  { method: 'get', path: '/Roles/:roleId', controller: 'role', action: 'GetRole' },
-  { method: 'get', path: '/Roles/Getprivilegesbyuserid/:userId', controller: 'role', action: 'Getprivilegesbyuserid' },
-  { method: 'post', path: '/Roles', controller: 'role', action: 'AddRole' },
-  { method: 'put', path: '/Roles', controller: 'role', action: 'UpdateRole' },
-  { method: 'delete', path: '/Roles', controller: 'role', action: 'DeleteRole' },
+  { method: 'get', path: '/Roles', controller: 'Role', action: 'GetRoles', exact: true },
+  { method: 'get', path: '/Roles/GetActiveuserprivileges', controller: 'Role', action: 'GetActiveuserprivileges' },
+  { method: 'get', path: '/Roles/:roleId', controller: 'Role', action: 'GetRole' },
+  { method: 'get', path: '/Roles/Getprivilegesbyuserid/:userId', controller: 'Role', action: 'Getprivilegesbyuserid' },
+  { method: 'post', path: '/Roles', controller: 'Role', action: 'AddRole' },
+  { method: 'put', path: '/Roles', controller: 'Role', action: 'UpdateRole' },
+  { method: 'delete', path: '/Roles', controller: 'Role', action: 'DeleteRole' },
 ]
 
 module.exports = Routes

@@ -11,8 +11,7 @@ async function GetStations(req, res, next) {
         const stations = await db.stationModel.findAll({ where: { Isactive: true } })
         res.status(200).json(stations)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -33,8 +32,7 @@ async function GetStation(req, res, next) {
         const station = await db.stationModel.findOne({ where: { Uuid: req.params.stationId } });
         res.status(200).json(station)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -49,7 +47,7 @@ async function AddStation(req, res, next) {
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
-    
+
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
@@ -68,12 +66,11 @@ async function AddStation(req, res, next) {
         }, { transaction: t })
 
         await t.commit()
-        const createdStation = await db.stationModel.findOne({ where: { Uuid: stationuuid } })
-        res.status(200).json(createdStation)
+        const stations = await db.stationModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(stations)
     } catch (err) {
         await t.rollback()
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(err))
     }
 }
 
@@ -116,11 +113,10 @@ async function UpdateStation(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
-        const updatedStation = await db.stationModel.findOne({ where: { Uuid: Uuid } })
-        res.status(200).json(updatedStation)
+        const stations = await db.stationModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(stations)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 
@@ -155,12 +151,11 @@ async function DeleteStation(req, res, next) {
 
         await db.stationModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const stations = await db.stationModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(stations)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }

@@ -23,8 +23,7 @@ async function GetUnits(req, res, next) {
         }
         res.status(200).json(units)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -61,8 +60,7 @@ async function GetUnit(req, res, next) {
         })
         res.status(200).json(unit)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -113,22 +111,23 @@ async function AddUnit(req, res, next) {
         }
 
         await t.commit()
-        const createdUnit = await db.unitModel.findOne({ where: { Uuid: unituuid } })
-        let departmentuuids = await db.unitdepartmentModel.findAll({
-            where: {
-                UnitId: unituuid,
-            }
-        });
-        createdUnit.Departments = await db.departmentModel.findAll({
-            where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
-            }
-        })
-        res.status(200).json(createdUnit)
+        const units = await db.unitModel.findAll({ where: { Isactive: true } })
+        for (const unit of units) {
+            let departmentuuids = await db.unitdepartmentModel.findAll({
+                where: {
+                    UnitId: unit.Uuid,
+                }
+            });
+            unit.Departments = await db.departmentModel.findAll({
+                where: {
+                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                }
+            })
+        }
+        res.status(200).json(units)
     } catch (err) {
         await t.rollback()
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(err))
     }
 }
 
@@ -189,21 +188,22 @@ async function UpdateUnit(req, res, next) {
             }, { transaction: t });
         }
         await t.commit()
-        const updatedUnit = await db.unitModel.findOne({ where: { Uuid: Uuid } })
-        let departmentuuids = await db.unitdepartmentModel.findAll({
-            where: {
-                UnitId: Uuid,
-            }
-        });
-        updatedUnit.Departments = await db.departmentModel.findAll({
-            where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
-            }
-        })
-        res.status(200).json(updatedUnit)
+        const units = await db.unitModel.findAll({ where: { Isactive: true } })
+        for (const unit of units) {
+            let departmentuuids = await db.unitdepartmentModel.findAll({
+                where: {
+                    UnitId: unit.Uuid,
+                }
+            });
+            unit.Departments = await db.departmentModel.findAll({
+                where: {
+                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                }
+            })
+        }
+        res.status(200).json(units)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 
@@ -239,12 +239,23 @@ async function DeleteUnit(req, res, next) {
         await db.unitdepartmentModel.destroy({ where: { UnitID: Uuid }, transaction: t });
         await db.unitModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const units = await db.unitModel.findAll({ where: { Isactive: true } })
+        for (const unit of units) {
+            let departmentuuids = await db.unitdepartmentModel.findAll({
+                where: {
+                    UnitId: unit.Uuid,
+                }
+            });
+            unit.Departments = await db.departmentModel.findAll({
+                where: {
+                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
+                }
+            })
+        }
+        res.status(200).json(units)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }

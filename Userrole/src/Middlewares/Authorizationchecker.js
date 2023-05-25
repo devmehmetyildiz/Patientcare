@@ -47,7 +47,7 @@ async function authorizationChecker(req, res, next) {
                             const accessTokenresponse = await axios(
                                 {
                                     method: 'POST',
-                                    url: config.services.Auth + 'oauth/ValidateToken',
+                                    url: config.services.Auth + 'Oauth/ValidateToken',
                                     data: {
                                         accessToken: bearerToken
                                     }

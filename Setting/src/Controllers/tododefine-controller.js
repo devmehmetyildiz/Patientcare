@@ -11,8 +11,7 @@ async function GetTododefines(req, res, next) {
         const tododefines = await db.tododefineModel.findAll({ where: { Isactive: true } })
         res.status(200).json(tododefines)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -33,8 +32,7 @@ async function GetTododefine(req, res, next) {
         const tododefine = await db.tododefineModel.findOne({ where: { Uuid: req.params.tododefineId } });
         res.status(200).json(tododefine)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -79,12 +77,11 @@ async function AddTododefine(req, res, next) {
         }, { transaction: t })
 
         await t.commit()
-        const createdTododefine = await db.tododefineModel.findOne({ where: { Uuid: tododefineuuid } })
-        res.status(200).json(createdTododefine)
+        const tododefines = await db.tododefineModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(tododefines)
     } catch (err) {
         await t.rollback()
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(err))
     }
 }
 
@@ -139,11 +136,10 @@ async function UpdateTododefine(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
-        const updatedTododefine = await db.tododefineModel.findOne({ where: { Uuid: Uuid } })
-        res.status(200).json(updatedTododefine)
+        const tododefines = await db.tododefineModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(tododefines)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 
@@ -178,12 +174,11 @@ async function DeleteTododefine(req, res, next) {
 
         await db.tododefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const tododefines = await db.tododefineModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(tododefines)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }

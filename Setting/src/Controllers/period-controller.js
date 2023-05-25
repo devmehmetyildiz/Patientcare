@@ -11,8 +11,7 @@ async function GetPeriods(req, res, next) {
         const periods = await db.periodModel.findAll({ where: { Isactive: true } })
         res.status(200).json(periods)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -33,8 +32,7 @@ async function GetPeriod(req, res, next) {
         const period = await db.periodModel.findOne({ where: { Uuid: req.params.periodId } });
         res.status(200).json(period)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -75,12 +73,11 @@ async function AddPeriod(req, res, next) {
         }, { transaction: t })
 
         await t.commit()
-        const createdPeriod = await db.periodModel.findOne({ where: { Uuid: perioduuid } })
-        res.status(200).json(createdPeriod)
+        const periods = await db.periodModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(periods)
     } catch (err) {
         await t.rollback()
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(err))
     }
 }
 
@@ -131,11 +128,10 @@ async function UpdatePeriod(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
-        const updatedPeriod = await db.periodModel.findOne({ where: { Uuid: Uuid } })
-        res.status(200).json(updatedPeriod)
+        const periods = await db.periodModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(periods)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 
@@ -170,12 +166,11 @@ async function DeletePeriod(req, res, next) {
 
         await db.periodModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const periods = await db.periodModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(periods)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }

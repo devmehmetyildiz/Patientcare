@@ -100,11 +100,10 @@ async function Register(req, res, next) {
             })
         } catch (err) {
             await t.rollback()
-            next(err)
+            next(sequelizeErrorCatcher(error))
         }
-
     } catch (error) {
-
+        next(sequelizeErrorCatcher(error))
     }
 
 }
@@ -117,8 +116,7 @@ async function GetUsers(req, res, next) {
         });
         res.status(200).json(users)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -145,10 +143,10 @@ async function GetUser(req, res, next) {
         user.PasswordHash && delete user.PasswordHash
         res.status(200).json(user)
     } catch (error) {
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
+
 async function Getbyusername(req, res, next) {
 
     let validationErrors = []
@@ -168,10 +166,10 @@ async function Getbyusername(req, res, next) {
         }
         res.status(200).json(user)
     } catch (error) {
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
+
 async function Getusersalt(req, res, next) {
 
     let validationErrors = []
@@ -191,8 +189,7 @@ async function Getusersalt(req, res, next) {
         }
         res.status(200).json(usersalt)
     } catch (error) {
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -266,12 +263,14 @@ async function AddUser(req, res, next) {
         }, { transaction: t })
 
         await t.commit()
-        const createdUser = await db.userModel.findOne({ where: { Uuid: useruuid } })
-        createdUser.PasswordHash && delete createdUser.PasswordHash
-        res.status(200).json(createdUser)
+        const users = await db.userModel.findAll({ where: { Isactive: true } })
+        users.forEach(element => {
+            element.PasswordHash && delete element.PasswordHash
+        });
+        res.status(200).json(users)
     } catch (err) {
         await t.rollback()
-        next(err)
+        next(sequelizeErrorCatcher(error))
     }
 
 }
@@ -317,13 +316,14 @@ async function UpdateUser(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
-        const updatedUser = await db.userModel.findOne({ where: { Uuid: Uuid } })
-        updatedUser.PasswordHash && delete updatedUser.PasswordHash
-        res.status(200).json(updatedUser)
+        const users = await db.userModel.findAll({ where: { Isactive: true } })
+        users.forEach(element => {
+            element.PasswordHash && delete element.PasswordHash
+        });
+        res.status(200).json(users)
     } catch (error) {
         await t.rollback()
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }
@@ -358,13 +358,32 @@ async function DeleteUser(req, res, next) {
         await db.userModel.destroy({ where: { uuid: Uuid }, transaction: t });
         await db.usersaltModel.destroy({ where: { Userid: Uuid }, transaction: t });
         await t.commit();
-
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const users = await db.userModel.findAll({ where: { Isactive: true } })
+        users.forEach(element => {
+            element.PasswordHash && delete element.PasswordHash
+        });
+        res.status(200).json(users)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
+}
+
+async function GetActiveUsername(req, res, next) {
+    console.log('req: ', req);
+    if (!req.identity.user) {
+        return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+    }
+    res.status(200)
+    return res.send(req.identity.user.Username)
+}
+
+async function GetActiveUserMeta(req, res, next) {
+    if (!req.identity.user) {
+        return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+    }
+    res.status(200)
+    return res.send(req.identity.user)
 }
 
 function GetUserByEmail(next, Email, language) {
@@ -398,5 +417,7 @@ module.exports = {
     DeleteUser,
     Register,
     Getbyusername,
-    Getusersalt
+    Getusersalt,
+    GetActiveUsername,
+    GetActiveUserMeta
 }

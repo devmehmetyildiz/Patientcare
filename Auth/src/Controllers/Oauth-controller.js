@@ -2,11 +2,10 @@ const messages = require('../Constants/Messages')
 const createValidationError = require('../Utilities/Error').createValidation
 const crypto = require('crypto')
 const uuid = require('uuid').v4
-const { sequelizeErrorCatcher, createAccessDenied, createAutherror, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, createAccessDenied, createAutherror, requestErrorCatcher,createNotfounderror } = require("../Utilities/Error")
 const priveleges = require('../Constants/Privileges')
 const axios = require('axios')
 const config = require('../Config')
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
 
 function Testserver(req, res, next) {
     res.status(200).json({ message: "success" })
@@ -46,7 +45,7 @@ async function ValidateToken(req, res, next) {
 
     accessToken = await db.accesstokenModel.findOne({ where: { Accesstoken: bearerToken, Isactive: true } })
     if (!accessToken) {
-        return next(createNotfounderror(messages.ERROR.ACCESS_TOKEN_NOT_FOUND, req.language))
+        return next(createAutherror(messages.ERROR.ACCESS_TOKEN_NOT_FOUND, req.language))
     }
     if (accessToken.ExpiresAt <= new Date()) {
         return next(createAutherror(messages.ERROR.ACCESS_TOKEN_INVALID, req.language))
@@ -210,12 +209,9 @@ async function ValidatePassword(UserPassword, DbPassword, salt) {
     }
 }
 
-async function GetUsernamebyAccesstoken(req,res,next){
-    
-}
 
 module.exports = {
     Login,
     ValidateToken,
-    Testserver
+    Testserver,
 }

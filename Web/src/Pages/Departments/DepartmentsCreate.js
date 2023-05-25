@@ -32,7 +32,7 @@ export class DepartmentsCreate extends Component {
     const { Departments, Stations } = this.props
 
     const Stationoptions = Stations.list.map(station => {
-      return { key: station.concurrencyStamp, text: station.name, value: station.concurrencyStamp }
+      return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
 
     return (
@@ -53,7 +53,7 @@ export class DepartmentsCreate extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input label="Departman Adı" placeholder="Departman Adı" name="name" fluid />
+                <Form.Input label="Departman Adı" placeholder="Departman Adı" name="Name" fluid />
               </Form.Field>
               <Form.Field>
                 <label className='text-[#000000de]'>Tanımlı İstasyonlar</label>
@@ -79,25 +79,15 @@ export class DepartmentsCreate extends Component {
     const { AddDepartments, history, fillDepartmentnotification, Stations } = this.props
     const { list } = Stations
     const data = formToObject(e.target)
-    data.stations = this.state.selectedstations.map(station => {
-      return list.find(u => u.concurrencyStamp === station)
+    data.Stations = this.state.selectedstations.map(station => {
+      return list.find(u => u.Uuid === station)
     })
-    data.stationstxt = null
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Departmanlar', description: 'İsim Boş Olamaz' })
     }
-    if (!data.stations || data.stations.length <= 0) {
+    if (!data.Stations || data.Stations.length <= 0) {
       errors.push({ type: 'Error', code: 'Departmanlar', description: 'Hiç Bir İstasyon seçili değil' })
     }
     if (errors.length > 0) {

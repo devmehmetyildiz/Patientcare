@@ -19,8 +19,7 @@ async function GetRoles(req, res, next) {
         }
         res.status(200).json(roles)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -48,8 +47,7 @@ async function GetRole(req, res, next) {
         role.privileges = await db.roleprivilegeModel.findAll({ where: { RoleID: role.Uuid } })
         res.status(200).json(role)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -76,8 +74,31 @@ async function Getprivilegesbyuserid(req, res, next) {
         }
         res.status(200).json(userprivileges)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function GetActiveuserprivileges(req, res, next) {
+    let userprivileges = []
+    try {
+        let validationErrors = []
+        if (!req.identity.user) {
+            validationErrors.push(messages.ERROR.USER_NOT_FOUND)
+        }
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.language))
+        }
+        const userroles = await db.userroleModel.findAll({ where: { UserID: req.identity.user.Uuid } })
+        if (!userroles) {
+            return next(createNotfounderror([messages.ERROR.USERROLE_NOT_FOUND], req.language))
+        }
+        for (const userrole of userroles) {
+            let privileges = await db.roleprivilegeModel.findAll({ where: { RoleID: userrole.RoleID } })
+            userprivileges = privileges.map(u => { return u.PrivilegeID }).concat(userprivileges)
+        }
+        res.status(200).json(userprivileges)
+    } catch (error) {
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -121,13 +142,18 @@ async function AddRole(req, res, next) {
         }
 
         await t.commit()
-        const createdRole = await db.roleModel.findOne({ where: { Uuid: roleuuid } })
-        createdRole.privileges = await db.roleprivilegeModel.findAll({ where: { RoleID: roleuuid } })
-        res.status(200).json(createdRole)
+        const roles = await db.roleModel.findAll({ where: { Isactive: true } })
+        for (const role of roles) {
+            role.privileges = await db.roleprivilegeModel.findAll({
+                where: {
+                    RoleID: role.Uuid,
+                }
+            });
+        }
+        res.status(200).json(roles)
     } catch (err) {
         await t.rollback()
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(err))
     }
 }
 
@@ -181,12 +207,17 @@ async function UpdateRole(req, res, next) {
             }, { transaction: t })
         }
         await t.commit()
-        const updatedRole = await db.roleModel.findOne({ where: { Uuid: Uuid } })
-        updatedRole.privileges = await db.roleprivilegeModel.findAll({ where: { RoleID: Uuid } })
-        res.status(200).json(updatedRole)
+        const roles = await db.roleModel.findAll({ where: { Isactive: true } })
+        for (const role of roles) {
+            role.privileges = await db.roleprivilegeModel.findAll({
+                where: {
+                    RoleID: role.Uuid,
+                }
+            });
+        }
+        res.status(200).json(roles)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 
@@ -222,12 +253,18 @@ async function DeleteRole(req, res, next) {
         await db.roleprivilegeModel.destroy({ where: { RoleID: Uuid }, transaction: t });
         await db.roleModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const roles = await db.roleModel.findAll({ where: { Isactive: true } })
+        for (const role of roles) {
+            role.privileges = await db.roleprivilegeModel.findAll({
+                where: {
+                    RoleID: role.Uuid,
+                }
+            });
+        }
+        res.status(200).json(roles)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }
@@ -239,5 +276,6 @@ module.exports = {
     AddRole,
     UpdateRole,
     DeleteRole,
-    Getprivilegesbyuserid
+    Getprivilegesbyuserid,
+    GetActiveuserprivileges
 }

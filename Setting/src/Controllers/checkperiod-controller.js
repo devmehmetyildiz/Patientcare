@@ -23,8 +23,7 @@ async function GetCheckperiods(req, res, next) {
         }
         res.status(200).json(checkperiods)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -61,8 +60,7 @@ async function GetCheckperiod(req, res, next) {
         })
         res.status(200).json(checkperiod)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -117,22 +115,23 @@ async function AddCheckperiod(req, res, next) {
         }
 
         await t.commit()
-        const createdCheckperiod = await db.checkperiodModel.findOne({ where: { Uuid: checkperioduuid } })
-        let perioduuids = await db.checkperiodperiodModel.findAll({
-            where: {
-                CheckperiodID: checkperioduuid,
-            }
-        });
-        createdCheckperiod.Periods = await db.periodModel.findAll({
-            where: {
-                Uuid: perioduuids.map(u => { return u.PeriodID })
-            }
-        })
-        res.status(200).json(createdCheckperiod)
+        const checkperiods = await db.checkperiodModel.findAll({ where: { Isactive: true } })
+        for (const checkperiod of checkperiods) {
+            let perioduuids = await db.checkperiodperiodModel.findAll({
+                where: {
+                    CheckperiodID: checkperiod.Uuid,
+                }
+            });
+            checkperiod.Periods = await db.periodModel.findAll({
+                where: {
+                    Uuid: perioduuids.map(u => { return u.PeriodID })
+                }
+            })
+        }
+        res.status(200).json(checkperiods)
     } catch (err) {
         await t.rollback()
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(err))
     }
 }
 
@@ -199,21 +198,22 @@ async function UpdateCheckperiod(req, res, next) {
         }
 
         await t.commit()
-        const updatedCheckperiod = await db.checkperiodModel.findOne({ where: { Uuid: Uuid } })
-        let perioduuids = await db.checkperiodperiodModel.findAll({
-            where: {
-                CheckperiodID: Uuid,
-            }
-        });
-        updatedCheckperiod.Periods = await db.periodModel.findAll({
-            where: {
-                Uuid: perioduuids.map(u => { return u.PeriodID })
-            }
-        })
-        res.status(200).json(updatedCheckperiod)
+        const checkperiods = await db.checkperiodModel.findAll({ where: { Isactive: true } })
+        for (const checkperiod of checkperiods) {
+            let perioduuids = await db.checkperiodperiodModel.findAll({
+                where: {
+                    CheckperiodID: checkperiod.Uuid,
+                }
+            });
+            checkperiod.Periods = await db.periodModel.findAll({
+                where: {
+                    Uuid: perioduuids.map(u => { return u.PeriodID })
+                }
+            })
+        }
+        res.status(200).json(checkperiods)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 
@@ -250,11 +250,23 @@ async function DeleteCheckperiod(req, res, next) {
         await db.checkperiodModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
 
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const checkperiods = await db.checkperiodModel.findAll({ where: { Isactive: true } })
+        for (const checkperiod of checkperiods) {
+            let perioduuids = await db.checkperiodperiodModel.findAll({
+                where: {
+                    CheckperiodID: checkperiod.Uuid,
+                }
+            });
+            checkperiod.Periods = await db.periodModel.findAll({
+                where: {
+                    Uuid: perioduuids.map(u => { return u.PeriodID })
+                }
+            })
+        }
+        res.status(200).json(checkperiods)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }

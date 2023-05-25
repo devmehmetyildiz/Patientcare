@@ -23,8 +23,7 @@ async function GetDepartments(req, res, next) {
         }
         res.status(200).json(departments)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -61,8 +60,7 @@ async function GetDepartment(req, res, next) {
         })
         res.status(200).json(department)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -114,18 +112,20 @@ async function AddDepartment(req, res, next) {
         }
 
         await t.commit()
-        const createdDepartment = await db.departmentModel.findOne({ where: { Uuid: departmentuuid } })
-        let stationsuuids = await db.departmentstationModel.findAll({
-            where: {
-                DepartmentID: departmentuuid,
-            }
-        });
-        createdDepartment.Stations = await db.stationModel.findAll({
-            where: {
-                Uuid: stationsuuids.map(u => { return u.StationID })
-            }
-        })
-        res.status(200).json(createdDepartment)
+        const departments = await db.departmentModel.findAll({ where: { Isactive: true } })
+        for (const department of departments) {
+            let stationuuids = await db.departmentstationModel.findAll({
+                where: {
+                    DepartmentID: department.Uuid,
+                }
+            });
+            department.Stations = await db.stationModel.findAll({
+                where: {
+                    Uuid: stationuuids.map(u => { return u.StationID })
+                }
+            })
+        }
+        res.status(200).json(departments)
     } catch (err) {
         await t.rollback()
         next(sequelizeErrorCatcher(err))
@@ -190,21 +190,22 @@ async function UpdateDepartment(req, res, next) {
             }, { transaction: t });
         }
         await t.commit()
-        const updatedDepartment = await db.departmentModel.findOne({ where: { Uuid: Uuid } })
-        let departmentuuids = await db.departmentstationModel.findAll({
-            where: {
-                DepartmentID: Uuid,
-            }
-        });
-        updatedDepartment.StationID = await db.stationModel.findAll({
-            where: {
-                Uuid: departmentuuids.map(u => { return u.StationID })
-            }
-        })
-        res.status(200).json(updatedDepartment)
+        const departments = await db.departmentModel.findAll({ where: { Isactive: true } })
+        for (const department of departments) {
+            let stationuuids = await db.departmentstationModel.findAll({
+                where: {
+                    DepartmentID: department.Uuid,
+                }
+            });
+            department.Stations = await db.stationModel.findAll({
+                where: {
+                    Uuid: stationuuids.map(u => { return u.StationID })
+                }
+            })
+        }
+        res.status(200).json(departments)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 
@@ -240,12 +241,23 @@ async function DeleteDepartment(req, res, next) {
         await db.departmentstationModel.destroy({ where: { DepartmentID: Uuid }, transaction: t });
         await db.departmentModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const departments = await db.departmentModel.findAll({ where: { Isactive: true } })
+        for (const department of departments) {
+            let stationuuids = await db.departmentstationModel.findAll({
+                where: {
+                    DepartmentID: department.Uuid,
+                }
+            });
+            department.Stations = await db.stationModel.findAll({
+                where: {
+                    Uuid: stationuuids.map(u => { return u.StationID })
+                }
+            })
+        }
+        res.status(200).json(departments)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }

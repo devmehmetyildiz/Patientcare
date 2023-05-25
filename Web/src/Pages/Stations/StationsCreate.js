@@ -34,7 +34,7 @@ export  default class StationsCreate extends Component {
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
                 <label className='text-[#000000de]'>İstasyon Adı</label>
-                <Form.Input placeholder="İstasyon Adı" name="name" fluid />
+                <Form.Input placeholder="İstasyon Adı" name="Name" fluid />
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Stations">
@@ -55,18 +55,9 @@ export  default class StationsCreate extends Component {
     const { AddStations, history,fillStationnotification } = this.props
 
     const data = formToObject(e.target)
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Stations', description: 'İsim Boş Olamaz' })
     }
     if (errors.length > 0) {

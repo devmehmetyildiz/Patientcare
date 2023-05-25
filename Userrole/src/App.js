@@ -15,8 +15,18 @@ require("./Middlewares/Databaseconnector")()
     const authorizationChecker = require('./Middlewares/Authorizationchecker');
     const reqbodyhelper = require("./Middlewares/Reqbodyhelper")
     const crossDomainEnabler = require('./Middlewares/Crossdomainenabler');
-
-    app.use(cors());
+    const whitelist = ["http://localhost:3000"]
+    const corsOptions = {
+      origin: function (origin, callback) {
+        if (!origin || whitelist.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error("Not allowed by CORS"))
+        }
+      },
+      credentials: true,
+    }
+    app.use(cors(corsOptions))
     app.use(express.static('./dist'))
     app.set('views', __dirname + '/views/')
     app.set('view engine', 'pug')
@@ -31,7 +41,7 @@ require("./Middlewares/Databaseconnector")()
     }))
 
     app.use(bodyParser.json())
-    app.use(crossDomainEnabler)
+   // app.use(crossDomainEnabler)
     app.use(authorizationChecker)
     app.use(reqbodyhelper)
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/`, controllerFileSuffix: '-controller.js', logRoutesList: false })
