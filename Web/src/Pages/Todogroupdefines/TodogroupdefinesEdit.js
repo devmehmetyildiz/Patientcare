@@ -9,7 +9,7 @@ export default class TodogroupdefinesEdit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedtodos: [],
+      selectedTododefines: [],
       isDatafetched: false,
       selectedDepartment: "",
     }
@@ -29,12 +29,12 @@ export default class TodogroupdefinesEdit extends Component {
   componentDidUpdate() {
     const { Todogroupdefines, Tododefines, Departments, removeDepartmentnotification, removeTodogroupdefinenotification, removeTododefinenotification } = this.props
     const { selected_record, isLoading } = Todogroupdefines
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0 && Tododefines.list.length > 0 && !Tododefines.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Tododefines.list.length > 0 && !Tododefines.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedtodos: selected_record.todos.map(todos => {
-          return todos.concurrencyStamp
+        selectedTododefines: selected_record.Tododefines.map(todos => {
+          return todos.Uuid
         }), isDatafetched: true,
-        selectedDepartment: selected_record.departmentID
+        selectedDepartment: selected_record.DepartmentID
       })
     }
     Notification(Todogroupdefines.notifications, removeTodogroupdefinenotification)
@@ -47,11 +47,11 @@ export default class TodogroupdefinesEdit extends Component {
     const { Todogroupdefines, Tododefines, Departments } = this.props
 
     const Tododefineoptions = Tododefines.list.map(tododefine => {
-      return { key: tododefine.concurrencyStamp, text: tododefine.name, value: tododefine.concurrencyStamp }
+      return { key: tododefine.Uuid, text: tododefine.Name, value: tododefine.Uuid }
     })
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
     return (
@@ -64,7 +64,7 @@ export default class TodogroupdefinesEdit extends Component {
                   <Breadcrumb.Section >Yapılacaklar Grupları</Breadcrumb.Section>
                 </Link>
                 <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
+                <Breadcrumb.Section>Güncelle</Breadcrumb.Section>
               </Breadcrumb>
             </Header>
           </div>
@@ -72,12 +72,12 @@ export default class TodogroupdefinesEdit extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input defaultValue={Todogroupdefines.selected_record?.name} label="Yapılacaklar Grup Adı" placeholder="Yapılacaklar Grup Adı" name="name" fluid />
+                <Form.Input defaultValue={Todogroupdefines.selected_record?.Name} label="Yapılacaklar Grup Adı" placeholder="Yapılacaklar Grup Adı" name="Name" fluid />
               </Form.Field>
               <Form.Group widths={'equal'}>
                 <Form.Field>
                   <label className='text-[#000000de]'>Yapılacaklar</label>
-                  <Dropdown value={this.state.selectedtodos} placeholder='Yapılacaklar' clearable search fluid multiple selection options={Tododefineoptions} onChange={(e, { value }) => { this.setState({ selectedTododefines: value }) }} />
+                  <Dropdown value={this.state.selectedTododefines} placeholder='Yapılacaklar' clearable search fluid multiple selection options={Tododefineoptions} onChange={(e, { value }) => { this.setState({ selectedTododefines: value }) }} />
                 </Form.Field>
                 <Form.Field>
                   <label className='text-[#000000de]'>Departman</label>
@@ -103,19 +103,19 @@ export default class TodogroupdefinesEdit extends Component {
     const { EditTodogroupdefines, history, fillTodogroupdefinenotification, Todogroupdefines, Tododefines } = this.props
     const { list } = Tododefines
     const data = formToObject(e.target)
-    data.todos = this.state.selectedtodos.map(tododefines => {
-      return list.find(u => u.concurrencyStamp === tododefines)
+    data.Tododefines = this.state.selectedTododefines.map(tododefines => {
+      return list.find(u => u.Uuid === tododefines)
     })
-    data.departmentID = this.state.selectedDepartment
+    data.DepartmentID = this.state.selectedDepartment
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Yapılacaklar Grupları', description: 'İsim Boş Olamaz' })
     }
-    if (!data.todos || data.todos.length <= 0) {
+    if (!data.Tododefines || data.Tododefines.length <= 0) {
       errors.push({ type: 'Error', code: 'Yapılacaklar Grupları', description: 'Hiç Bir yapılacak seçili değil' })
     }
-    if (!data.departmentID || data.departmentID === '') {
+    if (!data.DepartmentID || data.DepartmentID === '') {
       errors.push({ type: 'Error', code: 'Yapılacaklar Grupları', description: 'Departman Seçili değil' })
     }
     if (errors.length > 0) {

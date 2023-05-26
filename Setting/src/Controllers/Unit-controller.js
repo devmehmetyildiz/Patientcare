@@ -12,7 +12,7 @@ async function GetUnits(req, res, next) {
         for (const unit of units) {
             let departmentuuids = await db.unitdepartmentModel.findAll({
                 where: {
-                    UnitId: unit.Uuid,
+                    UnitID: unit.Uuid,
                 }
             });
             unit.Departments = await db.departmentModel.findAll({
@@ -105,7 +105,7 @@ async function AddUnit(req, res, next) {
                 return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
             }
             await db.unitdepartmentModel.create({
-                UnitId: unituuid,
+                UnitID: unituuid,
                 DepartmentID: department.Uuid
             }, { transaction: t });
         }
@@ -115,7 +115,7 @@ async function AddUnit(req, res, next) {
         for (const unit of units) {
             let departmentuuids = await db.unitdepartmentModel.findAll({
                 where: {
-                    UnitId: unit.Uuid,
+                    UnitID: unit.Uuid,
                 }
             });
             unit.Departments = await db.departmentModel.findAll({
@@ -177,13 +177,13 @@ async function UpdateUnit(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
-        await db.unitdepartmentModel.destroy({ where: { UnitId: Uuid }, transaction: t });
+        await db.unitdepartmentModel.destroy({ where: { UnitID: Uuid }, transaction: t });
         for (const department of Departments) {
             if (!department.Uuid || !validator.isUUID(department.Uuid)) {
                 return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
             }
             await db.unitdepartmentModel.create({
-                UnitId: Uuid,
+                UnitID: Uuid,
                 DepartmentID: department.Uuid
             }, { transaction: t });
         }
@@ -192,7 +192,7 @@ async function UpdateUnit(req, res, next) {
         for (const unit of units) {
             let departmentuuids = await db.unitdepartmentModel.findAll({
                 where: {
-                    UnitId: unit.Uuid,
+                    UnitID: unit.Uuid,
                 }
             });
             unit.Departments = await db.departmentModel.findAll({
@@ -243,7 +243,7 @@ async function DeleteUnit(req, res, next) {
         for (const unit of units) {
             let departmentuuids = await db.unitdepartmentModel.findAll({
                 where: {
-                    UnitId: unit.Uuid,
+                    UnitID: unit.Uuid,
                 }
             });
             unit.Departments = await db.departmentModel.findAll({

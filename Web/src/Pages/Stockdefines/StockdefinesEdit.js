@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button,  Divider, Dropdown, Form, Header } from 'semantic-ui-react'
-import Popup from '../../Utils/Popup'
+import { Breadcrumb, Button, Divider, Dropdown, Form, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
+import Notification from '../../Utils/Notification'
 
 export default class StockdefinesEdit extends Component {
   constructor(props) {
@@ -30,39 +30,27 @@ export default class StockdefinesEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Units, Stockdefines } = this.props
+    const { Stockdefines, Units, removeUnitnotification, removeStockdefinenotification, Departments, removeDepartmentnotification } = this.props
     const { selected_record, isLoading } = Stockdefines
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0 && Units.list.length > 0 && !Units.isLoading && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
         selecteddepartment: selected_record.department.concurrencyStamp, selectedunit: selected_record.unit.concurrencyStamp, isDatafetched: true
       })
     }
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Units.notifications, removeUnitnotification)
   }
 
   render() {
 
-    const { Departments, Stockdefines, Units, removeDepartmentnotification, removeStockdefinenotification, removeUnitnotification } = this.props
-    if (Departments.notifications && Departments.notifications.length > 0) {
-      let msg = Departments.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeDepartmentnotification()
-    }
-    if (Stockdefines.notifications && Stockdefines.notifications.length > 0) {
-      let msg = Stockdefines.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeStockdefinenotification()
-    }
-    if (Units.notifications && Units.notifications.length > 0) {
-      let msg = Units.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeUnitnotification()
-    }
+    const { Departments, Stockdefines, Units } = this.props
 
     const Departmentoption = Departments.list.map(station => {
-      return { key: station.concurrencyStamp, text: station.name, value: station.concurrencyStamp }
+      return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
     const Unitoption = Units.list.map(station => {
-      return { key: station.concurrencyStamp, text: station.name, value: station.concurrencyStamp }
+      return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
 
     return (
@@ -83,8 +71,8 @@ export default class StockdefinesEdit extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input label="Stok Tanımı" placeholder="Stok Tanımı" name="name" fluid defaultValue={Stockdefines.selected_record.name} />
-                <Form.Input label="Açıklama" placeholder="Açıklama" name="description" fluid defaultValue={Stockdefines.selected_record.description} />
+                <Form.Input label="Stok Tanımı" placeholder="Stok Tanımı" name="Name" fluid defaultValue={Stockdefines.selected_record.name} />
+                <Form.Input label="Açıklama" placeholder="Açıklama" name="Description" fluid defaultValue={Stockdefines.selected_record.description} />
               </Form.Field>
               <Form.Group widths={"equal"}>
                 <Form.Field>
@@ -113,19 +101,18 @@ export default class StockdefinesEdit extends Component {
     e.preventDefault()
 
     const { EditStockdefines, history, fillStockdefinenotification, Stockdefines, Units, Departments } = this.props
-    const pushData = { ...Stockdefines.selected_record }
     const data = formToObject(e.target)
-    data.department = this.state.selecteddepartment
-    data.unit = this.state.selectedunit
+    data.UnitID = this.state.selectedunit
+    data.DepartmentID = this.state.selecteddepartment
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Ürün Tanımları', description: 'İsim Boş Olamaz' })
     }
-    if (!Departments.list.find(u => u.concurrencyStamp === this.state.selecteddepartment)) {
+    if (!Departments.list.find(u => u.Uuid === this.state.selecteddepartment)) {
       errors.push({ type: 'Error', code: 'Ürün Tanımları', description: 'Departman seçili değil' })
     }
-    if (!Units.list.find(u => u.concurrencyStamp === this.state.selectedunit)) {
+    if (!Units.list.find(u => u.Uuid === this.state.selectedunit)) {
       errors.push({ type: 'Error', code: 'Ürün Tanımları', description: 'Birim seçili değil' })
     }
     if (errors.length > 0) {
@@ -133,11 +120,7 @@ export default class StockdefinesEdit extends Component {
         fillStockdefinenotification(error)
       })
     } else {
-      pushData.name = data.name
-      pushData.description = data.description
-      pushData.department = Departments.list.find(u=>u.concurrencyStamp===data.department)
-      pushData.unit = Units.list.find(u=>u.concurrencyStamp===data.unit)
-      EditStockdefines(pushData, history)
+      EditStockdefines({ ...Stockdefines.selected_record, ...data }, history)
     }
   }
 

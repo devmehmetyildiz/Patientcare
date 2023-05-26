@@ -1,22 +1,20 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form, FormField} from 'semantic-ui-react'
+import { Divider, Dropdown, Form, FormField } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
-import Popup from '../../Utils/Popup'
 import LoadingPage from '../../Utils/LoadingPage'
-
+import Notification from '../../Utils/Notification'
 
 export default class StockdefinesCreate extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      selecteddepartment :{},
-      selectedunit:{}
+      selecteddepartment: {},
+      selectedunit: {}
     }
   }
-
 
   componentDidMount() {
     const { GetDepartments, GetUnits } = this.props
@@ -24,33 +22,21 @@ export default class StockdefinesCreate extends Component {
     GetUnits()
   }
 
+  componentDidUpdate() {
+    const { Stockdefines, Units, removeUnitnotification, removeStockdefinenotification, Departments, removeDepartmentnotification } = this.props
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Units.notifications, removeUnitnotification)
+  }
+
   render() {
-    const { removeStockdefinenotification, Departments, Units, Stockdefines,
-      removeUnitnotification, removeDepartmentnotification, history
-    } = this.props
-
-    if (Departments.notifications && Departments.notifications.length > 0) {
-      let msg = Departments.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeDepartmentnotification()
-    }
-    if (Units.notifications && Units.notifications.length > 0) {
-      let msg = Units.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeUnitnotification()
-    }
-    if (Stockdefines.notifications && Stockdefines.notifications.length > 0) {
-      let msg = Stockdefines.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeStockdefinenotification()
-    }
-
+    const { Departments, Units, Stockdefines, history } = this.props
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
     const Unitoptions = Units.list.map(unit => {
-      return { key: unit.concurrencyStamp, text: unit.name, value: unit.concurrencyStamp }
+      return { key: unit.Uuid, text: unit.Name, value: unit.Uuid }
     })
 
     return (
@@ -71,8 +57,8 @@ export default class StockdefinesCreate extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input label="Stok Tanımı" placeholder="Stok Tanımı" name="name" fluid />
-                <Form.Input label="Açıklama" placeholder="Açıklama" name="description" fluid />
+                <Form.Input label="Stok Tanımı" placeholder="Stok Tanımı" name="Name" fluid />
+                <Form.Input label="Açıklama" placeholder="Açıklama" name="Description" fluid />
               </Form.Field>
               <Form.Group widths={"equal"}>
                 <FormField>
@@ -102,28 +88,17 @@ export default class StockdefinesCreate extends Component {
 
     const { AddStockdefines, Departments, Units, history, fillStockdefinenotification } = this.props
     const data = formToObject(e.target)
-    data.department = Departments.list.find(u => u.concurrencyStamp === this.state.selecteddepartment)
-    data.unit = Units.list.find(u => u.concurrencyStamp === this.state.selectedunit)
-    data.unitid = ""
-    data.departmentid = ""
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
+    data.UnitID = this.state.selectedunit
+    data.DepartmentID = this.state.selecteddepartment
 
     let errors = []
-    if (!data.name || data.name == '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Ürün Tanımları', description: 'İsim Boş Olamaz' })
     }
-    if (!Departments.list.find(u => u.concurrencyStamp === this.state.selecteddepartment)) {
+    if (!Departments.list.find(u => u.Uuid === this.state.selecteddepartment)) {
       errors.push({ type: 'Error', code: 'Ürün Tanımları', description: 'Departman seçili değil' })
     }
-    if (!Units.list.find(u => u.concurrencyStamp === this.state.selectedunit)) {
+    if (!Units.list.find(u => u.Uuid === this.state.selectedunit)) {
       errors.push({ type: 'Error', code: 'Ürün Tanımları', description: 'Birim seçili değil' })
     }
     if (errors.length > 0) {

@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_CHECKPERIODS_INIT: 'GET_CHECKPERIODS_INIT',
@@ -31,7 +32,7 @@ export const ACTION_TYPES = {
 
 export const GetCheckperiods = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_CHECKPERIODS_INIT })
-    await instanse.get(ROUTES.CHECKPERIOD + "/GetAll")
+    await instanse.get(config.services.Setting, ROUTES.CHECKPERIOD)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_CHECKPERIODS_SUCCESS, payload: response.data }) 
         })
@@ -43,7 +44,7 @@ export const GetCheckperiods = () => async (dispatch, getState) => {
 
 export const GetCheckperiod = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_CHECKPERIOD_INIT })
-    await instanse.get(ROUTES.CHECKPERIOD + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Setting, `${ROUTES.CHECKPERIOD}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_CHECKPERIOD_SUCCESS, payload: response.data })
         })
@@ -55,7 +56,7 @@ export const GetCheckperiod = (guid) => async (dispatch, getState) => {
 
 export const AddCheckperiods = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_CHECKPERIOD_INIT })
-    await instanse.post(ROUTES.CHECKPERIOD + "/Add", data)
+    await instanse.post(config.services.Setting, ROUTES.CHECKPERIOD, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.ADD_CHECKPERIOD_SUCCESS, payload: response.data })
                 historypusher.push('/Checkperiods')
@@ -68,7 +69,7 @@ export const AddCheckperiods = (data, historypusher) => async (dispatch, getStat
 
 export const EditCheckperiods = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_CHECKPERIOD_INIT })
-    await instanse.post(ROUTES.CHECKPERIOD + "/Update", data)
+    await instanse.put(config.services.Setting, ROUTES.CHECKPERIOD, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.EDIT_CHECKPERIOD_SUCCESS, payload: response.data })
                 historypusher.push('/Checkperiods')
@@ -83,7 +84,7 @@ export const DeleteCheckperiods = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_CHECKPERIOD_INIT })
-    await instanse.post(ROUTES.CHECKPERIOD + "/Delete", data)
+    await instanse.delete(config.services.Setting, ROUTES.CHECKPERIOD, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_CHECKPERIOD_SUCCESS, payload: response.data })
         })

@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_TODOGROUPDEFINES_INIT: 'GET_TODOGROUPDEFINES_INIT',
@@ -31,7 +32,7 @@ export const ACTION_TYPES = {
 
 export const GetTodogroupdefines = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_TODOGROUPDEFINES_INIT })
-    await instanse.get(ROUTES.TODOGROUPDEFINE + "/GetAll")
+    await instanse.get(config.services.Setting, ROUTES.TODOGROUPDEFINE)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_TODOGROUPDEFINES_SUCCESS, payload: response.data })
         })
@@ -43,7 +44,7 @@ export const GetTodogroupdefines = () => async (dispatch, getState) => {
 
 export const GetTodogroupdefine = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_TODOGROUPDEFINE_INIT })
-    await instanse.get(ROUTES.TODOGROUPDEFINE + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Setting, `${ROUTES.TODOGROUPDEFINE}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_TODOGROUPDEFINE_SUCCESS, payload: response.data })
         })
@@ -55,7 +56,7 @@ export const GetTodogroupdefine = (guid) => async (dispatch, getState) => {
 
 export const AddTodogroupdefines = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_TODOGROUPDEFINE_INIT })
-    await instanse.post(ROUTES.TODOGROUPDEFINE + "/Add", data)
+    await instanse.post(config.services.Setting, ROUTES.TODOGROUPDEFINE, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.ADD_TODOGROUPDEFINE_SUCCESS, payload: response.data })
                 historypusher.push('/Todogroupdefines')
@@ -68,7 +69,7 @@ export const AddTodogroupdefines = (data, historypusher) => async (dispatch, get
 
 export const EditTodogroupdefines = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_TODOGROUPDEFINE_INIT })
-    await instanse.post(ROUTES.TODOGROUPDEFINE + "/Update", data)
+    await instanse.put(config.services.Setting, ROUTES.TODOGROUPDEFINE, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.EDIT_TODOGROUPDEFINE_SUCCESS, payload: response.data })
                 historypusher.push('/Todogroupdefines')
@@ -83,7 +84,7 @@ export const DeleteTodogroupdefines = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_TODOGROUPDEFINE_INIT })
-    await instanse.post(ROUTES.TODOGROUPDEFINE + "/Delete", data)
+    await instanse.delete(config.services.Setting, ROUTES.TODOGROUPDEFINE, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_TODOGROUPDEFINE_SUCCESS, payload: response.data })
         })

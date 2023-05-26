@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_CASES_INIT: 'GET_CASES_INIT',
@@ -35,7 +36,7 @@ export const ACTION_TYPES = {
 
 export const GetCases = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_CASES_INIT })
-    await instanse.get(ROUTES.CASE + "/GetAll")
+    await instanse.get(config.services.Setting, ROUTES.CASE)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_CASES_SUCCESS, payload: response.data })
         })
@@ -47,7 +48,7 @@ export const GetCases = () => async (dispatch, getState) => {
 
 export const GetCase = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_CASE_INIT })
-    await instanse.get(ROUTES.CASE + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Setting, `${ROUTES.CASE}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_CASE_SUCCESS, payload: response.data })
         })
@@ -59,10 +60,10 @@ export const GetCase = (guid) => async (dispatch, getState) => {
 
 export const AddCases = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_CASE_INIT })
-    await instanse.post(ROUTES.CASE + "/Add", data)
+    await instanse.post(config.services.Setting, ROUTES.CASE, data)
         .then(response => {
-                dispatch({ type: ACTION_TYPES.ADD_CASE_SUCCESS, payload: response.data })
-                historypusher.push('/Cases')
+            dispatch({ type: ACTION_TYPES.ADD_CASE_SUCCESS, payload: response.data })
+            historypusher.push('/Cases')
         })
         .catch(error => {
             dispatch({ type: ACTION_TYPES.FILL_CASES_NOTIFICATION, payload: AxiosErrorHelper(error) })
@@ -72,10 +73,10 @@ export const AddCases = (data, historypusher) => async (dispatch, getState) => {
 
 export const EditCases = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_CASE_INIT })
-    await instanse.post(ROUTES.CASE + "/Update", data)
+    await instanse.put(config.services.Setting, ROUTES.CASE, data)
         .then(response => {
-                dispatch({ type: ACTION_TYPES.EDIT_CASE_SUCCESS, payload: response.data })
-                historypusher.push('/Cases')
+            dispatch({ type: ACTION_TYPES.EDIT_CASE_SUCCESS, payload: response.data })
+            historypusher.push('/Cases')
         })
         .catch(error => {
             dispatch({ type: ACTION_TYPES.FILL_CASES_NOTIFICATION, payload: AxiosErrorHelper(error) })
@@ -87,9 +88,9 @@ export const DeleteCases = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_CASE_INIT })
-    await instanse.post(ROUTES.CASE + "/Delete", data)
+    await instanse.delete(config.services.Setting, ROUTES.CASE, data)
         .then(response => {
-                dispatch({ type: ACTION_TYPES.DELETE_CASE_SUCCESS, payload: response.data })
+            dispatch({ type: ACTION_TYPES.DELETE_CASE_SUCCESS, payload: response.data })
         })
         .catch(error => {
             dispatch({ type: ACTION_TYPES.FILL_CASES_NOTIFICATION, payload: AxiosErrorHelper(error) })

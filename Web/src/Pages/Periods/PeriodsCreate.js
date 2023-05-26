@@ -36,11 +36,11 @@ export default class PeriodsCreate extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input label="Kontrol Grup Adı" placeholder="Kontrol Grup Adı" name="name" fluid />
+                <Form.Input label="Kontrol Grup Adı" placeholder="Kontrol Grup Adı" name="Name" fluid />
               </Form.Field>
               <Form.Group widths={"equal"}>
-                <Form.Input type='time' label="Gerçekleşme Saati" placeholder="Gerçekleşme Saati" name="occuredtime" fluid />
-                <Form.Input type='time' label="Geçikme Saati" placeholder="Geçikme Saati" name="checktime" fluid />
+                <Form.Input type='time' label="Gerçekleşme Saati" placeholder="Gerçekleşme Saati" name="Occuredtime" fluid />
+                <Form.Input type='time' label="Geçikme Saati" placeholder="Geçikme Saati" name="Checktime" fluid />
               </Form.Group>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Periods">
@@ -61,24 +61,15 @@ export default class PeriodsCreate extends Component {
     const { AddPeriods, history, fillPeriodnotification } = this.props
 
     const data = formToObject(e.target)
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'İsim Boş Olamaz' })
     }
-    if (!data.occuredtime || data.occuredtime === '') {
+    if (!data.Occuredtime || data.Occuredtime === '') {
       errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'Gerçekleşme tarihi seçilmedi' })
     }
-    if (!data.checktime || data.checktime === '') {
+    if (!data.Checktime || data.Checktime === '') {
       errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'Geçikme tarihi seçilmedi' })
     }
     if (errors.length > 0) {

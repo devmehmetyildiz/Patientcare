@@ -11,7 +11,6 @@ export default class CasesCreate extends Component {
   constructor(props) {
     super(props)
     const selecteddepartments = []
-    const record = {}
     const selectedstatusOption = {}
     this.state = {
       selecteddepartments,
@@ -36,7 +35,7 @@ export default class CasesCreate extends Component {
     const { Cases, Departments } = this.props
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
     const casestatusOption = [
@@ -75,8 +74,8 @@ export default class CasesCreate extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <Form.Input label="Durum Adı" placeholder="Durum Adı" name="name" fluid />
-                <Form.Input label="Durum Kısaltma" placeholder="Durum Kısaltma" name="shortname" fluid />
+                <Form.Input label="Durum Adı" placeholder="Durum Adı" name="Name" fluid />
+                <Form.Input label="Durum Kısaltma" placeholder="Durum Kısaltma" name="Shortname" fluid />
               </Form.Group>
               <Form.Group widths='equal'>
                 <Form.Field>
@@ -85,7 +84,7 @@ export default class CasesCreate extends Component {
                     content='blue,red,green...'
                     position='bottom left'
                   /></span></label>
-                  <Form.Input placeholder="Durum Rengi" name="casecolor" fluid />
+                  <Form.Input placeholder="Durum Rengi" name="Casecolor" fluid />
                 </Form.Field>
                 <Form.Field>
                   <label className='text-[#000000de]'>Durum Türü</label>
@@ -116,35 +115,25 @@ export default class CasesCreate extends Component {
     const { AddCases, history, fillCasenotification, Departments } = this.props
     const { list } = Departments
     const data = formToObject(e.target)
-    data.departments = this.state.selecteddepartments.map(department => {
-      return list.find(u => u.concurrencyStamp === department)
+    data.Departments = this.state.selecteddepartments.map(department => {
+      return list.find(u => u.Uuid === department)
     })
-    data.caseStatus = this.state.selectedstatusOption
-    data.departmentstxt = null
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
+    data.CaseStatus = this.state.selectedstatusOption
 
     let errors = []
-    if (!data.name || data.name == '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Durumlar', description: 'İsim Boş Olamaz' })
     }
-    if ((!Number.isInteger(data.caseStatus))) {
+    if ((!Number.isInteger(data.CaseStatus))) {
       errors.push({ type: 'Error', code: 'Durumlar', description: 'Tür seçili değil' })
     }
-    if (!data.casecolor || data.casecolor == '') {
+    if (!data.Casecolor || data.Casecolor === '') {
       errors.push({ type: 'Error', code: 'Durumlar', description: 'Renk seçili değil' })
     }
-    if (!data.shortname || data.shortname == '') {
+    if (!data.Shortname || data.Shortname === '') {
       errors.push({ type: 'Error', code: 'Durumlar', description: 'Kısaltma girili değil' })
     }
-    if (!data.departments || data.departments.length <= 0) {
+    if (!data.Departments || data.Departments.length <= 0) {
       errors.push({ type: 'Error', code: 'Durumlar', description: 'Hiç Bir Departman seçili değil' })
     }
     if (errors.length > 0) {

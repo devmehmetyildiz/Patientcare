@@ -37,6 +37,7 @@ export class Departments extends Component {
       { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'İsim', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'İstasyonlar', accessor: 'stationstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
+      { Header: 'Hasta tutuyor mu?', accessor: 'Ishavepatients', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -49,12 +50,12 @@ export class Departments extends Component {
     const { list, isLoading, isDispatching } = Departments
 
     const metaKey = "Departments"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.config).filter(u => u.isVisible === false).map(item => {
+      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
       }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.config).sort((a, b) => a.order - b.order).map(item => {
+      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
       }) : []
     };
@@ -166,5 +167,8 @@ export class Departments extends Component {
     return null
   }
 
+  boolCellhandler = (col) => {
+    return col.value !== null && (col.value === 1 ? "EVET" : "HAYIR")
+  }
 }
 export default Departments

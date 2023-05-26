@@ -1,23 +1,23 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import {  Divider, Form } from 'semantic-ui-react'
-import { Breadcrumb, Button,  Header } from 'semantic-ui-react'
+import { Divider, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
-import Popup from '../../Utils/Popup'
 import LoadingPage from '../../Utils/LoadingPage'
+import Notification from '../../Utils/Notification'
 
 
 export default class PatienttypesCreate extends Component {
+
+  componentDidUpdate() {
+    const { Patienttypes, removePatienttypenotification } = this.props
+    Notification(Patienttypes.notifications, removePatienttypenotification)
+  }
+
   render() {
 
-    const { removePatienttypenotification, Patienttypes, isLoading, isDispatching } = this.props
-    const { notifications, } = Patienttypes
-
-    if (notifications && notifications.length > 0) {
-      let msg = notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removePatienttypenotification()
-    }
+    const { Patienttypes } = this.props
+    const { isLoading, isDispatching } = Patienttypes
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
@@ -38,7 +38,7 @@ export default class PatienttypesCreate extends Component {
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
                 <label className='text-[#000000de]'>Hasta Tür Adı</label>
-                <Form.Input  placeholder="Hasta Tür Adı" name="name" fluid />
+                <Form.Input placeholder="Hasta Tür Adı" name="Name" fluid />
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Patienttypes">
@@ -59,18 +59,8 @@ export default class PatienttypesCreate extends Component {
     const { AddPatienttypes, history, fillPatienttypenotification } = this.props
 
     const data = formToObject(e.target)
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
-
     let errors = []
-    if (!data.name || data.name == '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Patienttypes', description: 'İsim Boş Olamaz' })
     }
     if (errors.length > 0) {

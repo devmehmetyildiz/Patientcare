@@ -3,8 +3,8 @@ import { Link} from 'react-router-dom'
 import {  Divider, Dropdown, Form } from 'semantic-ui-react'
 import { Breadcrumb, Button,Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
-import Popuputil from '../../Utils/Popup'
 import LoadingPage from '../../Utils/LoadingPage'
+import Notification from '../../Utils/Notification'
 
 export default class CasesCreate extends Component {
 
@@ -16,27 +16,22 @@ export default class CasesCreate extends Component {
     }
   }
 
-
   componentDidMount() {
     const { GetDepartments } = this.props
     GetDepartments()
   }
 
+  componentDidUpdate() {
+    const { Units, removeUnitnotification,Departments,removeDepartmentnotification } = this.props
+    Notification(Units.notifications, removeUnitnotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+  }
+
   render() {
-    const { Units, Departments, removeUnitnotification, removeDepartmentnotification } = this.props
-    if (Units.notifications && Units.notifications.length > 0) {
-      let msg = Units.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeUnitnotification()
-    }
-    if (Departments.notifications && Departments.notifications.length > 0) {
-      let msg = Departments.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeDepartmentnotification()
-    }
+    const { Units, Departments } = this.props
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
     const unitstatusOption = [
@@ -70,7 +65,7 @@ export default class CasesCreate extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <Form.Input label="Birim Adı" placeholder="Birim Adı" name="name" fluid />
+                <Form.Input label="Birim Adı" placeholder="Birim Adı" name="Name" fluid />
                 <Form.Field>
                   <label className='text-[#000000de]'>Birim Türü</label>
                   <Dropdown placeholder='Birim Türü' fluid selection options={unitstatusOption} onChange={this.handleChangeOption} />
@@ -95,35 +90,24 @@ export default class CasesCreate extends Component {
     )
   }
 
-
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddUnits, history, fillUnitnotification, Departments } = this.props
     const { list } = Departments
     const data = formToObject(e.target)
-    data.unittype = this.state.selectedstatusOption
-    data.departments = this.state.selecteddepartments.map(department => {
-      return list.find(u => u.concurrencyStamp === department)
+    data.Unittype = this.state.selectedstatusOption
+    data.Departments = this.state.selecteddepartments.map(department => {
+      return list.find(u => u.Uuid === department)
     })
-    data.departmentstxt = null
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Birimler', description: 'İsim Boş Olamaz' })
     }
-    if ((Number.isNaN(data.unittype))) {
+    if ((Number.isNaN(data.Unittype))) {
       errors.push({ type: 'Error', code: 'Birimler', description: 'Tür Seçili Değil' })
     }
-    if (!data.departments || data.departments.length <= 0) {
+    if (!data.Departments || data.Departments.length <= 0) {
       errors.push({ type: 'Error', code: 'Birimler', description: 'Hiç Bir Departman seçili değil' })
     }
     if (errors.length > 0) {

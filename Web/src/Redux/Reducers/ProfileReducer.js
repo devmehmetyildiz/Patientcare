@@ -69,11 +69,11 @@ const ProfileReducer = (state = defaultState, { type, payload }) => {
     case ACTION_TYPES.GET_USERSROLES_ERROR:
       return { ...state, isLogging: false, error: payload }
     case ACTION_TYPES.FILL_USER_NOTIFICATION:
-      const messages = [...state.notifications]
-      Array.isArray(payload) ? messages.concat(payload) : messages.push(payload) 
+      let messages = [...state.notifications]
+      Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
       return { ...state, notifications: messages }
     case ACTION_TYPES.REMOVE_USER_NOTIFICATION:
-      const messages1 = [...state.notifications]
+      let messages1 = [...state.notifications]
       messages1.splice(0, 1)
       return { ...state, notifications: messages1 }
     case ACTION_TYPES.GET_TABLEMETA_INIT:

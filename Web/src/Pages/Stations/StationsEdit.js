@@ -44,7 +44,7 @@ export default class StationsEdit extends Component {
                   <Breadcrumb.Section>İstasyonlar</Breadcrumb.Section>
                 </Link>
                 <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
+                <Breadcrumb.Section>Güncelle</Breadcrumb.Section>
               </Breadcrumb>
             </Header>
           </div>

@@ -6,7 +6,6 @@ const acInstanse = axios.create({
 });
 const localcookies = new cookies();
 acInstanse.defaults.headers.common['Authorization'] = "Bearer " + localcookies.get('patientcare')
-console.log('localcookies.get(', localcookies.get('patientcare'));
 
 function getRequest(service, url) {
     return new Promise((resolve, reject) => {

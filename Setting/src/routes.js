@@ -5,7 +5,7 @@ const Routes = [
     { method: 'put', path: '/Cases', controller: 'Case', action: 'UpdateCase' },
     { method: 'delete', path: '/Cases', controller: 'Case', action: 'DeleteCase' },
 
-    { method: 'get', path: '/Checkperiods/:checkperiodId', controller: 'Checkperiod', action: 'GetCheckperiod' },
+    { method: 'get', path: '/Checkperiods/:CheckperiodId', controller: 'Checkperiod', action: 'GetCheckperiod' },
     { method: 'get', path: '/Checkperiods', controller: 'Checkperiod', action: 'GetCheckperiods' },
     { method: 'post', path: '/Checkperiods', controller: 'Checkperiod', action: 'AddCheckperiod' },
     { method: 'put', path: '/Checkperiods', controller: 'Checkperiod', action: 'UpdateCheckperiod' },

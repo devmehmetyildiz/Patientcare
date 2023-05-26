@@ -6,7 +6,7 @@ import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Popup from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 
 export default class Units extends Component {
 
@@ -23,6 +23,11 @@ export default class Units extends Component {
   componentDidMount() {
     const { GetUnits } = this.props
     GetUnits()
+  }
+
+  componentDidUpdate() {
+    const { Units, removeUnitnotification } = this.props
+    Notification(Units.notifications, removeUnitnotification)
   }
 
 
@@ -42,44 +47,39 @@ export default class Units extends Component {
     ]
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Birim Adı', accessor: 'name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Birim Türü', accessor: 'unittype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.unittypeCellhandler(col, unitstatusOption) },
-      { Header: 'Departmanlar', accessor: 'departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
-      { Header: 'Oluşturan Kullanıcı', accessor: 'createdUser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleyen Kullanıcı', accessor: 'updatedUser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Oluşturma Zamanı', accessor: 'createTime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleme Zamanı', accessor: 'updateTime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Birim Adı', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Birim Türü', accessor: 'Unittype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.unittypeCellhandler(col, unitstatusOption) },
+      { Header: 'Departmanlar', accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
+      { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Güncelleme Zamanı', accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
       { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
 
-    const { Units, removeUnitnotification, DeleteUnits, Profile } = this.props
-    const { notifications, list, isLoading, isDispatching } = Units
-    if (notifications && notifications.length > 0) {
-      let msg = notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeUnitnotification()
-    }
+    const { Units, DeleteUnits, Profile } = this.props
+    const { list, isLoading, isDispatching } = Units
 
     const metaKey = "Units"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.config).filter(u => u.isVisible === false).map(item => {
+      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
-      }) : ["concurrencyStamp", "createdUser", "updatedUser", "createTime", "updateTime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.config).sort((a, b) => a.order - b.order).map(item => {
+      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
+      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
       }) : []
     };
 
     (list || []).forEach(item => {
-      var text = item.departments.map((department) => {
-        return department.name;
+      var text = item.Departments.map((department) => {
+        return department.Name;
       }).join(", ")
-      item.departmentstxt = text;
-      item.edit = <Link to={`/Units/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.Departmentstxt = text;
+      item.edit = <Link to={`/Units/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -124,7 +124,7 @@ export default class Units extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.name} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
                   Birimini silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>
@@ -167,8 +167,8 @@ export default class Units extends Component {
   departmentCellhandler = (col) => {
     if (col.value) {
       if (!col.cell.isGrouped) {
-        const itemId = col.row.original.id
-        const itemDepartments = col.row.original.departments
+        const itemId = col.row.original.Id
+        const itemDepartments = col.row.original.Departments
         return col.value.length - 35 > 20 ?
           (
             !this.state.departmentStatus.includes(itemId) ?

@@ -13,19 +13,19 @@ class ColumnChooser extends Component {
   componentDidMount() {
     const { metaKey, meta, columns } = this.props
 
-    let tableMeta = (meta || []).find(u => u.meta === metaKey)
+    let tableMeta = (meta || []).find(u => u.Meta === metaKey)
     if (tableMeta) {
-      const metaColumns = JSON.parse(tableMeta.config)
+      const metaColumns = JSON.parse(tableMeta.Config)
       const decoratedColumns = metaColumns.length === columns.length ?
-        metaColumns.map((item, index) => {
-          return { order: index, isVisible: item.isVisible, name: columns.find(u => u.accessor === item.key)?.Header, key: item.key }
-        }) :
-        columns.map((item, index) => {
-          return { order: index, isVisible: true, name: item.Header, key: item.accessor }
-        })
+      metaColumns.map((item, index) => {
+        return { order: index, isVisible: item.isVisible, name: columns.find(u => u.accessor === item.key)?.Header, key: item.key }
+      }) :
+      columns.map((item, index) => {
+        return { order: index, isVisible: true, name: item.Header, key: item.accessor }
+      })
       this.setState({ decoratedColumns: decoratedColumns })
     } else {
-      const defaultHiddens = ["concurrencyStamp", "createdUser", "updatedUser", "createTime", "updateTime"]
+      const defaultHiddens =  ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
       const decoratedColumns = columns.map((item, index) => {
         return { order: index, isVisible: defaultHiddens.includes(item.accessor) ? false : true, name: item.Header, key: item.accessor }
       })
@@ -83,20 +83,20 @@ class ColumnChooser extends Component {
 
   saveChanges = () => {
     const { SaveTableMeta, meta, metaKey } = this.props
-    let tableMeta = (meta || []).find(u => u.meta === metaKey)
+    let tableMeta = (meta || []).find(u => u.Meta === metaKey)
     const { decoratedColumns } = this.state
     delete decoratedColumns['name']
     const data = tableMeta ? {
-      id: tableMeta.id,
-      username: tableMeta.username,
-      meta: tableMeta.meta,
-      config: JSON.stringify(decoratedColumns)
+      Id: tableMeta.Id,
+      UserID: tableMeta.UserID,
+      Meta: tableMeta.Meta,
+      Config: JSON.stringify(decoratedColumns)
     } :
       {
-        id: 0,
-        username: "",
-        meta: metaKey,
-        config: JSON.stringify(decoratedColumns)
+        Id: 0,
+        UserID: "",
+        Meta: metaKey,
+        Config: JSON.stringify(decoratedColumns)
       }
     this.setState({ opened: false })
     SaveTableMeta(data)

@@ -34,7 +34,7 @@ export default class TododefinesCreate extends Component {
     const { isLoading, isDispatching } = Tododefines
 
     const Periodsoptions = Periods.list.map(period => {
-      return { key: period.concurrencyStamp, text: period.name, value: period.concurrencyStamp }
+      return { key: period.Uuid, text: period.Name, value: period.Uuid }
     })
 
     return (
@@ -57,11 +57,11 @@ export default class TododefinesCreate extends Component {
               <Form.Group widths={'equal'}>
                 <Form.Field>
                   <label className='text-[#000000de]'>Yapılacak İş</label>
-                  <Form.Input placeholder="Yapılacak İş" name="name" fluid />
+                  <Form.Input placeholder="Yapılacak İş" name="Name" fluid />
                 </Form.Field>
                 <Form.Field>
                   <label className='text-[#000000de]'>Açıklama</label>
-                  <Form.Input placeholder="Açıklama" name="info" fluid />
+                  <Form.Input placeholder="Açıklama" name="Info" fluid />
                 </Form.Field>
               </Form.Group>
               <Form.Group widths={'equal'}>
@@ -103,26 +103,17 @@ export default class TododefinesCreate extends Component {
     const { AddTododefines, history, fillTododefinenotification, Periods } = this.props
 
     const data = formToObject(e.target)
-    data.periods = this.state.selectedPeriods.map(period => {
-      return Periods.list.find(u => u.concurrencyStamp === period)
+    data.Periods = this.state.selectedPeriods.map(period => {
+      return Periods.list.find(u => u.Uuid === period)
     })
-    data.isRequired = this.state.isRequired
-    data.isNeedactivation = this.state.isNeedactivation
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
+    data.IsRequired = this.state.isRequired
+    data.IsNeedactivation = this.state.isNeedactivation
 
     let errors = []
-    if (!data.name || data.name == '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Yapılacaklar', description: 'İsim Boş Olamaz' })
     }
-    if (!data.periods || data.periods.length <= 0) {
+    if (!data.Periods || data.Periods.length <= 0) {
       errors.push({ type: 'Error', code: 'Yapılacaklar', description: 'Hiç Bir Kontrol seçili değil' })
     }
     if (errors.length > 0) {

@@ -29,10 +29,10 @@ export default class CostumertypesEdit extends Component {
   componentDidUpdate() {
     const { Departments, Costumertypes, removeCostumertypenotification, removeDepartmentnotification } = this.props
     const { selected_record, isLoading } = Costumertypes
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id != 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selecteddepartments: selected_record.departments.map(department => {
-          return department.concurrencyStamp
+        selecteddepartments: selected_record.Departments.map(department => {
+          return department.Uuid
         }), isDatafetched: true,
       })
     }
@@ -46,7 +46,7 @@ export default class CostumertypesEdit extends Component {
     const { selected_record } = Costumertypes
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
     return (
@@ -67,7 +67,7 @@ export default class CostumertypesEdit extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <Form.Input label="Müşteri Tür Adı" placeholder="Müşteri Tür Adı" name="name" fluid defaultValue={selected_record.name} />
+                <Form.Input label="Müşteri Tür Adı" placeholder="Müşteri Tür Adı" name="Name" fluid defaultValue={selected_record.Name} />
               </Form.Group>
               <Form.Group widths='equal'>
                 <Form.Field>
@@ -94,15 +94,15 @@ export default class CostumertypesEdit extends Component {
     const { EditCostumertypes, history, fillCostumertypenotification, Departments, Costumertypes } = this.props
     const { list } = Departments
     const data = formToObject(e.target)
-    data.departments = this.state.selecteddepartments.map(department => {
-      return list.find(u => u.concurrencyStamp === department)
+    data.Departments = this.state.selecteddepartments.map(department => {
+      return list.find(u => u.Uuid === department)
     })
 
     let errors = []
-    if (!data.name || data.name == '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Müşteri Türleri', description: 'İsim Boş Olamaz' })
     }
-    if (!data.departments || data.departments.length <= 0) {
+    if (!data.Departments || data.Departments.length <= 0) {
       errors.push({ type: 'Error', code: 'Müşteri Türleri', description: 'Hiç Bir Departman seçili değil' })
     }
     if (errors.length > 0) {

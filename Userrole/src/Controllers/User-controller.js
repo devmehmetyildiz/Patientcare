@@ -193,6 +193,58 @@ async function Getusersalt(req, res, next) {
     }
 }
 
+async function Getusertablemetaconfig(req, res, next) {
+
+    if (!req.identity.user) {
+        return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+    }
+    try {
+        const tablemetaconfigs = await db.tablemetaconfigModel.findAll({ where: { UserID: req.identity.user.Uuid } })
+        if (!tablemetaconfigs) {
+            return next(createNotfounderror([messages.ERROR.TABLEMETA_NOT_FOUND], req.language))
+        }
+        res.status(200).json(tablemetaconfigs)
+    } catch (error) {
+        next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function Saveusertablemetaconfig(req, res, next) {
+
+    let validationErrors = []
+    const {
+        Meta,
+        Config,
+    } = req.body
+
+    if (validator.isString(Meta)) {
+        validationErrors.push(messages.VALIDATION_ERROR.META_REQUIRED, req.language)
+    }
+    if (validator.isString(Config)) {
+        validationErrors.push(messages.VALIDATION_ERROR.CONFIG_REQUIRED, req.language)
+    }
+    try {
+        const tablemetaconfig = await db.tablemetaconfigModel.findOne({ where: { UserID: req.identity.user.Uuid, Meta: Meta } })
+        if (!tablemetaconfig) {
+            await db.tablemetaconfigModel.create({
+                ...req.body,
+                UserID: req.identity.user.Uuid
+            })
+        } else {
+            await db.tablemetaconfigModel.update({
+                ...req.body,
+            }, { where: { Id: tablemetaconfig.Id } })
+        }
+        const tablemetaconfigs = await db.tablemetaconfigModel.findAll({ where: { UserID: req.identity.user.Uuid } })
+        if (!tablemetaconfigs) {
+            return next(createNotfounderror([messages.ERROR.TABLEMETA_NOT_FOUND], req.language))
+        }
+        res.status(200).json(tablemetaconfigs)
+    } catch (error) {
+        next(sequelizeErrorCatcher(error))
+    }
+}
+
 async function AddUser(req, res, next) {
 
     let validationErrors = []
@@ -370,7 +422,6 @@ async function DeleteUser(req, res, next) {
 }
 
 async function GetActiveUsername(req, res, next) {
-    console.log('req: ', req);
     if (!req.identity.user) {
         return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
     }
@@ -419,5 +470,7 @@ module.exports = {
     Getbyusername,
     Getusersalt,
     GetActiveUsername,
-    GetActiveUserMeta
+    GetActiveUserMeta,
+    Getusertablemetaconfig,
+    Saveusertablemetaconfig
 }

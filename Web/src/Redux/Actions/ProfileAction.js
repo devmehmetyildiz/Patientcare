@@ -2,6 +2,7 @@ import instanse from "./axios"
 import cookies from 'universal-cookie';
 import AxiosErrorHelper from '../../Utils/AxiosErrorHelper';
 import config from "../../Config";
+import { ROUTES } from "../../Utils/Constants";
 
 export const ACTION_TYPES = {
   LOGIN_REQUEST_INIT: 'LOGIN_REQUEST_INIT',
@@ -80,7 +81,7 @@ export const Passwordresetrequest = (data, historyPusher, redirecturl) => {
 export const logIn = (data, historyPusher, redirecturl) => {
   return (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.LOGIN_REQUEST_INIT })
-    instanse.post(config.services.Auth,`Oauth/Login`, data)
+    instanse.post(config.services.Auth, `Oauth/Login`, data)
       .then(result => {
         dispatch({ type: ACTION_TYPES.LOGIN_REQUEST_SUCCESS })
         redirecturl ? window.location = (redirecturl) : window.location = ('Home')
@@ -110,7 +111,7 @@ export const register = (data, historyPusher) => {
 
 export const GetActiveUser = () => async (dispatch, getState) => {
   dispatch({ type: ACTION_TYPES.GET_ACTIVEUSER_INIT })
-  await instanse.get(config.services.Userrole,'Users/GetActiveUsername')
+  await instanse.get(config.services.Userrole, 'Users/GetActiveUsername')
     .then(response => {
       dispatch({ type: ACTION_TYPES.GET_ACTIVEUSER_SUCCESS, payload: response.data })
     })
@@ -122,7 +123,7 @@ export const GetActiveUser = () => async (dispatch, getState) => {
 
 export const GetUserMeta = () => async (dispatch, getState) => {
   dispatch({ type: ACTION_TYPES.GET_USERMETA_INIT })
-  await instanse.get(config.services.Userrole,'Users/GetActiveUserMeta')
+  await instanse.get(config.services.Userrole, 'Users/GetActiveUserMeta')
     .then(response => {
       dispatch({ type: ACTION_TYPES.GET_USERMETA_SUCCESS, payload: response.data })
     })
@@ -134,7 +135,7 @@ export const GetUserMeta = () => async (dispatch, getState) => {
 }
 export const GetUserRoles = () => async (dispatch, getState) => {
   dispatch({ type: ACTION_TYPES.GET_USERSROLES_INIT })
-  await instanse.get(config.services.Userrole,'Roles/GetActiveuserprivileges')
+  await instanse.get(config.services.Userrole, 'Roles/GetActiveuserprivileges')
     .then(response => {
       dispatch({ type: ACTION_TYPES.GET_USERSROLES_SUCCESS, payload: response.data })
     })
@@ -146,7 +147,7 @@ export const GetUserRoles = () => async (dispatch, getState) => {
 
 export const GetTableMeta = () => async (dispatch, getState) => {
   dispatch({ type: ACTION_TYPES.GET_TABLEMETA_INIT })
-  await instanse.get("Auth/GetTableMeta")
+  await instanse.get(config.services.Userrole, ROUTES.USER + '/GetTableMeta')
     .then(response => {
       dispatch({ type: ACTION_TYPES.GET_TABLEMETA_SUCCESS, payload: response.data })
     })
@@ -158,7 +159,7 @@ export const GetTableMeta = () => async (dispatch, getState) => {
 
 export const SaveTableMeta = (data) => async (dispatch, getState) => {
   dispatch({ type: ACTION_TYPES.SAVE_TABLEMETA_INIT })
-  await instanse.post("Auth/SaveTableMeta", data)
+  await instanse.post(config.services.Userrole, ROUTES.USER + '/SaveTableMeta', data)
     .then(response => {
       dispatch({ type: ACTION_TYPES.SAVE_TABLEMETA_SUCCESS, payload: response.data })
     })

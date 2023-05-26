@@ -6,6 +6,7 @@ const userroleModel = require('./UserroleModel')
 const usersaltModel = require('./UsersaltModel')
 const userstationModel = require('./UserstationModel')
 const userrolelogModel = require('./UserrolelogModel')
+const tablemetaconfigModel = require('./TablemetaconfigModel')
 
 module.exports = {
     roleModel,
@@ -15,5 +16,6 @@ module.exports = {
     userroleModel,
     usersaltModel,
     userstationModel,
-    userrolelogModel
+    userrolelogModel,
+    tablemetaconfigModel
 }

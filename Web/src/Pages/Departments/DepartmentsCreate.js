@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form } from 'semantic-ui-react'
+import { Checkbox, Divider, Dropdown, Form } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -10,9 +10,9 @@ export class DepartmentsCreate extends Component {
 
   constructor(props) {
     super(props)
-    const selectedstations = []
     this.state = {
-      selectedstations
+      selectedstations: [],
+      isHavepatient: false
     }
   }
 
@@ -59,6 +59,12 @@ export class DepartmentsCreate extends Component {
                 <label className='text-[#000000de]'>Tanımlı İstasyonlar</label>
                 <Dropdown label="İstasyonlar" placeholder='İstasyonlar' clearable search fluid multiple selection options={Stationoptions} onChange={this.handleChange} />
               </Form.Field>
+              <Form.Field>
+                <Checkbox toggle className='m-2'
+                  checked={this.state.isHavepatient}
+                  onClick={() => { this.setState({ isHavepatient: !this.state.isHavepatient }) }}
+                  label={"Hasta tutacak mı?"} />
+              </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Departments">
                   <Button floated="left" color='grey'>Geri Dön</Button>
@@ -82,6 +88,7 @@ export class DepartmentsCreate extends Component {
     data.Stations = this.state.selectedstations.map(station => {
       return list.find(u => u.Uuid === station)
     })
+    data.Ishavepatients = this.state.isHavepatient
 
     let errors = []
     if (!data.Name || data.Name === '') {

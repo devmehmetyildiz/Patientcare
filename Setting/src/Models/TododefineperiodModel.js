@@ -1,16 +1,16 @@
-module.exports = sequelize.define('unitdepartmentModel', {
+module.exports = sequelize.define('TododefineperiodModel', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    UnitID: {
+    TododefineID: {
         type: Sequelize.STRING
     },
-    DepartmentID: {
+    PeriodID: {
         type: Sequelize.STRING
-    },
+    }
 }, {
-    tableName: 'unitdepartments', // replace with the name of your existing table
+    tableName: 'Tododefineperiods', // replace with the name of your existing table
     timestamps: false
 });

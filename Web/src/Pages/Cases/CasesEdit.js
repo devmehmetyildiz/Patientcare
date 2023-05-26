@@ -28,11 +28,11 @@ export default class CasesEdit extends Component {
   componentDidUpdate() {
     const { Departments, Cases, removeCasenotification, removeDepartmentnotification } = this.props
     const { selected_record, isLoading } = Cases
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id != 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selecteddepartments: selected_record.departments.map(department => {
-          return department.concurrencyStamp
-        }), isDatafetched: true, selectedstatusOption: selected_record.caseStatus
+        selecteddepartments: selected_record.Departments.map(department => {
+          return department.Uuid
+        }), isDatafetched: true, selectedstatusOption: selected_record.CaseStatus
       })
     }
     Notification(Cases.notifications, removeCasenotification)
@@ -46,7 +46,7 @@ export default class CasesEdit extends Component {
 
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
     const casestatusOption = [
@@ -80,8 +80,8 @@ export default class CasesEdit extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <Form.Input label="Durum Adı" placeholder="Durum Adı" name="name" fluid defaultValue={selected_record.name} />
-                <Form.Input label="Durum Kısaltma" placeholder="Durum Kısaltma" name="shortname" fluid defaultValue={selected_record.shortname} />
+                <Form.Input label="Durum Adı" placeholder="Durum Adı" name="Name" fluid defaultValue={selected_record.Name} />
+                <Form.Input label="Durum Kısaltma" placeholder="Durum Kısaltma" name="Shortname" fluid defaultValue={selected_record.Shortname} />
               </Form.Group>
               <Form.Group widths='equal'>
                 <Form.Field>
@@ -90,7 +90,7 @@ export default class CasesEdit extends Component {
                     content='blue,red,green...'
                     position='bottom left'
                   /></span></label>
-                  <Form.Input placeholder="Durum Rengi" name="casecolor" fluid defaultValue={selected_record.casecolor} />
+                  <Form.Input placeholder="Durum Rengi" name="Casecolor" fluid defaultValue={selected_record.Casecolor} />
                 </Form.Field>
                 <Form.Field>
                   <label className='text-[#000000de]'>Durum Türü</label>
@@ -121,29 +121,26 @@ export default class CasesEdit extends Component {
 
     const { EditCases, history, fillCasenotification, Departments, Cases } = this.props
     const { list } = Departments
-    const pushData = { ...Cases.selected_record }
     const data = formToObject(e.target)
-    data.caseStatus = this.state.selectedstatusOption
-    console.log('data.caseStatus: ', data.caseStatus);
-    data.departments = this.state.selecteddepartments.map(department => {
-      return list.find(u => u.concurrencyStamp === department)
+    data.CaseStatus = this.state.selectedstatusOption
+    data.Departments = this.state.selecteddepartments.map(department => {
+      return list.find(u => u.Uuid === department)
     })
 
     let errors = []
-    if (!data.name || data.name == '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Durumlar', description: 'İsim Boş Olamaz' })
     }
-    console.log('!Number.isInteger(data.caseStatus): ', !Number.isInteger(data.caseStatus));
-    if ((!Number.isInteger(data.caseStatus))) {
+    if ((!Number.isInteger(data.CaseStatus))) {
       errors.push({ type: 'Error', code: 'Durumlar', description: 'Tür seçili değil' })
     }
-    if (!data.casecolor || data.casecolor == '') {
+    if (!data.Casecolor || data.Casecolor === '') {
       errors.push({ type: 'Error', code: 'Durumlar', description: 'Renk seçili değil' })
     }
-    if (!data.shortname || data.shortname == '') {
+    if (!data.Shortname || data.Shortname === '') {
       errors.push({ type: 'Error', code: 'Durumlar', description: 'Kısaltma girili değil' })
     }
-    if (!data.departments || data.departments.length <= 0) {
+    if (!data.Departments || data.Departments.length <= 0) {
       errors.push({ type: 'Error', code: 'Durumlar', description: 'Hiç Bir Departman seçili değil' })
     }
     if (errors.length > 0) {
@@ -160,7 +157,6 @@ export default class CasesEdit extends Component {
   }
 
   handleChangeOption = (e, { value }) => {
-    console.log('value: ', value);
     this.setState({ selectedstatusOption: value })
   }
 }

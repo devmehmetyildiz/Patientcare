@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import AppRoutes from '../../AppRoutes'
 import Navbar from '../../Common/Navbar'
 import { Sidebar } from '../../Common/Sidebar'
+import notification from '../../Utils/Notification'
 
 export default class Layout extends Component {
 
   componentDidMount() {
-    const { GetActiveUser, GetUserRoles, GetTableMeta,GetUserMeta } = this.props
+    const { GetActiveUser, GetUserRoles, GetTableMeta, GetUserMeta } = this.props
     const routes = [
       "/Login",
       "/login",
@@ -22,6 +23,11 @@ export default class Layout extends Component {
       GetTableMeta()
       GetUserMeta()
     }
+  }
+
+  componentDidUpdate() {
+    const { Profile, removenotification } = this.props
+    notification(Profile.notifications, removenotification)
   }
 
   render() {

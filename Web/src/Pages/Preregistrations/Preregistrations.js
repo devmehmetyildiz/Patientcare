@@ -41,10 +41,10 @@ export default class Preregistrations extends Component {
       { Header: 'Durum', accessor: 'case.name', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Stoklar', accessor: 'stockstxt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockCellhandler(col) },
       { Header: 'Dosyalar', accessor: 'filestxt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.filesCellhandler(col) },
-      { Header: 'Oluşturan Kullanıcı', accessor: 'createdUser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleyen Kullanıcı', accessor: 'updatedUser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Oluşturma Zamanı', accessor: 'createTime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleme Zamanı', accessor: 'updateTime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Güncelleme Zamanı', accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
       { accessor: 'enter', Header: "Kuruma Al", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { accessor: 'actions', Header: "Eylemler", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }
     ]
@@ -55,12 +55,12 @@ export default class Preregistrations extends Component {
     Notification(Warehouses.notifications, removeWarehousenotification)
 
     const metaKey = "Preregistrations"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.meta === metaKey)
+      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.config).filter(u => u.isVisible === false).map(item => {
+      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
-      }) : ["concurrencyStamp", "createdUser", "updatedUser", "createTime", "updateTime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.config).sort((a, b) => a.order - b.order).map(item => {
+      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
+      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
       }) : []
     };

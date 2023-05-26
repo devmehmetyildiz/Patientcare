@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_UNITS_INIT: 'GET_UNITS_INIT',
@@ -35,7 +36,7 @@ export const ACTION_TYPES = {
 
 export const GetUnits = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_UNITS_INIT })
-    await instanse.get(ROUTES.UNIT + "/GetAll")
+    await instanse.get(config.services.Setting, ROUTES.UNIT)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_UNITS_SUCCESS, payload: response.data })
         })
@@ -47,7 +48,7 @@ export const GetUnits = () => async (dispatch, getState) => {
 
 export const GetUnit = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_UNIT_INIT })
-    await instanse.get(ROUTES.UNIT + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Setting, `${ROUTES.UNIT}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_UNIT_SUCCESS, payload: response.data })
         })
@@ -59,7 +60,7 @@ export const GetUnit = (guid) => async (dispatch, getState) => {
 
 export const AddUnits = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_UNIT_INIT })
-    await instanse.post(ROUTES.UNIT + "/Add", data)
+    await instanse.post(config.services.Setting, ROUTES.UNIT, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.ADD_UNIT_SUCCESS, payload: response.data })
                 historypusher.push('/Units')
@@ -72,7 +73,7 @@ export const AddUnits = (data, historypusher) => async (dispatch, getState) => {
 
 export const EditUnits = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_UNIT_INIT })
-    await instanse.post(ROUTES.UNIT + "/Update", data)
+    await instanse.put(config.services.Setting, ROUTES.UNIT, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.EDIT_UNIT_SUCCESS, payload: response.data })
                 historypusher.push('/Units')
@@ -87,7 +88,7 @@ export const DeleteUnits = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_UNIT_INIT })
-    await instanse.post(ROUTES.UNIT + "/Delete", data)
+    await instanse.delete(config.services.Setting, ROUTES.UNIT, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_UNIT_SUCCESS, payload: response.data })
         })

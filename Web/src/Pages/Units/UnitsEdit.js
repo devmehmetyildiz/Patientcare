@@ -28,11 +28,11 @@ export default class UnitsEdit extends Component {
   componentDidUpdate() {
     const { Departments, Units } = this.props
     const { selected_record, isLoading } = Units
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selecteddepartments: selected_record.departments.map(department => {
-          return department.concurrencyStamp
-        }), isDatafetched: true, selectedstatusOption: selected_record.unittype
+        selecteddepartments: selected_record.Departments.map(department => {
+          return department.Uuid
+        }), isDatafetched: true, selectedstatusOption: selected_record.Unittype
       })
     }
   }
@@ -52,7 +52,7 @@ export default class UnitsEdit extends Component {
     }
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
     const unitstatusOption = [
@@ -86,7 +86,7 @@ export default class UnitsEdit extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <Form.Input label="Birim Adı" placeholder="Birim Adı" name="name" fluid defaultValue={Units.selected_record.name} />
+                <Form.Input label="Birim Adı" placeholder="Birim Adı" name="Name" fluid defaultValue={Units.selected_record.Name} />
                 <Form.Field>
                   <label className='text-[#000000de]'>Birim Türü</label>
                   <Dropdown placeholder='Birim Türü' fluid selection options={unitstatusOption} onChange={this.handleChangeOption} value={this.state.selectedstatusOption} />
@@ -125,19 +125,19 @@ export default class UnitsEdit extends Component {
     const { EditUnits, history, fillUnitnotification, Departments, Units } = this.props
     const { list } = Departments
     const data = formToObject(e.target)
-    data.unittype = this.state.selectedstatusOption
-    data.departments = this.state.selecteddepartments.map(department => {
-      return list.find(u => u.concurrencyStamp === department)
+    data.Unittype = this.state.selectedstatusOption
+    data.Departments = this.state.selecteddepartments.map(department => {
+      return list.find(u => u.Uuid === department)
     })
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Birimler', description: 'İsim Boş Olamaz' })
     }
-    if ((Number.isNaN(data.unittype))) {
+    if ((Number.isNaN(data.Unittype))) {
       errors.push({ type: 'Error', code: 'Birimler', description: 'Tür Seçili Değil' })
     }
-    if (!data.departments || data.departments.length <= 0) {
+    if (!data.Departments || data.Departments.length <= 0) {
       errors.push({ type: 'Error', code: 'Birimler', description: 'Hiç Bir Departman seçili değil' })
     }
     if (errors.length > 0) {

@@ -50,7 +50,7 @@ async function GetCheckperiod(req, res, next) {
         }
         let perioduuids = await db.checkperiodperiodModel.findAll({
             where: {
-                CheckperiodID: checkperioduuid,
+                CheckperiodID: checkperiod.Uuid,
             }
         });
         checkperiod.Periods = await db.periodModel.findAll({

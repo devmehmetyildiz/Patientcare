@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Dropdown, Form, Header } from 'semantic-ui-react'
+import { Breadcrumb, Button, Checkbox, Divider, Dropdown, Form, Header } from 'semantic-ui-react'
 import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -10,7 +10,8 @@ export default class DepartmentsEdit extends Component {
     super(props)
     this.state = {
       selectedstations: [],
-      isDatafetched: false
+      isDatafetched: false,
+      isHavepatient: false
     }
   }
 
@@ -31,7 +32,7 @@ export default class DepartmentsEdit extends Component {
       this.setState({
         selectedstations: selected_record.Stations.map(station => {
           return station.Uuid
-        }), isDatafetched: true
+        }), isDatafetched: true, isHavepatient: selected_record.Ishavepatients
       })
     }
     Notification(Departments.notifications, removeDepartmentnotification)
@@ -56,7 +57,7 @@ export default class DepartmentsEdit extends Component {
                   <Breadcrumb.Section >Departmanlar</Breadcrumb.Section>
                 </Link>
                 <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
+                <Breadcrumb.Section>Güncelle</Breadcrumb.Section>
               </Breadcrumb>
             </Header>
           </div>
@@ -69,6 +70,12 @@ export default class DepartmentsEdit extends Component {
               <Form.Field>
                 <label className='text-[#000000de]'>Tanımlı İstasyonlar</label>
                 <Dropdown placeholder='İstasyonlar' clearable search fluid multiple selection value={this.state.selectedstations} options={Stationoptions} onChange={this.handleChange} />
+              </Form.Field>
+              <Form.Field>
+                <Checkbox toggle className='m-2'
+                  checked={this.state.isHavepatient}
+                  onClick={() => { this.setState({ isHavepatient: !this.state.isHavepatient }) }}
+                  label={"Hasta tutacak mı?"} />
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Departments">
@@ -92,7 +99,7 @@ export default class DepartmentsEdit extends Component {
     data.Stations = this.state.selectedstations.map(station => {
       return list.find(u => u.Uuid === station)
     })
-
+    data.Ishavepatients = this.state.isHavepatient
     let errors = []
     if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Departmanlar', description: 'İsim Boş Olamaz' })
@@ -105,7 +112,6 @@ export default class DepartmentsEdit extends Component {
         fillDepartmentnotification(error)
       })
     } else {
-      console.log('{ ...Departments.selected_record, ...data }: ', { ...Departments.selected_record, ...data });
       EditDepartments({ ...Departments.selected_record, ...data }, history)
     }
   }

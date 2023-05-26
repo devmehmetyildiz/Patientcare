@@ -79,11 +79,11 @@ const RoleReducer = (state = defaultState, { type, payload }) => {
             return { ...state, isDispatching: false, errmsg: payload }
 
         case ACTION_TYPES.FILL_ROLES_NOTIFICATION:
-            const messages = [...state.notifications]
-            messages.push(payload)
+            let messages = [...state.notifications]
+            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
             return { ...state, notifications: messages }
         case ACTION_TYPES.REMOVE_ROLES_NOTIFICATION:
-            const messages1 = [...state.notifications]
+           let messages1 = [...state.notifications]
             messages1.splice(0, 1)
             return { ...state, notifications: messages1 }
         case ACTION_TYPES.REMOVE_SELECTED_ROLE:

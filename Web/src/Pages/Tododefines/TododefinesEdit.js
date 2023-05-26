@@ -17,9 +17,10 @@ export default class TododefinesEdit extends Component {
   }
 
   componentDidMount() {
-    const { GetTododefine, match, history } = this.props
+    const { GetTododefine, match, history,GetPeriods } = this.props
     if (match.params.TododefineID) {
       GetTododefine(match.params.TododefineID)
+      GetPeriods()
     } else {
       history.push("/Tododefines")
     }
@@ -28,13 +29,13 @@ export default class TododefinesEdit extends Component {
   componentDidUpdate() {
     const { Tododefines, removeTododefinenotification, Periods, removePeriodnotification } = this.props
     const { notifications, selected_record, isLoading } = Tododefines
-    if (selected_record && Object.keys(selected_record).length > 0 && !isLoading && selected_record.id !== 0 && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && !isLoading && selected_record.Id !== 0 && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true,
-        isRequired: selected_record.isRequired,
-        isNeedactivation: selected_record.isNeedactivation,
-        selectedPeriods: selected_record.periods.map(period => {
-          return period.concurrencyStamp
+        isRequired: this.boolValuechanger(selected_record.IsRequired),
+        isNeedactivation: this.boolValuechanger(selected_record.IsNeedactivation),
+        selectedPeriods: selected_record.Periods.map(period => {
+          return period.Uuid
         })
       })
     }
@@ -48,7 +49,7 @@ export default class TododefinesEdit extends Component {
     const { selected_record, isLoading, isDispatching } = Tododefines
 
     const Periodsoptions = Periods.list.map(period => {
-      return { key: period.concurrencyStamp, text: period.name, value: period.concurrencyStamp }
+      return { key: period.Uuid, text: period.Name, value: period.Uuid }
     })
 
     return (
@@ -61,7 +62,7 @@ export default class TododefinesEdit extends Component {
                   <Breadcrumb.Section>Yapılacaklar</Breadcrumb.Section>
                 </Link>
                 <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
+                <Breadcrumb.Section>Güncelle</Breadcrumb.Section>
               </Breadcrumb>
             </Header>
           </div>
@@ -71,11 +72,11 @@ export default class TododefinesEdit extends Component {
               <Form.Group widths={'equal'}>
                 <Form.Field>
                   <label className='text-[#000000de]'>Yapılacak İş</label>
-                  <Form.Input defaultValue={selected_record.name} placeholder="Yapılacak İş" name="name" fluid />
+                  <Form.Input defaultValue={selected_record.Name} placeholder="Yapılacak İş" name="Name" fluid />
                 </Form.Field>
                 <Form.Field>
                   <label className='text-[#000000de]'>Açıklama</label>
-                  <Form.Input defaultValue={selected_record.value} placeholder="Açıklama" name="info" fluid />
+                  <Form.Input defaultValue={selected_record.Info} placeholder="Açıklama" name="Info" fluid />
                 </Form.Field>
               </Form.Group>
               <Form.Group widths={'equal'}>
@@ -117,16 +118,16 @@ export default class TododefinesEdit extends Component {
 
     const { EditTododefines, history, removeTododefinenotification, Tododefines, Periods } = this.props
     const data = formToObject(e.target)
-    data.periods = this.state.selectedPeriods.map(period => {
-      return Periods.list.find(u => u.concurrencyStamp === period)
+    data.Periods = this.state.selectedPeriods.map(period => {
+      return Periods.list.find(u => u.Uuid === period)
     })
-    data.isNeedactivation = this.state.isNeedactivation
-    data.isRequired = this.state.isRequired
+    data.IsNeedactivation = this.state.isNeedactivation
+    data.IsRequired = this.state.isRequired
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Yapılacaklar', description: 'İsim Boş Olamaz' })
     }
-    if (!data.periods || data.periods.length <= 0) {
+    if (!data.Periods || data.Periods.length <= 0) {
       errors.push({ type: 'Error', code: 'Yapılacaklar', description: 'Hiç Bir Kontrol seçili değil' })
     }
     if (errors.length > 0) {
@@ -137,5 +138,15 @@ export default class TododefinesEdit extends Component {
       EditTododefines({ ...Tododefines.selected_record, ...data }, history)
     }
 
+
   }
+
+  boolValuechanger = (numberbool) => {
+    if (numberbool === 1) {
+      return true
+    } else {
+      return false
+    }
+  }
+
 }

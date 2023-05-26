@@ -33,7 +33,7 @@ export default class CheckperiodsCreate extends Component {
     const { Checkperiods, Periods } = this.props
 
     const Periodoptions = Periods.list.map(period => {
-      return { key: period.concurrencyStamp, text: period.name, value: period.concurrencyStamp }
+      return { key: period.Uuid, text: period.Name, value: period.Uuid }
     })
 
     const Days = [
@@ -71,7 +71,7 @@ export default class CheckperiodsCreate extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input label="Kontrol Grup Adı" placeholder="Kontrol Grup Adı" name="name" fluid />
+                <Form.Input label="Kontrol Grup Adı" placeholder="Kontrol Grup Adı" name="Name" fluid />
               </Form.Field>
               <Form.Group widths={"equal"}>
                 <Form.Field>
@@ -110,39 +110,28 @@ export default class CheckperiodsCreate extends Component {
     const { list } = Periods
     const { selectedDays, selectedPeriods, selectedType } = this.state
     const data = formToObject(e.target)
-    data.periods = selectedPeriods.map(station => {
-      return list.find(u => u.concurrencyStamp === station)
+    data.Periods = selectedPeriods.map(station => {
+      return list.find(u => u.Uuid === station)
     })
     var days = selectedDays.map((day) => {
       return day;
     }).join(", ")
-    data.occureddays = days
-    data.periodtype = selectedType
-    data.stationstxt = null
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
+    data.Occureddays = days
+    data.Periodtype = parseInt(selectedType);
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'İsim Boş Olamaz' })
     }
-    if (!data.periods || data.periods.length <= 0) {
+    if (!data.Periods || data.Periods.length <= 0) {
       errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'Hiç Bir Kontrol seçili değil' })
     }
-    if (!data.occureddays || data.occureddays === "") {
+    if (!data.Occureddays || data.Occureddays === "") {
       errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'Hiç Bir Gün seçili değil' })
     }
     if (!selectedType || selectedType === "") {
       errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'Hiç Bir Kontrol tipi seçili değil' })
     }
-    console.log('data: ', data);
     if (errors.length > 0) {
       errors.forEach(error => {
         fillCheckperiodnotification(error)

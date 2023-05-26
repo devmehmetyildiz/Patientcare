@@ -16,7 +16,6 @@ export default class CostumertypesCreate extends Component {
     }
   }
 
-
   componentDidMount() {
     const { GetDepartments } = this.props
     GetDepartments()
@@ -32,7 +31,7 @@ export default class CostumertypesCreate extends Component {
     const { Costumertypes, Departments } = this.props
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
     return (
@@ -53,7 +52,7 @@ export default class CostumertypesCreate extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <Form.Input label="Müşteri Tür Adı" placeholder="Müşteri Tür Adı" name="name" fluid />
+                <Form.Input label="Müşteri Tür Adı" placeholder="Müşteri Tür Adı" name="Name" fluid />
               </Form.Group>
               <Form.Group widths='equal'>
                 <Form.Field>
@@ -79,25 +78,15 @@ export default class CostumertypesCreate extends Component {
     const { AddCostumertypes, history, fillCostumertypenotification, Departments } = this.props
     const { list } = Departments
     const data = formToObject(e.target)
-    data.departments = this.state.selecteddepartments.map(department => {
-      return list.find(u => u.concurrencyStamp === department)
+    data.Departments = this.state.selecteddepartments.map(department => {
+      return list.find(u => u.Uuid === department)
     })
-    data.departmentstxt = null
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Müşteri Türleri', description: 'İsim Boş Olamaz' })
     }
-    if (!data.departments || data.departments.length <= 0) {
+    if (!data.Departments || data.Departments.length <= 0) {
       errors.push({ type: 'Error', code: 'Müşteri Türleri', description: 'Hiç Bir Departman seçili değil' })
     }
     if (errors.length > 0) {

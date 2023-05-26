@@ -43,6 +43,12 @@ const messages = {
         tr: 'Kullanıcı bulunamadı',
       }
     },
+    TABLEMETA_NOT_FOUND: {
+      code: 'TABLEMETA_NOT_FOUND', description: {
+        en: 'Table meta not found',
+        tr: 'Tablo meta datası bulunamadı',
+      }
+    },
     ROLE_NOT_ACTIVE: {
       code: 'ROLE_NOT_ACTIVE', description: {
         en: 'Role not active',
@@ -73,6 +79,18 @@ const messages = {
       code: 'NAME_REQUIRED', description: {
         en: 'The name required',
         tr: 'Bu işlem için isim gerekli',
+      }
+    },
+    META_REQUIRED: {
+      code: 'META_REQUIRED', description: {
+        en: 'The meta required',
+        tr: 'Bu işlem için meta data gerekli',
+      }
+    },
+    CONFIG_REQUIRED: {
+      code: 'CONFIG_REQUIRED', description: {
+        en: 'The config required',
+        tr: 'Bu işlem için config gerekli',
       }
     },
     ROLEID_REQUIRED: {

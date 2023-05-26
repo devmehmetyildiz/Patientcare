@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_PERIODS_INIT: 'GET_PERIODS_INIT',
@@ -31,7 +32,7 @@ export const ACTION_TYPES = {
 
 export const GetPeriods = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_PERIODS_INIT })
-    await instanse.get(ROUTES.PERIOD + "/GetAll")
+    await instanse.get(config.services.Setting, ROUTES.PERIOD)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_PERIODS_SUCCESS, payload: response.data }) 
         })
@@ -43,7 +44,7 @@ export const GetPeriods = () => async (dispatch, getState) => {
 
 export const GetPeriod = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_PERIOD_INIT })
-    await instanse.get(ROUTES.PERIOD + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Setting, `${ROUTES.PERIOD}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_PERIOD_SUCCESS, payload: response.data })
         })
@@ -55,7 +56,7 @@ export const GetPeriod = (guid) => async (dispatch, getState) => {
 
 export const AddPeriods = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_PERIOD_INIT })
-    await instanse.post(ROUTES.PERIOD + "/Add", data)
+    await instanse.post(config.services.Setting, ROUTES.PERIOD, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.ADD_PERIOD_SUCCESS, payload: response.data })
                 historypusher.push('/Periods')
@@ -68,7 +69,7 @@ export const AddPeriods = (data, historypusher) => async (dispatch, getState) =>
 
 export const EditPeriods = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_PERIOD_INIT })
-    await instanse.post(ROUTES.PERIOD + "/Update", data)
+    await instanse.put(config.services.Setting, ROUTES.PERIOD, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.EDIT_PERIOD_SUCCESS, payload: response.data })
                 historypusher.push('/Periods')
@@ -83,7 +84,7 @@ export const DeletePeriods = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_PERIOD_INIT })
-    await instanse.post(ROUTES.PERIOD + "/Delete", data)
+    await instanse.delete(config.services.Setting, ROUTES.PERIOD, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_PERIOD_SUCCESS, payload: response.data })
         })

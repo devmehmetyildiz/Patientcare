@@ -9,6 +9,18 @@ const uuid = require('uuid').v4
 async function GetTododefines(req, res, next) {
     try {
         const tododefines = await db.tododefineModel.findAll({ where: { Isactive: true } })
+        for (const tododefine of tododefines) {
+            let perioduuids = await db.tododefineperiodModel.findAll({
+                where: {
+                    TododefineID: tododefine.Uuid,
+                }
+            });
+            tododefine.Periods = await db.periodModel.findAll({
+                where: {
+                    Uuid: perioduuids.map(u => { return u.PeriodID })
+                }
+            })
+        }
         res.status(200).json(tododefines)
     } catch (error) {
         next(sequelizeErrorCatcher(error))
@@ -30,6 +42,16 @@ async function GetTododefine(req, res, next) {
 
     try {
         const tododefine = await db.tododefineModel.findOne({ where: { Uuid: req.params.tododefineId } });
+        let perioduuids = await db.tododefineperiodModel.findAll({
+            where: {
+                TododefineID: tododefine.Uuid,
+            }
+        });
+        tododefine.Periods = await db.periodModel.findAll({
+            where: {
+                Uuid: perioduuids.map(u => { return u.PeriodID })
+            }
+        })
         res.status(200).json(tododefine)
     } catch (error) {
         next(sequelizeErrorCatcher(error))
@@ -43,7 +65,8 @@ async function AddTododefine(req, res, next) {
         Name,
         Info,
         IsRequired,
-        IsNeedactivation
+        IsNeedactivation,
+        Periods
     } = req.body
 
     if (!validator.isString(Name)) {
@@ -57,6 +80,9 @@ async function AddTododefine(req, res, next) {
     }
     if (!validator.isBoolean(IsNeedactivation)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISNEEDACTIVATION_REQUIRED, req.language)
+    }
+    if (!validator.isArray(Periods)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED, req.language)
     }
 
     if (validationErrors.length > 0) {
@@ -76,8 +102,30 @@ async function AddTododefine(req, res, next) {
             Isactive: true
         }, { transaction: t })
 
+        for (const period of Periods) {
+            if (!period.Uuid || !validator.isUUID(period.Uuid)) {
+                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID, req.language))
+            }
+            await db.tododefineperiodModel.create({
+                TododefineID: tododefineuuid,
+                PeriodID: period.Uuid
+            }, { transaction: t });
+        }
+
         await t.commit()
         const tododefines = await db.tododefineModel.findAll({ where: { Isactive: true } })
+        for (const tododefine of tododefines) {
+            let perioduuids = await db.tododefineperiodModel.findAll({
+                where: {
+                    TododefineID: tododefine.Uuid,
+                }
+            });
+            tododefine.Periods = await db.periodModel.findAll({
+                where: {
+                    Uuid: perioduuids.map(u => { return u.PeriodID })
+                }
+            })
+        }
         res.status(200).json(tododefines)
     } catch (err) {
         await t.rollback()
@@ -93,7 +141,8 @@ async function UpdateTododefine(req, res, next) {
         Uuid,
         Info,
         IsRequired,
-        IsNeedactivation
+        IsNeedactivation,
+        Periods
     } = req.body
 
     if (!validator.isString(Name)) {
@@ -113,6 +162,9 @@ async function UpdateTododefine(req, res, next) {
     }
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID, req.language)
+    }
+    if (!validator.isArray(Periods)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED, req.language)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -135,8 +187,30 @@ async function UpdateTododefine(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await db.tododefineperiodModel.destroy({ where: { TododefineID: Uuid }, transaction: t });
+        for (const period of Periods) {
+            if (!period.Uuid || !validator.isUUID(period.Uuid)) {
+                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID, req.language))
+            }
+            await db.tododefineperiodModel.create({
+                TododefineID: Uuid,
+                PeriodID: period.Uuid
+            }, { transaction: t });
+        }
         await t.commit()
         const tododefines = await db.tododefineModel.findAll({ where: { Isactive: true } })
+        for (const tododefine of tododefines) {
+            let perioduuids = await db.tododefineperiodModel.findAll({
+                where: {
+                    TododefineID: tododefine.Uuid,
+                }
+            });
+            tododefine.Periods = await db.periodModel.findAll({
+                where: {
+                    Uuid: perioduuids.map(u => { return u.PeriodID })
+                }
+            })
+        }
         res.status(200).json(tododefines)
     } catch (error) {
         next(sequelizeErrorCatcher(error))
@@ -173,8 +247,21 @@ async function DeleteTododefine(req, res, next) {
         const t = await db.sequelize.transaction();
 
         await db.tododefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.tododefineperiodModel.destroy({ where: { TododefineID: Uuid }, transaction: t });
         await t.commit();
         const tododefines = await db.tododefineModel.findAll({ where: { Isactive: true } })
+        for (const tododefine of tododefines) {
+            let perioduuids = await db.tododefineperiodModel.findAll({
+                where: {
+                    TododefineID: tododefine.Uuid,
+                }
+            });
+            tododefine.Periods = await db.periodModel.findAll({
+                where: {
+                    Uuid: perioduuids.map(u => { return u.PeriodID })
+                }
+            })
+        }
         res.status(200).json(tododefines)
     } catch (error) {
         await t.rollback();

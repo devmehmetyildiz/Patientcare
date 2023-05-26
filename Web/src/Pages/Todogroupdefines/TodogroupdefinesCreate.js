@@ -35,10 +35,10 @@ export default class TodogroupdefinesCreate extends Component {
     const { Todogroupdefines, Departments, Tododefines } = this.props
 
     const Tododefineoptions = Tododefines.list.map(tododefine => {
-      return { key: tododefine.concurrencyStamp, text: tododefine.name, value: tododefine.concurrencyStamp }
+      return { key: tododefine.Uuid, text: tododefine.Name, value: tododefine.Uuid }
     })
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
     return (
@@ -59,7 +59,7 @@ export default class TodogroupdefinesCreate extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input label="Yapılacaklar Grup Adı" placeholder="Yapılacaklar Grup Adı" name="name" fluid />
+                <Form.Input label="Yapılacaklar Grup Adı" placeholder="Yapılacaklar Grup Adı" name="Name" fluid />
               </Form.Field>
               <Form.Group widths={'equal'}>
                 <Form.Field>
@@ -91,28 +91,19 @@ export default class TodogroupdefinesCreate extends Component {
     const { AddTodogroupdefines, history, fillTodogroupdefinenotification, Tododefines } = this.props
     const { list } = Tododefines
     const data = formToObject(e.target)
-    data.todos = this.state.selectedTododefines.map(tododefines => {
-      return list.find(u => u.concurrencyStamp === tododefines)
+    data.Tododefines = this.state.selectedTododefines.map(tododefines => {
+      return list.find(u => u.Uuid === tododefines)
     })
-    data.departmentID = this.state.selectedDepartment
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
+    data.DepartmentID = this.state.selectedDepartment
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Yapılacaklar Grupları', description: 'İsim Boş Olamaz' })
     }
-    if (!data.todos || data.todos.length <= 0) {
+    if (!data.Tododefines || data.Tododefines.length <= 0) {
       errors.push({ type: 'Error', code: 'Yapılacaklar Grupları', description: 'Hiç Bir yapılacak seçili değil' })
     }
-    if (!data.departmentID || data.departmentID === '') {
+    if (!data.DepartmentID || data.DepartmentID === '') {
       errors.push({ type: 'Error', code: 'Yapılacaklar Grupları', description: 'Departman Seçili değil' })
     }
     if (errors.length > 0) {

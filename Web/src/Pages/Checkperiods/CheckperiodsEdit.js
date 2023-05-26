@@ -21,6 +21,7 @@ export default class CheckperiodsEdit extends Component {
   componentDidMount() {
     const { GetPeriods, GetCheckperiod, match, history, } = this.props
     if (match.params.CheckperiodID) {
+      console.log('match.params.CheckperiodID: ', match.params.CheckperiodID);
       GetCheckperiod(match.params.CheckperiodID)
       GetPeriods()
     } else {
@@ -32,14 +33,12 @@ export default class CheckperiodsEdit extends Component {
   componentDidUpdate() {
     const { Periods, Checkperiods, removeCheckperiodnotification, removePeriodnotification } = this.props
     const { selected_record, isLoading } = Checkperiods
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id != 0 &&
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
       Periods.list.length > 0 && !Periods.isLoading && !isLoading && !this.state.isDatafetched) {
-      let text = selected_record.occureddays.split(',')
-      console.log('text: ', text);
       this.setState({
-        selectedPeriods: selected_record.periods.map(period => {
-          return period.concurrencyStamp
-        }), isDatafetched: true, selectedDays: selected_record.occureddays.split(',').map(element => element.trim()), selectedType: selected_record.periodtype
+        selectedPeriods: selected_record.Periods.map(period => {
+          return period.Uuid
+        }), isDatafetched: true, selectedDays: selected_record.Occureddays.split(',').map(element => element.trim()), selectedType: selected_record.Periodtype
       })
     }
     Notification(Periods.notifications, removePeriodnotification)
@@ -50,7 +49,7 @@ export default class CheckperiodsEdit extends Component {
     const { Checkperiods, Periods } = this.props
 
     const Periodoptions = Periods.list.map(period => {
-      return { key: period.concurrencyStamp, text: period.name, value: period.concurrencyStamp }
+      return { key: period.Uuid, text: period.Name, value: period.Uuid }
     })
 
     const Days = [
@@ -88,7 +87,7 @@ export default class CheckperiodsEdit extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input defaultValue={Checkperiods.selected_record.name} label="Kontrol Grup Adı" placeholder="Kontrol Grup Adı" name="name" fluid />
+                <Form.Input defaultValue={Checkperiods.selected_record.Name} label="Kontrol Grup Adı" placeholder="Kontrol Grup Adı" name="Name" fluid />
               </Form.Field>
               <Form.Group widths={"equal"}>
                 <Form.Field>
@@ -127,29 +126,28 @@ export default class CheckperiodsEdit extends Component {
     const { list } = Periods
     const { selectedDays, selectedPeriods, selectedType } = this.state
     const data = formToObject(e.target)
-    data.periods = selectedPeriods.map(station => {
-      return list.find(u => u.concurrencyStamp === station)
+    data.Periods = selectedPeriods.map(station => {
+      return list.find(u => u.Uuid === station)
     })
     var days = selectedDays.map((day) => {
       return day;
     }).join(", ")
-    data.occureddays = days
-    data.periodtype = selectedType
+    data.Occureddays = days
+    data.Periodtype = parseInt(selectedType);
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'İsim Boş Olamaz' })
     }
-    if (!data.periods || data.periods.length <= 0) {
+    if (!data.Periods || data.Periods.length <= 0) {
       errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'Hiç Bir Kontrol seçili değil' })
     }
-    if (!data.occureddays || data.occureddays === "") {
+    if (!data.Occureddays || data.Occureddays === "") {
       errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'Hiç Bir Gün seçili değil' })
     }
     if (!selectedType || selectedType === "") {
       errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'Hiç Bir Kontrol tipi seçili değil' })
     }
-    console.log('data: ', data);
     if (errors.length > 0) {
       errors.forEach(error => {
         fillCheckperiodnotification(error)

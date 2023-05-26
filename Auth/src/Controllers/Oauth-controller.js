@@ -95,14 +95,14 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
     }
 
     if (!await ValidatePassword(req.body.Password, user.PasswordHash, usersalt.Salt)) {
-        return next(createNotfounderror([messages.ERROR.PASSWORD_DIDNT_MATCH], req.language))
+        return next(createAutherror([messages.ERROR.PASSWORD_DIDNT_MATCH], req.language))
     }
 
     let accessToken = {
         token_type: 'bearer',
         accessToken: uuid(),
         refreshToken: uuid(),
-        ExpiresAt: new Date(new Date().getTime() + 5 * 60000),
+        ExpiresAt: new Date(new Date().getTime() + 10 * 60000),
     }
 
     try {

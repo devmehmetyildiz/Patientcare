@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_COSTUMERTYPES_INIT: 'GET_COSTUMERTYPES_INIT',
@@ -35,7 +36,7 @@ export const ACTION_TYPES = {
 
 export const GetCostumertypes = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_COSTUMERTYPES_INIT })
-    await instanse.get(ROUTES.COSTUMERTYPE + "/GetAll")
+    await instanse.get(config.services.Setting, ROUTES.COSTUMERTYPE)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_COSTUMERTYPES_SUCCESS, payload: response.data }) 
         })
@@ -47,7 +48,7 @@ export const GetCostumertypes = () => async (dispatch, getState) => {
 
 export const GetCostumertype = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_COSTUMERTYPE_INIT })
-    await instanse.get(ROUTES.COSTUMERTYPE + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Setting, `${ROUTES.COSTUMERTYPE}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_COSTUMERTYPE_SUCCESS, payload: response.data })
         })
@@ -59,7 +60,7 @@ export const GetCostumertype = (guid) => async (dispatch, getState) => {
 
 export const AddCostumertypes = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_COSTUMERTYPE_INIT })
-    await instanse.post(ROUTES.COSTUMERTYPE + "/Add", data)
+    await instanse.post(config.services.Setting, ROUTES.COSTUMERTYPE, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.ADD_COSTUMERTYPE_SUCCESS, payload: response.data })
                 historypusher.push('/Costumertypes')
@@ -72,7 +73,7 @@ export const AddCostumertypes = (data, historypusher) => async (dispatch, getSta
 
 export const EditCostumertypes = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_COSTUMERTYPE_INIT })
-    await instanse.post(ROUTES.COSTUMERTYPE + "/Update", data)
+    await instanse.put(config.services.Setting, ROUTES.COSTUMERTYPE, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.EDIT_COSTUMERTYPE_SUCCESS, payload: response.data })
                 historypusher.push('/Costumertypes')
@@ -87,7 +88,7 @@ export const DeleteCostumertypes = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_COSTUMERTYPE_INIT })
-    await instanse.post(ROUTES.COSTUMERTYPE + "/Delete", data)
+    await instanse.delete(config.services.Setting, ROUTES.COSTUMERTYPE, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_COSTUMERTYPE_SUCCESS, payload: response.data })
         })
