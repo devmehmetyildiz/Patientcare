@@ -3,8 +3,8 @@ import { ACTION_TYPES } from "../Actions/RoleAction"
 const defaultState = {
     list: [],
     selected_record: {},
-    authories: [],
-    authorygroups: [],
+    privileges: [],
+    privilegegroups: [],
     errmsg: null,
     notifications: [],
     isLoading: false,
@@ -34,18 +34,18 @@ const RoleReducer = (state = defaultState, { type, payload }) => {
         case ACTION_TYPES.GET_ROLE_ERROR:
             return { ...state, isLoading: false, errmsg: payload }
 
-        case ACTION_TYPES.GET_ALLAUTHS_INIT:
-            return { ...state, isLoading: true, errmsg: null, authories: [] }
-        case ACTION_TYPES.GET_ALLAUTHS_SUCCESS:
-            return { ...state, isLoading: false, authories: payload }
-        case ACTION_TYPES.GET_ALLAUTHS_ERROR:
+        case ACTION_TYPES.GET_PRIVILEGES_INIT:
+            return { ...state, isLoading: true, errmsg: null, privileges: [] }
+        case ACTION_TYPES.GET_PRIVILEGES_SUCCESS:
+            return { ...state, isLoading: false, privileges: payload }
+        case ACTION_TYPES.GET_PRIVILEGES_ERROR:
             return { ...state, isLoading: false, errmsg: payload }
 
-        case ACTION_TYPES.GET_ALLAUTHGROUP_INIT:
-            return { ...state, isLoading: true, errmsg: null, authorygroups: [] }
-        case ACTION_TYPES.GET_ALLAUTHGROUP_SUCCESS:
-            return { ...state, isLoading: false, authorygroups: payload }
-        case ACTION_TYPES.GET_ALLAUTHGROUP_ERROR:
+        case ACTION_TYPES.GET_PRIVILEGEGROUPS_INIT:
+            return { ...state, isLoading: true, errmsg: null, privilegegroups: [] }
+        case ACTION_TYPES.GET_PRIVILEGEGROUPS_SUCCESS:
+            return { ...state, isLoading: false, privilegegroups: payload }
+        case ACTION_TYPES.GET_PRIVILEGEROUPS_ERROR:
             return { ...state, isLoading: false, errmsg: payload }
 
         case ACTION_TYPES.ADD_ROLE_INIT:

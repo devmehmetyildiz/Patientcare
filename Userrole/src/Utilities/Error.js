@@ -198,11 +198,13 @@ function requestErrorCatcher(err, serviceName = null) {
 }
 
 function sequelizeErrorCatcher(err, errHelper) {
+  if (err && err.message) {
+    return create('SERVER_ERROR', `INTERNAL_${config.session.name.toUpperCase()}_ERROR`, err.message)
+  }
   if (err && err.name) {
     return create('VALIDATION', err.name, (err.parent && err.parent.code && err.parent.sqlMessage) ? `${err.parent.code} ${err.parent.sqlMessage} on ${config.session.name} service` : `Undefines error on Sequileze on ${config.session.name} service`)
-  } else {
-    throw err;
   }
+  throw err;
 }
 
 module.exports.create = create

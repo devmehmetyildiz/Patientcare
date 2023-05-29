@@ -14,6 +14,8 @@ const Routes = [
 
   { method: 'get', path: '/Roles', controller: 'Role', action: 'GetRoles', exact: true },
   { method: 'get', path: '/Roles/GetActiveuserprivileges', controller: 'Role', action: 'GetActiveuserprivileges' },
+  { method: 'get', path: '/Roles/Getprivileges', controller: 'Role', action: 'Getprivileges' },
+  { method: 'get', path: '/Roles/Getprivilegegroups', controller: 'Role', action: 'Getprivilegegroups' },
   { method: 'get', path: '/Roles/:roleId', controller: 'Role', action: 'GetRole' },
   { method: 'get', path: '/Roles/Getprivilegesbyuserid/:userId', controller: 'Role', action: 'Getprivilegesbyuserid' },
   { method: 'post', path: '/Roles', controller: 'Role', action: 'AddRole' },

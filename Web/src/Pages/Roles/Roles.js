@@ -6,8 +6,7 @@ import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Popup from '../../Utils/Popup'
-
+import Notification from '../../Utils/Notification'
 export class Roles extends Component {
 
   constructor(props) {
@@ -15,7 +14,7 @@ export class Roles extends Component {
     this.state = {
       open: false,
       selectedrecord: {},
-      authoriesStatus: []
+      privilegesStatus: []
     }
   }
 
@@ -25,13 +24,18 @@ export class Roles extends Component {
     GetRoles()
   }
 
+  componentDidUpdate() {
+    const { Roles, removeRolenotification } = this.props
+    Notification(Roles.notifications, removeRolenotification)
+  }
+
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'İsim', accessor: 'name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Yetkiler', accessor: 'authoriestxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.authoryCellhandler(col) },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'İsim', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Yetkiler', accessor: 'Privilegestxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.authoryCellhandler(col) },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -41,16 +45,11 @@ export class Roles extends Component {
 
 
 
-    const { Roles, removeRolenotification, DeleteRoles, Profile } = this.props
-    const { notifications, list, isLoading, isDispatching } = Roles
-    if (notifications && notifications.length > 0) {
-      let msg = notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeRolenotification()
-    }
+    const { Roles, DeleteRoles, Profile } = this.props
+    const { list, isLoading, isDispatching } = Roles
 
     const metaKey = "Roles"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -61,11 +60,11 @@ export class Roles extends Component {
     };
 
     (list || []).forEach(item => {
-      var text = item.authories.map((authory) => {
-        return authory.name;
+      var text = item.Privileges.map((privilege) => {
+        return privilege.text;
       }).join(", ")
-      item.authoriestxt = text;
-      item.edit = <Link to={`/roles/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.Privilegestxt = text;
+      item.edit = <Link to={`/roles/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -110,7 +109,7 @@ export class Roles extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.name} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
                   rolünü silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>
@@ -136,29 +135,28 @@ export class Roles extends Component {
   }
 
   expandAuthory = (rowid) => {
-    const prevData = this.state.authoriesStatus
+    const prevData = this.state.privilegesStatus
     prevData.push(rowid)
-    this.setState({ authoriesStatus: [...prevData] })
+    this.setState({ privilegesStatus: [...prevData] })
   }
 
   shrinkAuthory = (rowid) => {
-    const index = this.state.authoriesStatus.indexOf(rowid)
-    const prevData = this.state.authoriesStatus
+    const index = this.state.privilegesStatus.indexOf(rowid)
+    const prevData = this.state.privilegesStatus
     if (index > -1) {
       prevData.splice(index, 1)
-      this.setState({ authoriesStatus: [...prevData] })
+      this.setState({ privilegesStatus: [...prevData] })
     }
   }
 
   authoryCellhandler = (col) => {
     if (col.value) {
       if (!col.cell.isGrouped) {
-        console.log('col.row: ', col.row);
-        const itemId = col.row.original.id
-        const itemPrivileges = col.row.original.authories
+        const itemId = col.row.original.Id
+        const itemPrivileges = col.row.original.Privileges
         return col.value.length - 35 > 20 ?
           (
-            !this.state.authoriesStatus.includes(itemId) ?
+            !this.state.privilegesStatus.includes(itemId) ?
               [col.value.slice(0, 35) + ' ...(' + itemPrivileges.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandAuthory(itemId)}> ...Daha Fazla Göster</Link>] :
               [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkAuthory(itemId)}> ...Daha Az Göster</Link>]
           ) : col.value

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Dropdown, Form,  Header } from 'semantic-ui-react'
-import Popup from '../../Utils/Popup'
+import { Breadcrumb, Button, Divider, Dropdown, Form, Header } from 'semantic-ui-react'
+import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 
@@ -10,11 +10,11 @@ export default class UsersEdit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedstations:[],
-      selectedroles:[],
-      selectedlanguage:{},
-      selecteddepartments:[],
-      isDatafetched:false,
+      selectedstations: [],
+      selectedroles: [],
+      selectedlanguage: {},
+      selecteddepartments: [],
+      isDatafetched: false,
     }
   }
 
@@ -31,64 +31,51 @@ export default class UsersEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Roles, Stations, Users } = this.props
+    const { Departments, Roles, Stations, Users,
+      removeDepartmentnotification, removeStationnotification, removeRolenotification,
+      removeUsernotification } = this.props
     const { selected_record, isLoading } = Users
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0 &&
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
       Departments.list.length > 0 && !Departments.isLoading && Roles.list.length > 0 && !Roles.isLoading &&
       Stations.list.length > 0 && !Stations.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selecteddepartments: selected_record.departments.map(department => {
-          return department.concurrencyStamp
+        selecteddepartments: selected_record.Departments.map(department => {
+          return department.Uuid
         }),
-        selectedroles: selected_record.roles.map(role => {
-          return role.concurrencyStamp
+        selectedroles: selected_record.Roles.map(role => {
+          return role.Uuid
         }),
-        selectedstations: selected_record.stations.map(station => {
-          return station.concurrencyStamp
+        selectedstations: selected_record.Stations.map(station => {
+          return station.Uuid
         }),
-        selectedlanguage: selected_record.language,
+        selectedlanguage: selected_record.Language,
         isDatafetched: true
       })
     }
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Users.notifications, removeUsernotification)
+    Notification(Stations.notifications, removeStationnotification)
+    Notification(Roles.notifications, removeRolenotification)
   }
 
 
   render() {
 
-    const { Departments, Users, Stations, Roles, removeDepartmentnotification, removeStationnotification, removeRolenotification, removeUsernotification } = this.props
+    const { Departments, Users, Stations, Roles } = this.props
     const { selected_record } = Users
-    if (Departments.notifications && Departments.notifications.length > 0) {
-      let msg = Departments.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeDepartmentnotification()
-    }
-    if (Stations.notifications && Stations.notifications.length > 0) {
-      let msg = Stations.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeStationnotification()
-    }
-    if (Users.notifications && Users.notifications.length > 0) {
-      let msg = Users.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeUsernotification()
-    }
-    if (Roles.notifications && Roles.notifications.length > 0) {
-      let msg = Roles.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeRolenotification()
-    }
 
     const Stationoptions = Stations.list.map(station => {
-      return { key: station.concurrencyStamp, text: station.name, value: station.concurrencyStamp }
+      return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
     const Roleoptions = Roles.list.map(roles => {
-      return { key: roles.concurrencyStamp, text: roles.name, value: roles.concurrencyStamp }
+      return { key: roles.Uuid, text: roles.Name, value: roles.Uuid }
     })
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
     const Languageoptions = [
       { key: 'TR', text: 'TR', value: 'TR' },
+      { key: 'EN', text: 'EN', value: 'EN' },
     ]
 
 
@@ -111,24 +98,24 @@ export default class UsersEdit extends Component {
           </div>
           <Divider className='w-full  h-[1px]' />
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+            <Form className='' onSubmit={this.handleSubmit} preventDefault={false}>
               <Form.Group widths={'equal'}>
-                <Form.Input label="İsim" placeholder="İsim" name="name" fluid defaultValue={selected_record.name} />
-                <Form.Input label="Soyisim" placeholder="Soyisim" name="surname" fluid defaultValue={selected_record.surname} />
-                <Form.Input label="E Posta" placeholder="E posta" name="email" fluid defaultValue={selected_record.email} />
+                <Form.Input label="İsim" placeholder="İsim" name="Name" fluid defaultValue={selected_record.Name} />
+                <Form.Input label="Soyisim" placeholder="Soyisim" name="Surname" fluid defaultValue={selected_record.Surname} />
+                <Form.Input label="E Posta" placeholder="E posta" name="Email" fluid defaultValue={selected_record.Email} />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Input label="Kullanıcı Adı" placeholder="Kullanıcı Adı" name="username" fluid defaultValue={selected_record.username} />
-                <Form.Input label="Kullanıcı Numarası" placeholder="Kullanıcı Numarası" name="userID" type='number' fluid defaultValue={selected_record.userID} />
+                <Form.Input label="Kullanıcı Adı" placeholder="Kullanıcı Adı" name="Username" fluid defaultValue={selected_record.Username} />
+                <Form.Input label="Kullanıcı Numarası" placeholder="Kullanıcı Numarası" name="UserID" type='number' fluid defaultValue={selected_record.UserID} />
                 <Form.Field>
                   <label className='text-[#000000de]'>Dil</label>
                   <Dropdown label="Dil" fluid selection options={Languageoptions} onChange={this.handleChangeLanguage} value={this.state.selectedlanguage} />
                 </Form.Field>
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Input label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="city" fluid defaultValue={selected_record.city} />
-                <Form.Input label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="town" fluid defaultValue={selected_record.town} />
-                <Form.Input label="Adres" placeholder="Adres" name="address" fluid defaultValue={selected_record.address} />
+                <Form.Input label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="City" fluid defaultValue={selected_record.City} />
+                <Form.Input label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="Town" fluid defaultValue={selected_record.Town} />
+                <Form.Input label="Adres" placeholder="Adres" name="Address" fluid defaultValue={selected_record.Address} />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <Form.Field>
@@ -144,6 +131,10 @@ export default class UsersEdit extends Component {
                   <Dropdown label="İstasyonlar" clearable search fluid multiple selection options={Roleoptions} onChange={this.handleChangeRoles} value={this.state.selectedroles} />
                 </Form.Field>
               </Form.Group>
+              <Form.Field>
+                <label className='text-[#000000de]'>Dil</label>
+                <Dropdown label="Dil" fluid selection options={Languageoptions} onChange={this.handleChangeLanguage} />
+              </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Users">
                   <Button floated="left" color='grey'>Geri Dön</Button>
@@ -159,40 +150,41 @@ export default class UsersEdit extends Component {
     e.preventDefault()
     const { EditUsers, history, fillUsernotification, Roles, Departments, Stations, Users } = this.props
     const data = formToObject(e.target)
-    data.stations = this.state.selectedstations.map(station => {
-      return Stations.list.find(u => u.concurrencyStamp === station)
+    data.UserID = parseInt(data.UserID, 10)
+    data.Stations = this.state.selectedstations.map(station => {
+      return Stations.list.find(u => u.Uuid === station)
     })
-    data.roles = this.state.selectedroles.map(roles => {
-      return Roles.list.find(u => u.concurrencyStamp === roles)
+    data.Roles = this.state.selectedroles.map(roles => {
+      return Roles.list.find(u => u.Uuid === roles)
     })
-    data.departments = this.state.selecteddepartments.map(department => {
-      return Departments.list.find(u => u.concurrencyStamp === department)
+    data.Departments = this.state.selecteddepartments.map(department => {
+      return Departments.list.find(u => u.Uuid === department)
     })
-    data.language = this.state.selectedlanguage
+    data.Language = this.state.selectedlanguage
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'İsim boş olamaz' })
     }
-    if (!data.surname || data.surname === '') {
+    if (!data.Surname || data.Surname === '') {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Soy isim boş olamaz' })
     }
-    if (!data.username || data.username === '') {
+    if (!data.Username || data.Username === '') {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Kullanıcı adı boş olamaz' })
     }
-    if (!data.email || data.email === '') {
+    if (!data.Email || data.Email === '') {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'E-posta boş olamaz' })
     }
-    if (!data.stations || data.stations.length <= 0) {
+    if (!data.Stations || data.Stations.length <= 0) {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Hiç Bir İstasyon seçili değil' })
     }
-    if (!data.departments || data.departments.length <= 0) {
+    if (!data.Departments || data.Departments.length <= 0) {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Hiç Bir Departman seçili değil' })
     }
-    if (!data.roles || data.roles.length <= 0) {
+    if (!data.Roles || data.Roles.length <= 0) {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Hiç Bir Rol seçili değil' })
     }
-    if (!data.language || data.language === '') {
+    if (!data.Language || data.Language === '') {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Dil seçili değil' })
     }
     if (errors.length > 0) {

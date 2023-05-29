@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Dropdown, Form,  Header } from 'semantic-ui-react'
-import Popup from '../../Utils/Popup'
+import { Breadcrumb, Button, Divider, Dropdown, Form, Header } from 'semantic-ui-react'
+import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 
@@ -10,10 +10,10 @@ export default class UsersCreate extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedstations:[],
-      selectedroles:[],
-      selectedlanguage:{},
-      selecteddepartments:[],
+      selectedstations: [],
+      selectedroles: [],
+      selectedlanguage: {},
+      selecteddepartments: [],
     }
   }
 
@@ -24,38 +24,27 @@ export default class UsersCreate extends Component {
     GetDepartments()
   }
 
+  componentDidUpdate() {
+    const { Departments, Users, Stations, Roles, removeDepartmentnotification,
+      removeStationnotification, removeRolenotification, removeUsernotification } = this.props
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Users.notifications, removeUsernotification)
+    Notification(Stations.notifications, removeStationnotification)
+    Notification(Roles.notifications, removeRolenotification)
+  }
+
   render() {
 
-    const { Departments, Users, Stations, Roles, removeDepartmentnotification, removeStationnotification, removeRolenotification, removeUsernotification } = this.props
-    if (Departments.notifications && Departments.notifications.length > 0) {
-      let msg = Departments.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeDepartmentnotification()
-    }
-    if (Stations.notifications && Stations.notifications.length > 0) {
-      let msg = Stations.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeStationnotification()
-    }
-    if (Users.notifications && Users.notifications.length > 0) {
-      let msg = Users.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeUsernotification()
-    }
-    if (Roles.notifications && Roles.notifications.length > 0) {
-      let msg = Roles.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeRolenotification()
-    }
+    const { Departments, Users, Stations, Roles } = this.props
 
     const Stationoptions = Stations.list.map(station => {
-      return { key: station.concurrencyStamp, text: station.name, value: station.concurrencyStamp }
+      return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
     const Roleoptions = Roles.list.map(roles => {
-      return { key: roles.concurrencyStamp, text: roles.name, value: roles.concurrencyStamp }
+      return { key: roles.Uuid, text: roles.Name, value: roles.Uuid }
     })
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
     const Languageoptions = [
@@ -81,24 +70,22 @@ export default class UsersCreate extends Component {
           </div>
           <Divider className='w-full  h-[1px]' />
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+            <Form className='' onSubmit={this.handleSubmit} preventDefault={false}>
               <Form.Group widths={'equal'}>
-                <Form.Input label="İsim" placeholder="İsim" name="name" fluid />
-                <Form.Input label="Soyisim" placeholder="Soyisim" name="surname" fluid />
-                <Form.Input label="E Posta" placeholder="E posta" name="email" fluid />
+                <Form.Input label="İsim" placeholder="İsim" name="Name" fluid />
+                <Form.Input label="Soyisim" placeholder="Soyisim" name="Surname" fluid />
+                <Form.Input label="Parola" placeholder="Parola" name="Password" fluid type='password' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Input label="Kullanıcı Adı" placeholder="Kullanıcı Adı" name="username" fluid />
-                <Form.Input label="Kullanıcı Numarası" placeholder="Kullanıcı Numarası" name="userID" type='number' fluid />
-                <Form.Field>
-                  <label className='text-[#000000de]'>Dil</label>
-                  <Dropdown label="Dil" fluid selection options={Languageoptions} onChange={this.handleChangeLanguage} />
-                </Form.Field>
+                <Form.Input label="E Posta" placeholder="E posta" name="Email" fluid />
+                <Form.Input label="Kullanıcı Adı" placeholder="Kullanıcı Adı" name="Username" fluid />
+                <Form.Input label="Kullanıcı Numarası" placeholder="Kullanıcı Numarası" name="UserID" type='Number' fluid />
+
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Input label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="city" fluid />
-                <Form.Input label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="town" fluid />
-                <Form.Input label="Adres" placeholder="Adres" name="address" fluid />
+                <Form.Input label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="City" fluid />
+                <Form.Input label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="Town" fluid />
+                <Form.Input label="Adres" placeholder="Adres" name="Address" fluid />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <Form.Field>
@@ -114,11 +101,15 @@ export default class UsersCreate extends Component {
                   <Dropdown clearable search fluid multiple selection options={Roleoptions} onChange={this.handleChangeRoles} />
                 </Form.Field>
               </Form.Group>
+              <Form.Field>
+                <label className='text-[#000000de]'>Dil</label>
+                <Dropdown label="Dil" fluid selection options={Languageoptions} onChange={this.handleChangeLanguage} />
+              </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Users">
                   <Button floated="left" color='grey'>Geri Dön</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Güncelle</Button>
+                <Button floated="right" type='submit' color='blue'>Oluştur</Button>
               </div>
             </Form>
           </div>
@@ -130,54 +121,41 @@ export default class UsersCreate extends Component {
     e.preventDefault()
     const { AddUsers, history, fillUsernotification, Roles, Departments, Stations } = this.props
     const data = formToObject(e.target)
-    data.stations = this.state.selectedstations.map(station => {
-      return Stations.list.find(u => u.concurrencyStamp === station)
+    data.UserID = parseInt(data.UserID, 10)
+    data.Stations = this.state.selectedstations.map(station => {
+      return Stations.list.find(u => u.Uuid === station)
     })
-    data.roles = this.state.selectedroles.map(roles => {
-      return Roles.list.find(u => u.concurrencyStamp === roles)
+    data.Roles = this.state.selectedroles.map(roles => {
+      return Roles.list.find(u => u.Uuid === roles)
     })
-    data.stations = this.state.selecteddepartments.map(department => {
-      return Departments.list.find(u => u.concurrencyStamp === department)
+    data.Departments = this.state.selecteddepartments.map(department => {
+      return Departments.list.find(u => u.Uuid === department)
     })
-    data.language = this.state.selectedlanguage
-    console.log('data.language: ', data.language);
-    data.normalizedUsername = data.username.toUpperCase()
-    data.emailConfirmed = false
-    data.accessFailedCount = 0
-    data.phoneNumberConfirmed = false
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
+    data.Language = this.state.selectedlanguage
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'İsim boş olamaz' })
     }
-    if (!data.surname || data.surname === '') {
+    if (!data.Surname || data.Surname === '') {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Soy isim boş olamaz' })
     }
-    if (!data.username || data.username === '') {
+    if (!data.Username || data.Username === '') {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Kullanıcı adı boş olamaz' })
     }
-    if (!data.email || data.email === '') {
+    if (!data.Email || data.Email === '') {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'E-posta boş olamaz' })
     }
-    if (!data.stations || data.stations.length <= 0) {
+    if (!data.Stations || data.Stations.length <= 0) {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Hiç Bir İstasyon seçili değil' })
     }
-    if (!data.departments || data.departments.length <= 0) {
+    if (!data.Departments || data.Departments.length <= 0) {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Hiç Bir Departman seçili değil' })
     }
-    if (!data.roles || data.roles.length <= 0) {
+    if (!data.Roles || data.Roles.length <= 0) {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Hiç Bir Rol seçili değil' })
     }
-    if (!data.language || data.language === '' || Object.keys(data.language).length <= 0) {
+    if (!data.Language || data.Language === '' || Object.keys(data.Language).length <= 0) {
       errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Dil seçili değil' })
     }
     if (errors.length > 0) {
@@ -198,5 +176,7 @@ export default class UsersCreate extends Component {
   handleChangeRoles = (e, { value }) => {
     this.setState({ selectedroles: value })
   }
-
+  handleChangeLanguage = (e, { value }) => {
+    this.setState({ selectedlanguage: value })
+  }
 }

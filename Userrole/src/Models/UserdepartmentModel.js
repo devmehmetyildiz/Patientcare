@@ -7,7 +7,7 @@ module.exports = sequelize.define('userdepartmentModel', {
     UserID: {
         type: Sequelize.STRING
     },
-    DepartmanID: {
+    DepartmentID: {
         type: Sequelize.STRING
     }
 }, {

@@ -129,16 +129,70 @@ const messages = {
         tr: 'Bu işlem için e-posta gerekli',
       }
     },
+    SURNAME_REQUIRED: {
+      code: 'SURNAME_REQUIRED', description: {
+        en: 'The surname required',
+        tr: 'Bu işlem için soyisim gerekli',
+      }
+    },
+    LANGUAGE_REQUIRED: {
+      code: 'LANGUAGE_REQUIRED', description: {
+        en: 'The language required',
+        tr: 'Bu işlem için dil gerekli',
+      }
+    },
+    TOWN_REQUIRED: {
+      code: 'TOWN_REQUIRED', description: {
+        en: 'The town required',
+        tr: 'Bu işlem için ilçe gerekli',
+      }
+    },
+    CITY_REQUIRED: {
+      code: 'CITY_REQUIRED', description: {
+        en: 'The city required',
+        tr: 'Bu işlem için şehir gerekli',
+      }
+    },
+    ADDRESS_REQUIRED: {
+      code: 'ADDRESS_REQUIRED', description: {
+        en: 'The address required',
+        tr: 'Bu işlem için adres gerekli',
+      }
+    },
     USERID_REQUIRED: {
       code: 'USERID_REQUIRED', description: {
         en: 'The user uuid required',
         tr: 'Bu işlem için kullanıcı uuid gerekli',
       }
     },
+    DEPARTMENTS_REQUIRED: {
+      code: 'DEPARTMENTS_REQUIRED', description: {
+        en: 'The departments required',
+        tr: 'Bu işlem için departmanlar gerekli',
+      }
+    },
+    ROLES_REQUIRED: {
+      code: 'ROLES_REQUIRED', description: {
+        en: 'The roles required',
+        tr: 'Bu işlem için roller gerekli',
+      }
+    },
+    STATIONS_REQUIRED: {
+      code: 'STATIONS_REQUIRED', description: {
+        en: 'The stations required',
+        tr: 'Bu işlem için istasyonlar gerekli',
+      }
+    },
     UNSUPPORTED_USERID: {
       code: 'UNSUPPORTED_USERID', description: {
         en: 'Unstupported uuid has given',
         tr: 'Geçersiz kullanıcı id girişi',
+      }
+    },
+    UNSUPPORTED_STATIONID: {
+      code: 'UNSUPPORTED_STATIONID', description: {
+        en: 'Unstupported station uuid has given',
+        tr: 'Geçersiz istasyon id girişi',
       }
     },
     USERNAME_DUPLICATE: {

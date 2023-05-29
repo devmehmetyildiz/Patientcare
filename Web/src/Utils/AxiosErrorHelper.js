@@ -1,10 +1,18 @@
 import Cookies from "universal-cookie";
+import config from "../Config";
 
 export default function AxiosErrorHelper(error) {
     if (error) {
         console.log('error: ', error);
         if (error.code === 'ERR_NETWORK') {
-            return { type: 'Error', code: 'ERR_NETWORK', description: 'Server Kapalı yada Erişim Yok' }
+            let domain = (error && error.config && error.config.url) ? error.config.url : 'undefined'
+            if (domain !== 'undefined') {
+                let parsedurl = new URL(domain)
+                domain = Object.keys(config.services).find(key => config.services[key] === `${parsedurl.origin}/`)
+            }
+            return domain !== 'undefind' ?
+                { type: 'Error', code: `Network Error`, description: `${domain} service unavaliable` }
+                : { type: 'Error', code: 'Network Error', description: 'Undefined service unavaliable' }
         }
         if (error.code === 'ERR_BAD_REQUEST') {
             switch (error.response.status) {

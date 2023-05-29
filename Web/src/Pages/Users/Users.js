@@ -5,7 +5,7 @@ import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Popup from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 
 export default class Users extends Component {
 
@@ -25,28 +25,35 @@ export default class Users extends Component {
     GetUsers()
   }
 
+  componentDidUpdate() {
+    const { Users, removeUsernotification } = this.props
+    Notification(Users.notifications, removeUsernotification)
+  }
+
+
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Kullanıcı Adı', accessor: 'username', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kullanıcı Adı (Büyük)', accessor: 'normalizedUsername', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'E-Posta', accessor: 'email', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'E-Posta Doğrulama', accessor: 'emailConfirmed', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Son Hatalı Giriş Sayısı', accessor: 'accessFailedCount', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'İsim', accessor: 'name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Soyisim', accessor: 'surname', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Telefon numarası', accessor: 'phoneNumber', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Telefon numarası Doğrulama', accessor: 'phoneNumberConfirmed', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Şehir', accessor: 'city', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'İlçe', accessor: 'town', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Adres', accessor: 'address', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Dil', accessor: 'language', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kullanıcı ID', accessor: 'userID', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'İstasyonlar', accessor: 'stationstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
-      { Header: 'Departmanlar', accessor: 'departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
-      { Header: 'Roller', accessor: 'rolestxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.rolesCellhandler(col) },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Kullanıcı Adı', accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Kullanıcı Adı (Büyük)', accessor: 'NormalizedUsername', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'E-Posta', accessor: 'Email', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'E-Posta Doğrulama', accessor: 'EmailConfirmed', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Son Hatalı Giriş Sayısı', accessor: 'AccessFailedCount', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'İsim', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Soyisim', accessor: 'Surname', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Telefon numarası', accessor: 'PhoneNumber', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Telefon numarası Doğrulama', accessor: 'PhoneNumberConfirmed', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Şehir', accessor: 'City', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'İlçe', accessor: 'Town', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Adres', accessor: 'Address', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Dil', accessor: 'Language', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Kullanıcı ID', accessor: 'UserID', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Varsayılan Departman', accessor: 'Defaultdepartment', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'İstasyonlar', accessor: 'Stationstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
+      { Header: 'Departmanlar', accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
+      { Header: 'Roller', accessor: 'Rolestxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.rolesCellhandler(col) },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -55,16 +62,12 @@ export default class Users extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
 
-    const { Users, removeUsernotification, DeleteUsers, Profile } = this.props
-    const { notifications, list, isLoading, isDispatching } = Users
-    if (notifications && notifications.length > 0) {
-      let msg = notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeUsernotification()
-    }
+    const { Users, DeleteUsers, Profile } = this.props
+    const { list, isLoading, isDispatching } = Users
+
 
     const metaKey = "Users"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -74,20 +77,21 @@ export default class Users extends Component {
       }) : []
     };
 
+    console.log('list: ', list);
     (list || []).forEach(item => {
-      var stationtext = item.stations.map((station) => {
-        return station.name;
+      var stationtext = (item.Stations || []).map((station) => {
+        return station.Name;
       }).join(", ")
-      item.stationstxt = stationtext;
-      var rolestext = item.roles.map((role) => {
-        return role.name;
+      item.Stationstxt = stationtext;
+      var rolestext = (item.Roles || []).map((role) => {
+        return role.Name;
       }).join(", ")
-      item.rolestxt = rolestext;
-      var departmentext = item.departments.map((department) => {
-        return department.name;
+      item.Rolestxt = rolestext;
+      var departmentext = (item.Departments || []).map((department) => {
+        return department.Name;
       }).join(", ")
-      item.departmentstxt = departmentext;
-      item.edit = <Link to={`/Users/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.Departmentstxt = departmentext;
+      item.edit = <Link to={`/Users/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -132,7 +136,7 @@ export default class Users extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.name} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Username} ` : null} </span>
                   Kullanıcısını silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>
@@ -203,8 +207,8 @@ export default class Users extends Component {
   rolesCellhandler = (col) => {
     if (col.value) {
       if (!col.cell.isGrouped) {
-        const itemId = col.row.original.id
-        const itemRoles = col.row.original.roles
+        const itemId = col.row.original.Id
+        const itemRoles = col.row.original.Roles
         return col.value.length - 35 > 20 ?
           (
             !this.state.rolesStatus.includes(itemId) ?
@@ -220,8 +224,8 @@ export default class Users extends Component {
   departmentCellhandler = (col) => {
     if (col.value) {
       if (!col.cell.isGrouped) {
-        const itemId = col.row.original.id
-        const itemDepartments = col.row.original.departments
+        const itemId = col.row.original.Id
+        const itemDepartments = col.row.original.Departments
         return col.value.length - 35 > 20 ?
           (
             !this.state.departmentsStatus.includes(itemId) ?
@@ -237,8 +241,8 @@ export default class Users extends Component {
   stationCellhandler = (col) => {
     if (col.value) {
       if (!col.cell.isGrouped) {
-        const itemId = col.row.original.id
-        const itemStations = col.row.original.stations
+        const itemId = col.row.original.Id
+        const itemStations = col.row.original.Stations
         return col.value.length - 35 > 20 ?
           (
             !this.state.stationsStatus.includes(itemId) ?

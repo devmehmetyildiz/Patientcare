@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_USERS_INIT: 'GET_USERS_INIT',
@@ -31,7 +32,7 @@ export const ACTION_TYPES = {
 
 export const GetUsers = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_USERS_INIT })
-    await instanse.get(ROUTES.USER + "/GetAll")
+    await instanse.get(config.services.Userrole, ROUTES.USER)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_USERS_SUCCESS, payload: response.data })
         })
@@ -43,7 +44,7 @@ export const GetUsers = () => async (dispatch, getState) => {
 
 export const GetUser = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_USER_INIT })
-    await instanse.get(ROUTES.USER + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Userrole, `${ROUTES.USER}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_USER_SUCCESS, payload: response.data })
         })
@@ -55,7 +56,7 @@ export const GetUser = (guid) => async (dispatch, getState) => {
 
 export const AddUsers = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_USER_INIT })
-    await instanse.post(ROUTES.USER + "/Add", data)
+    await instanse.post(config.services.Userrole, ROUTES.USER, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.ADD_USER_SUCCESS, payload: response.data })
             historypusher.push('/Users')
@@ -68,7 +69,7 @@ export const AddUsers = (data, historypusher) => async (dispatch, getState) => {
 
 export const EditUsers = (data, historypusher, redirecturl) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_USER_INIT })
-    await instanse.post(ROUTES.USER + "/Update", data)
+    await instanse.put(config.services.Userrole, ROUTES.USER, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.EDIT_USER_SUCCESS, payload: response.data })
             historypusher.push(redirecturl ? redirecturl : '/Users')
@@ -83,7 +84,7 @@ export const DeleteUsers = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_USER_INIT })
-    await instanse.post(ROUTES.USER + "/Delete", data)
+    await instanse.delete(config.services.Userrole, ROUTES.USER, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_USER_SUCCESS, payload: response.data })
         })
