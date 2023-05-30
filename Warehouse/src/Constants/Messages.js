@@ -26,6 +26,44 @@ const messages = {
       }
     },
 
+    STOCK_NOT_FOUND: {
+      code: 'STOCK_NOT_FOUND', description: {
+        en: 'Stock not found',
+        tr: 'Stok  bulunamadı',
+      }
+    },
+    STOCK_NOT_ACTIVE: {
+      code: 'STOCK_NOT_ACTIVE', description: {
+        en: 'Stock not active',
+        tr: 'Stok  aktif değil',
+      }
+    },
+
+    WAREHOUSE_NOT_FOUND: {
+      code: 'WAREHOUSE_NOT_FOUND', description: {
+        en: 'Warehouse not found',
+        tr: 'Ambar bulunamadı',
+      }
+    },
+    WAREHOUSE_NOT_ACTIVE: {
+      code: 'WAREHOUSE_NOT_ACTIVE', description: {
+        en: 'Warehouse not active',
+        tr: 'Ambar aktif değil',
+      }
+    },
+    PURCHASEORDER_NOT_FOUND: {
+      code: 'PURCHASEORDER_NOT_FOUND', description: {
+        en: 'Purchaseorder not found',
+        tr: 'Satın alma bulunamadı',
+      }
+    },
+    PURCHASEORDER_NOT_ACTIVE: {
+      code: 'PURCHASEORDER_NOT_ACTIVE', description: {
+        en: 'Purchaseorder not active',
+        tr: 'Satın alma aktif değil',
+      }
+    },
+
 
   },
   VALIDATION_ERROR: {
@@ -90,10 +128,46 @@ const messages = {
         tr: 'Bu işlem için stockid gerekli',
       }
     },
+    ISONUSAGE_REQUIRED: {
+      code: 'ISONUSAGE_REQUIRED', description: {
+        en: 'The isonusage required',
+        tr: 'Bu işlem için kullanımdamı bilgisi gerekli',
+      }
+    },
     STOCKMOVEMENTID_REQUIRED: {
       code: 'STOCKMOVEMENTID_REQUIRED', description: {
         en: 'The stockmovementid required',
         tr: 'Bu işlem için stockmovementid gerekli',
+      }
+    },
+    SOURCE_REQUIRED: {
+      code: 'SOURCE_REQUIRED', description: {
+        en: 'The source required',
+        tr: 'Bu işlem için kaynak gerekli',
+      }
+    },
+    SKT_REQUIRED: {
+      code: 'SKT_REQUIRED', description: {
+        en: 'The skt required',
+        tr: 'Bu işlem için skt gerekli',
+      }
+    },
+    INFO_REQUIRED: {
+      code: 'INFO_REQUIRED', description: {
+        en: 'The info required',
+        tr: 'Bu işlem için açıklama gerekli',
+      }
+    },
+    STATUS_REQUIRED: {
+      code: 'STATUS_REQUIRED', description: {
+        en: 'The status required',
+        tr: 'Bu işlem için durum gerekli',
+      }
+    },
+    ORDER_REQUIRED: {
+      code: 'ORDER_REQUIRED', description: {
+        en: 'The order required',
+        tr: 'Bu işlem için sıra bilgisi gerekli',
       }
     },
     DEPARTMENTID_REQUIRED: {
@@ -108,6 +182,18 @@ const messages = {
         tr: 'Bu işlem için unitid gerekli',
       }
     },
+    PURCHASEORDERID_REQUIRED: {
+      code: 'PURCHASEORDERID_REQUIRED', description: {
+        en: 'The purchaseorderid required',
+        tr: 'Bu işlem için purchaseorderid gerekli',
+      }
+    },
+    WAREHOUSEID_REQUIRED: {
+      code: 'WAREHOUSEID_REQUIRED', description: {
+        en: 'The warehouseid required',
+        tr: 'Bu işlem için warehouseid gerekli',
+      }
+    },
 
     UNSUPPORTED_STOCKDEFINEID: {
       code: 'UNSUPPORTED_STOCKDEFINEID', description: {
@@ -119,6 +205,24 @@ const messages = {
       code: 'UNSUPPORTED_STOCKMOVEMENTID', description: {
         en: 'The stockmovementid is unsupported',
         tr: 'Geçersiz stockmovementid',
+      }
+    },
+    UNSUPPORTED_STOCKID: {
+      code: 'UNSUPPORTED_STOCKID', description: {
+        en: 'The stockid is unsupported',
+        tr: 'Geçersiz stockid',
+      }
+    },
+    UNSUPPORTED_WAREHOUSEID: {
+      code: 'UNSUPPORTED_WAREHOUSEID', description: {
+        en: 'The warehouseid is unsupported',
+        tr: 'Geçersiz warehouseid',
+      }
+    },
+    UNSUPPORTED_PURCHASEORDERID: {
+      code: 'UNSUPPORTED_PURCHASEORDERID', description: {
+        en: 'The purchaseorderid is unsupported',
+        tr: 'Geçersiz purchaseorderid',
       }
     },
   }

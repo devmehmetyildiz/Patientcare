@@ -29,15 +29,15 @@ async function GetWarehouses(req, res, next) {
                     }
                 })
                 await Promise.all([departmentresponse, unitresponse])
-                departments = departmentresponse
-                units = unitresponse
+                departments = departmentresponse.data
+                units = unitresponse.data
             } catch (err) {
                 return next(requestErrorCatcher(err, 'Setting'))
             }
         }
         for (const warehouse of warehouses) {
-            let stocks = await db.stockModel.findAll({ where: { WarehouseID: warehouse.Uuid } })
-            for (const stock of stocks) {
+            warehouse.Stocks = await db.stockModel.findAll({ where: { WarehouseID: warehouse.Uuid } })
+            for (const stock of warehouse.Stocks) {
                 let amount = 0.0;
                 let movements = await db.stockmovementModel.findAll({ where: { StockID: stock.Uuid } })
                 for (const movement of movements) {
@@ -47,6 +47,7 @@ async function GetWarehouses(req, res, next) {
                 stock.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: stock.StockdefineID } })
                 stock.Department = departments.find(u => u.Uuid === stock.DepartmentID)
                 stock.Stockdefine && (stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID))
+                stock.Stockdefine && (stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID))
             }
         }
         res.status(200).json(warehouses)
@@ -60,10 +61,10 @@ async function GetWarehouse(req, res, next) {
 
     let validationErrors = []
     if (!req.params.warehouseId) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
     }
     if (!validator.isUUID(req.params.warehouseId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_WAREHOUSEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -71,27 +72,51 @@ async function GetWarehouse(req, res, next) {
 
     try {
         const warehouse = await db.warehouseModel.findOne({ where: { Uuid: req.params.warehouseId } });
-        if (!todogroupdefine) {
-            return createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language)
+        if (!warehouse) {
+            return createNotfounderror([messages.ERROR.WAREHOUSE_NOT_FOUND], req.language)
         }
-        if (!todogroupdefine.Isactive) {
-            return createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language)
+        if (!warehouse.Isactive) {
+            return createNotfounderror([messages.ERROR.WAREHOUSE_NOT_ACTIVE], req.language)
         }
-        let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
-            where: {
-                GroupID: todogroupdefine.Uuid,
+        let departments = null
+        let units = null
+        try {
+            const departmentresponse = axios({
+                method: 'GET',
+                url: config.services.Setting + 'Departments',
+                headers: {
+                    session_key: config.session.secret
+                }
+            })
+            const unitresponse = axios({
+                method: 'GET',
+                url: config.services.Setting + 'Units',
+                headers: {
+                    session_key: config.session.secret
+                }
+            })
+            await Promise.all([departmentresponse, unitresponse])
+            departments = departmentresponse.data
+            units = unitresponse.data
+        } catch (err) {
+            return next(requestErrorCatcher(err, 'Setting'))
+        }
+        warehouse.Stocks = await db.stockModel.findAll({ where: { WarehouseID: warehouse.Uuid } })
+        for (const stock of warehouse.Stocks) {
+            let amount = 0.0;
+            let movements = await db.stockmovementModel.findAll({ where: { StockID: stock.Uuid } })
+            for (const movement of movements) {
+                amount += (movement.Amount * movement.Movementtype);
             }
-        });
-        todogroupdefine.Tododefines = await db.tododefineModel.findAll({
-            where: {
-                Uuid: tododefineuuids.map(u => { return u.TodoID })
-            }
-        })
-        todogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: todogroupdefine.DepartmentID } })
-        res.status(200).json(todogroupdefine)
+            stock.Amount = amount;
+            stock.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: stock.StockdefineID } })
+            stock.Department = departments.find(u => u.Uuid === stock.DepartmentID)
+            stock.Stockdefine && (stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID))
+            stock.Stockdefine && (stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID))
+        }
+        res.status(200).json(warehouse)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -100,65 +125,75 @@ async function AddWarehouse(req, res, next) {
     let validationErrors = []
     const {
         Name,
-        Tododefines,
-        DepartmentID,
     } = req.body
 
     if (!Name || !validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
-    }
-    if (!DepartmentID || !validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
-    }
-    if (!Tododefines || !Array.isArray(Tododefines) || Tododefines.length <= 0) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINES_REQUIRED, req.language)
     }
 
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
-    let todogroupdefineuuid = uuid()
+    let warehouseuuid = uuid()
 
     const t = await db.sequelize.transaction();
 
     try {
-        await db.todogroupdefineModel.create({
+        await db.warehouseModel.create({
             ...req.body,
-            Uuid: todogroupdefineuuid,
+            Uuid: warehouseuuid,
             Createduser: "System",
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
-        for (const tododefine of Tododefines) {
-            if (!tododefine.Uuid || !validator.isUUID(tododefine.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID, req.language))
-            }
-            await db.todogroupdefinetododefineModel.create({
-                GroupID: todogroupdefineuuid,
-                TodoID: tododefine.Uuid
-            }, { transaction: t });
-        }
-
         await t.commit()
-        const createdTodogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: todogroupdefineuuid } })
-        let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
-            where: {
-                GroupID: todogroupdefine.Uuid,
+        const warehouses = await db.warehouseModel.findAll({ where: { Isactive: true } })
+        let departments = null
+        let units = null
+        if (warehouses && Array.isArray(warehouses) && warehouses.length > 0) {
+            try {
+                const departmentresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + 'Departments',
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const unitresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + 'Units',
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                await Promise.all([departmentresponse, unitresponse])
+                departments = departmentresponse.data
+                units = unitresponse.data
+            } catch (err) {
+                return next(requestErrorCatcher(err, 'Setting'))
             }
-        });
-        createdTodogroupdefine.Tododefines = await db.tododefineModel.findAll({
-            where: {
-                Uuid: tododefineuuids.map(u => { return u.TodoID })
+        }
+        for (const warehouse of warehouses) {
+            warehouse.Stocks = await db.stockModel.findAll({ where: { WarehouseID: warehouse.Uuid } })
+            for (const stock of warehouse.Stocks) {
+                let amount = 0.0;
+                let movements = await db.stockmovementModel.findAll({ where: { StockID: stock.Uuid } })
+                for (const movement of movements) {
+                    amount += (movement.Amount * movement.Movementtype);
+                }
+                stock.Amount = amount;
+                stock.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: stock.StockdefineID } })
+                stock.Department = departments.find(u => u.Uuid === stock.DepartmentID)
+                stock.Stockdefine && (stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID))
+                stock.Stockdefine && (stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID))
             }
-        })
-        createdTodogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: createdTodogroupdefine.DepartmentID } })
-        res.status(200).json(createdTodogroupdefine)
+        }
+        res.status(200).json(warehouses)
     } catch (err) {
         await t.rollback()
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(err))
     }
 }
 
@@ -167,73 +202,83 @@ async function UpdateWarehouse(req, res, next) {
     let validationErrors = []
     const {
         Name,
-        Tododefines,
-        DepartmentID,
         Uuid
     } = req.body
     if (!Name || !validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID, req.language)
-    }
-    if (!DepartmentID || !validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
-    }
-    if (!Tododefines || !Array.isArray(Tododefines) || Tododefines.length <= 0) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINES_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const todogroupdefine = db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
-        if (!todogroupdefine) {
-            return next(createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language))
+        const warehouse = db.warehouseModel.findOne({ where: { Uuid: Uuid } })
+        if (!warehouse) {
+            return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_FOUND], req.language))
         }
-        if (todogroupdefine.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language))
+        if (warehouse.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.WAREHOUSE_NOT_ACTIVE], req.language))
         }
 
         const t = await db.sequelize.transaction();
 
-        await db.todogroupdefineModel.update({
+        await db.warehouseModel.update({
             ...req.body,
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
-        await db.todogroupdefinetododefineModel.destroy({ where: { GroupID: Uuid }, transaction: t });
-        for (const tododefine of Tododefines) {
-            if (!tododefine.Uuid || !validator.isUUID(tododefine.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID, req.language))
-            }
-            await db.todogroupdefinetododefineModel.create({
-                GroupID: Uuid,
-                TodoID: tododefine.Uuid
-            }, { transaction: t });
-        }
         await t.commit()
-        const updateTodogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
-        let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
-            where: {
-                GroupID: todogroupdefine.Uuid,
+        const warehouses = await db.warehouseModel.findAll({ where: { Isactive: true } })
+        let departments = null
+        let units = null
+        if (warehouses && Array.isArray(warehouses) && warehouses.length > 0) {
+            try {
+                const departmentresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + 'Departments',
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const unitresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + 'Units',
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                await Promise.all([departmentresponse, unitresponse])
+                departments = departmentresponse.data
+                units = unitresponse.data
+            } catch (err) {
+                return next(requestErrorCatcher(err, 'Setting'))
             }
-        });
-        updateTodogroupdefine.Tododefines = await db.tododefineModel.findAll({
-            where: {
-                Uuid: tododefineuuids.map(u => { return u.TodoID })
+        }
+        for (const warehouse of warehouses) {
+            warehouse.Stocks = await db.stockModel.findAll({ where: { WarehouseID: warehouse.Uuid } })
+            for (const stock of warehouse.Stocks) {
+                let amount = 0.0;
+                let movements = await db.stockmovementModel.findAll({ where: { StockID: stock.Uuid } })
+                for (const movement of movements) {
+                    amount += (movement.Amount * movement.Movementtype);
+                }
+                stock.Amount = amount;
+                stock.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: stock.StockdefineID } })
+                stock.Department = departments.find(u => u.Uuid === stock.DepartmentID)
+                stock.Stockdefine && (stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID))
+                stock.Stockdefine && (stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID))
             }
-        })
-        updateTodogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: updateTodogroupdefine.DepartmentID } })
-        res.status(200).json(updateTodogroupdefine)
+        }
+        res.status(200).json(warehouses)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 
@@ -247,34 +292,72 @@ async function DeleteWarehouse(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_WAREHOUSEID, req.language)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const todogroupdefine = db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
-        if (!todogroupdefine) {
-            return next(createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language))
+        const warehouse = db.warehouseModel.findOne({ where: { Uuid: Uuid } })
+        if (!warehouse) {
+            return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_FOUND], req.language))
         }
-        if (todogroupdefine.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language))
+        if (warehouse.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.WAREHOUSE_NOT_ACTIVE], req.language))
         }
         const t = await db.sequelize.transaction();
 
-        await db.todogroupdefinetododefineModel.destroy({ where: { GroupID: Uuid }, transaction: t });
-        await db.tododefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.warehouseModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const warehouses = await db.warehouseModel.findAll({ where: { Isactive: true } })
+        let departments = null
+        let units = null
+        if (warehouses && Array.isArray(warehouses) && warehouses.length > 0) {
+            try {
+                const departmentresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + 'Departments',
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const unitresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + 'Units',
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                await Promise.all([departmentresponse, unitresponse])
+                departments = departmentresponse.data
+                units = unitresponse.data
+            } catch (err) {
+                return next(requestErrorCatcher(err, 'Setting'))
+            }
+        }
+        for (const warehouse of warehouses) {
+            warehouse.Stocks = await db.stockModel.findAll({ where: { WarehouseID: warehouse.Uuid } })
+            for (const stock of warehouse.Stocks) {
+                let amount = 0.0;
+                let movements = await db.stockmovementModel.findAll({ where: { StockID: stock.Uuid } })
+                for (const movement of movements) {
+                    amount += (movement.Amount * movement.Movementtype);
+                }
+                stock.Amount = amount;
+                stock.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: stock.StockdefineID } })
+                stock.Department = departments.find(u => u.Uuid === stock.DepartmentID)
+                stock.Stockdefine && (stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID))
+                stock.Stockdefine && (stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID))
+            }
+        }
+        res.status(200).json(warehouses)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }

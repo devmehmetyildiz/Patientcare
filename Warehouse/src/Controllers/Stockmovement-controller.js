@@ -10,7 +10,8 @@ async function GetStockmovements(req, res, next) {
     try {
         const stockmovements = await db.stockmovementModel.findAll({ where: { Isactive: true } })
         for (const stockmovement of stockmovements) {
-            stockmovement.Stock = stockModel.find(u => u.Uuid === stockmovement.StockID)
+            stockmovement.Stock = db.stockModel.find(u => u.Uuid === stockmovement.StockID)
+            stockmovement.Stock && (stockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === stockmovement.Stock.StockdefineID))
         }
         res.status(200).json(stockmovements)
     } catch (error) {
@@ -101,7 +102,8 @@ async function AddStockmovement(req, res, next) {
         await t.commit()
         const stockmovements = await db.stockmovementModel.findAll({ where: { Isactive: true } })
         for (const stockmovement of stockmovements) {
-            stockmovement.Stock = stockModel.find(u => u.Uuid === stockmovement.StockID)
+            stockmovement.Stock = db.stockModel.find(u => u.Uuid === stockmovement.StockID)
+            stockmovement.Stock && (stockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === stockmovement.Stock.StockdefineID))
         }
         res.status(200).json(stockmovements)
     } catch (err) {
@@ -175,7 +177,8 @@ async function UpdateStockmovement(req, res, next) {
         await t.commit()
         const stockmovements = await db.stockmovementModel.findAll({ where: { Isactive: true } })
         for (const stockmovement of stockmovements) {
-            stockmovement.Stock = stockModel.find(u => u.Uuid === stockmovement.StockID)
+            stockmovement.Stock = db.stockModel.find(u => u.Uuid === stockmovement.StockID)
+            stockmovement.Stock && (stockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === stockmovement.Stock.StockdefineID))
         }
         res.status(200).json(stockmovements)
     } catch (error) {
@@ -216,7 +219,8 @@ async function DeleteStockmovement(req, res, next) {
         await t.commit();
         const stockmovements = await db.stockmovementModel.findAll({ where: { Isactive: true } })
         for (const stockmovement of stockmovements) {
-            stockmovement.Stock = stockModel.find(u => u.Uuid === stockmovement.StockID)
+            stockmovement.Stock = db.stockModel.find(u => u.Uuid === stockmovement.StockID)
+            stockmovement.Stock && (stockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === stockmovement.Stock.StockdefineID))
         }
         res.status(200).json(stockmovements)
     } catch (error) {

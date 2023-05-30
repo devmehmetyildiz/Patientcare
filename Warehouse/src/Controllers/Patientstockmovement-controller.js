@@ -6,213 +6,190 @@ const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
 
-async function GetTodogroupdefines(req, res, next) {
+async function GetPatientstockmovements(req, res, next) {
     try {
-        const todogroupdefines = await db.todogroupdefineModel.findAll({ where: { Isactive: true } })
-        for (const todogroupdefine of todogroupdefines) {
-            let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
-                where: {
-                    GroupID: todogroupdefine.Uuid,
-                }
-            });
-            todogroupdefine.Tododefines = await db.tododefineModel.findAll({
-                where: {
-                    Uuid: tododefineuuids.map(u => { return u.TodoID })
-                }
-            })
-            todogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: todogroupdefine.DepartmentID } })
+        const patientstockmovements = await db.patientstockmovementModel.findAll({ where: { Isactive: true } })
+        for (const patientstockmovement of patientstockmovements) {
+            patientstockmovement.Stock = db.patientstockModel.find(u => u.Uuid === patientstockmovement.StockID)
+            patientstockmovement.Stock && (patientstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === patientstockmovement.Stock.StockdefineID))
         }
-        res.status(200).json(todogroupdefines)
+        res.status(200).json(patientstockmovements)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
-async function GetTodogroupdefine(req, res, next) {
+async function GetPatientstockmovement(req, res, next) {
 
     let validationErrors = []
-    if (!req.params.todogroupdefineId) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED)
+    if (!req.params.stockmovementId) {
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
     }
-    if (!validator.isUUID(req.params.todogroupdefineId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID)
+    if (!validator.isUUID(req.params.stockmovementId)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const todogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: req.params.todogroupdefineId } });
-        if (!todogroupdefine) {
-            return createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language)
+        const patientstockmovement = await db.patientstockmovementModel.findOne({ where: { Uuid: req.params.stockmovementId } });
+        if (!patientstockmovement) {
+            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
         }
-        if (!todogroupdefine.Isactive) {
-            return createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language)
+        if (!patientstockmovement.Isactive) {
+            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
         }
-        let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
-            where: {
-                GroupID: todogroupdefine.Uuid,
-            }
-        });
-        todogroupdefine.Tododefines = await db.tododefineModel.findAll({
-            where: {
-                Uuid: tododefineuuids.map(u => { return u.TodoID })
-            }
-        })
-        todogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: todogroupdefine.DepartmentID } })
-        res.status(200).json(todogroupdefine)
+        patientstockmovement.Stock = db.patientstockModel.find(u => u.Uuid === patientstockmovement.StockID)
+        patientstockmovement.Stock && (patientstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === patientstockmovement.Stock.StockdefineID))
+        res.status(200).json(patientstockmovement)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 }
 
-async function AddTodogroupdefine(req, res, next) {
+async function AddPatientstockmovement(req, res, next) {
 
     let validationErrors = []
     const {
-        Name,
-        Tododefines,
-        DepartmentID,
+        StockID,
+        Movementtype,
+        Amount,
+        Prevvalue,
+        Newvalue,
+        Movementdate,
+        Status
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+    if (!validator.isUUID(StockID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED, req.language)
     }
-    if (!DepartmentID || !validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+    if (!validator.isNumber(Movementtype)) {
+        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED, req.language)
     }
-    if (!Tododefines || !Array.isArray(Tododefines) || Tododefines.length <= 0) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINES_REQUIRED, req.language)
+    if (!validator.isNumber(Amount)) {
+        validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED, req.language)
+    }
+    if (!validator.isNumber(Prevvalue)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PREVVALUE_REQUIRED, req.language)
+    }
+    if (!validator.isNumber(Newvalue)) {
+        validationErrors.push(messages.VALIDATION_ERROR.NEWVALUE_REQUIRED, req.language)
+    }
+    if (!validator.isISODate(Movementdate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+    }
+    if (!validator.isNumber(Status)) {
+        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
     }
 
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
-    let todogroupdefineuuid = uuid()
+    let stockmovementuuid = uuid()
 
     const t = await db.sequelize.transaction();
 
     try {
-        await db.todogroupdefineModel.create({
+        await db.patientstockmovementModel.create({
             ...req.body,
-            Uuid: todogroupdefineuuid,
+            Uuid: stockmovementuuid,
             Createduser: "System",
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
-        for (const tododefine of Tododefines) {
-            if (!tododefine.Uuid || !validator.isUUID(tododefine.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID, req.language))
-            }
-            await db.todogroupdefinetododefineModel.create({
-                GroupID: todogroupdefineuuid,
-                TodoID: tododefine.Uuid
-            }, { transaction: t });
-        }
-
         await t.commit()
-        const createdTodogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: todogroupdefineuuid } })
-        let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
-            where: {
-                GroupID: todogroupdefine.Uuid,
-            }
-        });
-        createdTodogroupdefine.Tododefines = await db.tododefineModel.findAll({
-            where: {
-                Uuid: tododefineuuids.map(u => { return u.TodoID })
-            }
-        })
-        createdTodogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: createdTodogroupdefine.DepartmentID } })
-        res.status(200).json(createdTodogroupdefine)
+        const patientstockmovements = await db.patientstockmovementModel.findAll({ where: { Isactive: true } })
+        for (const patientstockmovement of patientstockmovements) {
+            patientstockmovement.Stock = db.patientstockModel.find(u => u.Uuid === patientstockmovement.StockID)
+            patientstockmovement.Stock && (patientstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === patientstockmovement.Stock.StockdefineID))
+        }
+        res.status(200).json(patientstockmovements)
     } catch (err) {
         await t.rollback()
-        sequelizeErrorCatcher(err)
-        next()
+        next(sequelizeErrorCatcher(err))
     }
 }
 
-async function UpdateTodogroupdefine(req, res, next) {
+async function UpdatePatientstockmovement(req, res, next) {
 
     let validationErrors = []
     const {
-        Name,
-        Tododefines,
-        DepartmentID,
+        StockID,
+        Movementtype,
+        Amount,
+        Prevvalue,
+        Newvalue,
+        Movementdate,
+        Status,
         Uuid
     } = req.body
-    if (!Name || !validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+
+    if (!validator.isUUID(StockID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED, req.language)
+    }
+    if (!validator.isNumber(Movementtype)) {
+        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED, req.language)
+    }
+    if (!validator.isNumber(Amount)) {
+        validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED, req.language)
+    }
+    if (!validator.isNumber(Prevvalue)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PREVVALUE_REQUIRED, req.language)
+    }
+    if (!validator.isNumber(Newvalue)) {
+        validationErrors.push(messages.VALIDATION_ERROR.NEWVALUE_REQUIRED, req.language)
+    }
+    if (!validator.isISODate(Movementdate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+    }
+    if (!validator.isNumber(Status)) {
+        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID, req.language)
     }
-    if (!DepartmentID || !validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
-    }
-    if (!Tododefines || !Array.isArray(Tododefines) || Tododefines.length <= 0) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINES_REQUIRED, req.language)
-    }
+
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-
     try {
-        const todogroupdefine = db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
-        if (!todogroupdefine) {
-            return next(createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language))
+        const patientstockmovement = await db.patientstockmovementModel.findOne({ where: { Uuid: req.params.stockmovementId } });
+        if (!patientstockmovement) {
+            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
         }
-        if (todogroupdefine.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language))
+        if (!patientstockmovement.Isactive) {
+            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
         }
 
         const t = await db.sequelize.transaction();
 
-        await db.todogroupdefineModel.update({
+        await db.patientstockmovementModel.update({
             ...req.body,
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
-        await db.todogroupdefinetododefineModel.destroy({ where: { GroupID: Uuid }, transaction: t });
-        for (const tododefine of Tododefines) {
-            if (!tododefine.Uuid || !validator.isUUID(tododefine.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID, req.language))
-            }
-            await db.todogroupdefinetododefineModel.create({
-                GroupID: Uuid,
-                TodoID: tododefine.Uuid
-            }, { transaction: t });
-        }
         await t.commit()
-        const updateTodogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
-        let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
-            where: {
-                GroupID: todogroupdefine.Uuid,
-            }
-        });
-        updateTodogroupdefine.Tododefines = await db.tododefineModel.findAll({
-            where: {
-                Uuid: tododefineuuids.map(u => { return u.TodoID })
-            }
-        })
-        updateTodogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: updateTodogroupdefine.DepartmentID } })
-        res.status(200).json(updateTodogroupdefine)
+        const patientstockmovements = await db.patientstockmovementModel.findAll({ where: { Isactive: true } })
+        for (const patientstockmovement of patientstockmovements) {
+            patientstockmovement.Stock = db.patientstockModel.find(u => u.Uuid === patientstockmovement.StockID)
+            patientstockmovement.Stock && (patientstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === patientstockmovement.Stock.StockdefineID))
+        }
+        res.status(200).json(patientstockmovements)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 
 }
 
-async function DeleteTodogroupdefine(req, res, next) {
+async function DeletePatientstockmovement(req, res, next) {
 
     let validationErrors = []
     const {
@@ -220,42 +197,44 @@ async function DeleteTodogroupdefine(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID, req.language)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const todogroupdefine = db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
-        if (!todogroupdefine) {
-            return next(createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language))
+        const patientstockmovement = await db.patientstockmovementModel.findOne({ where: { Uuid: req.params.stockmovementId } });
+        if (!patientstockmovement) {
+            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
         }
-        if (todogroupdefine.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language))
+        if (!patientstockmovement.Isactive) {
+            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
         }
         const t = await db.sequelize.transaction();
 
-        await db.todogroupdefinetododefineModel.destroy({ where: { GroupID: Uuid }, transaction: t });
-        await db.tododefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.patientstockmovementModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        res.status(200).json({ messages: "deleted", Uuid: Uuid })
+        const patientstockmovements = await db.patientstockmovementModel.findAll({ where: { Isactive: true } })
+        for (const patientstockmovement of patientstockmovements) {
+            patientstockmovement.Stock = db.patientstockModel.find(u => u.Uuid === patientstockmovement.StockID)
+            patientstockmovement.Stock && (patientstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === patientstockmovement.Stock.StockdefineID))
+        }
+        res.status(200).json(patientstockmovements)
     } catch (error) {
         await t.rollback();
-        sequelizeErrorCatcher(error)
-        next()
+        next(sequelizeErrorCatcher(error))
     }
 
 }
 
 module.exports = {
-    GetTodogroupdefines,
-    GetTodogroupdefine,
-    AddTodogroupdefine,
-    UpdateTodogroupdefine,
-    DeleteTodogroupdefine,
+    GetPatientstockmovements,
+    GetPatientstockmovement,
+    AddPatientstockmovement,
+    UpdatePatientstockmovement,
+    DeletePatientstockmovement,
 }

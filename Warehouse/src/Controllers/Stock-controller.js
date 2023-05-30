@@ -40,8 +40,10 @@ async function GetStocks(req, res, next) {
                 });
                 stock.Amount = amount
                 stock.Stockdefine = db.stockdefineModel.findOne({ where: { Uuid: stock.StockdefineID } })
-                stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID)
-                stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID)
+                if (stock.Stockdefine) {
+                    stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID)
+                    stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID)
+                }
                 stock.Warehouse = db.warehouseModel.findOne({ where: { Uuid: stock.WarehouseID } })
             }
         }
@@ -55,10 +57,10 @@ async function GetStock(req, res, next) {
 
     let validationErrors = []
     if (!req.params.stockId) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
     }
     if (!validator.isUUID(req.params.stockId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -67,10 +69,10 @@ async function GetStock(req, res, next) {
     try {
         const stock = await db.stockModel.findOne({ where: { Uuid: req.params.stockId } });
         if (!stock) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language)
         }
         if (!stock.Isactive) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language)
         }
         try {
             stock.Warehouse = db.warehouseModel.findOne({ where: { Uuid: stock.WarehouseID } })
@@ -81,22 +83,24 @@ async function GetStock(req, res, next) {
                 amount += (movement.Amount * movement.Movementtype);
             });
             stock.Amount = amount
-            const departmentsresponse = await axios({
-                method: 'GET',
-                url: config.services.Setting + `Departments/${stock.Stockdefine.DepartmentID}`,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            const unitsresponse = await axios({
-                method: 'GET',
-                url: config.services.Setting + `Units/${stock.Stockdefine.UnitID}`,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            stock.Stockdefine.Department = departmentsresponse.data
-            stock.Stockdefine.Unit = unitsresponse.data
+            if (stock.Stockdefine) {
+                const departmentsresponse = await axios({
+                    method: 'GET',
+                    url: config.services.Setting + `Departments/${stock.Stockdefine.DepartmentID}`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const unitsresponse = await axios({
+                    method: 'GET',
+                    url: config.services.Setting + `Units/${stock.Stockdefine.UnitID}`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                stock.Stockdefine.Department = departmentsresponse.data
+                stock.Stockdefine.Unit = unitsresponse.data
+            }
         } catch (error) {
             next(requestErrorCatcher(error, 'Setting'))
         }
@@ -112,57 +116,45 @@ async function AddStock(req, res, next) {
     const {
         WarehouseID,
         Isonusage,
-        Isdeactive,
-        Deactivetime,
         Source,
         StockdefineID,
         DepartmentID,
         Skt,
         Barcodeno,
         Info,
-        Willdelete,
         Status,
         Order,
     } = req.body
 
     if (!validator.isUUID(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
     }
     if (!validator.isBoolean(Isonusage)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED, req.language)
-    }
-    if (!validator.isBoolean(Isdeactive)) {
-        validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED, req.language)
-    }
-    if (!validator.isISODate(Deactivetime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PREVVALUE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISONUSAGE_REQUIRED, req.language)
     }
     if (!validator.isNumber(Source)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NEWVALUE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SOURCE_REQUIRED, req.language)
     }
     if (!validator.isUUID(StockdefineID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED, req.language)
     }
     if (!validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
     }
     if (!validator.isISODate(Skt)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED, req.language)
     }
     if (!validator.isString(Barcodeno)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED, req.language)
     }
     if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
-    }
-    if (!validator.isBoolean(Willdelete)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
     }
     if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
     }
     if (!validator.isNumber(Order)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED, req.language)
     }
 
     if (validationErrors.length > 0) {
@@ -215,8 +207,10 @@ async function AddStock(req, res, next) {
                 });
                 stock.Amount = amount
                 stock.Stockdefine = db.stockdefineModel.findOne({ where: { Uuid: stock.StockdefineID } })
-                stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID)
-                stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID)
+                if (stock.Stockdefine) {
+                    stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID)
+                    stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID)
+                }
                 stock.Warehouse = db.warehouseModel.findOne({ where: { Uuid: stock.WarehouseID } })
             }
         }
@@ -233,64 +227,52 @@ async function UpdateStock(req, res, next) {
     const {
         WarehouseID,
         Isonusage,
-        Isdeactive,
-        Deactivetime,
         Source,
         StockdefineID,
         DepartmentID,
         Skt,
         Barcodeno,
         Info,
-        Willdelete,
         Status,
         Order,
         Uuid
     } = req.body
 
     if (!validator.isUUID(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
     }
     if (!validator.isBoolean(Isonusage)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED, req.language)
-    }
-    if (!validator.isBoolean(Isdeactive)) {
-        validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED, req.language)
-    }
-    if (!validator.isISODate(Deactivetime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PREVVALUE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISONUSAGE_REQUIRED, req.language)
     }
     if (!validator.isNumber(Source)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NEWVALUE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SOURCE_REQUIRED, req.language)
     }
     if (!validator.isUUID(StockdefineID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED, req.language)
     }
     if (!validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
     }
     if (!validator.isISODate(Skt)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED, req.language)
     }
     if (!validator.isString(Barcodeno)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED, req.language)
     }
     if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
-    }
-    if (!validator.isBoolean(Willdelete)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
     }
     if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
     }
     if (!validator.isNumber(Order)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID, req.language)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED, req.language)
     }
 
     if (validationErrors.length > 0) {
@@ -299,10 +281,10 @@ async function UpdateStock(req, res, next) {
     try {
         const stock = db.stockModel.findOne({ where: { Uuid: Uuid } })
         if (!stock) {
-            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
+            return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
         }
         if (stock.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+            return next(createAccessDenied([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
         }
 
         const t = await db.sequelize.transaction();
@@ -346,8 +328,10 @@ async function UpdateStock(req, res, next) {
                 });
                 stock.Amount = amount
                 stock.Stockdefine = db.stockdefineModel.findOne({ where: { Uuid: stock.StockdefineID } })
-                stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID)
-                stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID)
+                if (stock.Stockdefine) {
+                    stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID)
+                    stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID)
+                }
                 stock.Warehouse = db.warehouseModel.findOne({ where: { Uuid: stock.WarehouseID } })
             }
         }
@@ -367,10 +351,10 @@ async function DeleteStock(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID, req.language)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -379,13 +363,14 @@ async function DeleteStock(req, res, next) {
     try {
         const stock = await db.stockModel.findOne({ where: { Uuid: req.params.stockId } });
         if (!stock) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language)
         }
         if (!stock.Isactive) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language)
         }
         const t = await db.sequelize.transaction();
 
+        await db.stockmovementModel.destroy({ where: { StockID: Uuid } })
         await db.stockModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
         const stocks = await db.stockModel.findAll({ where: { Isactive: true } })
