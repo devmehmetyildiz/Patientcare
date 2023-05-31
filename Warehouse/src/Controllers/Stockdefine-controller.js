@@ -1,10 +1,11 @@
+const config = require("../Config")
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-
+const axios = require('axios')
 
 async function GetStockdefines(req, res, next) {
     try {
@@ -46,10 +47,10 @@ async function GetStockdefines(req, res, next) {
 async function GetStockdefine(req, res, next) {
 
     let validationErrors = []
-    if (!req.params.stokdefineId) {
+    if (!req.params.stockdefineId) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
     }
-    if (!validator.isUUID(req.params.stokdefineId)) {
+    if (!validator.isUUID(req.params.stockdefineId)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKDEFINEID)
     }
     if (validationErrors.length > 0) {
@@ -57,7 +58,7 @@ async function GetStockdefine(req, res, next) {
     }
 
     try {
-        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: req.params.stokdefineId } });
+        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: req.params.stockdefineId } });
         if (!stockdefine) {
             return createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_FOUND], req.language)
         }
@@ -130,7 +131,6 @@ async function AddStockdefine(req, res, next) {
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
-
 
         await t.commit()
         const stockdefines = await db.stockdefineModel.findAll({ where: { Isactive: true } })

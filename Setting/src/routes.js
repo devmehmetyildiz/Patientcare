@@ -1,5 +1,6 @@
 const Routes = [
   { method: 'get', path: '/Cases/GetCompleteCase', controller: 'Case', action: 'GetCompleteCase' },
+  { method: 'get', path: '/Cases/GetDeactivateCase', controller: 'Case', action: 'GetDeactivateCase' },
   { method: 'get', path: '/Cases/:caseId', controller: 'Case', action: 'GetCase' },
   { method: 'get', path: '/Cases', controller: 'Case', action: 'GetCases' },
   { method: 'post', path: '/Cases', controller: 'Case', action: 'AddCase' },

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form} from 'semantic-ui-react'
+import { Divider, Dropdown, Form } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
-import Popuputil from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
 
 export default class StocksEdit extends Component {
@@ -30,58 +30,43 @@ export default class StocksEdit extends Component {
     }
   }
 
+
   componentDidUpdate() {
-    const { Departments, Stockdefines, Stocks, Warehouses } = this.props
+    const { Departments, Stockdefines, Stocks, Warehouses,
+      removeWarehousenotification, removeStocknotification, removeStockdefinenotification,
+      removeDepartmentnotification } = this.props
+
     const { selected_record, isLoading } = Stocks
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
       && Departments.list.length > 0 && !Departments.isLoading
       && Warehouses.list.length > 0 && !Warehouses.isLoading
       && Stockdefines.list.length > 0 && !Stockdefines.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selecteddepartments: selected_record.departmentid,
-        selectedstockdefine: selected_record.stockdefineID,
-        selectedwarehouse: selected_record.warehouseID,
+        selecteddepartments: selected_record.DepartmentID,
+        selectedstockdefine: selected_record.StockdefineID,
+        selectedwarehouse: selected_record.WarehouseID,
         isDatafetched: true
       })
     }
+    Notification(Stocks.notifications, removeStocknotification)
+    Notification(Warehouses.notifications, removeWarehousenotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
   }
 
   render() {
-    const { Stocks, Warehouses, removeWarehousenotification, removeStocknotification, Departments, Stockdefines, removeStockdefinenotification, removeDepartmentnotification } = this.props
+    const { Stocks, Warehouses, Departments, Stockdefines } = this.props
     const { selected_record } = Stocks
-    if (Stocks.notifications && Stocks.notifications.length > 0) {
-      let msg = Stocks.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeStocknotification()
-    }
-    if (Warehouses.notifications && Warehouses.notifications.length > 0) {
-      let msg = Warehouses.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeWarehousenotification()
-    }
-    if (Departments.notifications && Departments.notifications.length > 0) {
-      let msg = Departments.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeDepartmentnotification()
-    }
-    if (Stockdefines.notifications && Stockdefines.notifications.length > 0) {
-      let msg = Stockdefines.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeStockdefinenotification()
-    }
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
     const Stockdefineoptions = Stockdefines.list.map(define => {
-      return { key: define.concurrencyStamp, text: define.name, value: define.concurrencyStamp }
+      return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
     const Warehouseoptions = Warehouses.list.map(warehouse => {
-      return { key: warehouse.concurrencyStamp, text: warehouse.name, value: warehouse.concurrencyStamp }
+      return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
     })
-
-
-
 
     return (
       Stockdefines.isLoading || Stockdefines.isDispatching || Stocks.isLoading || Stocks.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
@@ -113,11 +98,11 @@ export default class StocksEdit extends Component {
               <Form.Group widths='equal'>
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Barkod No" placeholder="Barkod No" name="barcodeno" fluid defaultValue={selected_record.barcodeno} />
+                <Form.Input label="Barkod No" placeholder="Barkod No" name="Barcodeno" fluid defaultValue={selected_record.barcodeno} />
               </Form.Group>
               <Form.Group widths='equal'>
                 <Form.Field>
-                  <Form.Input label="Skt" placeholder="Skt" name="skt" fluid type='date' defaultValue={this.getLocalDate(selected_record.skt)} />
+                  <Form.Input label="Skt" placeholder="Skt" name="Skt" fluid type='date' defaultValue={this.getLocalDate(selected_record.skt)} />
                 </Form.Field>
                 <Form.Field>
                   <label className='text-[#000000de]'>Departmanlar</label>
@@ -142,18 +127,18 @@ export default class StocksEdit extends Component {
     e.preventDefault()
     const { EditStocks, history, fillStocknotification, Stocks } = this.props
     const data = formToObject(e.target)
-    data.departmentid = this.state.selecteddepartments
-    data.stockdefineID = this.state.selectedstockdefine
-    data.warehouseID = this.state.selectedwarehouse
+    data.DepartmentID = this.state.selecteddepartments
+    data.StockdefineID = this.state.selectedstockdefine
+    data.WarehouseID = this.state.selectedwarehouse
 
     let errors = []
-    if (!data.departmentid || data.departmentid === '') {
+    if (!data.DepartmentID || data.DepartmentID === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Departman Seçili Değil' })
     }
-    if (!data.warehouseID || data.warehouseID === '') {
+    if (!data.WarehouseID || data.WarehouseID === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Ambar Seçili Değil' })
     }
-    if (!data.stockdefineID || data.stockdefineID === '') {
+    if (!data.StockdefineID || data.StockdefineID === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Ürün Seçili Değil' })
     }
     if (errors.length > 0) {

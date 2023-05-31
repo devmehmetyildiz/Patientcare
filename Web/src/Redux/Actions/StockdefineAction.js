@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_STOCKDEFINES_INIT: 'GET_STOCKDEFINES_INIT',
@@ -35,7 +36,7 @@ export const ACTION_TYPES = {
 
 export const GetStockdefines = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_STOCKDEFINES_INIT })
-    await instanse.get(ROUTES.STOCKDEFINE + "/GetAll")
+    await instanse.get(config.services.Warehouse, ROUTES.STOCKDEFINE)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_STOCKDEFINES_SUCCESS, payload: response.data })
         })
@@ -47,7 +48,7 @@ export const GetStockdefines = () => async (dispatch, getState) => {
 
 export const GetStockdefine = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_STOCKDEFINE_INIT })
-    await instanse.get(ROUTES.STOCKDEFINE + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Warehouse, `${ROUTES.STOCKDEFINE}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_STOCKDEFINE_SUCCESS, payload: response.data })
         })
@@ -59,7 +60,7 @@ export const GetStockdefine = (guid) => async (dispatch, getState) => {
 
 export const AddStockdefines = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_STOCKDEFINE_INIT })
-    await instanse.post(ROUTES.STOCKDEFINE + "/Add", data)
+    await instanse.post(config.services.Warehouse, ROUTES.STOCKDEFINE, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.ADD_STOCKDEFINE_SUCCESS, payload: response.data })
                 historypusher && historypusher.push('/Stockdefines')
@@ -72,7 +73,7 @@ export const AddStockdefines = (data, historypusher) => async (dispatch, getStat
 
 export const EditStockdefines = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_STOCKDEFINE_INIT })
-    await instanse.post(ROUTES.STOCKDEFINE + "/Update", data)
+    await instanse.put(config.services.Warehouse, ROUTES.STOCKDEFINE, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.EDIT_STOCKDEFINE_SUCCESS, payload: response.data })
                 historypusher.push('/Stockdefines')
@@ -87,7 +88,7 @@ export const DeleteStockdefines = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_STOCKDEFINE_INIT })
-    await instanse.post(ROUTES.STOCKDEFINE + "/Delete", data)
+    await instanse.delete(config.services.Warehouse, ROUTES.STOCKDEFINE, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_STOCKDEFINE_SUCCESS, payload: response.data })
         })

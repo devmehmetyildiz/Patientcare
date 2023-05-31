@@ -14,21 +14,20 @@ async function GetWarehouses(req, res, next) {
         let units = null
         if (warehouses && Array.isArray(warehouses) && warehouses.length > 0) {
             try {
-                const departmentresponse = axios({
+                const departmentresponse =await axios({
                     method: 'GET',
                     url: config.services.Setting + 'Departments',
                     headers: {
                         session_key: config.session.secret
                     }
                 })
-                const unitresponse = axios({
+                const unitresponse =await axios({
                     method: 'GET',
                     url: config.services.Setting + 'Units',
                     headers: {
                         session_key: config.session.secret
                     }
                 })
-                await Promise.all([departmentresponse, unitresponse])
                 departments = departmentresponse.data
                 units = unitresponse.data
             } catch (err) {

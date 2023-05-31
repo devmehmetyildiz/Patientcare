@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_STOCKMOVEMENTS_INIT: 'GET_STOCKMOVEMENTS_INIT',
@@ -35,7 +36,7 @@ export const ACTION_TYPES = {
 
 export const GetStockmovements = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_STOCKMOVEMENTS_INIT })
-    await instanse.get(ROUTES.STOCKMOVEMENT + "/GetAll")
+    await instanse.get(config.services.Warehouse, ROUTES.STOCKMOVEMENT)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_STOCKMOVEMENTS_SUCCESS, payload: response.data })
         })
@@ -47,7 +48,7 @@ export const GetStockmovements = () => async (dispatch, getState) => {
 
 export const GetStockmovement = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_STOCKMOVEMENT_INIT })
-    await instanse.get(ROUTES.STOCKMOVEMENT + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Warehouse, `${ROUTES.STOCKMOVEMENT}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_STOCKMOVEMENT_SUCCESS, payload: response.data }) 
         })
@@ -59,7 +60,7 @@ export const GetStockmovement = (guid) => async (dispatch, getState) => {
 
 export const AddStockmovements = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_STOCKMOVEMENT_INIT })
-    await instanse.post(ROUTES.STOCKMOVEMENT + "/Add", data)
+    await instanse.post(config.services.Warehouse, ROUTES.STOCKMOVEMENT, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.ADD_STOCKMOVEMENT_SUCCESS, payload: response.data })
                 historypusher('/Stockmovements')
@@ -72,7 +73,7 @@ export const AddStockmovements = (data, historypusher) => async (dispatch, getSt
 
 export const EditStockmovements = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_STOCKMOVEMENT_INIT })
-    await instanse.post(ROUTES.STOCKMOVEMENT + "/Update", data)
+    await instanse.put(config.services.Warehouse, ROUTES.STOCKMOVEMENT, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.EDIT_STOCKMOVEMENT_SUCCESS, payload: response.data })
                 historypusher.push('/Stockmovements')
@@ -87,7 +88,7 @@ export const DeleteStockmovements = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_STOCKMOVEMENT_INIT })
-    await instanse.post(ROUTES.STOCKMOVEMENT + "/Delete", data)
+    await instanse.delete(config.services.Warehouse, ROUTES.STOCKMOVEMENT, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_STOCKMOVEMENT_SUCCESS, payload: response.data })
         })

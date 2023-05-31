@@ -1,25 +1,56 @@
+const config = require("../Config")
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
+const axios = require('axios')
 
-
-async function GetPruchaseorderstockmovements(req, res, next) {
+async function GetPurchaseorderstockmovements(req, res, next) {
     try {
         const purchaseorderstockmovements = await db.purchaseorderstockmovementModel.findAll({ where: { Isactive: true } })
+        let departments = []
+        let units = []
+        if (purchaseorderstockmovements && purchaseorderstockmovements.length > 0) {
+            try {
+                const departmentresponse = await axios({
+                    method: 'GET',
+                    url: config.services.Setting + 'Departments',
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const unitresponse = await axios({
+                    method: 'GET',
+                    url: config.services.Setting + 'Units',
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                departments = departmentresponse.data
+                units = unitresponse.data
+            } catch (error) {
+                return next(requestErrorCatcher(error, 'Setting'))
+            }
+        }
         for (const purchaseorderstockmovement of purchaseorderstockmovements) {
-            purchaseorderstockmovement.Stock = db.purchaseorderstockModel.find(u => u.Uuid === purchaseorderstockmovement.StockID)
-            purchaseorderstockmovement.Stock && (purchaseorderstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === purchaseorderstockmovement.Stock.StockdefineID))
+            purchaseorderstockmovement.Stock = await db.purchaseorderstockModel.findOne({ where: { Uuid: purchaseorderstockmovement.StockID } })
+            if (purchaseorderstockmovement.Stock) {
+                purchaseorderstockmovement.Stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: purchaseorderstockmovement.Stock.StockdefineID } })
+                if (purchaseorderstockmovement.Stock.Stockdefine) {
+                    purchaseorderstockmovement.Stock.Stockdefine.Department = departments.find(u => u.Uuid === purchaseorderstockmovement.Stock.Stockdefine.DepartmentID)
+                    purchaseorderstockmovement.Stock.Stockdefine.Unit = units.find(u => u.Uuid === purchaseorderstockmovement.Stock.Stockdefine.UnitID)
+                }
+            }
         }
         res.status(200).json(purchaseorderstockmovements)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
-async function GetPruchaseorderstockmovement(req, res, next) {
+async function GetPurchaseorderstockmovement(req, res, next) {
 
     let validationErrors = []
     if (!req.params.stockmovementId) {
@@ -40,15 +71,39 @@ async function GetPruchaseorderstockmovement(req, res, next) {
         if (!purchaseorderstockmovement.Isactive) {
             return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
         }
-        purchaseorderstockmovement.Stock = db.purchaseorderstockModel.find(u => u.Uuid === purchaseorderstockmovement.StockID)
-        purchaseorderstockmovement.Stock && (purchaseorderstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === purchaseorderstockmovement.Stock.StockdefineID))
+        purchaseorderstockmovement.Stock = await db.purchaseorderstockModel.findOne({ where: { Uuid: purchaseorderstockmovement.StockID } })
+        if (purchaseorderstockmovement.Stock) {
+            purchaseorderstockmovement.Stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: purchaseorderstockmovement.Stock.StockdefineID } })
+            if (purchaseorderstockmovement.Stock.Stockdefine) {
+                try {
+                    const departmentresponse = await axios({
+                        method: 'GET',
+                        url: config.services.Setting + `Departments/${purchaseorderstockmovement.Stock.Stockdefine.DepartmentID}`,
+                        headers: {
+                            session_key: config.session.secret
+                        }
+                    })
+                    const unitresponse = await axios({
+                        method: 'GET',
+                        url: config.services.Setting + `Units/${purchaseorderstockmovement.Stock.Stockdefine.UnitID}`,
+                        headers: {
+                            session_key: config.session.secret
+                        }
+                    })
+                    purchaseorderstockmovement.Stock.Stockdefine.Department = departmentresponse.data
+                    purchaseorderstockmovement.Stock.Stockdefine.Unit = unitresponse.data
+                } catch (error) {
+                    return next(requestErrorCatcher(error, 'Setting'))
+                }
+            }
+        }
         res.status(200).json(purchaseorderstockmovement)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
-async function AddPruchaseorderstockmovement(req, res, next) {
+async function AddPurchaseorderstockmovement(req, res, next) {
 
     let validationErrors = []
     const {
@@ -92,8 +147,15 @@ async function AddPruchaseorderstockmovement(req, res, next) {
     const t = await db.sequelize.transaction();
 
     try {
+        let amount = 0.0;
+        let movements = await db.purchaseorderstockmovementModel.findAll({ where: { StockID: StockID } })
+        movements.forEach(movement => {
+            amount += (movement.Amount * movement.Movementtype);
+        });
         await db.purchaseorderstockmovementModel.create({
             ...req.body,
+            Prevvalue: amount,
+            Newvalue: Amount + amount,
             Uuid: stockmovementuuid,
             Createduser: "System",
             Createtime: new Date(),
@@ -101,19 +163,14 @@ async function AddPruchaseorderstockmovement(req, res, next) {
         }, { transaction: t })
 
         await t.commit()
-        const purchaseorderstockmovements = await db.purchaseorderstockmovementModel.findAll({ where: { Isactive: true } })
-        for (const purchaseorderstockmovement of purchaseorderstockmovements) {
-            purchaseorderstockmovement.Stock = db.purchaseorderstockModel.find(u => u.Uuid === purchaseorderstockmovement.StockID)
-            purchaseorderstockmovement.Stock && (purchaseorderstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === purchaseorderstockmovement.Stock.StockdefineID))
-        }
-        res.status(200).json(purchaseorderstockmovements)
     } catch (err) {
         await t.rollback()
-        next(sequelizeErrorCatcher(err))
+        return next(sequelizeErrorCatcher(err))
     }
+    GetPurchaseorderstockmovements(req, res, next)
 }
 
-async function UpdatePruchaseorderstockmovement(req, res, next) {
+async function UpdatePurchaseorderstockmovement(req, res, next) {
 
     let validationErrors = []
     const {
@@ -158,6 +215,8 @@ async function UpdatePruchaseorderstockmovement(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
+    const t = await db.sequelize.transaction();
+
     try {
         const purchaseorderstockmovement = db.purchaseorderstockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!purchaseorderstockmovement) {
@@ -167,8 +226,6 @@ async function UpdatePruchaseorderstockmovement(req, res, next) {
             return next(createAccessDenied([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
         }
 
-        const t = await db.sequelize.transaction();
-
         await db.purchaseorderstockmovementModel.update({
             ...req.body,
             Updateduser: "System",
@@ -176,20 +233,13 @@ async function UpdatePruchaseorderstockmovement(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
-        const purchaseorderstockmovements = await db.purchaseorderstockmovementModel.findAll({ where: { Isactive: true } })
-        for (const purchaseorderstockmovement of purchaseorderstockmovements) {
-            purchaseorderstockmovement.Stock = db.purchaseorderstockModel.find(u => u.Uuid === purchaseorderstockmovement.StockID)
-            purchaseorderstockmovement.Stock && (purchaseorderstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === purchaseorderstockmovement.Stock.StockdefineID))
-        }
-        res.status(200).json(purchaseorderstockmovements)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
-
+    GetPurchaseorderstockmovements(req, res, next)
 }
 
-async function DeletePruchaseorderstockmovement(req, res, next) {
+async function DeletePurchaseorderstockmovement(req, res, next) {
 
     let validationErrors = []
     const {
@@ -206,6 +256,7 @@ async function DeletePruchaseorderstockmovement(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const purchaseorderstockmovement = db.purchaseorderstockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!purchaseorderstockmovement) {
@@ -214,27 +265,20 @@ async function DeletePruchaseorderstockmovement(req, res, next) {
         if (purchaseorderstockmovement.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.purchaseorderstockmovementModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-        const purchaseorderstockmovements = await db.purchaseorderstockmovementModel.findAll({ where: { Isactive: true } })
-        for (const purchaseorderstockmovement of purchaseorderstockmovements) {
-            purchaseorderstockmovement.Stock = db.purchaseorderstockModel.find(u => u.Uuid === purchaseorderstockmovement.StockID)
-            purchaseorderstockmovement.Stock && (purchaseorderstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === purchaseorderstockmovement.Stock.StockdefineID))
-        }
-        res.status(200).json(purchaseorderstockmovements)
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
+    GetPurchaseorderstockmovements(req, res, next)
 }
 
 module.exports = {
-    GetPruchaseorderstockmovements,
-    GetPruchaseorderstockmovement,
-    AddPruchaseorderstockmovement,
-    UpdatePruchaseorderstockmovement,
-    DeletePruchaseorderstockmovement,
+    GetPurchaseorderstockmovements,
+    GetPurchaseorderstockmovement,
+    AddPurchaseorderstockmovement,
+    UpdatePurchaseorderstockmovement,
+    DeletePurchaseorderstockmovement,
 }

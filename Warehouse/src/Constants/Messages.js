@@ -109,13 +109,6 @@ const messages = {
         tr: 'Bu işlem için hareket tarihi gerekli',
       }
     },
-    STATUS_REQUIRED: {
-      code: 'STATUS_REQUIRED', description: {
-        en: 'The movement status required',
-        tr: 'Bu işlem için hareket durumu gerekli',
-      }
-    },
-
     STOCKDEFINEID_REQUIRED: {
       code: 'STOCKDEFINEID_REQUIRED', description: {
         en: 'The stockdefineid required',

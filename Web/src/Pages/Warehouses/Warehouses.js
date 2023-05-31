@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Divider, Icon, Modal } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
-import Popup from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import WarehousesList from './WarehousesList'
@@ -22,6 +22,12 @@ export default class Warehouses extends Component {
     GetWarehouses()
   }
 
+  componentDidUpdate() {
+    const { Warehouses, removeWarehousenotification } = this.props
+    Notification(Warehouses.notifications, removeWarehousenotification)
+  }
+
+
   render() {
 
     const Columns = [
@@ -34,9 +40,10 @@ export default class Warehouses extends Component {
           </span>
         ),
       },
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'İsim', accessor: 'name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'İsim', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Açıklama', accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -45,16 +52,12 @@ export default class Warehouses extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
 
-    const { Warehouses, DeleteWarehouses, removeWarehousenotification, Profile } = this.props
-    const { notifications, list, isLoading, isDispatching } = Warehouses
-    if (notifications && notifications.length > 0) {
-      let msg = notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeWarehousenotification()
-    }
+    const { Warehouses, DeleteWarehouses, Profile } = this.props
+    const { list, isLoading, isDispatching } = Warehouses
+
 
     const metaKey = "Warehouses"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -65,7 +68,7 @@ export default class Warehouses extends Component {
     };
 
     (list || []).forEach(item => {
-      item.edit = <Link to={`/Stations/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.edit = <Link to={`/Stations/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -114,7 +117,7 @@ export default class Warehouses extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.name} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
                   ambarını silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>

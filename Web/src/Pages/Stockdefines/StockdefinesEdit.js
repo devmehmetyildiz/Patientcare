@@ -32,9 +32,9 @@ export default class StockdefinesEdit extends Component {
   componentDidUpdate() {
     const { Stockdefines, Units, removeUnitnotification, removeStockdefinenotification, Departments, removeDepartmentnotification } = this.props
     const { selected_record, isLoading } = Stockdefines
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0 && Units.list.length > 0 && !Units.isLoading && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Units.list.length > 0 && !Units.isLoading && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selecteddepartment: selected_record.department.concurrencyStamp, selectedunit: selected_record.unit.concurrencyStamp, isDatafetched: true
+        selecteddepartment: selected_record.Department.Uuid, selectedunit: selected_record.Unit.Uuid, isDatafetched: true
       })
     }
     Notification(Stockdefines.notifications, removeStockdefinenotification)
@@ -71,8 +71,8 @@ export default class StockdefinesEdit extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input label="Stok Tanımı" placeholder="Stok Tanımı" name="Name" fluid defaultValue={Stockdefines.selected_record.name} />
-                <Form.Input label="Açıklama" placeholder="Açıklama" name="Description" fluid defaultValue={Stockdefines.selected_record.description} />
+                <Form.Input label="Stok Tanımı" placeholder="Stok Tanımı" name="Name" fluid defaultValue={Stockdefines.selected_record.Name} />
+                <Form.Input label="Açıklama" placeholder="Açıklama" name="Description" fluid defaultValue={Stockdefines.selected_record.Description} />
               </Form.Field>
               <Form.Group widths={"equal"}>
                 <Form.Field>

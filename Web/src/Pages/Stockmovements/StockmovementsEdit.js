@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import {  Divider, Dropdown, Form } from 'semantic-ui-react'
-import { Breadcrumb, Button,  Header } from 'semantic-ui-react'
+import { Divider, Dropdown, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
-import Popuputil from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
 
 export default class StockmovementsEdit extends Component {
@@ -27,45 +27,33 @@ export default class StockmovementsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Stocks, Stockmovements } = this.props
+    const { Stocks, Stockmovements,
+      removeStockmovementnotification, removeStocknotification } = this.props
     const { selected_record, isLoading } = Stockmovements
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
       && Stocks.list.length > 0 && !Stocks.isLoading
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedstock: selected_record.stockID,
-        selectedmovement: selected_record.movementtype,
+        selectedstock: selected_record.StockID,
+        selectedmovement: selected_record.Movementtype,
         isDatafetched: true
       })
     }
+    Notification(Stocks.notifications, removeStocknotification)
+    Notification(Stockmovements.notifications, removeStockmovementnotification)
   }
 
   render() {
-    const { Stockmovements, removeStockmovementnotification, Stocks, removeStocknotification } = this.props
-    if (Stockmovements.notifications &&Stockmovements.notifications.length > 0) {
-      let msg = Stockmovements.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeStockmovementnotification()
-    }
-    if (Stocks.notifications && Stocks.notifications.length > 0) {
-      let msg = Stocks.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeStocknotification()
-    }
-
+    const { Stockmovements, Stocks } = this.props
 
     const Stockoptions = Stocks.list.map(stock => {
-      return { key: stock.concurrencyStamp, text: `${stock.stockdefine.name} - ${stock.barcodeno}`, value: stock.concurrencyStamp }
+      return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
     })
 
     const Movementoptions = [
       { key: -1, text: "STOKDAN DÜŞME", value: -1 },
       { key: 1, text: "STOĞA EKLEME", value: 1 },
     ]
-
-
-
-
 
     return (
       Stocks.isLoading || Stocks.isDispatching || Stockmovements.isLoading || Stockmovements.isDispatching ? <LoadingPage /> :
@@ -91,7 +79,7 @@ export default class StockmovementsEdit extends Component {
                 </Form.Field>
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input defaultValue={Stockmovements.selected_record.amount} label="Miktar" placeholder="Miktar" name="amount" fluid />
+                <Form.Input defaultValue={Stockmovements.selected_record.Amount} label="Miktar" placeholder="Miktar" name="Amount" fluid />
                 <Form.Field>
                   <label className='text-[#000000de]'>Hareket Türü</label>
                   <Dropdown value={this.state.selectedmovement} placeholder='Hareket Türü' fluid selection options={Movementoptions} onChange={this.handleChangeMovement} />
@@ -116,17 +104,17 @@ export default class StockmovementsEdit extends Component {
     const { EditStockmovements, history, fillStockmovementnotification, Stockmovements } = this.props
     const data = formToObject(e.target)
 
-    data.movementtype = this.state.selectedmovement
-    data.stockID = this.state.selectedstock
-
+    data.Movementtype = this.state.selectedmovement
+    data.StockID = this.state.selectedstock
+    data.Amount = parseFloat(data.Amount)
     let errors = []
-    if (!data.movementtype || data.movementtype === '') {
+    if (!data.Movementtype || data.Movementtype === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Hareket Seçili Değil' })
     }
-    if (!data.stockID || data.stockID === '') {
+    if (!data.StockID || data.StockID === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Ürün Seçili Değil' })
     }
-    if (data.amount === '') {
+    if (data.Amount === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Miktar girilmedi' })
     }
     if (errors.length > 0) {

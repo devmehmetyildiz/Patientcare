@@ -40,6 +40,11 @@ export default class CasesCreate extends Component {
 
     const casestatusOption = [
       {
+        key: '-1',
+        text: 'İptal Etme',
+        value: -1,
+      },
+      {
         key: '0',
         text: 'Pasif',
         value: 0,
@@ -48,11 +53,6 @@ export default class CasesCreate extends Component {
         key: '1',
         text: 'Tamamlama',
         value: 1,
-      },
-      {
-        key: '2',
-        text: 'İptal Etme',
-        value: 2,
       },
     ]
 

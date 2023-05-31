@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import {  Divider, Dropdown, Form } from 'semantic-ui-react'
+import { Divider, Dropdown, Form } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
-import Popuputil from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
 
 export default class PurchaseorderstockmovementsCreate extends Component {
@@ -15,38 +15,29 @@ export default class PurchaseorderstockmovementsCreate extends Component {
     }
   }
 
-
   componentDidMount() {
     const { GetStocks } = this.props
     GetStocks()
   }
 
-  render() {
-    const { Stockmovements, removeStockmovementnotification, Stocks, removeStocknotification } = this.props
-    if (Stockmovements.notifications && Stockmovements.notifications.length > 0) {
-      let msg = Stockmovements.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeStockmovementnotification()
-    }
-    if (Stocks.notifications && Stocks.notifications.length > 0) {
-      let msg = Stocks.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeStocknotification()
-    }
+  componentDidUpdate() {
+    const { Stockmovements, removeStockmovementnotification,
+      Stocks, removeStocknotification } = this.props
+    Notification(Stockmovements.notifications, removeStockmovementnotification)
+    Notification(Stocks.notifications, removeStocknotification)
+  }
 
+  render() {
+    const { Stockmovements, Stocks } = this.props
 
     const Stockoptions = Stocks.list.map(stock => {
-      return { key: stock.concurrencyStamp, text: `${stock.stockdefine.name} - ${stock.barcodeno}`, value: stock.concurrencyStamp }
+      return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
     })
 
     const Movementoptions = [
       { key: -1, text: "STOKDAN DÜŞME", value: -1 },
       { key: 1, text: "STOĞA EKLEME", value: 1 },
     ]
-
-
-
-
 
     return (
       Stocks.isLoading || Stocks.isDispatching || Stockmovements.isLoading || Stockmovements.isDispatching ? <LoadingPage /> :
@@ -72,7 +63,7 @@ export default class PurchaseorderstockmovementsCreate extends Component {
                 </Form.Field>
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Miktar" placeholder="Miktar" name="amount" fluid />
+                <Form.Input label="Miktar" placeholder="Miktar" name="Amount" fluid />
                 <Form.Field>
                   <label className='text-[#000000de]'>Hareket Türü</label>
                   <Dropdown placeholder='Hareket Türü' fluid selection options={Movementoptions} onChange={this.handleChangeMovement} />
@@ -96,32 +87,22 @@ export default class PurchaseorderstockmovementsCreate extends Component {
     e.preventDefault()
     const { AddStockmovements, history, fillStockmovementnotification } = this.props
     const data = formToObject(e.target)
-    data.movementdate = null
-    data.newvalue = 0
-    data.prevvalue = 0
-    data.movementtype = this.state.selectedmovement
-    data.stockID = this.state.selectedstock
-    data.movementtypename = ""
-    data.status = 0
-    data.stock = null
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
+    data.Movementdate = new Date()
+    data.Newvalue = 0
+    data.Prevvalue = 0
+    data.Movementtype = this.state.selectedmovement
+    data.StockID = this.state.selectedstock
+    data.Status = 0
+    data.Amount = parseFloat(data.Amount)
 
     let errors = []
-    if (!data.movementtype || data.movementtype == '') {
+    if (!data.Movementtype || data.Movementtype === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Hareket Seçili Değil' })
     }
-    if (!data.stockID || data.stockID == '') {
+    if (!data.StockID || data.StockID === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Ürün Seçili Değil' })
     }
-    if (data.amount === '') {
+    if (data.Amount === '' || data.Amount === 0) {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Miktar girilmedi' })
     }
     if (errors.length > 0) {

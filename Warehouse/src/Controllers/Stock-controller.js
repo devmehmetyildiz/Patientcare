@@ -1,10 +1,11 @@
+const config = require("../Config")
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-
+const axios = require('axios')
 
 async function GetStocks(req, res, next) {
     try {
@@ -39,12 +40,12 @@ async function GetStocks(req, res, next) {
                     amount += (movement.Amount * movement.Movementtype);
                 });
                 stock.Amount = amount
-                stock.Stockdefine = db.stockdefineModel.findOne({ where: { Uuid: stock.StockdefineID } })
+                stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock.StockdefineID } })
                 if (stock.Stockdefine) {
                     stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID)
                     stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID)
                 }
-                stock.Warehouse = db.warehouseModel.findOne({ where: { Uuid: stock.WarehouseID } })
+                stock.Warehouse = await db.warehouseModel.findOne({ where: { Uuid: stock.WarehouseID } })
             }
         }
         res.status(200).json(stocks)
@@ -75,8 +76,8 @@ async function GetStock(req, res, next) {
             return createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language)
         }
         try {
-            stock.Warehouse = db.warehouseModel.findOne({ where: { Uuid: stock.WarehouseID } })
-            stock.Stockdefine = db.stockdefineModel.findOne({ where: { Uuid: stock.StockdefineID } })
+            stock.Warehouse = await db.warehouseModel.findOne({ where: { Uuid: stock.WarehouseID } })
+            stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock.StockdefineID } })
             let amount = 0.0;
             let movements = await db.stockmovementModel.findAll({ where: { StockID: stock.Uuid } })
             movements.forEach(movement => {
@@ -102,7 +103,7 @@ async function GetStock(req, res, next) {
                 stock.Stockdefine.Unit = unitsresponse.data
             }
         } catch (error) {
-            next(requestErrorCatcher(error, 'Setting'))
+            return next(requestErrorCatcher(error, 'Setting'))
         }
         res.status(200).json(stock)
     } catch (error) {
@@ -121,7 +122,6 @@ async function AddStock(req, res, next) {
         DepartmentID,
         Skt,
         Barcodeno,
-        Info,
         Status,
         Order,
     } = req.body
@@ -132,7 +132,7 @@ async function AddStock(req, res, next) {
     if (!validator.isBoolean(Isonusage)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISONUSAGE_REQUIRED, req.language)
     }
-    if (!validator.isNumber(Source)) {
+    if (!validator.isString(Source)) {
         validationErrors.push(messages.VALIDATION_ERROR.SOURCE_REQUIRED, req.language)
     }
     if (!validator.isUUID(StockdefineID)) {
@@ -146,9 +146,6 @@ async function AddStock(req, res, next) {
     }
     if (!validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED, req.language)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
     }
     if (!validator.isNumber(Status)) {
         validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
@@ -164,7 +161,6 @@ async function AddStock(req, res, next) {
     let stockuuid = uuid()
 
     const t = await db.sequelize.transaction();
-
     try {
         await db.stockModel.create({
             ...req.body,
@@ -174,51 +170,24 @@ async function AddStock(req, res, next) {
             Isactive: true
         }, { transaction: t })
 
+        await db.stockmovementModel.create({
+            StockID: stockuuid,
+            Amount: req.body.Amount,
+            Movementdate: new Date(),
+            Movementtype: 1,
+            Prevvalue: 0,
+            Newvalue: req.body.Amount,
+            Createduser: "System",
+            Createtime: new Date(),
+            Isactive: true
+        }, { transaction: t })
+
         await t.commit()
-        const stocks = await db.stockModel.findAll({ where: { Isactive: true } })
-        if (stocks && stocks.length > 0) {
-            let departments = []
-            let units = []
-            try {
-                const departmentsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Units`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                departments = departmentsresponse.data
-                units = unitsresponse.data
-            } catch (error) {
-                next(requestErrorCatcher(error, 'Setting'))
-            }
-            for (const stock of stocks) {
-                let amount = 0.0;
-                let movements = await db.stockmovementModel.findAll({ where: { StockID: stock.Uuid } })
-                movements.forEach(movement => {
-                    amount += (movement.Amount * movement.Movementtype);
-                });
-                stock.Amount = amount
-                stock.Stockdefine = db.stockdefineModel.findOne({ where: { Uuid: stock.StockdefineID } })
-                if (stock.Stockdefine) {
-                    stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID)
-                    stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID)
-                }
-                stock.Warehouse = db.warehouseModel.findOne({ where: { Uuid: stock.WarehouseID } })
-            }
-        }
-        res.status(200).json(stocks)
     } catch (err) {
         await t.rollback()
         next(sequelizeErrorCatcher(err))
     }
+    GetStocks(req, res, next)
 }
 
 async function UpdateStock(req, res, next) {
@@ -278,16 +247,15 @@ async function UpdateStock(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
+    const t = await db.sequelize.transaction();
     try {
-        const stock = db.stockModel.findOne({ where: { Uuid: Uuid } })
+        const stock = await db.stockModel.findOne({ where: { Uuid: Uuid } })
         if (!stock) {
             return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
         }
         if (stock.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
         }
-
-        const t = await db.sequelize.transaction();
 
         await db.stockModel.update({
             ...req.body,
@@ -296,51 +264,11 @@ async function UpdateStock(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
-        const stocks = await db.stockModel.findAll({ where: { Isactive: true } })
-        if (stocks && stocks.length > 0) {
-            let departments = []
-            let units = []
-            try {
-                const departmentsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Units`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                departments = departmentsresponse.data
-                units = unitsresponse.data
-            } catch (error) {
-                next(requestErrorCatcher(error, 'Setting'))
-            }
-            for (const stock of stocks) {
-                let amount = 0.0;
-                let movements = await db.stockmovementModel.findAll({ where: { StockID: stock.Uuid } })
-                movements.forEach(movement => {
-                    amount += (movement.Amount * movement.Movementtype);
-                });
-                stock.Amount = amount
-                stock.Stockdefine = db.stockdefineModel.findOne({ where: { Uuid: stock.StockdefineID } })
-                if (stock.Stockdefine) {
-                    stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID)
-                    stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID)
-                }
-                stock.Warehouse = db.warehouseModel.findOne({ where: { Uuid: stock.WarehouseID } })
-            }
-        }
-        res.status(200).json(stocks)
     } catch (error) {
+        await t.rollback()
         next(sequelizeErrorCatcher(error))
     }
-
-
+    GetStocks(req, res, next)
 }
 
 async function DeleteStock(req, res, next) {
@@ -360,6 +288,7 @@ async function DeleteStock(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const stock = await db.stockModel.findOne({ where: { Uuid: req.params.stockId } });
         if (!stock) {
@@ -368,55 +297,15 @@ async function DeleteStock(req, res, next) {
         if (!stock.Isactive) {
             return createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language)
         }
-        const t = await db.sequelize.transaction();
 
         await db.stockmovementModel.destroy({ where: { StockID: Uuid } })
         await db.stockModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-        const stocks = await db.stockModel.findAll({ where: { Isactive: true } })
-        if (stocks && stocks.length > 0) {
-            let departments = []
-            let units = []
-            try {
-                const departmentsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Units`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                departments = departmentsresponse.data
-                units = unitsresponse.data
-            } catch (error) {
-                next(requestErrorCatcher(error, 'Setting'))
-            }
-            for (const stock of stocks) {
-                let amount = 0.0;
-                let movements = await db.stockmovementModel.findAll({ where: { StockID: stock.Uuid } })
-                movements.forEach(movement => {
-                    amount += (movement.Amount * movement.Movementtype);
-                });
-                stock.Amount = amount
-                stock.Stockdefine = stockdefineModel.findOne({ where: { Uuid: stock.StockdefineID } })
-                stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID)
-                stock.Stockdefine.Department = units.find(u => u.Uuid === stock.Stockdefine.DepartmentID)
-                stock.Stockdefine.Department = units.find(u => u.Uuid === stock.Stockdefine.DepartmentID)
-                stock.Warehouse = warehouseModel.findOne({ where: { Uuid: stock.WarehouseID } })
-            }
-        }
-        res.status(200).json(stocks)
     } catch (error) {
         await t.rollback();
         next(sequelizeErrorCatcher(error))
     }
-
+    GetStocks(req, res, next)
 }
 
 module.exports = {

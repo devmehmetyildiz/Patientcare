@@ -15,7 +15,7 @@ exports.isPositiveInteger = function (value) {
 }
 
 exports.isString = function (value) {
-  return (typeof (value) === 'string')
+  return (typeof (value) === 'string' && value !== '')
 }
 
 exports.isArray = function (value) {
@@ -41,7 +41,8 @@ exports.isObjectId = function (value) {
 }
 
 exports.isISODate = function (value) {
-  return value && value.length === 24 && /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/.test(value)
+  const date = new Date(value);
+  return !isNaN(date);
 }
 
 exports.isEpochTime = function (value) {

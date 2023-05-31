@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_WAREHOUSES_INIT: 'GET_WAREHOUSES_INIT',
@@ -35,7 +36,7 @@ export const ACTION_TYPES = {
 
 export const GetWarehouses = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_WAREHOUSES_INIT })
-    await instanse.get(ROUTES.WAREHOUSE + "/GetAll")
+    await instanse.get(config.services.Warehouse, ROUTES.WAREHOUSE)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_WAREHOUSES_SUCCESS, payload: response.data })
         })
@@ -47,7 +48,7 @@ export const GetWarehouses = () => async (dispatch, getState) => {
 
 export const GetWarehouse = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_WAREHOUSE_INIT })
-    await instanse.get(ROUTES.WAREHOUSE + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Warehouse, `${ROUTES.WAREHOUSE}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_WAREHOUSE_SUCCESS, payload: response.data }) 
         })
@@ -59,7 +60,7 @@ export const GetWarehouse = (guid) => async (dispatch, getState) => {
 
 export const AddWarehouses = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_WAREHOUSE_INIT })
-    await instanse.post(ROUTES.WAREHOUSE + "/Add", data)
+    await instanse.post(config.services.Warehouse, ROUTES.WAREHOUSE, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.ADD_WAREHOUSE_SUCCESS, payload: response.data })
                 historypusher.push('/Warehouses')
@@ -72,7 +73,7 @@ export const AddWarehouses = (data, historypusher) => async (dispatch, getState)
 
 export const EditWarehouses = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_WAREHOUSE_INIT })
-    await instanse.post(ROUTES.WAREHOUSE + "/Update", data)
+    await instanse.put(config.services.Warehouse, ROUTES.WAREHOUSE, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.EDIT_WAREHOUSE_SUCCESS, payload: response.data })
                 historypusher.push('/Warehouses')
@@ -87,7 +88,7 @@ export const DeleteWarehouses = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_WAREHOUSE_INIT })
-    await instanse.post(ROUTES.WAREHOUSE + "/Delete", data)
+    await instanse.delete(config.services.Warehouse, ROUTES.WAREHOUSE, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_WAREHOUSE_SUCCESS, payload: response.data })
         })

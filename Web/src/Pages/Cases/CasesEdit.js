@@ -51,6 +51,11 @@ export default class CasesEdit extends Component {
 
     const casestatusOption = [
       {
+        key: '-1',
+        text: 'İptal Etme',
+        value: -1,
+      },
+      {
         key: '0',
         text: 'Pasif',
         value: 0,

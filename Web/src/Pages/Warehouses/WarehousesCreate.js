@@ -1,20 +1,22 @@
 import React, { Component } from 'react'
-import { Link} from 'react-router-dom'
-import {  Divider, Form } from 'semantic-ui-react'
-import { Breadcrumb, Button,  Header } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Divider, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
 
 export default class WarehousesCreate extends Component {
 
+  componentDidUpdate() {
+    const { Warehouses, removeWarehousenotification } = this.props
+    Notification(Warehouses.notifications, removeWarehousenotification)
+  }
+
   render() {
 
-    const { removeWarehousenotification, Warehouses } = this.props
-    const { notifications, isLoading, isDispatching } = Warehouses
-
-    Notification(notifications, removeWarehousenotification)
-
+    const { Warehouses } = this.props
+    const { isLoading, isDispatching } = Warehouses
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
@@ -35,7 +37,11 @@ export default class WarehousesCreate extends Component {
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
                 <label className='text-[#000000de]'>Ambar Adı</label>
-                <Form.Input placeholder="Ambar Adı" name="name" fluid />
+                <Form.Input placeholder="Ambar Adı" name="Name" fluid />
+              </Form.Field>
+              <Form.Field>
+                <label className='text-[#000000de]'>Açıklama</label>
+                <Form.Input placeholder="Açıklama" name="Info" fluid />
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Warehouses">
@@ -53,21 +59,15 @@ export default class WarehousesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddWarehouses, history,fillWarehousenotification } = this.props
+    const { AddWarehouses, history, fillWarehousenotification } = this.props
 
     const data = formToObject(e.target)
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
+      errors.push({ type: 'Error', code: 'Ambarlar', description: 'İsim Boş Olamaz' })
+    }
+    if (!data.Info || data.Info === '') {
       errors.push({ type: 'Error', code: 'Ambarlar', description: 'İsim Boş Olamaz' })
     }
     if (errors.length > 0) {

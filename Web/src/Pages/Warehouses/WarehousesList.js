@@ -7,21 +7,21 @@ export default function WarehousesList({ Data, Columns, initialConfig }) {
   const renderRowSubComponent = React.useCallback(
     ({ row }) => {
       let stocks = []
-      const decoratedstocks = Data.filter(u => u.id === row.original.id)
+      const decoratedstocks = Data.filter(u => u.id === row.original.Id)
       decoratedstocks.forEach(element => {
-        stocks = stocks.concat(element.stocks)
+        stocks = stocks.concat(element.Stocks)
       });
       const stockcolumns = [
-        { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-        { Header: 'Ürün', accessor: 'stockdefine.name', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Departman', accessor: 'department.name', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Skt', accessor: 'skt', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Barkod No', accessor: 'barcodeno', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Toplam Miktar', accessor: 'maxamount', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Aktüel Miktar', accessor: 'amount', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Kullanılan Miktar', accessor: 'usageamount', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Açıklama', accessor: 'info', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Kaynak', accessor: 'source', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+        { Header: 'Ürün', accessor: 'Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Departman', accessor: 'Department.Name', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Skt', accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Barkod No', accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Toplam Miktar', accessor: 'Maxamount', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Aktüel Miktar', accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Kullanılan Miktar', accessor: 'Usageamount', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Açıklama', accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Kaynak', accessor: 'Source', sortable: true, canGroupBy: true, canFilter: true },
       ]
       return <div className='w-full p-4'>
         <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>Stoklar</Header>

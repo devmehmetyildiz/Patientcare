@@ -37,6 +37,11 @@ export default class Cases extends Component {
 
     const casestatusOption = [
       {
+        key: '-1',
+        text: 'Pasif',
+        value: -1,
+      },
+      {
         key: '0',
         text: 'Pasif',
         value: 0,

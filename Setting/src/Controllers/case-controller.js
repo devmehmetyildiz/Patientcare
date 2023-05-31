@@ -53,6 +53,32 @@ async function GetCompleteCase(req, res, next) {
     }
 }
 
+async function GetDeactivateCase(req, res, next) {
+
+    try {
+        const casedata = await db.caseModel.findOne({ where: { CaseStatus: -1 } });
+        if (!casedata) {
+            return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
+        }
+        if (!casedata.Isactive) {
+            return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE], req.language)
+        }
+        let departmentuuids = await db.casedepartmentModel.findAll({
+            where: {
+                CaseID: casedata.Uuid,
+            }
+        });
+        casedata.Departments = await db.departmentModel.findAll({
+            where: {
+                Uuid: departmentuuids.map(u => { return u.DepartmentID })
+            }
+        })
+        res.status(200).json(casedata)
+    } catch (error) {
+        next(sequelizeErrorCatcher(error))
+    }
+}
+
 async function GetCase(req, res, next) {
 
     let validationErrors = []
@@ -311,5 +337,6 @@ module.exports = {
     AddCase,
     UpdateCase,
     DeleteCase,
-    GetCompleteCase
+    GetCompleteCase,
+    GetDeactivateCase
 }
