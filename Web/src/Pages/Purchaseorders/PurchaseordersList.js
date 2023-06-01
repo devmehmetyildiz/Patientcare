@@ -12,13 +12,13 @@ export default function PurchaseordersList({ Data, Columns, initialConfig }) {
         stocks = stocks.concat(element.stocks)
       });
       const stockcolumns = [
-        { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-        { Header: 'Ürün', accessor: 'stockdefine.name', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Departman', accessor: 'department.name', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Skt', accessor: 'skt', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Barkod No', accessor: 'barcodeno', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Aktüel Miktar', accessor: 'amount', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: 'Açıklama', accessor: 'info', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+        { Header: 'Ürün', accessor: 'Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Departman', accessor: 'Department.Name', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Skt', accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Barkod No', accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Aktüel Miktar', accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: 'Açıklama', accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
       ]
       return <div className='w-full p-4'>
         <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>Stoklar</Header>

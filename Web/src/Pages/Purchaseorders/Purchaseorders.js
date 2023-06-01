@@ -26,6 +26,13 @@ export default class Purchaseorders extends Component {
     GetPurchaseorderstocks()
   }
 
+  componentDidUpdate() {
+    const { Purchaseorders, removePurchaseordernotification, Purchaseorderstocks,
+      removePurchaseorderstocknotification } = this.props
+    Notification(Purchaseorders.notifications, removePurchaseordernotification)
+    Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
+  }
+
   render() {
 
     const Columns = [
@@ -39,15 +46,15 @@ export default class Purchaseorders extends Component {
         ),
 
       },
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Firma', accessor: 'company', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Satın alma numarası', accessor: 'purchasenumber', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Teslim Alan', accessor: 'personelname', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Teslim Eden', accessor: 'companypersonelname', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Siparişi açan', accessor: 'username', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Satın alma tarihi', accessor: 'purchasedate', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Durum', accessor: 'case.name', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Firma', accessor: 'Company', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Satın alma numarası', accessor: 'Purchasenumber', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Teslim Alan', accessor: 'Personelname', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Teslim Eden', accessor: 'Companypersonelname', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Siparişi açan', accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Satın alma tarihi', accessor: 'Purchasedate', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Durum', accessor: 'Case.Name', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -56,14 +63,12 @@ export default class Purchaseorders extends Component {
       { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
-    const { Purchaseorders, DeletePurchaseorders, removePurchaseordernotification, Purchaseorderstocks, removePurchaseorderstocknotification, Profile,CompletePurchaseorders } = this.props
+    const { Purchaseorders, DeletePurchaseorders, Profile, CompletePurchaseorders } = this.props
     const { list, isLoading, isDispatching } = Purchaseorders
 
-    Notification(Purchaseorders.notifications, removePurchaseordernotification)
-    Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
 
     const metaKey = "Purchaseorders"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -75,7 +80,7 @@ export default class Purchaseorders extends Component {
 
     (list || []).forEach(item => {
       item.complete = <Icon link size='large' color='red' name='check square' onClick={() => { this.setState({ selectedrecord: item, openComplete: true }) }} />
-      item.edit = <Link to={`/Purchaseorders/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.edit = <Link to={`/Purchaseorders/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -124,7 +129,7 @@ export default class Purchaseorders extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.purchasenumber} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Purchasenumber} ` : null} </span>
                   siparişini silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>
@@ -154,7 +159,7 @@ export default class Purchaseorders extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.purchasenumber} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Purchasenumber} ` : null} </span>
                   siparişini tamamlamak istediğinize emin misiniz?
                 </p>
               </Modal.Description>

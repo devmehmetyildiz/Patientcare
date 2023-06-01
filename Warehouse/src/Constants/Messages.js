@@ -187,6 +187,61 @@ const messages = {
         tr: 'Bu işlem için warehouseid gerekli',
       }
     },
+    CASEID_REQUIRED: {
+      code: 'CASEID_REQUIRED', description: {
+        en: 'The caseid required',
+        tr: 'Bu işlem için caseid gerekli',
+      }
+    },
+    STOCKS_REQUIRED: {
+      code: 'STOCKS_REQUIRED', description: {
+        en: 'The Stocks required',
+        tr: 'Bu işlem için stoklar gerekli',
+      }
+    },
+    COMPANY_REQUIRED: {
+      code: 'COMPANY_REQUIRED', description: {
+        en: 'The Company required',
+        tr: 'Bu işlem için firma gerekli',
+      }
+    },
+    USERNAME_REQUIRED: {
+      code: 'USERNAME_REQUIRED', description: {
+        en: 'The Username required',
+        tr: 'Bu işlem için Kullanıcı adı gerekli',
+      }
+    },
+    PURHCASEPRICE_REQUIRED: {
+      code: 'PURHCASEPRICE_REQUIRED', description: {
+        en: 'The purchase price required',
+        tr: 'Bu işlem için satın alma miktarı gerekli',
+      }
+    },
+    PURHCASENUMBER_REQUIRED: {
+      code: 'PURHCASENUMBER_REQUIRED', description: {
+        en: 'The purchase number required',
+        tr: 'Bu işlem için satın alma numarası gerekli',
+      }
+    },
+    COMPANYPERSONELNAME_REQUIRED: {
+      code: 'COMPANYPERSONELNAME_REQUIRED', description: {
+        en: 'The purchase company personel name required',
+        tr: 'Bu işlem için firma satın alma görevli adı gerekli',
+      }
+    },
+    PERSONELNAME_REQUIRED: {
+      code: 'PERSONELNAME_REQUIRED', description: {
+        en: 'The personel name required',
+        tr: 'Bu işlem için satın alma görevli adı gerekli',
+      }
+    },
+    PURCHASEDATE_REQUIRED: {
+      code: 'PURCHASEDATE_REQUIRED', description: {
+        en: 'The purchase date required',
+        tr: 'Bu işlem için satın alma tarihi gerekli',
+      }
+    },
+   
 
     UNSUPPORTED_STOCKDEFINEID: {
       code: 'UNSUPPORTED_STOCKDEFINEID', description: {

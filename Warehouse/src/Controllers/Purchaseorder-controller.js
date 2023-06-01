@@ -10,33 +10,32 @@ const axios = require("axios")
 async function GetPurchaseorders(req, res, next) {
     try {
         const purchaseorders = await db.purchaseorderModel.findAll({ where: { Isactive: true } })
-        let departments = null
-        let units = null
-        let cases = null
+        let departments = []
+        let units = []
+        let cases = []
         if (purchaseorders && Array.isArray(purchaseorders) && purchaseorders.length > 0) {
             try {
-                const departmentresponse = axios({
+                const departmentresponse = await axios({
                     method: 'GET',
                     url: config.services.Setting + 'Departments',
                     headers: {
                         session_key: config.session.secret
                     }
                 })
-                const caseresponse = axios({
+                const caseresponse = await axios({
                     method: 'GET',
                     url: config.services.Setting + 'Cases',
                     headers: {
                         session_key: config.session.secret
                     }
                 })
-                const unitresponse = axios({
+                const unitresponse = await axios({
                     method: 'GET',
                     url: config.services.Setting + 'Units',
                     headers: {
                         session_key: config.session.secret
                     }
                 })
-                await Promise.all([departmentresponse, unitresponse, caseresponse])
                 departments = departmentresponse.data
                 units = unitresponse.data
                 cases = caseresponse.data
@@ -49,7 +48,7 @@ async function GetPurchaseorders(req, res, next) {
             purchaseorders.Stocks = await db.purchaseorderstockModel.findAll({ where: { PurchaseorderID: purchaseorder.Uuid } })
             for (const purchaseorderstock of purchaseorders.Stocks) {
                 let amount = 0.0;
-                let movements = await db.purchaseorderstockmovementModel.findAll({ where: { StockID: stock.Uuid } })
+                let movements = await db.purchaseorderstockmovementModel.findAll({ where: { StockID: purchaseorderstock.Uuid } })
                 for (const movement of movements) {
                     amount += (movement.Amount * movement.Movementtype);
                 }
@@ -65,7 +64,7 @@ async function GetPurchaseorders(req, res, next) {
         res.status(200).json(purchaseorders)
     }
     catch (error) {
-        return next(sequelizeErrorCatcher(error))
+        next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -158,37 +157,37 @@ async function AddPurchaseorder(req, res, next) {
     } = req.body
 
     if (!validator.isArray(Stocks)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED, req.language)
     }
     if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
     }
     if (!validator.isString(Company)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED, req.language)
     }
     if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
     }
     if (!validator.isNumber(Purchaseprice)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED, req.language)
     }
     if (!validator.isString(Purchasenumber)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED, req.language)
     }
     if (!validator.isString(Companypersonelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED, req.language)
     }
     if (!validator.isString(Personelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED, req.language)
     }
     if (!validator.isISODate(Purchasedate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED, req.language)
     }
     if (!validator.isString(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
     }
     if (!validator.isString(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
     }
 
     if (validationErrors.length > 0) {
@@ -259,43 +258,43 @@ async function UpdatePurchaseorder(req, res, next) {
     } = req.body
 
     if (!validator.isArray(Stocks)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED, req.language)
     }
     if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
     }
     if (!validator.isString(Company)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED, req.language)
     }
     if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
     }
     if (!validator.isNumber(Purchaseprice)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED, req.language)
     }
     if (!validator.isString(Purchasenumber)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED, req.language)
     }
     if (!validator.isString(Companypersonelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED, req.language)
     }
     if (!validator.isString(Personelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED, req.language)
     }
     if (!validator.isISODate(Purchasedate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED, req.language)
     }
     if (!validator.isString(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
     }
     if (!validator.isString(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID, req.language)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -377,43 +376,43 @@ async function CompletePurchaseorder(req, res, next) {
     } = req.body
 
     if (!validator.isArray(Stocks)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED, req.language)
     }
     if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
     }
     if (!validator.isString(Company)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED, req.language)
     }
     if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
     }
     if (!validator.isNumber(Purchaseprice)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED, req.language)
     }
     if (!validator.isString(Purchasenumber)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED, req.language)
     }
     if (!validator.isString(Companypersonelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED, req.language)
     }
     if (!validator.isString(Personelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED, req.language)
     }
     if (!validator.isISODate(Purchasedate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED, req.language)
     }
     if (!validator.isString(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
     }
     if (!validator.isString(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID, req.language)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -547,43 +546,43 @@ async function DeactivePurchaseorder(req, res, next) {
     } = req.body
 
     if (!validator.isArray(Stocks)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED, req.language)
     }
     if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
     }
     if (!validator.isString(Company)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED, req.language)
     }
     if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
     }
     if (!validator.isNumber(Purchaseprice)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED, req.language)
     }
     if (!validator.isString(Purchasenumber)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED, req.language)
     }
     if (!validator.isString(Companypersonelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED, req.language)
     }
     if (!validator.isString(Personelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED, req.language)
     }
     if (!validator.isISODate(Purchasedate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED, req.language)
     }
     if (!validator.isString(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
     }
     if (!validator.isString(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID, req.language)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -652,10 +651,10 @@ async function DeletePurchaseorder(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_WAREHOUSEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID, req.language)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -663,15 +662,15 @@ async function DeletePurchaseorder(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const warehouse = await db.warehouseModel.findOne({ where: { Uuid: Uuid } })
-        if (!warehouse) {
-            return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_FOUND], req.language))
+        const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } })
+        if (!purchaseorder) {
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
         }
-        if (warehouse.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.WAREHOUSE_NOT_ACTIVE], req.language))
+        if (purchaseorder.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
         }
 
-        await db.warehouseModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.purchaseorderModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
     } catch (error) {
         await t.rollback();

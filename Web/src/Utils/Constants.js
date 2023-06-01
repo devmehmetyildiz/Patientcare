@@ -21,9 +21,9 @@ export const ROUTES = {
     STOCKDEFINE: 'Stockdefines',
     UNIT: 'Units',
 
-    PURCHASEORDER: 'Purchaseorder',
-    PURCHASEORDERSTOCK: 'Purchaseorderstock',
-    PURCHASEORDERSTOCKMOVEMENT: 'Purchaseorderstockmovement',
+    PURCHASEORDER: 'Purchaseorders',
+    PURCHASEORDERSTOCK: 'Purchaseorderstocks',
+    PURCHASEORDERSTOCKMOVEMENT: 'Purchaseorderstockmovements',
     DEACTIVESTOCK: 'Deactivestock',
     STOCK: 'Stocks',
     STOCKMOVEMENT: 'Stockmovements',

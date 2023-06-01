@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import {  Divider, Dropdown, Form } from 'semantic-ui-react'
+import { Divider, Dropdown, Form } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
-import Popuputil from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
 
 export default class PurchaseorderstockmovementsEdit extends Component {
@@ -27,7 +27,8 @@ export default class PurchaseorderstockmovementsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Purchaseorderstocks, Purchaseorderstockmovements } = this.props
+    const { Purchaseorderstocks, Purchaseorderstockmovements,
+      removePurchaseorderstocknotification, removePurchaseorderstockmovementnotification } = this.props
     const { selected_record, isLoading } = Purchaseorderstockmovements
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0
       && Purchaseorderstocks.list.length > 0 && !Purchaseorderstocks.isLoading
@@ -38,34 +39,21 @@ export default class PurchaseorderstockmovementsEdit extends Component {
         isDatafetched: true
       })
     }
+    Notification(Purchaseorderstockmovements, removePurchaseorderstockmovementnotification)
+    Notification(Purchaseorderstocks, removePurchaseorderstocknotification)
   }
 
   render() {
-    const { Purchaseorderstockmovements, removePurchaseorderstockmovementnotification, Purchaseorderstocks, removePurchaseorderstocknotification } = this.props
-    if (Purchaseorderstockmovements.notifications && Purchaseorderstockmovements.notifications.length > 0) {
-      let msg = Purchaseorderstockmovements.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removePurchaseorderstockmovementnotification()
-    }
-    if (Purchaseorderstocks.notifications && Purchaseorderstocks.notifications.length > 0) {
-      let msg = Purchaseorderstocks.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removePurchaseorderstocknotification()
-    }
-
+    const { Purchaseorderstockmovements, Purchaseorderstocks } = this.props
 
     const Purchaseorderstockoptions = Purchaseorderstocks.list.map(stock => {
-      return { key: stock.concurrencyStamp, text: `${stock.stockdefine.name} - ${stock.barcodeno}`, value: stock.concurrencyStamp }
+      return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
     })
 
     const Movementoptions = [
       { key: -1, text: "STOKDAN DÜŞME", value: -1 },
       { key: 1, text: "STOĞA EKLEME", value: 1 },
     ]
-
-
-
-
 
     return (
       Purchaseorderstocks.isLoading || Purchaseorderstocks.isDispatching || Purchaseorderstockmovements.isLoading || Purchaseorderstockmovements.isDispatching ? <LoadingPage /> :
@@ -91,7 +79,7 @@ export default class PurchaseorderstockmovementsEdit extends Component {
                 </Form.Field>
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input defaultValue={Purchaseorderstockmovements.selected_record.amount} label="Miktar" placeholder="Miktar" name="amount" fluid />
+                <Form.Input defaultValue={Purchaseorderstockmovements.selected_record.amount} label="Miktar" placeholder="Miktar" name="Amount" fluid />
                 <Form.Field>
                   <label className='text-[#000000de]'>Hareket Türü</label>
                   <Dropdown value={this.state.selectedmovement} placeholder='Hareket Türü' fluid selection options={Movementoptions} onChange={this.handleChangeMovement} />
@@ -115,17 +103,17 @@ export default class PurchaseorderstockmovementsEdit extends Component {
     e.preventDefault()
     const { EditPurchaseorderstockmovements, history, fillPurchaseorderstockmovementnotification, Purchaseorderstockmovements } = this.props
     const data = formToObject(e.target)
-    data.movementtype = this.state.selectedmovement
-    data.stockID = this.state.selectedstock
-
+    data.Movementtype = this.state.selectedmovement
+    data.StockID = this.state.selectedstock
+    data.Amount = parseFloat(data.Amount)
     let errors = []
-    if (!data.movementtype || data.movementtype === '') {
+    if (!data.Movementtype || data.Movementtype === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Hareket Seçili Değil' })
     }
-    if (!data.stockID || data.stockID === '') {
+    if (!data.StockID || data.StockID === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Ürün Seçili Değil' })
     }
-    if (data.amount === '') {
+    if (data.Amount === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Miktar girilmedi' })
     }
     if (errors.length > 0) {

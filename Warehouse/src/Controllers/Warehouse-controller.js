@@ -14,14 +14,14 @@ async function GetWarehouses(req, res, next) {
         let units = null
         if (warehouses && Array.isArray(warehouses) && warehouses.length > 0) {
             try {
-                const departmentresponse =await axios({
+                const departmentresponse = await axios({
                     method: 'GET',
                     url: config.services.Setting + 'Departments',
                     headers: {
                         session_key: config.session.secret
                     }
                 })
-                const unitresponse =await axios({
+                const unitresponse = await axios({
                     method: 'GET',
                     url: config.services.Setting + 'Units',
                     headers: {
@@ -54,6 +54,8 @@ async function GetWarehouses(req, res, next) {
     catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
+
+
 }
 
 async function GetWarehouse(req, res, next) {
@@ -80,21 +82,20 @@ async function GetWarehouse(req, res, next) {
         let departments = null
         let units = null
         try {
-            const departmentresponse = axios({
+            const departmentresponse = await axios({
                 method: 'GET',
                 url: config.services.Setting + 'Departments',
                 headers: {
                     session_key: config.session.secret
                 }
             })
-            const unitresponse = axios({
+            const unitresponse = await axios({
                 method: 'GET',
                 url: config.services.Setting + 'Units',
                 headers: {
                     session_key: config.session.secret
                 }
             })
-            await Promise.all([departmentresponse, unitresponse])
             departments = departmentresponse.data
             units = unitresponse.data
         } catch (err) {
@@ -148,52 +149,11 @@ async function AddWarehouse(req, res, next) {
         }, { transaction: t })
 
         await t.commit()
-        const warehouses = await db.warehouseModel.findAll({ where: { Isactive: true } })
-        let departments = null
-        let units = null
-        if (warehouses && Array.isArray(warehouses) && warehouses.length > 0) {
-            try {
-                const departmentresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + 'Departments',
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + 'Units',
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                await Promise.all([departmentresponse, unitresponse])
-                departments = departmentresponse.data
-                units = unitresponse.data
-            } catch (err) {
-                return next(requestErrorCatcher(err, 'Setting'))
-            }
-        }
-        for (const warehouse of warehouses) {
-            warehouse.Stocks = await db.stockModel.findAll({ where: { WarehouseID: warehouse.Uuid } })
-            for (const stock of warehouse.Stocks) {
-                let amount = 0.0;
-                let movements = await db.stockmovementModel.findAll({ where: { StockID: stock.Uuid } })
-                for (const movement of movements) {
-                    amount += (movement.Amount * movement.Movementtype);
-                }
-                stock.Amount = amount;
-                stock.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: stock.StockdefineID } })
-                stock.Department = departments.find(u => u.Uuid === stock.DepartmentID)
-                stock.Stockdefine && (stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID))
-                stock.Stockdefine && (stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID))
-            }
-        }
-        res.status(200).json(warehouses)
     } catch (err) {
         await t.rollback()
-        next(sequelizeErrorCatcher(err))
+        return next(sequelizeErrorCatcher(err))
     }
+    GetWarehouses(req, res, next)
 }
 
 async function UpdateWarehouse(req, res, next) {
@@ -216,16 +176,15 @@ async function UpdateWarehouse(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
-        const warehouse = db.warehouseModel.findOne({ where: { Uuid: Uuid } })
+        const warehouse =await db.warehouseModel.findOne({ where: { Uuid: Uuid } })
         if (!warehouse) {
             return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_FOUND], req.language))
         }
         if (warehouse.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.WAREHOUSE_NOT_ACTIVE], req.language))
         }
-
-        const t = await db.sequelize.transaction();
 
         await db.warehouseModel.update({
             ...req.body,
@@ -234,53 +193,11 @@ async function UpdateWarehouse(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
-        const warehouses = await db.warehouseModel.findAll({ where: { Isactive: true } })
-        let departments = null
-        let units = null
-        if (warehouses && Array.isArray(warehouses) && warehouses.length > 0) {
-            try {
-                const departmentresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + 'Departments',
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + 'Units',
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                await Promise.all([departmentresponse, unitresponse])
-                departments = departmentresponse.data
-                units = unitresponse.data
-            } catch (err) {
-                return next(requestErrorCatcher(err, 'Setting'))
-            }
-        }
-        for (const warehouse of warehouses) {
-            warehouse.Stocks = await db.stockModel.findAll({ where: { WarehouseID: warehouse.Uuid } })
-            for (const stock of warehouse.Stocks) {
-                let amount = 0.0;
-                let movements = await db.stockmovementModel.findAll({ where: { StockID: stock.Uuid } })
-                for (const movement of movements) {
-                    amount += (movement.Amount * movement.Movementtype);
-                }
-                stock.Amount = amount;
-                stock.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: stock.StockdefineID } })
-                stock.Department = departments.find(u => u.Uuid === stock.DepartmentID)
-                stock.Stockdefine && (stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID))
-                stock.Stockdefine && (stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID))
-            }
-        }
-        res.status(200).json(warehouses)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
     }
-
-
+    GetWarehouses(req, res, next)
 }
 
 async function DeleteWarehouse(req, res, next) {
@@ -300,65 +217,23 @@ async function DeleteWarehouse(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
-        const warehouse = db.warehouseModel.findOne({ where: { Uuid: Uuid } })
+        const warehouse =await db.warehouseModel.findOne({ where: { Uuid: Uuid } })
         if (!warehouse) {
             return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_FOUND], req.language))
         }
         if (warehouse.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.WAREHOUSE_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.warehouseModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-        const warehouses = await db.warehouseModel.findAll({ where: { Isactive: true } })
-        let departments = null
-        let units = null
-        if (warehouses && Array.isArray(warehouses) && warehouses.length > 0) {
-            try {
-                const departmentresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + 'Departments',
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + 'Units',
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                await Promise.all([departmentresponse, unitresponse])
-                departments = departmentresponse.data
-                units = unitresponse.data
-            } catch (err) {
-                return next(requestErrorCatcher(err, 'Setting'))
-            }
-        }
-        for (const warehouse of warehouses) {
-            warehouse.Stocks = await db.stockModel.findAll({ where: { WarehouseID: warehouse.Uuid } })
-            for (const stock of warehouse.Stocks) {
-                let amount = 0.0;
-                let movements = await db.stockmovementModel.findAll({ where: { StockID: stock.Uuid } })
-                for (const movement of movements) {
-                    amount += (movement.Amount * movement.Movementtype);
-                }
-                stock.Amount = amount;
-                stock.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: stock.StockdefineID } })
-                stock.Department = departments.find(u => u.Uuid === stock.DepartmentID)
-                stock.Stockdefine && (stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID))
-                stock.Stockdefine && (stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID))
-            }
-        }
-        res.status(200).json(warehouses)
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
+    GetWarehouses(req, res, next)
 }
 
 module.exports = {

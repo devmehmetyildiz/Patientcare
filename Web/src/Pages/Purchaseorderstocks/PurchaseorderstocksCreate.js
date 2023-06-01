@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import {  Divider, Dropdown, Form} from 'semantic-ui-react'
+import { Divider, Dropdown, Form } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
-import Popuputil from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
 
 export default class PurchaseorderstocksCreate extends Component {
@@ -13,7 +13,7 @@ export default class PurchaseorderstocksCreate extends Component {
       selecteddepartments: "",
       selectedstockdefine: "",
       selectedpurchaseorder: "",
-      open:false
+      open: false
     }
   }
 
@@ -25,46 +25,28 @@ export default class PurchaseorderstocksCreate extends Component {
     GetPurchaseorders()
   }
 
+  componentDidUpdate() {
+    const { Purchaseorders, Purchaseorderstocks, removePurchaseordernotification, Departments, Stockdefines,
+      removeStockdefinenotification, removePurchaseorderstocknotification, removeDepartmentnotification } = this.props
+
+    Notification(Purchaseorders, removePurchaseordernotification)
+    Notification(Departments, removeDepartmentnotification)
+    Notification(Stockdefines, removeStockdefinenotification)
+    Notification(Purchaseorderstocks, removePurchaseorderstocknotification)
+  }
+
   render() {
-    const { Purchaseorders, Purchaseorderstocks, removePurchaseordernotification, Departments, Stockdefines, removeStockdefinenotification, removePurchaseorderstocknotification, removeDepartmentnotification } = this.props
-    if (Purchaseorderstocks.notifications && Purchaseorderstocks.notifications.length > 0) {
-      let msg = Purchaseorderstocks.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removePurchaseorderstocknotification()
-    }
-    if (Purchaseorders.notifications && Purchaseorders.notifications.length > 0) {
-      let msg = Purchaseorders.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removePurchaseordernotification()
-    }
-    if (Purchaseorderstocks.notifications && Purchaseorderstocks.notifications.length > 0) {
-      let msg = Purchaseorderstocks.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removePurchaseorderstocknotification()
-    }
-    if (Departments.notifications && Departments.notifications.length > 0) {
-      let msg = Departments.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeDepartmentnotification()
-    }
-    if (Stockdefines.notifications && Stockdefines.notifications.length > 0) {
-      let msg = Stockdefines.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeStockdefinenotification()
-    }
+    const { Purchaseorders, Purchaseorderstocks, Departments, Stockdefines } = this.props
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
     const Stockdefineoptions = Stockdefines.list.map(define => {
-      return { key: define.concurrencyStamp, text: define.name, value: define.concurrencyStamp }
+      return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
     const Purchaseorderoptions = Purchaseorders.list.map(order => {
-      return { key: order.concurrencyStamp, text: order.purchasenumber, value: order.concurrencyStamp }
+      return { key: order.Uuid, text: order.Purchasenumber, value: order.Uuid }
     })
-
-
-
 
     return (
       Stockdefines.isLoading || Stockdefines.isDispatching || Purchaseorderstocks.isLoading || Purchaseorderstocks.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
@@ -96,12 +78,12 @@ export default class PurchaseorderstocksCreate extends Component {
               <Form.Group widths='equal'>
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Barkod No" placeholder="Barkod No" name="barcodeno" fluid />
-                <Form.Input label="Miktar" placeholder="Miktar" name="amount" fluid step="0.01" type='number' />
+                <Form.Input label="Barkod No" placeholder="Barkod No" name="Barcodeno" fluid />
+                <Form.Input label="Miktar" placeholder="Miktar" name="Amount" fluid step="0.01" type='number' />
               </Form.Group>
               <Form.Group widths='equal'>
                 <Form.Field>
-                  <Form.Input label="Skt" placeholder="Skt" name="skt" fluid type='date' defaultValue={this.getLocalDate()} />
+                  <Form.Input label="Skt" placeholder="Skt" name="Skt" fluid type='date' defaultValue={this.getLocalDate()} />
                 </Form.Field>
                 <Form.Field>
                   <label className='text-[#000000de]'>Departmanlar</label>
@@ -124,35 +106,29 @@ export default class PurchaseorderstocksCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddPurchaseorderstocks, history, fillPurchaseorderstocknotification, Departments, Stockdefines } = this.props
+    const { AddPurchaseorderstocks, history, fillPurchaseorderstocknotification } = this.props
     const data = formToObject(e.target)
-    data.departmentid = this.state.selecteddepartments
-    data.stockdefineID = this.state.selectedstockdefine
-    data.purchaseorderID = this.state.selectedpurchaseorder
-    data.status = 0
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
-    data.maxamount = data.amount
-    data.source = "Single Request"
-
+    data.Amount = parseFloat(data.Amount)
+    data.DepartmentID = this.state.selecteddepartments
+    data.StockdefineID = this.state.selectedstockdefine
+    data.PurchaseorderID = this.state.selectedpurchaseorder
+    data.Status = 0
+    data.IsActive = true
+    data.Maxamount = data.amount
+    data.Source = "Single Request"
+    data.Isonusage = false
+    data.Order = 1
     let errors = []
-    if (!data.departmentid || data.departmentid == '') {
+    if (!data.DepartmentID || data.DepartmentID === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Departman Seçili Değil' })
     }
-    if (!data.purchaseorderID || data.purchaseorderID == '') {
+    if (!data.PurchaseorderID || data.PurchaseorderID === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Sipariş Seçili Değil' })
     }
-    if (!data.stockdefineID || data.stockdefineID == '') {
+    if (!data.StockdefineID || data.StockdefineID === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Ürün Seçili Değil' })
     }
-    if (!data.amount || data.amount == '' || data.amount == 0) {
+    if (!data.Amount || data.Amount === '' || data.Amount === 0) {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Miktar girilmedi' })
     }
     if (errors.length > 0) {

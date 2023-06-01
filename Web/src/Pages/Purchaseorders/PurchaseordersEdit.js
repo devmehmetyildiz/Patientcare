@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Divider, Dropdown, Form, Icon, Popup, Table } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
-import Popuputils from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
 import formToObject from 'form-to-object'
 
@@ -33,72 +33,44 @@ export default class PurchaseordersEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Stockdefines, Purchaseorders, Cases, Departments, Warehouses } = this.props
+    const { Stockdefines, Purchaseorders, Cases, Departments, Warehouses, removePurchaseordernotification, removeDepartmentnotification,
+      removeCasenotification, removeStockdefinenotification, removeWarehousenotification } = this.props
     const { selected_record, isLoading } = Purchaseorders
     if (selected_record && Object.keys(selected_record).length > 0 &&
-      selected_record.id !== 0 && Stockdefines.list.length > 0 && !Stockdefines.isLoading
+      selected_record.Id !== 0 && Stockdefines.list.length > 0 && !Stockdefines.isLoading
       && Cases.list.length > 0 && !Cases.isLoading
       && Warehouses.list.length > 0 && !Warehouses.isLoading
       && Departments.list.length > 0 && !Departments.isLoading
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedStocks: selected_record.stocks, isDatafetched: true, selectedCase: selected_record.caseID
+        selectedStocks: selected_record.Stocks, isDatafetched: true, selectedCase: selected_record.CaseID
       })
     }
+    Notification(Purchaseorders, removePurchaseordernotification)
+    Notification(Departments, removeDepartmentnotification)
+    Notification(Cases, removeCasenotification)
+    Notification(Stockdefines, removeStockdefinenotification)
+    Notification(Warehouses, removeWarehousenotification)
   }
 
   render() {
 
-    const { removePurchaseordernotification, removeDepartmentnotification,
-      removeCasenotification, removeStockdefinenotification, Cases, Departments, Stockdefines, Warehouses, removeWarehousenotification,
-      Purchaseorders } = this.props
-    const { notifications, isLoading, isDispatching, selected_record } = Purchaseorders
+    const { Cases, Departments, Stockdefines, Warehouses, Purchaseorders } = this.props
+    const { isLoading, isDispatching, selected_record } = Purchaseorders
 
-    if (notifications && notifications.length > 0) {
-      let msg = notifications[0]
-      Popuputils(msg.type, msg.code, msg.description)
-      removePurchaseordernotification()
-    }
-
-    if (Cases.notifications && Cases.notifications.length > 0) {
-      let msg = Cases.notifications[0]
-      Popuputils(msg.type, msg.code, msg.description)
-      removeCasenotification()
-    }
-
-    if (Warehouses.notifications && Warehouses.notifications.length > 0) {
-      let msg = Warehouses.notifications[0]
-      Popuputils(msg.type, msg.code, msg.description)
-      removeWarehousenotification()
-    }
-
-
-    if (Departments.notifications && Departments.notifications.length > 0) {
-      let msg = Departments.notifications[0]
-      Popuputils(msg.type, msg.code, msg.description)
-      removeDepartmentnotification()
-    }
-
-    if (Stockdefines.notifications && Stockdefines.notifications.length > 0) {
-      let msg = Stockdefines.notifications[0]
-      Popuputils(msg.type, msg.code, msg.description)
-      removeStockdefinenotification()
-    }
-
-    const Stockdefinesoption = Stockdefines.list.map(stockdefine => {
-      return { key: stockdefine.concurrencyStamp, text: stockdefine.name, value: stockdefine.concurrencyStamp }
+    const Stockdefinesoption = (Stockdefines.list || []).map(stockdefine => {
+      return { key: stockdefine.Uuid, text: stockdefine.Name, value: stockdefine.Uuid }
     })
 
-    const Departmentsoption = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+    const Departmentsoption = (Departments.list || []).map(department => {
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const Casesoption = Cases.list.map(cases => {
-      return { key: cases.concurrencyStamp, text: cases.name, value: cases.concurrencyStamp }
+    const Casesoption = (Cases.list || []).filter(u => u.caseStatus !== 1).map(cases => {
+      return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
     })
-
-    const Warehousesoption = Warehouses.list.map(warehouse => {
-      return { key: warehouse.concurrencyStamp, text: warehouse.name, value: warehouse.concurrencyStamp }
+    const Warehousesoption = (Warehouses.list || []).map(warehouse => {
+      return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
     })
 
     return (
@@ -125,23 +97,23 @@ export default class PurchaseordersEdit extends Component {
                 </Form.Field>
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Input defaultValue={selected_record.company} placeholder="Firma Adı" name="company" fluid label="Firma Adı" />
-                <Form.Input defaultValue={selected_record.purchaseprice} placeholder="Alış Fiyatı" name="purchaseprice" fluid label="Alış Fiyatı" type='number' />
+                <Form.Input defaultValue={selected_record.Company} placeholder="Firma Adı" name="Company" fluid label="Firma Adı" />
+                <Form.Input defaultValue={selected_record.Purchaseprice} placeholder="Alış Fiyatı" name="Purchaseprice" fluid label="Alış Fiyatı" type='number' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Input defaultValue={selected_record.companypersonelname} placeholder="Siparişi Getiren" name="companypersonelname" fluid label="Siparişi Getiren" />
-                <Form.Input defaultValue={selected_record.purchasenumber} placeholder="Sipariş Numarası" name="purchasenumber" fluid label="Sipariş Numarası" />
+                <Form.Input defaultValue={selected_record.Companypersonelname} placeholder="Siparişi Getiren" name="Companypersonelname" fluid label="Siparişi Getiren" />
+                <Form.Input defaultValue={selected_record.Purchasenumber} placeholder="Sipariş Numarası" name="Purchasenumber" fluid label="Sipariş Numarası" />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <Form.Field>
                   <label className='text-[#000000de]'>Sipariş Durumu</label>
                   <Dropdown value={this.state.selectedCase} placeholder='Sipariş Durumu' clearable search fluid selection options={Casesoption} onChange={(e, data) => { this.setState({ selectedCase: data.value }) }} />
                 </Form.Field>
-                <Form.Input defaultValue={selected_record.personelname} placeholder="Teslim Alan" name="personelname" fluid label="Teslim Alan" />
+                <Form.Input defaultValue={selected_record.Personelname} placeholder="Teslim Alan" name="Personelname" fluid label="Teslim Alan" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Input defaultValue={selected_record.purchasedate && selected_record.purchasedate.split('T')[0]} placeholder="Satın Alma Tarihi" name="purchasedate" type='date' fluid label="Satın Alma Tarihi" />
-                <Form.Input defaultValue={selected_record.info} placeholder="Açıklama" name="info" fluid label="Açıklama" />
+                <Form.Input defaultValue={selected_record.Purchasedate && selected_record.Purchasedate.split('T')[0]} placeholder="Satın Alma Tarihi" name="Purchasedate" type='date' fluid label="Satın Alma Tarihi" />
+                <Form.Input defaultValue={selected_record.Info} placeholder="Açıklama" name="Info" fluid label="Açıklama" />
               </Form.Group>
               <Divider className='w-full  h-[1px]' />
               <div className='max-h-[calc(46vh-10px)] overflow-y-auto'>
@@ -165,39 +137,39 @@ export default class PurchaseordersEdit extends Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {this.state.selectedStocks.sort((a, b) => a.order - b.order).map((stock, index) => {
+                    {this.state.selectedStocks.sort((a, b) => a.Order - b.Order).map((stock, index) => {
                       return <Table.Row key={stock.key}>
                         <Table.Cell>
                           <Button.Group basic size='small'>
-                            <Button type='button' disabled={index === 0} icon='angle up' onClick={() => { this.selectedProductChangeHandler(stock.key, 'order', stock.order - 1) }} />
-                            <Button type='button' disabled={index + 1 === this.state.selectedStocks.length} icon='angle down' onClick={() => { this.selectedProductChangeHandler(stock.key, 'order', stock.order + 1) }} />
+                            <Button type='button' disabled={index === 0} icon='angle up' onClick={() => { this.selectedProductChangeHandler(stock.key, 'Order', stock.Order - 1) }} />
+                            <Button type='button' disabled={index + 1 === this.state.selectedStocks.length} icon='angle down' onClick={() => { this.selectedProductChangeHandler(stock.key, 'Order', stock.Order + 1) }} />
                           </Button.Group>
                         </Table.Cell>
                         <Table.Cell>
                           <Form.Field>
-                            <Dropdown value={stock.stockdefineID} placeholder='Ürün Tanımı' name="stockdefineID" clearable search fluid selection options={Stockdefinesoption} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'stockdefineID', data.value) }} />
+                            <Dropdown value={stock.StockdefineID} placeholder='Ürün Tanımı' name="StockdefineID" clearable search fluid selection options={Stockdefinesoption} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'StockdefineID', data.value) }} />
                           </Form.Field>
                         </Table.Cell>
                         <Table.Cell>
                           <Form.Field>
-                            <Dropdown value={stock.departmentid} placeholder='Departman' name="departmentid" clearable search fluid selection options={Departmentsoption} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'departmentid', data.value) }} />
+                            <Dropdown value={stock.DepartmentID} placeholder='Departman' name="DepartmentID" clearable search fluid selection options={Departmentsoption} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'DepartmentID', data.value) }} />
                           </Form.Field>
                         </Table.Cell>
                         <Table.Cell>
-                          <Form.Input value={stock.barcodeno} placeholder="Barkodno" name="barcodeno" fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'barcodeno', e.target.value) }} />
+                          <Form.Input value={stock.Barcodeno} placeholder="Barkodno" name="Barcodeno" fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Barcodeno', e.target.value) }} />
                         </Table.Cell>
                         <Table.Cell>
-                          <Form.Input value={stock.skt && stock.skt.split('T')[0]} placeholder="SKT" name="skt" type='date' fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'skt', e.target.value) }} />
+                          <Form.Input value={stock.Skt && stock.Skt.split('T')[0]} placeholder="SKT" name="Skt" type='date' fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Skt', e.target.value) }} />
                         </Table.Cell>
                         <Table.Cell>
-                          <Form.Input disabled={stock.concurrencyStamp} value={stock.amount} placeholder="Miktar" name="amount" type="number" fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'amount', e.target.value) }} />
+                          <Form.Input disabled={stock.Uuid} value={stock.Amount} placeholder="Miktar" name="Amount" type="number" fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Amount', e.target.value) }} />
                         </Table.Cell>
                         <Table.Cell>
-                          <Form.Input value={stock.info} placeholder="Açıklama" name="info" fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'info', e.target.value) }} />
+                          <Form.Input value={stock.Info} placeholder="Açıklama" name="info" fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'info', e.target.value) }} />
                         </Table.Cell>
                         <Table.Cell className='table-last-section'>
-                          {!stock.concurrencyStamp && <Icon className='type-conversion-remove-icon' link color='red' name='minus circle'
-                            onClick={() => { this.removeProduct(stock.key, stock.order) }} />}
+                          {!stock.Uuid && <Icon className='type-conversion-remove-icon' link color='red' name='minus circle'
+                            onClick={() => { this.removeProduct(stock.key, stock.Order) }} />}
                         </Table.Cell>
                       </Table.Row>
                     })}
@@ -231,66 +203,67 @@ export default class PurchaseordersEdit extends Component {
     const formData = formToObject(e.target)
 
     stocks.forEach(data => {
+      data.Amount = parseFloat(data.Amount)
       delete data.key
     });
 
     const responseData = {
-      info: Array.isArray(formData.info) ? formData.info[0] : formData.info,
-      company: formData.company,
-      purchaseprice: formData.purchaseprice,
-      purchasenumber: formData.purchasenumber,
-      companypersonelname: formData.companypersonelname,
-      personelname: formData.personelname,
-      purchasedate: formData.purchasedate,
-      caseID: this.state.selectedCase,
-      warehouseID: this.state.selectedWarehouse,
-      stocks: stocks
+      Info: Array.isArray(formData.Info) ? formData.Info[0] : formData.Info,
+      Company: formData.Company,
+      Purchaseprice: parseFloat(formData.Purchaseprice),
+      Purchasenumber: formData.Purchasenumber,
+      Companypersonelname: formData.Companypersonelname,
+      Personelname: formData.Personelname,
+      Purchasedate: formData.Purchasedate,
+      CaseID: this.state.selectedCase,
+      WarehouseID: this.state.selectedWarehouse,
+      Stocks: stocks
     }
 
     let errors = []
-    responseData.stocks.forEach(data => {
-      if (!data.stockdefineID || data.stockdefineID === '') {
+    responseData.Stocks.forEach(data => {
+      if (!data.StockdefineID || data.StockdefineID === '') {
         errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Ürün Tanımı Bulunamadı' })
       }
-      if (!data.departmentid || data.departmentid === '') {
+      if (!data.DepartmentID || data.DepartmentID === '') {
         errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Departman Bulunamadı' })
       }
-      if (!data.skt || data.skt === '') {
+      if (!data.Skt || data.Skt === '') {
         errors.push({ type: 'Error', code: 'Puchaseorders', description: 'SKT Girilmemiş' })
       }
-      if (!data.barcodeno || data.barcodeno === '') {
+      if (!data.Barcodeno || data.Barcodeno === '') {
         errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Barkod Girilmemiş' })
       }
-      if (!data.amount || data.amount === '' || data.amount === 0) {
+      if (!data.Amount || data.Amount === '' || data.amount === 0) {
         errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Miktar Girilmemiş' })
       }
-      if (!data.unitID || data.unitID === '') {
+      if (!data.UnitID || data.UnitID === '') {
         errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Birim Girilmemiş' })
       }
     });
 
-    if (!responseData.company || responseData.company === '') {
+    if (!responseData.Company || responseData.Company === '') {
       errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Firma Bilgisi Bulunamadı' })
     }
-    if (!responseData.purchaseprice || responseData.purchaseprice === '') {
+    if (!responseData.Purchaseprice || responseData.Purchaseprice === '') {
       errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Alış Fiyatı bulunamadı' })
     }
-    if (!responseData.companypersonelname || responseData.companypersonelname === '') {
+    if (!responseData.Companypersonelname || responseData.Companypersonelname === '') {
       errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Teslimatcı Adı bulunamadı' })
     }
-    if (!responseData.purchasenumber || responseData.purchasenumber === '') {
+    if (!responseData.Purchasenumber || responseData.Purchasenumber === '') {
       errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Sipariş Numarası bulunamadı' })
     }
-    if (!responseData.personelname || responseData.personelname === '') {
+    if (!responseData.Personelname || responseData.Personelname === '') {
       errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Teslim Alan Kişi belirtilmedi' })
     }
-    if (!responseData.warehouseID || responseData.warehouseID === '') {
+    if (!responseData.WarehouseID || responseData.WarehouseID === '') {
       errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Ambar girilmedi' })
     }
-    if (!responseData.caseID || responseData.caseID === '') {
+    if (!responseData.CaseID || responseData.CaseID === '') {
       errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Sipariş durumu girilmedi' })
     }
-    if (!responseData.purchasedate || responseData.purchasedate === '') {
+    if (!responseData.Purchasedate || responseData.Purchasedate === '') {
       errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Satın alma tarihi girilmemiş' })
     }
     if (errors.length > 0) {
@@ -306,40 +279,28 @@ export default class PurchaseordersEdit extends Component {
     this.setState({
       selectedStocks: [...this.state.selectedStocks,
       {
-        id: 0,
-        stockdefineID: '',
-        stockdefine: {},
-        departmentid: '',
-        department: {},
-        skt: null,
-        barcodeno: '',
-        usageamount: 0,
-        amount: 0,
-        maxamount: 0,
-        isonusage: false,
-        isdeactive: false,
-        deactivetime: null,
-        info: '',
-        source: '',
-        unitID: '',
-        unit: {},
+        Id: 0,
+        PurchaseorderID: '',
+        Purchaseorder: {},
+        StockdefineID: '',
+        Stockdefine: {},
+        DepartmentID: '',
+        Department: {},
+        Skt: null,
+        Barcodeno: '',
+        Amount: 0,
+        Status: 0,
+        Info: '',
+        Willdelete: false,
         key: Math.random(),
-        concurrencyStamp: '',
-        createdUser: '',
-        updatedUser: '',
-        deleteUser: '',
-        createTime: null,
-        updateTime: null,
-        deleteTime: null,
-        isActive: true,
-        order: this.state.selectedStocks.length,
+        Order: this.state.selectedStocks.length,
       }]
     })
   }
 
   removeProduct = (key, order) => {
     let stocks = this.state.selectedStocks.filter(productionRoute => productionRoute.key !== key)
-    stocks.filter(stock => stock.order > order).forEach(stock => stock.order--)
+    stocks.filter(stock => stock.Order > order).forEach(stock => stock.Order--)
     this.setState({ selectedStocks: stocks })
   }
 
@@ -347,14 +308,14 @@ export default class PurchaseordersEdit extends Component {
     let productionRoutes = this.state.selectedStocks
     const index = productionRoutes.findIndex(productionRoute => productionRoute.key === key)
     if (property === 'order') {
-      productionRoutes.filter(productionRoute => productionRoute.order === value)
-        .forEach((productionRoute) => productionRoute.order = productionRoutes[index].order > value ? productionRoute.order + 1 : productionRoute.order - 1)
+      productionRoutes.filter(productionRoute => productionRoute.Order === value)
+        .forEach((productionRoute) => productionRoute.Order = productionRoutes[index].Order > value ? productionRoute.Order + 1 : productionRoute.Order - 1)
     }
     productionRoutes[index][property] = value
     this.setState({ selectedStocks: productionRoutes })
   }
 
- 
+
 }
 
 

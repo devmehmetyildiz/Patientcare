@@ -1,18 +1,30 @@
 import React, { Component } from 'react'
-import { Link,  } from 'react-router-dom'
+import { Link, } from 'react-router-dom'
 import { Divider, Form } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
 
-export  default class StationsCreate extends Component {
+export default class StationsCreate extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      inputvalues: {}
+    }
+  }
+
+  componentDidUpdate() {
+    const { removeStationnotification, Stations } = this.props
+    Notification(Stations.notifications, removeStationnotification)
+  }
+
   render() {
 
-    const { removeStationnotification, Stations } = this.props
-    const { notifications, isLoading, isDispatching } = Stations
+    const { Stations } = this.props
+    const { isLoading, isDispatching } = Stations
 
-    Notification(notifications, removeStationnotification)
 
 
     return (
@@ -31,16 +43,19 @@ export  default class StationsCreate extends Component {
           </div>
           <Divider className='w-full  h-[1px]' />
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+            <Form className='' onSubmit={(e) => {
+              e.preventDefault()
+              this.handleSubmit(e)
+            }}>
               <Form.Field>
                 <label className='text-[#000000de]'>İstasyon Adı</label>
-                <Form.Input placeholder="İstasyon Adı" name="Name" fluid />
+                <Form.Input value={this.handleGetvalue('Name')} onChange={this.handleOnchange} placeholder="İstasyon Adı" name="Name" fluid />
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Stations">
                   <Button floated="left" color='grey'>Geri Dön</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Oluştur</Button>
+                <Button floated="right" type='submit' color='blue' >Oluştur</Button>
               </div>
             </Form>
           </div>
@@ -49,12 +64,11 @@ export  default class StationsCreate extends Component {
     )
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault()
+  handleSubmit = async (e) => {
 
-    const { AddStations, history,fillStationnotification } = this.props
+    const { AddStations, history, fillStationnotification } = this.props
 
-    const data = formToObject(e.target)
+    const data = { ...formToObject(e.target) }
 
     let errors = []
     if (!data.Name || data.Name === '') {
@@ -65,9 +79,20 @@ export  default class StationsCreate extends Component {
         fillStationnotification(error)
       })
     } else {
-      AddStations(data, history)
+      await AddStations({ ...data }, history)
     }
   }
 
+  handleGetvalue = (name, type) => {
+    let value = this.state.inputvalues[name] ? this.state.inputvalues[name] : (type === 'number' ? 0 : '')
+    return value
+  }
+
+  handleOnchange = (e) => {
+    const inputvalues = { ...this.state.inputvalues }
+    inputvalues[e.target.name] = e.target.value
+    this.setState({ inputvalues })
+  }
 
 }
+

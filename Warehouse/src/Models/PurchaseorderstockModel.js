@@ -7,9 +7,6 @@ module.exports = sequelize.define('purchaseorderstockModel', {
     Uuid: {
         type: Sequelize.STRING
     },
-    Name: {
-        type: Sequelize.STRING
-    },
     PurchaseorderID: {
         type: Sequelize.STRING
     },

@@ -7,7 +7,7 @@ import { MOVEMENTTYPES } from '../../Utils/Constants'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Popup from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 
 export default class Purchaseorderstockmovements extends Component {
 
@@ -24,19 +24,24 @@ export default class Purchaseorderstockmovements extends Component {
     GetPurchaseorderstockmovements()
   }
 
+  componentDidUpdate() {
+    const { Purchaseorderstockmovements, removePurchaseorderstockmovementnotification } = this.props
+    Notification(Purchaseorderstockmovements, removePurchaseorderstockmovementnotification)
+  }
+
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Ürün', accessor: 'stock.stockdefine.name', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Departman', accessor: 'stock.department.name', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Kullanıcı', accessor: 'username', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Hareket Zamanı', accessor: 'movementdate', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Hareket Türü', accessor: 'movementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
-      { Header: 'Hareket Miktarı', accessor: 'amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
-      { Header: 'Önceki Değer', accessor: 'prevvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
-      { Header: 'Yeni Değer', accessor: 'newvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Ürün', accessor: 'Stock.Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Departman', accessor: 'Stock.Department.Name', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Kullanıcı', accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Hareket Zamanı', accessor: 'Movementdate', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Hareket Türü', accessor: 'Movementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
+      { Header: 'Hareket Miktarı', accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
+      { Header: 'Önceki Değer', accessor: 'Prevvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
+      { Header: 'Yeni Değer', accessor: 'Newvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -45,16 +50,11 @@ export default class Purchaseorderstockmovements extends Component {
       { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
-    const { Purchaseorderstockmovements, DeletePurchaseorderstockmovements, removePurchaseorderstockmovementnotification, Profile } = this.props
-    const { notifications, list, isLoading, isDispatching } = Purchaseorderstockmovements
-    if (notifications && notifications.length > 0) {
-      let msg = notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removePurchaseorderstockmovementnotification()
-    }
+    const { Purchaseorderstockmovements, DeletePurchaseorderstockmovements, Profile } = this.props
+    const { list, isLoading, isDispatching } = Purchaseorderstockmovements
 
     const metaKey = "Purchaseorderstockmovements"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -65,8 +65,8 @@ export default class Purchaseorderstockmovements extends Component {
     };
 
     (list || []).forEach(item => {
-      item.watch = <Link to={`/Purchaseorderstockmovements/${item.concurrencyStamp}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
-      item.edit = <Link to={`/Purchaseorderstockmovements/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.watch = <Link to={`/Purchaseorderstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
+      item.edit = <Link to={`/Purchaseorderstockmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -111,7 +111,7 @@ export default class Purchaseorderstockmovements extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord?.stock?.stockdefine?.name} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord?.Stock?.Stockdefine?.Name} ` : null} </span>
                   ürününü hareketini silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>
@@ -125,7 +125,7 @@ export default class Purchaseorderstockmovements extends Component {
                 labelPosition='right'
                 icon='checkmark'
                 onClick={() => {
-                  DeletePurchaseorderstockmovements(this.state.selectedrecord.concurrencyStamp)
+                  DeletePurchaseorderstockmovements(this.state.selectedrecord.Uuid)
                   this.setState({ open: false, selectedrecord: {} })
                 }}
                 positive
@@ -141,7 +141,7 @@ export default class Purchaseorderstockmovements extends Component {
   }
 
   amountCellhandler = (col) => {
-    return <p>{`${col.value}  ${col.row.original.stock.stockdefine.unit.name}`}</p>
+    return <p>{`${col.value}  ${col.row.original.Stock.Stockdefine.Unit.Name}`}</p>
   }
 
   movementCellhandler = (col) => {

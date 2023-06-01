@@ -6,15 +6,15 @@ import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Popup from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 
 export default class Purchaseorderstocks extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      open:false,
-      openDeactivate:false,
-      selectedrecord:{}
+      open: false,
+      openDeactivate: false,
+      selectedrecord: {}
     }
   }
 
@@ -23,18 +23,23 @@ export default class Purchaseorderstocks extends Component {
     GetPurchaseorderstocks()
   }
 
+  componentDidUpdate() {
+    const { Purchaseorderstocks, removePurchaseorderstocknotification } = this.props
+    Notification(Purchaseorderstocks, removePurchaseorderstocknotification)
+  }
+
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Sipariş Numarası', accessor: 'purchaseorder.purchasenumber', sortable: true, canGroupBy: true, canFilter: true,},
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Ürün', accessor: 'stockdefine.name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Departman', accessor: 'department.name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Skt', accessor: 'skt', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Barkod No', accessor: 'barcodeno', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Aktüel Miktar', accessor: 'amount', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Açıklama', accessor: 'info', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Sipariş Numarası', accessor: 'Purchaseorder.Purchasenumber', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Ürün', accessor: 'Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Departman', accessor: 'Department.Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Skt', accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Barkod No', accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Aktüel Miktar', accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Açıklama', accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -43,16 +48,11 @@ export default class Purchaseorderstocks extends Component {
       { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
-    const { Purchaseorderstocks, DeletePurchaseorderstocks, removePurchaseorderstocknotification,Profile } = this.props
-    const { notifications, list, isLoading, isDispatching } = Purchaseorderstocks
-    if (notifications && notifications.length > 0) {
-      let msg = notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removePurchaseorderstocknotification()
-    }
+    const { Purchaseorderstocks, DeletePurchaseorderstocks, Profile } = this.props
+    const { list, isLoading, isDispatching } = Purchaseorderstocks
 
     const metaKey = "Purhcaseorderstocks"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -63,8 +63,8 @@ export default class Purchaseorderstocks extends Component {
     };
 
     (list || []).forEach(item => {
-      item.watch = <Link to={`/Purchaseorderstockmovements/${item.concurrencyStamp}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
-      item.edit = <Link to={`/Purchaseorderstocks/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.watch = <Link to={`/Purchaseorderstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
+      item.edit = <Link to={`/Purchaseorderstocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -109,7 +109,7 @@ export default class Purchaseorderstocks extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.stockdefine.name} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Stockdefine.Name} ` : null} </span>
                   ürününü silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>

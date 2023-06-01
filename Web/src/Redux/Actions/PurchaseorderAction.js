@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_PURCHASEORDERS_INIT: 'GET_PURCHASEORDERS_INIT',
@@ -39,7 +40,7 @@ export const ACTION_TYPES = {
 
 export const GetPurchaseorders = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_PURCHASEORDERS_INIT })
-    await instanse.get(ROUTES.PURCHASEORDER + "/GetAll")
+    await instanse.get(config.services.Warehouse, ROUTES.PURCHASEORDER)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_PURCHASEORDERS_SUCCESS, payload: response.data })
         })
@@ -51,7 +52,7 @@ export const GetPurchaseorders = () => async (dispatch, getState) => {
 
 export const GetPurchaseorder = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_PURCHASEORDER_INIT })
-    await instanse.get(ROUTES.PURCHASEORDER + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Warehouse, `${ROUTES.PURCHASEORDER}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_PURCHASEORDER_SUCCESS, payload: response.data })
         })
@@ -63,7 +64,7 @@ export const GetPurchaseorder = (guid) => async (dispatch, getState) => {
 
 export const AddPurchaseorders = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_PURCHASEORDER_INIT })
-    await instanse.post(ROUTES.PURCHASEORDER + "/Add", data)
+    await instanse.post(config.services.Warehouse, ROUTES.PURCHASEORDER, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.ADD_PURCHASEORDER_SUCCESS, payload: response.data })
                 historypusher.push('/Purchaseorders')
@@ -78,7 +79,7 @@ export const CompletePurchaseorders = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.COMPLETE_PURCHASEORDER_INIT })
-    await instanse.post(ROUTES.PURCHASEORDER + "/Complete", data)
+    await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDER+`/Complete`, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.COMPLETE_PURCHASEORDER_SUCCESS, payload: response.data })
         })
@@ -90,7 +91,7 @@ export const CompletePurchaseorders = (data) => async (dispatch, getState) => {
 
 export const EditPurchaseorders = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_PURCHASEORDER_INIT })
-    await instanse.post(ROUTES.PURCHASEORDER + "/Update", data)
+    await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDER, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.EDIT_PURCHASEORDER_SUCCESS, payload: response.data })
                 historypusher.push('/Purchaseorders')
@@ -105,7 +106,7 @@ export const DeletePurchaseorders = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_PURCHASEORDER_INIT })
-    await instanse.post(ROUTES.PURCHASEORDER + "/Delete", data)
+    await instanse.delete(config.services.Warehouse, ROUTES.PURCHASEORDER, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_PURCHASEORDER_SUCCESS, payload: response.data })
         })
