@@ -31,15 +31,15 @@ export default class Mailsettings extends Component {
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Mail Kural Adı', accessor: 'name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Mail Kullanıcı Adı', accessor: 'user', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Smtp Host', accessor: 'smtphost', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Smtp Port', accessor: 'smtpport', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Mail Adresi', accessor: 'mailaddress', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Body Html mi?', accessor: 'isbodyhtml', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: 'Ayar Aktif mi?', accessor: 'issettingactive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Mail Kural Adı', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Mail Kullanıcı Adı', accessor: 'User', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Smtp Host', accessor: 'Smtphost', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Smtp Port', accessor: 'Smtpport', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Mail Adresi', accessor: 'Mailaddress', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Body Html mi?', accessor: 'Isbodyhtml', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
+      { Header: 'Ayar Aktif mi?', accessor: 'Issettingactive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -63,7 +63,7 @@ export default class Mailsettings extends Component {
     };
 
     (list || []).forEach(item => {
-      item.edit = <Link to={`/Mailsettings/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.edit = <Link to={`/Mailsettings/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -108,7 +108,7 @@ export default class Mailsettings extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.name} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
                   ayarını silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>

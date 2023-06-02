@@ -47,7 +47,7 @@ export const GetStations = () => async (dispatch, getState) => {
 
 export const GetStation = (Uuid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_STATION_INIT })
-    await instanse.get(config.services.Setting,`${ROUTES.STATION}/${Uuid}`)
+    await instanse.get(config.services.Setting, `${ROUTES.STATION}/${Uuid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_STATION_SUCCESS, payload: response.data })
         })
@@ -58,8 +58,8 @@ export const GetStation = (Uuid) => async (dispatch, getState) => {
 }
 
 export const AddStations = (data, historypusher) => async (dispatch, getState) => {
-    dispatch({ type: ACTION_TYPES.ADD_STATION_INIT })
-    await instanse.post(config.services.Setting,ROUTES.STATION,data)
+    dispatch({ type: ACTION_TYPES.ADD_STATION_INIT, payload: data })
+    await instanse.post(config.services.Setting, ROUTES.STATION, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.ADD_STATION_SUCCESS, payload: response.data })
             historypusher.push('/Stations')
@@ -71,8 +71,8 @@ export const AddStations = (data, historypusher) => async (dispatch, getState) =
 }
 
 export const EditStations = (data, historypusher) => async (dispatch, getState) => {
-    dispatch({ type: ACTION_TYPES.EDIT_STATION_INIT })
-    await instanse.put(config.services.Setting,ROUTES.STATION, data)
+    dispatch({ type: ACTION_TYPES.EDIT_STATION_INIT, payload: data })
+    await instanse.put(config.services.Setting, ROUTES.STATION, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.EDIT_STATION_SUCCESS, payload: response.data })
             historypusher.push('/Stations')
@@ -87,7 +87,7 @@ export const DeleteStations = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_STATION_INIT })
-    await instanse.delete(config.services.Setting,ROUTES.STATION, data)
+    await instanse.delete(config.services.Setting, ROUTES.STATION, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_STATION_SUCCESS, payload: response.data })
         })

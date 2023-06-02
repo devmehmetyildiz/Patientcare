@@ -83,7 +83,7 @@ export default class Purchaseorders extends Component {
       item.edit = <Link to={`/Purchaseorders/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
-
+    
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>
@@ -165,7 +165,7 @@ export default class Purchaseorders extends Component {
               </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-              <Button color='black' onClick={() => this.setState({ open: false, selectedrecord: {} })}>
+              <Button color='black' onClick={() => this.setState({ openComplete: false, selectedrecord: {} })}>
                 Vazgeç
               </Button>
               <Button
@@ -174,7 +174,7 @@ export default class Purchaseorders extends Component {
                 icon='checkmark'
                 onClick={() => {
                   CompletePurchaseorders(this.state.selectedrecord)
-                  this.setState({ open: false, selectedrecord: {} })
+                  this.setState({ openComplete: false, selectedrecord: {} })
                 }}
                 positive
               />

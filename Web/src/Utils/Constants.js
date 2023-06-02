@@ -35,8 +35,8 @@ export const ROUTES = {
     PATIENTMOVEMENT: 'Patientmovement',
     CHECKPERIOD: 'Checkperiods',
     PERIOD: 'Periods',
-    MAILSETTING: 'Mailsetting',
-    PRINTTEMPLATE: 'Printtemplate',
+    MAILSETTING: 'Mailsettings',
+    PRINTTEMPLATE: 'Printtemplates',
 
 }
 

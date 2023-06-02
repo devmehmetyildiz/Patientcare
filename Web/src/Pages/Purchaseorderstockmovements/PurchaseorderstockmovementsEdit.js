@@ -30,17 +30,17 @@ export default class PurchaseorderstockmovementsEdit extends Component {
     const { Purchaseorderstocks, Purchaseorderstockmovements,
       removePurchaseorderstocknotification, removePurchaseorderstockmovementnotification } = this.props
     const { selected_record, isLoading } = Purchaseorderstockmovements
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
       && Purchaseorderstocks.list.length > 0 && !Purchaseorderstocks.isLoading
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedstock: selected_record.stockID,
-        selectedmovement: selected_record.movementtype,
+        selectedstock: selected_record.StockID,
+        selectedmovement: selected_record.Movementtype,
         isDatafetched: true
       })
     }
-    Notification(Purchaseorderstockmovements, removePurchaseorderstockmovementnotification)
-    Notification(Purchaseorderstocks, removePurchaseorderstocknotification)
+    Notification(Purchaseorderstockmovements.notifications, removePurchaseorderstockmovementnotification)
+    Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
   }
 
   render() {
@@ -79,7 +79,7 @@ export default class PurchaseorderstockmovementsEdit extends Component {
                 </Form.Field>
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input defaultValue={Purchaseorderstockmovements.selected_record.amount} label="Miktar" placeholder="Miktar" name="Amount" fluid />
+                <Form.Input defaultValue={Purchaseorderstockmovements.selected_record.Amount} label="Miktar" placeholder="Miktar" name="Amount" fluid />
                 <Form.Field>
                   <label className='text-[#000000de]'>Hareket Türü</label>
                   <Dropdown value={this.state.selectedmovement} placeholder='Hareket Türü' fluid selection options={Movementoptions} onChange={this.handleChangeMovement} />

@@ -66,10 +66,10 @@ async function GetPurchaseorderstockmovement(req, res, next) {
     try {
         const purchaseorderstockmovement = await db.purchaseorderstockmovementModel.findOne({ where: { Uuid: req.params.stockmovementId } });
         if (!purchaseorderstockmovement) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
         }
         if (!purchaseorderstockmovement.Isactive) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
         }
         purchaseorderstockmovement.Stock = await db.purchaseorderstockModel.findOne({ where: { Uuid: purchaseorderstockmovement.StockID } })
         if (purchaseorderstockmovement.Stock) {
@@ -113,7 +113,6 @@ async function AddPurchaseorderstockmovement(req, res, next) {
         Prevvalue,
         Newvalue,
         Movementdate,
-        Status
     } = req.body
 
     if (!validator.isUUID(StockID)) {
@@ -133,9 +132,6 @@ async function AddPurchaseorderstockmovement(req, res, next) {
     }
     if (!validator.isISODate(Movementdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
-    }
-    if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
     }
 
     if (validationErrors.length > 0) {
@@ -180,7 +176,6 @@ async function UpdatePurchaseorderstockmovement(req, res, next) {
         Prevvalue,
         Newvalue,
         Movementdate,
-        Status,
         Uuid
     } = req.body
 
@@ -201,9 +196,6 @@ async function UpdatePurchaseorderstockmovement(req, res, next) {
     }
     if (!validator.isISODate(Movementdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
-    }
-    if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
     }
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED, req.language)

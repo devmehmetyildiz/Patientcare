@@ -27,9 +27,9 @@ export default class MailsettingsEdit extends Component {
   componentDidUpdate() {
     const { removeMailsettingnotification, Mailsettings } = this.props
     const { notifications, selected_record, isLoading } = Mailsettings
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0 && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        isDatafetched: true, isbodyhtml: selected_record.isbodyhtml, issettingactive: selected_record.issettingactive
+        isDatafetched: true, isbodyhtml: selected_record.Isbodyhtml, issettingactive: selected_record.Issettingactive
       })
     }
     Notification(notifications, removeMailsettingnotification)
@@ -58,16 +58,16 @@ export default class MailsettingsEdit extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Group widths={"equal"}>
-                <Form.Input defaultValue={selected_record.name} label="Mail Ayar Adı" placeholder="Mail Ayar Adı" name="name" fluid />
-                <Form.Input defaultValue={selected_record.user} label="Mail Kullanıcısı" placeholder="Mail Kullanıcısı" name="user" fluid />
+                <Form.Input defaultValue={selected_record.Name} label="Mail Ayar Adı" placeholder="Mail Ayar Adı" name="Name" fluid />
+                <Form.Input defaultValue={selected_record.User} label="Mail Kullanıcısı" placeholder="Mail Kullanıcısı" name="User" fluid />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <Form.Input type='password' defaultValue={selected_record.password} label="Mail Kullanıcı Şifresi" placeholder="Mail Kullanıcı Şifresi" name="password" fluid />
-                <Form.Input defaultValue={selected_record.smtpport} label="Smtp Port" placeholder="Smtp Port" name="smtpport" fluid />
+                <Form.Input type='password' defaultValue={selected_record.Password} label="Mail Kullanıcı Şifresi" placeholder="Mail Kullanıcı Şifresi" name="Password" fluid />
+                <Form.Input defaultValue={selected_record.Smtpport} label="Smtp Port" placeholder="Smtp Port" name="Smtpport" fluid />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <Form.Input defaultValue={selected_record.smtphost} label="Smtp Host" placeholder="Smtp Host" name="smtphost" fluid />
-                <Form.Input defaultValue={selected_record.mailaddress} label="Mailaddress" placeholder="Mailaddress" name="mailaddress" fluid />
+                <Form.Input defaultValue={selected_record.Smtphost} label="Smtp Host" placeholder="Smtp Host" name="Smtphost" fluid />
+                <Form.Input defaultValue={selected_record.Mailaddress} label="Mailaddress" placeholder="Mailaddress" name="Mailaddress" fluid />
               </Form.Group>
               <Form.Group widths={"equal"}>
                 <Form.Field>
@@ -101,26 +101,26 @@ export default class MailsettingsEdit extends Component {
     const { EditMailsettings, Mailsettings, history, fillMailsettingnotification } = this.props
 
     const data = formToObject(e.target)
-    data.isbodyhtml = this.state.isbodyhtml
-    data.issettingactive = this.state.issettingactive
+    data.Isbodyhtml = this.state.isbodyhtml
+    data.Issettingactive = this.state.issettingactive
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'İsim Boş Olamaz' })
     }
-    if (!data.user || data.user === '') {
+    if (!data.User || data.User === '') {
       errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'Mail kullanıcısı Boş Olamaz' })
     }
-    if (!data.password || data.password === '') {
+    if (!data.Password || data.Password === '') {
       errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'Mail kullanıcı parolası Boş Olamaz' })
     }
-    if (!data.smtpport || data.smtpport === '') {
+    if (!data.Smtpport || data.Smtpport === '') {
       errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'Smtp Port Boş Olamaz' })
     }
-    if (!data.smtphost || data.smtphost === '') {
+    if (!data.Smtphost || data.Smtphost === '') {
       errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'Smtp Host Boş Olamaz' })
     }
-    if (!data.mailaddress || data.mailaddress === '') {
+    if (!data.Mailaddress || data.Mailaddress === '') {
       errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'E-Mail Adresi Boş Olamaz' })
     }
     if (errors.length > 0) {

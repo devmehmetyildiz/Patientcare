@@ -109,7 +109,7 @@ async function AddPatientstockmovement(req, res, next) {
         res.status(200).json(patientstockmovements)
     } catch (err) {
         await t.rollback()
-        next(sequelizeErrorCatcher(err))
+        return next(sequelizeErrorCatcher(err))
     }
 }
 

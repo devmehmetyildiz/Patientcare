@@ -60,9 +60,6 @@ export default class PurchaseordersCreate extends Component {
       return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
     })
 
-
-
-
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
@@ -95,23 +92,23 @@ export default class PurchaseordersCreate extends Component {
                             </Form.Field>
                           </Form.Group>
                           <Form.Group widths={'equal'}>
-                            <Form.Input placeholder="Firma Adı" name="Company" fluid label="Firma Adı" value={this.handleGetvalue('Company')} onChange={this.handleOnchange} />
-                            <Form.Input placeholder="Alış Fiyatı" name="Purchaseprice" fluid label="Alış Fiyatı" type='number' value={this.handleGetvalue('Purchaseprice')} onChange={this.handleOnchange} />
+                            <Form.Input placeholder="Firma Adı" name="Company" fluid label="Firma Adı" defaulValue={this.getState('Company')} />
+                            <Form.Input placeholder="Alış Fiyatı" name="Purchaseprice" fluid label="Alış Fiyatı" type='number' defaulValue={this.getState('Purchaseprice')} />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
-                            <Form.Input placeholder="Siparişi Getiren" name="Companypersonelname" fluid label="Siparişi Getiren" value={this.handleGetvalue('Companypersonelname')} onChange={this.handleOnchange} />
-                            <Form.Input placeholder="Sipariş Numarası" name="Purchasenumber" fluid label="Sipariş Numarası" value={this.handleGetvalue('Purchasenumber')} onChange={this.handleOnchange} />
+                            <Form.Input placeholder="Siparişi Getiren" name="Companypersonelname" fluid label="Siparişi Getiren" defaulValue={this.getState('Companypersonelname')} />
+                            <Form.Input placeholder="Sipariş Numarası" name="Purchasenumber" fluid label="Sipariş Numarası" defaulValue={this.getState('Purchasenumber')} />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
                             <Form.Field>
                               <label className='text-[#000000de]'>Sipariş Durumu</label>
                               <Dropdown placeholder='Sipariş Durumu' clearable search fluid selection options={Casesoption} value={this.state.selectedCase} onChange={(e, data) => { this.setState({ selectedCase: data.value }) }} />
                             </Form.Field>
-                            <Form.Input placeholder="Teslim Alan" name="Personelname" fluid label="Teslim Alan" value={this.handleGetvalue('Personelname')} onChange={this.handleOnchange} />
+                            <Form.Input placeholder="Teslim Alan" name="Personelname" fluid label="Teslim Alan" defaulValue={this.getState('Personelname')} />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
-                            <Form.Input placeholder="Satın Alma Tarihi" name="Purchasedate" type='date' fluid label="Satın Alma Tarihi" value={this.handleGetvalue('Purchasedate')} onChange={this.handleOnchange} />
-                            <Form.Input placeholder="Açıklama" name="Info" fluid label="Açıklama" value={this.handleGetvalue('Info')} onChange={this.handleOnchange} />
+                            <Form.Input placeholder="Satın Alma Tarihi" name="Purchasedate" type='date' fluid label="Satın Alma Tarihi" defaulValue={this.getState('Purchasedate')} />
+                            <Form.Input placeholder="Açıklama" name="Info" fluid label="Açıklama" defaulValue={this.getState('Info')} />
                           </Form.Group>
                         </div>
                       </React.Fragment>
@@ -226,7 +223,7 @@ export default class PurchaseordersCreate extends Component {
     const responseData = {
       Info: Array.isArray(formData.Info) ? formData.Info[0] : formData.Info,
       Company: formData.Company,
-      Username: '',
+      Username: 'test',
       Purchaseprice: parseFloat(formData.Purchaseprice),
       Purchasenumber: formData.Purchasenumber,
       Companypersonelname: formData.Companypersonelname,
@@ -329,26 +326,9 @@ export default class PurchaseordersCreate extends Component {
     this.setState({ selectedStocks: productionRoutes })
   }
 
-
-  handleGetvalue = (name, type) => {
-    if (!this.state.inputvalues[name]) {
-      switch (type) {
-        case 'number':
-          return 0
-        case 'date':
-          return new Date()
-        default:
-          return ''
-      }
-    } else {
-      return this.state.inputvalues[name]
-    }
-  }
-
-  handleOnchange = (e) => {
-    const inputvalues = { ...this.state.inputvalues }
-    inputvalues[e.target.name] = e.target.value
-    this.setState({ inputvalues })
+  getState = (name) => {
+    const { Purchaseorders } = this.props
+    return Purchaseorders.selected_record && Purchaseorders.selected_record[name]
   }
 }
 

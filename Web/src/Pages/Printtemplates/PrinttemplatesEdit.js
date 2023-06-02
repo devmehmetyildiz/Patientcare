@@ -31,9 +31,9 @@ export default class PrinttemplatesEdit extends Component {
   componentDidUpdate() {
     const { Departments, Printtemplates, removeDepartmentnotification, removePrinttemplatenotification } = this.props
     const { selected_record, isLoading } = Printtemplates
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedDepartment: selected_record.departmentID, isDatafetched: true, template: selected_record.printtemplate
+        selectedDepartment: selected_record.DepartmentID, isDatafetched: true, template: selected_record.Printtemplate
       })
     }
     Notification(Printtemplates.notifications, removePrinttemplatenotification)
@@ -47,7 +47,7 @@ export default class PrinttemplatesEdit extends Component {
     const { isLoading, isDispatching, selected_record } = Printtemplates
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
     return (
@@ -75,8 +75,8 @@ export default class PrinttemplatesEdit extends Component {
                       key: 'save',
                       content: <div className='h-auto'>
                         <Form.Group widths={"equal"}>
-                          <Form.Input defaultValue={selected_record.name} label="Taslak Adı" placeholder="Taslak Adı" name="name" fluid />
-                          <Form.Input defaultValue={selected_record.valuekey} label="Kaynak Değer" placeholder="Kaynak Değer" name="valuekey" fluid />
+                          <Form.Input defaultValue={selected_record.Name} label="Taslak Adı" placeholder="Taslak Adı" name="Name" fluid />
+                          <Form.Input defaultValue={selected_record.Valuekey} label="Kaynak Değer" placeholder="Kaynak Değer" name="Valuekey" fluid />
                         </Form.Group>
                         <Form.Group widths={"equal"}>
                           <Form.Field>
@@ -137,20 +137,20 @@ export default class PrinttemplatesEdit extends Component {
     const { EditPrinttemplates, history, fillPrinttemplatenotification, Printtemplates } = this.props
 
     const data = formToObject(e.target)
-    data.departmentID = this.state.selectedDepartment
-    data.printtemplate = this.state.template
+    data.DepartmentID = this.state.selectedDepartment
+    data.Printtemplate = this.state.template
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Yazırma Tasarımları', description: 'İsim Boş Olamaz' })
     }
-    if (!data.valuekey || data.valuekey === '') {
+    if (!data.Valuekey || data.Valuekey === '') {
       errors.push({ type: 'Error', code: 'Yazırma Tasarımları', description: 'Kaynak Değerleri Boş Olamaz' })
     }
-    if (!data.departmentID || data.departmentID === '') {
+    if (!data.DepartmentID || data.DepartmentID === '') {
       errors.push({ type: 'Error', code: 'Yazırma Tasarımları', description: 'Departman seçili değil' })
     }
-    if (!data.printtemplate || data.printtemplate === '') {
+    if (!data.Printtemplate || data.Printtemplate === '') {
       errors.push({ type: 'Error', code: 'Yazırma Tasarımları', description: 'Tasarım Yazılmadı' })
     }
     if (errors.length > 0) {

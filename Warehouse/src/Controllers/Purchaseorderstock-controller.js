@@ -71,10 +71,10 @@ async function GetPurchaseorderstock(req, res, next) {
     try {
         const purchaseorderstock = await db.purchaseorderstockModel.findOne({ where: { Uuid: req.params.stockId } });
         if (!purchaseorderstock) {
-            return createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
         }
         if (!purchaseorderstock.Isactive) {
-            return createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
         }
         try {
             purchaseorderstock.Purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: purchaseorderstock.PurchaseorderID } })
@@ -176,6 +176,7 @@ async function AddPurchaseorderstock(req, res, next) {
         }, { transaction: t })
 
         await db.purchaseorderstockmovementModel.create({
+            Uuid: uuid(),
             StockID: stockuuid,
             Amount: req.body.Amount,
             Movementdate: new Date(),

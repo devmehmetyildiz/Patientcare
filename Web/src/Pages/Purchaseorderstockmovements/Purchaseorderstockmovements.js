@@ -26,7 +26,7 @@ export default class Purchaseorderstockmovements extends Component {
 
   componentDidUpdate() {
     const { Purchaseorderstockmovements, removePurchaseorderstockmovementnotification } = this.props
-    Notification(Purchaseorderstockmovements, removePurchaseorderstockmovementnotification)
+    Notification(Purchaseorderstockmovements.notifications, removePurchaseorderstockmovementnotification)
   }
 
   render() {
@@ -35,7 +35,7 @@ export default class Purchaseorderstockmovements extends Component {
       { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Ürün', accessor: 'Stock.Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Departman', accessor: 'Stock.Department.Name', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Departman', accessor: 'Stock.Stockdefine.Department.Name', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Kullanıcı', accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Hareket Zamanı', accessor: 'Movementdate', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Hareket Türü', accessor: 'Movementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },

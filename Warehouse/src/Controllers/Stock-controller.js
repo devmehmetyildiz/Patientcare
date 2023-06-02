@@ -31,7 +31,7 @@ async function GetStocks(req, res, next) {
                 departments = departmentsresponse.data
                 units = unitsresponse.data
             } catch (error) {
-                next(requestErrorCatcher(error, 'Setting'))
+                return next(requestErrorCatcher(error, 'Setting'))
             }
             for (const stock of stocks) {
                 let amount = 0.0;
@@ -50,7 +50,7 @@ async function GetStocks(req, res, next) {
         }
         res.status(200).json(stocks)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -70,10 +70,10 @@ async function GetStock(req, res, next) {
     try {
         const stock = await db.stockModel.findOne({ where: { Uuid: req.params.stockId } });
         if (!stock) {
-            return createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
         }
         if (!stock.Isactive) {
-            return createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
         }
         try {
             stock.Warehouse = await db.warehouseModel.findOne({ where: { Uuid: stock.WarehouseID } })
@@ -171,6 +171,7 @@ async function AddStock(req, res, next) {
         }, { transaction: t })
 
         await db.stockmovementModel.create({
+            Uuid: uuid(),
             StockID: stockuuid,
             Amount: req.body.Amount,
             Movementdate: new Date(),
@@ -185,7 +186,7 @@ async function AddStock(req, res, next) {
         await t.commit()
     } catch (err) {
         await t.rollback()
-        next(sequelizeErrorCatcher(err))
+        return next(sequelizeErrorCatcher(err))
     }
     GetStocks(req, res, next)
 }
@@ -266,7 +267,7 @@ async function UpdateStock(req, res, next) {
         await t.commit()
     } catch (error) {
         await t.rollback()
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
     GetStocks(req, res, next)
 }
@@ -303,7 +304,7 @@ async function DeleteStock(req, res, next) {
         await t.commit();
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
     GetStocks(req, res, next)
 }

@@ -33,7 +33,7 @@ const StationReducer = (state = defaultState, { type, payload }) => {
             return { ...state, isLoading: false, errmsg: payload }
 
         case ACTION_TYPES.ADD_STATION_INIT:
-            return { ...state, isDispatching: true }
+            return { ...state, isDispatching: true, selected_record: payload }
         case ACTION_TYPES.ADD_STATION_SUCCESS:
             return {
                 ...state, isDispatching: false, list: payload,
@@ -43,7 +43,7 @@ const StationReducer = (state = defaultState, { type, payload }) => {
             return { ...state, isDispatching: false, errmsg: payload }
 
         case ACTION_TYPES.EDIT_STATION_INIT:
-            return { ...state, isDispatching: true }
+            return { ...state, isDispatching: true, selected_record: payload }
         case ACTION_TYPES.EDIT_STATION_SUCCESS:
             return {
                 ...state, isDispatching: false, list: payload,
@@ -67,7 +67,7 @@ const StationReducer = (state = defaultState, { type, payload }) => {
             Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
             return { ...state, notifications: messages }
         case ACTION_TYPES.REMOVE_STATIONS_NOTIFICATION:
-           let messages1 = [...state.notifications]
+            let messages1 = [...state.notifications]
             messages1.splice(0, 1)
             return { ...state, notifications: messages1 }
         case ACTION_TYPES.REMOVE_SELECTED_STATION:

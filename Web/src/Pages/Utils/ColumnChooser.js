@@ -17,15 +17,15 @@ class ColumnChooser extends Component {
     if (tableMeta) {
       const metaColumns = JSON.parse(tableMeta.Config)
       const decoratedColumns = metaColumns.length === columns.length ?
-      metaColumns.map((item, index) => {
-        return { order: index, isVisible: item.isVisible, name: columns.find(u => u.accessor === item.key)?.Header, key: item.key }
-      }) :
-      columns.map((item, index) => {
-        return { order: index, isVisible: true, name: item.Header, key: item.accessor }
-      })
+        metaColumns.map((item, index) => {
+          return { order: index, isVisible: item.isVisible, name: columns.find(u => u.accessor === item.key)?.Header, key: item.key }
+        }) :
+        columns.map((item, index) => {
+          return { order: index, isVisible: true, name: item.Header, key: item.accessor }
+        })
       this.setState({ decoratedColumns: decoratedColumns })
     } else {
-      const defaultHiddens =  ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
+      const defaultHiddens = ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
       const decoratedColumns = columns.map((item, index) => {
         return { order: index, isVisible: defaultHiddens.includes(item.accessor) ? false : true, name: item.Header, key: item.accessor }
       })
@@ -66,7 +66,7 @@ class ColumnChooser extends Component {
                     <Checkbox toggle className='m-2' checked={column.isVisible} onClick={(e) => { this.visibleChanged(column.key) }} />
                   </Table.Cell>
                   <Table.Cell className='table-last-section'>
-                    <Label>{column.name}</Label>
+                    <Label>{`${column.name}`}</Label>
                   </Table.Cell>
                 </Table.Row>
               })}

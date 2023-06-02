@@ -5,6 +5,7 @@ import { MdSettings } from "react-icons/md";
 import { Collapse } from 'react-collapse';
 import { withRouter } from 'react-router-dom';
 
+
 export function Sidebar(props) {
 
     const { iconOnly } = props

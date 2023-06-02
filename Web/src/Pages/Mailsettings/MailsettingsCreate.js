@@ -46,16 +46,16 @@ export default class MailsettingsCreate extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Group widths={"equal"}>
-                <Form.Input label="Mail Ayar Adı" placeholder="Mail Ayar Adı" name="name" fluid />
-                <Form.Input label="Mail Kullanıcısı" placeholder="Mail Kullanıcısı" name="user" fluid />
+                <Form.Input label="Mail Ayar Adı" placeholder="Mail Ayar Adı" name="Name" fluid />
+                <Form.Input label="Mail Kullanıcısı" placeholder="Mail Kullanıcısı" name="User" fluid />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <Form.Input type='password' label="Mail Kullanıcı Şifresi" placeholder="Mail Kullanıcı Şifresi" name="password" fluid />
-                <Form.Input label="Smtp Port" placeholder="Smtp Port" name="smtpport" fluid />
+                <Form.Input type='password' label="Mail Kullanıcı Şifresi" placeholder="Mail Kullanıcı Şifresi" name="Password" fluid />
+                <Form.Input label="Smtp Port" placeholder="Smtp Port" name="Smtpport" fluid />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <Form.Input label="Smtp Host" placeholder="Smtp Host" name="smtphost" fluid />
-                <Form.Input label="Mailaddress" placeholder="Mailaddress" name="mailaddress" fluid />
+                <Form.Input label="Smtp Host" placeholder="Smtp Host" name="Smtphost" fluid />
+                <Form.Input label="Mailaddress" placeholder="Mailaddress" name="Mailaddress" fluid />
               </Form.Group>
               <Form.Group widths={"equal"}>
                 <Form.Field>
@@ -88,35 +88,26 @@ export default class MailsettingsCreate extends Component {
     const { AddMailsettings, history, fillMailsettingnotification } = this.props
 
     const data = formToObject(e.target)
-    data.isbodyhtml = this.state.isbodyhtml
-    data.issettingactive = this.state.issettingactive
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
+    data.Isbodyhtml = this.state.isbodyhtml
+    data.Issettingactive = this.state.issettingactive
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'İsim Boş Olamaz' })
     }
-    if (!data.user || data.user === '') {
+    if (!data.User || data.User === '') {
       errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'Mail kullanıcısı Boş Olamaz' })
     }
-    if (!data.password || data.password === '') {
+    if (!data.Password || data.Password === '') {
       errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'Mail kullanıcı parolası Boş Olamaz' })
     }
-    if (!data.smtpport || data.smtpport === '') {
+    if (!data.Smtpport || data.Smtpport === '') {
       errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'Smtp Port Boş Olamaz' })
     }
-    if (!data.smtphost || data.smtphost === '') {
+    if (!data.Smtphost || data.Smtphost === '') {
       errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'Smtp Host Boş Olamaz' })
     }
-    if (!data.mailaddress || data.mailaddress === '') {
+    if (!data.Mailaddress || data.Mailaddress === '') {
       errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'E-Mail Adresi Boş Olamaz' })
     }
     if (errors.length > 0) {

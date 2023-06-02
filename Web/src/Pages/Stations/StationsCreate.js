@@ -49,7 +49,7 @@ export default class StationsCreate extends Component {
             }}>
               <Form.Field>
                 <label className='text-[#000000de]'>İstasyon Adı</label>
-                <Form.Input value={this.handleGetvalue('Name')} onChange={this.handleOnchange} placeholder="İstasyon Adı" name="Name" fluid />
+                <Form.Input defaulValue={this.getState('Name')} placeholder="İstasyon Adı" name="Name" fluid />
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Stations">
@@ -83,16 +83,9 @@ export default class StationsCreate extends Component {
     }
   }
 
-  handleGetvalue = (name, type) => {
-    let value = this.state.inputvalues[name] ? this.state.inputvalues[name] : (type === 'number' ? 0 : '')
-    return value
+  getState = (name) => {
+    const { Stations } = this.props
+    return Stations.selected_record && Stations.selected_record[name]
   }
-
-  handleOnchange = (e) => {
-    const inputvalues = { ...this.state.inputvalues }
-    inputvalues[e.target.name] = e.target.value
-    this.setState({ inputvalues })
-  }
-
 }
 

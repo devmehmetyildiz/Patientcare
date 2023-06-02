@@ -35,7 +35,7 @@ export default class PrinttemplatesCreate extends Component {
     const { isLoading, isDispatching } = Printtemplates
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
     return (
@@ -63,8 +63,8 @@ export default class PrinttemplatesCreate extends Component {
                       key: 'save',
                       content: <React.Fragment>
                         <Form.Group widths={"equal"}>
-                          <Form.Input label="Taslak Adı" placeholder="Taslak Adı" name="name" fluid />
-                          <Form.Input label="Kaynak Değer" placeholder="Kaynak Değer" name="valuekey" fluid />
+                          <Form.Input label="Taslak Adı" placeholder="Taslak Adı" name="Name" fluid />
+                          <Form.Input label="Kaynak Değer" placeholder="Kaynak Değer" name="Valuekey" fluid />
                         </Form.Group>
                         <Form.Group widths={"equal"}>
                           <Form.Field>
@@ -125,30 +125,20 @@ export default class PrinttemplatesCreate extends Component {
     const { AddPrinttemplates, history, fillPrinttemplatenotification } = this.props
 
     const data = formToObject(e.target)
-    data.departmentID = this.state.selectedDepartment
-    data.printtemplate = this.state.template
-    data.id = 0
-    data.department = {}
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
+    data.DepartmentID = this.state.selectedDepartment
+    data.Printtemplate = this.state.template
 
     let errors = []
-    if (!data.name || data.name === '') {
+    if (!data.Name || data.Name === '') {
       errors.push({ type: 'Error', code: 'Yazırma Tasarımları', description: 'İsim Boş Olamaz' })
     }
-    if (!data.valuekey || data.valuekey === '') {
+    if (!data.Valuekey || data.Valuekey === '') {
       errors.push({ type: 'Error', code: 'Yazırma Tasarımları', description: 'Kaynak Değerleri Boş Olamaz' })
     }
-    if (!data.departmentID || data.departmentID === '') {
+    if (!data.DepartmentID || data.DepartmentID === '') {
       errors.push({ type: 'Error', code: 'Yazırma Tasarımları', description: 'Departman seçili değil' })
     }
-    if (!data.printtemplate || data.printtemplate === '') {
+    if (!data.Printtemplate || data.Printtemplate === '') {
       errors.push({ type: 'Error', code: 'Yazırma Tasarımları', description: 'Tasarım Yazılmadı' })
     }
     if (errors.length > 0) {

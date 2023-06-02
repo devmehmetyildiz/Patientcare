@@ -15,6 +15,7 @@
     "nodemon": "^2.0.22"
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -23,10 +24,9 @@
     "expect": "^29.5.0",
     "express-session": "^1.17.3",
     "mysql2": "^3.2.0",
-    "pg": "^8.11.0",
+    "pg": "^8.10.0",
     "pg-hstore": "^2.3.4",
     "randomatic": "^3.1.1",
-    "request-promise-native": "^1.0.9",
     "sequelize": "^6.31.1",
     "session-memory-store": "^1.0.0",
     "uuid": "^9.0.0",

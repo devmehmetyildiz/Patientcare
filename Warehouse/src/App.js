@@ -54,7 +54,7 @@ require("./Middlewares/Databaseconnector")()
       httpServer.listen(config.port, () => {
         if (config.env === 'development') {
         console.log(`${config.session.name} service is running at http://localhost:${httpServer.address().port} for public usage`)
-          db.warehouselogModel.create({
+          db.applog_warehouseModel.create({
             Event: "App opened at: " + new Date()
           }).catch(() => {
 

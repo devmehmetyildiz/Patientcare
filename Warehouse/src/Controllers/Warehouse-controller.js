@@ -43,7 +43,7 @@ async function GetWarehouses(req, res, next) {
                     amount += (movement.Amount * movement.Movementtype);
                 }
                 stock.Amount = amount;
-                stock.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: stock.StockdefineID } })
+                stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock.StockdefineID } })
                 stock.Department = departments.find(u => u.Uuid === stock.DepartmentID)
                 stock.Stockdefine && (stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID))
                 stock.Stockdefine && (stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID))
@@ -54,8 +54,6 @@ async function GetWarehouses(req, res, next) {
     catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
-
-
 }
 
 async function GetWarehouse(req, res, next) {
@@ -74,10 +72,10 @@ async function GetWarehouse(req, res, next) {
     try {
         const warehouse = await db.warehouseModel.findOne({ where: { Uuid: req.params.warehouseId } });
         if (!warehouse) {
-            return createNotfounderror([messages.ERROR.WAREHOUSE_NOT_FOUND], req.language)
+            return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_FOUND], req.language))
         }
         if (!warehouse.Isactive) {
-            return createNotfounderror([messages.ERROR.WAREHOUSE_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_ACTIVE], req.language))
         }
         let departments = null
         let units = null
@@ -109,7 +107,7 @@ async function GetWarehouse(req, res, next) {
                 amount += (movement.Amount * movement.Movementtype);
             }
             stock.Amount = amount;
-            stock.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: stock.StockdefineID } })
+            stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock.StockdefineID } })
             stock.Department = departments.find(u => u.Uuid === stock.DepartmentID)
             stock.Stockdefine && (stock.Stockdefine.Unit = units.find(u => u.Uuid === stock.Stockdefine.UnitID))
             stock.Stockdefine && (stock.Stockdefine.Department = departments.find(u => u.Uuid === stock.Stockdefine.DepartmentID))

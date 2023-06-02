@@ -45,15 +45,15 @@ async function GetPurchaseorders(req, res, next) {
         }
         for (const purchaseorder of purchaseorders) {
             purchaseorder.Case = cases.find(u => u.Uuid === purchaseorder.CaseID)
-            purchaseorders.Stocks = await db.purchaseorderstockModel.findAll({ where: { PurchaseorderID: purchaseorder.Uuid } })
-            for (const purchaseorderstock of purchaseorders.Stocks) {
+            purchaseorder.Stocks = await db.purchaseorderstockModel.findAll({ where: { PurchaseorderID: purchaseorder.Uuid } })
+            for (const purchaseorderstock of purchaseorder.Stocks) {
                 let amount = 0.0;
                 let movements = await db.purchaseorderstockmovementModel.findAll({ where: { StockID: purchaseorderstock.Uuid } })
                 for (const movement of movements) {
                     amount += (movement.Amount * movement.Movementtype);
                 }
                 purchaseorderstock.Amount = amount;
-                purchaseorderstock.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: purchaseorderstock.StockdefineID } })
+                purchaseorderstock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: purchaseorderstock.StockdefineID } })
                 purchaseorderstock.Department = departments.find(u => u.Uuid === purchaseorderstock.DepartmentID)
                 if (purchaseorderstock.Stockdefine) {
                     purchaseorderstock.Stockdefine.Unit = units.find(u => u.Uuid === purchaseorderstock.Stockdefine.UnitID)
@@ -90,28 +90,27 @@ async function GetPurchaseorder(req, res, next) {
             return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language)
         }
         try {
-            const departmentresponse = axios({
+            const departmentresponse = await axios({
                 method: 'GET',
                 url: config.services.Setting + 'Departments',
                 headers: {
                     session_key: config.session.secret
                 }
             })
-            const caseresponse = axios({
+            const caseresponse = await axios({
                 method: 'GET',
                 url: config.services.Setting + `Cases/${purchaseorder.CaseID}`,
                 headers: {
                     session_key: config.session.secret
                 }
             })
-            const unitresponse = axios({
+            const unitresponse = await axios({
                 method: 'GET',
                 url: config.services.Setting + 'Units',
                 headers: {
                     session_key: config.session.secret
                 }
             })
-            await Promise.all([departmentresponse, unitresponse, caseresponse])
             departments = departmentresponse.data
             units = unitresponse.data
             purchaseorder.Case = caseresponse.data
@@ -121,13 +120,13 @@ async function GetPurchaseorder(req, res, next) {
         purchaseorder.Stocks = await db.purchaseorderstockModel.findAll({ where: { PurchaseorderID: purchaseorder.Uuid } })
         for (const purchaseorderstock of purchaseorder.Stocks) {
             let amount = 0.0;
-            let movements = await db.purchaseorderstockmovementModel.findAll({ where: { StockID: purchaseorder.Uuid } })
+            let movements = await db.purchaseorderstockmovementModel.findAll({ where: { StockID: purchaseorderstock.Uuid } })
             for (const movement of movements) {
                 amount += (movement.Amount * movement.Movementtype);
             }
-            purchaseorder.Amount = amount;
-            purchaseorder.Stockdefine = await db.stockdefineModel.findAll({ where: { Uuid: purchaseorder.StockdefineID } })
-            purchaseorder.Department = departments.find(u => u.Uuid === stock.DepartmentID)
+            purchaseorderstock.Amount = amount;
+            purchaseorderstock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: purchaseorderstock.StockdefineID } })
+            purchaseorderstock.Department = departments.find(u => u.Uuid === purchaseorderstock.DepartmentID)
             if (purchaseorderstock.Stockdefine) {
                 purchaseorderstock.Stockdefine.Unit = units.find(u => u.Uuid === purchaseorderstock.Stockdefine.UnitID)
                 purchaseorderstock.Stockdefine.Department = departments.find(u => u.Uuid === purchaseorderstock.Stockdefine.DepartmentID)
@@ -299,15 +298,14 @@ async function UpdatePurchaseorder(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-
     const t = await db.sequelize.transaction();
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } });
         if (!purchaseorder) {
-            return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language)
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
         }
         if (!purchaseorder.Isactive) {
-            return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
         }
 
         await db.purchaseorderModel.update({
@@ -418,13 +416,14 @@ async function CompletePurchaseorder(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } });
         if (!purchaseorder) {
-            return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language)
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
         }
         if (!purchaseorder.Isactive) {
-            return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
         }
         try {
             const caseresponse = await axios({
@@ -441,7 +440,6 @@ async function CompletePurchaseorder(req, res, next) {
         }
 
 
-        const t = await db.sequelize.transaction();
         await db.purchaseorderModel.update({
             ...req.body,
             Updateduser: "System",
@@ -451,7 +449,7 @@ async function CompletePurchaseorder(req, res, next) {
         for (const purchaseorderstock of Stocks) {
 
             let amount = 0;
-            var movements = unitOfWork.purchaseorderstockmovementModel.findAll({ where: { StockID: purchaseorderstock.Uuid, Isactive } })
+            let movements = await db.purchaseorderstockmovementModel.findAll({ where: { StockID: purchaseorderstock.Uuid } })
             for (const movement of movements) {
                 amount += (movement.Amount * movement.Movementtype);
             }
@@ -461,7 +459,7 @@ async function CompletePurchaseorder(req, res, next) {
                     Barcodeno: purchaseorderstock.Barcodeno,
                     StockdefineID: purchaseorderstock.StockdefineID,
                     DepartmentID: purchaseorderstock.DepartmentID,
-                    WarehouseID: purchaseorderstock.WarehouseID
+                    WarehouseID: WarehouseID
                 }
             })
 
@@ -592,10 +590,10 @@ async function DeactivePurchaseorder(req, res, next) {
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } });
         if (!purchaseorder) {
-            return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language)
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
         }
         if (!purchaseorder.Isactive) {
-            return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
         }
         try {
             const caseresponse = await axios({

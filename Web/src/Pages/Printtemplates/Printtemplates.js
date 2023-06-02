@@ -31,11 +31,11 @@ export default class Printtemplates extends Component {
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tasarım Adı', accessor: 'name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kaynak Değer', accessor: 'valuekey', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Geçerli Departman', accessor: 'department.name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tasarım Adı', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Kaynak Değer', accessor: 'Valuekey', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Geçerli Departman', accessor: 'Department.Name', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -59,7 +59,7 @@ export default class Printtemplates extends Component {
     };
 
     (list || []).forEach(item => {
-      item.edit = <Link to={`/Printtemplates/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.edit = <Link to={`/Printtemplates/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -104,7 +104,7 @@ export default class Printtemplates extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.name} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
                   tasarımını silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>

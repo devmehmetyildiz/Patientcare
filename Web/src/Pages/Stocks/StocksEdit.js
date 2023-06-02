@@ -96,8 +96,6 @@ export default class StocksEdit extends Component {
                 </Form.Field>
               </Form.Group>
               <Form.Group widths='equal'>
-              </Form.Group>
-              <Form.Group widths='equal'>
                 <Form.Input label="Barkod No" placeholder="Barkod No" name="Barcodeno" fluid defaultValue={selected_record.barcodeno} />
               </Form.Group>
               <Form.Group widths='equal'>

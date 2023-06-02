@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_MAILSETTINGS_INIT: 'GET_MAILSETTINGS_INIT',
@@ -31,7 +32,7 @@ export const ACTION_TYPES = {
 
 export const GetMailsettings = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_MAILSETTINGS_INIT })
-    await instanse.get(ROUTES.MAILSETTING + "/GetAll")
+    await instanse.get(config.services.System, ROUTES.MAILSETTING)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_MAILSETTINGS_SUCCESS, payload: response.data }) 
         })
@@ -43,7 +44,7 @@ export const GetMailsettings = () => async (dispatch, getState) => {
 
 export const GetMailsetting = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_MAILSETTING_INIT })
-    await instanse.get(ROUTES.MAILSETTING + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.System, `${ROUTES.MAILSETTING}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_MAILSETTING_SUCCESS, payload: response.data })
         })
@@ -55,7 +56,7 @@ export const GetMailsetting = (guid) => async (dispatch, getState) => {
 
 export const AddMailsettings = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_MAILSETTING_INIT })
-    await instanse.post(ROUTES.MAILSETTING + "/Add", data)
+    await instanse.post(config.services.System, ROUTES.MAILSETTING, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.ADD_MAILSETTING_SUCCESS, payload: response.data })
                 historypusher.push('/Mailsettings')
@@ -68,7 +69,7 @@ export const AddMailsettings = (data, historypusher) => async (dispatch, getStat
 
 export const EditMailsettings = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_MAILSETTING_INIT })
-    await instanse.post(ROUTES.MAILSETTING + "/Update", data)
+    await instanse.put(config.services.System, ROUTES.MAILSETTING, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.EDIT_MAILSETTING_SUCCESS, payload: response.data })
                 historypusher.push('/Mailsettings')
@@ -83,7 +84,7 @@ export const DeleteMailsettings = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_MAILSETTING_INIT })
-    await instanse.post(ROUTES.MAILSETTING + "/Delete", data)
+    await instanse.delete(config.services.System, ROUTES.MAILSETTING, data)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_MAILSETTING_SUCCESS, payload: response.data })
         })

@@ -1,4 +1,4 @@
-module.exports = sequelize.define('userrolelogModel', {
+module.exports = sequelize.define('applog_settingModel', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -8,6 +8,6 @@ module.exports = sequelize.define('userrolelogModel', {
         type: Sequelize.STRING,
     },
 }, {
-    tableName: 'userrolelogs', // replace with the name of your existing table
+    tableName: 'applog_setting', // replace with the name of your existing table
     timestamps: false
 });

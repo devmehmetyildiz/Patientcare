@@ -15,7 +15,7 @@ const todogroupdefineModel = require('./TodogroupdefineModel')
 const todogroupdefinetododefineModel = require('./TodogroupdefinetododefineModel')
 const unitdepartmentModel = require('./UnitdepartmentModel')
 const unitModel = require('./UnitModel')
-const settinglogModel = require('./SettinglogModel')
+const applog_settingModel = require('./Applog_settingModel')
 const tododefineperiodModel = require('./TododefineperiodModel')
 
 
@@ -37,6 +37,6 @@ module.exports = {
     todogroupdefinetododefineModel,
     unitdepartmentModel,
     unitModel,
-    settinglogModel,
+    applog_settingModel,
     tododefineperiodModel
 }

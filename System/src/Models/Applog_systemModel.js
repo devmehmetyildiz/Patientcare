@@ -1,4 +1,4 @@
-module.exports = sequelize.define('settinglogModel', {
+module.exports = sequelize.define('applog_systemModel', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -6,8 +6,8 @@ module.exports = sequelize.define('settinglogModel', {
     },
     Event: {
         type: Sequelize.STRING,
-    },
+    }
 }, {
-    tableName: 'settinglogs', // replace with the name of your existing table
+    tableName: 'applog_system', // replace with the name of your existing table
     timestamps: false
 });

@@ -65,6 +65,7 @@ export default class Stockmovements extends Component {
       }) : []
     };
 
+    console.log('list: ', list);
     (list || []).forEach(item => {
       item.watch = <Link to={`/Stockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
       item.edit = <Link to={`/Stockmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>

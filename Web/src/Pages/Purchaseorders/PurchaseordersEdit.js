@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form, Icon, Popup, Table } from 'semantic-ui-react'
+import { Divider, Dropdown, Form, Icon, Popup, Tab, Table } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -15,6 +15,7 @@ export default class PurchaseordersEdit extends Component {
       selectedCase: '',
       isDatafetched: false,
       selectedWarehouse: '',
+      inputvalues: {}
     }
   }
 
@@ -43,14 +44,15 @@ export default class PurchaseordersEdit extends Component {
       && Departments.list.length > 0 && !Departments.isLoading
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedStocks: selected_record.Stocks, isDatafetched: true, selectedCase: selected_record.CaseID
+        selectedStocks: selected_record.Stocks, isDatafetched: true, selectedCase: selected_record.CaseID, selectedWarehouse: selected_record.WarehouseID
       })
     }
-    Notification(Purchaseorders, removePurchaseordernotification)
-    Notification(Departments, removeDepartmentnotification)
-    Notification(Cases, removeCasenotification)
-    Notification(Stockdefines, removeStockdefinenotification)
-    Notification(Warehouses, removeWarehousenotification)
+    
+    Notification(Purchaseorders.notifications, removePurchaseordernotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Cases.notifications, removeCasenotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
+    Notification(Warehouses.notifications, removeWarehousenotification)
   }
 
   render() {
@@ -83,106 +85,127 @@ export default class PurchaseordersEdit extends Component {
                   <Breadcrumb.Section >Satın Alma Siparişi</Breadcrumb.Section>
                 </Link>
                 <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
+                <Breadcrumb.Section>Güncelle</Breadcrumb.Section>
               </Breadcrumb>
             </Header>
           </div>
           <Divider className='w-full  h-[1px]' />
           <div className='w-full  bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form onSubmit={this.handleSubmit}>
-              <Form.Group widths={'equal'}>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Hedef Ambar</label>
-                  <Dropdown value={this.state.selectedWarehouse} placeholder='Hedef Ambar' clearable search fluid selection options={Warehousesoption} onChange={(e, data) => { this.setState({ selectedWarehouse: data.value }) }} />
-                </Form.Field>
-              </Form.Group>
-              <Form.Group widths={'equal'}>
-                <Form.Input defaultValue={selected_record.Company} placeholder="Firma Adı" name="Company" fluid label="Firma Adı" />
-                <Form.Input defaultValue={selected_record.Purchaseprice} placeholder="Alış Fiyatı" name="Purchaseprice" fluid label="Alış Fiyatı" type='number' />
-              </Form.Group>
-              <Form.Group widths={'equal'}>
-                <Form.Input defaultValue={selected_record.Companypersonelname} placeholder="Siparişi Getiren" name="Companypersonelname" fluid label="Siparişi Getiren" />
-                <Form.Input defaultValue={selected_record.Purchasenumber} placeholder="Sipariş Numarası" name="Purchasenumber" fluid label="Sipariş Numarası" />
-              </Form.Group>
-              <Form.Group widths={'equal'}>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Sipariş Durumu</label>
-                  <Dropdown value={this.state.selectedCase} placeholder='Sipariş Durumu' clearable search fluid selection options={Casesoption} onChange={(e, data) => { this.setState({ selectedCase: data.value }) }} />
-                </Form.Field>
-                <Form.Input defaultValue={selected_record.Personelname} placeholder="Teslim Alan" name="Personelname" fluid label="Teslim Alan" />
-              </Form.Group>
-              <Form.Group widths={'equal'}>
-                <Form.Input defaultValue={selected_record.Purchasedate && selected_record.Purchasedate.split('T')[0]} placeholder="Satın Alma Tarihi" name="Purchasedate" type='date' fluid label="Satın Alma Tarihi" />
-                <Form.Input defaultValue={selected_record.Info} placeholder="Açıklama" name="Info" fluid label="Açıklama" />
-              </Form.Group>
+              <Tab className='station-tab'
+                panes={[
+                  {
+                    menuItem: "Sipariş Bilgileri",
+                    pane: {
+                      key: 'save',
+                      content: <React.Fragment>
+                        <Form.Group widths={'equal'}>
+                          <Form.Field>
+                            <label className='text-[#000000de]'>Hedef Ambar</label>
+                            <Dropdown value={this.state.selectedWarehouse} placeholder='Hedef Ambar' clearable search fluid selection options={Warehousesoption} onChange={(e, data) => { this.setState({ selectedWarehouse: data.value }) }} />
+                          </Form.Field>
+                        </Form.Group>
+                        <Form.Group widths={'equal'}>
+                          <Form.Input defaultValue={this.getState('Company')} placeholder="Firma Adı" name="Company" fluid label="Firma Adı" />
+                          <Form.Input defaultValue={this.getState('Purchaseprice')} placeholder="Alış Fiyatı" name="Purchaseprice" fluid label="Alış Fiyatı" type='number' step="0.01"/>
+                        </Form.Group>
+                        <Form.Group widths={'equal'}>
+                          <Form.Input defaultValue={this.getState('Companypersonelname')} placeholder="Siparişi Getiren" name="Companypersonelname" fluid label="Siparişi Getiren" />
+                          <Form.Input defaultValue={this.getState('Purchasenumber')} placeholder="Sipariş Numarası" name="Purchasenumber" fluid label="Sipariş Numarası" />
+                        </Form.Group>
+                        <Form.Group widths={'equal'}>
+                          <Form.Field>
+                            <label className='text-[#000000de]'>Sipariş Durumu</label>
+                            <Dropdown value={this.state.selectedCase} placeholder='Sipariş Durumu' clearable search fluid selection options={Casesoption} onChange={(e, data) => { this.setState({ selectedCase: data.value }) }} />
+                          </Form.Field>
+                          <Form.Input defaultValue={this.getState('Personelname')} placeholder="Teslim Alan" name="Personelname" fluid label="Teslim Alan" />
+                        </Form.Group>
+                        <Form.Group widths={'equal'}>
+                          <Form.Input defaultValue={this.getState('Purchasedate') && selected_record.Purchasedate.split('T')[0]} placeholder="Satın Alma Tarihi" name="Purchasedate" type='date' fluid label="Satın Alma Tarihi" />
+                          <Form.Input defaultValue={this.getState('Info')} placeholder="Açıklama" name="Info" fluid label="Açıklama" />
+                        </Form.Group>
+                        <Divider className='w-full  h-[1px]' />
+                      </React.Fragment>
+                    }
+                  },
+                  {
+                    menuItem: "Ürünler",
+                    pane: {
+                      key: 'design',
+                      content: <React.Fragment>
+                        <div className='max-h-[calc(46vh-10px)] overflow-y-auto'>
+                          <Table celled className='list-table ' key='product-create-type-conversion-table ' >
+                            <Table.Header>
+                              <Table.Row>
+                                <Table.HeaderCell width={1}>Sıra</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>Ürün Tanımı <span>
+                                  <Popup
+                                    trigger={<Icon link name='plus' />}
+                                    content='Yeni Ürün Tanımı Ekle'
+                                    position='top left'
+                                  />
+                                </span></Table.HeaderCell>
+                                <Table.HeaderCell width={2}>Departman</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>Barkodno</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>SKT</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>Miktar</Table.HeaderCell>
+                                <Table.HeaderCell width={6}>Açıklama</Table.HeaderCell>
+                                <Table.HeaderCell width={1}>Sil</Table.HeaderCell>
+                              </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                              {this.state.selectedStocks.sort((a, b) => a.Order - b.Order).map((stock, index) => {
+                                return <Table.Row key={stock.key}>
+                                  <Table.Cell>
+                                    <Button.Group basic size='small'>
+                                      <Button type='button' disabled={index === 0} icon='angle up' onClick={() => { this.selectedProductChangeHandler(stock.key, 'Order', stock.Order - 1) }} />
+                                      <Button type='button' disabled={index + 1 === this.state.selectedStocks.length} icon='angle down' onClick={() => { this.selectedProductChangeHandler(stock.key, 'Order', stock.Order + 1) }} />
+                                    </Button.Group>
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <Form.Field>
+                                      <Dropdown value={stock.StockdefineID} placeholder='Ürün Tanımı' name="StockdefineID" clearable search fluid selection options={Stockdefinesoption} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'StockdefineID', data.value) }} />
+                                    </Form.Field>
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <Form.Field>
+                                      <Dropdown value={stock.DepartmentID} placeholder='Departman' name="DepartmentID" clearable search fluid selection options={Departmentsoption} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'DepartmentID', data.value) }} />
+                                    </Form.Field>
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <Form.Input value={stock.Barcodeno} placeholder="Barkodno" name="Barcodeno" fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Barcodeno', e.target.value) }} />
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <Form.Input value={stock.Skt && stock.Skt.split('T')[0]} placeholder="SKT" name="Skt" type='date' fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Skt', e.target.value) }} />
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <Form.Input disabled={stock.Uuid} value={stock.Amount} placeholder="Miktar" name="Amount" type="number" fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Amount', e.target.value) }} />
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <Form.Input value={stock.Info} placeholder="Açıklama" name="info" fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'info', e.target.value) }} />
+                                  </Table.Cell>
+                                  <Table.Cell className='table-last-section'>
+                                    {!stock.Uuid && <Icon className='type-conversion-remove-icon' link color='red' name='minus circle'
+                                      onClick={() => { this.removeProduct(stock.key, stock.Order) }} />}
+                                  </Table.Cell>
+                                </Table.Row>
+                              })}
+                            </Table.Body>
+                            <Table.Footer>
+                              <Table.Row>
+                                <Table.HeaderCell colSpan='8'>
+                                  <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNewProduct() }}>Ürün Ekle</Button>
+                                </Table.HeaderCell>
+                              </Table.Row>
+                            </Table.Footer>
+                          </Table>
+                        </div>
+                      </React.Fragment>
+                    }
+                  }
+                ]}
+                renderActiveOnly={false} />
               <Divider className='w-full  h-[1px]' />
-              <div className='max-h-[calc(46vh-10px)] overflow-y-auto'>
-                <Table celled className='list-table ' key='product-create-type-conversion-table ' >
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.HeaderCell width={1}>Sıra</Table.HeaderCell>
-                      <Table.HeaderCell width={2}>Ürün Tanımı <span>
-                        <Popup
-                          trigger={<Icon link name='plus' />}
-                          content='Yeni Ürün Tanımı Ekle'
-                          position='top left'
-                        />
-                      </span></Table.HeaderCell>
-                      <Table.HeaderCell width={2}>Departman</Table.HeaderCell>
-                      <Table.HeaderCell width={2}>Barkodno</Table.HeaderCell>
-                      <Table.HeaderCell width={2}>SKT</Table.HeaderCell>
-                      <Table.HeaderCell width={2}>Miktar</Table.HeaderCell>
-                      <Table.HeaderCell width={6}>Açıklama</Table.HeaderCell>
-                      <Table.HeaderCell width={1}>Sil</Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {this.state.selectedStocks.sort((a, b) => a.Order - b.Order).map((stock, index) => {
-                      return <Table.Row key={stock.key}>
-                        <Table.Cell>
-                          <Button.Group basic size='small'>
-                            <Button type='button' disabled={index === 0} icon='angle up' onClick={() => { this.selectedProductChangeHandler(stock.key, 'Order', stock.Order - 1) }} />
-                            <Button type='button' disabled={index + 1 === this.state.selectedStocks.length} icon='angle down' onClick={() => { this.selectedProductChangeHandler(stock.key, 'Order', stock.Order + 1) }} />
-                          </Button.Group>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Form.Field>
-                            <Dropdown value={stock.StockdefineID} placeholder='Ürün Tanımı' name="StockdefineID" clearable search fluid selection options={Stockdefinesoption} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'StockdefineID', data.value) }} />
-                          </Form.Field>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Form.Field>
-                            <Dropdown value={stock.DepartmentID} placeholder='Departman' name="DepartmentID" clearable search fluid selection options={Departmentsoption} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'DepartmentID', data.value) }} />
-                          </Form.Field>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Form.Input value={stock.Barcodeno} placeholder="Barkodno" name="Barcodeno" fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Barcodeno', e.target.value) }} />
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Form.Input value={stock.Skt && stock.Skt.split('T')[0]} placeholder="SKT" name="Skt" type='date' fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Skt', e.target.value) }} />
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Form.Input disabled={stock.Uuid} value={stock.Amount} placeholder="Miktar" name="Amount" type="number" fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Amount', e.target.value) }} />
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Form.Input value={stock.Info} placeholder="Açıklama" name="info" fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'info', e.target.value) }} />
-                        </Table.Cell>
-                        <Table.Cell className='table-last-section'>
-                          {!stock.Uuid && <Icon className='type-conversion-remove-icon' link color='red' name='minus circle'
-                            onClick={() => { this.removeProduct(stock.key, stock.Order) }} />}
-                        </Table.Cell>
-                      </Table.Row>
-                    })}
-                  </Table.Body>
-                  <Table.Footer>
-                    <Table.Row>
-                      <Table.HeaderCell colSpan='8'>
-                        <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNewProduct() }}>Ürün Ekle</Button>
-                      </Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Footer>
-                </Table>
-              </div>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Purchaseorders">
                   <Button floated="left" color='grey'>Geri Dön</Button>
@@ -236,9 +259,6 @@ export default class PurchaseordersEdit extends Component {
       }
       if (!data.Amount || data.Amount === '' || data.amount === 0) {
         errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Miktar Girilmemiş' })
-      }
-      if (!data.UnitID || data.UnitID === '') {
-        errors.push({ type: 'Error', code: 'Puchaseorders', description: 'Birim Girilmemiş' })
       }
     });
 
@@ -315,6 +335,10 @@ export default class PurchaseordersEdit extends Component {
     this.setState({ selectedStocks: productionRoutes })
   }
 
+  getState = (name) => {
+    const { Purchaseorders } = this.props
+    return Purchaseorders.selected_record && Purchaseorders.selected_record[name]
+  }
 
 }
 

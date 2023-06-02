@@ -7,7 +7,7 @@ const purchaseorderstockmovementModel = require('./PurchaseorderstockmovementMod
 const stockdefineModel = require('./StockdefineModel')
 const stockModel = require('./StockModel')
 const stockmovementModel = require('./StockmovementModel')
-const warehouselogModel = require('./WarehouselogModel')
+const applog_warehouseModel = require('./Applog_warehouseModel')
 const warehouseModel = require('./WarehouseModel')
 
 
@@ -22,5 +22,5 @@ module.exports = {
     stockModel,
     stockmovementModel,
     warehouseModel,
-    warehouselogModel,
+    applog_warehouseModel,
 }

@@ -66,10 +66,10 @@ async function GetStockmovement(req, res, next) {
     try {
         const stockmovement = await db.stockmovementModel.findOne({ where: { Uuid: req.params.stockmovementId } });
         if (!stockmovement) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
         }
         if (!stockmovement.Isactive) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
         }
         stockmovement.Stock = await db.stockModel.findOne({ where: { Uuid: stockmovement.StockID } })
         if (stockmovement.Stock) {
@@ -113,7 +113,6 @@ async function AddStockmovement(req, res, next) {
         Prevvalue,
         Newvalue,
         Movementdate,
-        Status
     } = req.body
 
     if (!validator.isUUID(StockID)) {
@@ -133,9 +132,6 @@ async function AddStockmovement(req, res, next) {
     }
     if (!validator.isISODate(Movementdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
-    }
-    if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
     }
 
     if (validationErrors.length > 0) {
@@ -165,7 +161,7 @@ async function AddStockmovement(req, res, next) {
         await t.rollback()
         return next(sequelizeErrorCatcher(err))
     }
-    GetStockmovement(req, res, next)
+    GetStockmovements(req, res, next)
 }
 
 async function UpdateStockmovement(req, res, next) {
@@ -178,7 +174,6 @@ async function UpdateStockmovement(req, res, next) {
         Prevvalue,
         Newvalue,
         Movementdate,
-        Status,
         Uuid
     } = req.body
 
@@ -199,9 +194,6 @@ async function UpdateStockmovement(req, res, next) {
     }
     if (!validator.isISODate(Movementdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
-    }
-    if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
     }
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED, req.language)
@@ -232,7 +224,7 @@ async function UpdateStockmovement(req, res, next) {
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
-    GetStockmovement(req, res, next)
+    GetStockmovements(req, res, next)
 }
 
 async function DeleteStockmovement(req, res, next) {
@@ -267,7 +259,7 @@ async function DeleteStockmovement(req, res, next) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
-    GetStockmovement(req, res, next)
+    GetStockmovements(req, res, next)
 }
 
 

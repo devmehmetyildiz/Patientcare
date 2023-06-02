@@ -40,7 +40,7 @@ async function GetStockdefines(req, res, next) {
         }
         res.status(200).json(stockdefines)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -60,10 +60,10 @@ async function GetStockdefine(req, res, next) {
     try {
         const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: req.params.stockdefineId } });
         if (!stockdefine) {
-            return createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_FOUND], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_FOUND], req.language))
         }
         if (!stockdefine.Isactive) {
-            return createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language))
         }
 
         try {
@@ -84,11 +84,11 @@ async function GetStockdefine(req, res, next) {
             stockdefine.Department = departmentsresponse.data
             stockdefine.Unit = unitsresponse.data
         } catch (error) {
-            next(requestErrorCatcher(error, 'Setting'))
+            return next(requestErrorCatcher(error, 'Setting'))
         }
         res.status(200).json(stockdefine)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -133,40 +133,11 @@ async function AddStockdefine(req, res, next) {
         }, { transaction: t })
 
         await t.commit()
-        const stockdefines = await db.stockdefineModel.findAll({ where: { Isactive: true } })
-        if (stockdefines && stockdefines.length > 0) {
-            let departments = []
-            let units = []
-            try {
-                const departmentsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Units`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                departments = departmentsresponse.data
-                units = unitsresponse.data
-            } catch (error) {
-                next(requestErrorCatcher(error, 'Setting'))
-            }
-            for (const stockdefine of stockdefines) {
-                stockdefine.Department = departments.find(u => u.Uuid === stockdefine.DepartmentID)
-                stockdefine.Unit = units.find(u => u.Uuid === stockdefine.UnitID)
-            }
-        }
-        res.status(200).json(stockdefines)
     } catch (err) {
         await t.rollback()
         next(sequelizeErrorCatcher(err))
     }
+    GetStockdefines(req, res, next)
 }
 
 async function UpdateStockdefine(req, res, next) {
@@ -202,6 +173,7 @@ async function UpdateStockdefine(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
+    const t = await db.sequelize.transaction();
     try {
         const stockdefine = db.stockdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!stockdefine) {
@@ -211,8 +183,6 @@ async function UpdateStockdefine(req, res, next) {
             return next(createAccessDenied([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language))
         }
 
-        const t = await db.sequelize.transaction();
-
         await db.stockdefineModel.update({
             ...req.body,
             Updateduser: "System",
@@ -220,41 +190,11 @@ async function UpdateStockdefine(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
-        const stockdefines = await db.stockdefineModel.findAll({ where: { Isactive: true } })
-        if (stockdefines && stockdefines.length > 0) {
-            let departments = []
-            let units = []
-            try {
-                const departmentsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Units`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                departments = departmentsresponse.data
-                units = unitsresponse.data
-            } catch (error) {
-                next(requestErrorCatcher(error, 'Setting'))
-            }
-            for (const stockdefine of stockdefines) {
-                stockdefine.Department = departments.find(u => u.Uuid === stockdefine.DepartmentID)
-                stockdefine.Unit = units.find(u => u.Uuid === stockdefine.UnitID)
-            }
-        }
-        res.status(200).json(stockdefines)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
     }
-
-
+    GetStockdefines(req, res, next)
 }
 
 async function DeleteStockdefine(req, res, next) {
@@ -274,6 +214,7 @@ async function DeleteStockdefine(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const stockdefine = db.stockdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!stockdefine) {
@@ -282,46 +223,14 @@ async function DeleteStockdefine(req, res, next) {
         if (stockdefine.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.stockdefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        const stockdefines = await db.stockdefineModel.findAll({ where: { Isactive: true } })
-        if (stockdefines && stockdefines.length > 0) {
-            let departments = []
-            let units = []
-            try {
-                const departmentsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Units`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                departments = departmentsresponse.data
-                units = unitsresponse.data
-            } catch (error) {
-                next(requestErrorCatcher(error, 'Setting'))
-            }
-            for (const stockdefine of stockdefines) {
-                stockdefine.Department = departments.find(u => u.Uuid === stockdefine.DepartmentID)
-                stockdefine.Unit = units.find(u => u.Uuid === stockdefine.UnitID)
-            }
-        }
-        res.status(200).json(stockdefines)
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
+    GetStockdefines(req, res, next)
 }
 
 module.exports = {

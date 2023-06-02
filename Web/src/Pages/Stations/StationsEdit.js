@@ -53,7 +53,7 @@ export default class StationsEdit extends Component {
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
                 <label className='text-[#000000de]'>İstasyon Adı</label>
-                <Form.Input placeholder="İstasyon Adı" name="Name" fluid defaultValue={selected_record.Name} />
+                <Form.Input placeholder="İstasyon Adı" name="Name" fluid defaultValue={this.getState('Name')} />
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Stations">
@@ -81,8 +81,13 @@ export default class StationsEdit extends Component {
         fillStationnotification(error)
       })
     } else {
-      EditStations({...Stations.selected_record,...data}, history)
+      EditStations({ ...Stations.selected_record, ...data }, history)
     }
 
+  }
+
+  getState = (name) => {
+    const { Stations } = this.props
+    return Stations.selected_record && Stations.selected_record[name]
   }
 }

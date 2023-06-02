@@ -7,9 +7,9 @@ export default function PurchaseordersList({ Data, Columns, initialConfig }) {
   const renderRowSubComponent = React.useCallback(
     ({ row }) => {
       let stocks = []
-      const decoratedstocks = Data.filter(u => u.id === row.original.id)
+      const decoratedstocks = Data.filter(u => u.Id === row.original.Id)
       decoratedstocks.forEach(element => {
-        stocks = stocks.concat(element.stocks)
+        stocks = stocks.concat(element.Stocks)
       });
       const stockcolumns = [
         { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
@@ -24,7 +24,7 @@ export default function PurchaseordersList({ Data, Columns, initialConfig }) {
         <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>Stoklar</Header>
         <DataTable
           Columns={stockcolumns}
-          Data={stocks.sort((a, b) => a.order - b.order)}
+          Data={stocks.sort((a, b) => a.Order - b.Order)}
         />
       </div>
     }

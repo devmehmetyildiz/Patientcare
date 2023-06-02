@@ -1,4 +1,4 @@
-module.exports = sequelize.define('authlogModel', {
+module.exports = sequelize.define('applog_warehouseModel', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -6,8 +6,8 @@ module.exports = sequelize.define('authlogModel', {
     },
     Event: {
         type: Sequelize.STRING,
-    },
+    }
 }, {
-    tableName: 'authlogs', // replace with the name of your existing table
+    tableName: 'applog_warehouse', // replace with the name of your existing table
     timestamps: false
 });
