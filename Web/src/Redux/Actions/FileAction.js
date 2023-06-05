@@ -3,6 +3,7 @@ import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
 import cookies from 'universal-cookie';
 import axios from "axios";
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_FILES_INIT: 'GET_FILES_INIT',
@@ -33,7 +34,7 @@ export const ACTION_TYPES = {
 
 export const GetFiles = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_FILES_INIT })
-    await instanse.get(ROUTES.FILE + "/GetAll")
+    await instanse.get(config.services.Setting, ROUTES.FILE)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_FILES_SUCCESS, payload: response.data })
         })
@@ -45,7 +46,7 @@ export const GetFiles = () => async (dispatch, getState) => {
 
 export const GetFile = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_FILE_INIT })
-    await instanse.get(ROUTES.FILE + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Setting, `${ROUTES.FILE}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_FILE_SUCCESS, payload: response.data })
         })
@@ -60,12 +61,12 @@ export const AddFiles = (data, historypusher, url) => async (dispatch, getState)
     dispatch({ type: ACTION_TYPES.ADD_FILE_INIT })
     axios({
         method: `post`,
-        url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/Add`,
+        url: config.services.Setting + `${ROUTES.FILE}`,
         headers: { Authorization: "Bearer  " + localcookies.get('patientcare'), contentType: 'mime/form-data' },
         data: data
     })
-        .then(() => {
-            dispatch({ type: ACTION_TYPES.ADD_FILE_SUCCESS })
+        .then((response) => {
+            dispatch({ type: ACTION_TYPES.ADD_FILE_SUCCESS, payload: response.data })
             historypusher.push(url ? url : '/Files')
 
         })
@@ -79,8 +80,8 @@ export const EditFiles = (data, historypusher, url) => async (dispatch, getState
     const localcookies = new cookies();
     dispatch({ type: ACTION_TYPES.EDIT_FILE_INIT })
     axios({
-        method: `post`,
-        url: process.env.REACT_APP_BACKEND_URL + `/${ROUTES.FILE}/update`,
+        method: `put`,
+        url: config.services.Setting + `${ROUTES.FILE}`,
         headers: { Authorization: "Bearer  " + localcookies.get('patientcare'), contentType: 'mime/form-data' },
         data: data
     })
@@ -98,7 +99,7 @@ export const DeleteFiles = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_FILE_INIT })
-    await instanse.post(ROUTES.FILE + "/Files", data)
+    await instanse.delete(config.services.Setting, ROUTES.FILE, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_FILE_SUCCESS, payload: response.data })
         })

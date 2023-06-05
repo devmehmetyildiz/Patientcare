@@ -406,6 +406,24 @@ const messages = {
         tr: 'Bu işlem için hareket tarihi gerekli',
       }
     },
+    UNSUPPORTED_PATIENTDEFINEID: {
+      code: 'UNSUPPORTEDPATIENTDEFINEID_REQUIRED', description: {
+        en: 'The patientdefineid is unsupported',
+        tr: 'Tanımsız patientdefineid',
+      }
+    },
+    PATIENTMOVEMENTID_REQUIRED: {
+      code: 'PATIENTMOVEMENTID_REQUIRED', description: {
+        en: 'The patientmovementid required',
+        tr: 'Bu işlem için patientmovementid gerekli',
+      }
+    },
+    UNSUPPORTED_PATIENTMOVEMENTID: {
+      code: 'UNSUPPORTED_PATIENTMOVEMENTID', description: {
+        en: 'The patientmovementid is unsupported',
+        tr: 'Tanımsız patientmovementid',
+      }
+    },
    
   }
 

@@ -13,7 +13,7 @@ module.exports = sequelize.define('fileModel', {
     Order: {
         type: Sequelize.INTEGER
     },
-    Parentid: {
+    ParentID: {
         type: Sequelize.STRING
     },
     Filename: {

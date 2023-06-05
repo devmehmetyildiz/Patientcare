@@ -16,7 +16,7 @@ export const ROUTES = {
     COSTUMERTYPE: 'Costumertypes',
     CASE: 'Cases',
     DEPARTMENT: 'Department',
-    FILE: 'File',
+    FILE: 'Files',
     STATION: 'Stations',
     STOCKDEFINE: 'Stockdefines',
     UNIT: 'Units',

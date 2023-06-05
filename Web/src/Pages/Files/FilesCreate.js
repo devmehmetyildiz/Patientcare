@@ -53,16 +53,16 @@ export class FilesCreate extends Component {
                   {this.state.selectedFiles.map((file, index) => {
                     return <Table.Row key={index}>
                       <Table.Cell>
-                        <Form.Input placeholder="Dosya Adı" name="name" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'name', e.target.value) }} />
+                        <Form.Input placeholder="Dosya Adı" name="Name" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'Name', e.target.value) }} />
                       </Table.Cell>
                       <Table.Cell>
-                        <Form.Input placeholder="Üst ID" name="parentid" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'parentid', e.target.value) }} />
+                        <Form.Input placeholder="Üst ID" name="ParentID" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'ParentID', e.target.value) }} />
                       </Table.Cell>
                       <Table.Cell>
-                        <Form.Input placeholder="Kullanım Türü" name="usagetype" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'usagetype', e.target.value) }} />
+                        <Form.Input placeholder="Kullanım Türü" name="Usagetype" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'Usagetype', e.target.value) }} />
                       </Table.Cell>
                       <Table.Cell>
-                        <Form.Input placeholder="file" type='file' name="file" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'file', e) }} />
+                        <Form.Input placeholder="file" type='file' name="File" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'File', e) }} />
                       </Table.Cell>
                     </Table.Row>
                   })}
@@ -106,7 +106,7 @@ export class FilesCreate extends Component {
 
     let errors = []
     this.state.selectedFiles.forEach(data => {
-      if (!data.name || data.name === '') {
+      if (!data.Name || data.Name === '') {
         errors.push({ type: 'Error', code: 'Files', description: 'İsim Boş Olamaz' })
       }
     });
@@ -123,31 +123,25 @@ export class FilesCreate extends Component {
     this.setState({
       selectedFiles: [...this.state.selectedFiles,
       {
-        id: 0,
-        name: '',
-        parentid: '',
-        filename: '',
-        filefolder: '',
-        filepath: '',
-        filetype: '',
-        usagetype: '',
-        canteditfile: false,
-        file: {},
+        Name: '',
+        ParentID: '',
+        Filename: '',
+        Filefolder: '',
+        Filepath: '',
+        Filetype: '',
+        Usagetype: '',
+        Canteditfile: false,
+        File: {},
         key: Math.random(),
-        concurrencyStamp: '',
-        createdUser: '',
-        updatedUser: '',
-        deleteUser: '',
-        willDelete: false,
-        isActive: true,
       }]
     })
   }
 
+
   selectedFilesChangeHandler = (key, property, value) => {
     let selectedFiles = this.state.selectedFiles
     const index = selectedFiles.findIndex(file => file.key === key)
-    if (property === 'file') {
+    if (property === 'File') {
       if (value.target.files && value.target.files.length > 0) {
         selectedFiles[index][property] = value.target.files[0]
       }

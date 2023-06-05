@@ -31,15 +31,15 @@ export class Files extends Component {
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Üst ID', accessor: 'parentid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Dosya Adı', accessor: 'name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Temel Ad', accessor: 'filename', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Dosya Klasör', accessor: 'filefolder', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Dosya Dizin', accessor: 'filepath', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Dosya türü', accessor: 'filetype', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kullanım türü', accessor: 'usagetype', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Üst ID', accessor: 'ParentID', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Dosya Adı', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Temel Ad', accessor: 'Filename', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Dosya Klasör', accessor: 'Filefolder', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Dosya Dizin', accessor: 'Filepath', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Dosya türü', accessor: 'Filetype', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Kullanım türü', accessor: 'Usagetype', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -62,7 +62,7 @@ export class Files extends Component {
     };
 
     (list || []).forEach(item => {
-      item.edit = <Link to={`/Files/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.edit = <Link to={`/Files/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -107,7 +107,7 @@ export class Files extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.name} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
                   Dosyasını silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>

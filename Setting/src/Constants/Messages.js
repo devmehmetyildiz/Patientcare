@@ -12,6 +12,18 @@ const messages = {
         tr: 'Durum aktif değil',
       }
     },
+    FILE_NOT_FOUND: {
+      code: 'FILE_NOT_FOUND', description: {
+        en: 'File not found',
+        tr: 'Dosya bulunamadı',
+      }
+    },
+    FILE_NOT_ACTIVE: {
+      code: 'FILE_NOT_ACTIVE', description: {
+        en: 'File not active',
+        tr: 'Dosya aktif değil',
+      }
+    },
     UNIT_NOT_FOUND: {
       code: 'UNIT_NOT_FOUND', description: {
         en: 'Unit not found',
@@ -58,6 +70,12 @@ const messages = {
       code: 'COSTUMERTYPE_NOT_ACTIVE', description: {
         en: 'Costumer type not active',
         tr: 'Müşteri türü aktif değil',
+      }
+    },
+    FILE_UPLOAD_ERROR: {
+      code: 'FILE_UPLOAD_ERROR', description: {
+        en: 'File cant upload to ftp server',
+        tr: 'Dosya ftp servera yüklenemedi',
       }
     },
     PATIENTTYPE_NOT_FOUND: {
@@ -313,6 +331,18 @@ const messages = {
       code: 'UNSUPPORTED_TODOGROUPDEFINEID', description: {
         en: 'The todogroupdefineid is unsupported',
         tr: 'Geçersiz todogroupdefineid',
+      }
+    },
+    FILEID_REQUIRED: {
+      code: 'FILEID_REQUIRED', description: {
+        en: 'The fileid is required',
+        tr: 'Bu işlem için fileid gerekli',
+      }
+    },
+    UNSUPPORTED_FILEID: {
+      code: 'UNSUPPORTED_FILEID', description: {
+        en: 'The fileid is unsupported',
+        tr: 'Geçersiz fileid',
       }
     },
     TODOGROUPDEFINEID_REQUIRED: {
