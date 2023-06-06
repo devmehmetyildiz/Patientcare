@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_PATIENTDEFINES_INIT: 'GET_PATIENTDEFINES_INIT',
@@ -35,7 +36,7 @@ export const ACTION_TYPES = {
 
 export const GetPatientdefines = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_PATIENTDEFINES_INIT })
-    await instanse.get(ROUTES.PATIENTDEFINE + "/GetAll")
+    await instanse.get(config.services.Business, ROUTES.PATIENTDEFINE)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_PATIENTDEFINES_SUCCESS, payload: response.data })
         })
@@ -47,7 +48,7 @@ export const GetPatientdefines = () => async (dispatch, getState) => {
 
 export const GetPatientdefine = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_PATIENTDEFINE_INIT })
-    await instanse.get(ROUTES.PATIENTDEFINE + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Business, `${ROUTES.PATIENTDEFINE}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_PATIENTDEFINE_SUCCESS, payload: response.data })
         })
@@ -59,7 +60,7 @@ export const GetPatientdefine = (guid) => async (dispatch, getState) => {
 
 export const AddPatientdefines = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_PATIENTDEFINE_INIT })
-    await instanse.post(ROUTES.PATIENTDEFINE + "/Add", data)
+    await instanse.post(config.services.Business, ROUTES.PATIENTDEFINE, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.ADD_PATIENTDEFINE_SUCCESS, payload: response.data })
             historypusher.push('/Patientdefines')
@@ -72,7 +73,7 @@ export const AddPatientdefines = (data, historypusher) => async (dispatch, getSt
 
 export const EditPatientdefines = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_PATIENTDEFINE_INIT })
-    await instanse.post(ROUTES.PATIENTDEFINE + "/Update", data)
+    await instanse.put(config.services.Business, ROUTES.PATIENTDEFINE, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.EDIT_PATIENTDEFINE_SUCCESS, payload: response.data })
             historypusher.push('/Patientdefines')
@@ -87,7 +88,7 @@ export const DeletePatientdefines = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_PATIENTDEFINE_INIT })
-    await instanse.post(ROUTES.PATIENTDEFINE + "/Delete", data)
+    await instanse.delete(config.services.Business, ROUTES.PATIENTDEFINE, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_PATIENTDEFINE_SUCCESS, payload: response.data })
         })

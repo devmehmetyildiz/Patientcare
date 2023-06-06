@@ -1,14 +1,43 @@
+const config = require("../Config")
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-
+const axios = require('axios')
 
 async function GetPatientdefines(req, res, next) {
     try {
         const patientdefines = await db.patientdefineModel.findAll({ where: { Isactive: true } })
+        if (patientdefines && patientdefines.length > 0) {
+            let patienttypes = []
+            let costumertypes = []
+            try {
+                const patienttypesresponse = await axios({
+                    method: 'GET',
+                    url: config.services.Setting + `Patienttypes`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const costumertypesresponse = await axios({
+                    method: 'GET',
+                    url: config.services.Setting + `Costumertypes`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                patienttypes = patienttypesresponse.data
+                costumertypes = costumertypesresponse.data
+                for (const patientdefine of patientdefines) {
+                    patientdefine.Patienttype = patienttypes.find(u => u.Uuid === patientdefine.PatienttypeID)
+                    patientdefine.Costumertype = costumertypes.find(u => u.Uuid === patientdefine.CostumertypeID)
+                }
+            } catch (error) {
+                return next(requestErrorCatcher(error, 'Setting'))
+            }
+        }
         res.status(200).json(patientdefines)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -30,6 +59,26 @@ async function GetPatientdefine(req, res, next) {
 
     try {
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: req.params.patientdefineId } });
+        try {
+            const patienttypesresponse = await axios({
+                method: 'GET',
+                url: config.services.Setting + `Patienttypes/${patientdefine.PatientdefineID}`,
+                headers: {
+                    session_key: config.session.secret
+                }
+            })
+            const costumertypesresponse = await axios({
+                method: 'GET',
+                url: config.services.Setting + `Costumertypes/${patientdefine.CostumertypeID}`,
+                headers: {
+                    session_key: config.session.secret
+                }
+            })
+            patientdefine.Patienttype = patienttypesresponse.data
+            patientdefine.Costumertype = costumertypesresponse.data
+        } catch (error) {
+            return next(requestErrorCatcher(error, 'Setting'))
+        }
         res.status(200).json(patientdefine)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

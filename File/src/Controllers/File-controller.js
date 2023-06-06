@@ -7,6 +7,7 @@ const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const fs = require('fs');
 const ftp = require('basic-ftp')
+const stream = require("stream");
 
 async function GetFiles(req, res, next) {
     try {
@@ -17,6 +18,26 @@ async function GetFiles(req, res, next) {
     }
 }
 
+async function GetbyparentID(req, res, next) {
+
+    let validationErrors = []
+    if (!req.params.parentId) {
+        validationErrors.push(messages.VALIDATION_ERROR.PARENTID_REQUIRED)
+    }
+    if (!validator.isUUID(req.params.parentId)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PARENTID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    try {
+        const files = await db.fileModel.findAll({ where: { ParentID: req.params.parentId } });
+        res.status(200).json(files)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
 async function GetFile(req, res, next) {
 
     let validationErrors = []
@@ -59,7 +80,7 @@ async function Downloadfile(req, res, next) {
         if (file.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.FILE_NOT_ACTIVE], req.language))
         }
-        const fileStream = {}
+        const fileStream = new stream.PassThrough();
         const remoteFolderpath = `/${config.ftp.mainfolder}/${file.Filefolder}/`;
         const remoteFilePath = `/${remoteFolderpath}/${file.Filename}`;
 
@@ -75,17 +96,25 @@ async function Downloadfile(req, res, next) {
             try {
                 await client.access(server);
                 await client.downloadTo(fileStream, remoteFilePath);
-                res.status(200).json(fileStream)
+                res.setHeader("Content-Disposition", `attachment; filename=${file.Filename}`);
+                res.setHeader("Content-Type", file.Filetype);
+
+                fileStream.pipe(res);
+
+                fileStream.on("end", () => {
+                    client.close();
+                    console.log("File downloaded and sent as response successfully");
+                });
             } catch (err) {
                 client.close();
                 return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
-            } finally {
-                client.close();
             }
         })();
+        console.log("ended")
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
+    console.log("isok")
 }
 
 async function AddFile(req, res, next) {
@@ -139,35 +168,76 @@ async function AddFile(req, res, next) {
 
 async function UpdateFile(req, res, next) {
 
-    let validationErrors = []
-    let requestObject = req.fields
-    requestObject.File = req.files.file
+    let data = req.fields
+    let files = req.files
+    let requestArray = []
+    let objKeys = Object.keys(data).map(element => {
+        return element.split('.')[0]
+    })
 
-    if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+    for (const keyvalue of [...new Set(objKeys)]) {
+        let object = {}
+        Object.keys(data).map(element => {
+            if (element.includes(keyvalue)) {
+                object[element.split('.')[1]] = data[element]
+            }
+        })
+        object['File'] = files[`${keyvalue}.File`]
+        requestArray.push(object)
     }
 
     const t = await db.sequelize.transaction();
     try {
-        const file = db.fileModel.findOne({ where: { Uuid: requestObject.Uuid } })
-        if (!file) {
-            return next(createNotfounderror([messages.ERROR.FILE_NOT_FOUND], req.language))
-        }
-        if (file.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.FILE_NOT_ACTIVE], req.language))
-        }
 
-        const isFileremoved = await Removefileandfolderfromftp(requestObject)
-        if (!isFileremoved) {
-            return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
-        }
-        await Uploadfiletoftp(requestObject)
-        await db.fileModel.update({
-            ...req.body,
-            Updateduser: "System",
-            Updatetime: new Date(),
-        }, { where: { Uuid: requestObject.Uuid } }, { transaction: t })
+        for (const filedata of requestArray) {
 
+            if (!filedata.Uuid) {
+                let fileuuid = uuid()
+                filedata.Filefolder = fileuuid
+                filedata.Uuid = fileuuid
+                filedata.Filetype = filedata.File.type
+                filedata.Filename = filedata.File.name
+
+                const fileuploaded = await Uploadfiletoftp(filedata)
+                if (!fileuploaded) {
+                    return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
+                }
+                await db.fileModel.create({
+                    ...filedata,
+                    Createduser: "System",
+                    Createtime: new Date(),
+                    Isactive: true
+                }, { transaction: t })
+            } else {
+
+                const file = await db.fileModel.findOne({ where: { Uuid: filedata.Uuid } })
+                if (!file) {
+                    return next(createNotfounderror([messages.ERROR.FILE_NOT_FOUND], req.language))
+                }
+                if (file.Isactive === false) {
+                    return next(createAccessDenied([messages.ERROR.FILE_NOT_ACTIVE], req.language))
+                }
+                if (filedata.WillDelete) {
+                    const isFileremoved = await Removefileandfolderfromftp(filedata)
+                    if (!isFileremoved) {
+                        return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
+                    }
+                    await db.fileModel.destroy({ where: { Uuid: file.Uuid }, transaction: t });
+                } else {
+                    const isFileremoved = await Removefileandfolderfromftp(file)
+                    if (!isFileremoved) {
+                        return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
+                    }
+                    await Uploadfiletoftp(filedata)
+                    await db.fileModel.update({
+                        Filetype:filedata.File.type,
+                        Filename : filedata.File.name,
+                        Updateduser: "System",
+                        Updatetime: new Date(),
+                    }, { where: { Uuid: filedata.Uuid } }, { transaction: t })
+                }
+            }
+        }
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -270,10 +340,10 @@ async function Checkdirectoryfromftp(directoryname) {
             const directoryExists = dirList.some((item) => item.name === directoryname);
 
             if (!directoryExists) {
-                await client.ensureDir(remoteFolderpath); // Use "true" to create nested directories if needed
+                await client.ensureDir(remoteFolderpath);
                 isdirectoryactive = true
             } else {
-                isdirectoryactive = false
+                isdirectoryactive = true
             }
         } catch (err) {
             isdirectoryactive = false
@@ -315,7 +385,6 @@ async function Removefileandfolderfromftp(fileObject) {
     return isremoved
 }
 
-
 module.exports = {
     GetFiles,
     GetFile,
@@ -323,4 +392,5 @@ module.exports = {
     UpdateFile,
     DeleteFile,
     Downloadfile,
+    GetbyparentID
 }

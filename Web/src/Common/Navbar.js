@@ -3,7 +3,7 @@ import { FaUserAlt } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { Button, Dropdown, Header, Icon, Modal } from 'semantic-ui-react'
 import { ROUTES } from '../Utils/Constants'
-
+import config from '../Config'
 export class Navbar extends Component {
   state = { open: false }
 
@@ -13,12 +13,12 @@ export class Navbar extends Component {
 
   render() {
     const { iconOnly, seticonOnly, Profile } = this.props
-    const ishavePP = (Profile?.meta?.files || []).find(u => u.usagetype === 'PP')
+    const ishavePP = (Profile?.meta?.Files || []).find(u => u.Usagetype === 'PP')
 
 
     const trigger = (
       <div className='flex flex-row justify-center items-center select-none'>
-        {ishavePP ? <img alt='pp' src={`${process.env.REACT_APP_BACKEND_URL}/${ROUTES.FILE}/GetImage?guid=${ishavePP.parentid}`} className="rounded-full" style={{ width: '30px', height: '30px' }} /> : <FaUserAlt className='text-white' />}
+        {ishavePP ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${ishavePP.Uuid}`} className="rounded-full" style={{ width: '30px', height: '30px' }} /> : <FaUserAlt className='text-white' />}
         <div className={`h-[58.61px] text-white mx-4 my-auto transition-all ease-in-out duration-500  text-center flex flex-col justify-center items-center `}>
           <p className='m-0 text-sm font-semibold tracking-wider font-Common '>{Profile.username}</p>
           <p className='m-0 text-xs text-white dark:text-TextColor  '>

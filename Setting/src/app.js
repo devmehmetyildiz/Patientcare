@@ -16,7 +16,6 @@ require("./Middlewares/Databaseconnector")()
     const reqbodyhelper = require("./Middlewares/Reqbodyhelper")
     const crossDomainEnabler = require('./Middlewares/Crossdomainenabler');
     const whitelist = ["http://localhost:3000"]
-    const formidableMiddleware = require('express-formidable');
     const corsOptions = {
       origin: function (origin, callback) {
         if (!origin || whitelist.indexOf(origin) !== -1) {
@@ -45,7 +44,6 @@ require("./Middlewares/Databaseconnector")()
     app.use(bodyParser.urlencoded({ extended: true }));
     //  app.use(crossDomainEnabler)
     app.use(authorizationChecker)
-    app.use(formidableMiddleware());
     app.use(reqbodyhelper)
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/`, controllerFileSuffix: '-controller.js', logRoutesList: false })
 

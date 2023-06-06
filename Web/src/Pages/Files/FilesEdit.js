@@ -51,7 +51,7 @@ export class FilesEdit extends Component {
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Field>
                 <label className='text-[#000000de]'>İstasyon Adı</label>
-                <Form.Input placeholder="İstasyon Adı" name="name" fluid defaultValue={selected_record.name} />
+                <Form.Input placeholder="İstasyon Adı" name="Name" fluid defaultValue={selected_record.Name} />
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Files">
@@ -71,8 +71,8 @@ export class FilesEdit extends Component {
     const { EditFiles, history, fillFilenotification, Files } = this.props
     const Data = formToObject(e.target)
     let errors = []
-    if (!Data.name || Data.name == '') {
-      errors.push({ type: 'Error', code: 'Stations', description: 'İsim Boş Olamaz' })
+    if (!Data.Name || Data.Name === '') {
+      errors.push({ type: 'Error', code: 'Dosyalar', description: 'İsim Boş Olamaz' })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

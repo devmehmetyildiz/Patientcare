@@ -64,7 +64,7 @@ export default class StationsCreate extends Component {
     )
   }
 
-  handleSubmit = async (e) => {
+  handleSubmit = (e) => {
 
     const { AddStations, history, fillStationnotification } = this.props
 
@@ -79,7 +79,7 @@ export default class StationsCreate extends Component {
         fillStationnotification(error)
       })
     } else {
-      await AddStations({ ...data }, history)
+      AddStations({ ...data }, history)
     }
   }
 

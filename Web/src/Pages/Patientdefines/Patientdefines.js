@@ -31,41 +31,41 @@ export default class Patientdefines extends Component {
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'İsim', accessor: 'firstname', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Soyisim', accessor: 'lastname', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Baba Adı', accessor: 'fathername', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Anne Adı', accessor: 'mothername', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Anne Yakınlık Derecesi', accessor: 'motherbiologicalaffinity', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Anne Hayatta mı?', accessor: 'ismotheralive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: 'Baba Yakınlık Derecesi', accessor: 'fatherbiologicalaffinity', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Baba Hayatta mı?', accessor: 'isfatheralive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: 'TC Kimlik No', accessor: 'countryID', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Doğum Tarihi', accessor: 'dateofbirth', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Doğum Yeri', accessor: 'placeofbirth', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Ölüm Tarihi', accessor: 'dateofdeath', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Ölüm Yeri', accessor: 'placeofdeath', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Ölüm Nedeni', accessor: 'deathinfo', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Cinsiyet', accessor: 'gender', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Medeni Hal', accessor: 'marialstatus', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Sabıka', accessor: 'criminalrecord', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Çocuk Sayısı', accessor: 'childnumber', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Engelli Çocuk Sayısı', accessor: 'disabledchildnumber', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Engelli Kardeş Durumu', accessor: 'siblingstatus', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'SGK Durumu', accessor: 'sgkstatus', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Maaş Durumu', accessor: 'budgetstatus', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kayıtlı İl', accessor: 'city', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kayıtlı İlçe', accessor: 'town', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kayıtlı Adres 1', accessor: 'address1', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kayıtlı Adres 2', accessor: 'address2', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kayıtlı Ülke', accessor: 'country', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'İletişim No 1', accessor: 'contactnumber1', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'İletişim No 2', accessor: 'contactnumber2', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'İletişim Adı 1', accessor: 'contactname1', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'İletişim Adı 2', accessor: 'contactname2', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Müşteri Türü', accessor: 'costumertype.name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Hasta Türü', accessor: 'patienttype.name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'İsim', accessor: 'Firstname', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Soyisim', accessor: 'Lastname', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Baba Adı', accessor: 'Fathername', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Anne Adı', accessor: 'Mothername', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Anne Yakınlık Derecesi', accessor: 'Motherbiologicalaffinity', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Anne Hayatta mı?', accessor: 'Ismotheralive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
+      { Header: 'Baba Yakınlık Derecesi', accessor: 'Fatherbiologicalaffinity', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Baba Hayatta mı?', accessor: 'Isfatheralive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
+      { Header: 'TC Kimlik No', accessor: 'CountryID', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Doğum Tarihi', accessor: 'Dateofbirth', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Doğum Yeri', accessor: 'Placeofbirth', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Ölüm Tarihi', accessor: 'Dateofdeath', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Ölüm Yeri', accessor: 'Placeofdeath', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Ölüm Nedeni', accessor: 'Deathinfo', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Cinsiyet', accessor: 'Gender', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Medeni Hal', accessor: 'Marialstatus', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Sabıka', accessor: 'Criminalrecord', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Çocuk Sayısı', accessor: 'Childnumber', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Engelli Çocuk Sayısı', accessor: 'Disabledchildnumber', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Engelli Kardeş Durumu', accessor: 'Siblingstatus', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'SGK Durumu', accessor: 'Sgkstatus', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Maaş Durumu', accessor: 'Budgetstatus', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Kayıtlı İl', accessor: 'City', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Kayıtlı İlçe', accessor: 'Town', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Kayıtlı Adres 1', accessor: 'Address1', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Kayıtlı Adres 2', accessor: 'Address2', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Kayıtlı Ülke', accessor: 'Country', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'İletişim No 1', accessor: 'Contactnumber1', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'İletişim No 2', accessor: 'Contactnumber2', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'İletişim Adı 1', accessor: 'Contactname1', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'İletişim Adı 2', accessor: 'Contactname2', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Müşteri Türü', accessor: 'Costumertype.Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Hasta Türü', accessor: 'Patienttype.Name', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -89,7 +89,7 @@ export default class Patientdefines extends Component {
 
 
     (list || []).forEach(item => {
-      item.edit = <Link to={`/Patientdefines/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.edit = <Link to={`/Patientdefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -134,7 +134,7 @@ export default class Patientdefines extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord?.firstname + " " + this.state.selectedrecord?.lastname} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord?.Firstname + " " + this.state.selectedrecord?.Lastname} ` : null} </span>
                   hasta kaydını silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>

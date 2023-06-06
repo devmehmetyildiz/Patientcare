@@ -10,7 +10,8 @@ const config = {
     Setting: process.env.REACT_APP_SETTING_URL,
     System: process.env.REACT_APP_SYSTEM_URL,
     Userrole: process.env.REACT_APP_USERROLE_URL,
-    Warehouse: process.env.REACT_APP_WAREHOUSE_URL
+    Warehouse: process.env.REACT_APP_WAREHOUSE_URL,
+    File: process.env.REACT_APP_FILE_URL,
   }
 
 }

@@ -6,7 +6,6 @@ const costumertypedepartmentModel = require('./CostumertypedepartmentModel')
 const costumertypeModel = require('./CostumertypeModel')
 const departmentModel = require('./DepartmentModel')
 const departmentstationModel = require('./DepartmentstationModel')
-const fileModel = require('./FileModel')
 const patienttypeModel = require('./PatienttypeModel')
 const periodModel = require('./PeriodModel')
 const stationModel = require('./StationModel')
@@ -28,7 +27,6 @@ module.exports = {
     costumertypeModel,
     departmentModel,
     departmentstationModel,
-    fileModel,
     patienttypeModel,
     periodModel,
     stationModel,

@@ -26,8 +26,10 @@ export default class Layout extends Component {
   }
 
   componentDidUpdate() {
-    const { Profile, removenotification } = this.props
+    const { Profile, removenotification,
+      Users, removeUsernotification } = this.props
     notification(Profile.notifications, removenotification)
+    notification(Users.notifications, removeUsernotification)
   }
 
   render() {

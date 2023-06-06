@@ -34,7 +34,7 @@ export const ACTION_TYPES = {
 
 export const GetFiles = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_FILES_INIT })
-    await instanse.get(config.services.Setting, ROUTES.FILE)
+    await instanse.get(config.services.File, ROUTES.FILE)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_FILES_SUCCESS, payload: response.data })
         })
@@ -46,7 +46,7 @@ export const GetFiles = () => async (dispatch, getState) => {
 
 export const GetFile = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_FILE_INIT })
-    await instanse.get(config.services.Setting, `${ROUTES.FILE}/${guid}`)
+    await instanse.get(config.services.File, `${ROUTES.FILE}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_FILE_SUCCESS, payload: response.data })
         })
@@ -61,7 +61,7 @@ export const AddFiles = (data, historypusher, url) => async (dispatch, getState)
     dispatch({ type: ACTION_TYPES.ADD_FILE_INIT })
     axios({
         method: `post`,
-        url: config.services.Setting + `${ROUTES.FILE}`,
+        url: config.services.File + `${ROUTES.FILE}`,
         headers: { Authorization: "Bearer  " + localcookies.get('patientcare'), contentType: 'mime/form-data' },
         data: data
     })
@@ -81,7 +81,7 @@ export const EditFiles = (data, historypusher, url) => async (dispatch, getState
     dispatch({ type: ACTION_TYPES.EDIT_FILE_INIT })
     axios({
         method: `put`,
-        url: config.services.Setting + `${ROUTES.FILE}`,
+        url: config.services.File + `${ROUTES.FILE}`,
         headers: { Authorization: "Bearer  " + localcookies.get('patientcare'), contentType: 'mime/form-data' },
         data: data
     })
@@ -99,7 +99,7 @@ export const DeleteFiles = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_FILE_INIT })
-    await instanse.delete(config.services.Setting, ROUTES.FILE, data)
+    await instanse.delete(config.services.File, ROUTES.FILE, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_FILE_SUCCESS, payload: response.data })
         })

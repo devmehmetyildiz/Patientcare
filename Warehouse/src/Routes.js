@@ -37,6 +37,18 @@ const Routes = [
   { method: 'put', path: '/Purchaseorderstockmovements', controller: 'Purchaseorderstockmovement', action: 'UpdatePurchaseorderstockmovement' },
   { method: 'delete', path: '/Purchaseorderstockmovements', controller: 'Purchaseorderstockmovement', action: 'DeletePurchaseorderstockmovement' },
 
+  { method: 'get', path: '/Patientstocks/:stockId', controller: 'Patientstock', action: 'GetPatientstock' },
+  { method: 'get', path: '/Patientstocks', controller: 'Patientstock', action: 'GetPatientstocks' },
+  { method: 'post', path: '/Patientstocks', controller: 'Patientstock', action: 'AddPatientstock' },
+  { method: 'put', path: '/Patientstocks', controller: 'Patientstock', action: 'UpdatePatientstock' },
+  { method: 'delete', path: '/Patientstocks', controller: 'Patientstock', action: 'DeletePatientstock' },
+
+  { method: 'get', path: '/Patientstockmovements/:stockmovementId', controller: 'Patientstockmovement', action: 'GetPatientstockmovement' },
+  { method: 'get', path: '/Patientstockmovements', controller: 'Patientstockmovement', action: 'GetPatientstockmovements' },
+  { method: 'post', path: '/Patientstockmovements', controller: 'Patientstockmovement', action: 'AddPatientstockmovement' },
+  { method: 'put', path: '/Patientstockmovements', controller: 'Patientstockmovement', action: 'UpdatePatientstockmovement' },
+  { method: 'delete', path: '/Patientstockmovements', controller: 'Patientstockmovement', action: 'DeletePatientstockmovement' },
+
   { method: 'get', path: '/Stockdefines/:stockdefineId', controller: 'Stockdefine', action: 'GetStockdefine' },
   { method: 'get', path: '/Stockdefines', controller: 'Stockdefine', action: 'GetStockdefines' },
   { method: 'post', path: '/Stockdefines', controller: 'Stockdefine', action: 'AddStockdefine' },

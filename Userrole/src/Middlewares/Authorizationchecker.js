@@ -43,7 +43,7 @@ async function authorizationChecker(req, res, next) {
                     let bearerToken = getBearerToken(req.headers)
                     if (bearerToken) {
                         try {
-                            
+
                             const accessTokenresponse = await axios(
                                 {
                                     method: 'POST',
@@ -71,8 +71,72 @@ async function authorizationChecker(req, res, next) {
                                 return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
                             }
                             if (!user.Isactive) {
-                                return next(USER_IS_DISABLED[req.language])
+                                return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
                             }
+                            let departments = []
+                            let stations = []
+                            try {
+                                const departmentsresponse = await axios({
+                                    method: 'GET',
+                                    url: config.services.Setting + `Departments`,
+                                    headers: {
+                                        session_key: config.session.secret
+                                    }
+                                })
+                                const stationsresponse = await axios({
+                                    method: 'GET',
+                                    url: config.services.Setting + `Stations`,
+                                    headers: {
+                                        session_key: config.session.secret
+                                    }
+                                })
+                                const fileresponse = await axios({
+                                    method: 'GET',
+                                    url: config.services.File + `Files/GetbyparentID/${user.Uuid}`,
+                                    headers: {
+                                        session_key: config.session.secret
+                                    }
+                                })
+                                user.Files = fileresponse.data
+                                departments = departmentsresponse.data
+                                stations = stationsresponse.data
+                            } catch (error) {
+                                return next(requestErrorCatcher(error,'Service'))
+                            }
+                            let departmentuuids = await db.userdepartmentModel.findAll({
+                                where: {
+                                    UserID: user.Uuid,
+                                }
+                            });
+                            let rolesuuids = await db.userroleModel.findAll({
+                                where: {
+                                    UserID: user.Uuid
+                                }
+                            })
+                            let stationuuids = await db.userstationModel.findAll({
+                                where: {
+                                    UserID: user.Uuid
+                                }
+                            })
+                            user.Roles = await db.roleModel.findAll({
+                                where: {
+                                    Uuid: rolesuuids.map(u => { return u.RoleID })
+                                }
+                            })
+                            user.Departments = departmentuuids.map(userdepartment => {
+                                let data = departments.find(u => u.Uuid === userdepartment.DepartmentID)
+                                if (data) {
+                                    return data
+                                }
+                            })
+                            user.Stations = stationuuids.map(userstation => {
+                                let data = stations.find(u => u.Uuid === userstation.StationID)
+                                if (data) {
+                                    return data
+                                }
+                            })
+                          
+                            user.PasswordHash && delete user.PasswordHash
                             req.identity.user = user
                             const userroles = await db.userroleModel.findAll({ where: { UserID: user.Uuid } })
                             if (!userroles) {

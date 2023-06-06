@@ -241,6 +241,12 @@ const messages = {
         tr: 'Bu işlem için satın alma tarihi gerekli',
       }
     },
+    PATIENTID_REQUIRED: {
+      code: 'PATIENTID_REQUIRED', description: {
+        en: 'The patientId required',
+        tr: 'Bu işlem için patientId gerekli',
+      }
+    },
    
 
     UNSUPPORTED_STOCKDEFINEID: {

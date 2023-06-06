@@ -40,11 +40,11 @@ export default class PatientdefinesCreate extends Component {
     const { Costumertypes, Patienttypes, Patientdefines } = this.props
 
     const Costumertypeoptions = Costumertypes.list.map(costumertype => {
-      return { key: costumertype.concurrencyStamp, text: costumertype.name, value: costumertype.concurrencyStamp }
+      return { key: costumertype.Uuid, text: costumertype.Name, value: costumertype.Uuid }
     })
 
     const Patienttypeoptions = Patienttypes.list.map(patienttype => {
-      return { key: patienttype.concurrencyStamp, text: patienttype.name, value: patienttype.concurrencyStamp }
+      return { key: patienttype.Uuid, text: patienttype.Name, value: patienttype.Uuid }
     })
 
     const Liveoptions = [
@@ -79,10 +79,10 @@ export default class PatientdefinesCreate extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <Form.Input label="Hasta Adı" placeholder="Hasta Adı" name="firstname" fluid />
-                <Form.Input label="Hasta Soyadı" placeholder="Hasta Soyadı" name="lastname" fluid />
-                <Form.Input label="Baba Adı" placeholder="Baba Adı" name="fathername" fluid />
-                <Form.Input label="Anne Adı" placeholder="Anne Adı" name="mothername" fluid />
+                <Form.Input label="Hasta Adı" placeholder="Hasta Adı" name="Firstname" fluid />
+                <Form.Input label="Hasta Soyadı" placeholder="Hasta Soyadı" name="Lastname" fluid />
+                <Form.Input label="Baba Adı" placeholder="Baba Adı" name="Fathername" fluid />
+                <Form.Input label="Anne Adı" placeholder="Anne Adı" name="Mothername" fluid />
               </Form.Group>
               <Form.Group widths='equal'>
                 <Form.Field>
@@ -103,41 +103,41 @@ export default class PatientdefinesCreate extends Component {
                 </Form.Field>
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="TC Kimlik No" placeholder="TC Kimlik No" name="countryID" fluid />
-                <Form.Input label="Doğum Tarihi" placeholder="Doğum Tarihi" name="dateofbirth" type='date' fluid />
-                <Form.Input label="Doğum Yeri" placeholder="Doğum Yeri" name="placeofbirth" fluid />
-                <Form.Input label="Ölüm Tarihi" placeholder="Ölüm Tarihi" name="dateofdeath" type='date' fluid />
+                <Form.Input label="TC Kimlik No" placeholder="TC Kimlik No" name="CountryID" fluid />
+                <Form.Input label="Doğum Tarihi" placeholder="Doğum Tarihi" name="Dateofbirth" type='date' fluid />
+                <Form.Input label="Doğum Yeri" placeholder="Doğum Yeri" name="Placeofbirth" fluid />
+                <Form.Input label="Ölüm Tarihi" placeholder="Ölüm Tarihi" name="Dateofdeath" type='date' fluid />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Ölüm Yeri" placeholder="Ölüm Yeri" name="placeofdeath" fluid />
-                <Form.Input label="Ölüm Sebebi" placeholder="Ölüm Sebebi" name="deathinfo" fluid />
+                <Form.Input label="Ölüm Yeri" placeholder="Ölüm Yeri" name="Placeofdeath" fluid />
+                <Form.Input label="Ölüm Sebebi" placeholder="Ölüm Sebebi" name="Deathinfo" fluid />
                 <Form.Field>
                   <label className='text-[#000000de]'>Cinsiyet</label>
                   <Dropdown placeholder='Cinsiyet' fluid selection options={Genderoptions} onChange={(e, { value }) => { this.setState({ selectedGenderstatus: value }) }} />
                 </Form.Field>
-                <Form.Input label="Kardeş Durumu" placeholder="Kardeş Durumu" name="marialstatus" fluid />
+                <Form.Input label="Kardeş Durumu" placeholder="Kardeş Durumu" name="Marialstatus" fluid />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Çocuk Sayısı" placeholder="Çocuk Sayısı" name="childnumber" type='number' fluid />
-                <Form.Input label="Engelli Çocuk Sayısı" placeholder="Engelli Çocuk Sayısı" name="disabledchildnumber" type='number' fluid />
-                <Form.Input label="Kardeş Durumu" placeholder="Kardeş Durumu" name="siblingstatus" fluid />
-                <Form.Input label="Sgk Durumu" placeholder="Sgk Durumu" name="sgkstatus" fluid />
+                <Form.Input label="Çocuk Sayısı" placeholder="Çocuk Sayısı" name="Childnumber" type='number' fluid />
+                <Form.Input label="Engelli Çocuk Sayısı" placeholder="Engelli Çocuk Sayısı" name="Disabledchildnumber" type='number' fluid />
+                <Form.Input label="Kardeş Durumu" placeholder="Kardeş Durumu" name="Siblingstatus" fluid />
+                <Form.Input label="Sgk Durumu" placeholder="Sgk Durumu" name="Sgkstatus" fluid />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Maaş Durumu" placeholder="Maaş Durumu" name="budgetstatus" fluid />
-                <Form.Input label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="city" fluid />
-                <Form.Input label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="town" fluid />
-                <Form.Input label="Tanımlı Adres 1" placeholder="Tanımlı Adres 1" name="address1" fluid />
+                <Form.Input label="Maaş Durumu" placeholder="Maaş Durumu" name="Budgetstatus" fluid />
+                <Form.Input label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="City" fluid />
+                <Form.Input label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="Town" fluid />
+                <Form.Input label="Tanımlı Adres 1" placeholder="Tanımlı Adres 1" name="Address1" fluid />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Tanımlı Adres 2" placeholder="Tanımlı Adres 2" name="address2" fluid />
-                <Form.Input label="Kayıtlı Ülke" placeholder="Kayıtlı Ülke" name="country" fluid />
-                <Form.Input label="İletişim No 1" placeholder="İletişim No 1" name="contactnumber1" fluid />
-                <Form.Input label="İletişim No 2" placeholder="İletişim No 2" name="contactnumber2" fluid />
+                <Form.Input label="Tanımlı Adres 2" placeholder="Tanımlı Adres 2" name="Address2" fluid />
+                <Form.Input label="Kayıtlı Ülke" placeholder="Kayıtlı Ülke" name="Country" fluid />
+                <Form.Input label="İletişim No 1" placeholder="İletişim No 1" name="Contactnumber1" fluid />
+                <Form.Input label="İletişim No 2" placeholder="İletişim No 2" name="Contactnumber2" fluid />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="İletişim Kişi 1" placeholder="İletişim Kişi 1" name="contactname1" fluid />
-                <Form.Input label="İletişim Kişi 2" placeholder="İletişim Kişi 2" name="contactname2" fluid />
+                <Form.Input label="İletişim Kişi 1" placeholder="İletişim Kişi 1" name="Contactname1" fluid />
+                <Form.Input label="İletişim Kişi 2" placeholder="İletişim Kişi 2" name="Contactname2" fluid />
                 <Form.Field>
                   <label className='text-[#000000de]'>Müşteri Türü</label>
                   <Dropdown placeholder='Müşteri Türü' fluid selection options={Costumertypeoptions} onChange={(e, { value }) => { this.setState({ selectedcostumertype: value }) }} />
@@ -164,45 +164,35 @@ export default class PatientdefinesCreate extends Component {
     e.preventDefault()
     const { AddPatientdefines, history, fillPatientdefinenotification } = this.props
     const data = formToObject(e.target)
-    data.patienttypeid = this.state.selectedpatienttype
-    data.costumertypeid = this.state.selectedcostumertype
-    data.ismotheralive = this.state.selectedMotherstatus
-    data.isfatheralive = this.state.selectedFatherstatus
-    data.gender = this.state.selectedGenderstatus
-    data.motherbiologicalaffinity = this.state.selectedMotheralaffinity
-    data.fatherbiologicalaffinity = this.state.selectedFatheralaffinity
-    data.costumertype = {}
-    data.patienttype = {}
-    data.id = 0
-    data.concurrencyStamp = null
-    data.createdUser = null
-    data.updatedUser = null
-    data.deleteUser = null
-    data.createTime = null
-    data.updateTime = null
-    data.deleteTime = null
-    data.isActive = true
+    data.PatienttypeID = this.state.selectedpatienttype
+    data.CostumertypeID = this.state.selectedcostumertype
+    data.Ismotheralive = this.state.selectedMotherstatus
+    data.Isfatheralive = this.state.selectedFatherstatus
+    data.Gender = this.state.selectedGenderstatus
+    data.Motherbiologicalaffinity = this.state.selectedMotheralaffinity
+    data.Fatherbiologicalaffinity = this.state.selectedFatheralaffinity
 
-
-
-    if (!data.dateofbirth || data.dateofbirth === '') {
-      data.dateofbirth = null
+    if (!data.Dateofbirth || data.Dateofbirth === '') {
+      data.Dateofbirth = null
     }
-    if (!data.dateofdeath || data.dateofdeath === '') {
-      data.dateofdeath = null
+    if (!data.Dateofdeath || data.Dateofdeath === '') {
+      data.Dateofdeath = null
     }
-    if (!data.childnumber || data.childnumber === '') {
-      data.childnumber = 0
+    if (!data.Childnumber || data.Childnumber === '') {
+      data.Childnumber = 0
     }
-    if (!data.disabledchildnumber || data.disabledchildnumber === '') {
-      data.disabledchildnumber = 0
+    if (!data.Disabledchildnumber || data.Disabledchildnumber === '') {
+      data.Disabledchildnumber = 0
     }
+    data.Childnumber && (data.Childnumber = parseInt(data.Childnumber))
+    data.Disabledchildnumber && (data.Disabledchildnumber = parseInt(data.Disabledchildnumber))
+    data.Childnumber && (data.Childnumber = parseInt(data.Childnumber))
 
     let errors = []
-    if (!data.firstname || data.firstname === '') {
+    if (!data.Firstname || data.Firstname === '') {
       errors.push({ type: 'Error', code: 'Hasta Tanımları', description: 'İsim Boş Olamaz' })
     }
-    if (!data.lastname || data.lastname === '') {
+    if (!data.Lastname || data.Lastname === '') {
       errors.push({ type: 'Error', code: 'Hasta Tanımları', description: 'Soyisim Boş Olamaz' })
     }
     if (errors.length > 0) {

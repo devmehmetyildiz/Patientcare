@@ -254,11 +254,11 @@ async function UpdatePurchaseorderstock(req, res, next) {
     }
     const t = await db.sequelize.transaction();
     try {
-        const stock = db.stockModel.findOne({ where: { Uuid: Uuid } })
-        if (!stock) {
+        const purchaseorderstock = db.purchaseorderstockModel.findOne({ where: { Uuid: Uuid } })
+        if (!purchaseorderstock) {
             return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
         }
-        if (stock.Isactive === false) {
+        if (purchaseorderstock.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
         }
 

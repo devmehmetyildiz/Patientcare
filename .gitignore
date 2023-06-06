@@ -17,6 +17,9 @@ Userrole/build/
 Warehouse/dist/
 Warehouse/node_modules/
 Warehouse/build/
+File/dist/
+File/node_modules/
+File/build/
 Web/node_modules/
 Web/build/
 Ftp

@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_PATIENTSTOCKMOVEMENTS_INIT: 'GET_PATIENTSTOCKMOVEMENTS_INIT',
@@ -35,7 +36,7 @@ export const ACTION_TYPES = {
 
 export const GetPatientstockmovements = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_PATIENTSTOCKMOVEMENTS_INIT })
-    await instanse.get(ROUTES.PATIENTSTOCKMOVEMENT + "/GetAll")
+    await instanse.get(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_PATIENTSTOCKMOVEMENTS_SUCCESS, payload: response.data })
         })
@@ -47,7 +48,7 @@ export const GetPatientstockmovements = () => async (dispatch, getState) => {
 
 export const GetPatientstockmovement = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_PATIENTSTOCKMOVEMENT_INIT })
-    await instanse.get(ROUTES.PATIENTSTOCKMOVEMENT + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Warehouse, `${ROUTES.PATIENTSTOCKMOVEMENT}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_PATIENTSTOCKMOVEMENT_SUCCESS, payload: response.data })
         })
@@ -59,7 +60,7 @@ export const GetPatientstockmovement = (guid) => async (dispatch, getState) => {
 
 export const AddPatientstockmovements = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_PATIENTSTOCKMOVEMENT_INIT })
-    await instanse.post(ROUTES.PATIENTSTOCKMOVEMENT + "/Add", data)
+    await instanse.post(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.ADD_PATIENTSTOCKMOVEMENT_SUCCESS, payload: response.data })
             historypusher.push('/Patientstockmovements')
@@ -72,7 +73,7 @@ export const AddPatientstockmovements = (data, historypusher) => async (dispatch
 
 export const EditPatientstockmovements = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_PATIENTSTOCKMOVEMENT_INIT })
-    await instanse.post(ROUTES.PATIENTSTOCKMOVEMENT + "/Update", data)
+    await instanse.put(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.EDIT_PATIENTSTOCKMOVEMENT_SUCCESS, payload: response.data })
             historypusher.push('/Patientstockmovements')
@@ -87,7 +88,7 @@ export const DeletePatientstockmovements = (data) => async (dispatch, getState) 
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_PATIENTSTOCKMOVEMENT_INIT })
-    await instanse.post(ROUTES.PATIENTSTOCKMOVEMENT + "/Delete", data)
+    await instanse.delete(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_PATIENTSTOCKMOVEMENT_SUCCESS, payload: response.data })
         })

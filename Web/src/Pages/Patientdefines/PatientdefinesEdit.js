@@ -35,15 +35,15 @@ export default class PatientdefinesEdit extends Component {
   componentDidUpdate() {
     const { Patientdefines, Costumertypes, removeCostumertypenotification, removePatienttypenotification, Patienttypes, removePatientdefinenotification } = this.props
     const { selected_record, isLoading } = Patientdefines
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id != 0 && Costumertypes.list.length > 0 && !Costumertypes.isLoading && Patienttypes.list.length > 0 && !Patienttypes.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Costumertypes.list.length > 0 && !Costumertypes.isLoading && Patienttypes.list.length > 0 && !Patienttypes.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedpatienttype: selected_record.patienttypeid,
-        selectedcostumertype: selected_record.costumertypeid,
-        selectedMotherstatus: selected_record.ismotheralive,
-        selectedFatherstatus: selected_record.isfatheralive,
-        selectedGenderstatus: selected_record.gender,
-        selectedFatheralaffinity: selected_record.fatherbiologicalaffinity,
-        selectedMotheralaffinity: selected_record.motherbiologicalaffinity,
+        selectedpatienttype: selected_record.PatienttypeID,
+        selectedcostumertype: selected_record.CostumertypeID,
+        selectedMotherstatus: selected_record.Ismotheralive,
+        selectedFatherstatus: selected_record.Isfatheralive,
+        selectedGenderstatus: selected_record.Gender,
+        selectedFatheralaffinity: selected_record.Fatherbiologicalaffinity,
+        selectedMotheralaffinity: selected_record.Motherbiologicalaffinity,
         isDatafetched: true
       })
     }
@@ -57,11 +57,11 @@ export default class PatientdefinesEdit extends Component {
     const { selected_record } = Patientdefines
 
     const Costumertypeoptions = Costumertypes.list.map(costumertype => {
-      return { key: costumertype.concurrencyStamp, text: costumertype.name, value: costumertype.concurrencyStamp }
+      return { key: costumertype.Uuid, text: costumertype.Name, value: costumertype.Uuid }
     })
 
     const Patienttypeoptions = Patienttypes.list.map(patienttype => {
-      return { key: patienttype.concurrencyStamp, text: patienttype.name, value: patienttype.concurrencyStamp }
+      return { key: patienttype.Uuid, text: patienttype.Name, value: patienttype.Uuid }
     })
 
     const Liveoptions = [
@@ -96,10 +96,10 @@ export default class PatientdefinesEdit extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <Form.Input defaultValue={selected_record.firstname} label="Hasta Adı" placeholder="Hasta Adı" name="firstname" fluid />
-                <Form.Input defaultValue={selected_record.lastname} label="Hasta Soyadı" placeholder="Hasta Soyadı" name="lastname" fluid />
-                <Form.Input defaultValue={selected_record.fathername} label="Baba Adı" placeholder="Baba Adı" name="fathername" fluid />
-                <Form.Input defaultValue={selected_record.mothername} label="Anne Adı" placeholder="Anne Adı" name="mothername" fluid />
+                <Form.Input defaultValue={selected_record.Firstname} label="Hasta Adı" placeholder="Hasta Adı" name="Firstname" fluid />
+                <Form.Input defaultValue={selected_record.Lastname} label="Hasta Soyadı" placeholder="Hasta Soyadı" name="Lastname" fluid />
+                <Form.Input defaultValue={selected_record.Fathername} label="Baba Adı" placeholder="Baba Adı" name="Fathername" fluid />
+                <Form.Input defaultValue={selected_record.Mothername} label="Anne Adı" placeholder="Anne Adı" name="Mothername" fluid />
               </Form.Group>
               <Form.Group widths='equal'>
                 <Form.Field>
@@ -120,41 +120,41 @@ export default class PatientdefinesEdit extends Component {
                 </Form.Field>
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input defaultValue={selected_record.countryID} label="TC Kimlik No" placeholder="TC Kimlik No" name="countryID" fluid />
-                <Form.Input defaultValue={selected_record.dateofbirth && selected_record.dateofbirth.split('T')[0]} label="Doğum Tarihi" placeholder="Doğum Tarihi" name="dateofbirth" type='date' fluid />
-                <Form.Input defaultValue={selected_record.placeofbirth} label="Doğum Yeri" placeholder="Doğum Yeri" name="placeofbirth" fluid />
-                <Form.Input defaultValue={selected_record.dateofdeath && selected_record.dateofdeath.split('T')[0]} label="Ölüm Tarihi" placeholder="Ölüm Tarihi" name="dateofdeath" type='date' fluid />
+                <Form.Input defaultValue={selected_record.CountryID} label="TC Kimlik No" placeholder="TC Kimlik No" name="CountryID" fluid />
+                <Form.Input defaultValue={selected_record.Dateofbirth && selected_record.Dateofbirth.split('T')[0]} label="Doğum Tarihi" placeholder="Doğum Tarihi" name="Dateofbirth" type='date' fluid />
+                <Form.Input defaultValue={selected_record.Placeofbirth} label="Doğum Yeri" placeholder="Doğum Yeri" name="Placeofbirth" fluid />
+                <Form.Input defaultValue={selected_record.Dateofdeath && selected_record.Dateofdeath.split('T')[0]} label="Ölüm Tarihi" placeholder="Ölüm Tarihi" name="Dateofdeath" type='date' fluid />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input defaultValue={selected_record.placeofdeath} label="Ölüm Yeri" placeholder="Ölüm Yeri" name="placeofdeath" fluid />
-                <Form.Input defaultValue={selected_record.deathinfo} label="Ölüm Sebebi" placeholder="Ölüm Sebebi" name="deathinfo" fluid />
+                <Form.Input defaultValue={selected_record.Placeofdeath} label="Ölüm Yeri" placeholder="Ölüm Yeri" name="Placeofdeath" fluid />
+                <Form.Input defaultValue={selected_record.Deathinfo} label="Ölüm Sebebi" placeholder="Ölüm Sebebi" name="Deathinfo" fluid />
                 <Form.Field>
                   <label className='text-[#000000de]'>Cinsiyet</label>
                   <Dropdown value={this.state.selectedGenderstatus} placeholder='Cinsiyet' fluid selection options={Genderoptions} onChange={(e, { value }) => { this.setState({ selectedGenderstatus: value }) }} />
                 </Form.Field>
-                <Form.Input defaultValue={selected_record.marialstatus} label="Kardeş Durumu" placeholder="Kardeş Durumu" name="marialstatus" fluid />
+                <Form.Input defaultValue={selected_record.Marialstatus} label="Kardeş Durumu" placeholder="Kardeş Durumu" name="Marialstatus" fluid />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input defaultValue={selected_record.childnumber} label="Çocuk Sayısı" placeholder="Çocuk Sayısı" name="childnumber" type='number' fluid />
-                <Form.Input defaultValue={selected_record.disabledchildnumber} label="Engelli Çocuk Sayısı" placeholder="Engelli Çocuk Sayısı" name="disabledchildnumber" type='number' fluid />
-                <Form.Input defaultValue={selected_record.siblingstatus} label="Kardeş Durumu" placeholder="Kardeş Durumu" name="siblingstatus" fluid />
-                <Form.Input defaultValue={selected_record.sgkstatus} label="Sgk Durumu" placeholder="Sgk Durumu" name="sgkstatus" fluid />
+                <Form.Input defaultValue={selected_record.Childnumber} label="Çocuk Sayısı" placeholder="Çocuk Sayısı" name="Childnumber" type='number' fluid />
+                <Form.Input defaultValue={selected_record.Disabledchildnumber} label="Engelli Çocuk Sayısı" placeholder="Engelli Çocuk Sayısı" name="Disabledchildnumber" type='number' fluid />
+                <Form.Input defaultValue={selected_record.Siblingstatus} label="Kardeş Durumu" placeholder="Kardeş Durumu" name="Siblingstatus" fluid />
+                <Form.Input defaultValue={selected_record.Sgkstatus} label="Sgk Durumu" placeholder="Sgk Durumu" name="Sgkstatus" fluid />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input defaultValue={selected_record.budgetstatus} label="Maaş Durumu" placeholder="Maaş Durumu" name="budgetstatus" fluid />
-                <Form.Input defaultValue={selected_record.city} label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="city" fluid />
-                <Form.Input defaultValue={selected_record.town} label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="town" fluid />
-                <Form.Input defaultValue={selected_record.address1} label="Tanımlı Adres 1" placeholder="Tanımlı Adres 1" name="address1" fluid />
+                <Form.Input defaultValue={selected_record.Budgetstatus} label="Maaş Durumu" placeholder="Maaş Durumu" name="Budgetstatus" fluid />
+                <Form.Input defaultValue={selected_record.City} label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="City" fluid />
+                <Form.Input defaultValue={selected_record.Town} label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="Town" fluid />
+                <Form.Input defaultValue={selected_record.Address1} label="Tanımlı Adres 1" placeholder="Tanımlı Adres 1" name="Address1" fluid />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input defaultValue={selected_record.address2} label="Tanımlı Adres 2" placeholder="Tanımlı Adres 2" name="address2" fluid />
-                <Form.Input defaultValue={selected_record.country} label="Kayıtlı Ülke" placeholder="Kayıtlı Ülke" name="country" fluid />
-                <Form.Input defaultValue={selected_record.contactnumber1} label="İletişim No 1" placeholder="İletişim No 1" name="contactnumber1" fluid />
-                <Form.Input defaultValue={selected_record.contactnumber2} label="İletişim No 2" placeholder="İletişim No 2" name="contactnumber2" fluid />
+                <Form.Input defaultValue={selected_record.Address2} label="Tanımlı Adres 2" placeholder="Tanımlı Adres 2" name="Address2" fluid />
+                <Form.Input defaultValue={selected_record.Country} label="Kayıtlı Ülke" placeholder="Kayıtlı Ülke" name="Country" fluid />
+                <Form.Input defaultValue={selected_record.Contactnumber1} label="İletişim No 1" placeholder="İletişim No 1" name="Contactnumber1" fluid />
+                <Form.Input defaultValue={selected_record.Contactnumber2} label="İletişim No 2" placeholder="İletişim No 2" name="Contactnumber2" fluid />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input defaultValue={selected_record.contactname1} label="İletişim Kişi 1" placeholder="İletişim Kişi 1" name="contactname1" fluid />
-                <Form.Input defaultValue={selected_record.contactname2} label="İletişim Kişi 2" placeholder="İletişim Kişi 2" name="contactname2" fluid />
+                <Form.Input defaultValue={selected_record.Contactname1} label="İletişim Kişi 1" placeholder="İletişim Kişi 1" name="Contactname1" fluid />
+                <Form.Input defaultValue={selected_record.Contactname2} label="İletişim Kişi 2" placeholder="İletişim Kişi 2" name="Contactname2" fluid />
                 <Form.Field>
                   <label className='text-[#000000de]'>Müşteri Türü</label>
                   <Dropdown value={this.state.selectedcostumertype} placeholder='Müşteri Türü' fluid selection options={Costumertypeoptions} onChange={(e, { value }) => { this.setState({ selectedcostumertype: value }) }} />
@@ -181,34 +181,36 @@ export default class PatientdefinesEdit extends Component {
     e.preventDefault()
     const { EditPatientdefines, history, fillPatientdefinenotification, Patientdefines } = this.props
     const data = formToObject(e.target)
-    data.patienttypeid = this.state.selectedpatienttype
-    data.costumertypeid = this.state.selectedcostumertype
-    data.ismotheralive = this.state.selectedMotherstatus
-    data.isfatheralive = this.state.selectedFatherstatus
-    data.gender = this.state.selectedGenderstatus
-    data.motherbiologicalaffinity = this.state.selectedMotheralaffinity
-    data.fatherbiologicalaffinity = this.state.selectedFatheralaffinity
+    data.PatienttypeID = this.state.selectedpatienttype
+    data.CostumertypeID = this.state.selectedcostumertype
+    data.Ismotheralive = this.state.selectedMotherstatus
+    data.Isfatheralive = this.state.selectedFatherstatus
+    data.Gender = this.state.selectedGenderstatus
+    data.Motherbiologicalaffinity = this.state.selectedMotheralaffinity
+    data.Fatherbiologicalaffinity = this.state.selectedFatheralaffinity
 
 
 
-    if (!data.dateofbirth || data.dateofbirth === '') {
-      data.dateofbirth = null
+    if (!data.Dateofbirth || data.Dateofbirth === '') {
+      data.Dateofbirth = null
     }
-    if (!data.dateofdeath || data.dateofdeath === '') {
-      data.dateofdeath = null
+    if (!data.Dateofdeath || data.Dateofdeath === '') {
+      data.Dateofdeath = null
     }
-    if (!data.childnumber || data.childnumber === '') {
-      data.childnumber = 0
+    if (!data.Childnumber || data.Childnumber === '') {
+      data.Childnumber = 0
     }
-    if (!data.disabledchildnumber || data.disabledchildnumber === '') {
-      data.disabledchildnumber = 0
+    if (!data.Disabledchildnumber || data.Disabledchildnumber === '') {
+      data.Disabledchildnumber = 0
     }
-
+    data.Childnumber && (data.Childnumber = parseInt(data.Childnumber))
+    data.Disabledchildnumber && (data.Disabledchildnumber = parseInt(data.Disabledchildnumber))
+    data.Childnumber && (data.Childnumber = parseInt(data.Childnumber))
     let errors = []
-    if (!data.firstname || data.firstname === '') {
+    if (!data.Firstname || data.Firstname === '') {
       errors.push({ type: 'Error', code: 'Hasta Tanımları', description: 'İsim Boş Olamaz' })
     }
-    if (!data.lastname || data.lastname === '') {
+    if (!data.Lastname || data.Lastname === '') {
       errors.push({ type: 'Error', code: 'Hasta Tanımları', description: 'Soyisim Boş Olamaz' })
     }
     if (errors.length > 0) {

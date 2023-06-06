@@ -130,10 +130,11 @@ async function GetUsers(req, res, next) {
                         session_key: config.session.secret
                     }
                 })
+
                 departments = departmentsresponse.data
                 stations = stationsresponse.data
             } catch (error) {
-                next(requestErrorCatcher(error))
+                return next(requestErrorCatcher(error, 'Setting'))
             }
             for (const user of users) {
                 let departmentuuids = await db.userdepartmentModel.findAll({
@@ -168,6 +169,18 @@ async function GetUsers(req, res, next) {
                         return data
                     }
                 })
+                try {
+                    const fileresponse = await axios({
+                        method: 'GET',
+                        url: config.services.File + `Files/GetbyparentID/${user.Uuid}`,
+                        headers: {
+                            session_key: config.session.secret
+                        }
+                    })
+                    user.Files = fileresponse.data
+                } catch (error) {
+                    return next(requestErrorCatcher(error, 'Setting'))
+                }
             }
         }
         users.forEach(element => {
@@ -216,10 +229,18 @@ async function GetUser(req, res, next) {
                     session_key: config.session.secret
                 }
             })
+            const fileresponse = await axios({
+                method: 'GET',
+                url: config.services.File + `Files/GetbyparentID/${user.Uuid}`,
+                headers: {
+                    session_key: config.session.secret
+                }
+            })
+            user.Files = fileresponse.data
             departments = departmentsresponse.data
             stations = stationsresponse.data
         } catch (error) {
-            next(requestErrorCatcher(error))
+            next(requestErrorCatcher(error, 'Setting'))
         }
         let departmentuuids = await db.userdepartmentModel.findAll({
             where: {
@@ -253,6 +274,7 @@ async function GetUser(req, res, next) {
                 return data
             }
         })
+
         user.PasswordHash && delete user.PasswordHash
         res.status(200).json(user)
     } catch (error) {

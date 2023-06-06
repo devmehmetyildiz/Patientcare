@@ -16,7 +16,7 @@ const INVALID_ACCESS_TOKEN = createErrorList('FORBIDDEN', 'INVALID_ACCESS_TOKEN'
 
 
 const PUBLIC_URLS = [
-
+    { method: 'get', url: 'Files/Downloadfile' }
 ]
 
 async function authorizationChecker(req, res, next) {
@@ -132,6 +132,10 @@ function getBearerToken(headers) {
 }
 
 function isPublicUrlRequest(method, url) {
+    if (url.split('/').length > 3) {
+        let parsedurl = url.split('/')
+        url = parsedurl[1] +'/'+ parsedurl[2]
+    }
     let res = false
     let route = PUBLIC_URLS.find(u => u.method === method.toLowerCase() && u.url === url)
     if (route) {

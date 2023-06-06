@@ -60,13 +60,12 @@ module.exports.init = function (app) {
           res.json(result)
           break
 
-        case 'SERVER_ERROR':
-          res.status(500)
-          res.json(result)
-          break
-
         case 'TIMEOUT':
           res.status(524)
+          res.json(result)
+          break
+        case 'SERVER_ERROR':
+          res.status(500)
           res.json(result)
           break
 

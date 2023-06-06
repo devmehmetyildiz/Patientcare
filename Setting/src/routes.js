@@ -60,14 +60,6 @@ const Routes = [
   { method: 'post', path: '/Units', controller: 'Unit', action: 'AddUnit' },
   { method: 'put', path: '/Units', controller: 'Unit', action: 'UpdateUnit' },
   { method: 'delete', path: '/Units', controller: 'Unit', action: 'DeleteUnit' },
-
-  { method: 'get', path: '/Files/:fileId', controller: 'File', action: 'GetFile' },
-  { method: 'get', path: '/Files/Downloadfile/:fileId', controller: 'File', action: 'Downloadfile' },
-  { method: 'get', path: '/Files', controller: 'File', action: 'GetFiles' },
-  { method: 'post', path: '/Files', controller: 'File', action: 'AddFile' },
-  { method: 'put', path: '/Files', controller: 'File', action: 'UpdateFile' },
-  { method: 'delete', path: '/Files', controller: 'File', action: 'DeleteFile' },
-
 ]
 
 module.exports = Routes

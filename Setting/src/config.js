@@ -19,15 +19,9 @@ const config = {
     Setting: process.env.SETTING_URL,
     System: process.env.SYSTEM_URL,
     Userrole: process.env.USERROLE_URL,
-    Warehouse: process.env.WAREHOUSE_URL
-  },
-  ftp: {
-    host: process.env.FTP_HOST,
-    user: process.env.FTP_USERNAME,
-    password: process.env.FTP_PASSWORD,
-    mainfolder: process.env.FTP_MAINFOLDER
+    Warehouse: process.env.WAREHOUSE_URL,
+    File: process.env.FILE_URL
   }
-
 }
 
 function parseBoolean(str) {

@@ -1,21 +1,52 @@
+const config = require("../Config")
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-
+const axios = require('axios')
 
 async function GetPatientstockmovements(req, res, next) {
     try {
         const patientstockmovements = await db.patientstockmovementModel.findAll({ where: { Isactive: true } })
+        let departments = []
+        let units = []
+        if (patientstockmovements && patientstockmovements.length > 0) {
+            try {
+                const departmentresponse = await axios({
+                    method: 'GET',
+                    url: config.services.Setting + 'Departments',
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const unitresponse = await axios({
+                    method: 'GET',
+                    url: config.services.Setting + 'Units',
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                departments = departmentresponse.data
+                units = unitresponse.data
+            } catch (error) {
+                return next(requestErrorCatcher(error, 'Setting'))
+            }
+        }
         for (const patientstockmovement of patientstockmovements) {
-            patientstockmovement.Stock = db.patientstockModel.find(u => u.Uuid === patientstockmovement.StockID)
-            patientstockmovement.Stock && (patientstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === patientstockmovement.Stock.StockdefineID))
+            patientstockmovement.Stock = await db.patientstockModel.findOne({ where: { Uuid: patientstockmovement.StockID } })
+            if (patientstockmovement.Stock) {
+                patientstockmovement.Stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: patientstockmovement.Stock.StockdefineID } })
+                if (patientstockmovement.Stock.Stockdefine) {
+                    patientstockmovement.Stock.Stockdefine.Department = departments.find(u => u.Uuid === patientstockmovement.Stock.Stockdefine.DepartmentID)
+                    patientstockmovement.Stock.Stockdefine.Unit = units.find(u => u.Uuid === patientstockmovement.Stock.Stockdefine.UnitID)
+                }
+            }
         }
         res.status(200).json(patientstockmovements)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -35,16 +66,40 @@ async function GetPatientstockmovement(req, res, next) {
     try {
         const patientstockmovement = await db.patientstockmovementModel.findOne({ where: { Uuid: req.params.stockmovementId } });
         if (!patientstockmovement) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
         }
         if (!patientstockmovement.Isactive) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
         }
-        patientstockmovement.Stock = db.patientstockModel.find(u => u.Uuid === patientstockmovement.StockID)
-        patientstockmovement.Stock && (patientstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === patientstockmovement.Stock.StockdefineID))
+        patientstockmovement.Stock = await db.purchaseorderstockModel.findOne({ where: { Uuid: patientstockmovement.StockID } })
+        if (patientstockmovement.Stock) {
+            patientstockmovement.Stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: patientstockmovement.Stock.StockdefineID } })
+            if (patientstockmovement.Stock.Stockdefine) {
+                try {
+                    const departmentresponse = await axios({
+                        method: 'GET',
+                        url: config.services.Setting + `Departments/${patientstockmovement.Stock.Stockdefine.DepartmentID}`,
+                        headers: {
+                            session_key: config.session.secret
+                        }
+                    })
+                    const unitresponse = await axios({
+                        method: 'GET',
+                        url: config.services.Setting + `Units/${patientstockmovement.Stock.Stockdefine.UnitID}`,
+                        headers: {
+                            session_key: config.session.secret
+                        }
+                    })
+                    patientstockmovement.Stock.Stockdefine.Department = departmentresponse.data
+                    patientstockmovement.Stock.Stockdefine.Unit = unitresponse.data
+                } catch (error) {
+                    return next(requestErrorCatcher(error, 'Setting'))
+                }
+            }
+        }
         res.status(200).json(patientstockmovement)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -58,7 +113,6 @@ async function AddPatientstockmovement(req, res, next) {
         Prevvalue,
         Newvalue,
         Movementdate,
-        Status
     } = req.body
 
     if (!validator.isUUID(StockID)) {
@@ -79,9 +133,6 @@ async function AddPatientstockmovement(req, res, next) {
     if (!validator.isISODate(Movementdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
     }
-    if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
-    }
 
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -92,8 +143,15 @@ async function AddPatientstockmovement(req, res, next) {
     const t = await db.sequelize.transaction();
 
     try {
+        let amount = 0.0;
+        let movements = await db.patientstockmovementModel.findAll({ where: { StockID: StockID } })
+        movements.forEach(movement => {
+            amount += (movement.Amount * movement.Movementtype);
+        });
         await db.patientstockmovementModel.create({
             ...req.body,
+            Prevvalue: amount,
+            Newvalue: Amount + amount,
             Uuid: stockmovementuuid,
             Createduser: "System",
             Createtime: new Date(),
@@ -101,16 +159,11 @@ async function AddPatientstockmovement(req, res, next) {
         }, { transaction: t })
 
         await t.commit()
-        const patientstockmovements = await db.patientstockmovementModel.findAll({ where: { Isactive: true } })
-        for (const patientstockmovement of patientstockmovements) {
-            patientstockmovement.Stock = db.patientstockModel.find(u => u.Uuid === patientstockmovement.StockID)
-            patientstockmovement.Stock && (patientstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === patientstockmovement.Stock.StockdefineID))
-        }
-        res.status(200).json(patientstockmovements)
     } catch (err) {
         await t.rollback()
         return next(sequelizeErrorCatcher(err))
     }
+    GetPatientstockmovements(req, res, next)
 }
 
 async function UpdatePatientstockmovement(req, res, next) {
@@ -123,7 +176,6 @@ async function UpdatePatientstockmovement(req, res, next) {
         Prevvalue,
         Newvalue,
         Movementdate,
-        Status,
         Uuid
     } = req.body
 
@@ -145,9 +197,6 @@ async function UpdatePatientstockmovement(req, res, next) {
     if (!validator.isISODate(Movementdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
     }
-    if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
-    }
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED, req.language)
     }
@@ -158,16 +207,16 @@ async function UpdatePatientstockmovement(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-    try {
-        const patientstockmovement = await db.patientstockmovementModel.findOne({ where: { Uuid: req.params.stockmovementId } });
-        if (!patientstockmovement) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
-        }
-        if (!patientstockmovement.Isactive) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
-        }
+    const t = await db.sequelize.transaction();
 
-        const t = await db.sequelize.transaction();
+    try {
+        const patientstockmovement =await db.patientstockmovementModel.findOne({ where: { Uuid: Uuid } })
+        if (!patientstockmovement) {
+            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
+        }
+        if (patientstockmovement.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+        }
 
         await db.patientstockmovementModel.update({
             ...req.body,
@@ -176,17 +225,10 @@ async function UpdatePatientstockmovement(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
-        const patientstockmovements = await db.patientstockmovementModel.findAll({ where: { Isactive: true } })
-        for (const patientstockmovement of patientstockmovements) {
-            patientstockmovement.Stock = db.patientstockModel.find(u => u.Uuid === patientstockmovement.StockID)
-            patientstockmovement.Stock && (patientstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === patientstockmovement.Stock.StockdefineID))
-        }
-        res.status(200).json(patientstockmovements)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
-
+    GetPatientstockmovements(req, res, next)
 }
 
 async function DeletePatientstockmovement(req, res, next) {
@@ -206,29 +248,23 @@ async function DeletePatientstockmovement(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
-        const patientstockmovement = await db.patientstockmovementModel.findOne({ where: { Uuid: req.params.stockmovementId } });
+        const patientstockmovement =await db.patientstockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!patientstockmovement) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
+            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
         }
-        if (!patientstockmovement.Isactive) {
-            return createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language)
+        if (patientstockmovement.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.patientstockmovementModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-        const patientstockmovements = await db.patientstockmovementModel.findAll({ where: { Isactive: true } })
-        for (const patientstockmovement of patientstockmovements) {
-            patientstockmovement.Stock = db.patientstockModel.find(u => u.Uuid === patientstockmovement.StockID)
-            patientstockmovement.Stock && (patientstockmovement.Stock.Stockdefine = db.stockdefineModel.find(u => u.Uuid === patientstockmovement.Stock.StockdefineID))
-        }
-        res.status(200).json(patientstockmovements)
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
+    GetPurchaseorderstockmovements(req, res, next)
 }
 
 module.exports = {

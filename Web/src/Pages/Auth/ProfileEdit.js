@@ -6,6 +6,7 @@ import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import img from '../../Assets/img'
 import { ROUTES } from '../../Utils/Constants'
+import config from '../../Config'
 
 export default class ProfileEdit extends Component {
 
@@ -29,10 +30,10 @@ export default class ProfileEdit extends Component {
     componentDidUpdate() {
         const { Profile, removenotification, Files, removeFilenotification } = this.props
         const { notifications, meta } = Profile
-        if (meta && meta.id !== 0 && Object.keys(meta).length > 0 && !this.state.isDatafetched) {
-            if (meta.files && Array.isArray(meta.files)) {
-                let pp = meta.files.find(u => u.usagetype === "PP")
-                this.setState({ file: pp ? pp : {}, isDatafetched: true, fetchedFromapi: true, showImg: true }, () => {
+        if (meta && meta.Id !== 0 && Object.keys(meta).length > 0 && !this.state.isDatafetched) {
+            if (meta.Files && Array.isArray(meta.Files)) {
+                let pp = meta.Files.find(u => u.Usagetype === "PP")
+                this.setState({ file: pp ? pp : {}, isDatafetched: true, fetchedFromapi: true, showImg: pp ? true : false }, () => {
                     console.log('file: ', this.state);
 
                 })
@@ -70,21 +71,21 @@ export default class ProfileEdit extends Component {
                                 <Form.Field className='flex flex-col justify-between items-center h-[100%]  relative'>
                                     {this.state.showImg && <Button onClick={(e) => { this.deleteImage(e) }} color='red' className='cursor-pointer absolute right-5 z-50 top-5 rounded-full' size='large' icon='close' />}
                                     <Image className='mb-4' src={this.state.showImg ?
-                                        this.state.fetchedFromapi ? `${process.env.REACT_APP_BACKEND_URL}/${ROUTES.FILE}/GetImage?guid=${Profile?.meta?.concurrencyStamp}` : URL.createObjectURL(this.state.selectedimage)
+                                        this.state.fetchedFromapi ? `${config.services.File}${ROUTES.FILE}/Downloadfile/${this.state.file.Uuid}` : URL.createObjectURL(this.state.selectedimage)
                                         : img.avatar} circular size='medium' />
                                     {!this.state.showImg && <Form.Input type='file' onChange={this.imageChange} ></Form.Input>}
                                 </Form.Field>
                                 <Form.Field >
                                     <Form.Group widths={'equal'}>
-                                        <Form.Input label="İsim" placeholder="İsim" name="name" fluid defaultValue={meta.name} />
-                                        <Form.Input label="Soyisim" placeholder="Soyisim" name="surname" fluid defaultValue={meta.surname} />
+                                        <Form.Input label="İsim" placeholder="İsim" name="Name" fluid defaultValue={meta.Name} />
+                                        <Form.Input label="Soyisim" placeholder="Soyisim" name="Surname" fluid defaultValue={meta.Surname} />
                                     </Form.Group>
                                     <Form.Group widths={'equal'}>
-                                        <Form.Input label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="city" fluid defaultValue={meta.city} />
-                                        <Form.Input label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="town" fluid defaultValue={meta.town} />
+                                        <Form.Input label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="City" fluid defaultValue={meta.City} />
+                                        <Form.Input label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="Town" fluid defaultValue={meta.Town} />
                                     </Form.Group>
                                     <Form.Group widths={'equal'}>
-                                        <Form.Input label="Adres" placeholder="Adres" name="address" fluid defaultValue={meta.address} />
+                                        <Form.Input label="Adres" placeholder="Adres" name="Address" fluid defaultValue={meta.Address} />
                                     </Form.Group>
                                 </Form.Field>
                             </Form.Group>
@@ -104,10 +105,10 @@ export default class ProfileEdit extends Component {
         const { EditUsers, history, fillnotification, Profile } = this.props
         const data = formToObject(e.target)
         let errors = []
-        if (!data.name || data.name === '') {
+        if (!data.Name || data.Name === '') {
             errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'İsim boş olamaz' })
         }
-        if (!data.surname || data.surname === '') {
+        if (!data.Surname || data.Surname === '') {
             errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Soy isim boş olamaz' })
         }
         if (errors.length > 0) {
@@ -132,20 +133,18 @@ export default class ProfileEdit extends Component {
     }
 
     handleFile = () => {
-        console.log("geldim")
         const { EditFiles,  Profile } = this.props
         const { imgChanged, selectedimage, file } = this.state
-        console.log('this.state: ', this.state);
 
         if (imgChanged) {
             if (!selectedimage && Object.keys(file).length > 0) {
                 alert("silicem")
                 let filecontent = { ...file }
-                filecontent.willDelete = true
-                delete filecontent.updateTime
-                delete filecontent.deleteTime
+                filecontent.WillDelete = true
+                delete filecontent.Updatetime
+                delete filecontent.Deletetime
                 let files = [{
-                    ...filecontent, file: selectedimage
+                    ...filecontent, File: selectedimage
                 }]
                 const formData = new FormData();
                 files.forEach((data, index) => {
@@ -158,10 +157,10 @@ export default class ProfileEdit extends Component {
             if (selectedimage && Object.keys(file).length > 0) {
 
                 let filecontent = { ...file }
-                delete filecontent.updateTime
-                delete filecontent.deleteTime
+                delete filecontent.Updatetime
+                delete filecontent.Deletetime
                 let files = [{
-                    ...filecontent, file: selectedimage
+                    ...filecontent, File: selectedimage
                 }]
                 const formData = new FormData();
                 files.forEach((data, index) => {
@@ -174,24 +173,19 @@ export default class ProfileEdit extends Component {
             }
             if (selectedimage && Object.keys(file).length === 0) {
                 let files = [{
-                    id: 0,
-                    name: 'PP',
-                    parentid: Profile.meta.concurrencyStamp,
-                    filename: 'PP',
-                    filefolder: '',
-                    filepath: '',
-                    filetype: '',
-                    usagetype: 'PP',
-                    canteditfile: false,
-                    file: selectedimage,
-                    concurrencyStamp: '',
-                    createdUser: '',
-                    updatedUser: '',
-                    deleteUser: '',
-                    willDelete: false,
-                    fileChanged: true,
-                    isActive: true,
-                    order: Profile.meta.files.length,
+                    Id: 0,
+                    Name: 'PP',
+                    ParentID: Profile.meta.Uuid,
+                    Filename: 'PP',
+                    Filefolder: '',
+                    Filepath: '',
+                    Filetype: '',
+                    Usagetype: 'PP',
+                    Canteditfile: false,
+                    File: selectedimage,
+                    Willdelete: false,
+                    FileChanged: true,
+                    order: Profile.meta.Files.length,
                 }]
 
                 const formData = new FormData();
