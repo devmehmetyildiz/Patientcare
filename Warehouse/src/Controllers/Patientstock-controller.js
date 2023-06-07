@@ -8,6 +8,121 @@ const uuid = require('uuid').v4
 const axios = require('axios')
 
 
+async function Transferpatientstock(req, res, next) {
+    let validationErrors = []
+    const {
+        Uuid,
+        WarehouseID,
+    } = req.body
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+    }
+    if (!validator.isUUID(WarehouseID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const patient = req.body
+    const t = await db.sequelize.transaction();
+    try {
+        const patientstocks = await db.patientstockModel.findAll({ where: { PatientID: patient.Uuid } });
+        if (!patientstocks) {
+            return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
+        }
+        if (!patientstocks.Isactive) {
+            return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+        }
+        for (const patientstock of patientstocks) {
+
+            let amount = 0;
+            let movements = await db.patientstockmovementModel.findAll({ where: { StockID: patientstock.Uuid } })
+            for (const movement of movements) {
+                amount += (movement.Amount * movement.Movementtype);
+                await patientstockmovementModel.update({
+                    ...movement,
+                    Status: 1,
+                    Updateduser: "System",
+                    Updatetime: new Date(),
+                }, { where: { Uuid: movement.Uuid } }, { transaction: t })
+            }
+            let foundedstock = await db.stockModel.findOne({
+                where: {
+                    Skt: patientstock.Skt,
+                    Barcodeno: patientstock.Barcodeno,
+                    StockdefineID: patientstock.StockdefineID,
+                    DepartmentID: patientstock.DepartmentID,
+                    WarehouseID: WarehouseID
+                }
+            })
+
+            if (!foundedstock) {
+                let newstockUuid = uuid()
+                await db.stockModel.create({
+                    Uuid: newstockUuid,
+                    Barcodeno: patientstock.Barcodeno,
+                    DepartmentID: patientstock.DepartmentID,
+                    Info: patientstock.Info,
+                    Skt: patientstock.Skt,
+                    StockdefineID: patientstock.StockdefineID,
+                    WarehouseID: WarehouseID,
+                    CreatedUser: 'System',
+                    CreateTime: new Date(),
+                    IsActive: true,
+                }, { transaction: t })
+                await db.stockmovementModel.create({
+                    Uuid: uuid(),
+                    StockID: newstockUuid,
+                    Amount: amount,
+                    Movementdate: new Date(),
+                    Movementtype: 1,
+                    Prevvalue: 0,
+                    Newvalue: amount,
+                    CreatedUser: 'System',
+                    CreateTime: new Date(),
+                    IsActive: true
+                }, { transaction: t })
+            } else {
+                let previousamount = 0;
+                let oldmovements = await db.stockmovementModel.findAll({ where: { StockID: foundedstock.Uuid } })
+                for (const oldmovement of oldmovements) {
+                    previousamount += (oldmovement.Amount * oldmovement.Movementtype);
+                }
+                await db.stockmovementModel.create({
+                    Uuid: uuid(),
+                    StockID: foundedstock.Uuid,
+                    Amount: amount,
+                    Movementdate: new Date(),
+                    Movementtype: 1,
+                    Prevvalue: previousamount,
+                    Newvalue: previousamount + amount,
+                    CreatedUser: 'System',
+                    CreateTime: new Date(),
+                    IsActive: true
+                }, { transaction: t })
+            }
+
+            let body = DataCleaner(patientstock)
+            await db.patientstockModel.update({
+                ...body,
+                Status: 1,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { Uuid: patientstock.Uuid } }, { transaction: t })
+        }
+        t.commit()
+    } catch (error) {
+        t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    res.status(200)
+}
+
 async function GetPatientstocks(req, res, next) {
     try {
         const patientstocks = await db.patientstockModel.findAll({ where: { Isactive: true } })
@@ -335,4 +450,5 @@ module.exports = {
     AddPatientstock,
     UpdatePatientstock,
     DeletePatientstock,
+    Transferpatientstock
 }

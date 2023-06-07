@@ -9,6 +9,7 @@ import { ROUTES } from '../../Utils/Constants'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import PreregistrationsComplete from './PreregistrationsComplete'
 import Notification from '../../Utils/Notification'
+import config from '../../Config'
 
 export default class Preregistrations extends Component {
 
@@ -29,18 +30,24 @@ export default class Preregistrations extends Component {
     GetWarehouses()
   }
 
+  componentDidUpdate() {
+    const { Patients, removePatientnotification, Warehouses, removeWarehousenotification } = this.props
+    Notification(Patients.notifications, removePatientnotification)
+    Notification(Warehouses.notifications, removeWarehousenotification)
+  }
+
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'İsim', accessor: 'name', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.nameCellhandler(col) },
-      { Header: 'TC Kimlik No', accessor: 'patientdefine.countryID', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Kayıt Tarihi', accessor: 'registerdate', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
-      { Header: 'Kuruma Giriş Tarihi', accessor: 'approvaldate', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
-      { Header: 'Durum', accessor: 'case.name', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Stoklar', accessor: 'stockstxt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockCellhandler(col) },
-      { Header: 'Dosyalar', accessor: 'filestxt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.filesCellhandler(col) },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'İsim', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.nameCellhandler(col) },
+      { Header: 'TC Kimlik No', accessor: 'Patientdefine.CountryID', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Kayıt Tarihi', accessor: 'Registerdate', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
+      { Header: 'Kuruma Giriş Tarihi', accessor: 'Approvaldate', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
+      { Header: 'Durum', accessor: 'Case.Name', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Stoklar', accessor: 'Stockstxt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockCellhandler(col) },
+      { Header: 'Dosyalar', accessor: 'Filestxt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.filesCellhandler(col) },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -49,13 +56,12 @@ export default class Preregistrations extends Component {
       { accessor: 'actions', Header: "Eylemler", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }
     ]
 
-    const { Patients, Warehouses, removeWarehousenotification, DeletePatients, removePatientnotification, Profile, history, fillPatientnotification, CompletePrepatients } = this.props
-    const { notifications, list, isLoading, isDispatching } = Patients
-    Notification(notifications, removePatientnotification)
-    Notification(Warehouses.notifications, removeWarehousenotification)
+    const { Patients, Warehouses, DeletePatients, removePatientnotification, Profile, history, fillPatientnotification, CompletePrepatients } = this.props
+    const { list, isLoading, isDispatching } = Patients
+
 
     const metaKey = "Preregistrations"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -66,22 +72,22 @@ export default class Preregistrations extends Component {
     };
 
     (list || []).forEach(item => {
-      var filestext = item.files.map((file) => {
-        return file.name;
+      var filestext = item.Files.map((file) => {
+        return file.Name;
       }).join(", ")
-      item.filestxt = filestext;
-      var stockstext = item.stocks.map((stock) => {
-        return stock.stockdefine?.name;
+      item.Filestxt = filestext;
+      var stockstext = item.Stocks.map((stock) => {
+        return stock.Stockdefine?.Name;
       }).join(", ")
-      item.stockstxt = stockstext;
+      item.Stockstxt = stockstext;
       item.actions = <React.Fragment>
         <Popup
           trigger={<Icon className='cursor-pointer' name='ellipsis vertical' />}
           content={<div className='flex flex-col justify-start items-start w-full gap-2'>
-            <Link to={`/Preregistrations/${item.concurrencyStamp}/edit`} ><Icon className='row-edit' name='edit' /> Güncelle </Link>
-            <Link to={`/Patientdefines/${item.patientdefine?.concurrencyStamp}/edit`} ><Icon color='black' className='row-edit' name='clipboard' /> Tanım Düzenle</Link>
-            <Link to={`/Preregistrations/${item.concurrencyStamp}/Editfile`} ><Icon color='black' className='row-edit' name='folder open' /> Dosya Düzenle</Link>
-            <Link to={`/Preregistrations/${item.concurrencyStamp}/Editstock`} ><Icon color='black' className='row-edit' name='cart' /> Stok Düzenle</Link>
+            <Link to={`/Preregistrations/${item.Uuid}/edit`} ><Icon className='row-edit' name='edit' /> Güncelle </Link>
+            <Link to={`/Patientdefines/${item.Patientdefine?.Uuid}/edit`} ><Icon color='black' className='row-edit' name='clipboard' /> Tanım Düzenle</Link>
+            <Link to={`/Preregistrations/${item.Uuid}/Editfile`} ><Icon color='black' className='row-edit' name='folder open' /> Dosya Düzenle</Link>
+            <Link to={`/Preregistrations/${item.Uuid}/Editstock`} ><Icon color='black' className='row-edit' name='cart' /> Stok Düzenle</Link>
             <span><Icon link color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} /> Sil</span>
           </div>}
           on='click'
@@ -134,7 +140,7 @@ export default class Preregistrations extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord?.patientdefine?.firstname} ${this.state.selectedrecord?.patientdefine?.lastname}` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord?.Patientdefine?.Firstname} ${this.state.selectedrecord?.Patientdefine?.Lastname}` : null} </span>
                   Ön kayıtlı Hastasını istediğinize emin misiniz?
                 </p>
               </Modal.Description>
@@ -149,8 +155,8 @@ export default class Preregistrations extends Component {
                 icon='checkmark'
                 onClick={() => {
                   let data = this.state.selectedrecord
-                  delete data.filestxt
-                  delete data.stockstxt
+                  delete data.Filestxt
+                  delete data.Stockstxt
                   delete data.actions
                   DeletePatients(this.state.selectedrecord)
                   this.setState({ open: false, selectedrecord: {} })
@@ -198,8 +204,9 @@ export default class Preregistrations extends Component {
 
   nameCellhandler = (col) => {
     const patient = col.row.original
-    return <div className='flex justify-center items-center flex-row flex-nowrap whitespace-nowrap'>{patient.files.filter(u => u.usagetype === 'PP').length > 0 ? <img alt='pp' src={`${process.env.REACT_APP_BACKEND_URL}/${ROUTES.FILE}/GetImage?guid=${patient.concurrencyStamp}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
-      : null}{`${patient?.patientdefine?.firstname} ${patient?.patientdefine?.lastname}`}</div>
+    let file = patient.files.find(u => u.Usagetype === 'PP')
+    return <div className='flex justify-center items-center flex-row flex-nowrap whitespace-nowrap'>{file ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file.Uuid}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
+      : null}{`${patient?.Patientdefine?.Firstname} ${patient?.Patientdefine?.Lastname}`}</div>
   }
 
   dateCellhandler = (col) => {
@@ -212,8 +219,8 @@ export default class Preregistrations extends Component {
   stockCellhandler = (col) => {
     if (col.value) {
       if (!col.cell.isGrouped) {
-        const itemId = col.row.original.id
-        const itemStocks = col.row.original.stocks
+        const itemId = col.row.original.Id
+        const itemStocks = col.row.original.Stocks
         return col.value.length - 35 > 20 ?
           (
             !this.state.stocksStatus.includes(itemId) ?
@@ -229,8 +236,8 @@ export default class Preregistrations extends Component {
   filesCellhandler = (col) => {
     if (col.value) {
       if (!col.cell.isGrouped) {
-        const itemId = col.row.original.id
-        const itemFiles = col.row.original.files
+        const itemId = col.row.original.Id
+        const itemFiles = col.row.original.Files
         return col.value.length - 35 > 20 ?
           (
             !this.state.filesStatus.includes(itemId) ?

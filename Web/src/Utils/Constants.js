@@ -6,7 +6,7 @@ export const ROUTES = {
     USER: 'Users',
 
     ACTIVEPATIENT: 'Activepatient',
-    PATIENT: 'Patient',
+    PATIENT: 'Patients',
     TODO: 'Todo',
 
     PATIENTTYPE: 'Patienttypes',

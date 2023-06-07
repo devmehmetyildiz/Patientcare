@@ -1,6 +1,7 @@
 import { ROUTES } from "../../Utils/Constants";
 import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
 import instanse from "./axios"
+import config from "../../Config";
 
 export const ACTION_TYPES = {
     GET_PATIENTS_INIT: 'GET_PATIENTS_INIT',
@@ -41,7 +42,7 @@ export const ACTION_TYPES = {
 
 export const GetPatients = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_PATIENTS_INIT })
-    await instanse.get(ROUTES.PATIENT + "/GetAll")
+    await instanse.get(config.services.Business, ROUTES.PATIENT)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_PATIENTS_SUCCESS, payload: response.data })
         })
@@ -53,7 +54,7 @@ export const GetPatients = () => async (dispatch, getState) => {
 
 export const Getpreregistrations = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_PATIENTS_INIT })
-    await instanse.get(ROUTES.PATIENT + "/GetActivationlist")
+    await instanse.get(config.services.Business, ROUTES.PATIENT+"/Preregistrations")
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_PATIENTS_SUCCESS, payload: response.data })
         })
@@ -65,7 +66,7 @@ export const Getpreregistrations = () => async (dispatch, getState) => {
 
 export const GetPatient = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_PATIENT_INIT })
-    await instanse.get(ROUTES.PATIENT + `/Getselected?guid=${guid}`)
+    await instanse.get(config.services.Business, `${ROUTES.PATIENT}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_PATIENT_SUCCESS, payload: response.data })
         })
@@ -77,7 +78,7 @@ export const GetPatient = (guid) => async (dispatch, getState) => {
 
 export const AddPatients = (data, historypusher, url) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_PATIENT_INIT })
-    await instanse.post(ROUTES.PATIENT + "/Add", data)
+    await instanse.post(config.services.Business, ROUTES.PATIENT, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.ADD_PATIENT_SUCCESS, payload: response.data })
             historypusher.push(url ? url : '/Patients')
@@ -90,7 +91,7 @@ export const AddPatients = (data, historypusher, url) => async (dispatch, getSta
 
 export const EditPatients = (data, historypusher, url) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_PATIENT_INIT })
-    await instanse.post(ROUTES.PATIENT + "/Update", data)
+    await instanse.put(config.services.Business, ROUTES.PATIENT, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.EDIT_PATIENT_SUCCESS, payload: response.data })
             historypusher.push(url ? url : '/Patients')
@@ -103,7 +104,7 @@ export const EditPatients = (data, historypusher, url) => async (dispatch, getSt
 
 export const EditPatientcheckperiods = (data) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_PATIENTCHECKPERIOD_INIT })
-    await instanse.post(ROUTES.PATIENT + "/Updatecheckperiod", data)
+    await instanse.put(config.services.Business, ROUTES.PATIENT, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.EDIT_PATIENTCHECKPERIOD_SUCCESS, payload: response.data })
         })
@@ -115,7 +116,7 @@ export const EditPatientcheckperiods = (data) => async (dispatch, getState) => {
 
 export const EditPatienttodogroupdefines = (data) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_PATIENTTODOGROUPDEFINE_INIT })
-    await instanse.post(ROUTES.PATIENT + "/Updatetodogroupdefine", data)
+    await instanse.put(config.services.Business, ROUTES.PATIENT, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.EDIT_PATIENTTODOGROUPDEFINE_SUCCESS, payload: response.data })
         })
@@ -127,7 +128,7 @@ export const EditPatienttodogroupdefines = (data) => async (dispatch, getState) 
 
 export const CompletePrepatients = (data, historypusher, url) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_PATIENT_INIT })
-    await instanse.post(ROUTES.PATIENT + "/Completeprepatient", data)
+    await instanse.put(config.services.Business, ROUTES.PATIENT+"/Preregistrations/Complete", data)
         .then(response => {
             console.log('response: ', response);
             dispatch({ type: ACTION_TYPES.EDIT_PATIENT_SUCCESS, payload: response.data })
@@ -142,7 +143,7 @@ export const CompletePrepatients = (data, historypusher, url) => async (dispatch
 
 export const EditPatientstocks = (data, historypusher, url) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_PATIENT_INIT })
-    await instanse.post(ROUTES.PATIENT + "/Preparestocks", data)
+    await instanse.put(config.services.Business, ROUTES.PATIENT+"/Preregistrations/Editstock", data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.EDIT_PATIENT_SUCCESS, payload: response.data })
             historypusher.push(url ? url : '/Patients')
@@ -155,7 +156,7 @@ export const EditPatientstocks = (data, historypusher, url) => async (dispatch, 
 
 export const DeletePatients = (data) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.DELETE_PATIENT_INIT })
-    await instanse.post(ROUTES.PATIENT + "/Delete", data)
+    await instanse.put(config.services.Business, ROUTES.PATIENT, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_PATIENT_SUCCESS, payload: response.data })
         })

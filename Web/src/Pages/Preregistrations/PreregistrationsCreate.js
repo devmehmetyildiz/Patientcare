@@ -27,28 +27,31 @@ export default class PreregistrationsCreate extends Component {
     GetCases()
   }
 
-  render() {
-
+  componentDidUpdate() {
     const { Patientdefines, Patients, Departments, Cases, removePatientnotification, removePatientdefinenotification
       , removeDepartmentnotification, removeCasenotification } = this.props
-    const { isLoading, isDispatching } = Patients
-
     Notification(Patients.notifications, removePatientnotification)
     Notification(Departments.notifications, removeDepartmentnotification)
     Notification(Cases.notifications, removeCasenotification)
     Notification(Patientdefines.notifications, removePatientdefinenotification)
+  }
+
+  render() {
+
+    const { Patientdefines, Patients, Departments, Cases, } = this.props
+    const { isLoading, isDispatching } = Patients
 
 
     const Patientdefineoptions = Patientdefines.list.map(define => {
-      return { key: define.concurrencyStamp, text: `${define.firstname} ${define.lastname}-${define.countryID}`, value: define.concurrencyStamp }
+      return { key: define.Uuid, text: `${define.Firstname} ${define.Lastname}-${define.CountryID}`, value: define.Uuid }
     })
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const Casesoptions = Cases.list.filter(u => u.caseStatus !== 1).map(cases => {
-      return { key: cases.concurrencyStamp, text: cases.name, value: cases.concurrencyStamp }
+    const Casesoptions = Cases.list.filter(u => u.Casestatus !== 1).map(cases => {
+      return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
     })
 
     const Genderoptions = [
@@ -104,14 +107,14 @@ export default class PreregistrationsCreate extends Component {
                       </label>
                       <Form.Input placeholder="Hasta Adı" name="firstname" fluid />
                     </FormField>
-                    <Form.Input label="Hasta Soyadı" placeholder="Hasta Soyadı" name="lastname" fluid />
-                    <Form.Input label="Baba Adı" placeholder="Baba Adı" name="fathername" fluid />
-                    <Form.Input label="Anne Adı" placeholder="Anne Adı" name="mothername" fluid />
+                    <Form.Input label="Hasta Soyadı" placeholder="Hasta Soyadı" name="Lastname" fluid />
+                    <Form.Input label="Baba Adı" placeholder="Baba Adı" name="Fathername" fluid />
+                    <Form.Input label="Anne Adı" placeholder="Anne Adı" name="Mothername" fluid />
                   </Form.Group>
                   <Form.Group widths={'equal'}>
-                    <Form.Input label="TC Kimlik No" placeholder="TC Kimlik No" name="countryID" fluid />
-                    <Form.Input label="Doğum Tarihi" placeholder="Doğum Tarihi" name="dateofbirth" type='date' fluid />
-                    <Form.Input label="Doğum Yeri" placeholder="Doğum Yeri" name="placeofbirth" fluid />
+                    <Form.Input label="TC Kimlik No" placeholder="TC Kimlik No" name="CountryID" fluid />
+                    <Form.Input label="Doğum Tarihi" placeholder="Doğum Tarihi" name="Dateofbirth" type='date' fluid />
+                    <Form.Input label="Doğum Yeri" placeholder="Doğum Yeri" name="Placeofbirth" fluid />
                     <Form.Field>
                       <label className='text-[#000000de]'>Cinsiyet</label>
                       <Dropdown placeholder='Cinsiyet' fluid selection options={Genderoptions} onChange={(e, { value }) => { this.setState({ selectedGenderstatus: value }) }} />
@@ -130,8 +133,8 @@ export default class PreregistrationsCreate extends Component {
                 </Form.Field>
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Input label="Kayıt Tarihi" placeholder="Kayıt Tarihi" name="registerdate" type='date' fluid />
-                <Form.Input label="Kuruma Giriş Tarihi" placeholder="Kuruma Giriş Tarihi" name="approvaldate" type='date' fluid />
+                <Form.Input label="Kayıt Tarihi" placeholder="Kayıt Tarihi" name="Registerdate" type='date' fluid />
+                <Form.Input label="Kuruma Giriş Tarihi" placeholder="Kuruma Giriş Tarihi" name="Approvaldate" type='date' fluid />
               </Form.Group>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Preregistrations">

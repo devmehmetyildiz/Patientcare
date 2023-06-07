@@ -9,7 +9,7 @@ const axios = require('axios')
 
 async function GetPatients(req, res, next) {
     try {
-        const patients = await db.patientModel.findAll({ where: { Isactive: true } })
+        const patients = await db.patientModel.findAll({ where: { Isactive: true , Iswaitingactivation: false } })
         if (patients && patients.length > 0) {
             let cases = []
             let departments = []
@@ -88,13 +88,94 @@ async function GetPatients(req, res, next) {
     }
 }
 
-async function GetPatientdefine(req, res, next) {
+async function GetPreregistrations(req, res, next) {
+    try {
+        const patients = await db.patientModel.findAll({ where: { Isactive: true, Iswaitingactivation: true } })
+        if (patients && patients.length > 0) {
+            let cases = []
+            let departments = []
+            let files = []
+            let stocks = []
+            let patienttypes = []
+            let costumertypes = []
+            try {
+                const casesresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + `Cases`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const departmentsresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + `Departments`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const patienttypesresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + `Patienttypes`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const costumertypesresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + `Costumertypes`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const filesresponse = axios({
+                    method: 'GET',
+                    url: config.services.File + `Files`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const stocksresponse = axios({
+                    method: 'GET',
+                    url: config.services.Warehouse + `Patientstocks`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                await Promise.all([casesresponse, departmentsresponse, patienttypesresponse
+                    , costumertypesresponse, filesresponse, stocksresponse])
+                cases = casesresponse.data
+                departments = departmentsresponse.data
+                files = filesresponse.data
+                stocks = stocksresponse.data
+                patienttypes = patienttypesresponse.data
+                costumertypes = costumertypesresponse.data
+                for (const patient of patients) {
+                    patient.Case = cases.find(u => u.Uuid === patient.CaseID)
+                    patient.Department = departments.find(u => u.Uuid === patient.DeparmentID)
+                    patient.Stocks = stocks.filter(u => u.PatientID === patient.Uuid)
+                    patient.Patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient.PatientdefineID } })
+                    if (patient.Patientdefine) {
+                        patient.Patientdefine.Patienttype = patienttypes.find(u => u.Uuid === patient.Patientdefine.PatienttypeID)
+                        patient.Patientdefine.Costumertype = costumertypes.find(u => u.Uuid === patient.Patientdefine.CostumertypeID)
+                    }
+                }
+            } catch (error) {
+                return next(requestErrorCatcher(error, 'Setting'))
+            }
+        }
+        res.status(200).json(patients)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function GetPatient(req, res, next) {
 
     let validationErrors = []
-    if (!req.params.patientdefineId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
+    if (!req.params.patientId) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
     }
-    if (!validator.isUUID(req.params.patientdefineId)) {
+    if (!validator.isUUID(req.params.patientId)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTDEFINEID)
     }
     if (validationErrors.length > 0) {
@@ -102,35 +183,65 @@ async function GetPatientdefine(req, res, next) {
     }
 
     try {
-        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: req.params.patientdefineId } });
-        try {
+        const patient = await db.patientModel.findOne({ where: { Uuid: req.params.patientId } });
+        patient.Patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient.PatientdefineID } })
+        if (patient.Patientdefine) {
             const patienttypesresponse = await axios({
                 method: 'GET',
-                url: config.services.Setting + `Patienttypes/${patientdefine.PatientdefineID}`,
+                url: config.services.Setting + `Patienttypes/${patient.Patientdefine.PatienttypeID}`,
                 headers: {
                     session_key: config.session.secret
                 }
             })
             const costumertypesresponse = await axios({
                 method: 'GET',
-                url: config.services.Setting + `Costumertypes/${patientdefine.CostumertypeID}`,
+                url: config.services.Setting + `Costumertypes/${patient.Patientdefine.CostumertypeID}`,
                 headers: {
                     session_key: config.session.secret
                 }
             })
-            patientdefine.Patienttype = patienttypesresponse.data
-            patientdefine.Costumertype = costumertypesresponse.data
-        } catch (error) {
-            return next(requestErrorCatcher(error, 'Setting'))
+            patient.Patientdefine.Patienttype = patienttypesresponse.data
+            patient.Patientdefine.Costumertype = costumertypesresponse.data
         }
-        res.status(200).json(patientdefine)
+        const casesresponse = await axios({
+            method: 'GET',
+            url: config.services.Setting + `Cases/${patient.CaseID}`,
+            headers: {
+                session_key: config.session.secret
+            }
+        })
+        const departmentsresponse = await axios({
+            method: 'GET',
+            url: config.services.Setting + `Departments/${patient.DepartmentID}`,
+            headers: {
+                session_key: config.session.secret
+            }
+        })
+        const filesresponse = await axios({
+            method: 'GET',
+            url: config.services.File + `Files`,
+            headers: {
+                session_key: config.session.secret
+            }
+        })
+        const stocksresponse = await axios({
+            method: 'GET',
+            url: config.services.Warehouse + `Patientstocks`,
+            headers: {
+                session_key: config.session.secret
+            }
+        })
+        patient.Case = casesresponse.data
+        patient.Department = departmentsresponse.data
+        patient.Files = filesresponse.data.filter(u => u.ParentID === patient.Uuid)
+        patient.Stocks = stocksresponse.filter(u => u.PatientID === patient.Uuid)
+        res.status(200).json(patient)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
 }
 
-
-async function AddPatientdefine(req, res, next) {
+async function AddPatient(req, res, next) {
 
     let validationErrors = []
     const {
@@ -138,7 +249,8 @@ async function AddPatientdefine(req, res, next) {
         Lastname,
         CountryID,
         CostumertypeID,
-        PatienttypeID
+        PatienttypeID,
+        Patientdefine
     } = req.body
 
     if (!validator.isString(Firstname)) {
@@ -161,16 +273,45 @@ async function AddPatientdefine(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
-    let patientdefineuuid = uuid()
-
     const t = await db.sequelize.transaction();
 
     try {
-        await db.patientdefineModel.create({
+        if (!validator.isUUID(Patientdefine.Uuid)) {
+            let patientdefineuuid = uuid()
+            await db.patientdefineModel.create({
+                ...Patientdefine,
+                Uuid: patientdefineuuid,
+                Createduser: "System",
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+            req.body.PatientdefineID = patientdefineuuid
+        }
+        let patientuuid = uuid()
+        await db.patientModel.create({
             ...req.body,
-            Uuid: patientdefineuuid,
+            Uuid: patientuuid,
             Createduser: "System",
             Createtime: new Date(),
+            Isactive: true
+        }, { transaction: t })
+
+        let patientmovementuuid = uuid()
+
+        await db.patientmovementModel.create({
+            Uuid: patientmovementuuid,
+            OldPatientmovementtype: 0,
+            Patientmovementtype: 2,
+            NewPatientmovementtype: 2,
+            Createduser: "System",
+            Createtime: new Date(),
+            PatientID: patientuuid,
+            Movementdate: new Date(),
+            IsDeactive: false,
+            IsTodoneed: false,
+            IsTodocompleted: false,
+            IsComplated: false,
+            Iswaitingactivation: false,
             Isactive: true
         }, { transaction: t })
 
@@ -179,10 +320,95 @@ async function AddPatientdefine(req, res, next) {
         await t.rollback()
         return next(sequelizeErrorCatcher(err))
     }
-    GetPatientdefines(req, res, next)
+    GetPatients(req, res, next)
 }
 
-async function UpdatePatientdefine(req, res, next) {
+async function Completeprepatient(req, res, next) {
+
+    let validationErrors = []
+    const {
+        Firstname,
+        Lastname,
+        CountryID,
+        CostumertypeID,
+        PatienttypeID,
+        Patientdefine
+    } = req.body
+
+    if (!validator.isString(Firstname)) {
+        validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED, req.language)
+    }
+    if (!validator.isString(Lastname)) {
+        validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED, req.language)
+    }
+    if (!validator.isString(CountryID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED, req.language)
+    }
+    if (!validator.isString(CostumertypeID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED, req.language)
+    }
+    if (!validator.isString(PatienttypeID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED, req.language)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    let patient = req.body
+
+    const t = await db.sequelize.transaction();
+
+    try {
+        await db.patientModel.update({
+            ...patient,
+            Updateduser: "System",
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: patient.Uuid } }, { transaction: t })
+
+        try {
+            await axios({
+                method: 'PUT',
+                url: config.services.Warehouse + `Patientstocks/Transferpatientstock`,
+                data: patient,
+                headers: {
+                    session_key: config.session.secret
+                }
+            })
+        } catch (error) {
+            return next(requestErrorCatcher(error, 'Warehouse'))
+        }
+
+        let patientmovementuuid = uuid()
+
+        await db.patientmovementModel.create({
+            ...req.body,
+            Uuid: patientmovementuuid,
+            OldPatientmovementtype: 0,
+            Patientmovementtype: 1,
+            NewPatientmovementtype: 1,
+            Createduser: "System",
+            Createtime: new Date(),
+            PatientID: patient.Uuid,
+            Movementdate: new Date(),
+            IsDeactive: false,
+            IsTodoneed: false,
+            IsTodocompleted: false,
+            IsComplated: false,
+            Iswaitingactivation: false,
+            Isactive: true
+        }, { transaction: t })
+
+        await t.commit()
+    } catch (err) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(err))
+    }
+    GetPatients(req, res, next)
+}
+
+async function UpdatePatient(req, res, next) {
 
     let validationErrors = []
     const {
@@ -221,15 +447,15 @@ async function UpdatePatientdefine(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const patientdefine = db.patientdefineModel.findOne({ where: { Uuid: Uuid } })
-        if (!patientdefine) {
+        const patient = db.patientModel.findOne({ where: { Uuid: Uuid } })
+        if (!patient) {
             return next(createNotfounderror([messages.ERROR.PATIENTDEFINE_NOT_FOUND], req.language))
         }
-        if (patientdefine.Isactive === false) {
+        if (patient.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.PATIENTDEFINE_NOT_ACTIVE], req.language))
         }
 
-        await db.patientdefineModel.update({
+        await db.patientModel.update({
             ...req.body,
             Updateduser: "System",
             Updatetime: new Date(),
@@ -239,11 +465,10 @@ async function UpdatePatientdefine(req, res, next) {
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
-    GetPatientdefines(req, res, next)
-
+    GetPatients(req, res, next)
 }
 
-async function DeletePatientdefine(req, res, next) {
+async function DeletePatient(req, res, next) {
 
     let validationErrors = []
     const {
@@ -262,27 +487,29 @@ async function DeletePatientdefine(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const patientdefine = db.patientdefineModel.findOne({ where: { Uuid: Uuid } })
-        if (!patientdefine) {
-            return next(createNotfounderror([messages.ERROR.PATIENTDEFINE_NOT_FOUND], req.language))
+        const patient = db.patientModel.findOne({ where: { Uuid: Uuid } })
+        if (!patient) {
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
-        if (patientdefine.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENTDEFINE_NOT_ACTIVE], req.language))
+        if (patient.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
-        await db.patientdefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.patientModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
     } catch (error) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
-    GetPatientdefines(req, res, next)
+    GetPatients(req, res, next)
 }
 
 module.exports = {
-    GetPatientdefines,
-    GetPatientdefine,
-    AddPatientdefine,
-    UpdatePatientdefine,
-    DeletePatientdefine,
+    GetPatients,
+    Completeprepatient,
+    GetPreregistrations,
+    GetPatient,
+    AddPatient,
+    UpdatePatient,
+    DeletePatient,
 }
