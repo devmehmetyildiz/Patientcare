@@ -204,7 +204,7 @@ export default class Preregistrations extends Component {
 
   nameCellhandler = (col) => {
     const patient = col.row.original
-    let file = patient.files.find(u => u.Usagetype === 'PP')
+    let file = patient.Files.find(u => u.Usagetype === 'PP')
     return <div className='flex justify-center items-center flex-row flex-nowrap whitespace-nowrap'>{file ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file.Uuid}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
       : null}{`${patient?.Patientdefine?.Firstname} ${patient?.Patientdefine?.Lastname}`}</div>
   }

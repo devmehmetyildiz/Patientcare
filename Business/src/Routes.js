@@ -1,5 +1,6 @@
 const Routes = [
     { method: 'get', path: '/Patients/Preregistrations', controller: 'Patient', action: 'GetPreregistrations' },
+    { method: 'get', path: '/Patients/GetFullpatients', controller: 'Patient', action: 'GetFullpatients' },
     { method: 'get', path: '/Patients/:patientId', controller: 'Patient', action: 'GetPatient' },
     { method: 'get', path: '/Patients', controller: 'Patient', action: 'GetPatients' },
     { method: 'post', path: '/Patients', controller: 'Patient', action: 'AddPatient' },

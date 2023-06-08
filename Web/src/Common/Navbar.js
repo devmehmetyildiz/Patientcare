@@ -12,7 +12,7 @@ export class Navbar extends Component {
   handleClose = () => this.setState({ open: false })
 
   render() {
-    const { iconOnly, seticonOnly, Profile } = this.props
+    const { iconOnly, seticonOnly, Profile, isMobile } = this.props
     const ishavePP = (Profile?.meta?.Files || []).find(u => u.Usagetype === 'PP')
 
 
@@ -33,7 +33,7 @@ export class Navbar extends Component {
     return (
       <nav
         className=" w-[100%] h-[58.61px] bg-[#2b7694] dark:bg-Contentfg mx-auto flex flex-row justify-between items-center fixed top-0 pl-[20px] z-50">
-        <div className='group flex flex-col cursor-pointer justify-center items-center' onClick={() => { seticonOnly(!iconOnly) }}>
+        <div className={`group flex flex-col cursor-pointer justify-center items-center ${isMobile ? 'hidden' : 'visible'}`} onClick={() => { seticonOnly(!iconOnly) }}>
           <div className='h-[2px] group-hover:bg-[#747474] bg-white dark:bg-[#3d3d3d]  w-[20px]' />
           <div className='h-[2px] group-hover:bg-[#747474] bg-white dark:bg-[#3d3d3d] my-[3px] w-[20px]' />
           <div className='h-[2px] group-hover:bg-[#747474] bg-white dark:bg-[#3d3d3d]  w-[20px]' />

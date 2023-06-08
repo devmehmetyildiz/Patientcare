@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Divider, Dropdown, Form } from 'semantic-ui-react'
 import { Breadcrumb, Button,  Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
-import Popuputil from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
 
 export default class PatientstocksEdit extends Component {
@@ -32,59 +32,44 @@ export default class PatientstocksEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Stockdefines, Patientstocks, Patients, GetPatients, Getpreregistrations, } = this.props
+    const { Departments, Stockdefines, Patientstocks, Patients, GetPatients, Getpreregistrations,
+       removePatientnotification, removePatientstocknotification, removeStockdefinenotification, removeDepartmentnotification  } = this.props
     const { selected_record, isLoading } = Patientstocks
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id != 0
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
       && Departments.list.length > 0 && !Departments.isLoading
       && Stockdefines.list.length > 0 && !Stockdefines.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selecteddepartments: selected_record.departmentid,
-        selectedstockdefine: selected_record.stockdefineID,
-        selectedpatient: selected_record.patientID,
+        selecteddepartments: selected_record.DepartmentID,
+        selectedstockdefine: selected_record.StockdefineID,
+        selectedpatient: selected_record.PatientID,
         isDatafetched: true,
-        isInprepatients: selected_record.patient?.iswaitingactivation
+        isInprepatients: selected_record.Patient?.ıswaitingactivation
       }, () => {
-        if (selected_record.patient?.iswaitingactivation) {
+        if (selected_record.Patient?.Iswaitingactivation) {
           Getpreregistrations()
         } else {
           GetPatients()
         }
       })
     }
+    Notification(Patientstocks.notifications, removePatientstocknotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
+    Notification(Patients.notifications, removePatientnotification)
   }
 
   render() {
-    const { Patientstocks, Patients, removePatientnotification, removePatientstocknotification, Departments, Stockdefines, removeStockdefinenotification, removeDepartmentnotification } = this.props
+    const { Patientstocks, Patients, Departments, Stockdefines} = this.props
     const { selected_record } = Patientstocks
-    if (Patientstocks.notifications && Patientstocks.notifications.length > 0) {
-      let msg = Patientstocks.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removePatientstocknotification()
-    }
-    if (Patients.notifications && Patients.notifications.length > 0) {
-      let msg = Patients.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removePatientnotification()
-    }
-    if (Departments.notifications && Departments.notifications.length > 0) {
-      let msg = Departments.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeDepartmentnotification()
-    }
-    if (Stockdefines.notifications && Stockdefines.notifications.length > 0) {
-      let msg = Stockdefines.notifications[0]
-      Popuputil(msg.type, msg.code, msg.description)
-      removeStockdefinenotification()
-    }
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
     const Stockdefineoptions = Stockdefines.list.map(define => {
-      return { key: define.concurrencyStamp, text: define.name, value: define.concurrencyStamp }
+      return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
     const Patientoptions = Patients.list.map(patient => {
-      return { key: patient.concurrencyStamp, text: `${patient?.patientdefine?.firstname} ${patient?.patientdefine?.lastname} - ${patient?.patientdefine?.countryID}`, value: patient.concurrencyStamp }
+      return { key: patient.Uuid, text: `${patient?.Patientdefine?.Firstname} ${patient?.Patientdefine?.Lastname} - ${patient?.Patientdefine?.CountryID}`, value: patient.Uuid }
     })
     return (
       Stockdefines.isLoading || Stockdefines.isDispatching || Patientstocks.isLoading || Patientstocks.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
@@ -119,11 +104,11 @@ export default class PatientstocksEdit extends Component {
               <Form.Group widths='equal'>
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Barkod No" placeholder="Barkod No" name="barcodeno" fluid defaultValue={selected_record.barcodeno} />
+                <Form.Input label="Barkod No" placeholder="Barkod No" name="Barcodeno" fluid defaultValue={selected_record.Barcodeno} />
               </Form.Group>
               <Form.Group widths='equal'>
                 <Form.Field>
-                  <Form.Input label="Skt" placeholder="Skt" name="skt" fluid type='date' defaultValue={this.getLocalDate(selected_record.skt)} />
+                  <Form.Input label="Skt" placeholder="Skt" name="Skt" fluid type='date' defaultValue={this.getLocalDate(selected_record.Skt)} />
                 </Form.Field>
                 <Form.Field>
                   <label className='text-[#000000de]'>Departmanlar</label>
@@ -146,29 +131,29 @@ export default class PatientstocksEdit extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { EditPurchaseorderstocks, history, fillPurchaseorderstocknotification, Purchaseorderstocks } = this.props
+    const { EditPatientstocks, history, fillPatientstocknotification, Patientstocks } = this.props
     const data = formToObject(e.target)
-    data.departmentid = this.state.selecteddepartments
-    data.stockdefineID = this.state.selectedstockdefine
-    data.patientID = this.state.selectedpatient
+    data.DepartmentID = this.state.selecteddepartments
+    data.StockdefineID = this.state.selectedstockdefine
+    data.PatientID = this.state.selectedpatient
 
     let errors = []
-    if (!data.departmentid || data.departmentid == '') {
+    if (!data.DepartmentID || data.DepartmentID === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Departman Seçili Değil' })
     }
-    if (!data.patientID || data.patientID == '') {
+    if (!data.PatientID || data.PatientID === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Hasta Seçili Değil' })
     }
-    if (!data.stockdefineID || data.stockdefineID == '') {
+    if (!data.StockdefineID || data.StockdefineID === '') {
       errors.push({ type: 'Error', code: 'Ürünler', description: 'Ürün Seçili Değil' })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
-        fillPurchaseorderstocknotification(error)
+        fillPatientstocknotification(error)
       })
     } else {
-      const response = { ...Purchaseorderstocks.selected_record, ...data }
-      EditPurchaseorderstocks(response, history)
+      const response = { ...Patientstocks.selected_record, ...data }
+      EditPatientstocks(response, history)
     }
   }
 

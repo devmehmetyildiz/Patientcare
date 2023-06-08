@@ -33,13 +33,13 @@ export default class Layout extends Component {
   }
 
   render() {
-    const { Profile, iconOnly, seticonOnly, history, logOut } = this.props
+    const { Profile, iconOnly, seticonOnly, history, logOut, isMobile } = this.props
 
     return (
-      <div className='bg-[#f2f2f3] dark:bg-Contentbg' >
-        <Navbar iconOnly={iconOnly} seticonOnly={seticonOnly} Profile={Profile} logOut={logOut} />
+      <div className='bg-[#f2f2f3] dark:bg-Contentbg ' >
+        <Navbar iconOnly={isMobile ? true : iconOnly} seticonOnly={seticonOnly} Profile={Profile} logOut={logOut} isMobile={isMobile} />
         <div className='flex flex-row justify-start items-start '>
-          <Sidebar history={history} iconOnly={iconOnly} seticonOnly={seticonOnly} Profile={Profile} />
+          <Sidebar history={history} iconOnly={isMobile ? true : iconOnly} seticonOnly={seticonOnly} Profile={Profile} isMobile={isMobile} />
           <div className={`mt-[58.61px] p-4 w-full min-w-[0px] contentWrapper`}>
             <div className='w-full '>
               <AppRoutes />

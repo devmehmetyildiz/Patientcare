@@ -9,7 +9,7 @@ const axios = require('axios')
 
 async function GetPatients(req, res, next) {
     try {
-        const patients = await db.patientModel.findAll({ where: { Isactive: true , Iswaitingactivation: false } })
+        const patients = await db.patientModel.findAll({ where: { Isactive: true, Iswaitingactivation: false } })
         if (patients && patients.length > 0) {
             let cases = []
             let departments = []
@@ -60,18 +60,19 @@ async function GetPatients(req, res, next) {
                         session_key: config.session.secret
                     }
                 })
-                await Promise.all([casesresponse, departmentsresponse, patienttypesresponse
-                    , costumertypesresponse, filesresponse, stocksresponse])
-                cases = casesresponse.data
-                departments = departmentsresponse.data
-                files = filesresponse.data
-                stocks = stocksresponse.data
-                patienttypes = patienttypesresponse.data
-                costumertypes = costumertypesresponse.data
+                const res = await Promise.all([casesresponse, departmentsresponse,
+                    patienttypesresponse, costumertypesresponse, filesresponse, stocksresponse])
+                cases = res[0].data
+                departments = res[1].data
+                patienttypes = res[2].data
+                costumertypes = res[3].data
+                files = res[4].data
+                stocks = res[5].data
                 for (const patient of patients) {
                     patient.Case = cases.find(u => u.Uuid === patient.CaseID)
                     patient.Department = departments.find(u => u.Uuid === patient.DeparmentID)
                     patient.Stocks = stocks.filter(u => u.PatientID === patient.Uuid)
+                    patient.Files = files.filter(u => u.ParentID === patient.Uuid)
                     patient.Patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient.PatientdefineID } })
                     if (patient.Patientdefine) {
                         patient.Patientdefine.Patienttype = patienttypes.find(u => u.Uuid === patient.Patientdefine.PatienttypeID)
@@ -141,18 +142,91 @@ async function GetPreregistrations(req, res, next) {
                         session_key: config.session.secret
                     }
                 })
-                await Promise.all([casesresponse, departmentsresponse, patienttypesresponse
-                    , costumertypesresponse, filesresponse, stocksresponse])
-                cases = casesresponse.data
-                departments = departmentsresponse.data
-                files = filesresponse.data
-                stocks = stocksresponse.data
-                patienttypes = patienttypesresponse.data
-                costumertypes = costumertypesresponse.data
+                const res = await Promise.all([casesresponse, departmentsresponse,
+                    patienttypesresponse, costumertypesresponse, filesresponse, stocksresponse])
+                cases = res[0].data
+                departments = res[1].data
+                patienttypes = res[2].data
+                costumertypes = res[3].data
+                files = res[4].data
+                stocks = res[5].data
                 for (const patient of patients) {
                     patient.Case = cases.find(u => u.Uuid === patient.CaseID)
                     patient.Department = departments.find(u => u.Uuid === patient.DeparmentID)
                     patient.Stocks = stocks.filter(u => u.PatientID === patient.Uuid)
+                    patient.Files = files.filter(u => u.ParentID === patient.Uuid)
+                    patient.Patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient.PatientdefineID } })
+                    if (patient.Patientdefine) {
+                        patient.Patientdefine.Patienttype = patienttypes.find(u => u.Uuid === patient.Patientdefine.PatienttypeID)
+                        patient.Patientdefine.Costumertype = costumertypes.find(u => u.Uuid === patient.Patientdefine.CostumertypeID)
+                    }
+                }
+            } catch (error) {
+                return next(requestErrorCatcher(error, 'Setting'))
+            }
+        }
+        res.status(200).json(patients)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function GetFullpatients(req, res, next) {
+    try {
+        const patients = await db.patientModel.findAll({ where: { Isactive: true } })
+        if (patients && patients.length > 0) {
+            let cases = []
+            let departments = []
+            let files = []
+            let patienttypes = []
+            let costumertypes = []
+            try {
+                const casesresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + `Cases`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const departmentsresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + `Departments`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const patienttypesresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + `Patienttypes`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const costumertypesresponse = axios({
+                    method: 'GET',
+                    url: config.services.Setting + `Costumertypes`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const filesresponse = axios({
+                    method: 'GET',
+                    url: config.services.File + `Files`,
+                    headers: {
+                        session_key: config.session.secret
+                    }
+                })
+                const res = await Promise.all([casesresponse, departmentsresponse,
+                    patienttypesresponse, costumertypesresponse, filesresponse])
+                cases = res[0].data
+                departments = res[1].data
+                patienttypes = res[2].data
+                costumertypes = res[3].data
+                files = res[4].data
+                for (const patient of patients) {
+                    patient.Case = cases.find(u => u.Uuid === patient.CaseID)
+                    patient.Department = departments.find(u => u.Uuid === patient.DeparmentID)
+                    patient.Files = files.filter(u => u.ParentID === patient.Uuid)
                     patient.Patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient.PatientdefineID } })
                     if (patient.Patientdefine) {
                         patient.Patientdefine.Patienttype = patienttypes.find(u => u.Uuid === patient.Patientdefine.PatienttypeID)
@@ -234,7 +308,7 @@ async function GetPatient(req, res, next) {
         patient.Case = casesresponse.data
         patient.Department = departmentsresponse.data
         patient.Files = filesresponse.data.filter(u => u.ParentID === patient.Uuid)
-        patient.Stocks = stocksresponse.filter(u => u.PatientID === patient.Uuid)
+        patient.Stocks = stocksresponse.data.filter(u => u.PatientID === patient.Uuid)
         res.status(200).json(patient)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -245,28 +319,49 @@ async function AddPatient(req, res, next) {
 
     let validationErrors = []
     const {
-        Firstname,
-        Lastname,
-        CountryID,
-        CostumertypeID,
-        PatienttypeID,
-        Patientdefine
+        Approvaldate,
+        Registerdate,
+        DepartmentID,
+        CaseID,
+        Patientdefine,
+        PatientdefineID
     } = req.body
 
-    if (!validator.isString(Firstname)) {
+    if (!validator.isString(Patientdefine.Firstname) && !validator.isUUID(Patientdefine.Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED, req.language)
     }
-    if (!validator.isString(Lastname)) {
+    if (!validator.isString(Patientdefine.Lastname) && !validator.isUUID(Patientdefine.Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED, req.language)
     }
-    if (!validator.isString(CountryID)) {
+    if (!validator.isString(Patientdefine.CountryID) && !validator.isUUID(Patientdefine.Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED, req.language)
     }
-    if (!validator.isString(CostumertypeID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED, req.language)
+    if (!validator.isString(Patientdefine.Fathername) && !validator.isUUID(Patientdefine.Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.FATHERNAME_REQUIRED, req.language)
     }
-    if (!validator.isString(PatienttypeID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED, req.language)
+    if (!validator.isString(Patientdefine.Mothername) && !validator.isUUID(Patientdefine.Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.MOTHERNAME_REQUIRED, req.language)
+    }
+    if (!validator.isString(Patientdefine.Placeofbirth) && !validator.isUUID(Patientdefine.Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PLACEOFBIRTH_REQUIRED, req.language)
+    }
+    if (!validator.isString(Patientdefine.Gender) && !validator.isUUID(Patientdefine.Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.GENDER_REQUIRED, req.language)
+    }
+    if (Object.keys(Patientdefine).length <= 0 && !validator.isUUID(PatientdefineID)) {
+        validationErrors.push(messages.ERROR.PATIENTDEFINE_NOT_FOUND, req.language)
+    }
+    if (!validator.isUUID(DepartmentID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+    }
+    if (!validator.isUUID(CaseID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
+    }
+    if (!validator.isISODate(Registerdate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.REGISTERDATE_REQUIRED, req.language)
+    }
+    if (!validator.isISODate(Approvaldate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.APPROVALDATE_REQUIRED, req.language)
     }
 
     if (validationErrors.length > 0) {
@@ -412,35 +507,36 @@ async function UpdatePatient(req, res, next) {
 
     let validationErrors = []
     const {
-        Firstname,
-        Lastname,
-        CountryID,
-        CostumertypeID,
-        PatienttypeID,
+        Approvaldate,
+        Registerdate,
+        DepartmentID,
+        CaseID,
+        PatientdefineID,
         Uuid
     } = req.body
 
-    if (!validator.isString(Firstname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED, req.language)
-    }
-    if (!validator.isString(Lastname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED, req.language)
-    }
-    if (!validator.isString(CountryID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED, req.language)
-    }
-    if (!validator.isString(CostumertypeID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED, req.language)
-    }
-    if (!validator.isString(PatienttypeID)) {
+    if (!validator.isUUID(PatientdefineID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED, req.language)
+    }
+    if (!validator.isUUID(DepartmentID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+    }
+    if (!validator.isUUID(CaseID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
+    }
+    if (!validator.isISODate(Registerdate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.REGISTERDATE_REQUIRED, req.language)
+    }
+    if (!validator.isISODate(Approvaldate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.APPROVALDATE_REQUIRED, req.language)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED, req.language)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTDEFINEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTID, req.language)
     }
+
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
@@ -507,6 +603,7 @@ async function DeletePatient(req, res, next) {
 module.exports = {
     GetPatients,
     Completeprepatient,
+    GetFullpatients,
     GetPreregistrations,
     GetPatient,
     AddPatient,

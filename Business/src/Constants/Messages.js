@@ -424,6 +424,12 @@ const messages = {
         tr: 'Tanımsız patientmovementid',
       }
     },
+    UNSUPPORTED_PATIENTID: {
+      code: 'UNSUPPORTED_PATIENTID', description: {
+        en: 'The patientid is unsupported',
+        tr: 'Tanımsız patientid',
+      }
+    },
    
   }
 

@@ -147,7 +147,7 @@ async function GetPatientstocks(req, res, next) {
                 })
                 const patientsresponse = await axios({
                     method: 'GET',
-                    url: config.services.Business + `Patients`,
+                    url: config.services.Business + `Patients/GetFullpatients`,
                     headers: {
                         session_key: config.session.secret
                     }
@@ -170,6 +170,7 @@ async function GetPatientstocks(req, res, next) {
                     patientstock.Stockdefine.Unit = units.find(u => u.Uuid === patientstock.Stockdefine.UnitID)
                     patientstock.Stockdefine.Department = departments.find(u => u.Uuid === patientstock.Stockdefine.DepartmentID)
                 }
+                patientstock.Department = departments.find(u => u.Uuid === patientstock.DepartmentID)
                 patientstock.Patient = patients.find(u => u.Uuid === patientstock.PatientID)
             }
         }
@@ -203,7 +204,7 @@ async function GetPatientstock(req, res, next) {
         try {
             patientstock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: patientstock.StockdefineID } })
             let amount = 0.0;
-            let movements = await db.purchaseorderstockModel.findAll({ where: { StockID: purchaseorderstock.Uuid } })
+            let movements = await db.patientstockmovementModel.findAll({ where: { StockID: patientstock.Uuid } })
             movements.forEach(movement => {
                 amount += (movement.Amount * movement.Movementtype);
             });
@@ -255,7 +256,6 @@ async function AddPatientstock(req, res, next) {
         DepartmentID,
         Skt,
         Barcodeno,
-        Info,
         Status,
         Order,
     } = req.body
@@ -266,7 +266,7 @@ async function AddPatientstock(req, res, next) {
     if (!validator.isBoolean(Isonusage)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISONUSAGE_REQUIRED, req.language)
     }
-    if (!validator.isNumber(Source)) {
+    if (!validator.isString(Source)) {
         validationErrors.push(messages.VALIDATION_ERROR.SOURCE_REQUIRED, req.language)
     }
     if (!validator.isUUID(StockdefineID)) {
@@ -280,9 +280,6 @@ async function AddPatientstock(req, res, next) {
     }
     if (!validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED, req.language)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
     }
     if (!validator.isNumber(Status)) {
         validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
@@ -332,13 +329,10 @@ async function UpdatePatientstock(req, res, next) {
     let validationErrors = []
     const {
         PatientID,
-        Isonusage,
-        Source,
         StockdefineID,
         DepartmentID,
         Skt,
         Barcodeno,
-        Info,
         Status,
         Order,
         Uuid
@@ -346,12 +340,6 @@ async function UpdatePatientstock(req, res, next) {
 
     if (!validator.isUUID(PatientID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED, req.language)
-    }
-    if (!validator.isBoolean(Isonusage)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISONUSAGE_REQUIRED, req.language)
-    }
-    if (!validator.isNumber(Source)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SOURCE_REQUIRED, req.language)
     }
     if (!validator.isUUID(StockdefineID)) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED, req.language)
@@ -364,9 +352,6 @@ async function UpdatePatientstock(req, res, next) {
     }
     if (!validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED, req.language)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
     }
     if (!validator.isNumber(Status)) {
         validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)

@@ -33,16 +33,16 @@ export default class Patientstockmovements extends Component {
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Ürün', accessor: 'stock.stockdefine.name', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Departman', accessor: 'stock.department.name', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Kullanıcı', accessor: 'username', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Hareket Zamanı', accessor: 'movementdate', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Hareket Türü', accessor: 'movementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
-      { Header: 'Hareket Miktarı', accessor: 'amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
-      { Header: 'Önceki Değer', accessor: 'prevvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
-      { Header: 'Yeni Değer', accessor: 'newvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Ürün', accessor: 'Stock.Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Departman', accessor: 'Stock.Department.Name', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Kullanıcı', accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Hareket Zamanı', accessor: 'Movementdate', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Hareket Türü', accessor: 'Movementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
+      { Header: 'Hareket Miktarı', accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
+      { Header: 'Önceki Değer', accessor: 'Prevvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
+      { Header: 'Yeni Değer', accessor: 'Newvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -66,8 +66,8 @@ export default class Patientstockmovements extends Component {
     };
 
     (list || []).forEach(item => {
-      item.watch = <Link to={`/Patientstockmovements/${item.concurrencyStamp}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
-      item.edit = <Link to={`/Patientstockmovements/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.watch = <Link to={`/Patientstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
+      item.edit = <Link to={`/Patientstockmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -112,7 +112,7 @@ export default class Patientstockmovements extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord?.stock?.stockdefine?.name} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord?.Stock?.Stockdefine?.Name} ` : null} </span>
                   ürününü hareketini silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>
@@ -126,7 +126,7 @@ export default class Patientstockmovements extends Component {
                 labelPosition='right'
                 icon='checkmark'
                 onClick={() => {
-                  DeletePatientstockmovements(this.state.selectedrecord.concurrencyStamp)
+                  DeletePatientstockmovements(this.state.selectedrecord.Uuid)
                   this.setState({ open: false, selectedrecord: {} })
                 }}
                 positive
@@ -142,7 +142,7 @@ export default class Patientstockmovements extends Component {
   }
 
   amountCellhandler = (col) => {
-    return <p>{`${col.value}  ${col.row.original.stock.stockdefine.unit.name}`}</p>
+    return <p>{`${col.value}  ${col.row.original.Stock?.Stockdefine?.Unit?.Name}`}</p>
   }
 
   movementCellhandler = (col) => {

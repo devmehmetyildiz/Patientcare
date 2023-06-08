@@ -6,7 +6,7 @@ import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Popup from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 
 export default class Patientstocks extends Component {
   constructor(props) {
@@ -22,19 +22,24 @@ export default class Patientstocks extends Component {
     GetPatientstocks()
   }
 
+  componentDidUpdate() {
+    const { Patientstocks, removePatientstocknotification } = this.props
+    Notification(Patientstocks.notifications, removePatientstocknotification)
+  }
+
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Hasta Bilgisi', accessor: 'patient.patientdefine.firstname', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.patientdefineCellhandler(col) },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Ürün', accessor: 'stockdefine.name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Departman', accessor: 'department.name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Skt', accessor: 'skt', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Barkod No', accessor: 'barcodeno', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Aktüel Miktar', accessor: 'amount', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Açıklama', accessor: 'info', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kaynak', accessor: 'source', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Hasta Bilgisi', accessor: 'PatientPatientdefineFirstname', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.patientdefineCellhandler(col) },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Ürün', accessor: 'Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Departman', accessor: 'Department.Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Skt', accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Barkod No', accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Aktüel Miktar', accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Açıklama', accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Kaynak', accessor: 'Source', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -43,16 +48,11 @@ export default class Patientstocks extends Component {
       { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
-    const { Patientstocks, DeletePatientstocks, removePatientstocknotification, Profile } = this.props
-    const { notifications, list, isLoading, isDispatching } = Patientstocks
-    if (notifications && notifications.length > 0) {
-      let msg = notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removePatientstocknotification()
-    }
+    const { Patientstocks, DeletePatientstocks, Profile } = this.props
+    const { list, isLoading, isDispatching } = Patientstocks
 
     const metaKey = "Patientstocks"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -63,8 +63,8 @@ export default class Patientstocks extends Component {
     };
 
     (list || []).forEach(item => {
-      item.watch = <Link to={`/Patientstockmovements/${item.concurrencyStamp}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
-      item.edit = <Link to={`/Patientstocks/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.watch = <Link to={`/Patientstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
+      item.edit = <Link to={`/Patientstocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -109,7 +109,7 @@ export default class Patientstocks extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.stockdefine.name} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Stockdefine.Name} ` : null} </span>
                   ürününü silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>
@@ -139,12 +139,11 @@ export default class Patientstocks extends Component {
   }
 
   patientdefineCellhandler = (col) => {
-    if (col.value) {
       let value = col?.row?.original
       if (value) {
-        let define = value?.patient?.patientdefine
+        let define = value?.Patient?.Patientdefine
         if (define) {
-          return `${define.firstname} ${define.lastname} - ${define.countryID}`
+          return `${define.Firstname} ${define.Lastname} - ${define.CountryID}`
         } else {
           return "Hasta Kaydı Bulunamadı"
         }
@@ -152,6 +151,4 @@ export default class Patientstocks extends Component {
         return "Hata"
       }
     }
-  }
-
 }

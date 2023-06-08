@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form,  } from 'semantic-ui-react'
-import { Breadcrumb, Button,  Header } from 'semantic-ui-react'
+import { Divider, Dropdown, Form, } from 'semantic-ui-react'
+import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
@@ -32,46 +32,46 @@ export default class PreregistrationsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Cases, Patientdefines, Patients } = this.props
+    const { Departments, Cases, Patientdefines, Patients,
+      removeDepartmentnotification, removeCasenotification,
+      removePatientnotification, removePatientdefinenotification } = this.props
     const { selected_record, isLoading } = Patients
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0 &&
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
       Departments.list.length > 0 && !Departments.isLoading &&
       Cases.list.length > 0 && !Cases.isLoading &&
       Patientdefines.list.length > 0 && !Patientdefines.isLoading &&
       !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true,
-        selectedCase: selected_record.caseId,
-        selectedDepartment: selected_record.departmentid,
-        selectedPatientdefine: selected_record.patientdefineID
+        selectedCase: selected_record.CaseID,
+        selectedDepartment: selected_record.DepartmentID,
+        selectedPatientdefine: selected_record.PatientdefineID
       })
     }
+    Notification(Patients.notifications, removePatientnotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Cases.notifications, removeCasenotification)
+    Notification(Patientdefines.notifications, removePatientdefinenotification)
   }
 
 
   render() {
 
-    const { Patientdefines, Patients, Departments, Cases, removePatientnotification, removePatientdefinenotification
-      , removeDepartmentnotification, removeCasenotification } = this.props
+    const { Patientdefines, Patients, Departments, Cases } = this.props
     const { isLoading, isDispatching, selected_record } = Patients
 
-    Notification(Patients.notifications, removePatientnotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Cases.notifications, removeCasenotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
-
-
     const Patientdefineoptions = Patientdefines.list.map(define => {
-      return { key: define.concurrencyStamp, text: `${define.firstname} ${define.lastname}-${define.countryID}`, value: define.concurrencyStamp }
+      return { key: define.Uuid, text: `${define.Firstname} ${define.Lastname}-${define.CountryID}`, value: define.Uuid }
     })
 
     const Departmentoptions = Departments.list.map(department => {
-      return { key: department.concurrencyStamp, text: department.name, value: department.concurrencyStamp }
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const Casesoptions = Cases.list.map(cases => {
-      return { key: cases.concurrencyStamp, text: cases.name, value: cases.concurrencyStamp }
+    const Casesoptions = Cases.list.filter(u => u.Casestatus !== 1).map(cases => {
+      return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
     })
+
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
@@ -106,8 +106,8 @@ export default class PreregistrationsEdit extends Component {
                 </Form.Field>
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Input defaultValue={selected_record.registerdate && selected_record.registerdate.split('T')[0]} label="Kayıt Tarihi" placeholder="Kayıt Tarihi" name="registerdate" type='date' fluid />
-                <Form.Input defaultValue={selected_record.registerdate && selected_record.registerdate.split('T')[0]} label="Kuruma Giriş Tarihi" placeholder="Kuruma Giriş Tarihi" name="approvaldate" type='date' fluid />
+                <Form.Input defaultValue={selected_record.Registerdate && selected_record.Registerdate.split('T')[0]} label="Kayıt Tarihi" placeholder="Kayıt Tarihi" name="Registerdate" type='date' fluid />
+                <Form.Input defaultValue={selected_record.Registerdate && selected_record.Registerdate.split('T')[0]} label="Kuruma Giriş Tarihi" placeholder="Kuruma Giriş Tarihi" name="Approvaldate" type='date' fluid />
               </Form.Group>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Preregistrations">
@@ -126,16 +126,16 @@ export default class PreregistrationsEdit extends Component {
 
     const { fillPatientnotification, Patients, EditPatients, history } = this.props
     const data = formToObject(e.target)
-    if (data.registerdate === '' || data.registerdate === undefined) {
-      data.registerdate = null
+    if (data.Registerdate === '' || data.Registerdate === undefined) {
+      data.Registerdate = null
     }
-    if (data.approvaldate === '' || data.approvaldate === undefined) {
-      data.approvaldate = null
+    if (data.Approvaldate === '' || data.Approvaldate === undefined) {
+      data.Approvaldate = null
     }
 
-    data.caseId = this.state.selectedCase
-    data.departmentid = this.state.selectedDepartment
-    data.patientdefineID = this.state.selectedPatientdefine
+    data.CaseID = this.state.selectedCase
+    data.DepartmentID = this.state.selectedDepartment
+    data.PatientdefineID = this.state.selectedPatientdefine
 
     let errors = []
     /* if (!data.name || data.name == '') {

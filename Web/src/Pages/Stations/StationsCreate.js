@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Link, } from 'react-router-dom'
-import { Divider, Form } from 'semantic-ui-react'
+import { Divider, Form, Input } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
+import FormInput from '../../Utils/FormInput'
 
 export default class StationsCreate extends Component {
 
@@ -24,7 +25,7 @@ export default class StationsCreate extends Component {
 
     const { Stations } = this.props
     const { isLoading, isDispatching } = Stations
-
+    const { inputvalues } = this.state
 
 
     return (
@@ -43,13 +44,10 @@ export default class StationsCreate extends Component {
           </div>
           <Divider className='w-full  h-[1px]' />
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={(e) => {
-              e.preventDefault()
-              this.handleSubmit(e)
-            }}>
+            <Form className='' onSubmit={(e) => { this.handleSubmit(e) }}>
               <Form.Field>
                 <label className='text-[#000000de]'>İstasyon Adı</label>
-                <Form.Input defaulValue={this.getState('Name')} placeholder="İstasyon Adı" name="Name" fluid />
+                <FormInput  placeholder="İstasyon Adı" name="Name"  />
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Stations">
@@ -65,6 +63,7 @@ export default class StationsCreate extends Component {
   }
 
   handleSubmit = (e) => {
+    e.preventDefault()
 
     const { AddStations, history, fillStationnotification } = this.props
 
@@ -79,13 +78,9 @@ export default class StationsCreate extends Component {
         fillStationnotification(error)
       })
     } else {
+      this.setState({ inputvalues: data })
       AddStations({ ...data }, history)
     }
-  }
-
-  getState = (name) => {
-    const { Stations } = this.props
-    return Stations.selected_record && Stations.selected_record[name]
   }
 }
 

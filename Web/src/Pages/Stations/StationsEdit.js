@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Divider, Form, Header } from 'semantic-ui-react'
-import Popup from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
+import FormInput from '../../Utils/FormInput'
 
 export default class StationsEdit extends Component {
   constructor(props) {
@@ -23,16 +24,22 @@ export default class StationsEdit extends Component {
     }
   }
 
+  componentDidUpdate() {
+    const { Stations, removeStationnotification } = this.props
+    const { selected_record, isLoading } = Stations
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
+      this.setState({
+        isDatafetched: true,
+      })
+    }
+    Notification(Stations, removeStationnotification)
+  }
 
   render() {
 
-    const { Stations, removeStationnotification } = this.props
-    const { notifications, selected_record, isLoading, isDispatching } = Stations
-    if (notifications && notifications.length > 0) {
-      let msg = notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeStationnotification()
-    }
+    const { Stations } = this.props
+    const { isLoading, isDispatching } = Stations
+
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
@@ -50,10 +57,10 @@ export default class StationsEdit extends Component {
           </div>
           <Divider className='w-full  h-[1px]' />
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+            <Form onkeypress={() => { alert("hop") }} className='' onSubmit={this.handleSubmit}>
               <Form.Field>
                 <label className='text-[#000000de]'>İstasyon Adı</label>
-                <Form.Input placeholder="İstasyon Adı" name="Name" fluid defaultValue={this.getState('Name')} />
+                <FormInput placeholder="İstasyon Adı" name="Name" />
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Stations">
@@ -86,8 +93,5 @@ export default class StationsEdit extends Component {
 
   }
 
-  getState = (name) => {
-    const { Stations } = this.props
-    return Stations.selected_record && Stations.selected_record[name]
-  }
+
 }

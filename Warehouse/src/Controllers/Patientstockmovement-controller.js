@@ -38,6 +38,7 @@ async function GetPatientstockmovements(req, res, next) {
             patientstockmovement.Stock = await db.patientstockModel.findOne({ where: { Uuid: patientstockmovement.StockID } })
             if (patientstockmovement.Stock) {
                 patientstockmovement.Stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: patientstockmovement.Stock.StockdefineID } })
+                patientstockmovement.Stock.Department = departments.find(u => u.Uuid === patientstockmovement.Stock.DepartmentID)
                 if (patientstockmovement.Stock.Stockdefine) {
                     patientstockmovement.Stock.Stockdefine.Department = departments.find(u => u.Uuid === patientstockmovement.Stock.Stockdefine.DepartmentID)
                     patientstockmovement.Stock.Stockdefine.Unit = units.find(u => u.Uuid === patientstockmovement.Stock.Stockdefine.UnitID)

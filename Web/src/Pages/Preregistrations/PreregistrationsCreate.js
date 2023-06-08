@@ -105,7 +105,7 @@ export default class PreregistrationsCreate extends Component {
 
                         />
                       </label>
-                      <Form.Input placeholder="Hasta Adı" name="firstname" fluid />
+                      <Form.Input placeholder="Hasta Adı" name="Firstname" fluid />
                     </FormField>
                     <Form.Input label="Hasta Soyadı" placeholder="Hasta Soyadı" name="Lastname" fluid />
                     <Form.Input label="Baba Adı" placeholder="Baba Adı" name="Fathername" fluid />
@@ -154,96 +154,48 @@ export default class PreregistrationsCreate extends Component {
     const { Patientdefines, fillPatientnotification, AddPatients, history } = this.props
     const { selectedCase, selectedDepartment, selectedGenderstatus, selectedPatientdefine } = this.state
     const data = formToObject(e.target)
-    if (data.registerdate === '' || data.registerdate === undefined) {
-      data.registerdate = null
+    if (data.Registerdate === '' || data.Registerdate === undefined) {
+      data.Registerdate = null
     }
-    if (data.approvaldate === '' || data.approvaldate === undefined) {
-      data.approvaldate = null
+    if (data.Approvaldate === '' || data.Approvaldate === undefined) {
+      data.Approvaldate = null
     }
     const response = {
-      id: 0,
-      concurrencyStamp: null,
-      createdUser: null,
-      updatedUser: null,
-      deleteUser: null,
-      createTime: null,
-      updateTime: null,
-      deleteTime: null,
-      isActive: true,
-      stocks: [],
-      patientstatus: 0,
-      files: [],
-      releasedate: null,
-      roomnumber: 0,
-      floornumber: 0,
-      bednumber: 0,
-      departmentname: "",
-      iswaitingactivation: true,
-      imageID: "",
-      department: {},
-      case: {},
-      patientdefineID: "",
-      patientdefine: {},
-      approvaldate: data.approvaldate,
-      registerdate: data.registerdate,
-      departmentid: selectedDepartment,
-      checkperiodID: "",
-      checkperiod: {},
-      todogroupdefineID: "",
-      todogroupdefine: {},
-      caseId: selectedCase
+      Stocks: [],
+      Patientstatus: 0,
+      Files: [],
+      Releasedate: null,
+      Roomnumber: 0,
+      Floornumber: 0,
+      Bednumber: 0,
+      Iswaitingactivation: true,
+      ImageID: "",
+      PatientdefineID: "",
+      Patientdefine: {},
+      Approvaldate: data.Approvaldate,
+      Registerdate: data.Registerdate,
+      DepartmentID: selectedDepartment,
+      CheckperiodID: "",
+      TodogroupdefineID: "",
+      CaseID: selectedCase
     }
 
     if (this.state.newRegister) {
-      response.patientdefine = {
-        countryID: data.countryID,
-        dateofbirth: data.dateofbirth,
-        fathername: data.fathername,
-        firstname: data.firstname,
-        lastname: data.lastname,
-        mothername: data.mothername,
-        placeofbirth: data.placeofbirth,
-        gender: selectedGenderstatus,
-        Motherbiologicalaffinity: "",
-        Ismotheralive: false,
-        Fatherbiologicalaffinity: "",
-        isfatheralive: false,
-        dateofdeath: null,
-        placeofdeath: "",
-        deathinfo: "",
-        marialstatus: "",
-        criminalrecord: "",
-        childnumber: 0,
-        disabledchildnumber: 0,
-        siblingstatus: "",
-        sgkstatus: "",
-        budgetstatus: "",
-        town: "",
-        city: "",
-        address1: "",
-        address2: "",
-        country: "",
-        contactnumber1: "",
-        contactnumber2: "",
-        contactname1: "",
-        contactname2: "",
-        costumertypeid: "",
-        patienttypeid: "",
-        costumertype: {},
-        patienttype: {},
-        id: 0,
-        concurrencyStamp: null,
-        createdUser: null,
-        updatedUser: null,
-        deleteUser: null,
-        createTime: null,
-        updateTime: null,
-        deleteTime: null,
-        isActive: true,
+      response.Patientdefine = {
+        CountryID: data.CountryID,
+        Dateofbirth: data.Dateofbirth,
+        Fathername: data.Fathername,
+        Firstname: data.Firstname,
+        Lastname: data.Lastname,
+        Mothername: data.Mothername,
+        Placeofbirth: data.Placeofbirth,
+        Gender: selectedGenderstatus,
+        CostumertypeID: "",
+        PatienttypeID: "",
       }
     } else {
-      response.patientdefine = Patientdefines.list.find(u => u.concurrencyStamp === selectedPatientdefine)
-      response.patientdefineID = response.patientdefine.concurrencyStamp
+      response.Patientdefine = Patientdefines.list.find(u => u.Uuid === selectedPatientdefine)
+      response.PatientdefineID = response.Patientdefine.Uuid
     }
 
     let errors = []
@@ -255,6 +207,7 @@ export default class PreregistrationsCreate extends Component {
         fillPatientnotification(error)
       })
     } else {
+      console.log('response: ', response);
       AddPatients(response, history, "/Preregistrations")
     }
   }

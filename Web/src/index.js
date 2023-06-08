@@ -1,5 +1,5 @@
 import React from "react";
-import  { createRoot } from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
@@ -10,6 +10,7 @@ import thunk from 'redux-thunk'
 import TimerMiddleware from './Utils/TimerMiddleware';
 import 'semantic-ui-css/semantic.min.css'
 import AuthProvider from "./Provider/AuthProvider";
+import FormProvider from "./Provider/FormProvider";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk, TimerMiddleware)))
@@ -23,11 +24,13 @@ const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk, T
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(<AuthProvider>
-  <Provider store={store}>
-    <BrowserRouter >
-      <App />
-    </BrowserRouter>
-  </Provider>
+  <FormProvider>
+    <Provider store={store}>
+      <BrowserRouter >
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </FormProvider>
 </AuthProvider>);
 
 // If you want to start measuring performance in your app, pass a function
