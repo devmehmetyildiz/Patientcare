@@ -5,7 +5,8 @@ import { GetPatients, removePatientnotification } from "../../Redux/Actions/Pati
 
 const mapStateToProps = (state) => ({
     Patientmovements: state.Patientmovements,
-    Patients: state.Patients
+    Patients: state.Patients,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {

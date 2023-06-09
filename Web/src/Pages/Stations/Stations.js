@@ -4,17 +4,18 @@ import { Divider, Icon, Modal } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
-import Popup from '../../Utils/Popup'
+import Notification from '../../Utils/Notification'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
+import Literals from './Literals'
 
 export default class Stations extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      open:false,
-      selectedrecord:{}
+      open: false,
+      selectedrecord: {}
     }
   }
 
@@ -23,27 +24,27 @@ export default class Stations extends Component {
     GetStations()
   }
 
+  componentDidUpdate() {
+    const { Stations, removeStationnotification } = this.props
+    Notification(Stations.notifications, removeStationnotification)
+  }
+
   render() {
 
-    const Columns = [
-      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'İsim', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleme Zamanı', accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
-     
+    const { Stations, DeleteStations, Profile } = this.props
+    const { list, isLoading, isDispatching } = Stations
 
-    const { Stations, DeleteStations, removeStationnotification,Profile } = this.props
-    const { notifications, list, isLoading, isDispatching } = Stations
-    if (notifications && notifications.length > 0) {
-      let msg = notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeStationnotification()
-    }
+    const Columns = [
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+
 
     const metaKey = "Stations"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
@@ -71,14 +72,14 @@ export default class Stations extends Component {
                   <GridColumn width={8} className="">
                     <Breadcrumb size='big'>
                       <Link to={"/Stations"}>
-                        <Breadcrumb.Section>İstasyonlar</Breadcrumb.Section>
+                        <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                       </Link>
                     </Breadcrumb>
                   </GridColumn>
                   <GridColumn width={8} >
                     <Link to={"/Stations/Create"}>
                       <Button color='blue' floated='right' className='list-right-green-button'>
-                        Oluştur
+                        {Literals.Button.Create[Profile.Language]}
                       </Button>
                     </Link>
                     <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
@@ -90,7 +91,7 @@ export default class Stations extends Component {
             {list.length > 0 ?
               <div className='w-full mx-auto '>
                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />
-              </div> : <NoDataScreen message="Tanımlı İstasyon Yok" />
+              </div> : <NoDataScreen message={Literals.Messages.Nostationfind[Profile.Language]} />
             }
           </div>
           <Modal
@@ -98,21 +99,21 @@ export default class Stations extends Component {
             onOpen={() => this.setState({ open: true })}
             open={this.state.open}
           >
-            <Modal.Header>İsyasyon Silme</Modal.Header>
+            <Modal.Header>{Literals.Page.Pagedeleteheader[Profile.Language]}</Modal.Header>
             <Modal.Content image>
               <Modal.Description>
                 <p>
                   <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
-                  istasyonunu silmek istediğinize emin misiniz?
+                  {Literals.Messages.Deletestationcheck[Profile.Language]}
                 </p>
               </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
               <Button color='black' onClick={() => this.setState({ open: false, selectedrecord: {} })}>
-                Vazgeç
+                {Literals.Button.Giveup[Profile.Language]}
               </Button>
               <Button
-                content="Sil"
+                content={Literals.Button.Delete[Profile.Language]}
                 labelPosition='right'
                 icon='checkmark'
                 onClick={() => {

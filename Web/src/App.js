@@ -41,9 +41,6 @@ class App extends Component {
     }
   }
 
-  componentWillMount() {
-    this.mediaQuery.removeEventListener('change', this.handleMediaQueryChange);
-  }
 
   handleMediaQueryChange = (event) => {
     this.setState({ isMobile: event.matches });

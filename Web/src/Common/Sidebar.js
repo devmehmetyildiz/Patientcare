@@ -131,7 +131,7 @@ export function Sidebar(props) {
                                 {item.items ? <IoIosArrowDown className='text-md mr-4 text-TextColor ' /> : null}
                             </div>
                             {!iconOnly ?
-                                <Collapse isOpened={item.isOpened}>
+                                <Collapse isOpened={item.isOpened ? item.isOpened : false}>
                                     {(item.items || []).map((subitem, index) => {
                                         return <h1 key={index + index} onAuxClick={() => { window.open(subitem.url, "_blank") }} onClick={() => { props.history.push(subitem.url) }} className=' m-0 cursor-pointer hover:text-[#2b7694] whitespace-nowrap dark:hover:text-white text-TextColor text-sm w-full px-8 py-1' > {subitem.subtitle}</h1>
                                     })}
@@ -142,7 +142,7 @@ export function Sidebar(props) {
                                     }}>
                                     {item.url ? <h3 className='m-0 cursor-pointer hover:text-[#2b7694] dark:hover:text-white text-TextColor font-bold font-Common'>{item.title}</h3> : <h3 className='text-TextColor font-bold font-Common'>{item.title}</h3>}
                                     <div className='h-full overflow-auto'>
-                                        <Collapse className='overflow-auto' isOpened={settedPage === item.id ? true : item.isOpened}>
+                                        <Collapse  isOpened={settedPage === item.id ? true : (item.isOpened ? item.isOpened : false)}>
                                             {(item.items || []).map((subitem, index) => {
                                                 return <h1
                                                     key={index + index + index}

@@ -5,13 +5,14 @@ import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import FormInput from '../../Utils/FormInput'
-
+import { FormContext } from '../../Provider/FormProvider'
+import validator from '../../Utils/Validator'
+import Literals from './Literals'
 export default class StationsEdit extends Component {
   constructor(props) {
     super(props)
-    const isDatafetched = false
     this.state = {
-      isDatafetched
+      isDatafetched: false
     }
   }
 
@@ -27,20 +28,21 @@ export default class StationsEdit extends Component {
   componentDidUpdate() {
     const { Stations, removeStationnotification } = this.props
     const { selected_record, isLoading } = Stations
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
+    if (validator.isObject(selected_record) && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        isDatafetched: true,
+        isDatafetched: true
       })
+      this.context.setFormstates(selected_record)
     }
-    Notification(Stations, removeStationnotification)
+    Notification(Stations.notifications, removeStationnotification)
   }
 
   render() {
 
-    const { Stations } = this.props
+    const { Stations, Profile } = this.props
     const { isLoading, isDispatching } = Stations
-
-
+    
+    
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]' >
@@ -48,25 +50,24 @@ export default class StationsEdit extends Component {
             <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
               <Breadcrumb size='big'>
                 <Link to={"/Stations"}>
-                  <Breadcrumb.Section>İstasyonlar</Breadcrumb.Section>
+                  <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                 </Link>
                 <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Güncelle</Breadcrumb.Section>
+                <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
               </Breadcrumb>
             </Header>
           </div>
           <Divider className='w-full  h-[1px]' />
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form onkeypress={() => { alert("hop") }} className='' onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Field>
-                <label className='text-[#000000de]'>İstasyon Adı</label>
-                <FormInput placeholder="İstasyon Adı" name="Name" />
+                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" required />
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Stations">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Güncelle</Button>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
               </div>
             </Form>
           </div>
@@ -77,11 +78,11 @@ export default class StationsEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { EditStations, history, fillStationnotification, Stations } = this.props
+    const { EditStations, history, fillStationnotification, Stations,Profile } = this.props
     const data = formToObject(e.target)
     let errors = []
-    if (!data.Name || data.Name === '') {
-      errors.push({ type: 'Error', code: 'Stations', description: 'İsim Boş Olamaz' })
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
@@ -92,6 +93,5 @@ export default class StationsEdit extends Component {
     }
 
   }
-
-
 }
+StationsEdit.contextType = FormContext

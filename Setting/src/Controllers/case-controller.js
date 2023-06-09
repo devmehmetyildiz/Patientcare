@@ -35,7 +35,7 @@ async function GetCompleteCase(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
         }
         if (!casedata.Isactive) {
-            return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE])
         }
         let departmentuuids = await db.casedepartmentModel.findAll({
             where: {
@@ -61,7 +61,7 @@ async function GetDeactivateCase(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
         }
         if (!casedata.Isactive) {
-            return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE])
         }
         let departmentuuids = await db.casedepartmentModel.findAll({
             where: {
@@ -95,10 +95,10 @@ async function GetCase(req, res, next) {
     try {
         const casedata = await db.caseModel.findOne({ where: { Uuid: req.params.caseId } });
         if (!casedata) {
-            return createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language)
+            return createNotfounderror([messages.ERROR.CASE_NOT_FOUND])
         }
         if (!casedata.Isactive) {
-            return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE])
         }
         let departmentuuids = await db.casedepartmentModel.findAll({
             where: {
@@ -131,19 +131,19 @@ async function AddCase(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(Shortname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHORTNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SHORTNAME_REQUIRED)
     }
     if (!validator.isString(Casecolor)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isNumber(CaseStatus)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASECOLOR_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASECOLOR_REQUIRED)
     }
     if (!validator.isArray(Departments)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -207,25 +207,25 @@ async function UpdateCase(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(Shortname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHORTNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SHORTNAME_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID)
     }
     if (!validator.isString(Casecolor)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isNumber(CaseStatus)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASECOLOR_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASECOLOR_REQUIRED)
     }
     if (!validator.isArray(Departments)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -288,10 +288,10 @@ async function DeleteCase(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

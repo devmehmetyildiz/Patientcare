@@ -16,13 +16,13 @@ function Login(req, res, next) {
     let grantType = req.body.grant_type || req.body.grantType || req.query.grant_type || req.query.grantType
 
     if (!grantType) {
-        validationErrors.push(messages.VALIDATION_ERROR.GRANT_TYPE_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.GRANTTYPE_REQUIRED)
     }
 
     switch (grantType) {
         case 'password': return responseToGetTokenByGrantPassword(req, res, next)
         case 'refresh_token': return responseToGetTokenByRefreshToken(req, res, next)
-        default: validationErrors.push(messages.VALIDATION_ERROR.INVALID_GRANT_TYPE)
+        default: validationErrors.push(messages.VALIDATION_ERROR.INVALID_GRANTTYPE)
     }
 
     if (validationErrors.length > 0) {

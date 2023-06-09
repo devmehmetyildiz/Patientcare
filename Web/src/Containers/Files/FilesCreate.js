@@ -3,7 +3,8 @@ import FilesCreate from '../../Pages/Files/FilesCreate'
 import { AddFiles, removeFilenotification, fillFilenotification } from '../../Redux/Actions/FileAction'
 
 const mapStateToProps = (state) => ({
-    Files: state.Files
+    Files: state.Files,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {  AddFiles, removeFilenotification, fillFilenotification }

@@ -43,10 +43,10 @@ async function GetCostumertype(req, res, next) {
     try {
         const costumertpe = await db.costumertypeModel.findOne({ where: { Uuid: req.params.costumertypeId } });
         if (!costumertpe) {
-            return createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND], req.language)
+            return createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND])
         }
         if (!costumertpe.Isactive) {
-            return createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_ACTIVE])
         }
         let departmentuuids = await db.costumertypedepartmentModel.findAll({
             where: {
@@ -73,10 +73,10 @@ async function AddCostumertype(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isArray(Departments)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -137,16 +137,16 @@ async function UpdateCostumertype(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_COSTUMERTYPEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_COSTUMERTYPEID)
     }
     if (!validator.isArray(Departments)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -209,10 +209,10 @@ async function DeleteCostumertype(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_COSTUMERTYPEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_COSTUMERTYPEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

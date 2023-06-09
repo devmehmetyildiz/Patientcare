@@ -70,19 +70,19 @@ async function AddTododefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
     }
     if (!validator.isBoolean(IsRequired)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISREQUIRED_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISREQUIRED_REQUIRED)
     }
     if (!validator.isBoolean(IsNeedactivation)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISNEEDACTIVATION_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISNEEDACTIVATION_REQUIRED)
     }
     if (!validator.isArray(Periods)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -146,25 +146,25 @@ async function UpdateTododefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
     }
     if (!validator.isBoolean(IsRequired)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISREQUIRED_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISREQUIRED_REQUIRED)
     }
     if (!validator.isBoolean(IsNeedactivation)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISNEEDACTIVATION_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISNEEDACTIVATION_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID)
     }
     if (!validator.isArray(Periods)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -227,10 +227,10 @@ async function DeleteTododefine(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

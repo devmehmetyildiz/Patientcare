@@ -3,7 +3,8 @@ import StationsCreate from '../../Pages/Stations/StationsCreate'
 import { AddStations, removeStationnotification, fillStationnotification } from '../../Redux/Actions/StationAction'
 
 const mapStateToProps = (state) => ({
-    Stations: state.Stations
+    Stations: state.Stations,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = { AddStations, removeStationnotification, fillStationnotification }

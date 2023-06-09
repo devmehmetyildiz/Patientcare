@@ -84,16 +84,16 @@ async function AddPrinttemplate(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(Printtemplate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATE_REQUIRED)
     }
     if (!validator.isString(Valuekey)) {
-        validationErrors.push(messages.VALIDATION_ERROR.VALUEKEY_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.VALUEKEY_REQUIRED)
     }
     if (!validator.isString(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -133,22 +133,22 @@ async function UpdatePrinttemplate(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(Printtemplate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATE_REQUIRED)
     }
     if (!validator.isString(Valuekey)) {
-        validationErrors.push(messages.VALIDATION_ERROR.VALUEKEY_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.VALUEKEY_REQUIRED)
     }
     if (!validator.isString(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATEID_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PRINTTEMPLATEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PRINTTEMPLATEID)
     }
 
     if (validationErrors.length > 0) {
@@ -187,10 +187,10 @@ async function DeletePrinttemplate(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PRINTTEMPLATEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PRINTTEMPLATEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

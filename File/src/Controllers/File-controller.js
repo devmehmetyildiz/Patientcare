@@ -253,10 +253,10 @@ async function DeleteFile(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.FILEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.FILEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_FILEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_FILEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

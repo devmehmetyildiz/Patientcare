@@ -4,7 +4,8 @@ import { AddPeriods, removePeriodnotification, fillPeriodnotification } from '..
 
 
 const mapStateToProps = (state) => ({
-    Periods: state.Periods
+    Periods: state.Periods,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {

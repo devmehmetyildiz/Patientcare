@@ -1,20 +1,15 @@
 import React, { Component } from 'react'
 import { Link, } from 'react-router-dom'
-import { Divider, Form, Input } from 'semantic-ui-react'
+import { Divider, Form } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
 import FormInput from '../../Utils/FormInput'
-
+import validator from '../../Utils/Validator'
+import Literals from './Literals'
 export default class StationsCreate extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      inputvalues: {}
-    }
-  }
 
   componentDidUpdate() {
     const { removeStationnotification, Stations } = this.props
@@ -23,10 +18,8 @@ export default class StationsCreate extends Component {
 
   render() {
 
-    const { Stations } = this.props
+    const { Stations,Profile } = this.props
     const { isLoading, isDispatching } = Stations
-    const { inputvalues } = this.state
-
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
@@ -35,10 +28,10 @@ export default class StationsCreate extends Component {
             <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
               <Breadcrumb size='big'>
                 <Link to={"/Stations"}>
-                  <Breadcrumb.Section >İstasyonlar</Breadcrumb.Section>
+                  <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                 </Link>
                 <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
+                <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
               </Breadcrumb>
             </Header>
           </div>
@@ -46,14 +39,13 @@ export default class StationsCreate extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={(e) => { this.handleSubmit(e) }}>
               <Form.Field>
-                <label className='text-[#000000de]'>İstasyon Adı</label>
-                <FormInput  placeholder="İstasyon Adı" name="Name"  />
+                <FormInput  placeholder={Literals.Columns.Name[Profile.Language]} name="Name"  required/>
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Stations">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue' >Oluştur</Button>
+                <Button floated="right" type='submit' color='blue' >{Literals.Button.Create[Profile.Language]}</Button>
               </div>
             </Form>
           </div>
@@ -65,13 +57,13 @@ export default class StationsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddStations, history, fillStationnotification } = this.props
+    const { AddStations, history, fillStationnotification,Profile } = this.props
 
     const data = { ...formToObject(e.target) }
 
     let errors = []
-    if (!data.Name || data.Name === '') {
-      errors.push({ type: 'Error', code: 'Stations', description: 'İsim Boş Olamaz' })
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

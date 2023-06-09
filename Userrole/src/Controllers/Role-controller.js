@@ -43,10 +43,10 @@ async function GetRole(req, res, next) {
     try {
         const role = await db.roleModel.findOne({ where: { Uuid: req.params.roleId } });
         if (!role) {
-            return createNotfounderror([messages.ERROR.ROLE_NOT_FOUND], req.language)
+            return createNotfounderror([messages.ERROR.ROLE_NOT_FOUND])
         }
         if (!role.Isactive) {
-            return createNotfounderror([messages.ERROR.ROLE_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.ROLE_NOT_ACTIVE])
         }
         role.Privileges = []
         let privileges = await db.roleprivilegeModel.findAll({
@@ -135,10 +135,10 @@ async function AddRole(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isArray(Privileges)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRIVILEGES_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PRIVILEGES_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -191,16 +191,16 @@ async function UpdateRole(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROLEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ROLEID_REQUIRED)
     }
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isArray(Privileges)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRIVILEGES_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PRIVILEGES_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_ROLEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_ROLEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -255,10 +255,10 @@ async function DeleteRole(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

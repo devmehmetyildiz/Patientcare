@@ -46,13 +46,13 @@ async function AddPeriod(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(Occuredtime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDTIME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDTIME_REQUIRED)
     }
     if (!validator.isString(Checktime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CHECKTIME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CHECKTIME_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -92,19 +92,19 @@ async function UpdatePeriod(req, res, next) {
     } = req.body
 
     if (!Name || !validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!Occuredtime || !validator.isString(Occuredtime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDTIME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDTIME_REQUIRED)
     }
     if (!Checktime || !validator.isString(Checktime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CHECKTIME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CHECKTIME_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERIODID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PERIODID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -145,10 +145,10 @@ async function DeletePeriod(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERIODID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PERIODID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

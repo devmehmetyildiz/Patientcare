@@ -69,6 +69,18 @@ const messages = {
         tr: 'Bu işlem için isim gerekli',
       }
     },
+    GRANTTYPE_REQUIRED: {
+      code: 'GRANTTYPE_REQUIRED', description: {
+        en: 'The Grant type required',
+        tr: 'Bu işlem için grant type gerekli',
+      }
+    },
+    INVALID_GRANTTYPE: {
+      code: 'INVALID_GRANTTYPE', description: {
+        en: 'The Grant type is invalid',
+        tr: 'Geçersiz grant type',
+      }
+    },
     ROLEID_REQUIRED: {
       code: 'ROLEID_REQUIRED', description: {
         en: 'The role uuid required',

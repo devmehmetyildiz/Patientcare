@@ -4,7 +4,8 @@ import { GetMailsetting, EditMailsettings, fillMailsettingnotification, removeMa
 
 
 const mapStateToProps = (state) => ({
-    Mailsettings: state.Mailsettings
+    Mailsettings: state.Mailsettings,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {

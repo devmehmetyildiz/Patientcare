@@ -15,7 +15,8 @@ require("./Middlewares/Databaseconnector")()
     const authorizationChecker = require('./Middlewares/Authorizationchecker');
     const reqbodyhelper = require("./Middlewares/Reqbodyhelper")
     const crossDomainEnabler = require('./Middlewares/Crossdomainenabler');
-    const whitelist = ["http://localhost:3000"]
+    const languageHelper = require('./Middlewares/LanguageHelper')
+    const whitelist = config.session.corsdomains
     const corsOptions = {
       origin: function (origin, callback) {
         if (!origin || whitelist.indexOf(origin) !== -1) {
@@ -41,7 +42,9 @@ require("./Middlewares/Databaseconnector")()
     }))
 
     app.use(bodyParser.json())
-    //app.use(crossDomainEnabler)
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(languageHelper)
+    app.use(crossDomainEnabler)
     app.use(authorizationChecker)
     app.use(reqbodyhelper)
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/`, controllerFileSuffix: '-controller.js', logRoutesList: false })

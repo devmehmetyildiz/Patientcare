@@ -116,22 +116,22 @@ async function AddPurchaseorderstockmovement(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(StockID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
     }
     if (!validator.isNumber(Movementtype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED)
     }
     if (!validator.isNumber(Amount)) {
-        validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED)
     }
     if (!validator.isNumber(Prevvalue)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PREVVALUE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PREVVALUE_REQUIRED)
     }
     if (!validator.isNumber(Newvalue)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NEWVALUE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NEWVALUE_REQUIRED)
     }
     if (!validator.isISODate(Movementdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -180,28 +180,28 @@ async function UpdatePurchaseorderstockmovement(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(StockID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
     }
     if (!validator.isNumber(Movementtype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED)
     }
     if (!validator.isNumber(Amount)) {
-        validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED)
     }
     if (!validator.isNumber(Prevvalue)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PREVVALUE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PREVVALUE_REQUIRED)
     }
     if (!validator.isNumber(Newvalue)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NEWVALUE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NEWVALUE_REQUIRED)
     }
     if (!validator.isISODate(Movementdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
     }
 
     if (validationErrors.length > 0) {
@@ -239,10 +239,10 @@ async function DeletePurchaseorderstockmovement(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

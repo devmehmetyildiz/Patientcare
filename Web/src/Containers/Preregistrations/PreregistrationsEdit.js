@@ -9,7 +9,8 @@ const mapStateToProps = (state) => ({
   Patients: state.Patients,
   Departments: state.Departments,
   Cases: state.Cases,
-  Patientdefines: state.Patientdefines
+  Patientdefines: state.Patientdefines,
+  Profile: state.Profile
 })
 
 const mapDispatchToProps = {

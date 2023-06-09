@@ -61,25 +61,25 @@ async function AddPatientmovement(req, res, next) {
     } = req.body
 
     if (!validator.isString(PatientID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
     }
     if (!validator.isNumber(Patientmovementtype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTMOVEMENTTYPE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTMOVEMENTTYPE_REQUIRED)
     }
     if (!validator.isBoolean(IsDeactive)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISDEACTIVE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISDEACTIVE_REQUIRED)
     }
     if (!validator.isBoolean(IsTodoneed)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISTODONEED_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISTODONEED_REQUIRED)
     }
     if (!validator.isBoolean(IsTodocompleted)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISTODOCOMPLETED_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISTODOCOMPLETED_REQUIRED)
     }
     if (!validator.isBoolean(Iswaitingactivation)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISWAITINGACTIVATION_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISWAITINGACTIVATION_REQUIRED)
     }
     if (!validator.isBoolean(Movementdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -124,31 +124,31 @@ async function UpdatePatientmovement(req, res, next) {
     } = req.body
 
     if (!validator.isString(PatientID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
     }
     if (!validator.isNumber(Patientmovementtype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTMOVEMENTTYPE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTMOVEMENTTYPE_REQUIRED)
     }
     if (!validator.isBoolean(IsDeactive)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISDEACTIVE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISDEACTIVE_REQUIRED)
     }
     if (!validator.isBoolean(IsTodoneed)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISTODONEED_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISTODONEED_REQUIRED)
     }
     if (!validator.isBoolean(IsTodocompleted)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISTODOCOMPLETED_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISTODOCOMPLETED_REQUIRED)
     }
     if (!validator.isBoolean(Iswaitingactivation)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISWAITINGACTIVATION_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISWAITINGACTIVATION_REQUIRED)
     }
     if (!validator.isBoolean(Movementdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTMOVEMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTMOVEMENTID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTMOVEMENTID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTMOVEMENTID)
     }
 
     const t = await db.sequelize.transaction();
@@ -185,10 +185,10 @@ async function DeletePatientmovement(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTMOVEMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTMOVEMENTID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTMOVEMENTID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTMOVEMENTID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

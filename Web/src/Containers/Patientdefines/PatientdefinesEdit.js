@@ -8,6 +8,7 @@ const mapStateToProps = (state) => ({
   Patientdefines: state.Patientdefines,
   Costumertypes: state.Costumertypes,
   Patienttypes: state.Patienttypes,
+  Profile: state.Profile
 })
 
 const mapDispatchToProps = {

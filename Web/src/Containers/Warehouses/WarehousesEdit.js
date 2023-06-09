@@ -3,7 +3,8 @@ import WarehousesEdit from '../../Pages/Warehouses/WarehousesEdit'
 import { EditWarehouses, GetWarehouse, RemoveSelectedWarehouse, removeWarehousenotification, fillWarehousenotification } from '../../Redux/Actions/WarehouseAction'
 
 const mapStateToProps = (state) => ({
-    Warehouses: state.Warehouses
+    Warehouses: state.Warehouses,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {

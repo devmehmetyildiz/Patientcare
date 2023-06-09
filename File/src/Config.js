@@ -5,7 +5,8 @@ const config = {
   port: process.env.APP_PUBLIC_PORT,
   session: {
     name: process.env.APP_SESSION_NAME,
-    secret: process.env.APP_SESSION_SECRET
+    secret: process.env.APP_SESSION_SECRET,
+    corsdomains: parseDomain(process.env.CORS_DOMAINS)
   },
   database: {
     host: process.env.APP_MYSQL_DB_SERVER,
@@ -35,8 +36,10 @@ function parseBoolean(str) {
   return str === 'true' ? true : false
 }
 
-function parseServiceUrl(url) {
-  return url !== undefined ? url.replace(/\/$/, '') : url
+function parseDomain(urls) {
+  let urlarray = urls.split(',').map(url => {
+    return url
+  })
+  return urlarray
 }
-
 module.exports = config

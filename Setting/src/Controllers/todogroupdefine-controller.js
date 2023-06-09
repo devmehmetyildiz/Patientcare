@@ -44,10 +44,10 @@ async function GetTodogroupdefine(req, res, next) {
     try {
         const todogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: req.params.todogroupdefineId } });
         if (!todogroupdefine) {
-            return createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language)
+            return createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND])
         }
         if (!todogroupdefine.Isactive) {
-            return createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE])
         }
         let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
             where: {
@@ -76,13 +76,13 @@ async function AddTodogroupdefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
     if (!validator.isArray(Tododefines)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINES_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINES_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -144,19 +144,19 @@ async function UpdateTodogroupdefine(req, res, next) {
         Uuid
     } = req.body
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID)
     }
     if (!validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
     if (!validator.isArray(Tododefines)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINES_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINES_REQUIRED)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -220,10 +220,10 @@ async function DeleteTodogroupdefine(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

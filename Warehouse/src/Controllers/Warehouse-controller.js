@@ -126,7 +126,7 @@ async function AddWarehouse(req, res, next) {
     } = req.body
 
     if (!Name || !validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -162,13 +162,13 @@ async function UpdateWarehouse(req, res, next) {
         Uuid
     } = req.body
     if (!Name || !validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -206,10 +206,10 @@ async function DeleteWarehouse(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_WAREHOUSEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_WAREHOUSEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

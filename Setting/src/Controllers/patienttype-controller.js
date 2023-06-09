@@ -45,7 +45,7 @@ async function AddPatienttype(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -83,13 +83,13 @@ async function UpdatePatienttype(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTTYPEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTTYPEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTTYPEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTTYPEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -130,10 +130,10 @@ async function DeletePatienttype(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTTYPEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTTYPEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTTYPEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTTYPEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

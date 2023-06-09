@@ -57,28 +57,28 @@ async function AddMailsetting(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(User)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USER_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USER_REQUIRED)
     }
     if (!validator.isString(Password)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
     }
     if (!validator.isString(Smtphost)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SMTPHOST_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SMTPHOST_REQUIRED)
     }
     if (!validator.isString(Smtpport)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SMTPPORT_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SMTPPORT_REQUIRED)
     }
     if (!validator.isString(Mailaddress)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MAILADDRESS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.MAILADDRESS_REQUIRED)
     }
     if (!validator.isBoolean(Isbodyhtml)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISBODYHTML_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISBODYHTML_REQUIRED)
     }
     if (!validator.isBoolean(Issettingactive)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISSETTINGACTIVE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISSETTINGACTIVE_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -122,34 +122,34 @@ async function UpdateMailsetting(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(User)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USER_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USER_REQUIRED)
     }
     if (!validator.isString(Password)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
     }
     if (!validator.isString(Smtphost)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SMTPHOST_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SMTPHOST_REQUIRED)
     }
     if (!validator.isString(Smtpport)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SMTPPORT_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SMTPPORT_REQUIRED)
     }
     if (!validator.isString(Mailaddress)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MAILADDRESS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.MAILADDRESS_REQUIRED)
     }
     if (!validator.isBoolean(Isbodyhtml)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISBODYHTML_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISBODYHTML_REQUIRED)
     }
     if (!validator.isBoolean(Issettingactive)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISSETTINGACTIVE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISSETTINGACTIVE_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.MAILSETTINGID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.MAILSETTINGID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MAILSETTINGID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MAILSETTINGID)
     }
 
     if (validationErrors.length > 0) {
@@ -188,10 +188,10 @@ async function DeleteMailsetting(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

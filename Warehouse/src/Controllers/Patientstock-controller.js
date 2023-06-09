@@ -261,31 +261,31 @@ async function AddPatientstock(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(PatientID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
     }
     if (!validator.isBoolean(Isonusage)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISONUSAGE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISONUSAGE_REQUIRED)
     }
     if (!validator.isString(Source)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SOURCE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SOURCE_REQUIRED)
     }
     if (!validator.isUUID(StockdefineID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
     }
     if (!validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
     if (!validator.isISODate(Skt)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
     }
     if (!validator.isString(Barcodeno)) {
-        validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
     }
     if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED)
     }
     if (!validator.isNumber(Order)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -339,31 +339,31 @@ async function UpdatePatientstock(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(PatientID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
     }
     if (!validator.isUUID(StockdefineID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
     }
     if (!validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
     if (!validator.isISODate(Skt)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
     }
     if (!validator.isString(Barcodeno)) {
-        validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
     }
     if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED)
     }
     if (!validator.isNumber(Order)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -400,10 +400,10 @@ async function DeletePatientstock(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -413,10 +413,10 @@ async function DeletePatientstock(req, res, next) {
     try {
         const patientstock = await db.patientstockModel.findOne({ where: { Uuid: req.params.stockId } });
         if (!patientstock) {
-            return createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language)
+            return createNotfounderror([messages.ERROR.STOCK_NOT_FOUND])
         }
         if (!patientstock.Isactive) {
-            return createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE])
         }
 
         await db.patientstockmovementModel.destroy({ where: { StockID: Uuid } })

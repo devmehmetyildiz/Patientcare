@@ -1,11 +1,13 @@
 import axios from 'axios';
 import cookies from 'universal-cookie';
 
+
 const acInstanse = axios.create({
     withCredentials: true
 });
 const localcookies = new cookies();
 acInstanse.defaults.headers.common['Authorization'] = "Bearer " + localcookies.get('patientcare')
+acInstanse.defaults.headers.common['Language'] = localcookies.get('Language')
 
 function getRequest(service, url) {
     return new Promise((resolve, reject) => {

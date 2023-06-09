@@ -5,7 +5,8 @@ import { GetPatientstocks, removePatientstocknotification } from '../../Redux/Ac
 
 const mapStateToProps = (state) => ({
     Patientstockmovements: state.Patientstockmovements,
-    Patientstocks: state.Patientstocks
+    Patientstocks: state.Patientstocks,
+    Profile: state.Profile
 })
 
 

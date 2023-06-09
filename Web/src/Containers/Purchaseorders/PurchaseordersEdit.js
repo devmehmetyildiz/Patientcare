@@ -11,7 +11,8 @@ const mapStateToProps = (state) => ({
     Stockdefines: state.Stockdefines,
     Cases: state.Cases,
     Departments: state.Departments,
-    Warehouses: state.Warehouses
+    Warehouses: state.Warehouses,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {

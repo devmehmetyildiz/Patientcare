@@ -84,10 +84,10 @@ async function GetPurchaseorder(req, res, next) {
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: req.params.purchaseorderId } });
         if (!purchaseorder) {
-            return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language)
+            return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND])
         }
         if (!purchaseorder.Isactive) {
-            return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE])
         }
         try {
             const departmentresponse = await axios({
@@ -156,37 +156,37 @@ async function AddPurchaseorder(req, res, next) {
     } = req.body
 
     if (!validator.isArray(Stocks)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED)
     }
     if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
     }
     if (!validator.isString(Company)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
     }
     if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
     }
     if (!validator.isNumber(Purchaseprice)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED)
     }
     if (!validator.isString(Purchasenumber)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED)
     }
     if (!validator.isString(Companypersonelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED)
     }
     if (!validator.isString(Personelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED)
     }
     if (!validator.isISODate(Purchasedate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED)
     }
     if (!validator.isString(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
     }
     if (!validator.isString(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -257,43 +257,43 @@ async function UpdatePurchaseorder(req, res, next) {
     } = req.body
 
     if (!validator.isArray(Stocks)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED)
     }
     if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
     }
     if (!validator.isString(Company)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
     }
     if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
     }
     if (!validator.isNumber(Purchaseprice)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED)
     }
     if (!validator.isString(Purchasenumber)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED)
     }
     if (!validator.isString(Companypersonelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED)
     }
     if (!validator.isString(Personelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED)
     }
     if (!validator.isISODate(Purchasedate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED)
     }
     if (!validator.isString(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
     }
     if (!validator.isString(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -374,43 +374,43 @@ async function CompletePurchaseorder(req, res, next) {
     } = req.body
 
     if (!validator.isArray(Stocks)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED)
     }
     if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
     }
     if (!validator.isString(Company)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
     }
     if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
     }
     if (!validator.isNumber(Purchaseprice)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED)
     }
     if (!validator.isString(Purchasenumber)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED)
     }
     if (!validator.isString(Companypersonelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED)
     }
     if (!validator.isString(Personelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED)
     }
     if (!validator.isISODate(Purchasedate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED)
     }
     if (!validator.isString(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
     }
     if (!validator.isString(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -544,43 +544,43 @@ async function DeactivePurchaseorder(req, res, next) {
     } = req.body
 
     if (!validator.isArray(Stocks)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED)
     }
     if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
     }
     if (!validator.isString(Company)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
     }
     if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
     }
     if (!validator.isNumber(Purchaseprice)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED)
     }
     if (!validator.isString(Purchasenumber)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED)
     }
     if (!validator.isString(Companypersonelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED)
     }
     if (!validator.isString(Personelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED)
     }
     if (!validator.isISODate(Purchasedate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED)
     }
     if (!validator.isString(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
     }
     if (!validator.isString(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -649,10 +649,10 @@ async function DeletePurchaseorder(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

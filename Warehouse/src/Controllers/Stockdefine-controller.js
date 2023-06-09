@@ -103,16 +103,16 @@ async function AddStockdefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(Description)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DESCIRIPTION_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DESCIRIPTION_REQUIRED)
     }
     if (!DepartmentID || !validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
     if (!UnitID || !validator.isUUID(UnitID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -152,22 +152,22 @@ async function UpdateStockdefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(Description)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DESCIRIPTION_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DESCIRIPTION_REQUIRED)
     }
     if (!DepartmentID || !validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
     if (!UnitID || !validator.isUUID(UnitID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKDEFINEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKDEFINEID)
     }
 
     if (validationErrors.length > 0) {
@@ -205,10 +205,10 @@ async function DeleteStockdefine(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKDEFINEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKDEFINEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

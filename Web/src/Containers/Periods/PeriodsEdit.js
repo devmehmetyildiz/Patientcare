@@ -3,7 +3,8 @@ import PeriodsEdit from '../../Pages/Periods/PeriodsEdit'
 import { GetPeriod, removePeriodnotification, fillPeriodnotification, EditPeriods } from '../../Redux/Actions/PeriodAction'
 
 const mapStateToProps = (state) => ({
-    Periods: state.Periods
+    Periods: state.Periods,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = { GetPeriod, removePeriodnotification, fillPeriodnotification, EditPeriods }

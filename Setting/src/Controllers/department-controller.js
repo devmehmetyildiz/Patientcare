@@ -43,10 +43,10 @@ async function GetDepartment(req, res, next) {
     try {
         const department = await db.departmentModel.findOne({ where: { Uuid: req.params.departmentId } });
         if (!department) {
-            return createNotfounderror([messages.ERROR.DEPARTMENT_NOT_FOUND], req.language)
+            return createNotfounderror([messages.ERROR.DEPARTMENT_NOT_FOUND])
         }
         if (!department.Isactive) {
-            return createNotfounderror([messages.ERROR.DEPARTMENT_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.DEPARTMENT_NOT_ACTIVE])
         }
         let stationuuids = await db.departmentstationModel.findAll({
             where: {
@@ -74,14 +74,14 @@ async function AddDepartment(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
 
     if (!validator.isBoolean(Ishavepatients)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISHAVEPATIENTS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISHAVEPATIENTS_REQUIRED)
     }
     if (!validator.isArray(Stations)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATIONS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STATIONS_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -144,19 +144,19 @@ async function UpdateDepartment(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isBoolean(Ishavepatients)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISHAVEPATIENTS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ISHAVEPATIENTS_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID)
     }
     if (!validator.isArray(Stations)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATIONS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STATIONS_REQUIRED)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -219,10 +219,10 @@ async function DeleteDepartment(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

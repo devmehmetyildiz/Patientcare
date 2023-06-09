@@ -35,6 +35,10 @@ export default class Cases extends Component {
 
   render() {
 
+    
+    const { Cases, DeleteCases, Profile } = this.props
+    const { list, isLoading, isDispatching } = Cases
+    
     const casestatusOption = [
       {
         key: '-1',
@@ -67,10 +71,7 @@ export default class Cases extends Component {
       { Header: 'Güncelleme Zamanı', accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
       { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
-
-    const { Cases, DeleteCases, Profile } = this.props
-    const { list, isLoading, isDispatching } = Cases
-
+    
     const metaKey = "Cases"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {

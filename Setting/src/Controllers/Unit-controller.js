@@ -43,10 +43,10 @@ async function GetUnit(req, res, next) {
     try {
         const unit = await db.unitModel.findOne({ where: { Uuid: req.params.unitId } });
         if (!unit) {
-            return createNotfounderror([messages.ERROR.UNIT_NOT_FOUND], req.language)
+            return createNotfounderror([messages.ERROR.UNIT_NOT_FOUND])
         }
         if (!unit.Isactive) {
-            return createNotfounderror([messages.ERROR.UNIT_NOT_ACTIVE], req.language)
+            return createNotfounderror([messages.ERROR.UNIT_NOT_ACTIVE])
         }
         let departmentuuids = await db.unitdepartmentModel.findAll({
             where: {
@@ -74,13 +74,13 @@ async function AddUnit(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isNumber(Unittype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITTYPE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNITTYPE_REQUIRED)
     }
     if (!validator.isArray(Departments)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -142,19 +142,19 @@ async function UpdateUnit(req, res, next) {
     } = req.body
 
     if (!Name || !validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!Unittype && !validator.isNumber(Unittype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITTYPE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNITTYPE_REQUIRED)
     }
     if (!Departments || !Array.isArray(Departments) || Departments.length <= 0) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_UNITID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_UNITID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -217,10 +217,10 @@ async function DeleteUnit(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_UNITID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_UNITID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

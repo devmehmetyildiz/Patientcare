@@ -9,7 +9,8 @@ const mapStateToProps = (state) => ({
     Users: state.Users,
     Roles: state.Roles,
     Departments: state.Departments,
-    Stations: state.Stations
+    Stations: state.Stations,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {

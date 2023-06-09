@@ -26,13 +26,13 @@ async function Register(req, res, next) {
         } = req.body
         let validationErrors = []
         if (validator.isString(Username)) {
-            validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
+            validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
         }
         if (validator.isString(Password)) {
-            validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED, req.language)
+            validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
         }
         if (validator.isString(Email)) {
-            validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED, req.language)
+            validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED)
         }
 
         if (validationErrors.length > 0) {
@@ -353,10 +353,10 @@ async function Saveusertablemetaconfig(req, res, next) {
     } = req.body
 
     if (validator.isString(Meta)) {
-        validationErrors.push(messages.VALIDATION_ERROR.META_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.META_REQUIRED)
     }
     if (validator.isString(Config)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CONFIG_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CONFIG_REQUIRED)
     }
     try {
         const tablemetaconfig = await db.tablemetaconfigModel.findOne({ where: { UserID: req.identity.user.Uuid, Meta: Meta } })
@@ -400,54 +400,54 @@ async function AddUser(req, res, next) {
     } = req.body
 
     if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
     }
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(Surname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SURNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SURNAME_REQUIRED)
     }
     if (!validator.isString(Language)) {
-        validationErrors.push(messages.VALIDATION_ERROR.LANGUAGE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.LANGUAGE_REQUIRED)
     }
     if (!validator.isString(Town)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TOWN_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.TOWN_REQUIRED)
     }
     if (!validator.isString(City)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CITY_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CITY_REQUIRED)
     }
     if (!validator.isString(Address)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ADDRESS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ADDRESS_REQUIRED)
     }
     if (!validator.isString(Password)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
     }
     if (!validator.isString(Email)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED)
     }
     if (!validator.isNumber(UserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
     }
     if (!validator.isArray(Departments)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
     }
     if (!validator.isArray(Stations)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATIONS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.STATIONS_REQUIRED)
     }
     if (!validator.isArray(Roles)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROLES_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ROLES_REQUIRED)
     }
-    const usernamecheck = GetUserByUsername(next, Username, req.language)
+    const usernamecheck = GetUserByUsername(next, Username)
         .then(user => {
             if (user && Object.keys(user).length > 0) {
-                validationErrors.push(messages.VALIDATION_ERROR.USERNAME_DUPLICATE, req.language)
+                validationErrors.push(messages.VALIDATION_ERROR.USERNAME_DUPLICATE)
             }
         })
-    const emailcheck = GetUserByEmail(next, Email, req.language)
+    const emailcheck = GetUserByEmail(next, Email)
         .then(user => {
             if (user && Object.keys(user).length > 0) {
-                validationErrors.push(messages.VALIDATION_ERROR.EMAIL_DUPLICATE, req.language)
+                validationErrors.push(messages.VALIDATION_ERROR.EMAIL_DUPLICATE)
             }
         })
     await Promise.all([usernamecheck, emailcheck])
@@ -542,37 +542,37 @@ async function UpdateUser(req, res, next) {
     } = req.body
 
     if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
     }
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
     if (!validator.isString(Surname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SURNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.SURNAME_REQUIRED)
     }
     if (!validator.isNumber(UserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
     }
     if (!validator.isString(Language)) {
-        validationErrors.push(messages.VALIDATION_ERROR.LANGUAGE_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.LANGUAGE_REQUIRED)
     }
     if (!validator.isString(Town)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TOWN_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.TOWN_REQUIRED)
     }
     if (!validator.isString(City)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CITY_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.CITY_REQUIRED)
     }
     if (!validator.isString(Address)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ADDRESS_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.ADDRESS_REQUIRED)
     }
     if (!validator.isString(Email)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -644,10 +644,10 @@ async function DeleteUser(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

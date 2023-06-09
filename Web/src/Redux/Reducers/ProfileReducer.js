@@ -12,6 +12,7 @@ const defaultState = {
   roles: [],
   auth: false,
   tablemeta: [],
+  Language: "tr",
   resetpasswordStatus: false
 }
 
@@ -50,7 +51,11 @@ const ProfileReducer = (state = defaultState, { type, payload }) => {
     case ACTION_TYPES.GET_USERMETA_INIT:
       return { ...state, isLogging: true }
     case ACTION_TYPES.GET_USERMETA_SUCCESS:
-      return { ...state, isLogging: false, meta: payload }
+      let Language = "tr"
+      if (payload && payload.Language) {
+        Language = payload.Language.toLowerCase()
+      }
+      return { ...state, isLogging: false, meta: payload, Language: Language }
     case ACTION_TYPES.GET_USERMETA_ERROR:
       return { ...state, isLogging: false, error: payload }
     case ACTION_TYPES.CHANGE_PASSWORD_INIT:

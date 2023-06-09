@@ -3,6 +3,7 @@ import AppRoutes from '../../AppRoutes'
 import Navbar from '../../Common/Navbar'
 import { Sidebar } from '../../Common/Sidebar'
 import notification from '../../Utils/Notification'
+import Cookies from 'universal-cookie'
 
 export default class Layout extends Component {
 
@@ -30,11 +31,11 @@ export default class Layout extends Component {
       Users, removeUsernotification } = this.props
     notification(Profile.notifications, removenotification)
     notification(Users.notifications, removeUsernotification)
+    this.handleLanguage()
   }
 
   render() {
     const { Profile, iconOnly, seticonOnly, history, logOut, isMobile } = this.props
-
     return (
       <div className='bg-[#f2f2f3] dark:bg-Contentbg ' >
         <Navbar iconOnly={isMobile ? true : iconOnly} seticonOnly={seticonOnly} Profile={Profile} logOut={logOut} isMobile={isMobile} />
@@ -48,5 +49,13 @@ export default class Layout extends Component {
         </div>
       </div>
     )
+  }
+
+  handleLanguage = () => {
+    const { Profile } = this.props
+    if (Profile && Profile.meta && Profile.meta.Language) {
+      const localcookies = new Cookies();
+      localcookies.set('Language', Profile.meta.Language, { path: '/' })
+    }
   }
 }

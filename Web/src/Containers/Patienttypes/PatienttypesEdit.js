@@ -3,7 +3,8 @@ import PatienttypesEdit from '../../Pages/Patienttypes/PatienttypesEdit'
 import { EditPatienttypes, GetPatienttype, RemoveSelectedPatienttype, removePatienttypenotification, fillPatienttypenotification } from '../../Redux/Actions/PatienttypeAction'
 
 const mapStateToProps = (state) => ({
-  Patienttypes: state.Patienttypes
+  Patienttypes: state.Patienttypes,
+  Profile: state.Profile
 })
 
 const mapDispatchToProps = { EditPatienttypes, GetPatienttype, RemoveSelectedPatienttype, removePatienttypenotification, fillPatienttypenotification }

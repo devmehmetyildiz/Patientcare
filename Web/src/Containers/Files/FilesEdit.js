@@ -3,7 +3,8 @@ import FilesEdit from '../../Pages/Stations/StationsEdit'
 import { EditFiles, GetFile, RemoveSelectedFile, removeFilenotification, fillFilenotification } from '../../Redux/Actions/FileAction'
 
 const mapStateToProps = (state) => ({
-    Files: state.Files
+    Files: state.Files,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = { EditFiles, GetFile, RemoveSelectedFile, removeFilenotification, fillFilenotification }

@@ -6,7 +6,8 @@ import { GetStocks, removeStocknotification } from '../../Redux/Actions/StockAct
 
 const mapStateToProps = (state) => ({
     Stocks: state.Stocks,
-    Stockmovements: state.Stockmovements
+    Stockmovements: state.Stockmovements,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {

@@ -7,7 +7,8 @@ import { GetDepartments, removeDepartmentnotification } from '../../Redux/Action
 const mapStateToProps = (state) => ({
     Todogroupdefines: state.Todogroupdefines,
     Tododefines: state.Tododefines,
-    Departments: state.Departments
+    Departments: state.Departments,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {

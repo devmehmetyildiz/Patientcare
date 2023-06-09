@@ -5,7 +5,8 @@ import { GetPeriods, removePeriodnotification } from '../../Redux/Actions/Period
 
 const mapStateToProps = (state) => ({
     Checkperiods: state.Checkperiods,
-    Periods: state.Periods
+    Periods: state.Periods,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {

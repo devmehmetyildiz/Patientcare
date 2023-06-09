@@ -6,7 +6,8 @@ import { GetPurchaseorderstocks, removePurchaseorderstocknotification } from '..
 
 const mapStateToProps = (state) => ({
     Purchaseorderstocks: state.Purchaseorderstocks,
-    Purchaseorderstockmovements: state.Purchaseorderstockmovements
+    Purchaseorderstockmovements: state.Purchaseorderstockmovements,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {

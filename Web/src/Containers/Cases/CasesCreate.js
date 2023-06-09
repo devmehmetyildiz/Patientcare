@@ -6,7 +6,8 @@ import { GetDepartments, removeDepartmentnotification } from "../../Redux/Action
 
 const mapStateToProps = (state) => ({
   Cases: state.Cases,
-  Departments: state.Departments
+  Departments: state.Departments,
+  Profile: state.Profile
 })
 
 const mapDispatchToProps = { AddCases, removeCasenotification, fillCasenotification, GetDepartments, removeDepartmentnotification }

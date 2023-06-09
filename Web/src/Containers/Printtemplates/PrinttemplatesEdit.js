@@ -5,7 +5,8 @@ import { GetPrinttemplate, EditPrinttemplates, fillPrinttemplatenotification, re
 
 const mapStateToProps = (state) => ({
     Departments: state.Departments,
-    Printtemplates: state.Printtemplates
+    Printtemplates: state.Printtemplates,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {

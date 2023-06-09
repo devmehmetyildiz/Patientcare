@@ -98,19 +98,19 @@ async function AddPatientdefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Firstname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED)
     }
     if (!validator.isString(Lastname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED)
     }
     if (!validator.isString(CountryID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
     }
     if (!validator.isString(CostumertypeID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED)
     }
     if (!validator.isString(PatienttypeID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -151,25 +151,25 @@ async function UpdatePatientdefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Firstname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED)
     }
     if (!validator.isString(Lastname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED)
     }
     if (!validator.isString(CountryID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
     }
     if (!validator.isString(CostumertypeID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED)
     }
     if (!validator.isString(PatienttypeID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTDEFINEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTDEFINEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -207,10 +207,10 @@ async function DeletePatientdefine(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTDEFINEID, req.language)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTDEFINEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

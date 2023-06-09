@@ -1,5 +1,7 @@
+const config = require("../Config")
+
 module.exports = (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', "http://localhost:3000")
+  res.setHeader('Access-Control-Allow-Origin', config.session.corsdomains)
   res.setHeader('Access-Control-Allow-Methods', ' POST, PATCH, PUT, DELETE, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, Content-Length, X-Requested-With')
   res.setHeader('X-XSS-Protection', '1; mode=block')
