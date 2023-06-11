@@ -7,6 +7,7 @@ import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import Notification from '../../Utils/Notification'
+import Literals from './Literals'
 
 export default class Cases extends Component {
 
@@ -35,43 +36,43 @@ export default class Cases extends Component {
 
   render() {
 
-    
+
     const { Cases, DeleteCases, Profile } = this.props
     const { list, isLoading, isDispatching } = Cases
-    
+
     const casestatusOption = [
       {
         key: '-1',
-        text: 'Pasif',
+        text: Literals.Options.caseStatusoption.value0[Profile.Language],
         value: -1,
       },
       {
         key: '0',
-        text: 'Pasif',
+        text: Literals.Options.caseStatusoption.value1[Profile.Language],
         value: 0,
       },
       {
         key: '1',
-        text: 'Tamamlama',
+        text: Literals.Options.caseStatusoption.value2[Profile.Language],
         value: 1,
       }
     ]
 
     const Columns = [
-      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Durum Adı', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Durum Kısaltması', accessor: 'Shortname', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Durum Türü', accessor: 'CaseStatus', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.casesstatusCellhandler(col, casestatusOption) },
-      { Header: 'Durum Rengi', accessor: 'Casecolor', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.casecolorCellhandler(col) },
-      { Header: 'Departmanlar', accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
-      { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleme Zamanı', accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
-    
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Shortname[Profile.Language], accessor: 'Shortname', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.CaseStatus[Profile.Language], accessor: 'CaseStatus', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.casesstatusCellhandler(col, casestatusOption) },
+      { Header: Literals.Columns.Casecolor[Profile.Language], accessor: 'Casecolor', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.casecolorCellhandler(col) },
+      { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+
     const metaKey = "Cases"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
@@ -102,14 +103,14 @@ export default class Cases extends Component {
                   <GridColumn width={8} className="">
                     <Breadcrumb size='big'>
                       <Link to={"/Cases"}>
-                        <Breadcrumb.Section>Durumlar</Breadcrumb.Section>
+                        <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                       </Link>
                     </Breadcrumb>
                   </GridColumn>
                   <GridColumn width={8} >
                     <Link to={"/Cases/Create"}>
                       <Button color='blue' floated='right' className='list-right-green-button'>
-                        Oluştur
+                        {Literals.Page.Pagecreateheader[Profile.Language]}
                       </Button>
                     </Link>
                     <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
@@ -121,7 +122,7 @@ export default class Cases extends Component {
             {list.length > 0 ?
               <div className='w-full mx-auto '>
                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />
-              </div> : <NoDataScreen message="Tanımlı Durum Yok" />
+              </div> : <NoDataScreen message={Literals.Messages.Nocasefind[Profile.Language]} />
             }
           </div>
           <Modal
@@ -129,21 +130,21 @@ export default class Cases extends Component {
             onOpen={() => this.setState({ open: true })}
             open={this.state.open}
           >
-            <Modal.Header>Durum Silme</Modal.Header>
+            <Modal.Header>{Literals.Page.Pagedeleteheader[Profile.Language]}</Modal.Header>
             <Modal.Content image>
               <Modal.Description>
                 <p>
                   <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
-                  durumunu silmek istediğinize emin misiniz?
+                  {Literals.Messages.Deletestationcheck[Profile.Language]}
                 </p>
               </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
               <Button color='black' onClick={() => this.setState({ open: false, selectedrecord: {} })}>
-                Vazgeç
+              {Literals.Button.Giveup[Profile.Language]}
               </Button>
               <Button
-                content="Sil"
+                content= {Literals.Button.Delete[Profile.Language]}
                 labelPosition='right'
                 icon='checkmark'
                 onClick={() => {

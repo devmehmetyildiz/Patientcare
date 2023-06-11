@@ -30,10 +30,10 @@ export class Register extends Component {
                                 <p>Patient Care Hasta Bakım Sistemi</p>
                             </Header>
                             <Form size='large' className='p-4' onSubmit={this.RegisterHandler}>
-                                <Form.Input transparent placeholder="Kullanıcı Adı" name="username" fluid icon='user' iconPosition='left' />
-                                <Form.Input type='email' transparent placeholder="E-Posta" name="email" fluid icon='mail' iconPosition='left' />
+                                <Form.Input transparent placeholder="Kullanıcı Adı" name="Username" fluid icon='user' iconPosition='left' />
+                                <Form.Input type='email' transparent placeholder="E-Posta" name="Email" fluid icon='mail' iconPosition='left' />
                                 <Divider />
-                                <Form.Input type='password' transparent placeholder="Parola" name="password" fluid icon='lock' iconPosition='left' />
+                                <Form.Input type='password' transparent placeholder="Parola" name="Password" fluid icon='lock' iconPosition='left' />
                                 <Divider />
                                 <div className='mt-4 w-full flex justify-end items-center'>
                                     <div className='w-1/3 '>
@@ -64,13 +64,13 @@ export class Register extends Component {
 
         const data = formToObject(event.target)
         let errors = []
-        if (!data.username || data.username === '') {
+        if (!data.Username || data.Username === '') {
             errors.push({ type: 'Error', code: 'Kayıt İşlemi', description: 'Lütfen kullanıcı adı giriniz' })
         }
-        if (!data.password || data.password === '') {
+        if (!data.Password || data.Password === '') {
             errors.push({ type: 'Error', code: 'Kayıt İşlemi', description: 'lütfen parola giriniz' })
         }
-        if (!data.email || data.email === '') {
+        if (!data.Email || data.Email === '') {
             errors.push({ type: 'Error', code: 'Kayıt İşlemi', description: 'lütfen mail adresi giriniz' })
         }
         if (errors.length > 0) {

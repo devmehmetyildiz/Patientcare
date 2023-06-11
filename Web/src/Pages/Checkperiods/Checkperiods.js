@@ -7,6 +7,7 @@ import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import Notification from '../../Utils/Notification'
+import Literals from './Literals'
 
 export default class Checkperiods extends Component {
 
@@ -32,24 +33,24 @@ export default class Checkperiods extends Component {
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'İsim', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kontrol Periyodları', accessor: 'Periodstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.periodCellhandler(col) },
-      { Header: 'Periyot Türü', accessor: 'Periodtype', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Gerçekleşecek Günler', accessor: 'Occureddays', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleme Zamanı', accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Periodstxt[Profile.Language], accessor: 'Periodstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.periodCellhandler(col) },
+      { Header: Literals.Columns.Periodtype[Profile.Language], accessor: 'Periodtype', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Occureddays[Profile.Language], accessor: 'Occureddays', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const { Checkperiods, DeleteCheckperiods, Profile } = this.props
     const { list, isLoading, isDispatching } = Checkperiods
 
     const metaKey = "Checkperiods"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -78,14 +79,14 @@ export default class Checkperiods extends Component {
                   <GridColumn width={8} className="">
                     <Breadcrumb size='big'>
                       <Link to={"/Checkperiods"}>
-                        <Breadcrumb.Section>Kontrol Grupları</Breadcrumb.Section>
+                        <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                       </Link>
                     </Breadcrumb>
                   </GridColumn>
                   <GridColumn width={8} >
                     <Link to={"/Checkperiods/Create"}>
                       <Button color='blue' floated='right' className='list-right-green-button'>
-                        Oluştur
+                        {Literals.Button.Create[Profile.Language]}
                       </Button>
                     </Link>
                     <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
@@ -97,7 +98,7 @@ export default class Checkperiods extends Component {
             {list.length > 0 ?
               <div className='w-full mx-auto '>
                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />
-              </div> : <NoDataScreen message="Tanımlı Kontrol Grubu Yok" />
+              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </div>
           <Modal
@@ -105,21 +106,21 @@ export default class Checkperiods extends Component {
             onOpen={() => this.setState({ open: true })}
             open={this.state.open}
           >
-            <Modal.Header>Kontrol Grubu Silme</Modal.Header>
+            <Modal.Header>{Literals.Page.Pagedeleteheader[Profile.Language]}</Modal.Header>
             <Modal.Content image>
               <Modal.Description>
                 <p>
                   <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
-                  kontrol grubunu silmek istediğinize emin misiniz?
+                  {Literals.Messages.Deletecheck[Profile.Language]}
                 </p>
               </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
               <Button color='black' onClick={() => this.setState({ open: false, selectedrecord: {} })}>
-                Vazgeç
+                {Literals.Button.Giveup[Profile.Language]}
               </Button>
               <Button
-                content="Sil"
+                content={Literals.Button.Delete[Profile.Language]}
                 labelPosition='right'
                 icon='checkmark'
                 onClick={() => {

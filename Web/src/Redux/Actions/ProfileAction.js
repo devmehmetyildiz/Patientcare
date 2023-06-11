@@ -95,9 +95,9 @@ export const logIn = (data, historyPusher, redirecturl) => {
 }
 
 export const register = (data, historyPusher) => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.REGISTER_REQUEST_INIT })
-    instanse.post(`/auth/Register`, data)
+    await instanse.post(config.services.Userrole, 'Users/Register', data)
       .then(result => {
         dispatch({ type: ACTION_TYPES.REGISTER_REQUEST_SUCCESS })
         historyPusher.push("/Login")
@@ -123,6 +123,7 @@ export const GetActiveUser = () => async (dispatch, getState) => {
 
 export const GetUserMeta = () => async (dispatch, getState) => {
   dispatch({ type: ACTION_TYPES.GET_USERMETA_INIT })
+
   await instanse.get(config.services.Userrole, 'Users/GetActiveUserMeta')
     .then(response => {
       dispatch({ type: ACTION_TYPES.GET_USERMETA_SUCCESS, payload: response.data })

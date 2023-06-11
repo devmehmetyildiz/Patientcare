@@ -24,14 +24,15 @@ async function Register(req, res, next) {
             Email,
             Password,
         } = req.body
+        console.log('req.body: ', req.body);
         let validationErrors = []
-        if (validator.isString(Username)) {
+        if (!validator.isString(Username)) {
             validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
         }
-        if (validator.isString(Password)) {
+        if (!validator.isString(Password)) {
             validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
         }
-        if (validator.isString(Email)) {
+        if (!validator.isString(Email)) {
             validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED)
         }
 

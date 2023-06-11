@@ -5,16 +5,16 @@ import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
-
+import FormInput from '../../Utils/FormInput'
+import Literals from './Literals'
+import validator from "../../Utils/Validator"
 export default class CasesCreate extends Component {
 
   constructor(props) {
     super(props)
-    const selecteddepartments = []
-    const selectedstatusOption = {}
     this.state = {
-      selecteddepartments,
-      selectedstatusOption
+      selecteddepartments: [],
+      selectedstatusOption: {}
     }
   }
 
@@ -32,7 +32,7 @@ export default class CasesCreate extends Component {
 
 
   render() {
-    const { Cases, Departments } = this.props
+    const { Cases, Departments, Profile } = this.props
 
     const Departmentoptions = Departments.list.map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -41,19 +41,19 @@ export default class CasesCreate extends Component {
     const casestatusOption = [
       {
         key: '-1',
-        text: 'İptal Etme',
+        text: Literals.Options.caseStatusoption.value0[Profile.Language],
         value: -1,
       },
       {
         key: '0',
-        text: 'Pasif',
+        text: Literals.Options.caseStatusoption.value1[Profile.Language],
         value: 0,
       },
       {
         key: '1',
-        text: 'Tamamlama',
+        text: Literals.Options.caseStatusoption.value2[Profile.Language],
         value: 1,
-      },
+      }
     ]
 
     return (
@@ -63,45 +63,45 @@ export default class CasesCreate extends Component {
             <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
               <Breadcrumb size='big'>
                 <Link to={"/Cases"}>
-                  <Breadcrumb.Section >Durumlar</Breadcrumb.Section>
+                  <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                 </Link>
                 <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
+                <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
               </Breadcrumb>
             </Header>
           </div>
           <Divider className='w-full  h-[1px]' />
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <Form.Input label="Durum Adı" placeholder="Durum Adı" name="Name" fluid />
-                <Form.Input label="Durum Kısaltma" placeholder="Durum Kısaltma" name="Shortname" fluid />
+                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <Form.Input required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
               </Form.Group>
               <Form.Group widths='equal'>
                 <Form.Field>
-                  <label className='text-[#000000de]'>Durum Rengi<span> <Popup
+                  <label className='text-[#000000de]'>{Literals.Columns.Casecolor[Profile.Language]}<span> <Popup
                     trigger={<Icon link name='exclamation' />}
                     content='blue,red,green...'
                     position='bottom left'
                   /></span></label>
-                  <Form.Input placeholder="Durum Rengi" name="Casecolor" fluid />
+                  <FormInput required placeholder={Literals.Columns.Casecolor[Profile.Language]} name="Casecolor" fluid dontshowlabel />
                 </Form.Field>
                 <Form.Field>
-                  <label className='text-[#000000de]'>Durum Türü</label>
-                  <Dropdown placeholder='Durum Türü' fluid selection options={casestatusOption} onChange={this.handleChangeOption} />
+                  <label className='text-[#000000de]'>{Literals.Columns.CaseStatus[Profile.Language]}</label>
+                  <Dropdown placeholder={Literals.Columns.CaseStatus[Profile.Language]} fluid selection options={casestatusOption} onChange={this.handleChangeOption} value={this.state.selectedstatusOption} />
                 </Form.Field>
               </Form.Group>
               <Form.Group widths='equal'>
                 <Form.Field>
-                  <label className='text-[#000000de]'>Departmanlar</label>
-                  <Dropdown placeholder='Departmanlar' clearable search fluid multiple selection options={Departmentoptions} onChange={this.handleChange} />
+                  <label className='text-[#000000de]'>{Literals.Columns.Departmentstxt[Profile.Language]}</label>
+                  <Dropdown placeholder={Literals.Columns.Departmentstxt[Profile.Language]} clearable search fluid multiple selection options={Departmentoptions} onChange={this.handleChange} value={this.state.selecteddepartments} />
                 </Form.Field>
               </Form.Group>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Cases">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Oluştur</Button>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
               </div>
             </Form>
           </div>
@@ -112,7 +112,7 @@ export default class CasesCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddCases, history, fillCasenotification, Departments } = this.props
+    const { AddCases, history, fillCasenotification, Departments,Profile } = this.props
     const { list } = Departments
     const data = formToObject(e.target)
     data.Departments = this.state.selecteddepartments.map(department => {
@@ -121,20 +121,20 @@ export default class CasesCreate extends Component {
     data.CaseStatus = this.state.selectedstatusOption
 
     let errors = []
-    if (!data.Name || data.Name === '') {
-      errors.push({ type: 'Error', code: 'Durumlar', description: 'İsim Boş Olamaz' })
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
     }
-    if ((!Number.isInteger(data.CaseStatus))) {
-      errors.push({ type: 'Error', code: 'Durumlar', description: 'Tür seçili değil' })
+    if (!validator.isNumber(data.CaseStatus)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Casestatusrequired[Profile.Language] })
     }
-    if (!data.Casecolor || data.Casecolor === '') {
-      errors.push({ type: 'Error', code: 'Durumlar', description: 'Renk seçili değil' })
+    if (!validator.isString(data.Casecolor)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Casecolorrequired[Profile.Language] })
     }
-    if (!data.Shortname || data.Shortname === '') {
-      errors.push({ type: 'Error', code: 'Durumlar', description: 'Kısaltma girili değil' })
+    if (!validator.isString(data.Shortname)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Shortnamerequired[Profile.Language] })
     }
-    if (!data.Departments || data.Departments.length <= 0) {
-      errors.push({ type: 'Error', code: 'Durumlar', description: 'Hiç Bir Departman seçili değil' })
+    if (!validator.isArray(data.Departments)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Departmentsrequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

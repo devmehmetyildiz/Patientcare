@@ -44,6 +44,7 @@ require("./Middlewares/Databaseconnector")()
 
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(formidableMiddleware());
     app.use(languageHelper)
     app.use(crossDomainEnabler)
     app.use(authorizationChecker)

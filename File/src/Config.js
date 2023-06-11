@@ -42,4 +42,6 @@ function parseDomain(urls) {
   })
   return urlarray
 }
+console.log('config: ', config);
+
 module.exports = config

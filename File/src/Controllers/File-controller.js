@@ -106,6 +106,7 @@ async function Downloadfile(req, res, next) {
                     console.log("File downloaded and sent as response successfully");
                 });
             } catch (err) {
+                console.log('err: ', err);
                 client.close();
                 return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
             }
@@ -120,7 +121,9 @@ async function Downloadfile(req, res, next) {
 async function AddFile(req, res, next) {
 
     let data = req.fields
+    console.log('data: ', data);
     let files = req.files
+    console.log('files: ', files);
     let requestArray = []
     let objKeys = Object.keys(data).map(element => {
         return element.split('.')[0]
@@ -136,7 +139,7 @@ async function AddFile(req, res, next) {
         object['File'] = files[`${keyvalue}.File`]
         requestArray.push(object)
     }
-
+    
     const t = await db.sequelize.transaction();
     try {
         for (const filedata of requestArray) {

@@ -16,7 +16,7 @@ export default function FormInput(props) {
     return (
         <>
             <div className='flex flex-row m-2'>
-                <label className='text-[#000000de]'>{props.placeholder}</label>
+                {!props.dontshowlabel && <label className='text-[#000000de]'>{props.placeholder}</label>}
                 {props.required && <Popup
                     trigger={<Icon className='cursor-pointer' name='attention' />}
                     content={<Label>Bu alan zorunludur</Label>}

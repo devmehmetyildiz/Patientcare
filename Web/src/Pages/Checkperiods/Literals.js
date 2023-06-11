@@ -25,24 +25,20 @@ const Literals = {
             en: 'Unique ID'
         },
         Name: {
-            tr: 'Durum Adı',
-            en: 'Case Name'
+            tr: 'Kontrol Grup Adı',
+            en: 'Check Period Name'
         },
-        Shortname: {
-            tr: 'Durum Kısaltmasıı',
-            en: 'Short Name'
+        Periodstxt: {
+            tr: 'Kontroller',
+            en: 'Periods'
         },
-        CaseStatus: {
-            tr: 'Durum Türü',
-            en: 'Case Status'
+        Periodtype: {
+            tr: 'Kontrol Türü',
+            en: 'Period types'
         },
-        Casecolor: {
-            tr: 'Durum Rengi',
-            en: 'Case Color'
-        },
-        Departmentstxt: {
-            tr: 'Departmanlar',
-            en: 'Departments'
+        Occureddays: {
+            tr: 'Gerçekleşme Günleri',
+            en: 'Occured days'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -71,8 +67,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Durumlar",
-            en: "Cases"
+            tr: "Kontrol Grupları",
+            en: "Check Periods"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -83,8 +79,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Durum Silme",
-            en: "Delete Case"
+            tr: "Kontrol grubu Silme",
+            en: "Delete Checkperiod"
         }
     },
     Button: {
@@ -111,13 +107,13 @@ const Literals = {
 
     },
     Messages: {
-        Nocasefind: {
-            tr: "Tanımlı Durum Yok",
-            en: "There is no case found"
+        Nodatafind: {
+            tr: "Tanımlı Kontrol Grubu Yok",
+            en: "There is no check period found"
         },
-        Deletestationcheck: {
-            tr: "durumunu silmek istediğinize emin misiniz?",
-            en: "case will delete, are you sure?"
+        Deletecheck: {
+            tr: "kontrol grubunu silmek istediğinize emin misiniz?",
+            en: "checkperiod will delete, are you sure?"
         },
         Namerequired: {
             tr: "İsim Gerekli",
