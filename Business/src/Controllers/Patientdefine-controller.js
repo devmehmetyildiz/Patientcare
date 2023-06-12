@@ -47,6 +47,7 @@ async function GetPatientdefines(req, res, next) {
 async function GetPatientdefine(req, res, next) {
 
     let validationErrors = []
+    console.log('req.params: ', req.params);
     if (!req.params.patientdefineId) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
     }
@@ -62,7 +63,7 @@ async function GetPatientdefine(req, res, next) {
         try {
             const patienttypesresponse = await axios({
                 method: 'GET',
-                url: config.services.Setting + `Patienttypes/${patientdefine.PatientdefineID}`,
+                url: config.services.Setting + `Patienttypes/${patientdefine.PatienttypeID}`,
                 headers: {
                     session_key: config.session.secret
                 }

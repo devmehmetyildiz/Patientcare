@@ -4,6 +4,7 @@ import { Breadcrumb, Button, Divider, Dropdown, Form, Header, Icon, Label, Table
 import { ROUTES } from '../../Utils/Constants'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
+import config from '../../Config'
 
 export default class PreregistrationsEditfile extends Component {
 
@@ -26,11 +27,11 @@ export default class PreregistrationsEditfile extends Component {
     }
 
     componentDidUpdate() {
-        const { Patients } = this.props
+        const { Files, removeFilenotification, Patients, removePatientnotification } = this.props
         const { selected_record, isLoading } = Patients
         if (selected_record && Object.keys(selected_record).length > 0 &&
-            selected_record.id !== 0 && !isLoading && !this.state.isDatafetched) {
-            var response = (selected_record.files || [])
+            selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
+            var response = (selected_record.Files || [])
             response.forEach(element => {
                 element.key = Math.random()
             });
@@ -38,15 +39,16 @@ export default class PreregistrationsEditfile extends Component {
                 selectedFiles: response, isDatafetched: true
             })
         }
+        Notification(Files.notifications, removeFilenotification)
+        Notification(Patients.notifications, removePatientnotification)
     }
 
 
     render() {
 
-        const { Files, removeFilenotification, Patients, removePatientnotification } = this.props
+        const { Files, Patients } = this.props
         const { selected_record, isLoading, isDispatching } = Patients
-        Notification(Files.notifications, removeFilenotification)
-        Notification(Patients.notifications, removePatientnotification)
+
 
         const usagetypes = [
             { key: 'Genel Depolama', value: 'Genel Depolama', text: 'Genel Depolama' },
@@ -76,9 +78,9 @@ export default class PreregistrationsEditfile extends Component {
                     <Divider className='w-full  h-[1px]' />
                     <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
                         <Header as='h2' icon textAlign='center'>
-                            {(selected_record.files || []).filter(u => u.usagetype === 'PP').length > 0 ? <img alt='pp' src={`${process.env.REACT_APP_BACKEND_URL}/${ROUTES.FILE}/GetImage?guid=${selected_record.concurrencyStamp}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
+                            {(selected_record.Files || []).filter(u => u.Usagetype === 'PP').length > 0 ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${(selected_record.Files || []).find(u => u.Usagetype === 'PP')?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
                                 : <Icon name='users' circular />}
-                            <Header.Content>{`${selected_record.patientdefine?.firstname} ${selected_record.patientdefine?.lastname} - ${selected_record.patientdefine?.countryID}`}</Header.Content>
+                            <Header.Content>{`${selected_record.Patientdefine?.Firstname} ${selected_record.Patientdefine?.Lastname} - ${selected_record.Patientdefine?.CountryID}`}</Header.Content>
                         </Header>
                         <Form onSubmit={this.handleSubmit}>
                             <Table celled className='list-table' key='product-create-type-conversion-table' >
@@ -93,31 +95,31 @@ export default class PreregistrationsEditfile extends Component {
                                     </Table.Row>
                                 </Table.Header>
                                 <Table.Body>
-                                    {this.state.selectedFiles.sort((a, b) => a.order - b.order).map((file, index) => {
+                                    {this.state.selectedFiles.sort((a, b) => a.Order - b.Order).map((file, index) => {
                                         return <Table.Row key={file.key}>
                                             <Table.Cell>
                                                 <Button.Group basic size='small'>
-                                                    <Button type='button' disabled={index === 0} icon='angle up' onClick={() => { this.selectedFilesChangeHandler(file.key, 'order', file.order - 1) }} />
-                                                    <Button type='button' disabled={index + 1 === this.state.selectedFiles.length} icon='angle down' onClick={() => { this.selectedFilesChangeHandler(file.key, 'order', file.order + 1) }} />
+                                                    <Button type='button' disabled={index === 0} icon='angle up' onClick={() => { this.selectedFilesChangeHandler(file.key, 'Order', file.Order - 1) }} />
+                                                    <Button type='button' disabled={index + 1 === this.state.selectedFiles.length} icon='angle down' onClick={() => { this.selectedFilesChangeHandler(file.key, 'Order', file.Order + 1) }} />
                                                 </Button.Group>
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <Form.Input disabled={file.willDelete} value={file.name} placeholder="Dosya Adı" name="name" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'name', e.target.value) }} />
+                                                <Form.Input disabled={file.WillDelete} value={file.Name} placeholder="Dosya Adı" name="Name" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'Name', e.target.value) }} />
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <Dropdown disabled={file.willDelete} value={file.usagetype} placeholder='Ürün Tanımı' name="usagetype" clearable selection fluid options={usagetypes} onChange={(e, data) => { this.selectedFilesChangeHandler(file.key, 'usagetype', data.value) }} />
+                                                <Dropdown disabled={file.WillDelete} value={file.Usagetype} placeholder='Ürün Tanımı' name="Usagetype" clearable selection fluid options={usagetypes} onChange={(e, data) => { this.selectedFilesChangeHandler(file.key, 'Usagetype', data.value) }} />
                                             </Table.Cell>
                                             <Table.Cell>
-                                                {file.fileChanged ? <Form.Input className='w-full flex justify-center items-center' disabled={file.willDelete} type='file' name="file" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'file', e) }} />
-                                                    : <><Label active={!file.willDelete}>{file.filename}</Label>{(file.concurrencyStamp && file.concurrencyStamp !== "") && <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BACKEND_URL}/File/Getfile?guid=${file.concurrencyStamp}`} ><Icon name='download' /></a>}</>}
+                                                {file.fileChanged ? <Form.Input className='w-full flex justify-center items-center' disabled={file.WillDelete} type='File' name="File" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'File', e) }} />
+                                                    : <><Label active={!file.WillDelete}>{file.Filename}</Label>{(file.Uuid && file.Uuid !== "") && <a target="_blank" rel="noopener noreferrer" href={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file.Uuid}`} ><Icon name='download' /></a>}</>}
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {!file.fileChanged ? <Icon onClick={() => { this.handleFilechange(file.key, file.fileChanged) }} className='cursor-pointer' color='green' name='checkmark' />
-                                                    : <Icon active={!file.willDelete} onClick={() => { this.handleFilechange(file.key, file.fileChanged) }} className='cursor-pointer' color='red' name='times circle' />}
+                                                    : <Icon active={!file.WillDelete} onClick={() => { this.handleFilechange(file.key, file.fileChanged) }} className='cursor-pointer' color='red' name='times circle' />}
                                             </Table.Cell>
                                             <Table.Cell className='table-last-section'>
-                                                <Icon className='type-conversion-remove-icon' link color={file.willDelete ? 'green' : 'red'} name={`${file.willDelete ? 'checkmark' : 'minus circle'}`}
-                                                    onClick={() => { this.removeFile(file.key, file.order) }} />
+                                                <Icon className='type-conversion-remove-icon' link color={file.WillDelete ? 'green' : 'red'} name={`${file.WillDelete ? 'checkmark' : 'minus circle'}`}
+                                                    onClick={() => { this.removeFile(file.key, file.Order) }} />
                                             </Table.Cell>
                                         </Table.Row>
                                     })}
@@ -146,11 +148,11 @@ export default class PreregistrationsEditfile extends Component {
         e.preventDefault()
 
         const { EditFiles, history, fillFilenotification } = this.props
-        const files = [...this.state.selectedFiles]
+        const uncleanfiles = [...this.state.selectedFiles]
 
         let errors = []
         this.state.selectedFiles.forEach(data => {
-            if (!data.name || data.name === '') {
+            if (!data.Name || data.Name === '') {
                 errors.push({ type: 'Error', code: 'Files', description: 'İsim Boş Olamaz' })
             }
         });
@@ -159,15 +161,8 @@ export default class PreregistrationsEditfile extends Component {
                 fillFilenotification(error)
             })
         } else {
-            files.forEach(data => {
-                if (!data.updateTime) {
-                    delete data.updateTime
-                }
-                if (!data.deleteTime) {
-                    delete data.deleteTime
-                }
-                delete data.fileChanged
-                delete data.key
+            const files = uncleanfiles.map(data => {
+                return this.DataCleaner(data)
             });
 
             const formData = new FormData();
@@ -186,25 +181,19 @@ export default class PreregistrationsEditfile extends Component {
         this.setState({
             selectedFiles: [...this.state.selectedFiles,
             {
-                id: 0,
-                name: '',
-                parentid: Patients.selected_record.concurrencyStamp,
-                filename: '',
-                filefolder: '',
-                filepath: '',
-                filetype: '',
-                usagetype: '',
-                canteditfile: false,
-                file: {},
+                Name: '',
+                ParentID: Patients.selected_record.Uuid,
+                Filename: '',
+                Filefolder: '',
+                Filepath: '',
+                Filetype: '',
+                Usagetype: '',
+                Canteditfile: false,
+                File: {},
                 key: Math.random(),
-                concurrencyStamp: '',
-                createdUser: '',
-                updatedUser: '',
-                deleteUser: '',
-                willDelete: false,
+                WillDelete: false,
                 fileChanged: true,
-                isActive: true,
-                order: this.state.selectedFiles.length,
+                Order: this.state.selectedFiles.length,
             }]
         })
     }
@@ -214,12 +203,12 @@ export default class PreregistrationsEditfile extends Component {
         const index = this.state.selectedFiles.findIndex(file => file.key === key)
         let selectedFiles = this.state.selectedFiles
 
-        if (selectedFiles[index].concurrencyStamp) {
-            selectedFiles[index].willDelete = !(selectedFiles[index].willDelete)
+        if (selectedFiles[index].Uuid) {
+            selectedFiles[index].WillDelete = !(selectedFiles[index].WillDelete)
             this.setState({ selectedFiles: selectedFiles })
         } else {
             let files = selectedFiles.filter(file => file.key !== key)
-            files.filter(file => file.order > order).forEach(file => file.order--)
+            files.filter(file => file.Order > order).forEach(file => file.Order--)
             this.setState({ selectedFiles: files })
         }
     }
@@ -227,35 +216,60 @@ export default class PreregistrationsEditfile extends Component {
     handleFilechange = (key) => {
         const index = this.state.selectedFiles.findIndex(file => file.key === key)
         let selectedFiles = this.state.selectedFiles
-        if (selectedFiles[index].willDelete) {
+        if (selectedFiles[index].WillDelete) {
             return
         }
         if (selectedFiles[index].fileChanged) {
             return
         }
         selectedFiles[index].fileChanged = !(selectedFiles[index].fileChanged)
-        selectedFiles[index].file = {}
+        selectedFiles[index].File = {}
         this.setState({ selectedFiles: selectedFiles })
     }
 
     selectedFilesChangeHandler = (key, property, value) => {
         let selectedFiles = this.state.selectedFiles
         const index = selectedFiles.findIndex(file => file.key === key)
-        if (property === 'order') {
-            selectedFiles.filter(file => file.order === value)
-                .forEach((file) => file.order = selectedFiles[index].order > value ? file.order + 1 : file.order - 1)
+        if (property === 'Order') {
+            selectedFiles.filter(file => file.Order === value)
+                .forEach((file) => file.Order = selectedFiles[index].Order > value ? file.Order + 1 : file.Order - 1)
         }
-        if (property === 'file') {
+        if (property === 'File') {
             if (value.target.files && value.target.files.length > 0) {
                 selectedFiles[index][property] = value.target.files[0]
-                selectedFiles[index].filename = selectedFiles[index].file?.name
-                selectedFiles[index].name = selectedFiles[index].file?.name
+                selectedFiles[index].Filename = selectedFiles[index].File?.name
+                selectedFiles[index].Name = selectedFiles[index].File?.name
                 selectedFiles[index].fileChanged = false
             }
         } else {
             selectedFiles[index][property] = value
         }
         this.setState({ selectedFiles: selectedFiles })
+    }
+
+    DataCleaner = (data) => {
+        if (data.Id !== undefined) {
+            delete data.Id;
+        }
+        if (data.Createduser !== undefined) {
+            delete data.Createduser;
+        }
+        if (data.Createtime !== undefined) {
+            delete data.Createtime;
+        }
+        if (data.Updateduser !== undefined) {
+            delete data.Updateduser;
+        }
+        if (data.Updatetime !== undefined) {
+            delete data.Updatetime;
+        }
+        if (data.Deleteduser !== undefined) {
+            delete data.Deleteduser;
+        }
+        if (data.Deletetime !== undefined) {
+            delete data.Deletetime;
+        }
+        return data
     }
 
 }

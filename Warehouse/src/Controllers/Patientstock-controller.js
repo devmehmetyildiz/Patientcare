@@ -32,19 +32,13 @@ async function Transferpatientstock(req, res, next) {
     const t = await db.sequelize.transaction();
     try {
         const patientstocks = await db.patientstockModel.findAll({ where: { PatientID: patient.Uuid } });
-        if (!patientstocks) {
-            return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
-        }
-        if (!patientstocks.Isactive) {
-            return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
-        }
         for (const patientstock of patientstocks) {
 
             let amount = 0;
             let movements = await db.patientstockmovementModel.findAll({ where: { StockID: patientstock.Uuid } })
             for (const movement of movements) {
                 amount += (movement.Amount * movement.Movementtype);
-                await patientstockmovementModel.update({
+                await db.patientstockmovementModel.update({
                     ...movement,
                     Status: 1,
                     Updateduser: "System",
@@ -120,7 +114,7 @@ async function Transferpatientstock(req, res, next) {
         t.rollback()
         return next(sequelizeErrorCatcher(error))
     }
-    res.status(200)
+    res.status(200).json({succes:true})
 }
 
 async function GetPatientstocks(req, res, next) {
@@ -392,6 +386,101 @@ async function UpdatePatientstock(req, res, next) {
     GetPatientstocks(req, res, next)
 }
 
+async function UpdatePatientstocklist(req, res, next) {
+
+    let validationErrors = []
+
+    const stocklist = req.body
+    const t = await db.sequelize.transaction();
+    try {
+        for (const stockitem of stocklist) {
+            const {
+                PatientID,
+                StockdefineID,
+                DepartmentID,
+                Skt,
+                Barcodeno,
+                Status,
+                Order,
+                Uuid
+            } = stockitem
+
+            if (!validator.isUUID(PatientID)) {
+                validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+            }
+            if (!validator.isUUID(StockdefineID)) {
+                validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
+            }
+            if (!validator.isUUID(DepartmentID)) {
+                validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
+            }
+            if (!validator.isISODate(Skt)) {
+                validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
+            }
+            if (!validator.isString(Barcodeno)) {
+                validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
+            }
+            if (!validator.isNumber(Status)) {
+                validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED)
+            }
+            if (!validator.isNumber(Order)) {
+                validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED)
+            }
+
+            if (validationErrors.length > 0) {
+                return next(createValidationError(validationErrors, req.language))
+            }
+
+            if (Uuid && validator.isUUID(Uuid)) {
+                const stock = db.patientstockModel.findOne({ where: { Uuid: Uuid } })
+                if (!stock) {
+                    return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
+                }
+                if (stock.Isactive === false) {
+                    return next(createAccessDenied([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+                }
+                if (stockitem.Willdetele) {
+                    await db.patientstockModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+                    await db.patientstockmovementModel.destroy({ where: { StockID: Uuid } })
+                } else {
+                    await db.patientstockModel.update({
+                        ...stockitem,
+                        Updateduser: "System",
+                        Updatetime: new Date(),
+                    }, { where: { Uuid: Uuid } }, { transaction: t })
+                }
+            } else {
+                let stockuuid = uuid()
+                await db.patientstockModel.create({
+                    ...stockitem,
+                    Uuid: stockuuid,
+                    Createduser: "System",
+                    Createtime: new Date(),
+                    Isactive: true
+                }, { transaction: t })
+
+                await db.patientstockmovementModel.create({
+                    Uuid: uuid(),
+                    StockID: stockuuid,
+                    Amount: stockitem.Amount,
+                    Movementdate: new Date(),
+                    Movementtype: 1,
+                    Prevvalue: 0,
+                    Newvalue: stockitem.Amount,
+                    Createduser: "System",
+                    Createtime: new Date(),
+                    Isactive: true
+                }, { transaction: t })
+            }
+        }
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    res.status(200).json({ success: true })
+}
+
 async function DeletePatientstock(req, res, next) {
 
     let validationErrors = []
@@ -429,11 +518,37 @@ async function DeletePatientstock(req, res, next) {
     GetPurchaseorderstocks(req, res, next)
 }
 
+function DataCleaner(data) {
+    if (data.Id !== undefined) {
+        delete data.Id;
+    }
+    if (data.Createduser !== undefined) {
+        delete data.Createduser;
+    }
+    if (data.Createtime !== undefined) {
+        delete data.Createtime;
+    }
+    if (data.Updateduser !== undefined) {
+        delete data.Updateduser;
+    }
+    if (data.Updatetime !== undefined) {
+        delete data.Updatetime;
+    }
+    if (data.Deleteduser !== undefined) {
+        delete data.Deleteduser;
+    }
+    if (data.Deletetime !== undefined) {
+        delete data.Deletetime;
+    }
+    return data
+}
+
 module.exports = {
     GetPatientstocks,
     GetPatientstock,
     AddPatientstock,
     UpdatePatientstock,
     DeletePatientstock,
-    Transferpatientstock
+    Transferpatientstock,
+    UpdatePatientstocklist
 }

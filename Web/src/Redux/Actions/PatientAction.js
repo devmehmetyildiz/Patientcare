@@ -130,7 +130,6 @@ export const CompletePrepatients = (data, historypusher, url) => async (dispatch
     dispatch({ type: ACTION_TYPES.EDIT_PATIENT_INIT })
     await instanse.put(config.services.Business, ROUTES.PATIENT+"/Preregistrations/Complete", data)
         .then(response => {
-            console.log('response: ', response);
             dispatch({ type: ACTION_TYPES.EDIT_PATIENT_SUCCESS, payload: response.data })
             historypusher.push(url ? url : '/Patients')
         })
@@ -143,7 +142,7 @@ export const CompletePrepatients = (data, historypusher, url) => async (dispatch
 
 export const EditPatientstocks = (data, historypusher, url) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_PATIENT_INIT })
-    await instanse.put(config.services.Business, ROUTES.PATIENT+"/Preregistrations/Editstock", data)
+    await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Editpatientstocks", data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.EDIT_PATIENT_SUCCESS, payload: response.data })
             historypusher.push(url ? url : '/Patients')

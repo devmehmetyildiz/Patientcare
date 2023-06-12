@@ -13,7 +13,7 @@ export default function PreregistrationsComplete({ Warehouseslist, data, history
   const [bed, setBed] = useState(0)
 
   const Warehouseoptions = Warehouseslist.map(warehouse => {
-    return { key: warehouse.concurrencyStamp, text: warehouse.name, value: warehouse.concurrencyStamp }
+    return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
   })
 
 
@@ -29,7 +29,7 @@ export default function PreregistrationsComplete({ Warehouseslist, data, history
       let notificationErrors = []
       let notificationSuccess = []
       willCheckfiles.forEach(filestypes => {
-        let foundedFile = data.files.find(u => u.usagetype === filestypes)
+        let foundedFile = data.Files.find(u => u.Usagetype === filestypes)
         if (!foundedFile) {
           notificationErrors.push({ type: 'Error', code: 'Dosya Bulunamadı', description: `${filestypes} bulunamadı` })
         } else {
@@ -51,10 +51,10 @@ export default function PreregistrationsComplete({ Warehouseslist, data, history
 
   const saveChanges = () => {
     let responsedata = { ...data }
-    responsedata.roomnumber = room
-    responsedata.floornumber = floor
-    responsedata.bednumber = bed
-    responsedata.warehouseID = warehouse
+    responsedata.Roomnumber = parseInt(room)
+    responsedata.Floornumber = parseInt(floor)
+    responsedata.Bednumber = parseInt(bed)
+    responsedata.WarehouseID = warehouse
     delete responsedata.actions
     delete responsedata.enter
     if (enable) {
@@ -76,8 +76,8 @@ export default function PreregistrationsComplete({ Warehouseslist, data, history
           <Grid.Column className='gap-4'>
 
             <div className='w-full flex justify-center items-center'>
-              <Label className='!mb-4' size='big'>{`${data.patientdefine?.firstname} ${data.patientdefine?.lastname} - 
-            ${data.patientdefine?.countryID} - ${data.patientdefine?.costumertype?.name} - ${data.patientdefine?.patienttype?.name}`}</Label>
+              <Label className='!mb-4' size='big'>{`${data.Patientdefine?.Firstname} ${data.Patientdefine?.Lastname} - 
+            ${data.Patientdefine?.CountryID} - ${data.Patientdefine?.Costumertype?.Name} - ${data.Patientdefine?.Patienttype?.Name}`}</Label>
             </div>
             <div className='flex flex-col justify-start items-start '>
               <Label className='!m-2' color='grey'>Gerekli Dosyalar</Label>
@@ -99,15 +99,15 @@ export default function PreregistrationsComplete({ Warehouseslist, data, history
             <Grid columns={3}>
               <GridColumn>
                 <label className='text-[#000000de] my-2'>Kat Numarası</label>
-                <Input onChange={(e) => { setFloor(e.target.value) }} fluid placeholder='Kat Numarası' />
+                <Input onChange={(e) => { setFloor(e.target.value) }} fluid placeholder='Kat Numarası' type='number' />
               </GridColumn>
               <GridColumn>
                 <label className='text-[#000000de] my-2'>Oda Numarası</label>
-                <Input onChange={(e) => { setRoom(e.target.value) }} fluid placeholder='Oda Numarası' />
+                <Input onChange={(e) => { setRoom(e.target.value) }} fluid placeholder='Oda Numarası' type='number'/>
               </GridColumn>
               <GridColumn>
                 <label className='text-[#000000de] my-2'>Yatak Numarası</label>
-                <Input onChange={(e) => { setBed(e.target.value) }} fluid placeholder='Yatak Numarası' />
+                <Input onChange={(e) => { setBed(e.target.value) }} fluid placeholder='Yatak Numarası' type='number'/>
               </GridColumn>
             </Grid>
           </Grid.Column>

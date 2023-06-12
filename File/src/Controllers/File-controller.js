@@ -80,42 +80,50 @@ async function Downloadfile(req, res, next) {
         if (file.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.FILE_NOT_ACTIVE], req.language))
         }
-        const fileStream = new stream.PassThrough();
+        const fileStream = new stream.Writable({
+            write(chunk, encoding, callback) {
+                if (res.writableEnded) {
+                    return callback(new Error('Response ended'));
+                }
+                res.write(chunk, encoding, callback);
+            },
+            final(callback) {
+                res.end(callback);
+            },
+        });
         const remoteFolderpath = `/${config.ftp.mainfolder}/${file.Filefolder}/`;
         const remoteFilePath = `/${remoteFolderpath}/${file.Filename}`;
 
         const server = {
             host: config.ftp.host,
             user: config.ftp.user,
-            password: config.ftp.password
+            password: config.ftp.password,
         };
 
         await (async () => {
             const client = new ftp.Client();
-
             try {
-                await client.access(server);
-                await client.downloadTo(fileStream, remoteFilePath);
                 res.setHeader("Content-Disposition", `attachment; filename=${file.Filename}`);
                 res.setHeader("Content-Type", file.Filetype);
+                await client.access(server);
+                await client.downloadTo(fileStream, remoteFilePath, 0);
 
                 fileStream.pipe(res);
 
-                fileStream.on("end", () => {
+                fileStream.on('finish', () => {
                     client.close();
-                    console.log("File downloaded and sent as response successfully");
+                    console.log('File downloaded and sent as response successfully');
                 });
+
             } catch (err) {
                 console.log('err: ', err);
                 client.close();
-                return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
+                return next(createValidationError(messages.ERROR.FILE_DOWNLOAD_ERROR))
             }
         })();
-        console.log("ended")
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
-    console.log("isok")
 }
 
 async function AddFile(req, res, next) {
@@ -139,7 +147,7 @@ async function AddFile(req, res, next) {
         object['File'] = files[`${keyvalue}.File`]
         requestArray.push(object)
     }
-    
+
     const t = await db.sequelize.transaction();
     try {
         for (const filedata of requestArray) {
@@ -227,14 +235,17 @@ async function UpdateFile(req, res, next) {
                     }
                     await db.fileModel.destroy({ where: { Uuid: file.Uuid }, transaction: t });
                 } else {
-                    const isFileremoved = await Removefileandfolderfromftp(file)
-                    if (!isFileremoved) {
-                        return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
+                    if (filedata.File) {
+                        const isFileremoved = await Removefileandfolderfromftp(file)
+                        if (!isFileremoved) {
+                            return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
+                        }
+                        await Uploadfiletoftp(filedata)
+                        filedata.Filetype = filedata.File.type
+                        filedata.Filename = filedata.File.name
                     }
-                    await Uploadfiletoftp(filedata)
                     await db.fileModel.update({
-                        Filetype:filedata.File.type,
-                        Filename : filedata.File.name,
+                        ...filedata,
                         Updateduser: "System",
                         Updatetime: new Date(),
                     }, { where: { Uuid: filedata.Uuid } }, { transaction: t })

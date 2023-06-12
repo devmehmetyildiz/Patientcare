@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const config = require('./Config');
-
+const os = require("os")
 require("./Middlewares/Databaseconnector")()
   .then(() => {
 
@@ -42,8 +42,8 @@ require("./Middlewares/Databaseconnector")()
       saveUninitialized: false,
     }))
 
-    app.use(bodyParser.json())
-    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({  extended: true }));
     app.use(formidableMiddleware());
     app.use(languageHelper)
     app.use(crossDomainEnabler)

@@ -422,28 +422,27 @@ async function Completeprepatient(req, res, next) {
 
     let validationErrors = []
     const {
-        Firstname,
-        Lastname,
-        CountryID,
-        CostumertypeID,
-        PatienttypeID,
-        Patientdefine
+        PatientdefineID,
+        WarehouseID,
+        Roomnumber,
+        Floornumber,
+        Bednumber
     } = req.body
 
-    if (!validator.isString(Firstname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED)
-    }
-    if (!validator.isString(Lastname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED)
-    }
-    if (!validator.isString(CountryID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
-    }
-    if (!validator.isString(CostumertypeID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED)
-    }
-    if (!validator.isString(PatienttypeID)) {
+    if (!validator.isUUID(PatientdefineID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
+    }
+    if (!validator.isUUID(WarehouseID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
+    }
+    if (!validator.isNumber(Roomnumber)) {
+        validationErrors.push(messages.VALIDATION_ERROR.ROOMNUMBER_REQUIRED)
+    }
+    if (!validator.isNumber(Floornumber)) {
+        validationErrors.push(messages.VALIDATION_ERROR.FLOORNUMBER_REQUIRED)
+    }
+    if (!validator.isNumber(Bednumber)) {
+        validationErrors.push(messages.VALIDATION_ERROR.BEDNUMBER_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -452,28 +451,30 @@ async function Completeprepatient(req, res, next) {
 
     let patient = req.body
 
+    try {
+        await axios({
+            method: 'PUT',
+            url: config.services.Warehouse + `Patientstocks/Transferpatientstock`,
+            data: patient,
+            headers: {
+                session_key: config.session.secret
+            }
+        })
+    } catch (error) {
+        console.log('error111: ', error);
+        return next(requestErrorCatcher(error, 'Warehouse'))
+    }
+    
     const t = await db.sequelize.transaction();
-
     try {
         await db.patientModel.update({
             ...patient,
+            Iswaitingactivation:false,
             Updateduser: "System",
             Updatetime: new Date(),
             Isactive: true
         }, { where: { Uuid: patient.Uuid } }, { transaction: t })
 
-        try {
-            await axios({
-                method: 'PUT',
-                url: config.services.Warehouse + `Patientstocks/Transferpatientstock`,
-                data: patient,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-        } catch (error) {
-            return next(requestErrorCatcher(error, 'Warehouse'))
-        }
 
         let patientmovementuuid = uuid()
 
@@ -501,6 +502,23 @@ async function Completeprepatient(req, res, next) {
         return next(sequelizeErrorCatcher(err))
     }
     GetPatients(req, res, next)
+}
+
+async function Editpatientstocks(req, res, next) {
+
+    try {
+        await axios({
+            method: 'PUT',
+            url: config.services.Warehouse + "Patientstocks/UpdatePatientstocklist",
+            data: req.body,
+            headers: {
+                session_key: config.session.secret
+            }
+        })
+    } catch (error) {
+        return next(requestErrorCatcher(error, "Warehouse"))
+    }
+    GetPreregistrations(req, res, next)
 }
 
 async function UpdatePatient(req, res, next) {
@@ -609,4 +627,5 @@ module.exports = {
     AddPatient,
     UpdatePatient,
     DeletePatient,
+    Editpatientstocks
 }

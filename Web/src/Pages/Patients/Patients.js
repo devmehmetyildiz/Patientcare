@@ -9,6 +9,7 @@ import PrintBodyReplacer from "../../Utils/PrintBodyReplacer"
 import { ROUTES } from '../../Utils/Constants'
 import jsPDF from 'jspdf';
 import myTurkishFont from '../../Assets/fonts/AbhayaLibre-Medium.ttf';
+import config from '../../Config'
 export default class Patients extends Component {
   constructor(props) {
     super(props)
@@ -46,7 +47,7 @@ export default class Patients extends Component {
     const { list, isLoading, isDispatching } = Patients
     const { activeIndex } = this.state
 
-    const floorList = [...new Set(list.map(item => { return item.floornumber }))]
+    const floorList = [...new Set(list.map(item => { return item.Floornumber }))]
 
     const triggerSetting = (
       <div className='flex flex-row justify-center items-center select-none'>
@@ -99,24 +100,24 @@ export default class Patients extends Component {
                         <Accordion.Content active={activeIndex.includes(index)}>
                           <Transition visible={activeIndex.includes(index)} animation='slide left' duration={500}>
                             <Grid stackable divided >
-                              {list.filter(u => u.floornumber === floor).map((patient, index) => {
+                              {list.filter(u => u.Floornumber === floor).map((patient, index) => {
                                 return <Grid.Column key={index} mobile={9} tablet={6} computer={3}>
                                   <Card>
                                     <Card.Content>
-                                      {(patient.files || []).filter(u => u.usagetype === 'PP').length > 0 ?
+                                      {(patient.Files || []).filter(u => u.Usagetype === 'PP').length > 0 ?
                                         <Image
                                           floated='right'
                                           size='mini'
-                                          src={`${process.env.REACT_APP_BACKEND_URL}/${ROUTES.FILE}/GetImage?guid=${patient.concurrencyStamp}`}
+                                          src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${(patient.Files || []).find(u => u.Usagetype === 'PP')?.Uuid}`}
                                         />
                                         : <Image
                                           floated='right'
                                           size='mini'
                                           src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'
                                         />}
-                                      <Card.Header>{`${patient?.patientdefine?.firstname} ${patient?.patientdefine?.lastname}`}</Card.Header>
-                                      <Card.Meta>{`${patient?.patientdefine?.costumertype?.name}`}</Card.Meta>
-                                      <Card.Meta>{`Oda no:${patient?.roomnumber}  Yatak no:${patient?.bednumber}`}
+                                      <Card.Header>{`${patient?.Patientdefine?.Firstname} ${patient?.Patientdefine?.Lastname}`}</Card.Header>
+                                      <Card.Meta>{`${patient?.Patientdefine?.Costumertype?.Name}`}</Card.Meta>
+                                      <Card.Meta>{`Oda no:${patient?.Roomnumber}  Yatak no:${patient?.Bednumber}`}
                                       </Card.Meta>
                                       <Card.Description>
                                         <Grid>

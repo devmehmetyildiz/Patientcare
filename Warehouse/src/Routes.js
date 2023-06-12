@@ -41,6 +41,7 @@ const Routes = [
   { method: 'get', path: '/Patientstocks', controller: 'Patientstock', action: 'GetPatientstocks' },
   { method: 'post', path: '/Patientstocks', controller: 'Patientstock', action: 'AddPatientstock' },
   { method: 'put', path: '/Patientstocks/Transferpatientstock', controller: 'Patientstock', action: 'Transferpatientstock' },
+  { method: 'put', path: '/Patientstocks/UpdatePatientstocklist', controller: 'Patientstock', action: 'UpdatePatientstocklist' },
   { method: 'put', path: '/Patientstocks', controller: 'Patientstock', action: 'UpdatePatientstock' },
   { method: 'delete', path: '/Patientstocks', controller: 'Patientstock', action: 'DeletePatientstock' },
 

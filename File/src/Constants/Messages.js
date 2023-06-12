@@ -78,6 +78,12 @@ const messages = {
         tr: 'Dosya ftp servera yüklenemedi',
       }
     },
+    FILE_DOWNLOAD_ERROR: {
+      code: 'FILE_DOWNLOAD_ERROR', description: {
+        en: 'File cant download to ftp server',
+        tr: 'Dosya ftp serverdan indirilemedi',
+      }
+    },
     PATIENTTYPE_NOT_FOUND: {
       code: 'PATIENTTYPE_NOT_FOUND', description: {
         en: 'Patient type not found',

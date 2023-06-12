@@ -6,7 +6,7 @@ module.exports.init = function (app) {
     res.json({
       type: 'NOT_FOUND',
       code: 'ERR_NOT_FOUND',
-      description: 'Resource not found',
+      description: 'Resource not found in '+ config.session.name,
     })
   })
 
@@ -65,6 +65,10 @@ module.exports.init = function (app) {
           res.json(result)
           break
         case 'SERVER_ERROR':
+          res.status(500)
+          res.json(result)
+          break
+        case 'MICROSERVICE_INTERNALERROR':
           res.status(500)
           res.json(result)
           break

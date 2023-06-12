@@ -78,7 +78,7 @@ export default class PreregistrationsEditstock extends Component {
           <Divider className='w-full  h-[1px]' />
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Header as='h2' icon textAlign='center'>
-              {(selected_record.Files || []).filter(u => u.Usagetype === 'PP').length > 0 ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${selected_record.Files.find(u=>u.Usagetype==='PP')?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
+              {(selected_record.Files || []).filter(u => u.Usagetype === 'PP').length > 0 ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${selected_record.Files.find(u => u.Usagetype === 'PP')?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
                 : <Icon name='users' circular />}
               <Header.Content>{`${selected_record.Patientdefine?.Firstname} ${selected_record.Patientdefine?.Lastname} - ${selected_record.Patientdefine?.CountryID}`}</Header.Content>
             </Header>
@@ -120,7 +120,7 @@ export default class PreregistrationsEditstock extends Component {
                       </Table.Cell>
                       <Table.Cell>
                         <Form.Field>
-                          <Dropdown value={stock.Departmentid} placeholder='Departman' name="DepartmentID" clearable search fluid selection options={Departmentsoption} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'Departmentid', data.value) }} />
+                          <Dropdown value={stock.DepartmentID} placeholder='Departman' name="DepartmentID" clearable search fluid selection options={Departmentsoption} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'DepartmentID', data.value) }} />
                         </Form.Field>
                       </Table.Cell>
                       <Table.Cell>
@@ -169,7 +169,7 @@ export default class PreregistrationsEditstock extends Component {
     if (this.state.open) {
       return
     }
-    const { EditPatientstocks, Patients, history, fillPatientnotification } = this.props
+    const { EditPatientstocks, history, fillPatientnotification } = this.props
     const stocks = this.state.selectedStocks
 
     stocks.forEach(data => {
@@ -201,16 +201,17 @@ export default class PreregistrationsEditstock extends Component {
         fillPatientnotification(error)
       })
     } else {
-      EditPatientstocks({ ...Patients.selected_record, Stocks: stocks }, history, "/Preregistrations")
+      EditPatientstocks(stocks, history, "/Preregistrations")
     }
   }
 
   AddNewProduct = () => {
+    const { Patients } = this.props
     this.setState({
       selectedStocks: [...this.state.selectedStocks,
       {
         Patient: {},
-        patientID: '',
+        PatientID: Patients.selected_record.Uuid,
         StockdefineID: '',
         Stockdefine: {},
         DepartmentID: '',
@@ -221,7 +222,7 @@ export default class PreregistrationsEditstock extends Component {
         Info: '',
         Status: 0,
         key: Math.random(),
-        order: this.state.selectedStocks.length,
+        Order: this.state.selectedStocks.length,
       }]
     })
   }
