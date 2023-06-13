@@ -644,9 +644,7 @@ async function DeactivePurchaseorder(req, res, next) {
 async function DeletePurchaseorder(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.purchaseorderId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)

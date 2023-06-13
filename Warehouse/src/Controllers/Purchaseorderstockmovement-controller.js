@@ -234,9 +234,7 @@ async function UpdatePurchaseorderstockmovement(req, res, next) {
 async function DeletePurchaseorderstockmovement(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.purchaseorderstockmovementId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)

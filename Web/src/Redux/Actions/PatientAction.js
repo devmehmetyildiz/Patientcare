@@ -155,7 +155,7 @@ export const EditPatientstocks = (data, historypusher, url) => async (dispatch, 
 
 export const DeletePatients = (data) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.DELETE_PATIENT_INIT })
-    await instanse.put(config.services.Business, ROUTES.PATIENT, data)
+    await instanse.delete(config.services.Business, `${ROUTES.PATIENT}/${data.Uuid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_PATIENT_SUCCESS, payload: response.data })
         })

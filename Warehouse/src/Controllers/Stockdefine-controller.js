@@ -200,9 +200,7 @@ async function UpdateStockdefine(req, res, next) {
 async function DeleteStockdefine(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.stockdefineId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)

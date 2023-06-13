@@ -87,7 +87,7 @@ export const EditPurchaseorderstockmovements = (data, historypusher) => async (d
 export const DeletePurchaseorderstockmovements = (data) => async (dispatch, getState) => {
     
     dispatch({ type: ACTION_TYPES.DELETE_PURCHASEORDERSTOCKMOVEMENT_INIT })
-    await instanse.delete(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCKMOVEMENT, data)
+    await instanse.delete(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCKMOVEMENT}/${data.Uuid}`)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_PURCHASEORDERSTOCKMOVEMENT_SUCCESS, payload: response.data })
         })

@@ -84,7 +84,7 @@ export const DeletePeriods = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_PERIOD_INIT })
-    await instanse.delete(config.services.Setting, ROUTES.PERIOD, data)
+    await instanse.get(config.services.Setting, `${ROUTES.PERIOD}/${data.Uuid}`)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_PERIOD_SUCCESS, payload: response.data })
         })

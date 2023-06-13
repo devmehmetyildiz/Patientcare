@@ -182,9 +182,7 @@ async function UpdatePrinttemplate(req, res, next) {
 async function DeletePrinttemplate(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.printtemplateId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATEID_REQUIRED)

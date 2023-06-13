@@ -36,7 +36,7 @@ export const ACTION_TYPES = {
 
 export const GetDepartments = () => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_DEPARTMENTS_INIT })
-    await instanse.get(config.services.Setting, "Departments")
+    await instanse.get(config.services.Setting, ROUTES.DEPARTMENT)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_DEPARTMENTS_SUCCESS, payload: response.data })
         })
@@ -48,7 +48,7 @@ export const GetDepartments = () => async (dispatch, getState) => {
 
 export const GetDepartment = (guid) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.GET_DEPARTMENT_INIT })
-    await instanse.get(config.services.Setting, `Departments/${guid}`)
+    await instanse.get(config.services.Setting, `${ROUTES.DEPARTMENT}/${guid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.GET_DEPARTMENT_SUCCESS, payload: response.data })
         })
@@ -60,7 +60,7 @@ export const GetDepartment = (guid) => async (dispatch, getState) => {
 
 export const AddDepartments = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.ADD_DEPARTMENT_INIT })
-    await instanse.post(config.services.Setting, `Departments`, data)
+    await instanse.post(config.services.Setting, ROUTES.DEPARTMENT, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.ADD_DEPARTMENT_SUCCESS, payload: response.data })
             historypusher.push('/Departments')
@@ -73,13 +73,12 @@ export const AddDepartments = (data, historypusher) => async (dispatch, getState
 
 export const EditDepartments = (data, historypusher) => async (dispatch, getState) => {
     dispatch({ type: ACTION_TYPES.EDIT_DEPARTMENT_INIT })
-    await instanse.put(config.services.Setting, `Departments`, data)
+    await instanse.put(config.services.Setting, ROUTES.DEPARTMENT, data)
         .then(response => {
             dispatch({ type: ACTION_TYPES.EDIT_DEPARTMENT_SUCCESS, payload: response.data })
             historypusher.push('/Departments')
         })
         .catch(error => {
-            console.log('AxiosErrorHelper(error): ', AxiosErrorHelper(error));
             dispatch({ type: ACTION_TYPES.FILL_DEPARTMENTS_NOTIFICATION, payload: AxiosErrorHelper(error) })
             dispatch({ type: ACTION_TYPES.EDIT_DEPARTMENT_ERROR, payload: AxiosErrorHelper(error) })
         })
@@ -89,7 +88,7 @@ export const DeleteDepartments = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_DEPARTMENT_INIT })
-    await instanse.delete(config.services.Setting, `Departments`, data)
+    await instanse.delete(config.services.Setting, `${ROUTES.DEPARTMENT}/${data.Uuid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_DEPARTMENT_SUCCESS, payload: response.data })
         })

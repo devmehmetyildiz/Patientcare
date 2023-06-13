@@ -88,7 +88,7 @@ export const DeleteCases = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_CASE_INIT })
-    await instanse.delete(config.services.Setting, ROUTES.CASE, data)
+    await instanse.delete(config.services.Setting, `${ROUTES.CASE}/${data.Uuid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_CASE_SUCCESS, payload: response.data })
         })

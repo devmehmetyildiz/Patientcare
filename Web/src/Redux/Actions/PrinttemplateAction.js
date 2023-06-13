@@ -84,7 +84,7 @@ export const DeletePrinttemplates = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_PRINTTEMPLATE_INIT })
-    await instanse.delete(config.services.System, ROUTES.PRINTTEMPLATE, data)
+    await instanse.delete(config.services.System, `${ROUTES.PRINTTEMPLATE}/${data.Uuid}`)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_PRINTTEMPLATE_SUCCESS, payload: response.data })
         })

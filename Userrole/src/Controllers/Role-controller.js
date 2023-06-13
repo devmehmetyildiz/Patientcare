@@ -250,9 +250,7 @@ async function UpdateRole(req, res, next) {
 async function DeleteRole(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.roleId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)

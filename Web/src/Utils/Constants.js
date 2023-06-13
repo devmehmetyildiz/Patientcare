@@ -15,7 +15,7 @@ export const ROUTES = {
 
     COSTUMERTYPE: 'Costumertypes',
     CASE: 'Cases',
-    DEPARTMENT: 'Department',
+    DEPARTMENT: 'Departments',
     FILE: 'Files',
     STATION: 'Stations',
     STOCKDEFINE: 'Stockdefines',
@@ -32,7 +32,7 @@ export const ROUTES = {
     PATIENTSTOCKMOVEMENT: 'Patientstockmovements',
     TODODEFINE: 'Tododefines',
     TODOGROUPDEFINE: 'Todogroupdefines',
-    PATIENTMOVEMENT: 'Patientmovement',
+    PATIENTMOVEMENT: 'Patientmovements',
     CHECKPERIOD: 'Checkperiods',
     PERIOD: 'Periods',
     MAILSETTING: 'Mailsettings',

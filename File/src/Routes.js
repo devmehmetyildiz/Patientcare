@@ -5,7 +5,7 @@ const Routes = [
   { method: 'get', path: '/Files', controller: 'File', action: 'GetFiles' },
   { method: 'post', path: '/Files', controller: 'File', action: 'AddFile' },
   { method: 'put', path: '/Files', controller: 'File', action: 'UpdateFile' },
-  { method: 'delete', path: '/Files', controller: 'File', action: 'DeleteFile' },
+  { method: 'delete', path: '/Files/:fileId', controller: 'File', action: 'DeleteFile' },
 
 ]
 

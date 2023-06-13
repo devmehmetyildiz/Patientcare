@@ -201,9 +201,7 @@ async function UpdateWarehouse(req, res, next) {
 async function DeleteWarehouse(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.warehouseId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)

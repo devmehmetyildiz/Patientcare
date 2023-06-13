@@ -84,7 +84,7 @@ export const DeleteTodogroupdefines = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_TODOGROUPDEFINE_INIT })
-    await instanse.delete(config.services.Setting, ROUTES.TODOGROUPDEFINE, data)
+    await instanse.delete(config.services.Setting, `${ROUTES.TODOGROUPDEFINE}/${data.Uuid}`)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_TODOGROUPDEFINE_SUCCESS, payload: response.data })
         })

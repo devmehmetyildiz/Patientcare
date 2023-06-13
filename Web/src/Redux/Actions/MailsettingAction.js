@@ -84,7 +84,7 @@ export const DeleteMailsettings = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_MAILSETTING_INIT })
-    await instanse.delete(config.services.System, ROUTES.MAILSETTING, data)
+    await instanse.delete(config.services.System, `${ROUTES.MAILSETTING}/${data.Uuid}`)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_MAILSETTING_SUCCESS, payload: response.data })
         })

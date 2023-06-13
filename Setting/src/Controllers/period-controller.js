@@ -140,9 +140,7 @@ async function UpdatePeriod(req, res, next) {
 async function DeletePeriod(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.periodId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.PERIODID_REQUIRED)

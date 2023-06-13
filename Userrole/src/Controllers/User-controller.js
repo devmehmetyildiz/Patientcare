@@ -640,9 +640,7 @@ async function UpdateUser(req, res, next) {
 async function DeleteUser(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.userId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)

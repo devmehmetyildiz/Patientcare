@@ -585,15 +585,13 @@ async function UpdatePatient(req, res, next) {
 async function DeletePatient(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.patientId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTDEFINEID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))

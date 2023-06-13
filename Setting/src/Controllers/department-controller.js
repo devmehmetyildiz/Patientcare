@@ -214,9 +214,7 @@ async function UpdateDepartment(req, res, next) {
 async function DeleteDepartment(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.departmentId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)

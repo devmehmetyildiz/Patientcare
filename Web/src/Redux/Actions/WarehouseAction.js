@@ -88,7 +88,7 @@ export const DeleteWarehouses = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_WAREHOUSE_INIT })
-    await instanse.delete(config.services.Warehouse, ROUTES.WAREHOUSE, data)
+    await instanse.delete(config.services.Warehouse, `${ROUTES.WAREHOUSE}/${data.Uuid}`)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_WAREHOUSE_SUCCESS, payload: response.data })
         })

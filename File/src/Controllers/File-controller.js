@@ -262,9 +262,7 @@ async function UpdateFile(req, res, next) {
 async function DeleteFile(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.fileId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.FILEID_REQUIRED)

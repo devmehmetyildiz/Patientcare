@@ -215,9 +215,7 @@ async function UpdateTodogroupdefine(req, res, next) {
 async function DeleteTodogroupdefine(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.todogroupdefineId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED)

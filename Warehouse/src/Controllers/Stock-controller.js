@@ -275,9 +275,7 @@ async function UpdateStock(req, res, next) {
 async function DeleteStock(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.stockId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)

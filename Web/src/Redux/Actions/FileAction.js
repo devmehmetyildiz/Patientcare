@@ -99,7 +99,7 @@ export const DeleteFiles = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_FILE_INIT })
-    await instanse.delete(config.services.File, ROUTES.FILE, data)
+    await instanse.delete(config.services.File, `${ROUTES.FILE}/${data.Uuid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_FILE_SUCCESS, payload: response.data })
         })

@@ -136,9 +136,9 @@ export default class Patients extends Component {
                                                         <div
                                                           onClick={() => {
                                                             setPatient(patient)
-                                                            this.setState({ openPrintpreview: true, selectedPrintdesign: printdesign, isPreviewloading: true, decoratedBody: PrintBodyReplacer(printdesign.printtemplate, patient) }
+                                                            this.setState({ openPrintpreview: true, selectedPrintdesign: printdesign, isPreviewloading: true, decoratedBody: PrintBodyReplacer(printdesign.Printtemplate, patient) }
                                                             )
-                                                          }} className='text-[#3d3d3d] hover:text-[#3d3d3d]'><Icon className='id card ' />{printdesign.name}</div>
+                                                          }} className='text-[#3d3d3d] hover:text-[#3d3d3d]'><Icon className='id card ' />{printdesign.Name}</div>
                                                       </Dropdown.Item>
                                                     })
                                                     : <React.Fragment />}
@@ -202,7 +202,7 @@ export default class Patients extends Component {
             open={this.state.openCheckperiod}
           >
             <Modal.Header>Hasta Kontrol Periyodları</Modal.Header>
-            <Modal.Header>{`${Patients.selected_patient?.patientdefine?.firstname} ${Patients.selected_patient?.patientdefine?.lastname}`}</Modal.Header>
+            <Modal.Header>{`${Patients.selected_patient?.Patientdefine?.Firstname} ${Patients.selected_patient?.Patientdefine?.Lastname}`}</Modal.Header>
             <Modal.Content image>
               <Modal.Description>
                 <Table celled className='list-table ' key='product-create-type-conversion-table ' >
@@ -217,10 +217,10 @@ export default class Patients extends Component {
                       (Checkperiods.isLoading || Patients.isCheckperiodloading) ? <Loader /> :
                         Checkperiods.list.map(item => {
                           return <Table.Row>
-                            <Table.Cell>{item.name}{item.concurrencyStamp === Patients.selected_patient?.checkperiodID && <Icon name='check' />}</Table.Cell>
+                            <Table.Cell>{item.Name}{item.Uuid === Patients.selected_patient?.CheckperiodID && <Icon name='check' />}</Table.Cell>
                             <Table.Cell>
-                              {item.concurrencyStamp !== Patients.selected_patient?.checkperiodID && <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => {
-                                EditPatientcheckperiods({ ...Patients.selected_patient, checkperiodID: item.concurrencyStamp })
+                              {item.Uuid !== Patients.selected_patient?.checkperiodID && <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => {
+                                EditPatientcheckperiods({ ...Patients.selected_patient, checkperiodID: item.Uuid })
                               }}>Hastaya Ata</Button>}
                             </Table.Cell>
                           </Table.Row>
@@ -243,7 +243,7 @@ export default class Patients extends Component {
             open={this.state.openTodos}
           >
             <Modal.Header>Hasta Yapılacakları</Modal.Header>
-            <Modal.Header>{`${this.state.selectedpatient?.patientdefine?.firstname} ${this.state.selectedpatient?.patientdefine?.lastname}`}</Modal.Header>
+            <Modal.Header>{`${this.state.selectedpatient?.Patientdefine?.Firstname} ${this.state.selectedpatient?.Patientdefine?.Lastname}`}</Modal.Header>
             <Modal.Content image>
               <Modal.Description>
                 <Table celled className='list-table ' key='product-create-type-conversion-table ' >
@@ -258,10 +258,10 @@ export default class Patients extends Component {
                       (Todogroupdefines.isLoading || Patients.isTodogroupdefineloading) ? <Loader /> :
                         Todogroupdefines.list.map(item => {
                           return <Table.Row>
-                            <Table.Cell>{item.name}{item.concurrencyStamp === Patients.selected_patient?.todogroupdefineID && <Icon name='check' />}</Table.Cell>
+                            <Table.Cell>{item.Name}{item.Uuid === Patients.selected_patient?.TodogroupdefineID && <Icon name='check' />}</Table.Cell>
                             <Table.Cell>
-                              {item.concurrencyStamp !== Patients.selected_patient?.todogroupdefineID && <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => {
-                                EditPatienttodogroupdefines({ ...Patients.selected_patient, todogroupdefineID: item.concurrencyStamp })
+                              {item.Uuid !== Patients.selected_patient?.todogroupdefineID && <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => {
+                                EditPatienttodogroupdefines({ ...Patients.selected_patient, todogroupdefineID: item.Uuid })
                               }}>Hastaya Ata</Button>}
                             </Table.Cell>
                           </Table.Row>
@@ -284,12 +284,12 @@ export default class Patients extends Component {
             open={this.state.openPrintpreview}
           >
             <Modal.Header as={'h1'}>Hasta Raporu</Modal.Header>
-            <Modal.Header as={'h2'}>{`${this.state.selectedPrintdesign?.name}`}</Modal.Header>
+            <Modal.Header as={'h2'}>{`${this.state.selectedPrintdesign?.Name}`}</Modal.Header>
             <Modal.Content image>
               <Modal.Description>
                 <div className='p-2 shadow-lg shadow-gray-300 w-full flex justify-center items-center'>
                   <InnerHTML html={
-                    this.state.selectedPrintdesign?.printtemplate ? this.state.decoratedBody
+                    this.state.selectedPrintdesign?.Printtemplate ? this.state.decoratedBody
                       : '<div class="print-design-preview-message">No code to show.</div>'
                   } />
                 </div>

@@ -125,9 +125,7 @@ async function UpdatePatienttype(req, res, next) {
 async function DeletePatienttype(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.patienttypeId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTTYPEID_REQUIRED)

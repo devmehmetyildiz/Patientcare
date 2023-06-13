@@ -204,9 +204,7 @@ async function UpdateCostumertype(req, res, next) {
 async function DeleteCostumertype(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.costumertypeId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED)

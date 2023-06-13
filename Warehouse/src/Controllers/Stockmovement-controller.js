@@ -230,9 +230,7 @@ async function UpdateStockmovement(req, res, next) {
 async function DeleteStockmovement(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.stockmovementId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)

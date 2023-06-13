@@ -88,7 +88,7 @@ export const DeleteUnits = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_UNIT_INIT })
-    await instanse.delete(config.services.Setting, ROUTES.UNIT, data)
+    await instanse.delete(config.services.Setting, `${ROUTES.UNIT}/${data.Uuid}`)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_UNIT_SUCCESS, payload: response.data })
         })

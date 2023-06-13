@@ -212,9 +212,7 @@ async function UpdateUnit(req, res, next) {
 async function DeleteUnit(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.unitId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)

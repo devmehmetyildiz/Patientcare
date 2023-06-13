@@ -88,7 +88,7 @@ export const DeleteCostumertypes = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_COSTUMERTYPE_INIT })
-    await instanse.delete(config.services.Setting, ROUTES.COSTUMERTYPE, data)
+    await instanse.delete(config.services.Setting, `${ROUTES.COSTUMERTYPE}/${data.Uuid}`)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_COSTUMERTYPE_SUCCESS, payload: response.data })
         })

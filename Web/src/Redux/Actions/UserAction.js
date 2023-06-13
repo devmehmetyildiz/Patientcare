@@ -84,7 +84,7 @@ export const DeleteUsers = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_USER_INIT })
-    await instanse.delete(config.services.Userrole, ROUTES.USER, data)
+    await instanse.delete(config.services.Userrole, `${ROUTES.USER}/${data.Uuid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_USER_SUCCESS, payload: response.data })
         })

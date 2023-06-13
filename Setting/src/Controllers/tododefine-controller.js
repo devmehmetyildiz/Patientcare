@@ -222,9 +222,7 @@ async function UpdateTododefine(req, res, next) {
 async function DeleteTododefine(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.tododefineId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.TODODEFINEID_REQUIRED)

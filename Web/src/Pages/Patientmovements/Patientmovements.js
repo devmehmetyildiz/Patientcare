@@ -33,18 +33,18 @@ export default class Patientmovements extends Component {
   render() {
 
     const Columns = [
-      { Header: 'Id', accessor: 'id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'concurrencyStamp', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Hasta Adı', accessor: 'patientdefine.firstname', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.nameCellhandler(col) },
-      { Header: 'Hareket Türü', accessor: 'patientmovementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
-      { Header: 'İptal mi?', accessor: 'isDeactive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: 'Önceki Hareket', accessor: 'oldPatientmovementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
-      { Header: 'Yeni Hareket', accessor: 'newPatientmovementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
-      { Header: 'Yapılacaklar Aktif mi?', accessor: 'isTodoneed', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: 'Yapılacaklar Tamamlandı mı?', accessor: 'isTodocompleted', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: 'Tamamlandı mı?', accessor: 'isComplated', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: 'Aktivasyon mu bekleniyor?', accessor: 'iswaitingactivation', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: 'Hareket Tarihi', accessor: 'movementdate', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: 'Hasta Adı', accessor: 'Patientdefine.Firstname', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.nameCellhandler(col) },
+      { Header: 'Hareket Türü', accessor: 'Patientmovementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
+      { Header: 'İptal mi?', accessor: 'IsDeactive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
+      { Header: 'Önceki Hareket', accessor: 'OldPatientmovementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
+      { Header: 'Yeni Hareket', accessor: 'NewPatientmovementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
+      { Header: 'Yapılacaklar Aktif mi?', accessor: 'IsTodoneed', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
+      { Header: 'Yapılacaklar Tamamlandı mı?', accessor: 'IsTodocompleted', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
+      { Header: 'Tamamlandı mı?', accessor: 'IsComplated', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
+      { Header: 'Aktivasyon mu bekleniyor?', accessor: 'Iswaitingactivation', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
+      { Header: 'Hareket Tarihi', accessor: 'Movementdate', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -67,7 +67,7 @@ export default class Patientmovements extends Component {
     };
 
     (list || []).forEach(item => {
-      item.edit = <Link to={`/Patientmovements/${item.concurrencyStamp}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
+      item.edit = <Link to={`/Patientmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
       item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
     })
 
@@ -112,8 +112,8 @@ export default class Patientmovements extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord?.patientdefine?.firstname}
-                   ${this.state.selectedrecord?.patientdefine?.lastname} ` : null} </span>
+                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord?.Patientdefine?.Firstname}
+                   ${this.state.selectedrecord?.Patientdefine?.Lastname} ` : null} </span>
                   hasta hareketini silmek istediğinize emin misiniz?
                 </p>
               </Modal.Description>
@@ -127,7 +127,7 @@ export default class Patientmovements extends Component {
                 labelPosition='right'
                 icon='checkmark'
                 onClick={() => {
-                  DeletePatientmovements(this.state.selectedrecord.concurrencyStamp)
+                  DeletePatientmovements(this.state.selectedrecord.Uuid)
                   this.setState({ open: false, selectedrecord: {} })
                 }}
                 positive
@@ -151,7 +151,7 @@ export default class Patientmovements extends Component {
   }
 
   nameCellhandler = (col) => {
-    return col ? col.cell.row.original?.patient?.patientdefine ? `${col.cell.row.original?.patient?.patientdefine?.firstname} ${col.cell.row.original?.patient?.patientdefine?.lastname}` : "Hasta Kaydı Bulunamadı" : "Tanımsız"
+    return col ? col.cell.row.original?.Patient?.Patientdefine ? `${col.cell.row.original?.Patient?.Patientdefine?.Firstname} ${col.cell.row.original?.Patient?.Patientdefine?.Lastname}` : "Hasta Kaydı Bulunamadı" : "Tanımsız"
   }
 
 }

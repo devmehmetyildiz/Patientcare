@@ -183,9 +183,7 @@ async function UpdateMailsetting(req, res, next) {
 async function DeleteMailsetting(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.mailsettingId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)

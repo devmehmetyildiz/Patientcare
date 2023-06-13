@@ -180,9 +180,7 @@ async function UpdatePatientmovement(req, res, next) {
 async function DeletePatientmovement(req, res, next) {
 
     let validationErrors = []
-    const {
-        Uuid
-    } = req.body
+    const Uuid = req.params.patientmovementId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTMOVEMENTID_REQUIRED)

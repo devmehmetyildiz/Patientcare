@@ -84,7 +84,7 @@ export const DeleteTododefines = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_TODODEFINE_INIT })
-    await instanse.delete(config.services.Setting, ROUTES.TODODEFINE, data)
+    await instanse.delete(config.services.Setting, `${ROUTES.TODODEFINE}/${data.Uuid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_TODODEFINE_SUCCESS, payload: response.data })
         })

@@ -97,7 +97,7 @@ export const DeleteStocks = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_STOCK_INIT })
-    await instanse.post(config.services.Warehouse, ROUTES.STOCK, data)
+    await instanse.delete(config.services.Warehouse, `${ROUTES.STOCK}/${data.Uuid}`)
         .then(response => {
                 dispatch({ type: ACTION_TYPES.DELETE_STOCK_SUCCESS, payload: response.data })
         })

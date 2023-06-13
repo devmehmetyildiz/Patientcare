@@ -88,7 +88,7 @@ export const DeletePatientstocks = (data) => async (dispatch, getState) => {
     delete data['edit']
     delete data['delete']
     dispatch({ type: ACTION_TYPES.DELETE_PATIENTSTOCK_INIT })
-    await instanse.delete(config.services.Warehouse, ROUTES.PATIENTSTOCK, data)
+    await instanse.get(config.services.Warehouse, `${ROUTES.PATIENTSTOCK}/${data.Uuid}`)
         .then(response => {
             dispatch({ type: ACTION_TYPES.DELETE_PATIENTSTOCK_SUCCESS, payload: response.data })
         })
