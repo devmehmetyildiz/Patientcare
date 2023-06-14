@@ -26,7 +26,7 @@ const style = StyleSheet.create({
     container: {
         width: '80%',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'flex-start'
     },
     forminputwrapper: {
         height: 40,
@@ -50,9 +50,9 @@ const style = StyleSheet.create({
     },
     formlabel: {
         textAlign: 'left',
-        width: '100%',
         fontWeight: 'bold',
-        paddingLeft: 4
+        paddingLeft: 4,
+        marginHorizontal: 10
     }
 });
 

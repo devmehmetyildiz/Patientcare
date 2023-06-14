@@ -1,54 +1,47 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Platform, Text } from 'react-native';
 import Images from '../../Assets/Images';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Forminput from '../../Components/Forminput';
-import Formbutton from '../../Components/Formbutton';
+import { Appnametext, Container, Content, Footerview, LogoImage } from '../../Components/Logincomponents';
+import { Formbutton, Forminput } from '../../Components/Common';
+import { Webservice } from '../../Utils/Webservice';
 
 export default class Login extends Component {
+
+    private _webservice: Webservice;
+
+    constructor(props: any) {
+        super(props);
+
+    }
+
+
+    async componentDidMount(): Promise<void> {
+
+        let baseurl: string = "http://172.16.30.183:8000/";
+        let path: string = "Oauth/TestServer"
+        await Webservice.doGet(baseurl, path)
+    }
+
     render() {
         return (
-            <SafeAreaView style={style.container}>
-                <Image
-                    style={style.icon}
-                    source={Images.patient}
-                />
-                <Text style={style.appnametxt}>Patient Care Hasta Bakım Sistemi</Text>
-                <Forminput icon="user" placeholder="Kullanıcı Adı" />
-                <Forminput icon="lock" placeholder="Parola" password />
-                <Formbutton title="Giriş Yap" />
-                <View style={style.footerwrapper}>
+            <Container
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // Adjust the value according to your layout
+            >
+                <Content>
+                    <LogoImage source={Images.patient} />
+                    <Appnametext>Patient Care Hasta Bakım Sistemi</Appnametext>
+                    <Forminput icon="user" placeholder="Kullanıcı Adı" />
+                    <Forminput icon="lock" placeholder="Parola" password />
+                    <Formbutton title="Giriş Yap" />
+                </Content>
+                <Footerview>
                     <Text>Terms of Use</Text>
                     <Text>ARMS Teknoloji 2023</Text>
-                </View>
-            </SafeAreaView>
+                </Footerview>
+            </Container>
         );
     }
 }
 
-const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'flex-start'
-    },
-    icon: {
-        width: 180,
-        height: 180,
-        marginVertical: 40
-    },
-    appnametxt: {
-        fontSize: 20,
-        padding: 5,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: '#2E85B2',
-        marginBottom: 10
-    },
-    footerwrapper: {
-        gap: 5,
-        alignItems: 'center',
-        fontWeight: '300',
-        zIndex: 0
-    }
-})
+

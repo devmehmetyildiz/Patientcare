@@ -7,7 +7,6 @@ import Login from './Pages/Login/Login';
 
 const Stack = createNativeStackNavigator();
 
-
 export default class App extends Component {
   render() {
     return (
@@ -15,7 +14,7 @@ export default class App extends Component {
         <Stack.Navigator
           initialRouteName="Login"
           screenOptions={{
-            headerShown: false,
+            headerShown: false
           }}
         >
           <Stack.Screen name="Login" component={Login} />
