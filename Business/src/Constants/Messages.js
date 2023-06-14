@@ -309,12 +309,6 @@ const messages = {
         tr: 'Bu işlem için DepartmentID gerekli',
       }
     },
-    ISWAITINGACTIVATION_REQUIRED: {
-      code: 'ISWAITINGACTIVATION_REQUIRED', description: {
-        en: 'The Is waiting activation required',
-        tr: 'Bu işlem için Aktivasyon bekliyormu bilgisi gerekli',
-      }
-    },
     WAREHOUSEID_REQUIRED: {
       code: 'WAREHOUSEID_REQUIRED', description: {
         en: 'The WarehouseID required',

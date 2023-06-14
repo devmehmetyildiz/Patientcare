@@ -3,6 +3,7 @@ import cookies from 'universal-cookie';
 import AxiosErrorHelper from '../../Utils/AxiosErrorHelper';
 import config from "../../Config";
 import { ROUTES } from "../../Utils/Constants";
+import Cookies from "universal-cookie";
 
 export const ACTION_TYPES = {
   LOGIN_REQUEST_INIT: 'LOGIN_REQUEST_INIT',
@@ -83,11 +84,12 @@ export const logIn = (data, historyPusher, redirecturl) => {
     dispatch({ type: ACTION_TYPES.LOGIN_REQUEST_INIT })
     instanse.post(config.services.Auth, `Oauth/Login`, data)
       .then(result => {
+        const localcookies = new Cookies();
+        localcookies.set('patientcare', result.data.accessToken, { path: '/' })
         dispatch({ type: ACTION_TYPES.LOGIN_REQUEST_SUCCESS })
         redirecturl ? window.location = (redirecturl) : window.location = ('Home')
       })
       .catch(error => {
-        console.log('error: ', error);
         dispatch({ type: ACTION_TYPES.FILL_USER_NOTIFICATION, payload: AxiosErrorHelper(error) })
         dispatch({ type: ACTION_TYPES.LOGIN_REQUEST_ERROR, payload: AxiosErrorHelper(error) })
       })

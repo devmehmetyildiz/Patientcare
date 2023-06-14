@@ -49,17 +49,14 @@ module.exports.init = function (app) {
           res.status(503)
           res.json(result)
           break
-
         case 'UNAUTHORIZED':
           res.status(401)
           res.json(result)
           break
-
         case 'REQUEST_TIMEOUT':
           res.status(504)
           res.json(result)
           break
-
         case 'TIMEOUT':
           res.status(524)
           res.json(result)
@@ -90,8 +87,6 @@ module.exports.init = function (app) {
               description: 'Unexpected internal server error happened.',
               callstack: (config.env === 'development' ? err.stack : '')
             })
-            console.error(err)
-            process.exit(1)
           }
       }
     }
@@ -102,7 +97,6 @@ module.exports.init = function (app) {
         code: 'SERVER_ERROR',
         description: err.message
       })
-      console.log('err: ', err);
     }
   })
 }

@@ -8,6 +8,6 @@ module.exports = sequelize.define('applog_businessModel', {
         type: Sequelize.STRING,
     }
 }, {
-    tableName: 'applog_businessModel', // replace with the name of your existing table
+    tableName: 'applog_business', // replace with the name of your existing table
     timestamps: false
 });

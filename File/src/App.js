@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const config = require('./Config');
-const os = require("os")
 require("./Middlewares/Databaseconnector")()
   .then(() => {
 

@@ -2,10 +2,10 @@
   "name": "systemapp",
   "version": "1.0.0",
   "description": "system express app",
-  "main": "src/app.js",
+  "main": "src/App.js",
   "scripts": {
-    "start": "nodemon src/app.js",
-    "build": "esbuild src/app.js --bundle --minify --platform=node --outfile=dist/bundle.js"
+    "start": "nodemon src/App.js",
+    "build": "esbuild src/App.js --bundle --minify --platform=node --outfile=dist/bundle.js"
   },
   "author": "mehmetyildiz",
   "license": "ISC",
