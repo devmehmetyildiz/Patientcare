@@ -172,7 +172,7 @@ export default class PreregistrationsEditfile extends Component {
                 });
             })
 
-            EditFiles(formData, history, "/Preregistrations")
+            EditFiles({ data: formData, history, url: "/Preregistrations" })
         }
     }
 

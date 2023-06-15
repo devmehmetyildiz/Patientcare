@@ -146,7 +146,7 @@ export default class PreregistrationsEdit extends Component {
         fillPatientnotification(error)
       })
     } else {
-      EditPatients({ ...Patients.selected_record, ...data }, history, "/Preregistrations")
+      EditPatients({ data: { ...Patients.selected_record, ...data }, history, url: "/Preregistrations" })
     }
   }
 

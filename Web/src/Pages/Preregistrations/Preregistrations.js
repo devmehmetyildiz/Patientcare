@@ -57,7 +57,7 @@ export default class Preregistrations extends Component {
     ]
 
     const { Patients, Warehouses, DeletePatients, removePatientnotification, Profile, history, fillPatientnotification, CompletePrepatients } = this.props
-    const { list, isLoading, isDispatching } = Patients
+    const { isLoading, isDispatching } = Patients
 
 
     const metaKey = "Preregistrations"
@@ -71,7 +71,7 @@ export default class Preregistrations extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
+    const list = (Patients.list || []).map(item => {
       var filestext = item.Files.map((file) => {
         return file.Name;
       }).join(", ")
@@ -79,25 +79,28 @@ export default class Preregistrations extends Component {
       var stockstext = item.Stocks.map((stock) => {
         return stock.Stockdefine?.Name;
       }).join(", ")
-      item.Stockstxt = stockstext;
-      item.actions = <React.Fragment>
-        <Popup
-          trigger={<Icon className='cursor-pointer' name='ellipsis vertical' />}
-          content={<div className='flex flex-col justify-start items-start w-full gap-2'>
-            <Link to={`/Preregistrations/${item.Uuid}/edit`} ><Icon className='row-edit' name='edit' /> Güncelle </Link>
-            <Link to={`/Patientdefines/${item.Patientdefine?.Uuid}/edit`} ><Icon color='black' className='row-edit' name='clipboard' /> Tanım Düzenle</Link>
-            <Link to={`/Preregistrations/${item.Uuid}/Editfile`} ><Icon color='black' className='row-edit' name='folder open' /> Dosya Düzenle</Link>
-            <Link to={`/Preregistrations/${item.Uuid}/Editstock`} ><Icon color='black' className='row-edit' name='cart' /> Stok Düzenle</Link>
-            <span><Icon link color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} /> Sil</span>
-          </div>}
-          on='click'
-          hideOnScroll
-          position='left center'
-        />
-      </React.Fragment>
-      item.enter = <React.Fragment>
-        <PreregistrationsComplete Warehouseslist={Warehouses.list} data={item} history={history} CompletePrepatients={CompletePrepatients} fillPatientnotification={fillPatientnotification} removePatientnotification={removePatientnotification} />
-      </React.Fragment>
+      return {
+        ...item,
+        Stockstxt: stockstext,
+        actions: <React.Fragment>
+          <Popup
+            trigger={<Icon className='cursor-pointer' name='ellipsis vertical' />}
+            content={<div className='flex flex-col justify-start items-start w-full gap-2'>
+              <Link to={`/Preregistrations/${item.Uuid}/edit`} ><Icon className='row-edit' name='edit' /> Güncelle </Link>
+              <Link to={`/Patientdefines/${item.Patientdefine?.Uuid}/edit`} ><Icon color='black' className='row-edit' name='clipboard' /> Tanım Düzenle</Link>
+              <Link to={`/Preregistrations/${item.Uuid}/Editfile`} ><Icon color='black' className='row-edit' name='folder open' /> Dosya Düzenle</Link>
+              <Link to={`/Preregistrations/${item.Uuid}/Editstock`} ><Icon color='black' className='row-edit' name='cart' /> Stok Düzenle</Link>
+              <span><Icon link color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} /> Sil</span>
+            </div>}
+            on='click'
+            hideOnScroll
+            position='left center'
+          />
+        </React.Fragment>,
+        enter: <React.Fragment>
+          <PreregistrationsComplete Warehouseslist={Warehouses.list} data={item} history={history} CompletePrepatients={CompletePrepatients} fillPatientnotification={fillPatientnotification} removePatientnotification={removePatientnotification} />
+        </React.Fragment>
+      }
     })
     return (
       isLoading || isDispatching ? <LoadingPage /> :

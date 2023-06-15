@@ -1,5 +1,5 @@
-import React, {  useEffect, useState } from 'react'
-import { Icon, Button, Modal,  Label, Dropdown, Grid, Input,  Divider, GridColumn } from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
+import { Icon, Button, Modal, Label, Dropdown, Grid, Input, Divider, GridColumn } from 'semantic-ui-react'
 
 export default function PreregistrationsComplete({ Warehouseslist, data, history, CompletePrepatients, removePatientnotification, fillPatientnotification }) {
 
@@ -37,7 +37,7 @@ export default function PreregistrationsComplete({ Warehouseslist, data, history
         }
       })
       if (notificationErrors.length > 0) {
-      //  setEnable(false)
+        //  setEnable(false)
         setErrors(notificationErrors)
         notificationErrors.forEach(error => {
           fillPatientnotification(error)
@@ -58,7 +58,7 @@ export default function PreregistrationsComplete({ Warehouseslist, data, history
     delete responsedata.actions
     delete responsedata.enter
     if (enable) {
-      CompletePrepatients(responsedata, history, "/Preregistrations")
+      CompletePrepatients({ data: responsedata, history, url: "/Preregistrations" })
     } else {
       fillPatientnotification({ type: 'Error', code: 'Kaydetme Hatası', description: `Dosyalar Eksik` })
     }
@@ -103,11 +103,11 @@ export default function PreregistrationsComplete({ Warehouseslist, data, history
               </GridColumn>
               <GridColumn>
                 <label className='text-[#000000de] my-2'>Oda Numarası</label>
-                <Input onChange={(e) => { setRoom(e.target.value) }} fluid placeholder='Oda Numarası' type='number'/>
+                <Input onChange={(e) => { setRoom(e.target.value) }} fluid placeholder='Oda Numarası' type='number' />
               </GridColumn>
               <GridColumn>
                 <label className='text-[#000000de] my-2'>Yatak Numarası</label>
-                <Input onChange={(e) => { setBed(e.target.value) }} fluid placeholder='Yatak Numarası' type='number'/>
+                <Input onChange={(e) => { setBed(e.target.value) }} fluid placeholder='Yatak Numarası' type='number' />
               </GridColumn>
             </Grid>
           </Grid.Column>

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PreregistrationsCreate from "../../Pages/Preregistrations/PreregistrationsCreate"
-import { AddPatients, fillPatientnotification, removePatientnotification } from "../../Redux/Actions/PatientAction"
+import { AddPatients, fillPatientnotification, removePatientnotification } from "../../Redux/Reducers/PatientReducer"
 import { GetPatientdefines, removePatientdefinenotification } from "../../Redux/Reducers/PatientdefineReducer"
 import { GetDepartments, removeDepartmentnotification } from "../../Redux/Reducers/DepartmentReducer"
 import { GetCases, removeCasenotification } from "../../Redux/Reducers/CaseReducer"

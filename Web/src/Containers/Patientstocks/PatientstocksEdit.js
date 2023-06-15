@@ -3,7 +3,7 @@ import PatientstocksEdit from '../../Pages/Patientstocks/PatientstocksEdit'
 import { EditPatientstocks, GetPatientstock, RemoveSelectedPatientstock, removePatientstocknotification, fillPatientstocknotification } from '../../Redux/Reducers/PatientstockReducer'
 import { GetStockdefines, removeStockdefinenotification } from '../../Redux/Reducers/StockdefineReducer'
 import { GetDepartments, removeDepartmentnotification } from '../../Redux/Reducers/DepartmentReducer'
-import { GetPatients, Getpreregistrations, removePatientnotification } from "../../Redux/Actions/PatientAction"
+import { GetPatients, Getpreregistrations, removePatientnotification } from "../../Redux/Reducers/PatientReducer"
 
 const mapStateToProps = (state) => ({
     Patientstocks: state.Patientstocks,

@@ -207,8 +207,7 @@ export default class PreregistrationsCreate extends Component {
         fillPatientnotification(error)
       })
     } else {
-      console.log('response: ', response);
-      AddPatients(response, history, "/Preregistrations")
+      AddPatients({ data: response, history, url: "/Preregistrations" })
     }
   }
 

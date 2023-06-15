@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import PatientstocksCreate from '../../Pages/Patientstocks/PatientstocksCreate'
 import { AddPatientstocks, removePatientstocknotification, fillPatientstocknotification } from '../../Redux/Reducers/PatientstockReducer'
-import { GetPatients, Getpreregistrations, removePatientnotification } from "../../Redux/Actions/PatientAction"
+import { GetPatients, Getpreregistrations, removePatientnotification } from "../../Redux/Reducers/PatientReducer"
 import { GetStockdefines, removeStockdefinenotification } from "../../Redux/Reducers/StockdefineReducer"
 import { GetDepartments, removeDepartmentnotification } from "../../Redux/Reducers/DepartmentReducer"
 

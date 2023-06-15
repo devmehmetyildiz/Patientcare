@@ -1,98 +1,283 @@
-import { ACTION_TYPES } from "../Actions/PatientAction"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
 
-const defaultState = {
-    list: [],
-    selected_record: {},
-    errmsg: null,
-    notifications: [],
-    isLoading: false,
-    isDispatching: false,
-    isCheckperiodloading: false,
-    isTodogroupdefineloading: false,
-    selected_patient: {}
-}
-
-const PatientReducer = (state = defaultState, { type, payload }) => {
-    switch (type) {
-        case ACTION_TYPES.GET_PATIENTS_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_PATIENTS_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_PATIENTS_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_PATIENT_INIT:
-            return { ...state, isLoading: true, errmsg: null, selected_record: {} }
-        case ACTION_TYPES.GET_PATIENT_SUCCESS:
-            return { ...state, isLoading: false, selected_record: payload }
-        case ACTION_TYPES.GET_PATIENT_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.ADD_PATIENT_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.ADD_PATIENT_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Hastalar', description: 'Hasta Başarı ile Eklendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.ADD_PATIENT_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_PATIENT_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.EDIT_PATIENT_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Hastalar', description: 'Hasta Başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_PATIENT_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_PATIENTTODOGROUPDEFINE_INIT:
-            return { ...state, isTodogroupdefineloading: true }
-        case ACTION_TYPES.EDIT_PATIENTTODOGROUPDEFINE_SUCCESS:
-            return {
-                ...state, isTodogroupdefineloading: false, selected_patient: payload.find(u => u.concurrencyStamp === state.selected_patient.concurrencyStamp), list: payload,
-                notifications: [{ type: 'Success', code: 'Hastalar', description: 'Hasta Yapılacağı başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_PATIENTTODOGROUPDEFINE_ERROR:
-            return { ...state, isTodogroupdefineloading: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_PATIENTCHECKPERIOD_INIT:
-            return { ...state, isCheckperiodloading: true }
-        case ACTION_TYPES.EDIT_PATIENTCHECKPERIOD_SUCCESS:
-            return {
-                ...state, isCheckperiodloading: false, selected_patient: payload.find(u => u.concurrencyStamp === state.selected_patient.concurrencyStamp), list: payload,
-                notifications: [{ type: 'Success', code: 'Hastalar', description: 'Hasta Kontrol grubu başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_PATIENTCHECKPERIOD_ERROR:
-            return { ...state, isCheckperiodloading: false, errmsg: payload }
-
-        case ACTION_TYPES.DELETE_PATIENT_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.DELETE_PATIENT_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Hastalar', description: 'Hasta Başarı ile Silindi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.DELETE_PATIENT_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.FILL_PATIENTS_NOTIFICATION:
-            let messages = [...state.notifications]
-            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
-            return { ...state, notifications: messages }
-        case ACTION_TYPES.REMOVE_PATIENTS_NOTIFICATION:
-           let messages1 = [...state.notifications]
-            messages1.splice(0, 1)
-            return { ...state, notifications: messages1 }
-        case ACTION_TYPES.REMOVE_SELECTED_PATIENT:
-            return { ...state, selected_patient: {} }
-        case ACTION_TYPES.SET_SELECTED_PATIENT:
-            return { ...state, selected_patient: payload }
-        default:
-            return state
+export const GetPatients = createAsyncThunk(
+    'Patients/GetPatients',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Business, ROUTES.PATIENT);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
     }
-}
+);
 
-export default PatientReducer
+export const GetPatient = createAsyncThunk(
+    'Patients/GetPatient',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Business, `${ROUTES.PATIENT}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const Getpreregistrations = createAsyncThunk(
+    'Patients/GetPatient',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Business, ROUTES.PATIENT + "/Preregistrations");
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddPatients = createAsyncThunk(
+    'Patients/AddPatients',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Business, ROUTES.PATIENT, data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
+            }));
+            history.push('/Patients');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditPatients = createAsyncThunk(
+    'Patients/EditPatients',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.Business, ROUTES.PATIENT, data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history.push('/Patients');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+export const EditPatientstocks = createAsyncThunk(
+    'Patients/EditPatientstocks',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Editpatientstocks", data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history.push('/Patients');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+export const CompletePrepatients = createAsyncThunk(
+    'Patients/CompletePrepatients',
+    async ({ data, history, url }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Complete", data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history.push(url ? url : '/Patients')
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeletePatients = createAsyncThunk(
+    'Patients/DeletePatients',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENT}/${data.Uuid}`);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const PatientsSlice = createSlice({
+    name: 'Patients',
+    initialState: {
+        list: [],
+        selected_record: {},
+        errMsg: null,
+        notifications: [],
+        isLoading: false,
+        isDispatching: false,
+        isCheckperiodloading: false,
+        isTodogroupdefineloading: false,
+        selected_patient: {}
+    },
+    reducers: {
+        RemoveSelectedPatient: (state) => {
+            state.selected_record = {};
+        },
+        setPatient: (state, action) => {
+            state.selected_record = action.payload;
+        },
+        fillPatientnotification: (state, action) => {
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
+        },
+        removePatientnotification: (state) => {
+            state.notifications.splice(0, 1);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(GetPatients.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(GetPatients.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(GetPatients.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(Getpreregistrations.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(Getpreregistrations.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(Getpreregistrations.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetPatient.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.selected_record = {};
+            })
+            .addCase(GetPatient.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(GetPatient.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddPatients.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddPatients.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddPatients.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditPatients.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditPatients.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditPatients.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(CompletePrepatients.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(CompletePrepatients.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(CompletePrepatients.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditPatientstocks.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditPatientstocks.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditPatientstocks.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeletePatients.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeletePatients.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeletePatients.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            });
+    },
+});
+
+export const {
+    RemoveSelectedPatient,
+    fillPatientnotification,
+    removePatientnotification,
+    setPatient
+} = PatientsSlice.actions;
+
+export default PatientsSlice.reducer;
