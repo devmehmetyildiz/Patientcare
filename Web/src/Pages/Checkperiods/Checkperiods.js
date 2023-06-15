@@ -32,6 +32,10 @@ export default class Checkperiods extends Component {
 
   render() {
 
+    
+    const { Checkperiods, DeleteCheckperiods, Profile } = this.props
+    const { list, isLoading, isDispatching } = Checkperiods
+    
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
@@ -45,9 +49,6 @@ export default class Checkperiods extends Component {
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
-
-    const { Checkperiods, DeleteCheckperiods, Profile } = this.props
-    const { list, isLoading, isDispatching } = Checkperiods
 
     const metaKey = "Checkperiods"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)

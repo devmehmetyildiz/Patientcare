@@ -34,7 +34,7 @@ export default class Patientstocks extends Component {
       { Header: 'Hasta Bilgisi', accessor: 'PatientPatientdefineFirstname', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.patientdefineCellhandler(col) },
       { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Ürün', accessor: 'Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Departman', accessor: 'Department.Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Departman', accessor: 'Stockdefine.Department.Name', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Skt', accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Barkod No', accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Aktüel Miktar', accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true },

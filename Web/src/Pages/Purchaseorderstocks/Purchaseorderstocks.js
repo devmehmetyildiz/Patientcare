@@ -35,7 +35,7 @@ export default class Purchaseorderstocks extends Component {
       { Header: 'Sipariş Numarası', accessor: 'Purchaseorder.Purchasenumber', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: 'Ürün', accessor: 'Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Departman', accessor: 'Department.Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: 'Departman', accessor: 'Stockdefine.Department.Name', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Skt', accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Barkod No', accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
       { Header: 'Aktüel Miktar', accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true },

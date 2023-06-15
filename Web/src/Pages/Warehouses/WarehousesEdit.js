@@ -79,7 +79,7 @@ export default class WarehousesEdit extends Component {
       errors.push({ type: 'Error', code: 'Ambarlar', description: 'İsim Boş Olamaz' })
     }
     if (!data.Info || data.Info === '') {
-      errors.push({ type: 'Error', code: 'Ambarlar', description: 'İsim Boş Olamaz' })
+      errors.push({ type: 'Error', code: 'Ambarlar', description: 'Açıklama Boş Olamaz' })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

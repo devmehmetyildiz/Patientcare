@@ -14,7 +14,7 @@ export default class CasesCreate extends Component {
     super(props)
     this.state = {
       selecteddepartments: [],
-      selectedstatusOption: {}
+      selectedstatusOption: 0
     }
   }
 
@@ -75,27 +75,14 @@ export default class CasesCreate extends Component {
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
                 <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <Form.Input required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
+                <FormInput required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Field>
-                  <label className='text-[#000000de]'>{Literals.Columns.Casecolor[Profile.Language]}<span> <Popup
-                    trigger={<Icon link name='exclamation' />}
-                    content='blue,red,green...'
-                    position='bottom left'
-                  /></span></label>
-                  <FormInput required placeholder={Literals.Columns.Casecolor[Profile.Language]} name="Casecolor" fluid dontshowlabel />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>{Literals.Columns.CaseStatus[Profile.Language]}</label>
-                  <Dropdown placeholder={Literals.Columns.CaseStatus[Profile.Language]} fluid selection options={casestatusOption} onChange={this.handleChangeOption} value={this.state.selectedstatusOption} />
-                </Form.Field>
+                <FormInput required placeholder={Literals.Columns.Casecolor[Profile.Language]} name="Casecolor" attention="blue,red,green..." />
+                <FormInput required placeholder={Literals.Columns.CaseStatus[Profile.Language]} options={casestatusOption} onChange={this.handleChangeOption} value={this.state.selectedstatusOption} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Field>
-                  <label className='text-[#000000de]'>{Literals.Columns.Departmentstxt[Profile.Language]}</label>
-                  <Dropdown placeholder={Literals.Columns.Departmentstxt[Profile.Language]} clearable search fluid multiple selection options={Departmentoptions} onChange={this.handleChange} value={this.state.selecteddepartments} />
-                </Form.Field>
+                <FormInput required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} clearable search multiple options={Departmentoptions} onChange={this.handleChange} value={this.state.selecteddepartments} formtype="dropdown" />
               </Form.Group>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Cases">
@@ -112,7 +99,7 @@ export default class CasesCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddCases, history, fillCasenotification, Departments,Profile } = this.props
+    const { AddCases, history, fillCasenotification, Departments, Profile } = this.props
     const { list } = Departments
     const data = formToObject(e.target)
     data.Departments = this.state.selecteddepartments.map(department => {

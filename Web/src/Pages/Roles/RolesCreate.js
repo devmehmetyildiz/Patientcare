@@ -128,8 +128,8 @@ export class RolesCreate extends Component {
 
     handleAddgroup = (e) => {
         e.target.checked
-            ? this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return el.group !== e.target.id; }).concat(this.props.Roles.privileges.filter(u => u.group === e.target.id) || []) })
-            : this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return el.group !== e.target.id; }) })
+            ? this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return !el.group.includes(e.target.id) }).concat(this.props.Roles.privileges.filter(u => u.group.includes(e.target.id)) || []) })
+            : this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return !el.group.includes(e.target.id) }) })
     }
 
     handleClickprivilege = (e) => {

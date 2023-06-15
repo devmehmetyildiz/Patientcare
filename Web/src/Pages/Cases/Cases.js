@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Divider, Icon, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
+import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import Notification from '../../Utils/Notification'
 import Literals from './Literals'
+import Pagewrapper from '../../Common/Pagewrapper'
+import Headerwrapper from '../../Common/Headerwrapper'
 
 export default class Cases extends Component {
 
@@ -38,8 +40,7 @@ export default class Cases extends Component {
 
 
     const { Cases, DeleteCases, Profile } = this.props
-    const { list, isLoading, isDispatching } = Cases
-
+    const { isLoading, isDispatching } = Cases
     const casestatusOption = [
       {
         key: '-1',
@@ -84,47 +85,49 @@ export default class Cases extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
+    const list = (Cases.list || []).map(item => {
       var text = item.Departments.map((department) => {
         return department.Name;
       }).join(", ")
-      item.Departmentstxt = text;
-      item.edit = <Link to={`/Cases/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+
+      return {
+        ...item,
+        Departmentstxt: text,
+        edit: <Link to={`/Cases/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />,
+      }
     })
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>
-          <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-            <div className='w-full mx-auto align-middle'>
-              <Header style={{ backgroundColor: 'transparent', border: 'none' }} as='h1' attached='top' >
-                <Grid columns='2' >
-                  <GridColumn width={8} className="">
-                    <Breadcrumb size='big'>
-                      <Link to={"/Cases"}>
-                        <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-                      </Link>
-                    </Breadcrumb>
-                  </GridColumn>
-                  <GridColumn width={8} >
-                    <Link to={"/Cases/Create"}>
-                      <Button color='blue' floated='right' className='list-right-green-button'>
-                        {Literals.Page.Pagecreateheader[Profile.Language]}
-                      </Button>
+          <Pagewrapper>
+            <Headerwrapper>
+              <Grid columns='2' >
+                <GridColumn width={8}>
+                  <Breadcrumb size='big'>
+                    <Link to={"/Cases"}>
+                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
-                    <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                  </GridColumn>
-                </Grid>
-              </Header>
-            </div>
+                  </Breadcrumb>
+                </GridColumn>
+                <GridColumn width={8} >
+                  <Link to={"/Cases/Create"}>
+                    <Button color='blue' floated='right' className='list-right-green-button'>
+                      {Literals.Page.Pagecreateheader[Profile.Language]}
+                    </Button>
+                  </Link>
+                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
+                </GridColumn>
+              </Grid>
+            </Headerwrapper>
             <Divider className='w-full  h-[1px]' />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />
               </div> : <NoDataScreen message={Literals.Messages.Nocasefind[Profile.Language]} />
             }
-          </div>
+          </Pagewrapper>
           <Modal
             onClose={() => this.setState({ open: false })}
             onOpen={() => this.setState({ open: true })}
@@ -134,17 +137,17 @@ export default class Cases extends Component {
             <Modal.Content image>
               <Modal.Description>
                 <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
+                  <span className='font-bold'>{this.state.selectedrecord?.Name}</span>
                   {Literals.Messages.Deletestationcheck[Profile.Language]}
                 </p>
               </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
               <Button color='black' onClick={() => this.setState({ open: false, selectedrecord: {} })}>
-              {Literals.Button.Giveup[Profile.Language]}
+                {Literals.Button.Giveup[Profile.Language]}
               </Button>
               <Button
-                content= {Literals.Button.Delete[Profile.Language]}
+                content={Literals.Button.Delete[Profile.Language]}
                 labelPosition='right'
                 icon='checkmark'
                 onClick={() => {

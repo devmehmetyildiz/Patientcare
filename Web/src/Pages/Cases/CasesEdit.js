@@ -46,7 +46,7 @@ export default class CasesEdit extends Component {
 
   render() {
 
-    const { Cases, Departments,Profile } = this.props
+    const { Cases, Departments, Profile } = this.props
 
     const Departmentoptions = Departments.list.map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -87,33 +87,20 @@ export default class CasesEdit extends Component {
           <Divider className='w-full  h-[1px]' />
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={this.handleSubmit}>
-            <Form.Group widths='equal'>
+              <Form.Group widths='equal'>
                 <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <Form.Input required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
+                <FormInput required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Field>
-                  <label className='text-[#000000de]'>{Literals.Columns.Casecolor[Profile.Language]}<span> <Popup
-                    trigger={<Icon link name='exclamation' />}
-                    content='blue,red,green...'
-                    position='bottom left'
-                  /></span></label>
-                  <FormInput required placeholder={Literals.Columns.Casecolor[Profile.Language]} name="Casecolor" fluid dontshowlabel />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>{Literals.Columns.CaseStatus[Profile.Language]}</label>
-                  <Dropdown placeholder={Literals.Columns.CaseStatus[Profile.Language]} fluid selection options={casestatusOption} onChange={this.handleChangeOption} value={this.state.selectedstatusOption} />
-                </Form.Field>
+                <FormInput required placeholder={Literals.Columns.Casecolor[Profile.Language]} name="Casecolor" attention="blue,red,green..." />
+                <FormInput required placeholder={Literals.Columns.CaseStatus[Profile.Language]} options={casestatusOption} onChange={this.handleChangeOption} value={this.state.selectedstatusOption} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Field>
-                  <label className='text-[#000000de]'>{Literals.Columns.Departmentstxt[Profile.Language]}</label>
-                  <Dropdown placeholder={Literals.Columns.Departmentstxt[Profile.Language]} clearable search fluid multiple selection options={Departmentoptions} onChange={this.handleChange} value={this.state.selecteddepartments} />
-                </Form.Field>
+                <FormInput required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} clearable search multiple options={Departmentoptions} onChange={this.handleChange} value={this.state.selecteddepartments} formtype="dropdown" />
               </Form.Group>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Cases">
-                <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
               </div>
@@ -127,7 +114,7 @@ export default class CasesEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { EditCases, history, fillCasenotification, Departments, Cases,Profile } = this.props
+    const { EditCases, history, fillCasenotification, Departments, Cases, Profile } = this.props
     const { list } = Departments
     const data = formToObject(e.target)
     data.CaseStatus = this.state.selectedstatusOption

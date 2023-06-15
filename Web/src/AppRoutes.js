@@ -136,6 +136,7 @@ class AppRoutes extends Component {
       { exact: true, path: "/Login", auth: false, component: Login },
       { exact: true, path: "/Register", auth: false, component: Register },
       { exact: true, path: "/Home", auth: true, component: Home },
+      { exact: true, path: "/", auth: true, component: Home },
       { exact: true, path: "/Roles", auth: true, component: Roles },
       { exact: true, path: "/Roles/Create", auth: true, component: RolesCreate },
       { exact: true, path: "/Roles/:RoleID/Edit", auth: true, component: RolesEdit },

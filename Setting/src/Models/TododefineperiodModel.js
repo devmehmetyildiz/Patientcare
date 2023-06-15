@@ -11,6 +11,6 @@ module.exports = sequelize.define('TododefineperiodModel', {
         type: Sequelize.STRING
     }
 }, {
-    tableName: 'Tododefineperiods', // replace with the name of your existing table
+    tableName: 'tododefineperiods', // replace with the name of your existing table
     timestamps: false
 });
