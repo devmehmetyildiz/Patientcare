@@ -48,10 +48,10 @@ export class Files extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const { Files, DeleteFiles, Profile } = this.props
-    const { list, isLoading, isDispatching } = Files
+    const { isLoading, isDispatching } = Files
 
     const metaKey = "Files"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -61,9 +61,12 @@ export class Files extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
-      item.edit = <Link to={`/Files/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Files.list || []).map(item => {
+      return {
+        ...item,
+        edit: <Link to={`/Files/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

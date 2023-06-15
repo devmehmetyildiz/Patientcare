@@ -49,7 +49,7 @@ export default class Patientstocks extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const { Patientstocks, DeletePatientstocks, Profile } = this.props
-    const { list, isLoading, isDispatching } = Patientstocks
+    const { isLoading, isDispatching } = Patientstocks
 
     const metaKey = "Patientstocks"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
@@ -62,10 +62,13 @@ export default class Patientstocks extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
-      item.watch = <Link to={`/Patientstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
-      item.edit = <Link to={`/Patientstocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Patientstocks.list || []).map(item => {
+      return {
+        ...item,
+        watch: <Link to={`/Patientstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
+        edit: <Link to={`/Patientstocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (
@@ -139,16 +142,16 @@ export default class Patientstocks extends Component {
   }
 
   patientdefineCellhandler = (col) => {
-      let value = col?.row?.original
-      if (value) {
-        let define = value?.Patient?.Patientdefine
-        if (define) {
-          return `${define.Firstname} ${define.Lastname} - ${define.CountryID}`
-        } else {
-          return "Hasta Kaydı Bulunamadı"
-        }
+    let value = col?.row?.original
+    if (value) {
+      let define = value?.Patient?.Patientdefine
+      if (define) {
+        return `${define.Firstname} ${define.Lastname} - ${define.CountryID}`
       } else {
-        return "Hata"
+        return "Hasta Kaydı Bulunamadı"
       }
+    } else {
+      return "Hata"
     }
+  }
 }

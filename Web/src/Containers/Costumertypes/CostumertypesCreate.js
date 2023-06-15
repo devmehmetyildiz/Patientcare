@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import CostumertypesCreate from '../../Pages/Costumertypes/CostumertypesCreate'
-import { AddCostumertypes, removeCostumertypenotification, fillCostumertypenotification } from "../../Redux/Actions/CostumertypeAction"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/Actions/DepartmentAction"
+import { AddCostumertypes, removeCostumertypenotification, fillCostumertypenotification } from "../../Redux/Reducers/CostumertypeReducer"
+import { GetDepartments, removeDepartmentnotification } from "../../Redux/Reducers/DepartmentReducer"
 
 const mapStateToProps = (state) => ({
   Costumertypes: state.Costumertypes,

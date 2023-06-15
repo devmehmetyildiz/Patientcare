@@ -1,85 +1,128 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import AxiosErrorHelper from '../../Utils/AxiosErrorHelper';
-import instance from '../Actions/axios';
-import config from '../../Config';
-import { ROUTES } from '../../Utils/Constants';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
 
-export const GetCases = createAsyncThunk('case/GetCases', async (_, { rejectWithValue }) => {
-    try {
-        const response = await instance.get(config.services.Setting, ROUTES.CASE);
-        return response.data;
-    } catch (error) {
-        return rejectWithValue(AxiosErrorHelper(error));
+export const GetCases = createAsyncThunk(
+    'Cases/GetCases',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Setting, ROUTES.CASE);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCasenotification(errorPayload));
+            throw errorPayload;
+        }
     }
-});
+);
 
-export const GetCase = createAsyncThunk('case/GetCase', async (guid, { rejectWithValue }) => {
-    try {
-        const response = await instance.get(`${config.services.Setting}${ROUTES.CASE}/${guid}`);
-        return response.data;
-    } catch (error) {
-        return rejectWithValue(AxiosErrorHelper(error));
+export const GetCase = createAsyncThunk(
+    'Cases/GetCase',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Setting, `${ROUTES.CASE}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCasenotification(errorPayload));
+            throw errorPayload;
+        }
     }
-});
+);
 
-export const AddCases = createAsyncThunk('case/AddCases', async ({ data, historypusher }, { rejectWithValue }) => {
-    try {
-        const response = await instance.post(`${config.services.Setting}${ROUTES.CASE}`, data);
-        historypusher.push('/Cases');
-        return response.data;
-    } catch (error) {
-        return rejectWithValue(AxiosErrorHelper(error));
+export const AddCases = createAsyncThunk(
+    'Cases/AddCases',
+    async ({data, history}, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Setting, ROUTES.CASE, data);
+            dispatch(fillCasenotification({
+                type: 'Success',
+                code: 'Durumlar',
+                description: 'Kontrol grubu başarı ile Eklendi',
+            }));
+            history.push('/Cases');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCasenotification(errorPayload));
+            throw errorPayload;
+        }
     }
-});
+);
 
-export const EditCases = createAsyncThunk('case/EditCases', async ({ data, historypusher }, { rejectWithValue }) => {
-    try {
-        const response = await instance.put(`${config.services.Setting}${ROUTES.CASE}`, data);
-        historypusher.push('/Cases');
-        return response.data;
-    } catch (error) {
-        return rejectWithValue(AxiosErrorHelper(error));
+export const EditCases = createAsyncThunk(
+    'Cases/EditCases',
+    async ({data, history}, {dispatch} ) => {
+        try {
+            const response = await instanse.put(config.services.Setting, ROUTES.CASE, data);
+            dispatch(fillCasenotification({
+                type: 'Success',
+                code: 'Durumlar',
+                description: 'Kontrol grubu başarı ile Güncellendi',
+            }));
+              history.push('/Cases');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCasenotification(errorPayload));
+            throw errorPayload;
+        }
     }
-});
+);
 
-export const DeleteCases = createAsyncThunk('case/DeleteCases', async (data, { rejectWithValue }) => {
-    try {
-        await instance.delete(`${config.services.Setting}${ROUTES.CASE}/${data.Uuid}`);
-        return data;
-    } catch (error) {
-        return rejectWithValue(AxiosErrorHelper(error));
+export const DeleteCases = createAsyncThunk(
+    'Cases/DeleteCases',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.CASE}/${data.Uuid}`);
+            dispatch(fillCasenotification({
+                type: 'Success',
+                code: 'Durumlar',
+                description: 'Kontrol grubu başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCasenotification(errorPayload));
+            throw errorPayload;
+        }
     }
-});
+);
 
-const caseSlice = createSlice({
-    name: 'case',
+export const CasesSlice = createSlice({
+    name: 'Cases',
     initialState: {
         list: [],
         selected_record: {},
-        errmsg: null,
+        errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false,
+        isDispatching: false
     },
     reducers: {
         RemoveSelectedCase: (state) => {
             state.selected_record = {};
         },
         fillCasenotification: (state, action) => {
-            const messages = Array.isArray(action.payload)
-                ? state.notifications.concat(action.payload)
-                : state.notifications.concat([action.payload]);
-            state.notifications = messages;
+            console.log('state: ', state);
+            console.log('action.payload: ', action.payload);
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
         },
         removeCasenotification: (state) => {
             state.notifications.splice(0, 1);
-        },
+        }
     },
     extraReducers: (builder) => {
         builder
             .addCase(GetCases.pending, (state) => {
                 state.isLoading = true;
-                state.errmsg = null;
+                state.errMsg = null;
                 state.list = [];
             })
             .addCase(GetCases.fulfilled, (state, action) => {
@@ -88,11 +131,11 @@ const caseSlice = createSlice({
             })
             .addCase(GetCases.rejected, (state, action) => {
                 state.isLoading = false;
-                state.errmsg = action.payload;
+                state.errMsg = action.error.message;
             })
             .addCase(GetCase.pending, (state) => {
                 state.isLoading = true;
-                state.errmsg = null;
+                state.errMsg = null;
                 state.selected_record = {};
             })
             .addCase(GetCase.fulfilled, (state, action) => {
@@ -101,7 +144,7 @@ const caseSlice = createSlice({
             })
             .addCase(GetCase.rejected, (state, action) => {
                 state.isLoading = false;
-                state.errmsg = action.payload;
+                state.errMsg = action.error.message;
             })
             .addCase(AddCases.pending, (state) => {
                 state.isDispatching = true;
@@ -109,15 +152,10 @@ const caseSlice = createSlice({
             .addCase(AddCases.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
-                state.notifications.unshift({
-                    type: 'Success',
-                    code: 'Durumlar',
-                    description: 'Durum Başarı ile Eklendi',
-                });
             })
             .addCase(AddCases.rejected, (state, action) => {
                 state.isDispatching = false;
-                state.errmsg = action.payload;
+                state.errMsg = action.error.message;
             })
             .addCase(EditCases.pending, (state) => {
                 state.isDispatching = true;
@@ -125,15 +163,10 @@ const caseSlice = createSlice({
             .addCase(EditCases.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
-                state.notifications.unshift({
-                    type: 'Success',
-                    code: 'Durumlar',
-                    description: 'Durum Başarı ile Güncellendi',
-                });
             })
             .addCase(EditCases.rejected, (state, action) => {
                 state.isDispatching = false;
-                state.errmsg = action.payload;
+                state.errMsg = action.error.message;
             })
             .addCase(DeleteCases.pending, (state) => {
                 state.isDispatching = true;
@@ -141,15 +174,10 @@ const caseSlice = createSlice({
             .addCase(DeleteCases.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
-                state.notifications.unshift({
-                    type: 'Success',
-                    code: 'Durumlar',
-                    description: 'Durum Başarı ile Silindi',
-                });
             })
             .addCase(DeleteCases.rejected, (state, action) => {
                 state.isDispatching = false;
-                state.errmsg = action.payload;
+                state.errMsg = action.error.message;
             });
     },
 });
@@ -158,6 +186,6 @@ export const {
     RemoveSelectedCase,
     fillCasenotification,
     removeCasenotification,
-} = caseSlice.actions;
+} = CasesSlice.actions;
 
-export default caseSlice.reducer;
+export default CasesSlice.reducer;

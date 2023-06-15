@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import TodogroupdefinesCreate from '../../Pages/Todogroupdefines/TodogroupdefinesCreate'
-import { GetTododefines, removeTododefinenotification } from '../../Redux/Actions/TododefineAction'
-import { AddTodogroupdefines, fillTodogroupdefinenotification, removeTodogroupdefinenotification } from '../../Redux/Actions/TodogroupdefineAction'
-import { GetDepartments, removeDepartmentnotification } from '../../Redux/Actions/DepartmentAction'
+import { GetTododefines, removeTododefinenotification } from '../../Redux/Reducers/TododefineReducer'
+import { AddTodogroupdefines, fillTodogroupdefinenotification, removeTodogroupdefinenotification } from '../../Redux/Reducers/TodogroupdefineReducer'
+import { GetDepartments, removeDepartmentnotification } from '../../Redux/Reducers/DepartmentReducer'
 
 const mapStateToProps = (state) => ({
     Todogroupdefines: state.Todogroupdefines,

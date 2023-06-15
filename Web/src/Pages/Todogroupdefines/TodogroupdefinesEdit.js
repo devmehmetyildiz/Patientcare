@@ -123,7 +123,7 @@ export default class TodogroupdefinesEdit extends Component {
         fillTodogroupdefinenotification(error)
       })
     } else {
-      EditTodogroupdefines({ ...Todogroupdefines.selected_record, ...data }, history)
+      EditTodogroupdefines({ data: { ...Todogroupdefines.selected_record, ...data }, history })
     }
   }
 

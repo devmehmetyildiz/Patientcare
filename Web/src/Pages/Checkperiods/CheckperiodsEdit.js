@@ -153,7 +153,7 @@ export default class CheckperiodsEdit extends Component {
         fillCheckperiodnotification(error)
       })
     } else {
-      EditCheckperiods({ ...Checkperiods.selected_record, ...data }, history)
+      EditCheckperiods({data:{ ...Checkperiods.selected_record, ...data }, history})
     }
   }
 

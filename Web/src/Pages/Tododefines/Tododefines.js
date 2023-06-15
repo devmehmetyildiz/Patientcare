@@ -48,7 +48,7 @@ export default class Tododefines extends Component {
 
 
     const { Tododefines, DeleteTododefines, Profile } = this.props
-    const { list, isLoading, isDispatching } = Tododefines
+    const { isLoading, isDispatching } = Tododefines
 
     const metaKey = "Tododefines"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
@@ -61,13 +61,16 @@ export default class Tododefines extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
+    const list = (Tododefines.list || []).map(item => {
       var text = item.Periods.map((period) => {
         return period.Name;
       }).join(", ")
-      item.Periodstxt = text;
-      item.edit = <Link to={`/Tododefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      return {
+        ...item,
+        Periodstxt: text,
+        edit: <Link to={`/Tododefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

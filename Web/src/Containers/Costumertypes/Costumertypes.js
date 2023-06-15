@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Costumertypes from "../../Pages/Costumertypes/Costumertypes"
-import { GetCostumertypes, DeleteCostumertypes, removeCostumertypenotification, fillCostumertypenotification } from "../../Redux/Actions/CostumertypeAction"
+import { GetCostumertypes, DeleteCostumertypes, removeCostumertypenotification, fillCostumertypenotification } from "../../Redux/Reducers/CostumertypeReducer"
 
 
 const mapStateToProps = (state) => ({

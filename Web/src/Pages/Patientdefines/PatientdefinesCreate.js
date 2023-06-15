@@ -200,7 +200,7 @@ export default class PatientdefinesCreate extends Component {
         fillPatientdefinenotification(error)
       })
     } else {
-      AddPatientdefines(data, history)
+      AddPatientdefines({data, history})
     }
   }
 }

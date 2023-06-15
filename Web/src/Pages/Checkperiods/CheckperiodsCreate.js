@@ -137,7 +137,7 @@ export default class CheckperiodsCreate extends Component {
         fillCheckperiodnotification(error)
       })
     } else {
-      AddCheckperiods(data, history)
+      AddCheckperiods({data, history})
     }
   }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Link} from 'react-router-dom'
-import {  Divider, Dropdown, Form } from 'semantic-ui-react'
-import { Breadcrumb, Button,Header } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Divider, Dropdown, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
@@ -11,8 +11,8 @@ export default class CasesCreate extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selecteddepartments:[],
-      selectedstatusOption:{}
+      selecteddepartments: [],
+      selectedstatusOption: {}
     }
   }
 
@@ -22,7 +22,7 @@ export default class CasesCreate extends Component {
   }
 
   componentDidUpdate() {
-    const { Units, removeUnitnotification,Departments,removeDepartmentnotification } = this.props
+    const { Units, removeUnitnotification, Departments, removeDepartmentnotification } = this.props
     Notification(Units.notifications, removeUnitnotification)
     Notification(Departments.notifications, removeDepartmentnotification)
   }
@@ -115,7 +115,7 @@ export default class CasesCreate extends Component {
         fillUnitnotification(error)
       })
     } else {
-      AddUnits(data, history)
+      AddUnits({ data, history })
     }
   }
 

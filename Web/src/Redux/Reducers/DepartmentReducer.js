@@ -1,80 +1,189 @@
-import { ACTION_TYPES } from "../Actions/DepartmentAction"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
 
-const defaultState = {
-    list: [],
-    selected_record: {},
-    errmsg: null,
-    notifications: [],
-    isLoading: false,
-    isDispatching: false
-}
-
-const DepartmentReducer = (state = defaultState, { type, payload }) => {
-    switch (type) {
-        case ACTION_TYPES.GET_DEPARTMENTS_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_DEPARTMENTS_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_DEPARTMENTS_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_ALLDEPARTMENTS_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_ALLDEPARTMENTS_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_ALLDEPARTMENTS_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_DEPARTMENT_INIT:
-            return { ...state, isLoading: true, errmsg: null, selected_record: {} }
-        case ACTION_TYPES.GET_DEPARTMENT_SUCCESS:
-            return { ...state, isLoading: false, selected_record: payload }
-        case ACTION_TYPES.GET_DEPARTMENT_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.ADD_DEPARTMENT_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.ADD_DEPARTMENT_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Departmanlar', description: 'Departman Başarı ile Eklendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.ADD_DEPARTMENT_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_DEPARTMENT_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.EDIT_DEPARTMENT_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Departmanlar', description: 'Departman Başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_DEPARTMENT_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.DELETE_DEPARTMENT_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.DELETE_DEPARTMENT_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Departmanlar', description: 'Departman Başarı ile Silindi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.DELETE_DEPARTMENT_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.FILL_DEPARTMENTS_NOTIFICATION:
-            let messages = [...state.notifications]
-            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
-            return { ...state, notifications: messages }
-        case ACTION_TYPES.REMOVE_DEPARTMENTS_NOTIFICATION:
-            let messages1 = [...state.notifications]
-            messages1.splice(0, 1)
-            return { ...state, notifications: messages1 }
-        case ACTION_TYPES.REMOVE_SELECTED_DEPARTMENT:
-            return { ...state, selected_record: {} }
-        default:
-            return state
+export const GetDepartments = createAsyncThunk(
+    'Departments/GetDepartments',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Setting, ROUTES.DEPARTMENT);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillDepartmentnotification(errorPayload));
+            throw errorPayload;
+        }
     }
-}
+);
 
-export default DepartmentReducer
+export const GetDepartment = createAsyncThunk(
+    'Departments/GetDepartment',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Setting, `${ROUTES.DEPARTMENT}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillDepartmentnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddDepartments = createAsyncThunk(
+    'Departments/AddDepartments',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Setting, ROUTES.DEPARTMENT, data);
+            dispatch(fillDepartmentnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
+            }));
+            history.push('/Departments');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillDepartmentnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditDepartments = createAsyncThunk(
+    'Departments/EditDepartments',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.Setting, ROUTES.DEPARTMENT, data);
+            dispatch(fillDepartmentnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history.push('/Departments');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillDepartmentnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeleteDepartments = createAsyncThunk(
+    'Departments/DeleteDepartments',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.DEPARTMENT}/${data.Uuid}`);
+            dispatch(fillDepartmentnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillDepartmentnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DepartmentsSlice = createSlice({
+    name: 'Departments',
+    initialState: {
+        list: [],
+        selected_record: {},
+        errMsg: null,
+        notifications: [],
+        isLoading: false,
+        isDispatching: false
+    },
+    reducers: {
+        RemoveSelectedDepartment: (state) => {
+            state.selected_record = {};
+        },
+        fillDepartmentnotification: (state, action) => {
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
+        },
+        removeDepartmentnotification: (state) => {
+            state.notifications.splice(0, 1);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(GetDepartments.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(GetDepartments.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(GetDepartments.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetDepartment.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.selected_record = {};
+            })
+            .addCase(GetDepartment.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(GetDepartment.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddDepartments.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddDepartments.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddDepartments.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditDepartments.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditDepartments.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditDepartments.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeleteDepartments.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeleteDepartments.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeleteDepartments.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            });
+    },
+});
+
+export const {
+    RemoveSelectedDepartment,
+    fillDepartmentnotification,
+    removeDepartmentnotification,
+} = DepartmentsSlice.actions;
+
+export default DepartmentsSlice.reducer;

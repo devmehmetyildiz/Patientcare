@@ -218,7 +218,7 @@ export default class PatientdefinesEdit extends Component {
         fillPatientdefinenotification(error)
       })
     } else {
-      EditPatientdefines({ ...Patientdefines.selected_record, ...data }, history)
+      EditPatientdefines({data:{ ...Patientdefines.selected_record, ...data }, history})
     }
   }
 }

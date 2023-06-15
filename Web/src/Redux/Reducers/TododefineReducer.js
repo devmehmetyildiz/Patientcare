@@ -1,73 +1,189 @@
-import { ACTION_TYPES } from "../Actions/TododefineAction"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
 
-const defaultState = {
-    list: [],
-    selected_record: {},
-    errmsg: null,
-    notifications: [],
-    isLoading: false,
-    isDispatching: false
-}
-
-const TododefineReducer = (state = defaultState, { type, payload }) => {
-    switch (type) {
-        case ACTION_TYPES.GET_TODODEFINES_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_TODODEFINES_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_TODODEFINES_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_TODODEFINE_INIT:
-            return { ...state, isLoading: true, errmsg: null, selected_record: {} }
-        case ACTION_TYPES.GET_TODODEFINE_SUCCESS:
-            return { ...state, isLoading: false, selected_record: payload }
-        case ACTION_TYPES.GET_TODODEFINE_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.ADD_TODODEFINE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.ADD_TODODEFINE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Yapılacaklar', description: 'Yapılacaklar Başarı ile Eklendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.ADD_TODODEFINE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_TODODEFINE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.EDIT_TODODEFINE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Yapılacaklar', description: 'Yapılacaklar Başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_TODODEFINE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.DELETE_TODODEFINE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.DELETE_TODODEFINE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Yapılacaklar', description: 'Yapılacaklar Başarı ile Silindi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.DELETE_TODODEFINE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.FILL_TODODEFINES_NOTIFICATION:
-            let messages = [...state.notifications]
-            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
-            return { ...state, notifications: messages }
-        case ACTION_TYPES.REMOVE_TODODEFINES_NOTIFICATION:
-           let messages1 = [...state.notifications]
-            messages1.splice(0, 1)
-            return { ...state, notifications: messages1 }
-        case ACTION_TYPES.REMOVE_SELECTED_TODODEFINE:
-            return { ...state, selected_record: {} }
-        default:
-            return state
+export const GetTododefines = createAsyncThunk(
+    'Tododefines/GetTododefines',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Setting, ROUTES.TODODEFINE);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillTododefinenotification(errorPayload));
+            throw errorPayload;
+        }
     }
-}
+);
 
-export default TododefineReducer
+export const GetTododefine = createAsyncThunk(
+    'Tododefines/GetTododefine',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Setting, `${ROUTES.TODODEFINE}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillTododefinenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddTododefines = createAsyncThunk(
+    'Tododefines/AddTododefines',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Setting, ROUTES.TODODEFINE, data);
+            dispatch(fillTododefinenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
+            }));
+            history.push('/Tododefines');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillTododefinenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditTododefines = createAsyncThunk(
+    'Tododefines/EditTododefines',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.Setting, ROUTES.TODODEFINE, data);
+            dispatch(fillTododefinenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history.push('/Tododefines');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillTododefinenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeleteTododefines = createAsyncThunk(
+    'Tododefines/DeleteTododefines',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.TODODEFINE}/${data.Uuid}`);
+            dispatch(fillTododefinenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillTododefinenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const TododefinesSlice = createSlice({
+    name: 'Tododefines',
+    initialState: {
+        list: [],
+        selected_record: {},
+        errMsg: null,
+        notifications: [],
+        isLoading: false,
+        isDispatching: false
+    },
+    reducers: {
+        RemoveSelectedTododefine: (state) => {
+            state.selected_record = {};
+        },
+        fillTododefinenotification: (state, action) => {
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
+        },
+        removeTododefinenotification: (state) => {
+            state.notifications.splice(0, 1);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(GetTododefines.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(GetTododefines.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(GetTododefines.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetTododefine.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.selected_record = {};
+            })
+            .addCase(GetTododefine.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(GetTododefine.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddTododefines.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddTododefines.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddTododefines.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditTododefines.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditTododefines.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditTododefines.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeleteTododefines.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeleteTododefines.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeleteTododefines.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            });
+    },
+});
+
+export const {
+    RemoveSelectedTododefine,
+    fillTododefinenotification,
+    removeTododefinenotification,
+} = TododefinesSlice.actions;
+
+export default TododefinesSlice.reducer;

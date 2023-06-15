@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import PrinttemplatesCreate from '../../Pages/Printtemplates/PrinttemplatesCreate'
-import { AddPrinttemplates, fillPrinttemplatenotification, removePrinttemplatenotification } from '../../Redux/Actions/PrinttemplateAction'
-import { GetDepartments, removeDepartmentnotification } from '../../Redux/Actions/DepartmentAction'
+import { AddPrinttemplates, fillPrinttemplatenotification, removePrinttemplatenotification } from '../../Redux/Reducers/PrinttemplateReducer'
+import { GetDepartments, removeDepartmentnotification } from '../../Redux/Reducers/DepartmentReducer'
 
 
 const mapStateToProps = (state) => ({

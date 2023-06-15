@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import Layout from "../../Pages/Layout/Layout"
 import { GetActiveUser, GetUserRoles, logOut, GetTableMeta, GetUserMeta, removenotification } from "../../Redux/Actions/ProfileAction"
-import { removeUsernotification } from "../../Redux/Actions/UserAction"
+import { removeUsernotification } from "../../Redux/Reducers/UserReducer"
 
 const mapStateToProps = (state) => ({
     Profile: state.Profile,

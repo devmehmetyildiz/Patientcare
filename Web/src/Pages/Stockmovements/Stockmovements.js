@@ -51,7 +51,7 @@ export default class Stockmovements extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const { Stockmovements, DeleteStockmovements, Profile } = this.props
-    const { list, isLoading, isDispatching } = Stockmovements
+    const { isLoading, isDispatching } = Stockmovements
 
 
     const metaKey = "Stockmovements"
@@ -65,11 +65,13 @@ export default class Stockmovements extends Component {
       }) : []
     };
 
-    console.log('list: ', list);
-    (list || []).forEach(item => {
-      item.watch = <Link to={`/Stockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
-      item.edit = <Link to={`/Stockmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Stockmovements.list || []).map(item => {
+      return {
+        ...item,
+        watch: <Link to={`/Stockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
+        edit: <Link to={`/Stockmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

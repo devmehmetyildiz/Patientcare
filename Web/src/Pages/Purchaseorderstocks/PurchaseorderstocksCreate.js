@@ -136,7 +136,7 @@ export default class PurchaseorderstocksCreate extends Component {
         fillPurchaseorderstocknotification(error)
       })
     } else {
-      AddPurchaseorderstocks(data, history)
+      AddPurchaseorderstocks({data, history})
     }
   }
 

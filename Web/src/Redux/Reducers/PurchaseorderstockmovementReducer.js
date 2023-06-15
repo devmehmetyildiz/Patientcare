@@ -1,80 +1,189 @@
-import { ACTION_TYPES } from "../Actions/PurchaseorderstockmovementAction"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
 
-const defaultState = {
-    list: [],
-    selected_record: {},
-    errmsg: null,
-    notifications: [],
-    isLoading: false,
-    isDispatching: false
-}
-
-const PurchaseorderstockmovementReducer = (state = defaultState, { type, payload }) => {
-    switch (type) {
-        case ACTION_TYPES.GET_PURCHASEORDERSTOCKMOVEMENTS_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_PURCHASEORDERSTOCKMOVEMENTS_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_PURCHASEORDERSTOCKMOVEMENTS_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_ALLPURCHASEORDERSTOCKMOVEMENTS_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_ALLPURCHASEORDERSTOCKMOVEMENTS_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_ALLPURCHASEORDERSTOCKMOVEMENTS_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_PURCHASEORDERSTOCKMOVEMENT_INIT:
-            return { ...state, isLoading: true, errmsg: null, selected_record: {} }
-        case ACTION_TYPES.GET_PURCHASEORDERSTOCKMOVEMENT_SUCCESS:
-            return { ...state, isLoading: false, selected_record: payload }
-        case ACTION_TYPES.GET_PURCHASEORDERSTOCKMOVEMENT_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.ADD_PURCHASEORDERSTOCKMOVEMENT_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.ADD_PURCHASEORDERSTOCKMOVEMENT_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Satın alma stok hareketleri', description: 'Satın alma stok hareketi Başarı ile Eklendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.ADD_PURCHASEORDERSTOCKMOVEMENT_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_PURCHASEORDERSTOCKMOVEMENT_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.EDIT_PURCHASEORDERSTOCKMOVEMENT_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Satın alma stok hareketleri', description: 'Satın alma stok hareketi Başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_PURCHASEORDERSTOCKMOVEMENT_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.DELETE_PURCHASEORDERSTOCKMOVEMENT_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.DELETE_PURCHASEORDERSTOCKMOVEMENT_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Satın alma stok hareketleri', description: 'Satın alma stok hareketi Başarı ile Silindi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.DELETE_PURCHASEORDERSTOCKMOVEMENT_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.FILL_PURCHASEORDERSTOCKMOVEMENTS_NOTIFICATION:
-            let messages = [...state.notifications]
-            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
-            return { ...state, notifications: messages }
-        case ACTION_TYPES.REMOVE_PURCHASEORDERSTOCKMOVEMENTS_NOTIFICATION:
-           let messages1 = [...state.notifications]
-            messages1.splice(0, 1)
-            return { ...state, notifications: messages1 }
-        case ACTION_TYPES.REMOVE_SELECTED_PURCHASEORDERSTOCKMOVEMENT:
-            return { ...state, selected_record: {} }
-        default:
-            return state
+export const GetPurchaseorderstockmovements = createAsyncThunk(
+    'Purchaseorderstockmovements/GetPurchaseorderstockmovements',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Setting, ROUTES.PURCHASEORDERSTOCKMOVEMENT);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPurchaseorderstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
     }
-}
+);
 
-export default PurchaseorderstockmovementReducer
+export const GetPurchaseorderstockmovement = createAsyncThunk(
+    'Purchaseorderstockmovements/GetPurchaseorderstockmovement',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCKMOVEMENT}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPurchaseorderstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddPurchaseorderstockmovements = createAsyncThunk(
+    'Purchaseorderstockmovements/AddPurchaseorderstockmovements',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCKMOVEMENT, data);
+            dispatch(fillPurchaseorderstockmovementnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
+            }));
+            history.push('/Purchaseorderstockmovements');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPurchaseorderstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditPurchaseorderstockmovements = createAsyncThunk(
+    'Purchaseorderstockmovements/EditPurchaseorderstockmovements',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCKMOVEMENT, data);
+            dispatch(fillPurchaseorderstockmovementnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history.push('/Purchaseorderstockmovements');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPurchaseorderstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeletePurchaseorderstockmovements = createAsyncThunk(
+    'Purchaseorderstockmovements/DeletePurchaseorderstockmovements',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCKMOVEMENT}/${data.Uuid}`);
+            dispatch(fillPurchaseorderstockmovementnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPurchaseorderstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const PurchaseorderstockmovementsSlice = createSlice({
+    name: 'Purchaseorderstockmovements',
+    initialState: {
+        list: [],
+        selected_record: {},
+        errMsg: null,
+        notifications: [],
+        isLoading: false,
+        isDispatching: false
+    },
+    reducers: {
+        RemoveSelectedPurchaseorderstockmovement: (state) => {
+            state.selected_record = {};
+        },
+        fillPurchaseorderstockmovementnotification: (state, action) => {
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
+        },
+        removePurchaseorderstockmovementnotification: (state) => {
+            state.notifications.splice(0, 1);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(GetPurchaseorderstockmovements.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(GetPurchaseorderstockmovements.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(GetPurchaseorderstockmovements.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetPurchaseorderstockmovement.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.selected_record = {};
+            })
+            .addCase(GetPurchaseorderstockmovement.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(GetPurchaseorderstockmovement.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddPurchaseorderstockmovements.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddPurchaseorderstockmovements.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddPurchaseorderstockmovements.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditPurchaseorderstockmovements.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditPurchaseorderstockmovements.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditPurchaseorderstockmovements.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeletePurchaseorderstockmovements.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeletePurchaseorderstockmovements.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeletePurchaseorderstockmovements.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            });
+    },
+});
+
+export const {
+    RemoveSelectedPurchaseorderstockmovement,
+    fillPurchaseorderstockmovementnotification,
+    removePurchaseorderstockmovementnotification,
+} = PurchaseorderstockmovementsSlice.actions;
+
+export default PurchaseorderstockmovementsSlice.reducer;

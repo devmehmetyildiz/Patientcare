@@ -144,8 +144,7 @@ export default class StocksEdit extends Component {
         fillStocknotification(error)
       })
     } else {
-      const response = { ...Stocks.selected_record, ...data }
-      EditStocks(response, history)
+      EditStocks({ data: { ...Stocks.selected_record, ...data }, history })
     }
   }
 

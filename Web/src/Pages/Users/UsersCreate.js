@@ -163,7 +163,7 @@ export default class UsersCreate extends Component {
         fillUsernotification(error)
       })
     } else {
-      AddUsers(data, history)
+      AddUsers({data, history})
     }
   }
 

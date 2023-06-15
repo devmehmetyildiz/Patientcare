@@ -138,7 +138,7 @@ export default class StocksCreate extends Component {
         fillStocknotification(error)
       })
     } else {
-      AddStocks(data, history)
+      AddStocks({ data, history })
     }
   }
 

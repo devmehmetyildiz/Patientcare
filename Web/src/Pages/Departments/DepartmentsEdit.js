@@ -112,7 +112,7 @@ export default class DepartmentsEdit extends Component {
         fillDepartmentnotification(error)
       })
     } else {
-      EditDepartments({ ...Departments.selected_record, ...data }, history)
+      EditDepartments({data:{ ...Departments.selected_record, ...data }, history})
     }
   }
 

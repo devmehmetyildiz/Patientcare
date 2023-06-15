@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Stockdefines from "../../Pages/Stockdefines/Stockdefines"
-import { GetStockdefines, removeStockdefinenotification, fillStockdefinenotification, DeleteStockdefines } from "../../Redux/Actions/StockdefineAction"
+import { GetStockdefines, removeStockdefinenotification, fillStockdefinenotification, DeleteStockdefines } from "../../Redux/Reducers/StockdefineReducer"
 
 const mapStateToProps = (state) => ({
     Stockdefines: state.Stockdefines,

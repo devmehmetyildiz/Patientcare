@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import PreregistrationsCreate from "../../Pages/Preregistrations/PreregistrationsCreate"
 import { AddPatients, fillPatientnotification, removePatientnotification } from "../../Redux/Actions/PatientAction"
-import { GetPatientdefines, removePatientdefinenotification } from "../../Redux/Actions/PatientdefineAction"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/Actions/DepartmentAction"
-import { GetCases, removeCasenotification } from "../../Redux/Actions/CaseAction"
+import { GetPatientdefines, removePatientdefinenotification } from "../../Redux/Reducers/PatientdefineReducer"
+import { GetDepartments, removeDepartmentnotification } from "../../Redux/Reducers/DepartmentReducer"
+import { GetCases, removeCasenotification } from "../../Redux/Reducers/CaseReducer"
 
 const mapStateToProps = (state) => ({
   Patients: state.Patients,

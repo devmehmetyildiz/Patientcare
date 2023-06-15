@@ -46,26 +46,29 @@ export default class Todogroupdefines extends Component {
 
 
         const { Todogroupdefines, DeleteTodogroupdefines, Profile } = this.props
-        const { list, isLoading, isDispatching } = Todogroupdefines
+        const { isLoading, isDispatching } = Todogroupdefines
 
         const metaKey = "Todogroupdefines"
         let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
         const initialConfig = {
-          hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
-            return item.key
-          }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-          columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
-            return item.key
-          }) : []
+            hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
+                return item.key
+            }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
+            columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
+                return item.key
+            }) : []
         };
 
-        (list || []).forEach(item => {
+        const list = (Todogroupdefines.list || []).map(item => {
             var text = item.Tododefines.map((todo) => {
                 return todo.Name;
             }).join(", ")
-            item.Tododefinestxt = text;
-            item.edit = <Link to={`/Todogroupdefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-            item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+            return {
+                ...item,
+                Tododefinestxt: text,
+                edit: <Link to={`/Todogroupdefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+                delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+            }
         })
 
         return (

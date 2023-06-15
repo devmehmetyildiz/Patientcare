@@ -138,7 +138,7 @@ export default class PatientstocksCreate extends Component {
         fillPatientstocknotification(error)
       })
     } else {
-      AddPatientstocks(data, history)
+      AddPatientstocks({data, history})
     }
   }
 

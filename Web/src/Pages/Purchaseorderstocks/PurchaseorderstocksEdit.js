@@ -145,8 +145,7 @@ export default class PurchaseorderstocksEdit extends Component {
         fillPurchaseorderstocknotification(error)
       })
     } else {
-      const response = { ...Purchaseorderstocks.selected_record, ...data }
-      EditPurchaseorderstocks(response, history)
+      EditPurchaseorderstocks({ data: { ...Purchaseorderstocks.selected_record, ...data }, history })
     }
   }
 

@@ -18,7 +18,7 @@ export default class StationsCreate extends Component {
 
   render() {
 
-    const { Stations,Profile } = this.props
+    const { Stations, Profile } = this.props
     const { isLoading, isDispatching } = Stations
 
     return (
@@ -39,7 +39,7 @@ export default class StationsCreate extends Component {
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
             <Form className='' onSubmit={(e) => { this.handleSubmit(e) }}>
               <Form.Field>
-                <FormInput  placeholder={Literals.Columns.Name[Profile.Language]} name="Name"  required/>
+                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" required />
               </Form.Field>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
                 <Link to="/Stations">
@@ -57,7 +57,7 @@ export default class StationsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddStations, history, fillStationnotification,Profile } = this.props
+    const { AddStations, history, fillStationnotification, Profile } = this.props
 
     const data = { ...formToObject(e.target) }
 
@@ -71,7 +71,7 @@ export default class StationsCreate extends Component {
       })
     } else {
       this.setState({ inputvalues: data })
-      AddStations({ ...data }, history)
+      AddStations({ data, history })
     }
   }
 }

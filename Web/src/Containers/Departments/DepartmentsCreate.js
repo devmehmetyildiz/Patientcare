@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import DepartmentsCreate from '../../Pages/Departments/DepartmentsCreate'
-import { AddDepartments, removeDepartmentnotification, fillDepartmentnotification } from "../../Redux/Actions/DepartmentAction"
-import { GetStations, removeStationnotification } from '../../Redux/Actions/StationAction'
+import { AddDepartments, removeDepartmentnotification, fillDepartmentnotification } from "../../Redux/Reducers/DepartmentReducer"
+import { GetStations, removeStationnotification } from '../../Redux/Reducers/StationReducer'
 
 const mapStateToProps = (state) => ({
     Departments: state.Departments,

@@ -1,80 +1,189 @@
-import { ACTION_TYPES } from "../Actions/CostumertypeAction"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
 
-const defaultState = {
-    list: [],
-    selected_record: {},
-    errmsg: null,
-    notifications: [],
-    isLoading: false,
-    isDispatching: false
-}
-
-const CostumertypeReducer = (state = defaultState, { type, payload }) => {
-    switch (type) {
-        case ACTION_TYPES.GET_COSTUMERTYPES_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_COSTUMERTYPES_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_COSTUMERTYPES_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_ALLCOSTUMERTYPES_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_ALLCOSTUMERTYPES_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_ALLCOSTUMERTYPES_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_COSTUMERTYPE_INIT:
-            return { ...state, isLoading: true, errmsg: null, selected_record: {} }
-        case ACTION_TYPES.GET_COSTUMERTYPE_SUCCESS:
-            return { ...state, isLoading: false, selected_record: payload }
-        case ACTION_TYPES.GET_COSTUMERTYPE_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.ADD_COSTUMERTYPE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.ADD_COSTUMERTYPE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Müşteri Türleri', description: 'Müşteri türü Başarı ile Eklendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.ADD_COSTUMERTYPE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_COSTUMERTYPE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.EDIT_COSTUMERTYPE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Müşteri Türleri', description: 'Müşteri türü Başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_COSTUMERTYPE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.DELETE_COSTUMERTYPE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.DELETE_COSTUMERTYPE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Müşteri Türleri', description: 'Müşteri türü Başarı ile Silindi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.DELETE_COSTUMERTYPE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.FILL_COSTUMERTYPES_NOTIFICATION:
-            let messages = [...state.notifications]
-            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
-            return { ...state, notifications: messages }
-        case ACTION_TYPES.REMOVE_COSTUMERTYPES_NOTIFICATION:
-           let messages1 = [...state.notifications]
-            messages1.splice(0, 1)
-            return { ...state, notifications: messages1 }
-        case ACTION_TYPES.REMOVE_SELECTED_COSTUMERTYPE:
-            return { ...state, selected_record: {} }
-        default:
-            return state
+export const GetCostumertypes = createAsyncThunk(
+    'Costumertypes/GetCostumertypes',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Setting, ROUTES.COSTUMERTYPE);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCostumertypenotification(errorPayload));
+            throw errorPayload;
+        }
     }
-}
+);
 
-export default CostumertypeReducer
+export const GetCostumertype = createAsyncThunk(
+    'Costumertypes/GetCostumertype',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Setting, `${ROUTES.COSTUMERTYPE}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCostumertypenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddCostumertypes = createAsyncThunk(
+    'Costumertypes/AddCostumertypes',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Setting, ROUTES.COSTUMERTYPE, data);
+            dispatch(fillCostumertypenotification({
+                type: 'Success',
+                code: 'Müşteri Türleri',
+                description: 'Müşteri türü başarı ile Eklendi',
+            }));
+            history.push('/Costumertypes');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCostumertypenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditCostumertypes = createAsyncThunk(
+    'Costumertypes/EditCostumertypes',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.Setting, ROUTES.COSTUMERTYPE, data);
+            dispatch(fillCostumertypenotification({
+                type: 'Success',
+                code: 'Müşteri Türleri',
+                description: 'Müşteri türü başarı ile Güncellendi',
+            }));
+            history.push('/Costumertypes');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCostumertypenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeleteCostumertypes = createAsyncThunk(
+    'Costumertypes/DeleteCostumertypes',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.COSTUMERTYPE}/${data.Uuid}`);
+            dispatch(fillCostumertypenotification({
+                type: 'Success',
+                code: 'Müşteri Türleri',
+                description: 'Müşteri türü başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCostumertypenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const CostumertypesSlice = createSlice({
+    name: 'Costumertypes',
+    initialState: {
+        list: [],
+        selected_record: {},
+        errMsg: null,
+        notifications: [],
+        isLoading: false,
+        isDispatching: false
+    },
+    reducers: {
+        RemoveSelectedCostumertype: (state) => {
+            state.selected_record = {};
+        },
+        fillCostumertypenotification: (state, action) => {
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
+        },
+        removeCostumertypenotification: (state) => {
+            state.notifications.splice(0, 1);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(GetCostumertypes.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(GetCostumertypes.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(GetCostumertypes.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetCostumertype.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.selected_record = {};
+            })
+            .addCase(GetCostumertype.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(GetCostumertype.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddCostumertypes.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddCostumertypes.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddCostumertypes.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditCostumertypes.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditCostumertypes.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditCostumertypes.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeleteCostumertypes.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeleteCostumertypes.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeleteCostumertypes.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            });
+    },
+});
+
+export const {
+    RemoveSelectedCostumertype,
+    fillCostumertypenotification,
+    removeCostumertypenotification,
+} = CostumertypesSlice.actions;
+
+export default CostumertypesSlice.reducer;

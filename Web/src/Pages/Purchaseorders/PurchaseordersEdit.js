@@ -47,7 +47,7 @@ export default class PurchaseordersEdit extends Component {
         selectedStocks: selected_record.Stocks, isDatafetched: true, selectedCase: selected_record.CaseID, selectedWarehouse: selected_record.WarehouseID
       })
     }
-    
+
     Notification(Purchaseorders.notifications, removePurchaseordernotification)
     Notification(Departments.notifications, removeDepartmentnotification)
     Notification(Cases.notifications, removeCasenotification)
@@ -107,7 +107,7 @@ export default class PurchaseordersEdit extends Component {
                         </Form.Group>
                         <Form.Group widths={'equal'}>
                           <Form.Input defaultValue={this.getState('Company')} placeholder="Firma Adı" name="Company" fluid label="Firma Adı" />
-                          <Form.Input defaultValue={this.getState('Purchaseprice')} placeholder="Alış Fiyatı" name="Purchaseprice" fluid label="Alış Fiyatı" type='number' step="0.01"/>
+                          <Form.Input defaultValue={this.getState('Purchaseprice')} placeholder="Alış Fiyatı" name="Purchaseprice" fluid label="Alış Fiyatı" type='number' step="0.01" />
                         </Form.Group>
                         <Form.Group widths={'equal'}>
                           <Form.Input defaultValue={this.getState('Companypersonelname')} placeholder="Siparişi Getiren" name="Companypersonelname" fluid label="Siparişi Getiren" />
@@ -291,7 +291,7 @@ export default class PurchaseordersEdit extends Component {
         fillPurchaseordernotification(error)
       })
     } else {
-      EditPurchaseorders({ ...Purchaseorders.selected_record, ...responseData }, history)
+      EditPurchaseorders({ data: { ...Purchaseorders.selected_record, ...responseData }, history })
     }
   }
 

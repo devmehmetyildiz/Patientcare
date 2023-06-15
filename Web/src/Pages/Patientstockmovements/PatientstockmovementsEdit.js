@@ -121,7 +121,7 @@ export default class PatientstockmovementsEdit extends Component {
         fillPatientstockmovementnotification(error)
       })
     } else {
-      EditPatientstockmovements({ ...Patientstockmovements.selected_record, ...data }, history)
+      EditPatientstockmovements({data:{ ...Patientstockmovements.selected_record, ...data }, history})
     }
   }
 

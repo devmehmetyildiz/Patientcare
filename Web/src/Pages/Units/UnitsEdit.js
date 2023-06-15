@@ -146,7 +146,7 @@ export default class UnitsEdit extends Component {
       })
     } else {
 
-      EditUnits({ ...Units.selected_record, ...data }, history)
+      EditUnits({ data: { ...Units.selected_record, ...data }, history })
     }
   }
 

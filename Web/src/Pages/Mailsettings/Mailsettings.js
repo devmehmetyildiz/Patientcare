@@ -48,11 +48,11 @@ export default class Mailsettings extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const { Mailsettings, Profile, DeleteMailsettings } = this.props
-    const { list, isLoading, isDispatching } = Mailsettings
+    const { isLoading, isDispatching } = Mailsettings
 
 
     const metaKey = "Mailsettings"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -62,9 +62,12 @@ export default class Mailsettings extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
-      item.edit = <Link to={`/Mailsettings/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Mailsettings.list || []).forEach(item => {
+      return {
+        ...item,
+        edit: <Link to={`/Mailsettings/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />,
+      }
     })
 
     return (

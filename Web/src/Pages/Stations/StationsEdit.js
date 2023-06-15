@@ -41,8 +41,8 @@ export default class StationsEdit extends Component {
 
     const { Stations, Profile } = this.props
     const { isLoading, isDispatching } = Stations
-    
-    
+
+
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]' >
@@ -78,7 +78,7 @@ export default class StationsEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { EditStations, history, fillStationnotification, Stations,Profile } = this.props
+    const { EditStations, history, fillStationnotification, Stations, Profile } = this.props
     const data = formToObject(e.target)
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -89,7 +89,7 @@ export default class StationsEdit extends Component {
         fillStationnotification(error)
       })
     } else {
-      EditStations({ ...Stations.selected_record, ...data }, history)
+      EditStations({ data: { ...Stations.selected_record, ...data }, history })
     }
 
   }

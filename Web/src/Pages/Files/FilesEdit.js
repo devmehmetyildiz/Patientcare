@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button,  Divider, Form, Header } from 'semantic-ui-react'
+import { Breadcrumb, Button, Divider, Form, Header } from 'semantic-ui-react'
 import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -9,7 +9,7 @@ export class FilesEdit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isDatafetched:false
+      isDatafetched: false
     }
   }
 
@@ -30,7 +30,7 @@ export class FilesEdit extends Component {
   render() {
 
     const { Files } = this.props
-    const {  selected_record, isLoading, isDispatching } = Files
+    const { selected_record, isLoading, isDispatching } = Files
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
@@ -79,7 +79,7 @@ export class FilesEdit extends Component {
         fillFilenotification(error)
       })
     } else {
-      EditFiles({ ...Files.selected_record, ...Data }, history)
+      EditFiles({ data: { ...Files.selected_record, ...Data }, history })
     }
 
   }

@@ -115,7 +115,7 @@ export class FilesCreate extends Component {
         fillFilenotification(error)
       })
     } else {
-      AddFiles(formData, history)
+      AddFiles({ data: formData, history })
     }
   }
 

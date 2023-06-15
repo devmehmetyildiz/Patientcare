@@ -121,7 +121,7 @@ export default class PurchaseorderstockmovementsEdit extends Component {
         fillPurchaseorderstockmovementnotification(error)
       })
     } else {
-      EditPurchaseorderstockmovements({ ...Purchaseorderstockmovements.selected_record, ...data }, history)
+      EditPurchaseorderstockmovements({ data: { ...Purchaseorderstockmovements.selected_record, ...data }, history })
     }
   }
 

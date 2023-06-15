@@ -128,7 +128,7 @@ export default class CasesCreate extends Component {
         fillCasenotification(error)
       })
     } else {
-      AddCases(data, history)
+      AddCases({data, history})
     }
   }
 

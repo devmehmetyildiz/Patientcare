@@ -143,7 +143,7 @@ export default class CasesEdit extends Component {
         fillCasenotification(error)
       })
     } else {
-      EditCases({ ...Cases.selected_record, ...data }, history)
+      EditCases({ data: { ...Cases.selected_record, ...data }, history })
     }
   }
 

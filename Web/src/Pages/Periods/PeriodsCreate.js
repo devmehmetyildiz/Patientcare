@@ -77,7 +77,7 @@ export default class PeriodsCreate extends Component {
         fillPeriodnotification(error)
       })
     } else {
-      AddPeriods(data, history)
+      AddPeriods({data, history})
     }
   }
 }

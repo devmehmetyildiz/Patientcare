@@ -94,7 +94,7 @@ export default class CostumertypesCreate extends Component {
         fillCostumertypenotification(error)
       })
     } else {
-      AddCostumertypes(data, history)
+      AddCostumertypes({data, history})
     }
   }
 

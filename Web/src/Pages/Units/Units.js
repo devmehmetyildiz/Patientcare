@@ -61,7 +61,7 @@ export default class Units extends Component {
 
 
     const { Units, DeleteUnits, Profile } = this.props
-    const { list, isLoading, isDispatching } = Units
+    const { isLoading, isDispatching } = Units
 
     const metaKey = "Units"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
@@ -74,13 +74,16 @@ export default class Units extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
+    const list = (Units.list || []).map(item => {
       var text = item.Departments.map((department) => {
         return department.Name;
       }).join(", ")
-      item.Departmentstxt = text;
-      item.edit = <Link to={`/Units/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      return {
+        ...item,
+        Departmentstxt: text,
+        edit: <Link to={`/Units/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

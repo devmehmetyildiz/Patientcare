@@ -3,7 +3,7 @@ import Stockmovements from '../../Pages/Stockmovements/Stockmovements'
 import {
     GetStockmovements, removeStockmovementnotification,
     fillStockmovementnotification, DeleteStockmovements
-} from '../../Redux/Actions/StockmovementAction'
+} from '../../Redux/Reducers/StockmovementReducer'
 
 
 const mapStateToProps = (state) => ({

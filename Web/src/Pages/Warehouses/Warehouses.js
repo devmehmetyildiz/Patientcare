@@ -53,7 +53,7 @@ export default class Warehouses extends Component {
 
 
     const { Warehouses, DeleteWarehouses, Profile } = this.props
-    const { list, isLoading, isDispatching } = Warehouses
+    const { isLoading, isDispatching } = Warehouses
 
 
     const metaKey = "Warehouses"
@@ -67,9 +67,12 @@ export default class Warehouses extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
-      item.edit = <Link to={`/Stations/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Warehouses.list || []).forEach(item => {
+      return {
+        ...item,
+        edit: <Link to={`/Stations/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

@@ -111,7 +111,7 @@ export default class PurchaseorderstockmovementsCreate extends Component {
         fillPurchaseorderstockmovementnotification(error)
       })
     } else {
-      AddPurchaseorderstockmovements(data, history)
+      AddPurchaseorderstockmovements({data, history})
     }
   }
 

@@ -79,7 +79,7 @@ export default class PatienttypesEdit extends Component {
         fillPatienttypenotification(error)
       })
     } else {
-      EditPatienttypes({ ...Patienttypes.selected_record, ...data }, history)
+      EditPatienttypes({ data: { ...Patienttypes.selected_record, ...data }, history })
     }
 
   }

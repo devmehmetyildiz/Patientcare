@@ -49,10 +49,10 @@ export default class Costumertypes extends Component {
 
 
     const { Costumertypes, DeleteCostumertypes, Profile } = this.props
-    const { list, isLoading, isDispatching } = Costumertypes
+    const { isLoading, isDispatching } = Costumertypes
 
     const metaKey = "Costumertypes"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -63,13 +63,16 @@ export default class Costumertypes extends Component {
     };
 
 
-    (list || []).forEach(item => {
+    const list = (Costumertypes.list || []).map(item => {
       var text = item.Departments.map((department) => {
         return department.Name;
       }).join(", ")
-      item.Departmentstxt = text;
-      item.edit = <Link to={`/Costumertypes/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      return {
+        ...item,
+        Departmentstxt: text,
+        edit: <Link to={`/Costumertypes/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />,
+      }
     })
 
     return (

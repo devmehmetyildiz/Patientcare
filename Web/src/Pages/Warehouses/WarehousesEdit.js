@@ -86,7 +86,7 @@ export default class WarehousesEdit extends Component {
         fillWarehousenotification(error)
       })
     } else {
-      EditWarehouses({ ...Warehouses.selected_record, ...data }, history)
+      EditWarehouses({data:{ ...Warehouses.selected_record, ...data }, history})
     }
   }
 

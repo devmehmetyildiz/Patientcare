@@ -1,80 +1,189 @@
-import { ACTION_TYPES } from "../Actions/WarehouseAction"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
 
-const defaultState = {
-    list: [],
-    selected_record: {},
-    errmsg: null,
-    notifications: [],
-    isLoading: false,
-    isDispatching: false
-}
-
-const WarehouseReducer = (state = defaultState, { type, payload }) => {
-    switch (type) {
-        case ACTION_TYPES.GET_WAREHOUSES_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_WAREHOUSES_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_WAREHOUSES_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_ALLWAREHOUSES_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_ALLWAREHOUSES_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_ALLWAREHOUSES_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_WAREHOUSE_INIT:
-            return { ...state, isLoading: true, errmsg: null, selected_record: {} }
-        case ACTION_TYPES.GET_WAREHOUSE_SUCCESS:
-            return { ...state, isLoading: false, selected_record: payload }
-        case ACTION_TYPES.GET_WAREHOUSE_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.ADD_WAREHOUSE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.ADD_WAREHOUSE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Ambalar', description: 'Ambar Başarı ile Eklendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.ADD_WAREHOUSE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_WAREHOUSE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.EDIT_WAREHOUSE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Ambalar', description: 'Ambar Başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_WAREHOUSE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.DELETE_WAREHOUSE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.DELETE_WAREHOUSE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Ambalar', description: 'Ambar Başarı ile Silindi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.DELETE_WAREHOUSE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.FILL_WAREHOUSES_NOTIFICATION:
-            let messages = [...state.notifications]
-            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
-            return { ...state, notifications: messages }
-        case ACTION_TYPES.REMOVE_WAREHOUSES_NOTIFICATION:
-           let messages1 = [...state.notifications]
-            messages1.splice(0, 1)
-            return { ...state, notifications: messages1 }
-        case ACTION_TYPES.REMOVE_SELECTED_WAREHOUSE:
-            return { ...state, selected_record: {} }
-        default:
-            return state
+export const GetWarehouses = createAsyncThunk(
+    'Warehouses/GetWarehouses',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Warehouse, ROUTES.WAREHOUSE);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillWarehousenotification(errorPayload));
+            throw errorPayload;
+        }
     }
-}
+);
 
-export default WarehouseReducer
+export const GetWarehouse = createAsyncThunk(
+    'Warehouses/GetWarehouse',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Warehouse, `${ROUTES.WAREHOUSE}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillWarehousenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddWarehouses = createAsyncThunk(
+    'Warehouses/AddWarehouses',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Warehouse, ROUTES.WAREHOUSE, data);
+            dispatch(fillWarehousenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
+            }));
+            history.push('/Warehouses');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillWarehousenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditWarehouses = createAsyncThunk(
+    'Warehouses/EditWarehouses',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.Warehouse, ROUTES.WAREHOUSE, data);
+            dispatch(fillWarehousenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history.push('/Warehouses');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillWarehousenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeleteWarehouses = createAsyncThunk(
+    'Warehouses/DeleteWarehouses',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.Warehouse, `${ROUTES.WAREHOUSE}/${data.Uuid}`);
+            dispatch(fillWarehousenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillWarehousenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const WarehousesSlice = createSlice({
+    name: 'Warehouses',
+    initialState: {
+        list: [],
+        selected_record: {},
+        errMsg: null,
+        notifications: [],
+        isLoading: false,
+        isDispatching: false
+    },
+    reducers: {
+        RemoveSelectedWarehouse: (state) => {
+            state.selected_record = {};
+        },
+        fillWarehousenotification: (state, action) => {
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
+        },
+        removeWarehousenotification: (state) => {
+            state.notifications.splice(0, 1);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(GetWarehouses.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(GetWarehouses.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(GetWarehouses.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetWarehouse.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.selected_record = {};
+            })
+            .addCase(GetWarehouse.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(GetWarehouse.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddWarehouses.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddWarehouses.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddWarehouses.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditWarehouses.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditWarehouses.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditWarehouses.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeleteWarehouses.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeleteWarehouses.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeleteWarehouses.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            });
+    },
+});
+
+export const {
+    RemoveSelectedWarehouse,
+    fillWarehousenotification,
+    removeWarehousenotification,
+} = WarehousesSlice.actions;
+
+export default WarehousesSlice.reducer;

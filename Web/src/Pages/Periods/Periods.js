@@ -45,10 +45,10 @@ export default class Periods extends Component {
 
 
     const { Periods, DeletePeriods, Profile } = this.props
-    const { list, isLoading, isDispatching } = Periods
+    const { isLoading, isDispatching } = Periods
 
     const metaKey = "Periods"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -58,9 +58,12 @@ export default class Periods extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
-      item.edit = <Link to={`/Periods/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Periods.list || []).map(item => {
+      return {
+        ...item,
+        edit: <Link to={`/Periods/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

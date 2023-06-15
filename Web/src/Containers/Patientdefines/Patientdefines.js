@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Patientdefines from '../../Pages/Patientdefines/Patientdefines'
-import { GetPatientdefines, removePatientdefinenotification, fillPatientdefinenotification, DeletePatientdefines } from '../../Redux/Actions/PatientdefineAction'
+import { GetPatientdefines, removePatientdefinenotification, fillPatientdefinenotification, DeletePatientdefines } from '../../Redux/Reducers/PatientdefineReducer'
 
 const mapStateToProps = (state) => ({
     Patientdefines: state.Patientdefines,

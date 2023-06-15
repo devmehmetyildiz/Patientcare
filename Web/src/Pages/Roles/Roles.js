@@ -46,7 +46,7 @@ export class Roles extends Component {
 
 
     const { Roles, DeleteRoles, Profile } = this.props
-    const { list, isLoading, isDispatching } = Roles
+    const { isLoading, isDispatching } = Roles
 
     const metaKey = "Roles"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
@@ -59,13 +59,16 @@ export class Roles extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
+    const list = (Roles.list || []).map(item => {
       var text = item.Privileges.map((privilege) => {
         return privilege.text;
       }).join(", ")
-      item.Privilegestxt = text;
-      item.edit = <Link to={`/roles/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      return {
+        ...item,
+        Privilegestxt: text,
+        edit: <Link to={`/roles/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

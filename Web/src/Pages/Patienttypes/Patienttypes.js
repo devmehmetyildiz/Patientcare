@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon,  Modal } from 'semantic-ui-react'
+import { Divider, Icon, Modal } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -13,8 +13,8 @@ export default class Patienttypes extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      open:false,
-      selectedrecord:{}
+      open: false,
+      selectedrecord: {}
     }
   }
 
@@ -42,11 +42,11 @@ export default class Patienttypes extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
 
-    const { Patienttypes, DeletePatienttypes,  Profile } = this.props
-    const {  list, isLoading, isDispatching } = Patienttypes
+    const { Patienttypes, DeletePatienttypes, Profile } = this.props
+    const { isLoading, isDispatching } = Patienttypes
 
     const metaKey = "Patienttypes"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -56,9 +56,12 @@ export default class Patienttypes extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
-      item.edit = <Link to={`/Patienttypes/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Patienttypes.list || []).map(item => {
+      return {
+        ...item,
+        edit: <Link to={`/Patienttypes/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

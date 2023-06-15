@@ -32,10 +32,10 @@ export default class Checkperiods extends Component {
 
   render() {
 
-    
+
     const { Checkperiods, DeleteCheckperiods, Profile } = this.props
-    const { list, isLoading, isDispatching } = Checkperiods
-    
+    const { isLoading, isDispatching } = Checkperiods
+
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
@@ -61,13 +61,16 @@ export default class Checkperiods extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
+    const list = (Checkperiods.list || []).map(item => {
       var text = item.Periods.map((period) => {
         return period.Name;
       }).join(", ")
-      item.Periodstxt = text;
-      item.edit = <Link to={`/Checkperiods/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      return {
+        ...item,
+        Periodstxt: text,
+        edit: <Link to={`/Checkperiods/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />,
+      }
     })
 
     return (

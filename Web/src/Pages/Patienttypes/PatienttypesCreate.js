@@ -68,7 +68,7 @@ export default class PatienttypesCreate extends Component {
         fillPatienttypenotification(error)
       })
     } else {
-      AddPatienttypes(data, history)
+      AddPatienttypes({data, history})
     }
   }
 }

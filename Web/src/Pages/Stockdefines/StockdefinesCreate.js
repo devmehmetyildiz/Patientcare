@@ -106,7 +106,7 @@ export default class StockdefinesCreate extends Component {
         fillStockdefinenotification(error)
       })
     } else {
-      AddStockdefines(data, history)
+      AddStockdefines({data, history})
     }
   }
 

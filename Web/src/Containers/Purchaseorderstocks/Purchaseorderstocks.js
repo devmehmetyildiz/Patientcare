@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Purchaseorderstocks from '../../Pages/Purchaseorderstocks/Purchaseorderstocks'
-import { GetPurchaseorderstocks, removePurchaseorderstocknotification, fillPurchaseorderstocknotification, DeletePurchaseorderstocks } from '../../Redux/Actions/PurchaseorderstockAction'
+import { GetPurchaseorderstocks, removePurchaseorderstocknotification, fillPurchaseorderstocknotification, DeletePurchaseorderstocks } from '../../Redux/Reducers/PurchaseorderstockReducer'
 
 
 

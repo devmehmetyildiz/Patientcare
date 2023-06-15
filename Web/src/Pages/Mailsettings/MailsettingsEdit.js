@@ -128,7 +128,7 @@ export default class MailsettingsEdit extends Component {
         fillMailsettingnotification(error)
       })
     } else {
-      EditMailsettings({ ...Mailsettings.selected_record, ...data }, history)
+      EditMailsettings({data:{ ...Mailsettings.selected_record, ...data }, history})
     }
   }
 }

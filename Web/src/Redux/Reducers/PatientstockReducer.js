@@ -1,80 +1,189 @@
-import { ACTION_TYPES } from "../Actions/PatientstockAction"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
 
-const defaultState = {
-    list: [],
-    selected_record: {},
-    errmsg: null,
-    notifications: [],
-    isLoading: false,
-    isDispatching: false
-}
-
-const PatientstockReducer = (state = defaultState, { type, payload }) => {
-    switch (type) {
-        case ACTION_TYPES.GET_PATIENTSTOCKS_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_PATIENTSTOCKS_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_PATIENTSTOCKS_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_ALLPATIENTSTOCKS_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_ALLPATIENTSTOCKS_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_ALLPATIENTSTOCKS_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_PATIENTSTOCK_INIT:
-            return { ...state, isLoading: true, errmsg: null, selected_record: {} }
-        case ACTION_TYPES.GET_PATIENTSTOCK_SUCCESS:
-            return { ...state, isLoading: false, selected_record: payload }
-        case ACTION_TYPES.GET_PATIENTSTOCK_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.ADD_PATIENTSTOCK_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.ADD_PATIENTSTOCK_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Hasta Stokları', description: 'Hasta Stoğu Başarı ile Eklendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.ADD_PATIENTSTOCK_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_PATIENTSTOCK_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.EDIT_PATIENTSTOCK_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Hasta Stokları', description: 'Hasta Stoğu Başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_PATIENTSTOCK_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.DELETE_PATIENTSTOCK_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.DELETE_PATIENTSTOCK_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Hasta Stokları', description: 'Hasta Stoğu Başarı ile Silindi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.DELETE_PATIENTSTOCK_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.FILL_PATIENTSTOCKS_NOTIFICATION:
-            let messages = [...state.notifications]
-            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
-            return { ...state, notifications: messages }
-        case ACTION_TYPES.REMOVE_PATIENTSTOCKS_NOTIFICATION:
-           let messages1 = [...state.notifications]
-            messages1.splice(0, 1)
-            return { ...state, notifications: messages1 }
-        case ACTION_TYPES.REMOVE_SELECTED_PATIENTSTOCK:
-            return { ...state, selected_record: {} }
-        default:
-            return state
+export const GetPatientstocks = createAsyncThunk(
+    'Patientstocks/GetPatientstocks',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Warehouse, ROUTES.PATIENTSTOCK);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientstocknotification(errorPayload));
+            throw errorPayload;
+        }
     }
-}
+);
 
-export default PatientstockReducer
+export const GetPatientstock = createAsyncThunk(
+    'Patientstocks/GetPatientstock',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Warehouse, `${ROUTES.PATIENTSTOCK}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientstocknotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddPatientstocks = createAsyncThunk(
+    'Patientstocks/AddPatientstocks',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Warehouse, ROUTES.PATIENTSTOCK, data);
+            dispatch(fillPatientstocknotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
+            }));
+            history.push('/Patientstocks');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientstocknotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditPatientstocks = createAsyncThunk(
+    'Patientstocks/EditPatientstocks',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.Warehouse, ROUTES.PATIENTSTOCK, data);
+            dispatch(fillPatientstocknotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history.push('/Patientstocks');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientstocknotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeletePatientstocks = createAsyncThunk(
+    'Patientstocks/DeletePatientstocks',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PATIENTSTOCK}/${data.Uuid}`);
+            dispatch(fillPatientstocknotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientstocknotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const PatientstocksSlice = createSlice({
+    name: 'Patientstocks',
+    initialState: {
+        list: [],
+        selected_record: {},
+        errMsg: null,
+        notifications: [],
+        isLoading: false,
+        isDispatching: false
+    },
+    reducers: {
+        RemoveSelectedPatientstock: (state) => {
+            state.selected_record = {};
+        },
+        fillPatientstocknotification: (state, action) => {
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
+        },
+        removePatientstocknotification: (state) => {
+            state.notifications.splice(0, 1);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(GetPatientstocks.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(GetPatientstocks.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(GetPatientstocks.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetPatientstock.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.selected_record = {};
+            })
+            .addCase(GetPatientstock.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(GetPatientstock.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddPatientstocks.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddPatientstocks.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddPatientstocks.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditPatientstocks.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditPatientstocks.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditPatientstocks.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeletePatientstocks.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeletePatientstocks.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeletePatientstocks.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            });
+    },
+});
+
+export const {
+    RemoveSelectedPatientstock,
+    fillPatientstocknotification,
+    removePatientstocknotification,
+} = PatientstocksSlice.actions;
+
+export default PatientstocksSlice.reducer;

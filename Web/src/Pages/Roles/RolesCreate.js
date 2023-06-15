@@ -11,7 +11,7 @@ export class RolesCreate extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            selectedPrivileges:[]
+            selectedPrivileges: []
         }
     }
 
@@ -25,12 +25,12 @@ export class RolesCreate extends Component {
     componentDidUpdate() {
         const { Roles, removeRolenotification } = this.props
         Notification(Roles.notifications, removeRolenotification)
-      }
-    
+    }
+
 
     render() {
         const { Roles } = this.props
-        const {  privileges, privilegegroups, isLoading, isDispatching } = Roles
+        const { privileges, privilegegroups, isLoading, isDispatching } = Roles
 
         return (
             isLoading || isDispatching ? <LoadingPage /> :
@@ -112,7 +112,7 @@ export class RolesCreate extends Component {
                 fillRolenotification(error)
             })
         } else {
-            AddRoles(data, history)
+            AddRoles({ data, history })
         }
     }
 

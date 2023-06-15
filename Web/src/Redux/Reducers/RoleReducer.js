@@ -1,96 +1,245 @@
-import { ACTION_TYPES } from "../Actions/RoleAction"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
 
-const defaultState = {
-    list: [],
-    selected_record: {},
-    privileges: [],
-    privilegegroups: [],
-    errmsg: null,
-    notifications: [],
-    isLoading: false,
-    isDispatching: false
-}
-
-const RoleReducer = (state = defaultState, { type, payload }) => {
-    switch (type) {
-        case ACTION_TYPES.GET_ROLES_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_ROLES_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_ROLES_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_ALLROLES_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_ALLROLES_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_ALLROLES_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_ROLE_INIT:
-            return { ...state, isLoading: true, errmsg: null, selected_record: {} }
-        case ACTION_TYPES.GET_ROLE_SUCCESS:
-            return { ...state, isLoading: false, selected_record: payload }
-        case ACTION_TYPES.GET_ROLE_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_PRIVILEGES_INIT:
-            return { ...state, isLoading: true, errmsg: null, privileges: [] }
-        case ACTION_TYPES.GET_PRIVILEGES_SUCCESS:
-            return { ...state, isLoading: false, privileges: payload }
-        case ACTION_TYPES.GET_PRIVILEGES_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_PRIVILEGEGROUPS_INIT:
-            return { ...state, isLoading: true, errmsg: null, privilegegroups: [] }
-        case ACTION_TYPES.GET_PRIVILEGEGROUPS_SUCCESS:
-            return { ...state, isLoading: false, privilegegroups: payload }
-        case ACTION_TYPES.GET_PRIVILEGEROUPS_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.ADD_ROLE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.ADD_ROLE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Roller', description: 'Role Başarı ile Eklendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.ADD_ROLE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_ROLE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.EDIT_ROLE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Roller', description: 'Role Başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_ROLE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.DELETE_ROLE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.DELETE_ROLE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Roller', description: 'Role Başarı ile Silindi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.DELETE_ROLE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.FILL_ROLES_NOTIFICATION:
-            let messages = [...state.notifications]
-            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
-            return { ...state, notifications: messages }
-        case ACTION_TYPES.REMOVE_ROLES_NOTIFICATION:
-           let messages1 = [...state.notifications]
-            messages1.splice(0, 1)
-            return { ...state, notifications: messages1 }
-        case ACTION_TYPES.REMOVE_SELECTED_ROLE:
-            return { ...state, selected_record: {} }
-        default:
-            return state
+export const GetRoles = createAsyncThunk(
+    'Roles/GetRoles',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Userrole, ROUTES.ROLE);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillRolenotification(errorPayload));
+            throw errorPayload;
+        }
     }
-}
+);
 
-export default RoleReducer
+export const GetRole = createAsyncThunk(
+    'Roles/GetRole',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Userrole, `${ROUTES.ROLE}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillRolenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const GetPrivileges = createAsyncThunk(
+    'Roles/GetPrivileges',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Userrole, ROUTES.ROLE + `/Getprivileges`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillRolenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const GetPrivilegegroups = createAsyncThunk(
+    'Roles/GetPrivilegegroups',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Userrole, ROUTES.ROLE + `/Getprivilegegroups`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillRolenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddRoles = createAsyncThunk(
+    'Roles/AddRoles',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Userrole, ROUTES.ROLE, data);
+            dispatch(fillRolenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
+            }));
+            history.push('/Roles');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillRolenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditRoles = createAsyncThunk(
+    'Roles/EditRoles',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.Userrole, ROUTES.ROLE, data);
+            dispatch(fillRolenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history.push('/Roles');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillRolenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeleteRoles = createAsyncThunk(
+    'Roles/DeleteRoles',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.Userrole, `${ROUTES.ROLE}/${data.Uuid}`);
+            dispatch(fillRolenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillRolenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const RolesSlice = createSlice({
+    name: 'Roles',
+    initialState: {
+        list: [],
+        selected_record: {},
+        privileges: [],
+        privilegegroups: [],
+        errMsg: null,
+        notifications: [],
+        isLoading: false,
+        isDispatching: false
+    },
+    reducers: {
+        RemoveSelectedRole: (state) => {
+            state.selected_record = {};
+        },
+        fillRolenotification: (state, action) => {
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
+        },
+        removeRolenotification: (state) => {
+            state.notifications.splice(0, 1);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(GetRoles.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(GetRoles.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(GetRoles.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetRole.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.selected_record = {};
+            })
+            .addCase(GetRole.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(GetRole.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetPrivileges.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.privileges = [];
+            })
+            .addCase(GetPrivileges.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.privileges = action.payload;
+            })
+            .addCase(GetPrivileges.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetPrivilegegroups.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.privilegegroups = [];
+            })
+            .addCase(GetPrivilegegroups.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.privilegegroups = action.payload;
+            })
+            .addCase(GetPrivilegegroups.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddRoles.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddRoles.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddRoles.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditRoles.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditRoles.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditRoles.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeleteRoles.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeleteRoles.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeleteRoles.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            });
+    },
+});
+
+export const {
+    RemoveSelectedRole,
+    fillRolenotification,
+    removeRolenotification,
+} = RolesSlice.actions;
+
+export default RolesSlice.reducer;

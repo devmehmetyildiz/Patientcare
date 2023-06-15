@@ -119,7 +119,7 @@ export default class PatientstockmovementsCreate extends Component {
         fillPatientstockmovementnotification(error)
       })
     } else {
-      AddPatientstockmovements(data, history)
+      AddPatientstockmovements({data, history})
     }
   }
 

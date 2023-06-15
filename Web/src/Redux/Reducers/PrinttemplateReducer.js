@@ -1,73 +1,189 @@
-import { ACTION_TYPES } from "../Actions/PrinttemplateAction"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
 
-const defaultState = {
-    list: [],
-    selected_record: {},
-    errmsg: null,
-    notifications: [],
-    isLoading: false,
-    isDispatching: false
-}
-
-const PrinttemplateReducer = (state = defaultState, { type, payload }) => {
-    switch (type) {
-        case ACTION_TYPES.GET_PRINTTEMPLATES_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_PRINTTEMPLATES_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_PRINTTEMPLATES_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_PRINTTEMPLATE_INIT:
-            return { ...state, isLoading: true, errmsg: null, selected_record: {} }
-        case ACTION_TYPES.GET_PRINTTEMPLATE_SUCCESS:
-            return { ...state, isLoading: false, selected_record: payload }
-        case ACTION_TYPES.GET_PRINTTEMPLATE_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.ADD_PRINTTEMPLATE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.ADD_PRINTTEMPLATE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Yazdırma Tasarımları', description: 'Tasarım Başarı ile Eklendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.ADD_PRINTTEMPLATE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_PRINTTEMPLATE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.EDIT_PRINTTEMPLATE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Yazdırma Tasarımları', description: 'Tasarım Başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_PRINTTEMPLATE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.DELETE_PRINTTEMPLATE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.DELETE_PRINTTEMPLATE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Yazdırma Tasarımları', description: 'Tasarım Başarı ile Silindi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.DELETE_PRINTTEMPLATE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.FILL_PRINTTEMPLATES_NOTIFICATION:
-            let messages = [...state.notifications]
-            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
-            return { ...state, notifications: messages }
-        case ACTION_TYPES.REMOVE_PRINTTEMPLATES_NOTIFICATION:
-           let messages1 = [...state.notifications]
-            messages1.splice(0, 1)
-            return { ...state, notifications: messages1 }
-        case ACTION_TYPES.REMOVE_SELECTED_PRINTTEMPLATE:
-            return { ...state, selected_record: {} }
-        default:
-            return state
+export const GetPrinttemplates = createAsyncThunk(
+    'Printtemplates/GetPrinttemplates',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.System, ROUTES.PRINTTEMPLATE);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPrinttemplatenotification(errorPayload));
+            throw errorPayload;
+        }
     }
-}
+);
 
-export default PrinttemplateReducer
+export const GetPrinttemplate = createAsyncThunk(
+    'Printtemplates/GetPrinttemplate',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.System, `${ROUTES.PRINTTEMPLATE}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPrinttemplatenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddPrinttemplates = createAsyncThunk(
+    'Printtemplates/AddPrinttemplates',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.System, ROUTES.PRINTTEMPLATE, data);
+            dispatch(fillPrinttemplatenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
+            }));
+            history.push('/Printtemplates');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPrinttemplatenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditPrinttemplates = createAsyncThunk(
+    'Printtemplates/EditPrinttemplates',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.System, ROUTES.PRINTTEMPLATE, data);
+            dispatch(fillPrinttemplatenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history.push('/Printtemplates');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPrinttemplatenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeletePrinttemplates = createAsyncThunk(
+    'Printtemplates/DeletePrinttemplates',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.System, `${ROUTES.PRINTTEMPLATE}/${data.Uuid}`);
+            dispatch(fillPrinttemplatenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPrinttemplatenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const PrinttemplatesSlice = createSlice({
+    name: 'Printtemplates',
+    initialState: {
+        list: [],
+        selected_record: {},
+        errMsg: null,
+        notifications: [],
+        isLoading: false,
+        isDispatching: false
+    },
+    reducers: {
+        RemoveSelectedPrinttemplate: (state) => {
+            state.selected_record = {};
+        },
+        fillPrinttemplatenotification: (state, action) => {
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
+        },
+        removePrinttemplatenotification: (state) => {
+            state.notifications.splice(0, 1);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(GetPrinttemplates.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(GetPrinttemplates.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(GetPrinttemplates.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetPrinttemplate.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.selected_record = {};
+            })
+            .addCase(GetPrinttemplate.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(GetPrinttemplate.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddPrinttemplates.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddPrinttemplates.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddPrinttemplates.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditPrinttemplates.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditPrinttemplates.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditPrinttemplates.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeletePrinttemplates.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeletePrinttemplates.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeletePrinttemplates.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            });
+    },
+});
+
+export const {
+    RemoveSelectedPrinttemplate,
+    fillPrinttemplatenotification,
+    removePrinttemplatenotification,
+} = PrinttemplatesSlice.actions;
+
+export default PrinttemplatesSlice.reducer;

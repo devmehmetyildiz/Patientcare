@@ -146,7 +146,7 @@ export default class PrinttemplatesCreate extends Component {
         fillPrinttemplatenotification(error)
       })
     } else {
-      AddPrinttemplates(data, history)
+      AddPrinttemplates({data, history})
     }
   }
 

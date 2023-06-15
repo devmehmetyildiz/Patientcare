@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Tododefines from '../../Pages/Tododefines/Tododefines'
-import { GetTododefines, removeTododefinenotification,DeleteTododefines } from '../../Redux/Actions/TododefineAction'
+import { GetTododefines, removeTododefinenotification,DeleteTododefines } from '../../Redux/Reducers/TododefineReducer'
 
 const mapStateToProps = (state) => ({
     Tododefines: state.Tododefines,

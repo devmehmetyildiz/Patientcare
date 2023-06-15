@@ -1,80 +1,189 @@
-import { ACTION_TYPES } from "../Actions/PatientstockmovementAction"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
 
-const defaultState = {
-    list: [],
-    selected_record: {},
-    errmsg: null,
-    notifications: [],
-    isLoading: false,
-    isDispatching: false
-}
-
-const PatientstockmovementReducer = (state = defaultState, { type, payload }) => {
-    switch (type) {
-        case ACTION_TYPES.GET_PATIENTSTOCKMOVEMENTS_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_PATIENTSTOCKMOVEMENTS_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_PATIENTSTOCKMOVEMENTS_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_ALLPATIENTSTOCKMOVEMENTS_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_ALLPATIENTSTOCKMOVEMENTS_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_ALLPATIENTSTOCKMOVEMENTS_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_PATIENTSTOCKMOVEMENT_INIT:
-            return { ...state, isLoading: true, errmsg: null, selected_record: {} }
-        case ACTION_TYPES.GET_PATIENTSTOCKMOVEMENT_SUCCESS:
-            return { ...state, isLoading: false, selected_record: payload }
-        case ACTION_TYPES.GET_PATIENTSTOCKMOVEMENT_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.ADD_PATIENTSTOCKMOVEMENT_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.ADD_PATIENTSTOCKMOVEMENT_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Hasta Stok Hareketleri', description: 'Hasta Stok Hareketi Başarı ile Eklendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.ADD_PATIENTSTOCKMOVEMENT_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_PATIENTSTOCKMOVEMENT_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.EDIT_PATIENTSTOCKMOVEMENT_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Hasta Stok Hareketleri', description: 'Hasta Stok Hareketi Başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_PATIENTSTOCKMOVEMENT_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.DELETE_PATIENTSTOCKMOVEMENT_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.DELETE_PATIENTSTOCKMOVEMENT_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Hasta Stok Hareketleri', description: 'Hasta Stok Hareketi Başarı ile Silindi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.DELETE_PATIENTSTOCKMOVEMENT_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.FILL_PATIENTSTOCKMOVEMENTS_NOTIFICATION:
-            let messages = [...state.notifications]
-            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
-            return { ...state, notifications: messages }
-        case ACTION_TYPES.REMOVE_PATIENTSTOCKMOVEMENTS_NOTIFICATION:
-           let messages1 = [...state.notifications]
-            messages1.splice(0, 1)
-            return { ...state, notifications: messages1 }
-        case ACTION_TYPES.REMOVE_SELECTED_PATIENTSTOCKMOVEMENT:
-            return { ...state, selected_record: {} }
-        default:
-            return state
+export const GetPatientstockmovements = createAsyncThunk(
+    'Patientstockmovements/GetPatientstockmovements',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
     }
-}
+);
 
-export default PatientstockmovementReducer
+export const GetPatientstockmovement = createAsyncThunk(
+    'Patientstockmovements/GetPatientstockmovement',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Warehouse, `${ROUTES.PATIENTSTOCKMOVEMENT}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddPatientstockmovements = createAsyncThunk(
+    'Patientstockmovements/AddPatientstockmovements',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT, data);
+            dispatch(fillPatientstockmovementnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
+            }));
+            history.push('/Patientstockmovements');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditPatientstockmovements = createAsyncThunk(
+    'Patientstockmovements/EditPatientstockmovements',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT, data);
+            dispatch(fillPatientstockmovementnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history.push('/Patientstockmovements');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeletePatientstockmovements = createAsyncThunk(
+    'Patientstockmovements/DeletePatientstockmovements',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PATIENTSTOCKMOVEMENT}/${data.Uuid}`);
+            dispatch(fillPatientstockmovementnotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const PatientstockmovementsSlice = createSlice({
+    name: 'Patientstockmovements',
+    initialState: {
+        list: [],
+        selected_record: {},
+        errMsg: null,
+        notifications: [],
+        isLoading: false,
+        isDispatching: false
+    },
+    reducers: {
+        RemoveSelectedPatientstockmovement: (state) => {
+            state.selected_record = {};
+        },
+        fillPatientstockmovementnotification: (state, action) => {
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
+        },
+        removePatientstockmovementnotification: (state) => {
+            state.notifications.splice(0, 1);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(GetPatientstockmovements.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(GetPatientstockmovements.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(GetPatientstockmovements.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetPatientstockmovement.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.selected_record = {};
+            })
+            .addCase(GetPatientstockmovement.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(GetPatientstockmovement.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddPatientstockmovements.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddPatientstockmovements.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddPatientstockmovements.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditPatientstockmovements.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditPatientstockmovements.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditPatientstockmovements.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeletePatientstockmovements.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeletePatientstockmovements.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeletePatientstockmovements.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            });
+    },
+});
+
+export const {
+    RemoveSelectedPatientstockmovement,
+    fillPatientstockmovementnotification,
+    removePatientstockmovementnotification,
+} = PatientstockmovementsSlice.actions;
+
+export default PatientstockmovementsSlice.reducer;

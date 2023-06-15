@@ -115,7 +115,7 @@ export default class MailsettingsCreate extends Component {
         fillMailsettingnotification(error)
       })
     } else {
-      AddMailsettings(data, history)
+      AddMailsettings({data, history})
     }
   }
 

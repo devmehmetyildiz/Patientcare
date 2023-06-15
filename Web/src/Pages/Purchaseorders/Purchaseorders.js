@@ -64,7 +64,7 @@ export default class Purchaseorders extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const { Purchaseorders, DeletePurchaseorders, Profile, CompletePurchaseorders } = this.props
-    const { list, isLoading, isDispatching } = Purchaseorders
+    const { isLoading, isDispatching } = Purchaseorders
 
 
     const metaKey = "Purchaseorders"
@@ -78,12 +78,15 @@ export default class Purchaseorders extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
-      item.complete = <Icon link size='large' color='red' name='check square' onClick={() => { this.setState({ selectedrecord: item, openComplete: true }) }} />
-      item.edit = <Link to={`/Purchaseorders/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Purchaseorders.list || []).map(item => {
+      return {
+        ...item,
+        complete: <Icon link size='large' color='red' name='check square' onClick={() => { this.setState({ selectedrecord: item, openComplete: true }) }} />,
+        edit: <Link to={`/Purchaseorders/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
-    
+
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>

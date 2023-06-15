@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Divider, Dropdown, Form } from 'semantic-ui-react'
-import { Breadcrumb, Button,  Header } from 'semantic-ui-react'
+import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -33,7 +33,7 @@ export default class PatientstocksEdit extends Component {
 
   componentDidUpdate() {
     const { Departments, Stockdefines, Patientstocks, Patients, GetPatients, Getpreregistrations,
-       removePatientnotification, removePatientstocknotification, removeStockdefinenotification, removeDepartmentnotification  } = this.props
+      removePatientnotification, removePatientstocknotification, removeStockdefinenotification, removeDepartmentnotification } = this.props
     const { selected_record, isLoading } = Patientstocks
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
       && Departments.list.length > 0 && !Departments.isLoading
@@ -59,7 +59,7 @@ export default class PatientstocksEdit extends Component {
   }
 
   render() {
-    const { Patientstocks, Patients, Departments, Stockdefines} = this.props
+    const { Patientstocks, Patients, Departments, Stockdefines } = this.props
     const { selected_record } = Patientstocks
 
     const Departmentoptions = Departments.list.map(department => {
@@ -92,7 +92,7 @@ export default class PatientstocksEdit extends Component {
                 <Form.Field>
                   <label className='text-[#000000de]'>{this.state.isInprepatients ? "Ön Kayıtlı Hastalar" : "Kurumdaki Hastalar"}
                     <Button onClick={(e) => { this.handleChangePatienttype(e) }} className='cursor-pointer ' circular size='mini' icon="redo"></Button></label>
-                  <Dropdown value={this.state.selectedpatient} loading={Patients.isLoading}  fluid selection options={Patientoptions} onChange={this.handleChangePatient} />
+                  <Dropdown value={this.state.selectedpatient} loading={Patients.isLoading} fluid selection options={Patientoptions} onChange={this.handleChangePatient} />
                 </Form.Field>
                 <Form.Field>
                   <label className='text-[#000000de]'>Ürün
@@ -152,8 +152,7 @@ export default class PatientstocksEdit extends Component {
         fillPatientstocknotification(error)
       })
     } else {
-      const response = { ...Patientstocks.selected_record, ...data }
-      EditPatientstocks(response, history)
+      EditPatientstocks({ data: { ...Patientstocks.selected_record, ...data }, history })
     }
   }
 

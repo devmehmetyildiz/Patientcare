@@ -52,10 +52,10 @@ export default class Patientstockmovements extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const { Patientstockmovements, DeletePatientstockmovements, Profile } = this.props
-    const { list, isLoading, isDispatching } = Patientstockmovements
+    const { isLoading, isDispatching } = Patientstockmovements
 
     const metaKey = "Patientstockmovements"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -65,10 +65,13 @@ export default class Patientstockmovements extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
-      item.watch = <Link to={`/Patientstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
-      item.edit = <Link to={`/Patientstockmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Patientstockmovements.list || []).map(item => {
+      return {
+        ...item,
+        watch: <Link to={`/Patientstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
+        edit: <Link to={`/Patientstockmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />,
+      }
     })
 
     return (

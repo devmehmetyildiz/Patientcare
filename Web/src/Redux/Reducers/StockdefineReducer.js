@@ -1,80 +1,189 @@
-import { ACTION_TYPES } from "../Actions/StockdefineAction"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
 
-const defaultState = {
-    list: [],
-    selected_record: {},
-    errmsg: null,
-    notifications: [],
-    isLoading: false,
-    isDispatching: false
-}
-
-const StockdefinesReducer = (state = defaultState, { type, payload }) => {
-    switch (type) {
-        case ACTION_TYPES.GET_STOCKDEFINES_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_STOCKDEFINES_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_STOCKDEFINES_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_ALLSTOCKDEFINES_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_ALLSTOCKDEFINES_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_ALLSTOCKDEFINES_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_STOCKDEFINE_INIT:
-            return { ...state, isLoading: true, errmsg: null, selected_record: {} }
-        case ACTION_TYPES.GET_STOCKDEFINE_SUCCESS:
-            return { ...state, isLoading: false, selected_record: payload }
-        case ACTION_TYPES.GET_STOCKDEFINE_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.ADD_STOCKDEFINE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.ADD_STOCKDEFINE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Ürün Tanımları', description: 'Ürün Tanımı Başarı ile Eklendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.ADD_STOCKDEFINE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_STOCKDEFINE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.EDIT_STOCKDEFINE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Ürün Tanımları', description: 'Ürün Tanımı Başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_STOCKDEFINE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.DELETE_STOCKDEFINE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.DELETE_STOCKDEFINE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Ürün Tanımları', description: 'Ürün Tanımı Başarı ile Silindi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.DELETE_STOCKDEFINE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.FILL_STOCKDEFINES_NOTIFICATION:
-            let messages = [...state.notifications]
-            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
-            return { ...state, notifications: messages }
-        case ACTION_TYPES.REMOVE_STOCKDEFINES_NOTIFICATION:
-           let messages1 = [...state.notifications]
-            messages1.splice(0, 1)
-            return { ...state, notifications: messages1 }
-        case ACTION_TYPES.REMOVE_SELECTED_STOCKDEFINE:
-            return { ...state, selected_record: {} }
-        default:
-            return state
+export const GetStockdefines = createAsyncThunk(
+    'Stockdefines/GetStockdefines',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Warehouse, ROUTES.STOCKDEFINE);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillStockdefinenotification(errorPayload));
+            throw errorPayload;
+        }
     }
-}
+);
 
-export default StockdefinesReducer
+export const GetStockdefine = createAsyncThunk(
+    'Stockdefines/GetStockdefine',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Warehouse, `${ROUTES.STOCKDEFINE}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillStockdefinenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddStockdefines = createAsyncThunk(
+    'Stockdefines/AddStockdefines',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Warehouse, ROUTES.STOCKDEFINE, data);
+            dispatch(fillStockdefinenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
+            }));
+            history.push('/Stockdefines');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillStockdefinenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditStockdefines = createAsyncThunk(
+    'Stockdefines/EditStockdefines',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.put(config.services.Warehouse, ROUTES.STOCKDEFINE, data);
+            dispatch(fillStockdefinenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history.push('/Stockdefines');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillStockdefinenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeleteStockdefines = createAsyncThunk(
+    'Stockdefines/DeleteStockdefines',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.Warehouse, `${ROUTES.STOCKDEFINE}/${data.Uuid}`);
+            dispatch(fillStockdefinenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillStockdefinenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const StockdefinesSlice = createSlice({
+    name: 'Stockdefines',
+    initialState: {
+        list: [],
+        selected_record: {},
+        errMsg: null,
+        notifications: [],
+        isLoading: false,
+        isDispatching: false
+    },
+    reducers: {
+        RemoveSelectedStockdefine: (state) => {
+            state.selected_record = {};
+        },
+        fillStockdefinenotification: (state, action) => {
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
+        },
+        removeStockdefinenotification: (state) => {
+            state.notifications.splice(0, 1);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(GetStockdefines.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(GetStockdefines.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(GetStockdefines.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetStockdefine.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.selected_record = {};
+            })
+            .addCase(GetStockdefine.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(GetStockdefine.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddStockdefines.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddStockdefines.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddStockdefines.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditStockdefines.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditStockdefines.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditStockdefines.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeleteStockdefines.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeleteStockdefines.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeleteStockdefines.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            });
+    },
+});
+
+export const {
+    RemoveSelectedStockdefine,
+    fillStockdefinenotification,
+    removeStockdefinenotification,
+} = StockdefinesSlice.actions;
+
+export default StockdefinesSlice.reducer;

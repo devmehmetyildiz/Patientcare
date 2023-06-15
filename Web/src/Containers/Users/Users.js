@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Users from "../../Pages/Users/Users"
-import { GetUsers, DeleteUsers, fillUsernotification, removeUsernotification } from "../../Redux/Actions/UserAction"
+import { GetUsers, DeleteUsers, fillUsernotification, removeUsernotification } from "../../Redux/Reducers/UserReducer"
 
 const mapStateToProps = (state) => ({
     Users: state.Users,

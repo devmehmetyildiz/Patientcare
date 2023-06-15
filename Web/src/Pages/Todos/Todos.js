@@ -53,10 +53,10 @@ export default class Todos extends Component {
 
 
     const { Todos, Profile } = this.props
-    const { list, isLoading, isDispatching } = Todos
+    const { isLoading, isDispatching } = Todos
 
     const metaKey = "Todos"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -66,8 +66,11 @@ export default class Todos extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
-      item.delete = <Icon link size='large' color='red' name='edit' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Todos.list || []).map(item => {
+      return {
+        ...item,
+        delete: <Icon link size='large' color='red' name='edit' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

@@ -1,73 +1,203 @@
-import { ACTION_TYPES } from "../Actions/FileAction"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ROUTES } from "../../Utils/Constants";
+import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
+import instanse from "../Actions/axios";
+import config from "../../Config";
+import Cookies from 'universal-cookie';
+import axios from 'axios';
 
-const defaultState = {
-    list: [],
-    selected_record: {},
-    errmsg: null,
-    notifications: [],
-    isLoading: false,
-    isDispatching: false
-}
-
-const FileReducer = (state = defaultState, { type, payload }) => {
-    switch (type) {
-        case ACTION_TYPES.GET_FILES_INIT:
-            return { ...state, isLoading: true, errmsg: null, list: [] }
-        case ACTION_TYPES.GET_FILES_SUCCESS:
-            return { ...state, isLoading: false, list: payload }
-        case ACTION_TYPES.GET_FILES_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.GET_FILE_INIT:
-            return { ...state, isLoading: true, errmsg: null, selected_record: {} }
-        case ACTION_TYPES.GET_FILE_SUCCESS:
-            return { ...state, isLoading: false, selected_record: payload }
-        case ACTION_TYPES.GET_FILE_ERROR:
-            return { ...state, isLoading: false, errmsg: payload }
-
-        case ACTION_TYPES.ADD_FILE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.ADD_FILE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Dosyalar', description: 'Dosya Başarı ile Eklendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.ADD_FILE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.EDIT_FILE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.EDIT_FILE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Dosyalar', description: 'Dosya Başarı ile Güncellendi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.EDIT_FILE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.DELETE_FILE_INIT:
-            return { ...state, isDispatching: true }
-        case ACTION_TYPES.DELETE_FILE_SUCCESS:
-            return {
-                ...state, isDispatching: false, list: payload,
-                notifications: [{ type: 'Success', code: 'Dosyalar', description: 'Dosya Başarı ile Silindi' }].concat(state.notifications || [])
-            }
-        case ACTION_TYPES.DELETE_FILE_ERROR:
-            return { ...state, isDispatching: false, errmsg: payload }
-
-        case ACTION_TYPES.FILL_FILES_NOTIFICATION:
-            let messages = [...state.notifications]
-            Array.isArray(payload) ? messages = messages.concat(payload) : messages.push(payload)
-            return { ...state, notifications: messages }
-        case ACTION_TYPES.REMOVE_FILES_NOTIFICATION:
-           let messages1 = [...state.notifications]
-            messages1.splice(0, 1)
-            return { ...state, notifications: messages1 }
-        case ACTION_TYPES.REMOVE_SELECTED_FILE:
-            return { ...state, selected_record: {} }
-        default:
-            return state
+export const GetFiles = createAsyncThunk(
+    'Files/GetFiles',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.File, ROUTES.FILE);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillFilenotification(errorPayload));
+            throw errorPayload;
+        }
     }
-}
+);
 
-export default FileReducer
+export const GetFile = createAsyncThunk(
+    'Files/GetFile',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.File, `${ROUTES.FILE}/${guid}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillFilenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddFiles = createAsyncThunk(
+    'Files/AddFiles',
+    async ({ data, history, url }, { dispatch }) => {
+        try {
+            const localcookies = new Cookies();
+            const response = await axios({
+                method: `post`,
+                url: config.services.File + `${ROUTES.FILE}`,
+                headers: { Authorization: "Bearer  " + localcookies.get('patientcare'), contentType: 'mime/form-data' },
+                data: data
+            })
+            dispatch(fillFilenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
+            }));
+            history.push(url ? url : '/Files')
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillFilenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditFiles = createAsyncThunk(
+    'Files/EditFiles',
+    async ({ data, history, url }, { dispatch }) => {
+        try {
+            const localcookies = new Cookies();
+            const response = await axios({
+                method: `put`,
+                url: config.services.File + `${ROUTES.FILE}`,
+                headers: { Authorization: "Bearer  " + localcookies.get('patientcare'), contentType: 'mime/form-data' },
+                data: data
+            })
+            dispatch(fillFilenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
+            }));
+            history && history.push(url ? url : '/Files')
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillFilenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeleteFiles = createAsyncThunk(
+    'Files/DeleteFiles',
+    async (data, { dispatch }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const response = await instanse.delete(config.services.File, `${ROUTES.FILE}/${data.Uuid}`);
+            dispatch(fillFilenotification({
+                type: 'Success',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillFilenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const FilesSlice = createSlice({
+    name: 'Files',
+    initialState: {
+        list: [],
+        selected_record: {},
+        errMsg: null,
+        notifications: [],
+        isLoading: false,
+        isDispatching: false
+    },
+    reducers: {
+        RemoveSelectedFile: (state) => {
+            state.selected_record = {};
+        },
+        fillFilenotification: (state, action) => {
+            const payload = action.payload;
+            const messages = Array.isArray(payload) ? payload : [payload];
+            state.notifications = messages.concat(state.notifications || []);
+        },
+        removeFilenotification: (state) => {
+            state.notifications.splice(0, 1);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(GetFiles.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.list = [];
+            })
+            .addCase(GetFiles.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(GetFiles.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetFile.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.selected_record = {};
+            })
+            .addCase(GetFile.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(GetFile.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddFiles.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddFiles.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddFiles.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditFiles.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditFiles.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditFiles.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeleteFiles.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeleteFiles.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeleteFiles.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            });
+    },
+});
+
+export const {
+    RemoveSelectedFile,
+    fillFilenotification,
+    removeFilenotification,
+} = FilesSlice.actions;
+
+export default FilesSlice.reducer;

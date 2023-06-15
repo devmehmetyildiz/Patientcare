@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PeriodsCreate from '../../Pages/Periods/PeriodsCreate'
-import { AddPeriods, removePeriodnotification, fillPeriodnotification } from '../../Redux/Actions/PeriodAction'
+import { AddPeriods, removePeriodnotification, fillPeriodnotification } from '../../Redux/Reducers/PeriodReducer'
 
 
 const mapStateToProps = (state) => ({

@@ -75,7 +75,7 @@ export default class WarehousesCreate extends Component {
         fillWarehousenotification(error)
       })
     } else {
-      AddWarehouses(data, history)
+      AddWarehouses({data, history})
     }
   }
 

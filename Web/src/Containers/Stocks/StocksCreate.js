@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import StocksCreate from '../../Pages/Stocks/StocksCreate'
-import { AddStocks, removeStocknotification, fillStocknotification } from '../../Redux/Actions/StockAction'
-import { GetStockdefines, removeStockdefinenotification } from '../../Redux/Actions/StockdefineAction'
-import { GetDepartments, removeDepartmentnotification } from '../../Redux/Actions/DepartmentAction'
-import { GetWarehouses, removeWarehousenotification } from '../../Redux/Actions/WarehouseAction'
+import { AddStocks, removeStocknotification, fillStocknotification } from '../../Redux/Reducers/StockReducer'
+import { GetStockdefines, removeStockdefinenotification } from '../../Redux/Reducers/StockdefineReducer'
+import { GetDepartments, removeDepartmentnotification } from '../../Redux/Reducers/DepartmentReducer'
+import { GetWarehouses, removeWarehousenotification } from '../../Redux/Reducers/WarehouseReducer'
 
 const mapStateToProps = (state) => ({
   Stockdefines: state.Stockdefines,

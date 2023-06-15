@@ -63,7 +63,7 @@ export default class Users extends Component {
 
 
     const { Users, DeleteUsers, Profile } = this.props
-    const { list, isLoading, isDispatching } = Users
+    const { isLoading, isDispatching } = Users
 
 
     const metaKey = "Users"
@@ -77,22 +77,24 @@ export default class Users extends Component {
       }) : []
     };
 
-    console.log('list: ', list);
-    (list || []).forEach(item => {
+    const list = (Users.list || []).map(item => {
       var stationtext = (item.Stations || []).map((station) => {
         return station.Name;
       }).join(", ")
-      item.Stationstxt = stationtext;
       var rolestext = (item.Roles || []).map((role) => {
         return role.Name;
       }).join(", ")
-      item.Rolestxt = rolestext;
       var departmentext = (item.Departments || []).map((department) => {
         return department.Name;
       }).join(", ")
-      item.Departmentstxt = departmentext;
-      item.edit = <Link to={`/Users/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      return {
+        ...item,
+        Stationstxt: stationtext,
+        Rolestxt: rolestext,
+        Departmentstxt: departmentext,
+        edit: <Link to={`/Users/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import PatientstockmovementsEdit from '../../Pages/Patientstockmovements/PatientstockmovementsEdit'
-import { EditPatientstockmovements, GetPatientstockmovement, RemoveSelectedPatientstockmovement, removePatientstockmovementnotification, fillPatientstockmovementnotification } from '../../Redux/Actions/PatientstockmovementAction'
-import { GetPatientstocks, removePatientstocknotification } from '../../Redux/Actions/PatientstockAction'
+import { EditPatientstockmovements, GetPatientstockmovement, RemoveSelectedPatientstockmovement, removePatientstockmovementnotification, fillPatientstockmovementnotification } from '../../Redux/Reducers/PatientstockmovementReducer'
+import { GetPatientstocks, removePatientstocknotification } from '../../Redux/Reducers/PatientstockReducer'
 
 const mapStateToProps = (state) => ({
     Patientstockmovements: state.Patientstockmovements,

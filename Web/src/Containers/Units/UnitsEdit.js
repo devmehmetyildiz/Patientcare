@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import UnitsEdit from '../../Pages/Units/UnitsEdit'
-import { EditUnits, GetUnit, removeUnitnotification, fillUnitnotification } from "../../Redux/Actions/UnitActions"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/Actions/DepartmentAction"
+import { EditUnits, GetUnit, removeUnitnotification, fillUnitnotification } from "../../Redux/Reducers/UnitReducer"
+import { GetDepartments, removeDepartmentnotification } from "../../Redux/Reducers/DepartmentReducer"
 
 const mapStateToProps = (state) => ({
   Units: state.Units,

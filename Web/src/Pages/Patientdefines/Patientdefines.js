@@ -74,10 +74,10 @@ export default class Patientdefines extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const { Patientdefines, DeletePatientdefines, Profile } = this.props
-    const { list, isLoading, isDispatching } = Patientdefines
+    const { isLoading, isDispatching } = Patientdefines
 
     const metaKey = "Patientdefines"
-      let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
         return item.key
@@ -88,9 +88,12 @@ export default class Patientdefines extends Component {
     };
 
 
-    (list || []).forEach(item => {
-      item.edit = <Link to={`/Patientdefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Patientdefines.list || []).map(item => {
+      return{
+        ...item,
+        edit : <Link to={`/Patientdefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete : <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

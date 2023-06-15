@@ -51,7 +51,7 @@ export default class Purchaseorderstockmovements extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const { Purchaseorderstockmovements, DeletePurchaseorderstockmovements, Profile } = this.props
-    const { list, isLoading, isDispatching } = Purchaseorderstockmovements
+    const { isLoading, isDispatching } = Purchaseorderstockmovements
 
     const metaKey = "Purchaseorderstockmovements"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
@@ -64,10 +64,13 @@ export default class Purchaseorderstockmovements extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
-      item.watch = <Link to={`/Purchaseorderstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
-      item.edit = <Link to={`/Purchaseorderstockmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Purchaseorderstockmovements.list || []).map(item => {
+      return {
+        ...item,
+        watch: <Link to={`/Purchaseorderstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
+        edit: <Link to={`/Purchaseorderstockmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

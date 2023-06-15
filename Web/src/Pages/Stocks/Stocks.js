@@ -53,7 +53,7 @@ export default class Stocks extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const { Stocks, DeleteStocks, DeactivateStocks, Profile } = this.props
-    const { list, isLoading, isDispatching } = Stocks
+    const { isLoading, isDispatching } = Stocks
 
 
     const metaKey = "Stocks"
@@ -67,11 +67,14 @@ export default class Stocks extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
-      item.watch = <Link to={`/Stockmovement/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>
-      item.kill = <Icon link size='large' className='text-[#c5a47e] hover:text-[#ca975c]' name='bomb' onClick={() => { this.setState({ selectedrecord: item, openDeactivate: true }) }} />
-      item.edit = <Link to={`/Stocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Stocks.list || []).map(item => {
+      return {
+        ...item,
+        watch: <Link to={`/Stockmovement/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
+        kill: <Icon link size='large' className='text-[#c5a47e] hover:text-[#ca975c]' name='bomb' onClick={() => { this.setState({ selectedrecord: item, openDeactivate: true }) }} />,
+        edit: <Link to={`/Stocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

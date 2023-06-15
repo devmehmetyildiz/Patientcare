@@ -120,7 +120,7 @@ export default class StockdefinesEdit extends Component {
         fillStockdefinenotification(error)
       })
     } else {
-      EditStockdefines({ ...Stockdefines.selected_record, ...data }, history)
+      EditStockdefines({ data: { ...Stockdefines.selected_record, ...data }, history })
     }
   }
 

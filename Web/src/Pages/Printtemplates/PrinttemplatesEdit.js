@@ -158,7 +158,7 @@ export default class PrinttemplatesEdit extends Component {
         fillPrinttemplatenotification(error)
       })
     } else {
-      EditPrinttemplates({ ...Printtemplates.selected_record, ...data }, history)
+      EditPrinttemplates({ data: { ...Printtemplates.selected_record, ...data }, history })
     }
   }
 

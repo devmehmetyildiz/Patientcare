@@ -192,7 +192,7 @@ export default class UsersEdit extends Component {
         fillUsernotification(error)
       })
     } else {
-      EditUsers({ ...Users.selected_record, ...data }, history)
+      EditUsers({ data: { ...Users.selected_record, ...data }, history })
     }
   }
 

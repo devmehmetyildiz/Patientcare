@@ -53,7 +53,7 @@ export default class Patientmovements extends Component {
       { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const { Patientmovements, DeletePatientmovements, Profile } = this.props
-    const { list, isLoading, isDispatching } = Patientmovements
+    const {  isLoading, isDispatching } = Patientmovements
 
     const metaKey = "Patientmovements"
       let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
@@ -66,9 +66,11 @@ export default class Patientmovements extends Component {
       }) : []
     };
 
-    (list || []).forEach(item => {
-      item.edit = <Link to={`/Patientmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>
-      item.delete = <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+    const list = (Patientmovements.list || []).map(item => {
+      return { ...item,
+        edit : <Link to={`/Patientmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete : <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+      }
     })
 
     return (

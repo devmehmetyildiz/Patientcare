@@ -111,7 +111,7 @@ export default class TodogroupdefinesCreate extends Component {
         fillTodogroupdefinenotification(error)
       })
     } else {
-      AddTodogroupdefines(data, history)
+      AddTodogroupdefines({data, history})
     }
   }
 

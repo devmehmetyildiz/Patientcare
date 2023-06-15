@@ -102,7 +102,7 @@ export class DepartmentsCreate extends Component {
         fillDepartmentnotification(error)
       })
     } else {
-      AddDepartments(data, history)
+      AddDepartments({data, history})
     }
   }
 

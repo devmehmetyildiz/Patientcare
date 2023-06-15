@@ -282,7 +282,7 @@ export default class PurchaseordersCreate extends Component {
         fillPurchaseordernotification(error)
       })
     } else {
-      await AddPurchaseorders(responseData, history)
+      await AddPurchaseorders({ data: responseData, history })
     }
   }
 

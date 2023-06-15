@@ -90,7 +90,7 @@ export default class PeriodsEdit extends Component {
         fillPeriodnotification(error)
       })
     } else {
-      EditPeriods({ ...Periods.selected_record, ...data }, history)
+      EditPeriods({ data: { ...Periods.selected_record, ...data }, history })
     }
 
   }

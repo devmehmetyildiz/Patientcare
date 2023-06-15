@@ -126,7 +126,7 @@ export class RolesEdit extends Component {
                 fillRolenotification(error)
             })
         } else {
-            EditRoles({ ...Roles.selected_record, ...data }, history)
+            EditRoles({ data: { ...Roles.selected_record, ...data }, history })
         }
 
     }

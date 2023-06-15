@@ -122,7 +122,7 @@ export default class StockmovementsEdit extends Component {
         fillStockmovementnotification(error)
       })
     } else {
-      EditStockmovements({ ...Stockmovements.selected_record, ...data }, history)
+      EditStockmovements({ data: { ...Stockmovements.selected_record, ...data }, history })
     }
   }
 

@@ -110,7 +110,7 @@ export default class CostumertypesEdit extends Component {
         fillCostumertypenotification(error)
       })
     } else {
-      EditCostumertypes({ ...Costumertypes.selected_record, ...data }, history)
+      EditCostumertypes({ data: { ...Costumertypes.selected_record, ...data }, history })
     }
   }
 

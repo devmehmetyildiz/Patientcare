@@ -121,7 +121,7 @@ export default class TododefinesCreate extends Component {
         fillTododefinenotification(error)
       })
     } else {
-      AddTododefines(data, history)
+      AddTododefines({ data, history })
     }
   }
 

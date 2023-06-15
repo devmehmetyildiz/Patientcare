@@ -17,7 +17,7 @@ export default class TododefinesEdit extends Component {
   }
 
   componentDidMount() {
-    const { GetTododefine, match, history,GetPeriods } = this.props
+    const { GetTododefine, match, history, GetPeriods } = this.props
     if (match.params.TododefineID) {
       GetTododefine(match.params.TododefineID)
       GetPeriods()
@@ -135,7 +135,7 @@ export default class TododefinesEdit extends Component {
         removeTododefinenotification(error)
       })
     } else {
-      EditTododefines({ ...Tododefines.selected_record, ...data }, history)
+      EditTododefines({ data: { ...Tododefines.selected_record, ...data }, history })
     }
 
 
