@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import WarehousesEdit from '../../Pages/Warehouses/WarehousesEdit'
-import { EditWarehouses, GetWarehouse, RemoveSelectedWarehouse, removeWarehousenotification, fillWarehousenotification } from '../../Redux/WarehouseSlice'
+import { EditWarehouses, GetWarehouse, handleSelectedWarehouse, removeWarehousenotification, fillWarehousenotification } from '../../Redux/WarehouseSlice'
 
 const mapStateToProps = (state) => ({
     Warehouses: state.Warehouses,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    EditWarehouses, GetWarehouse, RemoveSelectedWarehouse, removeWarehousenotification, fillWarehousenotification
+    EditWarehouses, GetWarehouse, handleSelectedWarehouse, removeWarehousenotification, fillWarehousenotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WarehousesEdit)

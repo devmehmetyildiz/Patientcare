@@ -39,8 +39,8 @@ export const AddPatienttypes = createAsyncThunk(
             const response = await instanse.post(config.services.Setting, ROUTES.PATIENTTYPE, data);
             dispatch(fillPatienttypenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Hasta türü başarı ile Eklendi',
             }));
             history.push('/Patienttypes');
             return response.data;
@@ -59,8 +59,8 @@ export const EditPatienttypes = createAsyncThunk(
             const response = await instanse.put(config.services.Setting, ROUTES.PATIENTTYPE, data);
             dispatch(fillPatienttypenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Hasta türü başarı ile Güncellendi',
             }));
             history.push('/Patienttypes');
             return response.data;
@@ -81,8 +81,8 @@ export const DeletePatienttypes = createAsyncThunk(
             const response = await instanse.delete(config.services.Setting, `${ROUTES.PATIENTTYPE}/${data.Uuid}`);
             dispatch(fillPatienttypenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Hasta türü başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const PatienttypesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedPatienttype: (state) => {
-            state.selected_record = {};
+        handleSelectedPatienttype: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillPatienttypenotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const PatienttypesSlice = createSlice({
         },
         removePatienttypenotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const PatienttypesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPatienttype,
+    handleSelectedPatienttype,
     fillPatienttypenotification,
     removePatienttypenotification,
+    handleDeletemodal
 } = PatienttypesSlice.actions;
 
 export default PatienttypesSlice.reducer;

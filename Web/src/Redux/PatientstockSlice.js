@@ -39,8 +39,8 @@ export const AddPatientstocks = createAsyncThunk(
             const response = await instanse.post(config.services.Warehouse, ROUTES.PATIENTSTOCK, data);
             dispatch(fillPatientstocknotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Hasta stoğu başarı ile Eklendi',
             }));
             history.push('/Patientstocks');
             return response.data;
@@ -59,8 +59,8 @@ export const EditPatientstocks = createAsyncThunk(
             const response = await instanse.put(config.services.Warehouse, ROUTES.PATIENTSTOCK, data);
             dispatch(fillPatientstocknotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Hasta stoğu başarı ile Güncellendi',
             }));
             history.push('/Patientstocks');
             return response.data;
@@ -81,8 +81,8 @@ export const DeletePatientstocks = createAsyncThunk(
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PATIENTSTOCK}/${data.Uuid}`);
             dispatch(fillPatientstocknotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Hasta stoğu başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const PatientstocksSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedPatientstock: (state) => {
-            state.selected_record = {};
+        handleSelectedPatientstock: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillPatientstocknotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const PatientstocksSlice = createSlice({
         },
         removePatientstocknotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const PatientstocksSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPatientstock,
+    handleSelectedPatientstock,
     fillPatientstocknotification,
     removePatientstocknotification,
+    handleDeletemodal
 } = PatientstocksSlice.actions;
 
 export default PatientstocksSlice.reducer;

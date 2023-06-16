@@ -39,8 +39,8 @@ export const AddPatientdefines = createAsyncThunk(
             const response = await instanse.post(config.services.Business, ROUTES.PATIENTDEFINE, data);
             dispatch(fillPatientdefinenotification({
                 type: 'Success',
-                code: 'Müşteri Türleri',
-                description: 'Müşteri türü başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Hasta tanımı başarı ile Eklendi',
             }));
             history.push('/Patientdefines');
             return response.data;
@@ -59,8 +59,8 @@ export const EditPatientdefines = createAsyncThunk(
             const response = await instanse.put(config.services.Business, ROUTES.PATIENTDEFINE, data);
             dispatch(fillPatientdefinenotification({
                 type: 'Success',
-                code: 'Müşteri Türleri',
-                description: 'Müşteri türü başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Hasta tanımı başarı ile Güncellendi',
             }));
             history.push('/Patientdefines');
             return response.data;
@@ -81,8 +81,8 @@ export const DeletePatientdefines = createAsyncThunk(
             const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENTDEFINE}/${data.Uuid}`);
             dispatch(fillPatientdefinenotification({
                 type: 'Success',
-                code: 'Müşteri Türleri',
-                description: 'Müşteri türü başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Hasta tanımı başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const PatientdefinesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedPatientdefine: (state) => {
-            state.selected_record = {};
+        handleSelectedPatientdefine: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillPatientdefinenotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const PatientdefinesSlice = createSlice({
         },
         removePatientdefinenotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const PatientdefinesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPatientdefine,
+    handleSelectedPatientdefine,
     fillPatientdefinenotification,
     removePatientdefinenotification,
+    handleDeletemodal
 } = PatientdefinesSlice.actions;
 
 export default PatientdefinesSlice.reducer;

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Patienttypes from '../../Pages/Patienttypes/Patienttypes'
-import { GetPatienttypes, removePatienttypenotification, fillPatienttypenotification, DeletePatienttypes } from '../../Redux/PatienttypeSlice'
+import { GetPatienttypes, removePatienttypenotification, fillPatienttypenotification, DeletePatienttypes, handleDeletemodal, handleSelectedPatienttype } from '../../Redux/PatienttypeSlice'
 
 
 const mapStateToProps = (state) => ({
@@ -8,6 +8,9 @@ const mapStateToProps = (state) => ({
   Profile: state.Profile
 })
 
-const mapDispatchToProps = { GetPatienttypes, removePatienttypenotification, fillPatienttypenotification, DeletePatienttypes }
+const mapDispatchToProps = {
+  GetPatienttypes, removePatienttypenotification, fillPatienttypenotification, DeletePatienttypes,
+  handleDeletemodal, handleSelectedPatienttype
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Patienttypes)

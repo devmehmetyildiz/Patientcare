@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Printtemplates from '../../Pages/Printtemplates/Printtemplates'
-import { GetPrinttemplates, removePrinttemplatenotification, DeletePrinttemplates } from '../../Redux/PrinttemplateSlice'
+import { GetPrinttemplates, removePrinttemplatenotification, DeletePrinttemplates, handleDeletemodal, handleSelectedPrinttemplate } from '../../Redux/PrinttemplateSlice'
 
 
 const mapStateToProps = (state) => ({
@@ -8,6 +8,9 @@ const mapStateToProps = (state) => ({
     Profile: state.Profile
 })
 
-const mapDispatchToProps = { GetPrinttemplates, removePrinttemplatenotification, DeletePrinttemplates }
+const mapDispatchToProps = {
+    GetPrinttemplates, removePrinttemplatenotification, DeletePrinttemplates,
+    handleDeletemodal, handleSelectedPrinttemplate
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Printtemplates)

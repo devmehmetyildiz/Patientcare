@@ -7,6 +7,10 @@ import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import Notification from '../../Utils/Notification'
+import Literals from './Literals'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 
 export class Departments extends Component {
 
@@ -32,22 +36,21 @@ export class Departments extends Component {
 
   render() {
 
-    const Columns = [
-      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'İsim', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'İstasyonlar', accessor: 'stationstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
-      { Header: 'Hasta tutuyor mu?', accessor: 'Ishavepatients', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
-      { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleme Zamanı', accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
-
-
-    const { Departments, DeleteDepartments, Profile } = this.props
+    const { Departments, DeleteDepartments, Profile, handleSelectedDepartment, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Departments
+
+    const Columns = [
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.stationstxt[Profile.Language], accessor: 'stationstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
+      { Header: Literals.Columns.Ishavepatients[Profile.Language], accessor: 'Ishavepatients', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const metaKey = "Departments"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
@@ -68,7 +71,10 @@ export class Departments extends Component {
         ...item,
         stationstxt: text,
         edit: <Link to={`/Departments/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+          handleSelectedDepartment(item)
+          handleDeletemodal(true)
+        }} />,
       }
 
     })
@@ -76,65 +82,34 @@ export class Departments extends Component {
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>
-          <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-            <div className='w-full mx-auto align-middle'>
-              <Header style={{ backgroundColor: 'transparent', border: 'none' }} as='h1' attached='top' >
-                <Grid columns='2' >
-                  <GridColumn width={8} className="">
-                    <Breadcrumb size='big'>
-                      <Link to={"/Departments"}>
-                        <Breadcrumb.Section>Departmanlar</Breadcrumb.Section>
-                      </Link>
-                    </Breadcrumb>
-                  </GridColumn>
-                  <GridColumn width={8} >
-                    <Link to={"/Departments/Create"}>
-                      <Button color='blue' floated='right' className='list-right-green-button'>
-                        Oluştur
-                      </Button>
+          <Pagewrapper>
+            <Headerwrapper>
+              <Grid columns='2' >
+                <GridColumn width={8} className="">
+                  <Breadcrumb size='big'>
+                    <Link to={"/Departments"}>
+                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
-                    <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                  </GridColumn>
-                </Grid>
-              </Header>
-            </div>
-            <Divider className='w-full  h-[1px]' />
+                  </Breadcrumb>
+                </GridColumn>
+                <GridColumn width={8} >
+                  <Link to={"/Departments/Create"}>
+                    <Button color='blue' floated='right' className='list-right-green-button'>
+                      {Literals.Page.Pagecreateheader[Profile.Language]}
+                    </Button>
+                  </Link>
+                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
+                </GridColumn>
+              </Grid>
+            </Headerwrapper>
+            <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />
-              </div> : <NoDataScreen message="Tanımlı Departman Yok" />
+              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
-          </div>
-          <Modal
-            onClose={() => this.setState({ open: false })}
-            onOpen={() => this.setState({ open: true })}
-            open={this.state.open}
-          >
-            <Modal.Header>Departman Silme</Modal.Header>
-            <Modal.Content image>
-              <Modal.Description>
-                <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.name} ` : null} </span>
-                  departmanını silmek istediğinize emin misiniz?
-                </p>
-              </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='black' onClick={() => this.setState({ open: false, selectedrecord: {} })}>
-                Vazgeç
-              </Button>
-              <Button
-                content="Sil"
-                labelPosition='right'
-                icon='checkmark'
-                onClick={() => {
-                  DeleteDepartments(this.state.selectedrecord)
-                  this.setState({ open: false, selectedrecord: {} })
-                }}
-                positive
-              />
-            </Modal.Actions>
-          </Modal>
+          </Pagewrapper>
+          <DepartmentDelete />
         </React.Fragment>
     )
   }

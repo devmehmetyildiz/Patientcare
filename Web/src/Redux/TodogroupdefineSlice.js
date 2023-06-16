@@ -39,8 +39,8 @@ export const AddTodogroupdefines = createAsyncThunk(
             const response = await instanse.post(config.services.Setting, ROUTES.TODOGROUPDEFINE, data);
             dispatch(fillTodogroupdefinenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Yapılacaklar grup tanımı başarı ile Eklendi',
             }));
             history.push('/Todogroupdefines');
             return response.data;
@@ -59,8 +59,8 @@ export const EditTodogroupdefines = createAsyncThunk(
             const response = await instanse.put(config.services.Setting, ROUTES.TODOGROUPDEFINE, data);
             dispatch(fillTodogroupdefinenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Yapılacaklar grup tanımı başarı ile Güncellendi',
             }));
             history.push('/Todogroupdefines');
             return response.data;
@@ -81,8 +81,8 @@ export const DeleteTodogroupdefines = createAsyncThunk(
             const response = await instanse.delete(config.services.Setting, `${ROUTES.TODOGROUPDEFINE}/${data.Uuid}`);
             dispatch(fillTodogroupdefinenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Yapılacaklar grup tanımı başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const TodogroupdefinesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedTodogroupdefine: (state) => {
-            state.selected_record = {};
+        handleSelectedTodogroupdefine: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillTodogroupdefinenotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const TodogroupdefinesSlice = createSlice({
         },
         removeTodogroupdefinenotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const TodogroupdefinesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedTodogroupdefine,
+    handleSelectedTodogroupdefine,
     fillTodogroupdefinenotification,
     removeTodogroupdefinenotification,
+    handleDeletemodal
 } = TodogroupdefinesSlice.actions;
 
 export default TodogroupdefinesSlice.reducer;

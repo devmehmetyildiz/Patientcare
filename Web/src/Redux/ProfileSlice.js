@@ -7,17 +7,17 @@ import Cookies from 'universal-cookie';
 
 export const logIn = createAsyncThunk(
     'Profile/logIn',
-    async ({ data, history, redirecturl }, { dispatch }) => {
+    async ({ data, history, redirectUrl }, { dispatch }) => {
         try {
             const response = await instanse.post(config.services.Auth, `Oauth/Login`, data);
             const localcookies = new Cookies();
             localcookies.set('patientcare', response.data.accessToken, { path: '/' })
             dispatch(fillnotification({
                 type: 'Success',
-                code: 'Profile',
+                code: 'Elder Camp',
                 description: 'Elder camp giriş yapıldı',
             }));
-            redirecturl ? window.location = (redirecturl) : window.location = ('Home')
+            redirectUrl ? window.location = (redirectUrl) : window.location = ('Home')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -34,7 +34,7 @@ export const register = createAsyncThunk(
             const response = await instanse.post(config.services.Userrole, 'Users/Register', data);
             dispatch(fillnotification({
                 type: 'Success',
-                code: 'Profile',
+                code: 'Elder Camp',
                 description: 'Admin kullanıcı oluşturuldu.',
             }));
             history.push("/Login")
@@ -110,7 +110,7 @@ export const SaveTableMeta = createAsyncThunk(
             const response = await instanse.post(config.services.Userrole, ROUTES.USER + '/SaveTableMeta', data);
             dispatch(fillnotification({
                 type: 'Success',
-                code: 'Profile',
+                code: 'Veri Güncelleme',
                 description: 'Tablo Ayarı Güncellendi',
             }));
             return response.data;

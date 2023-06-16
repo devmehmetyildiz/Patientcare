@@ -39,7 +39,7 @@ export const AddMailsettings = createAsyncThunk(
             const response = await instanse.post(config.services.System, ROUTES.MAILSETTING, data);
             dispatch(fillMailsettingnotification({
                 type: 'Success',
-                code: 'Mail Ayarı',
+                code: 'Veri Kaydetme',
                 description: 'Mail Ayarı başarı ile Eklendi',
             }));
             history.push('/Mailsettings');
@@ -59,7 +59,7 @@ export const EditMailsettings = createAsyncThunk(
             const response = await instanse.put(config.services.System, ROUTES.MAILSETTING, data);
             dispatch(fillMailsettingnotification({
                 type: 'Success',
-                code: 'Mail Ayarı',
+                code: 'Veri Güncelleme',
                 description: 'Mail Ayarı başarı ile Güncellendi',
             }));
             history.push('/Mailsettings');
@@ -81,7 +81,7 @@ export const DeleteMailsettings = createAsyncThunk(
             const response = await instanse.delete(config.services.System, `${ROUTES.MAILSETTING}/${data.Uuid}`);
             dispatch(fillMailsettingnotification({
                 type: 'Success',
-                code: 'Mail Ayarı',
+                code: 'Veri Silme',
                 description: 'Mail Ayarı başarı ile Silindi',
             }));
             return response.data;
@@ -101,11 +101,12 @@ export const MailsettingsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedMailsetting: (state) => {
-            state.selected_record = {};
+        handleSelectedMailsetting: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillMailsettingnotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const MailsettingsSlice = createSlice({
         },
         removeMailsettingnotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const MailsettingsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedMailsetting,
+    handleSelectedMailsetting,
     fillMailsettingnotification,
     removeMailsettingnotification,
+    handleDeletemodal
 } = MailsettingsSlice.actions;
 
 export default MailsettingsSlice.reducer;

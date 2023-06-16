@@ -39,8 +39,8 @@ export const AddPurchaseorders = createAsyncThunk(
             const response = await instanse.post(config.services.Warehouse, ROUTES.PURCHASEORDER, data);
             dispatch(fillPurchaseordernotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Satın alma başarı ile Eklendi',
             }));
             history.push('/Purchaseorders');
             return response.data;
@@ -59,8 +59,8 @@ export const EditPurchaseorders = createAsyncThunk(
             const response = await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDER, data);
             dispatch(fillPurchaseordernotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Satın alma başarı ile Güncellendi',
             }));
             history.push('/Purchaseorders');
             return response.data;
@@ -79,8 +79,8 @@ export const CompletePurchaseorders = createAsyncThunk(
             const response = await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDER + `/Complete`, data);
             dispatch(fillPurchaseordernotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Satın alma başarı ile Tamamlandı',
             }));
             history.push('/Purchaseorders');
             return response.data;
@@ -101,8 +101,8 @@ export const DeletePurchaseorders = createAsyncThunk(
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PURCHASEORDER}/${data.Uuid}`);
             dispatch(fillPurchaseordernotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Satın alma başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -121,11 +121,12 @@ export const PurchaseordersSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedPurchaseorder: (state) => {
-            state.selected_record = {};
+        handleSelectedPurchaseorder: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillPurchaseordernotification: (state, action) => {
             const payload = action.payload;
@@ -134,6 +135,9 @@ export const PurchaseordersSlice = createSlice({
         },
         removePurchaseordernotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -212,9 +216,10 @@ export const PurchaseordersSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPurchaseorder,
+    handleSelectedPurchaseorder,
     fillPurchaseordernotification,
     removePurchaseordernotification,
+    handleDeletemodal
 } = PurchaseordersSlice.actions;
 
 export default PurchaseordersSlice.reducer;

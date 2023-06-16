@@ -1,27 +1,25 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
+import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import Notification from '../../Utils/Notification'
-
+import Literals from './Literals'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import CostumertypesDelete from "../../Containers/Costumertypes/CostumertypesDelete"
 export default class Costumertypes extends Component {
 
   constructor(props) {
     super(props)
-    const open = false
-    const selectedrecord = {}
-    const departmentStatus = []
     this.state = {
-      open,
-      selectedrecord,
-      departmentStatus
+      departmentStatus: []
     }
   }
-
 
   componentDidMount() {
     const { GetCostumertypes } = this.props
@@ -35,21 +33,20 @@ export default class Costumertypes extends Component {
 
   render() {
 
-    const Columns = [
-      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'İsim', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Departmanlar', accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
-      { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleme Zamanı', accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
-
-
-    const { Costumertypes, DeleteCostumertypes, Profile } = this.props
+    const { Costumertypes, Profile, handleSelectedCostumertype, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Costumertypes
+
+    const Columns = [
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const metaKey = "Costumertypes"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
@@ -62,7 +59,6 @@ export default class Costumertypes extends Component {
       }) : []
     };
 
-
     const list = (Costumertypes.list || []).map(item => {
       var text = item.Departments.map((department) => {
         return department.Name;
@@ -71,72 +67,44 @@ export default class Costumertypes extends Component {
         ...item,
         Departmentstxt: text,
         edit: <Link to={`/Costumertypes/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+          handleSelectedCostumertype(item)
+          handleDeletemodal(true)
+        }} />,
       }
     })
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>
-          <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-            <div className='w-full mx-auto align-middle'>
-              <Header style={{ backgroundColor: 'transparent', border: 'none' }} as='h1' attached='top' >
-                <Grid columns='2' >
-                  <GridColumn width={8} className="">
-                    <Breadcrumb size='big'>
-                      <Link to={"/Costumertypes"}>
-                        <Breadcrumb.Section>Müşteri Türleri</Breadcrumb.Section>
-                      </Link>
-                    </Breadcrumb>
-                  </GridColumn>
-                  <GridColumn width={8} >
-                    <Link to={"/Costumertypes/Create"}>
-                      <Button color='blue' floated='right' className='list-right-green-button'>
-                        Oluştur
-                      </Button>
+          <Pagewrapper>
+            <Headerwrapper>
+              <Grid columns='2' >
+                <GridColumn width={8} >
+                  <Breadcrumb size='big'>
+                    <Link to={"/Costumertypes"}>
+                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
-                    <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                  </GridColumn>
-                </Grid>
-              </Header>
-            </div>
-            <Divider className='w-full  h-[1px]' />
+                  </Breadcrumb>
+                </GridColumn>
+                <GridColumn width={8} >
+                  <Link to={"/Costumertypes/Create"}>
+                    <Button color='blue' floated='right' className='list-right-green-button'>
+                      {Literals.Button.Create[Profile.Language]}
+                    </Button>
+                  </Link>
+                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
+                </GridColumn>
+              </Grid>
+            </Headerwrapper>
+            <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />
-              </div> : <NoDataScreen message="Tanımlı Müşteri Türü Yok" />
+              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
-          </div>
-          <Modal
-            onClose={() => this.setState({ open: false })}
-            onOpen={() => this.setState({ open: true })}
-            open={this.state.open}
-          >
-            <Modal.Header>Müşteri Türü Silme</Modal.Header>
-            <Modal.Content image>
-              <Modal.Description>
-                <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
-                  müşteri türünü silmek istediğinize emin misiniz?
-                </p>
-              </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='black' onClick={() => this.setState({ open: false, selectedrecord: {} })}>
-                Vazgeç
-              </Button>
-              <Button
-                content="Sil"
-                labelPosition='right'
-                icon='checkmark'
-                onClick={() => {
-                  DeleteCostumertypes(this.state.selectedrecord)
-                  this.setState({ open: false, selectedrecord: {} })
-                }}
-                positive
-              />
-            </Modal.Actions>
-          </Modal>
+          </Pagewrapper>
+          <CostumertypesDelete />
         </React.Fragment >
     )
   }

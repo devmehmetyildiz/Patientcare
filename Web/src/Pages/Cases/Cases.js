@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Modal } from 'semantic-ui-react'
+import { Divider, Icon } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
@@ -8,20 +8,17 @@ import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import Notification from '../../Utils/Notification'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Pagewrapper'
-import Headerwrapper from '../../Common/Headerwrapper'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import CasesDelete from '../../Containers/Cases/CasesDelete'
+import Pagedivider from '../../Common/Styled/Pagedivider'
 
 export default class Cases extends Component {
 
   constructor(props) {
     super(props)
-    const open = false
-    const selectedrecord = {}
-    const departmentStatus = []
     this.state = {
-      open,
-      selectedrecord,
-      departmentStatus
+      departmentStatus: []
     }
   }
 
@@ -39,7 +36,7 @@ export default class Cases extends Component {
   render() {
 
 
-    const { Cases, DeleteCases, Profile } = this.props
+    const { Cases, Profile, handleSelectedCase, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Cases
     const casestatusOption = [
       {
@@ -94,7 +91,10 @@ export default class Cases extends Component {
         ...item,
         Departmentstxt: text,
         edit: <Link to={`/Cases/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+          handleSelectedCase(item)
+          handleDeletemodal(true)
+        }} />,
       }
     })
 
@@ -121,43 +121,14 @@ export default class Cases extends Component {
                 </GridColumn>
               </Grid>
             </Headerwrapper>
-            <Divider className='w-full  h-[1px]' />
+            <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />
               </div> : <NoDataScreen message={Literals.Messages.Nocasefind[Profile.Language]} />
             }
           </Pagewrapper>
-          <Modal
-            onClose={() => this.setState({ open: false })}
-            onOpen={() => this.setState({ open: true })}
-            open={this.state.open}
-          >
-            <Modal.Header>{Literals.Page.Pagedeleteheader[Profile.Language]}</Modal.Header>
-            <Modal.Content image>
-              <Modal.Description>
-                <p>
-                  <span className='font-bold'>{this.state.selectedrecord?.Name}</span>
-                  {Literals.Messages.Deletestationcheck[Profile.Language]}
-                </p>
-              </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='black' onClick={() => this.setState({ open: false, selectedrecord: {} })}>
-                {Literals.Button.Giveup[Profile.Language]}
-              </Button>
-              <Button
-                content={Literals.Button.Delete[Profile.Language]}
-                labelPosition='right'
-                icon='checkmark'
-                onClick={() => {
-                  DeleteCases(this.state.selectedrecord)
-                  this.setState({ open: false, selectedrecord: {} })
-                }}
-                positive
-              />
-            </Modal.Actions>
-          </Modal>
+          <CasesDelete />
         </React.Fragment >
     )
   }

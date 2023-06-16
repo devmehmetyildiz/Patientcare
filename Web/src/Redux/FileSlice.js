@@ -47,8 +47,8 @@ export const AddFiles = createAsyncThunk(
             })
             dispatch(fillFilenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Dosya başarı ile Eklendi',
             }));
             history.push(url ? url : '/Files')
             return response.data;
@@ -73,8 +73,8 @@ export const EditFiles = createAsyncThunk(
             })
             dispatch(fillFilenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Dosya başarı ile Güncellendi',
             }));
             history && history.push(url ? url : '/Files')
             return response.data;
@@ -95,8 +95,8 @@ export const DeleteFiles = createAsyncThunk(
             const response = await instanse.delete(config.services.File, `${ROUTES.FILE}/${data.Uuid}`);
             dispatch(fillFilenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Dosya başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -115,11 +115,12 @@ export const FilesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedFile: (state) => {
-            state.selected_record = {};
+        handleSelectedFile: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillFilenotification: (state, action) => {
             const payload = action.payload;
@@ -128,6 +129,9 @@ export const FilesSlice = createSlice({
         },
         removeFilenotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -195,9 +199,10 @@ export const FilesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedFile,
+    handleSelectedFile,
     fillFilenotification,
     removeFilenotification,
+    handleDeletemodal
 } = FilesSlice.actions;
 
 export default FilesSlice.reducer;

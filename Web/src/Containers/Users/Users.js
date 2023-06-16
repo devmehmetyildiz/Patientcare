@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Users from "../../Pages/Users/Users"
-import { GetUsers, DeleteUsers, fillUsernotification, removeUsernotification } from "../../Redux/UserSlice"
+import { GetUsers, DeleteUsers, fillUsernotification, removeUsernotification,handleDeletemodal,handleSelectedUser } from "../../Redux/UserSlice"
 
 const mapStateToProps = (state) => ({
     Users: state.Users,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetUsers, DeleteUsers, fillUsernotification, removeUsernotification
+    GetUsers, DeleteUsers, fillUsernotification, removeUsernotification,handleDeletemodal,handleSelectedUser
    
 }
 

@@ -39,7 +39,7 @@ export const AddCostumertypes = createAsyncThunk(
             const response = await instanse.post(config.services.Setting, ROUTES.COSTUMERTYPE, data);
             dispatch(fillCostumertypenotification({
                 type: 'Success',
-                code: 'Müşteri Türleri',
+                code: 'Veri Kaydetme',
                 description: 'Müşteri türü başarı ile Eklendi',
             }));
             history.push('/Costumertypes');
@@ -59,7 +59,7 @@ export const EditCostumertypes = createAsyncThunk(
             const response = await instanse.put(config.services.Setting, ROUTES.COSTUMERTYPE, data);
             dispatch(fillCostumertypenotification({
                 type: 'Success',
-                code: 'Müşteri Türleri',
+                code: 'Veri Güncelleme',
                 description: 'Müşteri türü başarı ile Güncellendi',
             }));
             history.push('/Costumertypes');
@@ -81,7 +81,7 @@ export const DeleteCostumertypes = createAsyncThunk(
             const response = await instanse.delete(config.services.Setting, `${ROUTES.COSTUMERTYPE}/${data.Uuid}`);
             dispatch(fillCostumertypenotification({
                 type: 'Success',
-                code: 'Müşteri Türleri',
+                code: 'Veri Silme',
                 description: 'Müşteri türü başarı ile Silindi',
             }));
             return response.data;
@@ -101,11 +101,12 @@ export const CostumertypesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedCostumertype: (state) => {
-            state.selected_record = {};
+        handleSelectedCostumertype: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillCostumertypenotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const CostumertypesSlice = createSlice({
         },
         removeCostumertypenotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const CostumertypesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedCostumertype,
+    handleSelectedCostumertype,
     fillCostumertypenotification,
     removeCostumertypenotification,
+    handleDeletemodal
 } = CostumertypesSlice.actions;
 
 export default CostumertypesSlice.reducer;

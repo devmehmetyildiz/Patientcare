@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import UsersEdit from '../../Pages/Users/UsersEdit'
-import { EditUsers, GetUser, RemoveSelectedUser, fillUsernotification, removeUsernotification } from "../../Redux/UserSlice"
+import { EditUsers, GetUser, handleSelectedUser, fillUsernotification, removeUsernotification } from "../../Redux/UserSlice"
 import { GetRoles, removeRolenotification } from "../../Redux/RoleSlice"
 import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
 import { GetStations, removeStationnotification } from "../../Redux/StationSlice"
@@ -15,7 +15,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  EditUsers, GetUser, RemoveSelectedUser, fillUsernotification, removeUsernotification, GetRoles, removeRolenotification,
+  EditUsers, GetUser, handleSelectedUser, fillUsernotification, removeUsernotification, GetRoles, removeRolenotification,
   GetDepartments, removeDepartmentnotification, GetStations, removeStationnotification
 }
 

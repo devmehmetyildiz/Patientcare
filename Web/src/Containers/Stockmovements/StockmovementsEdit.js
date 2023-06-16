@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import StockmovementsEdit from '../../Pages/Stockmovements/StockmovementsEdit'
-import { EditStockmovements, GetStockmovement, RemoveSelectedStockmovement, removeStockmovementnotification, fillStockmovementnotification } from '../../Redux/StockmovementSlice'
+import { EditStockmovements, GetStockmovement, handleSelectedStockmovement, removeStockmovementnotification, fillStockmovementnotification } from '../../Redux/StockmovementSlice'
 import { GetStocks, removeStocknotification } from '../../Redux/StockSlice'
 
 
@@ -11,7 +11,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    EditStockmovements, GetStockmovement, RemoveSelectedStockmovement,
+    EditStockmovements, GetStockmovement, handleSelectedStockmovement,
     removeStockmovementnotification, fillStockmovementnotification,GetStocks, removeStocknotification 
 }
 

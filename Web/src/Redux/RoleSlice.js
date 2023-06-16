@@ -67,8 +67,8 @@ export const AddRoles = createAsyncThunk(
             const response = await instanse.post(config.services.Userrole, ROUTES.ROLE, data);
             dispatch(fillRolenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Rol başarı ile Eklendi',
             }));
             history.push('/Roles');
             return response.data;
@@ -87,8 +87,8 @@ export const EditRoles = createAsyncThunk(
             const response = await instanse.put(config.services.Userrole, ROUTES.ROLE, data);
             dispatch(fillRolenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Rol başarı ile Güncellendi',
             }));
             history.push('/Roles');
             return response.data;
@@ -109,8 +109,8 @@ export const DeleteRoles = createAsyncThunk(
             const response = await instanse.delete(config.services.Userrole, `${ROUTES.ROLE}/${data.Uuid}`);
             dispatch(fillRolenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Rol başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -131,11 +131,12 @@ export const RolesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedRole: (state) => {
-            state.selected_record = {};
+        handleSelectedRole: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillRolenotification: (state, action) => {
             const payload = action.payload;
@@ -144,6 +145,9 @@ export const RolesSlice = createSlice({
         },
         removeRolenotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -237,9 +241,10 @@ export const RolesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedRole,
+    handleSelectedRole,
     fillRolenotification,
     removeRolenotification,
+    handleDeletemodal
 } = RolesSlice.actions;
 
 export default RolesSlice.reducer;

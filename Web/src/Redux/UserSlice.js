@@ -39,8 +39,8 @@ export const AddUsers = createAsyncThunk(
             const response = await instanse.post(config.services.Userrole, ROUTES.USER, data);
             dispatch(fillUsernotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Kullanıcı başarı ile Eklendi',
             }));
             history.push('/Users');
             return response.data;
@@ -59,8 +59,8 @@ export const EditUsers = createAsyncThunk(
             const response = await instanse.put(config.services.Userrole, ROUTES.USER, data);
             dispatch(fillUsernotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Kullanıcı başarı ile Güncellendi',
             }));
             history.push('/Users');
             return response.data;
@@ -81,8 +81,8 @@ export const DeleteUsers = createAsyncThunk(
             const response = await instanse.delete(config.services.Userrole, `${ROUTES.USER}/${data.Uuid}`);
             dispatch(fillUsernotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Kullanıcı başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const UsersSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedUser: (state) => {
-            state.selected_record = {};
+        handleSelectedUser: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillUsernotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const UsersSlice = createSlice({
         },
         removeUsernotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const UsersSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedUser,
+    handleSelectedUser,
     fillUsernotification,
     removeUsernotification,
+    handleDeletemodal
 } = UsersSlice.actions;
 
 export default UsersSlice.reducer;

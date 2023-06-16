@@ -39,8 +39,8 @@ export const AddWarehouses = createAsyncThunk(
             const response = await instanse.post(config.services.Warehouse, ROUTES.WAREHOUSE, data);
             dispatch(fillWarehousenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Ambar başarı ile Eklendi',
             }));
             history.push('/Warehouses');
             return response.data;
@@ -59,8 +59,8 @@ export const EditWarehouses = createAsyncThunk(
             const response = await instanse.put(config.services.Warehouse, ROUTES.WAREHOUSE, data);
             dispatch(fillWarehousenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Ambar başarı ile Güncellendi',
             }));
             history.push('/Warehouses');
             return response.data;
@@ -81,8 +81,8 @@ export const DeleteWarehouses = createAsyncThunk(
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.WAREHOUSE}/${data.Uuid}`);
             dispatch(fillWarehousenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Ambar başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const WarehousesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedWarehouse: (state) => {
-            state.selected_record = {};
+        handleSelectedWarehouse: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillWarehousenotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const WarehousesSlice = createSlice({
         },
         removeWarehousenotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const WarehousesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedWarehouse,
+    handleSelectedWarehouse,
     fillWarehousenotification,
     removeWarehousenotification,
+    handleDeletemodal
 } = WarehousesSlice.actions;
 
 export default WarehousesSlice.reducer;

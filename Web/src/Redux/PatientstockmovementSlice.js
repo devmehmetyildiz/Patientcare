@@ -39,8 +39,8 @@ export const AddPatientstockmovements = createAsyncThunk(
             const response = await instanse.post(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT, data);
             dispatch(fillPatientstockmovementnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Hasta Stok hareketi başarı ile Eklendi',
             }));
             history.push('/Patientstockmovements');
             return response.data;
@@ -59,8 +59,8 @@ export const EditPatientstockmovements = createAsyncThunk(
             const response = await instanse.put(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT, data);
             dispatch(fillPatientstockmovementnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Hasta Stok hareketi başarı ile Güncellendi',
             }));
             history.push('/Patientstockmovements');
             return response.data;
@@ -81,8 +81,8 @@ export const DeletePatientstockmovements = createAsyncThunk(
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PATIENTSTOCKMOVEMENT}/${data.Uuid}`);
             dispatch(fillPatientstockmovementnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Hasta Stok hareketi başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const PatientstockmovementsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedPatientstockmovement: (state) => {
-            state.selected_record = {};
+        handleSelectedPatientstockmovement: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillPatientstockmovementnotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const PatientstockmovementsSlice = createSlice({
         },
         removePatientstockmovementnotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const PatientstockmovementsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPatientstockmovement,
+    handleSelectedPatientstockmovement,
     fillPatientstockmovementnotification,
     removePatientstockmovementnotification,
+    handleDeletemodal
 } = PatientstockmovementsSlice.actions;
 
 export default PatientstockmovementsSlice.reducer;

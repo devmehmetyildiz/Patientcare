@@ -39,8 +39,8 @@ export const AddTododefines = createAsyncThunk(
             const response = await instanse.post(config.services.Setting, ROUTES.TODODEFINE, data);
             dispatch(fillTododefinenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Yapılacaklar tanımı başarı ile Eklendi',
             }));
             history.push('/Tododefines');
             return response.data;
@@ -59,8 +59,8 @@ export const EditTododefines = createAsyncThunk(
             const response = await instanse.put(config.services.Setting, ROUTES.TODODEFINE, data);
             dispatch(fillTododefinenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Yapılacaklar tanımı başarı ile Güncellendi',
             }));
             history.push('/Tododefines');
             return response.data;
@@ -81,8 +81,8 @@ export const DeleteTododefines = createAsyncThunk(
             const response = await instanse.delete(config.services.Setting, `${ROUTES.TODODEFINE}/${data.Uuid}`);
             dispatch(fillTododefinenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Yapılacaklar tanımı başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const TododefinesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedTododefine: (state) => {
-            state.selected_record = {};
+        handleSelectedTododefine:(state, action) => {
+            state.selected_record = action.payload;
         },
         fillTododefinenotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const TododefinesSlice = createSlice({
         },
         removeTododefinenotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const TododefinesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedTododefine,
+    handleSelectedTododefine,
     fillTododefinenotification,
     removeTododefinenotification,
+    handleDeletemodal
 } = TododefinesSlice.actions;
 
 export default TododefinesSlice.reducer;

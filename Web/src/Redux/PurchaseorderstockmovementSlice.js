@@ -39,8 +39,8 @@ export const AddPurchaseorderstockmovements = createAsyncThunk(
             const response = await instanse.post(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCKMOVEMENT, data);
             dispatch(fillPurchaseorderstockmovementnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Satın alma stok hareketi başarı ile Eklendi',
             }));
             history.push('/Purchaseorderstockmovements');
             return response.data;
@@ -59,8 +59,8 @@ export const EditPurchaseorderstockmovements = createAsyncThunk(
             const response = await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCKMOVEMENT, data);
             dispatch(fillPurchaseorderstockmovementnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Satın alma stok hareketi başarı ile Güncellendi',
             }));
             history.push('/Purchaseorderstockmovements');
             return response.data;
@@ -81,8 +81,8 @@ export const DeletePurchaseorderstockmovements = createAsyncThunk(
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCKMOVEMENT}/${data.Uuid}`);
             dispatch(fillPurchaseorderstockmovementnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Satın alma stok hareketi başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const PurchaseorderstockmovementsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedPurchaseorderstockmovement: (state) => {
-            state.selected_record = {};
+        handleSelectedPurchaseorderstockmovement: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillPurchaseorderstockmovementnotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const PurchaseorderstockmovementsSlice = createSlice({
         },
         removePurchaseorderstockmovementnotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const PurchaseorderstockmovementsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPurchaseorderstockmovement,
+    handleSelectedPurchaseorderstockmovement,
     fillPurchaseorderstockmovementnotification,
     removePurchaseorderstockmovementnotification,
+    handleDeletemodal
 } = PurchaseorderstockmovementsSlice.actions;
 
 export default PurchaseorderstockmovementsSlice.reducer;

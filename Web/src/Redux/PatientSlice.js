@@ -53,8 +53,8 @@ export const AddPatients = createAsyncThunk(
             const response = await instanse.post(config.services.Business, ROUTES.PATIENT, data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Hasta başarı ile Eklendi',
             }));
             history.push('/Patients');
             return response.data;
@@ -73,8 +73,8 @@ export const EditPatients = createAsyncThunk(
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT, data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Hasta başarı ile Güncellendi',
             }));
             history.push('/Patients');
             return response.data;
@@ -92,8 +92,8 @@ export const EditPatientstocks = createAsyncThunk(
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Editpatientstocks", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Hasta stoğu başarı ile Güncellendi',
             }));
             history.push('/Patients');
             return response.data;
@@ -111,8 +111,8 @@ export const CompletePrepatients = createAsyncThunk(
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Complete", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Hasta başarı ile Kuruma alındı',
             }));
             history.push(url ? url : '/Patients')
             return response.data;
@@ -133,8 +133,8 @@ export const DeletePatients = createAsyncThunk(
             const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENT}/${data.Uuid}`);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Hasta başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -156,11 +156,12 @@ export const PatientsSlice = createSlice({
         isDispatching: false,
         isCheckperiodloading: false,
         isTodogroupdefineloading: false,
-        selected_patient: {}
+        selected_patient: {},
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedPatient: (state) => {
-            state.selected_record = {};
+        handleSelectedPatient: (state, action) => {
+            state.selected_record = action.payload;
         },
         setPatient: (state, action) => {
             state.selected_record = action.payload;
@@ -172,6 +173,9 @@ export const PatientsSlice = createSlice({
         },
         removePatientnotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -274,10 +278,11 @@ export const PatientsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPatient,
+    handleSelectedPatient,
     fillPatientnotification,
     removePatientnotification,
-    setPatient
+    setPatient,
+    handleDeletemodal
 } = PatientsSlice.actions;
 
 export default PatientsSlice.reducer;

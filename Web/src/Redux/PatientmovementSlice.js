@@ -39,8 +39,8 @@ export const AddPatientmovements = createAsyncThunk(
             const response = await instanse.post(config.services.Business, ROUTES.PATIENTMOVEMENT, data);
             dispatch(fillPatientmovementnotification({
                 type: 'Success',
-                code: 'Müşteri Türleri',
-                description: 'Müşteri türü başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Hasta hareketi başarı ile Eklendi',
             }));
             history.push('/Patientmovements');
             return response.data;
@@ -59,8 +59,8 @@ export const EditPatientmovements = createAsyncThunk(
             const response = await instanse.put(config.services.Business, ROUTES.PATIENTMOVEMENT, data);
             dispatch(fillPatientmovementnotification({
                 type: 'Success',
-                code: 'Müşteri Türleri',
-                description: 'Müşteri türü başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Hasta hareketi başarı ile Güncellendi',
             }));
             history.push('/Patientmovements');
             return response.data;
@@ -81,8 +81,8 @@ export const DeletePatientmovements = createAsyncThunk(
             const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENTMOVEMENT}/${data.Uuid}`);
             dispatch(fillPatientmovementnotification({
                 type: 'Success',
-                code: 'Müşteri Türleri',
-                description: 'Müşteri türü başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Hasta hareketi başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const PatientmovementsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedPatientmovement: (state) => {
-            state.selected_record = {};
+        handleSelectedPatientmovement: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillPatientmovementnotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const PatientmovementsSlice = createSlice({
         },
         removePatientmovementnotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const PatientmovementsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPatientmovement,
+    handleSelectedPatientmovement,
     fillPatientmovementnotification,
     removePatientmovementnotification,
+    handleDeletemodal
 } = PatientmovementsSlice.actions;
 
 export default PatientmovementsSlice.reducer;

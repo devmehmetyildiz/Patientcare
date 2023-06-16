@@ -39,8 +39,8 @@ export const AddPeriods = createAsyncThunk(
             const response = await instanse.post(config.services.Setting, ROUTES.PERIOD, data);
             dispatch(fillPeriodnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Periyod başarı ile Eklendi',
             }));
             history.push('/Periods');
             return response.data;
@@ -59,8 +59,8 @@ export const EditPeriods = createAsyncThunk(
             const response = await instanse.put(config.services.Setting, ROUTES.PERIOD, data);
             dispatch(fillPeriodnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Periyod başarı ile Güncellendi',
             }));
             history.push('/Periods');
             return response.data;
@@ -81,8 +81,8 @@ export const DeletePeriods = createAsyncThunk(
             const response = await instanse.delete(config.services.Setting, `${ROUTES.PERIOD}/${data.Uuid}`);
             dispatch(fillPeriodnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Periyod başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const PeriodsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedPeriod: (state) => {
-            state.selected_record = {};
+        handleSelectedPeriod: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillPeriodnotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const PeriodsSlice = createSlice({
         },
         removePeriodnotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const PeriodsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPeriod,
+    handleSelectedPeriod,
     fillPeriodnotification,
     removePeriodnotification,
+    handleDeletemodal
 } = PeriodsSlice.actions;
 
 export default PeriodsSlice.reducer;

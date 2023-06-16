@@ -39,8 +39,8 @@ export const AddUnits = createAsyncThunk(
             const response = await instanse.post(config.services.Setting, ROUTES.UNIT, data);
             dispatch(fillUnitnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Birim başarı ile Eklendi',
             }));
             history.push('/Units');
             return response.data;
@@ -59,8 +59,8 @@ export const EditUnits = createAsyncThunk(
             const response = await instanse.put(config.services.Setting, ROUTES.UNIT, data);
             dispatch(fillUnitnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Birim başarı ile Güncellendi',
             }));
             history.push('/Units');
             return response.data;
@@ -81,8 +81,8 @@ export const DeleteUnits = createAsyncThunk(
             const response = await instanse.delete(config.services.Setting, `${ROUTES.UNIT}/${data.Uuid}`);
             dispatch(fillUnitnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Birim başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const UnitsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedUnit: (state) => {
-            state.selected_record = {};
+        handleSelectedUnit: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillUnitnotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const UnitsSlice = createSlice({
         },
         removeUnitnotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const UnitsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedUnit,
+    handleSelectedUnit,
     fillUnitnotification,
     removeUnitnotification,
+    handleDeletemodal
 } = UnitsSlice.actions;
 
 export default UnitsSlice.reducer;

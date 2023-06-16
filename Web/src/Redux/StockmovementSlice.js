@@ -39,8 +39,8 @@ export const AddStockmovements = createAsyncThunk(
             const response = await instanse.post(config.services.Warehouse, ROUTES.STOCKMOVEMENT, data);
             dispatch(fillStockmovementnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Stok hareketi başarı ile Eklendi',
             }));
             history.push('/Stockmovements');
             return response.data;
@@ -59,8 +59,8 @@ export const EditStockmovements = createAsyncThunk(
             const response = await instanse.put(config.services.Warehouse, ROUTES.STOCKMOVEMENT, data);
             dispatch(fillStockmovementnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Stok hareketi başarı ile Güncellendi',
             }));
             history.push('/Stockmovements');
             return response.data;
@@ -81,8 +81,8 @@ export const DeleteStockmovements = createAsyncThunk(
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.STOCKMOVEMENT}/${data.Uuid}`);
             dispatch(fillStockmovementnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Stok hareketi başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const StockmovementsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedStockmovement: (state) => {
-            state.selected_record = {};
+        handleSelectedStockmovement: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillStockmovementnotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const StockmovementsSlice = createSlice({
         },
         removeStockmovementnotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const StockmovementsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedStockmovement,
+    handleSelectedStockmovement,
     fillStockmovementnotification,
     removeStockmovementnotification,
+    handleDeletemodal
 } = StockmovementsSlice.actions;
 
 export default StockmovementsSlice.reducer;

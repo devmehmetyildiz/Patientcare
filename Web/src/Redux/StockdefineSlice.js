@@ -39,8 +39,8 @@ export const AddStockdefines = createAsyncThunk(
             const response = await instanse.post(config.services.Warehouse, ROUTES.STOCKDEFINE, data);
             dispatch(fillStockdefinenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Stok tanımı başarı ile Eklendi',
             }));
             history.push('/Stockdefines');
             return response.data;
@@ -59,8 +59,8 @@ export const EditStockdefines = createAsyncThunk(
             const response = await instanse.put(config.services.Warehouse, ROUTES.STOCKDEFINE, data);
             dispatch(fillStockdefinenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Stok tanımı başarı ile Güncellendi',
             }));
             history.push('/Stockdefines');
             return response.data;
@@ -81,8 +81,8 @@ export const DeleteStockdefines = createAsyncThunk(
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.STOCKDEFINE}/${data.Uuid}`);
             dispatch(fillStockdefinenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Stok tanımı başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const StockdefinesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedStockdefine: (state) => {
-            state.selected_record = {};
+        handleSelectedStockdefine: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillStockdefinenotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const StockdefinesSlice = createSlice({
         },
         removeStockdefinenotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const StockdefinesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedStockdefine,
+    handleSelectedStockdefine,
     fillStockdefinenotification,
     removeStockdefinenotification,
+    handleDeletemodal
 } = StockdefinesSlice.actions;
 
 export default StockdefinesSlice.reducer;

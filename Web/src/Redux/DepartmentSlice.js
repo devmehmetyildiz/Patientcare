@@ -39,7 +39,7 @@ export const AddDepartments = createAsyncThunk(
             const response = await instanse.post(config.services.Setting, ROUTES.DEPARTMENT, data);
             dispatch(fillDepartmentnotification({
                 type: 'Success',
-                code: 'Departman',
+                code: 'Veri Kaydetme',
                 description: 'Departman başarı ile Eklendi',
             }));
             history.push('/Departments');
@@ -59,7 +59,7 @@ export const EditDepartments = createAsyncThunk(
             const response = await instanse.put(config.services.Setting, ROUTES.DEPARTMENT, data);
             dispatch(fillDepartmentnotification({
                 type: 'Success',
-                code: 'Departman',
+                code: 'Veri Güncelleme',
                 description: 'Departman başarı ile Güncellendi',
             }));
             history.push('/Departments');
@@ -81,7 +81,7 @@ export const DeleteDepartments = createAsyncThunk(
             const response = await instanse.delete(config.services.Setting, `${ROUTES.DEPARTMENT}/${data.Uuid}`);
             dispatch(fillDepartmentnotification({
                 type: 'Success',
-                code: 'Departman',
+                code: 'Veri Silme',
                 description: 'Departman başarı ile Silindi',
             }));
             return response.data;
@@ -101,11 +101,12 @@ export const DepartmentsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedDepartment: (state) => {
-            state.selected_record = {};
+        handleSelectedDepartment: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillDepartmentnotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const DepartmentsSlice = createSlice({
         },
         removeDepartmentnotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const DepartmentsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedDepartment,
+    handleSelectedDepartment,
     fillDepartmentnotification,
     removeDepartmentnotification,
+    handleDeletemodal
 } = DepartmentsSlice.actions;
 
 export default DepartmentsSlice.reducer;

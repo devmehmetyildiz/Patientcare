@@ -39,8 +39,8 @@ export const AddStations = createAsyncThunk(
             const response = await instanse.post(config.services.Setting, ROUTES.STATION, data);
             dispatch(fillStationnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'İstasyon başarı ile Eklendi',
             }));
             history.push('/Stations');
             return response.data;
@@ -59,8 +59,8 @@ export const EditStations = createAsyncThunk(
             const response = await instanse.put(config.services.Setting, ROUTES.STATION, data);
             dispatch(fillStationnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'İstasyon başarı ile Güncellendi',
             }));
             history.push('/Stations');
             return response.data;
@@ -81,8 +81,8 @@ export const DeleteStations = createAsyncThunk(
             const response = await instanse.delete(config.services.Setting, `${ROUTES.STATION}/${data.Uuid}`);
             dispatch(fillStationnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'İstasyon başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const StationsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedStation: (state) => {
-            state.selected_record = {};
+        handleSelectedStation: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillStationnotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const StationsSlice = createSlice({
         },
         removeStationnotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const StationsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedStation,
+    handleSelectedStation,
     fillStationnotification,
     removeStationnotification,
+    handleDeletemodal
 } = StationsSlice.actions;
 
 export default StationsSlice.reducer;

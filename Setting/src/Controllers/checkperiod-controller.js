@@ -30,10 +30,10 @@ async function GetCheckperiods(req, res, next) {
 async function GetCheckperiod(req, res, next) {
 
     let validationErrors = []
-    if (!req.params.CheckperiodId) {
+    if (!req.params.checkperiodId) {
         validationErrors.push(messages.VALIDATION_ERROR.CHECKPERIODID_REQUIRED)
     }
-    if (!validator.isUUID(req.params.CheckperiodId)) {
+    if (!validator.isUUID(req.params.checkperiodId)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CHECKPERIODID)
     }
     if (validationErrors.length > 0) {
@@ -41,7 +41,7 @@ async function GetCheckperiod(req, res, next) {
     }
 
     try {
-        const checkperiod = await db.checkperiodModel.findOne({ where: { Uuid: req.params.CheckperiodId } });
+        const checkperiod = await db.checkperiodModel.findOne({ where: { Uuid: req.params.checkperiodId } });
         if (!checkperiod) {
             return createNotfounderror([messages.ERROR.CHECKPERIOD_NOT_FOUND])
         }

@@ -8,6 +8,12 @@ import FormInput from '../../Utils/FormInput'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 export default class CasesEdit extends Component {
 
   constructor(props) {
@@ -21,7 +27,7 @@ export default class CasesEdit extends Component {
 
   componentDidMount() {
     const { GetCase, match, history, GetDepartments } = this.props
-    if (match.params.CaseID) {
+    if (validator.isUUID(match.params.CaseID)) {
       GetCase(match.params.CaseID)
       GetDepartments()
     } else {
@@ -71,42 +77,40 @@ export default class CasesEdit extends Component {
     ]
 
     return (
-      Departments.isLoading || Departments.isDispatching || Cases.isLoading || Cases.isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Cases"}>
-                  <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
-              <Form.Group widths='equal'>
-                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
-              </Form.Group>
-              <Form.Group widths='equal'>
-                <FormInput required placeholder={Literals.Columns.Casecolor[Profile.Language]} name="Casecolor" attention="blue,red,green..." />
-                <FormInput required placeholder={Literals.Columns.CaseStatus[Profile.Language]} options={casestatusOption} onChange={this.handleChangeOption} value={this.state.selectedstatusOption} formtype="dropdown" />
-              </Form.Group>
-              <Form.Group widths='equal'>
-                <FormInput required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} clearable search multiple options={Departmentoptions} onChange={this.handleChange} value={this.state.selecteddepartments} formtype="dropdown" />
-              </Form.Group>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
-                <Link to="/Cases">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </div>
-            </Form>
-          </div>
-        </div>
+      Cases.isLoading || Cases.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
+      <Pagewrapper>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Cases"}>
+              <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+          </Headerbredcrump>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Form onSubmit={this.handleSubmit}>
+            <Form.Group widths='equal'>
+              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
+            </Form.Group>
+            <Form.Group widths='equal'>
+              <FormInput required placeholder={Literals.Columns.Casecolor[Profile.Language]} name="Casecolor" attention="blue,red,green..." />
+              <FormInput required placeholder={Literals.Columns.CaseStatus[Profile.Language]} options={casestatusOption} onChange={this.handleChangeOption} value={this.state.selectedstatusOption} formtype="dropdown" />
+            </Form.Group>
+            <Form.Group widths='equal'>
+              <FormInput required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} clearable search multiple options={Departmentoptions} onChange={this.handleChange} value={this.state.selecteddepartments} formtype="dropdown" />
+            </Form.Group>
+            <Footerwrapper>
+              <Link to="/Cases">
+                <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+              </Link>
+              <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+            </Footerwrapper>
+          </Form>
+        </Contentwrapper>
+      </Pagewrapper >
     )
   }
 

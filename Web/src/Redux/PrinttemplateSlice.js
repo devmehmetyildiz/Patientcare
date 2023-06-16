@@ -39,8 +39,8 @@ export const AddPrinttemplates = createAsyncThunk(
             const response = await instanse.post(config.services.System, ROUTES.PRINTTEMPLATE, data);
             dispatch(fillPrinttemplatenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Yazırma taslağı başarı ile Eklendi',
             }));
             history.push('/Printtemplates');
             return response.data;
@@ -59,8 +59,8 @@ export const EditPrinttemplates = createAsyncThunk(
             const response = await instanse.put(config.services.System, ROUTES.PRINTTEMPLATE, data);
             dispatch(fillPrinttemplatenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Yazırma taslağı başarı ile Güncellendi',
             }));
             history.push('/Printtemplates');
             return response.data;
@@ -81,8 +81,8 @@ export const DeletePrinttemplates = createAsyncThunk(
             const response = await instanse.delete(config.services.System, `${ROUTES.PRINTTEMPLATE}/${data.Uuid}`);
             dispatch(fillPrinttemplatenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Yazırma taslağı başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const PrinttemplatesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedPrinttemplate: (state) => {
-            state.selected_record = {};
+        handleSelectedPrinttemplate: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillPrinttemplatenotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const PrinttemplatesSlice = createSlice({
         },
         removePrinttemplatenotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const PrinttemplatesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPrinttemplate,
+    handleSelectedPrinttemplate,
     fillPrinttemplatenotification,
     removePrinttemplatenotification,
+    handleDeletemodal
 } = PrinttemplatesSlice.actions;
 
 export default PrinttemplatesSlice.reducer;

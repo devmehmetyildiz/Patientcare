@@ -34,13 +34,13 @@ export const GetCase = createAsyncThunk(
 
 export const AddCases = createAsyncThunk(
     'Cases/AddCases',
-    async ({data, history}, { dispatch }) => {
+    async ({ data, history }, { dispatch }) => {
         try {
             const response = await instanse.post(config.services.Setting, ROUTES.CASE, data);
             dispatch(fillCasenotification({
                 type: 'Success',
-                code: 'Durumlar',
-                description: 'Kontrol grubu başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Durum başarı ile Eklendi',
             }));
             history.push('/Cases');
             return response.data;
@@ -54,15 +54,15 @@ export const AddCases = createAsyncThunk(
 
 export const EditCases = createAsyncThunk(
     'Cases/EditCases',
-    async ({data, history}, {dispatch} ) => {
+    async ({ data, history }, { dispatch }) => {
         try {
             const response = await instanse.put(config.services.Setting, ROUTES.CASE, data);
             dispatch(fillCasenotification({
                 type: 'Success',
-                code: 'Durumlar',
-                description: 'Kontrol grubu başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Durum başarı ile Güncellendi',
             }));
-              history.push('/Cases');
+            history.push('/Cases');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -81,8 +81,8 @@ export const DeleteCases = createAsyncThunk(
             const response = await instanse.delete(config.services.Setting, `${ROUTES.CASE}/${data.Uuid}`);
             dispatch(fillCasenotification({
                 type: 'Success',
-                code: 'Durumlar',
-                description: 'Kontrol grubu başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Durum başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,21 +101,23 @@ export const CasesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedCase: (state) => {
-            state.selected_record = {};
+        handleSelectedCase: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillCasenotification: (state, action) => {
-            console.log('state: ', state);
-            console.log('action.payload: ', action.payload);
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
         removeCasenotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -183,9 +185,10 @@ export const CasesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedCase,
+    handleSelectedCase,
     fillCasenotification,
     removeCasenotification,
+    handleDeletemodal
 } = CasesSlice.actions;
 
 export default CasesSlice.reducer;

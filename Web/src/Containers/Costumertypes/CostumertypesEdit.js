@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import CostumertypesEdit from '../../Pages/Costumertypes/CostumertypesEdit'
-import { EditCostumertypes, GetCostumertype, RemoveSelectedCostumertype, removeCostumertypenotification, fillCostumertypenotification } from "../../Redux/CostumertypeSlice"
+import { EditCostumertypes, GetCostumertype, handleSelectedCostumertype, removeCostumertypenotification, fillCostumertypenotification } from "../../Redux/CostumertypeSlice"
 import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
 
 const mapStateToProps = (state) => ({
@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  EditCostumertypes, GetCostumertype, RemoveSelectedCostumertype, removeCostumertypenotification, fillCostumertypenotification,
+  EditCostumertypes, GetCostumertype, handleSelectedCostumertype, removeCostumertypenotification, fillCostumertypenotification,
   GetDepartments, removeDepartmentnotification
 }
 

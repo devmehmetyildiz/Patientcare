@@ -34,12 +34,12 @@ export const GetCheckperiod = createAsyncThunk(
 
 export const AddCheckperiods = createAsyncThunk(
     'checkperiods/AddCheckperiods',
-    async ({data, history}, { dispatch }) => {
+    async ({ data, history }, { dispatch }) => {
         try {
             const response = await instanse.post(config.services.Setting, ROUTES.CHECKPERIOD, data);
             dispatch(fillCheckperiodnotification({
                 type: 'Success',
-                code: 'Kontrol Grupları',
+                code: 'Veri Kaydetme',
                 description: 'Kontrol grubu başarı ile Eklendi',
             }));
             history.push('/Checkperiods');
@@ -54,12 +54,12 @@ export const AddCheckperiods = createAsyncThunk(
 
 export const EditCheckperiods = createAsyncThunk(
     'checkperiods/EditCheckperiods',
-    async ({data, history}, { dispatch }) => {
+    async ({ data, history }, { dispatch }) => {
         try {
             const response = await instanse.put(config.services.Setting, ROUTES.CHECKPERIOD, data);
             dispatch(fillCheckperiodnotification({
                 type: 'Success',
-                code: 'Kontrol Grupları',
+                code: 'Veri Güncelleme',
                 description: 'Kontrol grubu başarı ile Güncellendi',
             }));
             history.push('/Checkperiods');
@@ -81,7 +81,7 @@ export const DeleteCheckperiods = createAsyncThunk(
             const response = await instanse.delete(config.services.Setting, `${ROUTES.CHECKPERIOD}/${data.Uuid}`);
             dispatch(fillCheckperiodnotification({
                 type: 'Success',
-                code: 'Kontrol Grupları',
+                code: 'Veri Silme',
                 description: 'Kontrol grubu başarı ile Silindi',
             }));
             return response.data;
@@ -101,11 +101,12 @@ export const checkperiodsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedCheckperiod: (state) => {
-            state.selected_record = {};
+        handleSelectedCheckperiod: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillCheckperiodnotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const checkperiodsSlice = createSlice({
         },
         removeCheckperiodnotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const checkperiodsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedCheckperiod,
+    handleSelectedCheckperiod,
     fillCheckperiodnotification,
     removeCheckperiodnotification,
+    handleDeletemodal
 } = checkperiodsSlice.actions;
 
 export default checkperiodsSlice.reducer;

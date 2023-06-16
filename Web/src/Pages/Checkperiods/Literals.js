@@ -1,17 +1,9 @@
 const Literals = {
     Options: {
-        caseStatusoption: {
+        Periodtypeoption: {
             value0: {
-                tr: 'Pasif',
-                en: "Passive"
-            },
-            value1: {
-                tr: 'İptal Etme',
-                en: "Deactivate"
-            },
-            value2: {
-                tr: 'Tamamlama',
-                en: "Complete"
+                tr: 'Sürekli Kontrol',
+                en: "Continuous Control"
             },
         },
     },
@@ -119,22 +111,19 @@ const Literals = {
             tr: "İsim Gerekli",
             en: "Name Required"
         },
-        Departmentsrequired: {
-            tr: "Deparmanlar Gerekli",
-            en: "Departments Required"
+        Periodsrequired: {
+            tr: "Kontroller Gerekli",
+            en: "Periods Required"
         },
-        Casestatusrequired: {
-            tr: "Durumn türü Gerekli",
-            en: "Case status Required"
+        Occureddaysrequired: {
+            tr: "Gerçekleşecek günler gerekli",
+            en: "Occured days Required"
         },
-        Casecolorrequired: {
-            tr: "Durum Rengi Gerekli",
-            en: "Case color Required"
+        PeriodTyperequired: {
+            tr: "Kontrol türü Gerekli",
+            en: "Period type Required"
         },
-        Shortnamerequired: {
-            tr: "Durum Rengi Gerekli",
-            en: "Case color Required"
-        },
+      
 
     }
 }

@@ -1,21 +1,22 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
+import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import Notification from '../../Utils/Notification'
 import Literals from './Literals'
-
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import CheckperiodsDelete from "../../Containers/Checkperiods/CheckperiodsDelete"
 export default class Checkperiods extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      open: false,
-      selectedrecord: {},
       periodStatus: []
     }
   }
@@ -33,7 +34,7 @@ export default class Checkperiods extends Component {
   render() {
 
 
-    const { Checkperiods, DeleteCheckperiods, Profile } = this.props
+    const { Checkperiods, Profile, handleSelectedCheckperiod, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Checkperiods
 
     const Columns = [
@@ -69,72 +70,44 @@ export default class Checkperiods extends Component {
         ...item,
         Periodstxt: text,
         edit: <Link to={`/Checkperiods/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+          handleSelectedCheckperiod(item)
+          handleDeletemodal(true)
+        }} />,
       }
     })
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>
-          <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-            <div className='w-full mx-auto align-middle'>
-              <Header style={{ backgroundColor: 'transparent', border: 'none' }} as='h1' attached='top' >
-                <Grid columns='2' >
-                  <GridColumn width={8} className="">
-                    <Breadcrumb size='big'>
-                      <Link to={"/Checkperiods"}>
-                        <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-                      </Link>
-                    </Breadcrumb>
-                  </GridColumn>
-                  <GridColumn width={8} >
-                    <Link to={"/Checkperiods/Create"}>
-                      <Button color='blue' floated='right' className='list-right-green-button'>
-                        {Literals.Button.Create[Profile.Language]}
-                      </Button>
+          <Pagewrapper>
+            <Headerwrapper>
+              <Grid columns='2' >
+                <GridColumn width={8} className="">
+                  <Breadcrumb size='big'>
+                    <Link to={"/Checkperiods"}>
+                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
-                    <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                  </GridColumn>
-                </Grid>
-              </Header>
-            </div>
-            <Divider className='w-full  h-[1px]' />
+                  </Breadcrumb>
+                </GridColumn>
+                <GridColumn width={8} >
+                  <Link to={"/Checkperiods/Create"}>
+                    <Button color='blue' floated='right' className='list-right-green-button'>
+                      {Literals.Button.Create[Profile.Language]}
+                    </Button>
+                  </Link>
+                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
+                </GridColumn>
+              </Grid>
+            </Headerwrapper>
+            <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
-          </div>
-          <Modal
-            onClose={() => this.setState({ open: false })}
-            onOpen={() => this.setState({ open: true })}
-            open={this.state.open}
-          >
-            <Modal.Header>{Literals.Page.Pagedeleteheader[Profile.Language]}</Modal.Header>
-            <Modal.Content image>
-              <Modal.Description>
-                <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
-                  {Literals.Messages.Deletecheck[Profile.Language]}
-                </p>
-              </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='black' onClick={() => this.setState({ open: false, selectedrecord: {} })}>
-                {Literals.Button.Giveup[Profile.Language]}
-              </Button>
-              <Button
-                content={Literals.Button.Delete[Profile.Language]}
-                labelPosition='right'
-                icon='checkmark'
-                onClick={() => {
-                  DeleteCheckperiods(this.state.selectedrecord)
-                  this.setState({ open: false, selectedrecord: {} })
-                }}
-                positive
-              />
-            </Modal.Actions>
-          </Modal>
+          </Pagewrapper>
+          <CheckperiodsDelete />
         </React.Fragment>
     )
   }

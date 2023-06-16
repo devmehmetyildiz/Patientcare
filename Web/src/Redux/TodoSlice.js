@@ -39,8 +39,8 @@ export const AddTodos = createAsyncThunk(
             const response = await instanse.post(config.services.Setting, ROUTES.TODO, data);
             dispatch(fillTodonotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Yapılacak başarı ile Eklendi',
             }));
             history.push('/Todos');
             return response.data;
@@ -59,8 +59,8 @@ export const EditTodos = createAsyncThunk(
             const response = await instanse.put(config.services.Setting, ROUTES.TODO, data);
             dispatch(fillTodonotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Yapılacak başarı ile Güncellendi',
             }));
             history.push('/Todos');
             return response.data;
@@ -81,8 +81,8 @@ export const DeleteTodos = createAsyncThunk(
             const response = await instanse.delete(config.services.Setting, `${ROUTES.TODO}/${data.Uuid}`);
             dispatch(fillTodonotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Yapılacak başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -101,11 +101,12 @@ export const TodosSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedTodo: (state) => {
-            state.selected_record = {};
+        handleSelectedTodo: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillTodonotification: (state, action) => {
             const payload = action.payload;
@@ -114,6 +115,9 @@ export const TodosSlice = createSlice({
         },
         removeTodonotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -181,9 +185,10 @@ export const TodosSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedTodo,
+    handleSelectedTodo,
     fillTodonotification,
     removeTodonotification,
+    handleDeletemodal
 } = TodosSlice.actions;
 
 export default TodosSlice.reducer;

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import DepartmentsEdit from '../../Pages/Departments/DepartmentsEdit'
-import { EditDepartments, GetDepartment, RemoveSelectedDepartment, removeDepartmentnotification, fillDepartmentnotification } from "../../Redux/DepartmentSlice"
+import { EditDepartments, GetDepartment, handleSelectedDepartment, removeDepartmentnotification, fillDepartmentnotification } from "../../Redux/DepartmentSlice"
 import { GetStations, removeStationnotification } from '../../Redux/StationSlice'
 
 const mapStateToProps = (state) => ({
@@ -9,6 +9,6 @@ const mapStateToProps = (state) => ({
     Profile: state.Profile
 })
 
-const mapDispatchToProps = { EditDepartments, GetStations, GetDepartment, RemoveSelectedDepartment, removeDepartmentnotification, fillDepartmentnotification, removeStationnotification }
+const mapDispatchToProps = { EditDepartments, GetStations, GetDepartment, handleSelectedDepartment, removeDepartmentnotification, fillDepartmentnotification, removeStationnotification }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DepartmentsEdit)

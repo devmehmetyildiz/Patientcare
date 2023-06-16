@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Patientmovements from '../../Pages/Patientmovements/Patientmovements'
-import { GetPatientmovements, removePatientmovementnotification, DeletePatientmovements } from '../../Redux/PatientmovementSlice'
+import { GetPatientmovements, removePatientmovementnotification, DeletePatientmovements, handleDeletemodal, handleSelectedPatientmovement } from '../../Redux/PatientmovementSlice'
 
 const mapStateToProps = (state) => ({
     Patientmovements: state.Patientmovements,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetPatientmovements, removePatientmovementnotification, DeletePatientmovements
+    GetPatientmovements, removePatientmovementnotification, DeletePatientmovements, handleDeletemodal, handleSelectedPatientmovement
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Patientmovements)

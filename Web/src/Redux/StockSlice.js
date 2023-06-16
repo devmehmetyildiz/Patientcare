@@ -39,8 +39,8 @@ export const AddStocks = createAsyncThunk(
             const response = await instanse.post(config.services.Warehouse, ROUTES.STOCK, data);
             dispatch(fillStocknotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Kaydetme',
+                description: 'Stok başarı ile Eklendi',
             }));
             history.push('/Stocks');
             return response.data;
@@ -59,8 +59,8 @@ export const MoveStocks = createAsyncThunk(
             const response = await instanse.post(config.services.Warehouse, ROUTES.STOCK + "/Movestock", data);
             dispatch(fillStocknotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Güncelleme',
+                description: 'Stok başarı ile Taşındı',
             }));
             history.push('/Stocks');
             return response.data;
@@ -79,8 +79,8 @@ export const DeactivateStocks = createAsyncThunk(
             const response = await instanse.post(config.services.Warehouse, ROUTES.STOCK + "/Deactivestocks", data);
             dispatch(fillStocknotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Veri Güncelleme',
+                description: 'Stok başarı ile Deaktif edildi',
             }));
             history.push('/Stocks');
             return response.data;
@@ -99,8 +99,8 @@ export const EditStocks = createAsyncThunk(
             const response = await instanse.put(config.services.Warehouse, ROUTES.STOCK, data);
             dispatch(fillStocknotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Veri Güncelleme',
+                description: 'Stok başarı ile Güncellendi',
             }));
             history.push('/Stocks');
             return response.data;
@@ -121,8 +121,8 @@ export const DeleteStocks = createAsyncThunk(
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.STOCK}/${data.Uuid}`);
             dispatch(fillStocknotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Veri Silme',
+                description: 'Stok başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
@@ -141,11 +141,12 @@ export const StocksSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false
+        isDispatching: false,
+        isDeletemodalopen: false
     },
     reducers: {
-        RemoveSelectedStock: (state) => {
-            state.selected_record = {};
+        handleSelectedStock: (state, action) => {
+            state.selected_record = action.payload;
         },
         fillStocknotification: (state, action) => {
             const payload = action.payload;
@@ -154,6 +155,9 @@ export const StocksSlice = createSlice({
         },
         removeStocknotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        handleDeletemodal: (state, action) => {
+            state.isDeletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -243,9 +247,10 @@ export const StocksSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedStock,
+    handleSelectedStock,
     fillStocknotification,
     removeStocknotification,
+    handleDeletemodal
 } = StocksSlice.actions;
 
 export default StocksSlice.reducer;
