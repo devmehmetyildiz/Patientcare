@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
 export const GetPatients = createAsyncThunk(
     'Patients/GetPatients',
@@ -33,7 +33,7 @@ export const GetPatient = createAsyncThunk(
 );
 
 export const Getpreregistrations = createAsyncThunk(
-    'Patients/GetPatient',
+    'Patients/Getpreregistrations',
     async (_, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Business, ROUTES.PATIENT + "/Preregistrations");

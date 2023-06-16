@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Patientstocks from '../../Pages/Patientstocks/Patientstocks'
-import { GetPatientstocks, removePatientstocknotification, fillPatientstocknotification, DeletePatientstocks } from '../../Redux/Reducers/PatientstockReducer'
+import { GetPatientstocks, removePatientstocknotification, fillPatientstocknotification, DeletePatientstocks } from '../../Redux/PatientstockSlice'
 
 
 const mapStateToProps = (state) => ({

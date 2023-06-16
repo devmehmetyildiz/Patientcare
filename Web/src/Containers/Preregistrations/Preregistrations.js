@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import Preregistrations from "../../Pages/Preregistrations/Preregistrations"
-import { Getpreregistrations, CompletePrepatients, removePatientnotification, DeletePatients, fillPatientnotification } from "../../Redux/Reducers/PatientReducer"
-import { GetWarehouses, removeWarehousenotification } from "../../Redux/Reducers/WarehouseReducer"
+import { Getpreregistrations, CompletePrepatients, removePatientnotification, DeletePatients, fillPatientnotification } from "../../Redux/PatientSlice"
+import { GetWarehouses, removeWarehousenotification } from "../../Redux/WarehouseSlice"
 
 const mapStateToProps = (state) => ({
   Patients: state.Patients,

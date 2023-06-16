@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux'
-import rootReducer from './Redux/Reducers'
+import rootSlice from './Redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import TimerMiddleware from './Utils/TimerMiddleware';
@@ -13,7 +13,7 @@ import AuthProvider from "./Provider/AuthProvider";
 import FormProvider from "./Provider/FormProvider";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk, TimerMiddleware)))
+const store = createStore(rootSlice, composeEnhancers(applyMiddleware(thunk, TimerMiddleware)))
 
 /* setInterval(function () {
   store.dispatch({

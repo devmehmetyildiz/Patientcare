@@ -1,85 +1,85 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetUnits = createAsyncThunk(
-    'Units/GetUnits',
+export const GetTododefines = createAsyncThunk(
+    'Tododefines/GetTododefines',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.UNIT);
+            const response = await instanse.get(config.services.Setting, ROUTES.TODODEFINE);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillUnitnotification(errorPayload));
+            dispatch(fillTododefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetUnit = createAsyncThunk(
-    'Units/GetUnit',
+export const GetTododefine = createAsyncThunk(
+    'Tododefines/GetTododefine',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.UNIT}/${guid}`);
+            const response = await instanse.get(config.services.Setting, `${ROUTES.TODODEFINE}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillUnitnotification(errorPayload));
+            dispatch(fillTododefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddUnits = createAsyncThunk(
-    'Units/AddUnits',
+export const AddTododefines = createAsyncThunk(
+    'Tododefines/AddTododefines',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Setting, ROUTES.UNIT, data);
-            dispatch(fillUnitnotification({
+            const response = await instanse.post(config.services.Setting, ROUTES.TODODEFINE, data);
+            dispatch(fillTododefinenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Eklendi',
             }));
-            history.push('/Units');
+            history.push('/Tododefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillUnitnotification(errorPayload));
+            dispatch(fillTododefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditUnits = createAsyncThunk(
-    'Units/EditUnits',
+export const EditTododefines = createAsyncThunk(
+    'Tododefines/EditTododefines',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.Setting, ROUTES.UNIT, data);
-            dispatch(fillUnitnotification({
+            const response = await instanse.put(config.services.Setting, ROUTES.TODODEFINE, data);
+            dispatch(fillTododefinenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Güncellendi',
             }));
-            history.push('/Units');
+            history.push('/Tododefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillUnitnotification(errorPayload));
+            dispatch(fillTododefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeleteUnits = createAsyncThunk(
-    'Units/DeleteUnits',
+export const DeleteTododefines = createAsyncThunk(
+    'Tododefines/DeleteTododefines',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.UNIT}/${data.Uuid}`);
-            dispatch(fillUnitnotification({
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.TODODEFINE}/${data.Uuid}`);
+            dispatch(fillTododefinenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Silindi',
@@ -87,14 +87,14 @@ export const DeleteUnits = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillUnitnotification(errorPayload));
+            dispatch(fillTododefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const UnitsSlice = createSlice({
-    name: 'Units',
+export const TododefinesSlice = createSlice({
+    name: 'Tododefines',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const UnitsSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedUnit: (state) => {
+        RemoveSelectedTododefine: (state) => {
             state.selected_record = {};
         },
-        fillUnitnotification: (state, action) => {
+        fillTododefinenotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removeUnitnotification: (state) => {
+        removeTododefinenotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetUnits.pending, (state) => {
+            .addCase(GetTododefines.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetUnits.fulfilled, (state, action) => {
+            .addCase(GetTododefines.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetUnits.rejected, (state, action) => {
+            .addCase(GetTododefines.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetUnit.pending, (state) => {
+            .addCase(GetTododefine.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetUnit.fulfilled, (state, action) => {
+            .addCase(GetTododefine.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetUnit.rejected, (state, action) => {
+            .addCase(GetTododefine.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddUnits.pending, (state) => {
+            .addCase(AddTododefines.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddUnits.fulfilled, (state, action) => {
+            .addCase(AddTododefines.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddUnits.rejected, (state, action) => {
+            .addCase(AddTododefines.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditUnits.pending, (state) => {
+            .addCase(EditTododefines.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditUnits.fulfilled, (state, action) => {
+            .addCase(EditTododefines.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditUnits.rejected, (state, action) => {
+            .addCase(EditTododefines.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteUnits.pending, (state) => {
+            .addCase(DeleteTododefines.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeleteUnits.fulfilled, (state, action) => {
+            .addCase(DeleteTododefines.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeleteUnits.rejected, (state, action) => {
+            .addCase(DeleteTododefines.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const UnitsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedUnit,
-    fillUnitnotification,
-    removeUnitnotification,
-} = UnitsSlice.actions;
+    RemoveSelectedTododefine,
+    fillTododefinenotification,
+    removeTododefinenotification,
+} = TododefinesSlice.actions;
 
-export default UnitsSlice.reducer;
+export default TododefinesSlice.reducer;

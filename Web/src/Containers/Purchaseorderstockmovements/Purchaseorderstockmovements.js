@@ -3,7 +3,7 @@ import Purchaseorderstockmovements from '../../Pages/Purchaseorderstockmovements
 import {
     GetPurchaseorderstockmovements, removePurchaseorderstockmovementnotification,
     fillPurchaseorderstockmovementnotification, DeletePurchaseorderstockmovements
-} from '../../Redux/Reducers/PurchaseorderstockmovementReducer'
+} from '../../Redux/PurchaseorderstockmovementSlice'
 
 
 const mapStateToProps = (state) => ({

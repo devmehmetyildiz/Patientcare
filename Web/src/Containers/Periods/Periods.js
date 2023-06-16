@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Periods from '../../Pages/Periods/Periods'
-import { GetPeriods, removePeriodnotification,DeletePeriods } from '../../Redux/Reducers/PeriodReducer'
+import { GetPeriods, removePeriodnotification,DeletePeriods } from '../../Redux/PeriodSlice'
 
 const mapStateToProps = (state) => ({
     Periods: state.Periods,

@@ -1,85 +1,85 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetStations = createAsyncThunk(
-    'Stations/GetStations',
+export const GetStockmovements = createAsyncThunk(
+    'Stockmovements/GetStockmovements',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.STATION);
+            const response = await instanse.get(config.services.Warehouse, ROUTES.STOCKMOVEMENT);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStationnotification(errorPayload));
+            dispatch(fillStockmovementnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetStation = createAsyncThunk(
-    'Stations/GetStation',
+export const GetStockmovement = createAsyncThunk(
+    'Stockmovements/GetStockmovement',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.STATION}/${guid}`);
+            const response = await instanse.get(config.services.Warehouse, `${ROUTES.STOCKMOVEMENT}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStationnotification(errorPayload));
+            dispatch(fillStockmovementnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddStations = createAsyncThunk(
-    'Stations/AddStations',
+export const AddStockmovements = createAsyncThunk(
+    'Stockmovements/AddStockmovements',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Setting, ROUTES.STATION, data);
-            dispatch(fillStationnotification({
+            const response = await instanse.post(config.services.Warehouse, ROUTES.STOCKMOVEMENT, data);
+            dispatch(fillStockmovementnotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Eklendi',
             }));
-            history.push('/Stations');
+            history.push('/Stockmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStationnotification(errorPayload));
+            dispatch(fillStockmovementnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditStations = createAsyncThunk(
-    'Stations/EditStations',
+export const EditStockmovements = createAsyncThunk(
+    'Stockmovements/EditStockmovements',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.Setting, ROUTES.STATION, data);
-            dispatch(fillStationnotification({
+            const response = await instanse.put(config.services.Warehouse, ROUTES.STOCKMOVEMENT, data);
+            dispatch(fillStockmovementnotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Güncellendi',
             }));
-            history.push('/Stations');
+            history.push('/Stockmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStationnotification(errorPayload));
+            dispatch(fillStockmovementnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeleteStations = createAsyncThunk(
-    'Stations/DeleteStations',
+export const DeleteStockmovements = createAsyncThunk(
+    'Stockmovements/DeleteStockmovements',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.STATION}/${data.Uuid}`);
-            dispatch(fillStationnotification({
+            const response = await instanse.delete(config.services.Warehouse, `${ROUTES.STOCKMOVEMENT}/${data.Uuid}`);
+            dispatch(fillStockmovementnotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Silindi',
@@ -87,14 +87,14 @@ export const DeleteStations = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStationnotification(errorPayload));
+            dispatch(fillStockmovementnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const StationsSlice = createSlice({
-    name: 'Stations',
+export const StockmovementsSlice = createSlice({
+    name: 'Stockmovements',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const StationsSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedStation: (state) => {
+        RemoveSelectedStockmovement: (state) => {
             state.selected_record = {};
         },
-        fillStationnotification: (state, action) => {
+        fillStockmovementnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removeStationnotification: (state) => {
+        removeStockmovementnotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetStations.pending, (state) => {
+            .addCase(GetStockmovements.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetStations.fulfilled, (state, action) => {
+            .addCase(GetStockmovements.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetStations.rejected, (state, action) => {
+            .addCase(GetStockmovements.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetStation.pending, (state) => {
+            .addCase(GetStockmovement.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetStation.fulfilled, (state, action) => {
+            .addCase(GetStockmovement.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetStation.rejected, (state, action) => {
+            .addCase(GetStockmovement.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddStations.pending, (state) => {
+            .addCase(AddStockmovements.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddStations.fulfilled, (state, action) => {
+            .addCase(AddStockmovements.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddStations.rejected, (state, action) => {
+            .addCase(AddStockmovements.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditStations.pending, (state) => {
+            .addCase(EditStockmovements.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditStations.fulfilled, (state, action) => {
+            .addCase(EditStockmovements.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditStations.rejected, (state, action) => {
+            .addCase(EditStockmovements.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteStations.pending, (state) => {
+            .addCase(DeleteStockmovements.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeleteStations.fulfilled, (state, action) => {
+            .addCase(DeleteStockmovements.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeleteStations.rejected, (state, action) => {
+            .addCase(DeleteStockmovements.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const StationsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedStation,
-    fillStationnotification,
-    removeStationnotification,
-} = StationsSlice.actions;
+    RemoveSelectedStockmovement,
+    fillStockmovementnotification,
+    removeStockmovementnotification,
+} = StockmovementsSlice.actions;
 
-export default StationsSlice.reducer;
+export default StockmovementsSlice.reducer;

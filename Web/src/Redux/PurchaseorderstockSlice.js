@@ -1,85 +1,85 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetDepartments = createAsyncThunk(
-    'Departments/GetDepartments',
+export const GetPurchaseorderstocks = createAsyncThunk(
+    'Purchaseorderstocks/GetPurchaseorderstocks',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.DEPARTMENT);
+            const response = await instanse.get(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCK);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillDepartmentnotification(errorPayload));
+            dispatch(fillPurchaseorderstocknotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetDepartment = createAsyncThunk(
-    'Departments/GetDepartment',
+export const GetPurchaseorderstock = createAsyncThunk(
+    'Purchaseorderstocks/GetPurchaseorderstock',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.DEPARTMENT}/${guid}`);
+            const response = await instanse.get(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCK}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillDepartmentnotification(errorPayload));
+            dispatch(fillPurchaseorderstocknotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddDepartments = createAsyncThunk(
-    'Departments/AddDepartments',
+export const AddPurchaseorderstocks = createAsyncThunk(
+    'Purchaseorderstocks/AddPurchaseorderstocks',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Setting, ROUTES.DEPARTMENT, data);
-            dispatch(fillDepartmentnotification({
+            const response = await instanse.post(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCK, data);
+            dispatch(fillPurchaseorderstocknotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Eklendi',
             }));
-            history.push('/Departments');
+            history.push('/Purchaseorderstocks');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillDepartmentnotification(errorPayload));
+            dispatch(fillPurchaseorderstocknotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditDepartments = createAsyncThunk(
-    'Departments/EditDepartments',
+export const EditPurchaseorderstocks = createAsyncThunk(
+    'Purchaseorderstocks/EditPurchaseorderstocks',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.Setting, ROUTES.DEPARTMENT, data);
-            dispatch(fillDepartmentnotification({
+            const response = await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCK, data);
+            dispatch(fillPurchaseorderstocknotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Güncellendi',
             }));
-            history.push('/Departments');
+            history.push('/Purchaseorderstocks');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillDepartmentnotification(errorPayload));
+            dispatch(fillPurchaseorderstocknotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeleteDepartments = createAsyncThunk(
-    'Departments/DeleteDepartments',
+export const DeletePurchaseorderstocks = createAsyncThunk(
+    'Purchaseorderstocks/DeletePurchaseorderstocks',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.DEPARTMENT}/${data.Uuid}`);
-            dispatch(fillDepartmentnotification({
+            const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCK}/${data.Uuid}`);
+            dispatch(fillPurchaseorderstocknotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Silindi',
@@ -87,14 +87,14 @@ export const DeleteDepartments = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillDepartmentnotification(errorPayload));
+            dispatch(fillPurchaseorderstocknotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DepartmentsSlice = createSlice({
-    name: 'Departments',
+export const PurchaseorderstocksSlice = createSlice({
+    name: 'Purchaseorderstocks',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const DepartmentsSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedDepartment: (state) => {
+        RemoveSelectedPurchaseorderstock: (state) => {
             state.selected_record = {};
         },
-        fillDepartmentnotification: (state, action) => {
+        fillPurchaseorderstocknotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removeDepartmentnotification: (state) => {
+        removePurchaseorderstocknotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetDepartments.pending, (state) => {
+            .addCase(GetPurchaseorderstocks.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetDepartments.fulfilled, (state, action) => {
+            .addCase(GetPurchaseorderstocks.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetDepartments.rejected, (state, action) => {
+            .addCase(GetPurchaseorderstocks.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetDepartment.pending, (state) => {
+            .addCase(GetPurchaseorderstock.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetDepartment.fulfilled, (state, action) => {
+            .addCase(GetPurchaseorderstock.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetDepartment.rejected, (state, action) => {
+            .addCase(GetPurchaseorderstock.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddDepartments.pending, (state) => {
+            .addCase(AddPurchaseorderstocks.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddDepartments.fulfilled, (state, action) => {
+            .addCase(AddPurchaseorderstocks.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddDepartments.rejected, (state, action) => {
+            .addCase(AddPurchaseorderstocks.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditDepartments.pending, (state) => {
+            .addCase(EditPurchaseorderstocks.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditDepartments.fulfilled, (state, action) => {
+            .addCase(EditPurchaseorderstocks.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditDepartments.rejected, (state, action) => {
+            .addCase(EditPurchaseorderstocks.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteDepartments.pending, (state) => {
+            .addCase(DeletePurchaseorderstocks.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeleteDepartments.fulfilled, (state, action) => {
+            .addCase(DeletePurchaseorderstocks.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeleteDepartments.rejected, (state, action) => {
+            .addCase(DeletePurchaseorderstocks.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const DepartmentsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedDepartment,
-    fillDepartmentnotification,
-    removeDepartmentnotification,
-} = DepartmentsSlice.actions;
+    RemoveSelectedPurchaseorderstock,
+    fillPurchaseorderstocknotification,
+    removePurchaseorderstocknotification,
+} = PurchaseorderstocksSlice.actions;
 
-export default DepartmentsSlice.reducer;
+export default PurchaseorderstocksSlice.reducer;

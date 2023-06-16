@@ -69,7 +69,7 @@ class Login extends Component {
         const data = formToObject(event.target)
         if (data.Username && data.Password) {
             data.grant_type = "password"
-            logIn(data, history, redirectUrl)
+            logIn({data, history, redirectUrl})
         } else {
             fillnotification({ type: 'Error', code: 'USERNAME_PASSWORD_REQUIRED', description: 'Lütfen Kullanıcı ve ya şifre giriniz' })
         }

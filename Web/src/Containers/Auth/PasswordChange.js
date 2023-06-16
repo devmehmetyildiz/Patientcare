@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PasswordChange from '../../Pages/Auth/PasswordChange'
-import { ChangePassword, removenotification, fillnotification } from "../../Redux/Actions/ProfileAction"
+import { removenotification, fillnotification } from "../../Redux/ProfileSlice"
 
 
 const mapStateToProps = (state) => ({
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    ChangePassword, removenotification, fillnotification
+    removenotification, fillnotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PasswordChange)

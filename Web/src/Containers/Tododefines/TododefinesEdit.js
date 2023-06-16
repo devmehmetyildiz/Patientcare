@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import TododefinesEdit from '../../Pages/Tododefines/TododefinesEdit'
-import { GetTododefine, EditTododefines, removeTododefinenotification, fillTododefinenotification } from '../../Redux/Reducers/TododefineReducer'
-import { GetPeriods, removePeriodnotification } from '../../Redux/Reducers/PeriodReducer'
+import { GetTododefine, EditTododefines, removeTododefinenotification, fillTododefinenotification } from '../../Redux/TododefineSlice'
+import { GetPeriods, removePeriodnotification } from '../../Redux/PeriodSlice'
 
 
 const mapStateToProps = (state) => ({

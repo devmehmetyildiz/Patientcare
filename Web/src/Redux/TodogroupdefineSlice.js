@@ -1,85 +1,85 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetPurchaseorderstocks = createAsyncThunk(
-    'Purchaseorderstocks/GetPurchaseorderstocks',
+export const GetTodogroupdefines = createAsyncThunk(
+    'Todogroupdefines/GetTodogroupdefines',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCK);
+            const response = await instanse.get(config.services.Setting, ROUTES.TODOGROUPDEFINE);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPurchaseorderstocknotification(errorPayload));
+            dispatch(fillTodogroupdefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetPurchaseorderstock = createAsyncThunk(
-    'Purchaseorderstocks/GetPurchaseorderstock',
+export const GetTodogroupdefine = createAsyncThunk(
+    'Todogroupdefines/GetTodogroupdefine',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCK}/${guid}`);
+            const response = await instanse.get(config.services.Setting, `${ROUTES.TODOGROUPDEFINE}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPurchaseorderstocknotification(errorPayload));
+            dispatch(fillTodogroupdefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddPurchaseorderstocks = createAsyncThunk(
-    'Purchaseorderstocks/AddPurchaseorderstocks',
+export const AddTodogroupdefines = createAsyncThunk(
+    'Todogroupdefines/AddTodogroupdefines',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCK, data);
-            dispatch(fillPurchaseorderstocknotification({
+            const response = await instanse.post(config.services.Setting, ROUTES.TODOGROUPDEFINE, data);
+            dispatch(fillTodogroupdefinenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Eklendi',
             }));
-            history.push('/Purchaseorderstocks');
+            history.push('/Todogroupdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPurchaseorderstocknotification(errorPayload));
+            dispatch(fillTodogroupdefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditPurchaseorderstocks = createAsyncThunk(
-    'Purchaseorderstocks/EditPurchaseorderstocks',
+export const EditTodogroupdefines = createAsyncThunk(
+    'Todogroupdefines/EditTodogroupdefines',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCK, data);
-            dispatch(fillPurchaseorderstocknotification({
+            const response = await instanse.put(config.services.Setting, ROUTES.TODOGROUPDEFINE, data);
+            dispatch(fillTodogroupdefinenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Güncellendi',
             }));
-            history.push('/Purchaseorderstocks');
+            history.push('/Todogroupdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPurchaseorderstocknotification(errorPayload));
+            dispatch(fillTodogroupdefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeletePurchaseorderstocks = createAsyncThunk(
-    'Purchaseorderstocks/DeletePurchaseorderstocks',
+export const DeleteTodogroupdefines = createAsyncThunk(
+    'Todogroupdefines/DeleteTodogroupdefines',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCK}/${data.Uuid}`);
-            dispatch(fillPurchaseorderstocknotification({
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.TODOGROUPDEFINE}/${data.Uuid}`);
+            dispatch(fillTodogroupdefinenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Silindi',
@@ -87,14 +87,14 @@ export const DeletePurchaseorderstocks = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPurchaseorderstocknotification(errorPayload));
+            dispatch(fillTodogroupdefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const PurchaseorderstocksSlice = createSlice({
-    name: 'Purchaseorderstocks',
+export const TodogroupdefinesSlice = createSlice({
+    name: 'Todogroupdefines',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const PurchaseorderstocksSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedPurchaseorderstock: (state) => {
+        RemoveSelectedTodogroupdefine: (state) => {
             state.selected_record = {};
         },
-        fillPurchaseorderstocknotification: (state, action) => {
+        fillTodogroupdefinenotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removePurchaseorderstocknotification: (state) => {
+        removeTodogroupdefinenotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetPurchaseorderstocks.pending, (state) => {
+            .addCase(GetTodogroupdefines.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetPurchaseorderstocks.fulfilled, (state, action) => {
+            .addCase(GetTodogroupdefines.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetPurchaseorderstocks.rejected, (state, action) => {
+            .addCase(GetTodogroupdefines.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetPurchaseorderstock.pending, (state) => {
+            .addCase(GetTodogroupdefine.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetPurchaseorderstock.fulfilled, (state, action) => {
+            .addCase(GetTodogroupdefine.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetPurchaseorderstock.rejected, (state, action) => {
+            .addCase(GetTodogroupdefine.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddPurchaseorderstocks.pending, (state) => {
+            .addCase(AddTodogroupdefines.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddPurchaseorderstocks.fulfilled, (state, action) => {
+            .addCase(AddTodogroupdefines.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddPurchaseorderstocks.rejected, (state, action) => {
+            .addCase(AddTodogroupdefines.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditPurchaseorderstocks.pending, (state) => {
+            .addCase(EditTodogroupdefines.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditPurchaseorderstocks.fulfilled, (state, action) => {
+            .addCase(EditTodogroupdefines.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditPurchaseorderstocks.rejected, (state, action) => {
+            .addCase(EditTodogroupdefines.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeletePurchaseorderstocks.pending, (state) => {
+            .addCase(DeleteTodogroupdefines.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeletePurchaseorderstocks.fulfilled, (state, action) => {
+            .addCase(DeleteTodogroupdefines.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeletePurchaseorderstocks.rejected, (state, action) => {
+            .addCase(DeleteTodogroupdefines.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const PurchaseorderstocksSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPurchaseorderstock,
-    fillPurchaseorderstocknotification,
-    removePurchaseorderstocknotification,
-} = PurchaseorderstocksSlice.actions;
+    RemoveSelectedTodogroupdefine,
+    fillTodogroupdefinenotification,
+    removeTodogroupdefinenotification,
+} = TodogroupdefinesSlice.actions;
 
-export default PurchaseorderstocksSlice.reducer;
+export default TodogroupdefinesSlice.reducer;

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import StockmovementsCreate from '../../Pages/Stockmovements/StockmovementsCreate'
-import { GetStocks, removeStocknotification } from '../../Redux/Reducers/StockReducer'
-import { AddStockmovements, removeStockmovementnotification, fillStockmovementnotification } from '../../Redux/Reducers/StockmovementReducer'
+import { GetStocks, removeStocknotification } from '../../Redux/StockSlice'
+import { AddStockmovements, removeStockmovementnotification, fillStockmovementnotification } from '../../Redux/StockmovementSlice'
 
 
 const mapStateToProps = (state) => ({

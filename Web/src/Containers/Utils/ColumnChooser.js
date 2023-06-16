@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import ColumnChooser from '../../Pages/Utils/ColumnChooser'
-import { SaveTableMeta } from "../../Redux/Actions/ProfileAction"
+import { SaveTableMeta } from "../../Redux/ProfileSlice"
 
 const mapStateToProps = (state) => ({
   Profile: state.Profile

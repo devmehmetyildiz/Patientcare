@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Stations from '../../Pages/Stations/Stations'
-import { GetStations,removeStationnotification ,fillStationnotification,DeleteStations } from '../../Redux/Reducers/StationReducer'
+import { GetStations,removeStationnotification ,fillStationnotification,DeleteStations } from '../../Redux/StationSlice'
 
 const mapStateToProps = (state) => ({
     Stations:state.Stations,

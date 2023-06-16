@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import PatientdefinesCreate from '../../Pages/Patientdefines/PatientdefinesCreate'
-import { AddPatientdefines, removePatientdefinenotification, fillPatientdefinenotification } from '../../Redux/Reducers/PatientdefineReducer'
-import { GetCostumertypes, removeCostumertypenotification } from "../../Redux/Reducers/CostumertypeReducer"
-import { GetPatienttypes, removePatienttypenotification } from "../../Redux/Reducers/PatienttypeReducer"
+import { AddPatientdefines, removePatientdefinenotification, fillPatientdefinenotification } from '../../Redux/PatientdefineSlice'
+import { GetCostumertypes, removeCostumertypenotification } from "../../Redux/CostumertypeSlice"
+import { GetPatienttypes, removePatienttypenotification } from "../../Redux/PatienttypeSlice"
 
 const mapStateToProps = (state) => ({
   Patientdefines: state.Patientdefines,

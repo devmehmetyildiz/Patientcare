@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import PurchaseordersEdit from '../../Pages/Purchaseorders/PurchaseordersEdit'
-import { EditPurchaseorders, GetPurchaseorder, fillPurchaseordernotification, removePurchaseordernotification } from "../../Redux/Reducers/PurchaseorderReducer"
-import { GetStockdefines, removeStockdefinenotification, AddStockdefines, fillStockdefinenotification } from "../../Redux/Reducers/StockdefineReducer"
-import { GetCases, removeCasenotification } from "../../Redux/Reducers/CaseReducer"
-import { GetWarehouses, removeWarehousenotification } from "../../Redux/Reducers/WarehouseReducer"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/Reducers/DepartmentReducer"
+import { EditPurchaseorders, GetPurchaseorder, fillPurchaseordernotification, removePurchaseordernotification } from "../../Redux/PurchaseorderSlice"
+import { GetStockdefines, removeStockdefinenotification, AddStockdefines, fillStockdefinenotification } from "../../Redux/StockdefineSlice"
+import { GetCases, removeCasenotification } from "../../Redux/CaseSlice"
+import { GetWarehouses, removeWarehousenotification } from "../../Redux/WarehouseSlice"
+import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
 
 const mapStateToProps = (state) => ({
     Purchaseorders: state.Purchaseorders,

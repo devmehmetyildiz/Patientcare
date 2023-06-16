@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import RolesEdit from '../../Pages/Roles/RolesEdit'
-import { GetPrivileges, GetPrivilegegroups, GetRole, EditRoles, removeRolenotification, fillRolenotification } from "../../Redux/Reducers/RoleReducer"
+import { GetPrivileges, GetPrivilegegroups, GetRole, EditRoles, removeRolenotification, fillRolenotification } from "../../Redux/RoleSlice"
 
 const mapStateToProps = (state) => ({
     Roles: state.Roles,

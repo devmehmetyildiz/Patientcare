@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Units from "../../Pages/Units/Units"
-import { GetUnits, DeleteUnits, removeUnitnotification, fillUnitnotification } from "../../Redux/Reducers/UnitReducer"
+import { GetUnits, DeleteUnits, removeUnitnotification, fillUnitnotification } from "../../Redux/UnitSlice"
 
 const mapStateToProps = (state) => ({
   Units: state.Units,

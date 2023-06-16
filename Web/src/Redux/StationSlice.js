@@ -1,85 +1,85 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetUsers = createAsyncThunk(
-    'Users/GetUsers',
+export const GetStations = createAsyncThunk(
+    'Stations/GetStations',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Userrole, ROUTES.USER);
+            const response = await instanse.get(config.services.Setting, ROUTES.STATION);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillUsernotification(errorPayload));
+            dispatch(fillStationnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetUser = createAsyncThunk(
-    'Users/GetUser',
+export const GetStation = createAsyncThunk(
+    'Stations/GetStation',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Userrole, `${ROUTES.USER}/${guid}`);
+            const response = await instanse.get(config.services.Setting, `${ROUTES.STATION}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillUsernotification(errorPayload));
+            dispatch(fillStationnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddUsers = createAsyncThunk(
-    'Users/AddUsers',
+export const AddStations = createAsyncThunk(
+    'Stations/AddStations',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Userrole, ROUTES.USER, data);
-            dispatch(fillUsernotification({
+            const response = await instanse.post(config.services.Setting, ROUTES.STATION, data);
+            dispatch(fillStationnotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Eklendi',
             }));
-            history.push('/Users');
+            history.push('/Stations');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillUsernotification(errorPayload));
+            dispatch(fillStationnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditUsers = createAsyncThunk(
-    'Users/EditUsers',
+export const EditStations = createAsyncThunk(
+    'Stations/EditStations',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.Userrole, ROUTES.USER, data);
-            dispatch(fillUsernotification({
+            const response = await instanse.put(config.services.Setting, ROUTES.STATION, data);
+            dispatch(fillStationnotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Güncellendi',
             }));
-            history.push('/Users');
+            history.push('/Stations');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillUsernotification(errorPayload));
+            dispatch(fillStationnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeleteUsers = createAsyncThunk(
-    'Users/DeleteUsers',
+export const DeleteStations = createAsyncThunk(
+    'Stations/DeleteStations',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Userrole, `${ROUTES.USER}/${data.Uuid}`);
-            dispatch(fillUsernotification({
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.STATION}/${data.Uuid}`);
+            dispatch(fillStationnotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Silindi',
@@ -87,14 +87,14 @@ export const DeleteUsers = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillUsernotification(errorPayload));
+            dispatch(fillStationnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const UsersSlice = createSlice({
-    name: 'Users',
+export const StationsSlice = createSlice({
+    name: 'Stations',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const UsersSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedUser: (state) => {
+        RemoveSelectedStation: (state) => {
             state.selected_record = {};
         },
-        fillUsernotification: (state, action) => {
+        fillStationnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removeUsernotification: (state) => {
+        removeStationnotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetUsers.pending, (state) => {
+            .addCase(GetStations.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetUsers.fulfilled, (state, action) => {
+            .addCase(GetStations.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetUsers.rejected, (state, action) => {
+            .addCase(GetStations.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetUser.pending, (state) => {
+            .addCase(GetStation.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetUser.fulfilled, (state, action) => {
+            .addCase(GetStation.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetUser.rejected, (state, action) => {
+            .addCase(GetStation.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddUsers.pending, (state) => {
+            .addCase(AddStations.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddUsers.fulfilled, (state, action) => {
+            .addCase(AddStations.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddUsers.rejected, (state, action) => {
+            .addCase(AddStations.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditUsers.pending, (state) => {
+            .addCase(EditStations.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditUsers.fulfilled, (state, action) => {
+            .addCase(EditStations.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditUsers.rejected, (state, action) => {
+            .addCase(EditStations.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteUsers.pending, (state) => {
+            .addCase(DeleteStations.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeleteUsers.fulfilled, (state, action) => {
+            .addCase(DeleteStations.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeleteUsers.rejected, (state, action) => {
+            .addCase(DeleteStations.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const UsersSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedUser,
-    fillUsernotification,
-    removeUsernotification,
-} = UsersSlice.actions;
+    RemoveSelectedStation,
+    fillStationnotification,
+    removeStationnotification,
+} = StationsSlice.actions;
 
-export default UsersSlice.reducer;
+export default StationsSlice.reducer;

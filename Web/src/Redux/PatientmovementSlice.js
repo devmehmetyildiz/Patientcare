@@ -1,85 +1,85 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetPatientdefines = createAsyncThunk(
-    'Patientdefines/GetPatientdefines',
+export const GetPatientmovements = createAsyncThunk(
+    'Patientmovements/GetPatientmovements',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Business, ROUTES.PATIENTDEFINE);
+            const response = await instanse.get(config.services.Business, ROUTES.PATIENTMOVEMENT);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientdefinenotification(errorPayload));
+            dispatch(fillPatientmovementnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetPatientdefine = createAsyncThunk(
-    'Patientdefines/GetPatientdefine',
+export const GetPatientmovement = createAsyncThunk(
+    'Patientmovements/GetPatientmovement',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Business, `${ROUTES.PATIENTDEFINE}/${guid}`);
+            const response = await instanse.get(config.services.Business, `${ROUTES.PATIENTMOVEMENT}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientdefinenotification(errorPayload));
+            dispatch(fillPatientmovementnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddPatientdefines = createAsyncThunk(
-    'Patientdefines/AddPatientdefines',
+export const AddPatientmovements = createAsyncThunk(
+    'Patientmovements/AddPatientmovements',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Business, ROUTES.PATIENTDEFINE, data);
-            dispatch(fillPatientdefinenotification({
+            const response = await instanse.post(config.services.Business, ROUTES.PATIENTMOVEMENT, data);
+            dispatch(fillPatientmovementnotification({
                 type: 'Success',
                 code: 'Müşteri Türleri',
                 description: 'Müşteri türü başarı ile Eklendi',
             }));
-            history.push('/Patientdefines');
+            history.push('/Patientmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientdefinenotification(errorPayload));
+            dispatch(fillPatientmovementnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditPatientdefines = createAsyncThunk(
-    'Patientdefines/EditPatientdefines',
+export const EditPatientmovements = createAsyncThunk(
+    'Patientmovements/EditPatientmovements',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.Business, ROUTES.PATIENTDEFINE, data);
-            dispatch(fillPatientdefinenotification({
+            const response = await instanse.put(config.services.Business, ROUTES.PATIENTMOVEMENT, data);
+            dispatch(fillPatientmovementnotification({
                 type: 'Success',
                 code: 'Müşteri Türleri',
                 description: 'Müşteri türü başarı ile Güncellendi',
             }));
-            history.push('/Patientdefines');
+            history.push('/Patientmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientdefinenotification(errorPayload));
+            dispatch(fillPatientmovementnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeletePatientdefines = createAsyncThunk(
-    'Patientdefines/DeletePatientdefines',
+export const DeletePatientmovements = createAsyncThunk(
+    'Patientmovements/DeletePatientmovements',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENTDEFINE}/${data.Uuid}`);
-            dispatch(fillPatientdefinenotification({
+            const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENTMOVEMENT}/${data.Uuid}`);
+            dispatch(fillPatientmovementnotification({
                 type: 'Success',
                 code: 'Müşteri Türleri',
                 description: 'Müşteri türü başarı ile Silindi',
@@ -87,14 +87,14 @@ export const DeletePatientdefines = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientdefinenotification(errorPayload));
+            dispatch(fillPatientmovementnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const PatientdefinesSlice = createSlice({
-    name: 'Patientdefines',
+export const PatientmovementsSlice = createSlice({
+    name: 'Patientmovements',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const PatientdefinesSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedPatientdefine: (state) => {
+        RemoveSelectedPatientmovement: (state) => {
             state.selected_record = {};
         },
-        fillPatientdefinenotification: (state, action) => {
+        fillPatientmovementnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removePatientdefinenotification: (state) => {
+        removePatientmovementnotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetPatientdefines.pending, (state) => {
+            .addCase(GetPatientmovements.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetPatientdefines.fulfilled, (state, action) => {
+            .addCase(GetPatientmovements.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetPatientdefines.rejected, (state, action) => {
+            .addCase(GetPatientmovements.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetPatientdefine.pending, (state) => {
+            .addCase(GetPatientmovement.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetPatientdefine.fulfilled, (state, action) => {
+            .addCase(GetPatientmovement.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetPatientdefine.rejected, (state, action) => {
+            .addCase(GetPatientmovement.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddPatientdefines.pending, (state) => {
+            .addCase(AddPatientmovements.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddPatientdefines.fulfilled, (state, action) => {
+            .addCase(AddPatientmovements.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddPatientdefines.rejected, (state, action) => {
+            .addCase(AddPatientmovements.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditPatientdefines.pending, (state) => {
+            .addCase(EditPatientmovements.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditPatientdefines.fulfilled, (state, action) => {
+            .addCase(EditPatientmovements.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditPatientdefines.rejected, (state, action) => {
+            .addCase(EditPatientmovements.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeletePatientdefines.pending, (state) => {
+            .addCase(DeletePatientmovements.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeletePatientdefines.fulfilled, (state, action) => {
+            .addCase(DeletePatientmovements.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeletePatientdefines.rejected, (state, action) => {
+            .addCase(DeletePatientmovements.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const PatientdefinesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPatientdefine,
-    fillPatientdefinenotification,
-    removePatientdefinenotification,
-} = PatientdefinesSlice.actions;
+    RemoveSelectedPatientmovement,
+    fillPatientmovementnotification,
+    removePatientmovementnotification,
+} = PatientmovementsSlice.actions;
 
-export default PatientdefinesSlice.reducer;
+export default PatientmovementsSlice.reducer;

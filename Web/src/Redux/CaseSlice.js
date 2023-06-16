@@ -1,100 +1,100 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetWarehouses = createAsyncThunk(
-    'Warehouses/GetWarehouses',
+export const GetCases = createAsyncThunk(
+    'Cases/GetCases',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Warehouse, ROUTES.WAREHOUSE);
+            const response = await instanse.get(config.services.Setting, ROUTES.CASE);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillWarehousenotification(errorPayload));
+            dispatch(fillCasenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetWarehouse = createAsyncThunk(
-    'Warehouses/GetWarehouse',
+export const GetCase = createAsyncThunk(
+    'Cases/GetCase',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Warehouse, `${ROUTES.WAREHOUSE}/${guid}`);
+            const response = await instanse.get(config.services.Setting, `${ROUTES.CASE}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillWarehousenotification(errorPayload));
+            dispatch(fillCasenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddWarehouses = createAsyncThunk(
-    'Warehouses/AddWarehouses',
-    async ({ data, history }, { dispatch }) => {
+export const AddCases = createAsyncThunk(
+    'Cases/AddCases',
+    async ({data, history}, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Warehouse, ROUTES.WAREHOUSE, data);
-            dispatch(fillWarehousenotification({
+            const response = await instanse.post(config.services.Setting, ROUTES.CASE, data);
+            dispatch(fillCasenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Durumlar',
+                description: 'Kontrol grubu başarı ile Eklendi',
             }));
-            history.push('/Warehouses');
+            history.push('/Cases');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillWarehousenotification(errorPayload));
+            dispatch(fillCasenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditWarehouses = createAsyncThunk(
-    'Warehouses/EditWarehouses',
-    async ({ data, history }, { dispatch }) => {
+export const EditCases = createAsyncThunk(
+    'Cases/EditCases',
+    async ({data, history}, {dispatch} ) => {
         try {
-            const response = await instanse.put(config.services.Warehouse, ROUTES.WAREHOUSE, data);
-            dispatch(fillWarehousenotification({
+            const response = await instanse.put(config.services.Setting, ROUTES.CASE, data);
+            dispatch(fillCasenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Durumlar',
+                description: 'Kontrol grubu başarı ile Güncellendi',
             }));
-            history.push('/Warehouses');
+              history.push('/Cases');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillWarehousenotification(errorPayload));
+            dispatch(fillCasenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeleteWarehouses = createAsyncThunk(
-    'Warehouses/DeleteWarehouses',
+export const DeleteCases = createAsyncThunk(
+    'Cases/DeleteCases',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Warehouse, `${ROUTES.WAREHOUSE}/${data.Uuid}`);
-            dispatch(fillWarehousenotification({
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.CASE}/${data.Uuid}`);
+            dispatch(fillCasenotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Durumlar',
+                description: 'Kontrol grubu başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillWarehousenotification(errorPayload));
+            dispatch(fillCasenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const WarehousesSlice = createSlice({
-    name: 'Warehouses',
+export const CasesSlice = createSlice({
+    name: 'Cases',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,78 @@ export const WarehousesSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedWarehouse: (state) => {
+        RemoveSelectedCase: (state) => {
             state.selected_record = {};
         },
-        fillWarehousenotification: (state, action) => {
+        fillCasenotification: (state, action) => {
+            console.log('state: ', state);
+            console.log('action.payload: ', action.payload);
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removeWarehousenotification: (state) => {
+        removeCasenotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetWarehouses.pending, (state) => {
+            .addCase(GetCases.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetWarehouses.fulfilled, (state, action) => {
+            .addCase(GetCases.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetWarehouses.rejected, (state, action) => {
+            .addCase(GetCases.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetWarehouse.pending, (state) => {
+            .addCase(GetCase.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetWarehouse.fulfilled, (state, action) => {
+            .addCase(GetCase.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetWarehouse.rejected, (state, action) => {
+            .addCase(GetCase.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddWarehouses.pending, (state) => {
+            .addCase(AddCases.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddWarehouses.fulfilled, (state, action) => {
+            .addCase(AddCases.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddWarehouses.rejected, (state, action) => {
+            .addCase(AddCases.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditWarehouses.pending, (state) => {
+            .addCase(EditCases.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditWarehouses.fulfilled, (state, action) => {
+            .addCase(EditCases.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditWarehouses.rejected, (state, action) => {
+            .addCase(EditCases.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteWarehouses.pending, (state) => {
+            .addCase(DeleteCases.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeleteWarehouses.fulfilled, (state, action) => {
+            .addCase(DeleteCases.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeleteWarehouses.rejected, (state, action) => {
+            .addCase(DeleteCases.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +183,9 @@ export const WarehousesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedWarehouse,
-    fillWarehousenotification,
-    removeWarehousenotification,
-} = WarehousesSlice.actions;
+    RemoveSelectedCase,
+    fillCasenotification,
+    removeCasenotification,
+} = CasesSlice.actions;
 
-export default WarehousesSlice.reducer;
+export default CasesSlice.reducer;

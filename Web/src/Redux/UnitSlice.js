@@ -1,100 +1,100 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetCostumertypes = createAsyncThunk(
-    'Costumertypes/GetCostumertypes',
+export const GetUnits = createAsyncThunk(
+    'Units/GetUnits',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.COSTUMERTYPE);
+            const response = await instanse.get(config.services.Setting, ROUTES.UNIT);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillCostumertypenotification(errorPayload));
+            dispatch(fillUnitnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetCostumertype = createAsyncThunk(
-    'Costumertypes/GetCostumertype',
+export const GetUnit = createAsyncThunk(
+    'Units/GetUnit',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.COSTUMERTYPE}/${guid}`);
+            const response = await instanse.get(config.services.Setting, `${ROUTES.UNIT}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillCostumertypenotification(errorPayload));
+            dispatch(fillUnitnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddCostumertypes = createAsyncThunk(
-    'Costumertypes/AddCostumertypes',
+export const AddUnits = createAsyncThunk(
+    'Units/AddUnits',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Setting, ROUTES.COSTUMERTYPE, data);
-            dispatch(fillCostumertypenotification({
+            const response = await instanse.post(config.services.Setting, ROUTES.UNIT, data);
+            dispatch(fillUnitnotification({
                 type: 'Success',
-                code: 'Müşteri Türleri',
-                description: 'Müşteri türü başarı ile Eklendi',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
             }));
-            history.push('/Costumertypes');
+            history.push('/Units');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillCostumertypenotification(errorPayload));
+            dispatch(fillUnitnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditCostumertypes = createAsyncThunk(
-    'Costumertypes/EditCostumertypes',
+export const EditUnits = createAsyncThunk(
+    'Units/EditUnits',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.Setting, ROUTES.COSTUMERTYPE, data);
-            dispatch(fillCostumertypenotification({
+            const response = await instanse.put(config.services.Setting, ROUTES.UNIT, data);
+            dispatch(fillUnitnotification({
                 type: 'Success',
-                code: 'Müşteri Türleri',
-                description: 'Müşteri türü başarı ile Güncellendi',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
             }));
-            history.push('/Costumertypes');
+            history.push('/Units');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillCostumertypenotification(errorPayload));
+            dispatch(fillUnitnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeleteCostumertypes = createAsyncThunk(
-    'Costumertypes/DeleteCostumertypes',
+export const DeleteUnits = createAsyncThunk(
+    'Units/DeleteUnits',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.COSTUMERTYPE}/${data.Uuid}`);
-            dispatch(fillCostumertypenotification({
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.UNIT}/${data.Uuid}`);
+            dispatch(fillUnitnotification({
                 type: 'Success',
-                code: 'Müşteri Türleri',
-                description: 'Müşteri türü başarı ile Silindi',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillCostumertypenotification(errorPayload));
+            dispatch(fillUnitnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const CostumertypesSlice = createSlice({
-    name: 'Costumertypes',
+export const UnitsSlice = createSlice({
+    name: 'Units',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const CostumertypesSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedCostumertype: (state) => {
+        RemoveSelectedUnit: (state) => {
             state.selected_record = {};
         },
-        fillCostumertypenotification: (state, action) => {
+        fillUnitnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removeCostumertypenotification: (state) => {
+        removeUnitnotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetCostumertypes.pending, (state) => {
+            .addCase(GetUnits.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetCostumertypes.fulfilled, (state, action) => {
+            .addCase(GetUnits.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetCostumertypes.rejected, (state, action) => {
+            .addCase(GetUnits.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetCostumertype.pending, (state) => {
+            .addCase(GetUnit.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetCostumertype.fulfilled, (state, action) => {
+            .addCase(GetUnit.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetCostumertype.rejected, (state, action) => {
+            .addCase(GetUnit.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddCostumertypes.pending, (state) => {
+            .addCase(AddUnits.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddCostumertypes.fulfilled, (state, action) => {
+            .addCase(AddUnits.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddCostumertypes.rejected, (state, action) => {
+            .addCase(AddUnits.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditCostumertypes.pending, (state) => {
+            .addCase(EditUnits.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditCostumertypes.fulfilled, (state, action) => {
+            .addCase(EditUnits.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditCostumertypes.rejected, (state, action) => {
+            .addCase(EditUnits.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteCostumertypes.pending, (state) => {
+            .addCase(DeleteUnits.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeleteCostumertypes.fulfilled, (state, action) => {
+            .addCase(DeleteUnits.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeleteCostumertypes.rejected, (state, action) => {
+            .addCase(DeleteUnits.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const CostumertypesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedCostumertype,
-    fillCostumertypenotification,
-    removeCostumertypenotification,
-} = CostumertypesSlice.actions;
+    RemoveSelectedUnit,
+    fillUnitnotification,
+    removeUnitnotification,
+} = UnitsSlice.actions;
 
-export default CostumertypesSlice.reducer;
+export default UnitsSlice.reducer;

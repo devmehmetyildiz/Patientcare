@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Cases from "../../Pages/Cases/Cases"
-import { GetCases, DeleteCases, removeCasenotification, fillCasenotification } from "../../Redux/Reducers/CaseReducer"
+import { GetCases, DeleteCases, removeCasenotification, fillCasenotification } from "../../Redux/CaseSlice"
 
 const mapStateToProps = (state) => ({
   Cases: state.Cases,

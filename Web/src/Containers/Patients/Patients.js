@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import Patients from '../../Pages/Patients/Patients'
-import { GetPatients, removePatientnotification, setPatient, RemoveSelectedPatient } from "../../Redux/Reducers/PatientReducer"
-import { GetCheckperiods, removeCheckperiodnotification } from "../../Redux/Reducers/CheckperiodReducer"
-import { GetTodogroupdefines, removeTodogroupdefinenotification } from "../../Redux/Reducers/TodogroupdefineReducer"
-import { GetPrinttemplates, removePrinttemplatenotification } from "../../Redux/Reducers/PrinttemplateReducer"
+import { GetPatients, removePatientnotification, setPatient, RemoveSelectedPatient } from "../../Redux/PatientSlice"
+import { GetCheckperiods, removeCheckperiodnotification } from "../../Redux/CheckperiodSlice"
+import { GetTodogroupdefines, removeTodogroupdefinenotification } from "../../Redux/TodogroupdefineSlice"
+import { GetPrinttemplates, removePrinttemplatenotification } from "../../Redux/PrinttemplateSlice"
 
 const mapStateToProps = (state) => ({
   Patients: state.Patients,

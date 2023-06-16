@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Register from '../../Pages/Auth/Register'
-import { register, removenotification, fillnotification } from "../../Redux/Actions/ProfileAction"
+import { register, removenotification, fillnotification } from "../../Redux/ProfileSlice"
 
 const mapStateToProps = (state) => ({
     Profile: state.Profile

@@ -78,7 +78,7 @@ export class Register extends Component {
                 fillnotification(error)
             })
         } else {
-              register(data, history)
+              register({data, history})
         }
     }
 }

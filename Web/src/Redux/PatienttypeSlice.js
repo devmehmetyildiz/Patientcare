@@ -1,85 +1,85 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetTododefines = createAsyncThunk(
-    'Tododefines/GetTododefines',
+export const GetPatienttypes = createAsyncThunk(
+    'Patienttypes/GetPatienttypes',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.TODODEFINE);
+            const response = await instanse.get(config.services.Setting, ROUTES.PATIENTTYPE);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillTododefinenotification(errorPayload));
+            dispatch(fillPatienttypenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetTododefine = createAsyncThunk(
-    'Tododefines/GetTododefine',
+export const GetPatienttype = createAsyncThunk(
+    'Patienttypes/GetPatienttype',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.TODODEFINE}/${guid}`);
+            const response = await instanse.get(config.services.Setting, `${ROUTES.PATIENTTYPE}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillTododefinenotification(errorPayload));
+            dispatch(fillPatienttypenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddTododefines = createAsyncThunk(
-    'Tododefines/AddTododefines',
+export const AddPatienttypes = createAsyncThunk(
+    'Patienttypes/AddPatienttypes',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Setting, ROUTES.TODODEFINE, data);
-            dispatch(fillTododefinenotification({
+            const response = await instanse.post(config.services.Setting, ROUTES.PATIENTTYPE, data);
+            dispatch(fillPatienttypenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Eklendi',
             }));
-            history.push('/Tododefines');
+            history.push('/Patienttypes');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillTododefinenotification(errorPayload));
+            dispatch(fillPatienttypenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditTododefines = createAsyncThunk(
-    'Tododefines/EditTododefines',
+export const EditPatienttypes = createAsyncThunk(
+    'Patienttypes/EditPatienttypes',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.Setting, ROUTES.TODODEFINE, data);
-            dispatch(fillTododefinenotification({
+            const response = await instanse.put(config.services.Setting, ROUTES.PATIENTTYPE, data);
+            dispatch(fillPatienttypenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Güncellendi',
             }));
-            history.push('/Tododefines');
+            history.push('/Patienttypes');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillTododefinenotification(errorPayload));
+            dispatch(fillPatienttypenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeleteTododefines = createAsyncThunk(
-    'Tododefines/DeleteTododefines',
+export const DeletePatienttypes = createAsyncThunk(
+    'Patienttypes/DeletePatienttypes',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.TODODEFINE}/${data.Uuid}`);
-            dispatch(fillTododefinenotification({
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.PATIENTTYPE}/${data.Uuid}`);
+            dispatch(fillPatienttypenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Silindi',
@@ -87,14 +87,14 @@ export const DeleteTododefines = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillTododefinenotification(errorPayload));
+            dispatch(fillPatienttypenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const TododefinesSlice = createSlice({
-    name: 'Tododefines',
+export const PatienttypesSlice = createSlice({
+    name: 'Patienttypes',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const TododefinesSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedTododefine: (state) => {
+        RemoveSelectedPatienttype: (state) => {
             state.selected_record = {};
         },
-        fillTododefinenotification: (state, action) => {
+        fillPatienttypenotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removeTododefinenotification: (state) => {
+        removePatienttypenotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetTododefines.pending, (state) => {
+            .addCase(GetPatienttypes.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetTododefines.fulfilled, (state, action) => {
+            .addCase(GetPatienttypes.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetTododefines.rejected, (state, action) => {
+            .addCase(GetPatienttypes.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetTododefine.pending, (state) => {
+            .addCase(GetPatienttype.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetTododefine.fulfilled, (state, action) => {
+            .addCase(GetPatienttype.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetTododefine.rejected, (state, action) => {
+            .addCase(GetPatienttype.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddTododefines.pending, (state) => {
+            .addCase(AddPatienttypes.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddTododefines.fulfilled, (state, action) => {
+            .addCase(AddPatienttypes.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddTododefines.rejected, (state, action) => {
+            .addCase(AddPatienttypes.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditTododefines.pending, (state) => {
+            .addCase(EditPatienttypes.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditTododefines.fulfilled, (state, action) => {
+            .addCase(EditPatienttypes.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditTododefines.rejected, (state, action) => {
+            .addCase(EditPatienttypes.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteTododefines.pending, (state) => {
+            .addCase(DeletePatienttypes.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeleteTododefines.fulfilled, (state, action) => {
+            .addCase(DeletePatienttypes.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeleteTododefines.rejected, (state, action) => {
+            .addCase(DeletePatienttypes.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const TododefinesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedTododefine,
-    fillTododefinenotification,
-    removeTododefinenotification,
-} = TododefinesSlice.actions;
+    RemoveSelectedPatienttype,
+    fillPatienttypenotification,
+    removePatienttypenotification,
+} = PatienttypesSlice.actions;
 
-export default TododefinesSlice.reducer;
+export default PatienttypesSlice.reducer;

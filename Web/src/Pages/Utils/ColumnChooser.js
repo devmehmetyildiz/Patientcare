@@ -99,7 +99,7 @@ class ColumnChooser extends Component {
         Config: JSON.stringify(decoratedColumns)
       }
     this.setState({ opened: false })
-    SaveTableMeta(data)
+    SaveTableMeta({data})
   }
 
   orderChanged = (property, value) => {

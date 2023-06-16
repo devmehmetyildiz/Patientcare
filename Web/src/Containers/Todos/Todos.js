@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Todos from '../../Pages/Todos/Todos'
-import { GetTodos, removeTodonotification, EditTodos, fillTodonotification } from "../../Redux/Reducers/TodoReducer"
+import { GetTodos, removeTodonotification, EditTodos, fillTodonotification } from "../../Redux/TodoSlice"
 
 const mapStateToProps = (state) => ({
     Todos: state.Todos,

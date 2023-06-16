@@ -1,85 +1,85 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetPeriods = createAsyncThunk(
-    'Periods/GetPeriods',
+export const GetWarehouses = createAsyncThunk(
+    'Warehouses/GetWarehouses',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.PERIOD);
+            const response = await instanse.get(config.services.Warehouse, ROUTES.WAREHOUSE);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPeriodnotification(errorPayload));
+            dispatch(fillWarehousenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetPeriod = createAsyncThunk(
-    'Periods/GetPeriod',
+export const GetWarehouse = createAsyncThunk(
+    'Warehouses/GetWarehouse',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.PERIOD}/${guid}`);
+            const response = await instanse.get(config.services.Warehouse, `${ROUTES.WAREHOUSE}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPeriodnotification(errorPayload));
+            dispatch(fillWarehousenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddPeriods = createAsyncThunk(
-    'Periods/AddPeriods',
+export const AddWarehouses = createAsyncThunk(
+    'Warehouses/AddWarehouses',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Setting, ROUTES.PERIOD, data);
-            dispatch(fillPeriodnotification({
+            const response = await instanse.post(config.services.Warehouse, ROUTES.WAREHOUSE, data);
+            dispatch(fillWarehousenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Eklendi',
             }));
-            history.push('/Periods');
+            history.push('/Warehouses');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPeriodnotification(errorPayload));
+            dispatch(fillWarehousenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditPeriods = createAsyncThunk(
-    'Periods/EditPeriods',
+export const EditWarehouses = createAsyncThunk(
+    'Warehouses/EditWarehouses',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.Setting, ROUTES.PERIOD, data);
-            dispatch(fillPeriodnotification({
+            const response = await instanse.put(config.services.Warehouse, ROUTES.WAREHOUSE, data);
+            dispatch(fillWarehousenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Güncellendi',
             }));
-            history.push('/Periods');
+            history.push('/Warehouses');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPeriodnotification(errorPayload));
+            dispatch(fillWarehousenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeletePeriods = createAsyncThunk(
-    'Periods/DeletePeriods',
+export const DeleteWarehouses = createAsyncThunk(
+    'Warehouses/DeleteWarehouses',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.PERIOD}/${data.Uuid}`);
-            dispatch(fillPeriodnotification({
+            const response = await instanse.delete(config.services.Warehouse, `${ROUTES.WAREHOUSE}/${data.Uuid}`);
+            dispatch(fillWarehousenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Silindi',
@@ -87,14 +87,14 @@ export const DeletePeriods = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPeriodnotification(errorPayload));
+            dispatch(fillWarehousenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const PeriodsSlice = createSlice({
-    name: 'Periods',
+export const WarehousesSlice = createSlice({
+    name: 'Warehouses',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const PeriodsSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedPeriod: (state) => {
+        RemoveSelectedWarehouse: (state) => {
             state.selected_record = {};
         },
-        fillPeriodnotification: (state, action) => {
+        fillWarehousenotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removePeriodnotification: (state) => {
+        removeWarehousenotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetPeriods.pending, (state) => {
+            .addCase(GetWarehouses.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetPeriods.fulfilled, (state, action) => {
+            .addCase(GetWarehouses.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetPeriods.rejected, (state, action) => {
+            .addCase(GetWarehouses.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetPeriod.pending, (state) => {
+            .addCase(GetWarehouse.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetPeriod.fulfilled, (state, action) => {
+            .addCase(GetWarehouse.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetPeriod.rejected, (state, action) => {
+            .addCase(GetWarehouse.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddPeriods.pending, (state) => {
+            .addCase(AddWarehouses.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddPeriods.fulfilled, (state, action) => {
+            .addCase(AddWarehouses.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddPeriods.rejected, (state, action) => {
+            .addCase(AddWarehouses.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditPeriods.pending, (state) => {
+            .addCase(EditWarehouses.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditPeriods.fulfilled, (state, action) => {
+            .addCase(EditWarehouses.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditPeriods.rejected, (state, action) => {
+            .addCase(EditWarehouses.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeletePeriods.pending, (state) => {
+            .addCase(DeleteWarehouses.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeletePeriods.fulfilled, (state, action) => {
+            .addCase(DeleteWarehouses.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeletePeriods.rejected, (state, action) => {
+            .addCase(DeleteWarehouses.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const PeriodsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPeriod,
-    fillPeriodnotification,
-    removePeriodnotification,
-} = PeriodsSlice.actions;
+    RemoveSelectedWarehouse,
+    fillWarehousenotification,
+    removeWarehousenotification,
+} = WarehousesSlice.actions;
 
-export default PeriodsSlice.reducer;
+export default WarehousesSlice.reducer;

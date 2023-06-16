@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import WarehousesCreate from '../../Pages/Warehouses/WarehousesCreate'
-import { AddWarehouses, removeWarehousenotification, fillWarehousenotification } from '../../Redux/Reducers/WarehouseReducer'
+import { AddWarehouses, removeWarehousenotification, fillWarehousenotification } from '../../Redux/WarehouseSlice'
 
 
 const mapStateToProps = (state) => ({

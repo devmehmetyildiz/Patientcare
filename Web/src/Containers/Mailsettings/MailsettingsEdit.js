@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import MailsettingsEdit from '../../Pages/Mailsettings/MailsettingsEdit'
-import { GetMailsetting, EditMailsettings, fillMailsettingnotification, removeMailsettingnotification } from "../../Redux/Reducers/MailsettingReducer"
+import { GetMailsetting, EditMailsettings, fillMailsettingnotification, removeMailsettingnotification } from "../../Redux/MailsettingSlice"
 
 
 const mapStateToProps = (state) => ({

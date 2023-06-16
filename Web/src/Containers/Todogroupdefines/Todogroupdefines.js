@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Todogroupdefines from '../../Pages/Todogroupdefines/Todogroupdefines'
-import { GetTodogroupdefines,removeTodogroupdefinenotification,DeleteTodogroupdefines } from '../../Redux/Reducers/TodogroupdefineReducer'
+import { GetTodogroupdefines,removeTodogroupdefinenotification,DeleteTodogroupdefines } from '../../Redux/TodogroupdefineSlice'
 
 const mapStateToProps = (state) => ({
     Todogroupdefines: state.Todogroupdefines,

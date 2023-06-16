@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import CasesEdit from '../../Pages/Cases/CasesEdit'
-import { EditCases, GetCase, RemoveSelectedCase, removeCasenotification, fillCasenotification } from "../../Redux/Reducers/CaseReducer"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/Reducers/DepartmentReducer"
+import { EditCases, GetCase, RemoveSelectedCase, removeCasenotification, fillCasenotification } from "../../Redux/CaseSlice"
+import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
 
 const mapStateToProps = (state) => ({
   Cases: state.Cases,

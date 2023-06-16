@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import FilesCreate from '../../Pages/Files/FilesCreate'
-import { AddFiles, removeFilenotification, fillFilenotification } from '../../Redux/Reducers/FileReducer'
+import { AddFiles, removeFilenotification, fillFilenotification } from '../../Redux/FileSlice'
 
 const mapStateToProps = (state) => ({
     Files: state.Files,

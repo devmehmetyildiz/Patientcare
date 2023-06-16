@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Printtemplates from '../../Pages/Printtemplates/Printtemplates'
-import { GetPrinttemplates, removePrinttemplatenotification, DeletePrinttemplates } from '../../Redux/Reducers/PrinttemplateReducer'
+import { GetPrinttemplates, removePrinttemplatenotification, DeletePrinttemplates } from '../../Redux/PrinttemplateSlice'
 
 
 const mapStateToProps = (state) => ({

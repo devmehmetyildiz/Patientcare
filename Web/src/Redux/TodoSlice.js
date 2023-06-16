@@ -1,100 +1,100 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetCases = createAsyncThunk(
-    'Cases/GetCases',
+export const GetTodos = createAsyncThunk(
+    'Todos/GetTodos',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.CASE);
+            const response = await instanse.get(config.services.Setting, ROUTES.TODO);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillCasenotification(errorPayload));
+            dispatch(fillTodonotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetCase = createAsyncThunk(
-    'Cases/GetCase',
+export const GetTodo = createAsyncThunk(
+    'Todos/GetTodo',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.CASE}/${guid}`);
+            const response = await instanse.get(config.services.Setting, `${ROUTES.TODO}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillCasenotification(errorPayload));
+            dispatch(fillTodonotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddCases = createAsyncThunk(
-    'Cases/AddCases',
-    async ({data, history}, { dispatch }) => {
+export const AddTodos = createAsyncThunk(
+    'Todos/AddTodos',
+    async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Setting, ROUTES.CASE, data);
-            dispatch(fillCasenotification({
+            const response = await instanse.post(config.services.Setting, ROUTES.TODO, data);
+            dispatch(fillTodonotification({
                 type: 'Success',
-                code: 'Durumlar',
-                description: 'Kontrol grubu başarı ile Eklendi',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
             }));
-            history.push('/Cases');
+            history.push('/Todos');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillCasenotification(errorPayload));
+            dispatch(fillTodonotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditCases = createAsyncThunk(
-    'Cases/EditCases',
-    async ({data, history}, {dispatch} ) => {
+export const EditTodos = createAsyncThunk(
+    'Todos/EditTodos',
+    async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.Setting, ROUTES.CASE, data);
-            dispatch(fillCasenotification({
+            const response = await instanse.put(config.services.Setting, ROUTES.TODO, data);
+            dispatch(fillTodonotification({
                 type: 'Success',
-                code: 'Durumlar',
-                description: 'Kontrol grubu başarı ile Güncellendi',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
             }));
-              history.push('/Cases');
+            history.push('/Todos');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillCasenotification(errorPayload));
+            dispatch(fillTodonotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeleteCases = createAsyncThunk(
-    'Cases/DeleteCases',
+export const DeleteTodos = createAsyncThunk(
+    'Todos/DeleteTodos',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.CASE}/${data.Uuid}`);
-            dispatch(fillCasenotification({
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.TODO}/${data.Uuid}`);
+            dispatch(fillTodonotification({
                 type: 'Success',
-                code: 'Durumlar',
-                description: 'Kontrol grubu başarı ile Silindi',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillCasenotification(errorPayload));
+            dispatch(fillTodonotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const CasesSlice = createSlice({
-    name: 'Cases',
+export const TodosSlice = createSlice({
+    name: 'Todos',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,78 +104,76 @@ export const CasesSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedCase: (state) => {
+        RemoveSelectedTodo: (state) => {
             state.selected_record = {};
         },
-        fillCasenotification: (state, action) => {
-            console.log('state: ', state);
-            console.log('action.payload: ', action.payload);
+        fillTodonotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removeCasenotification: (state) => {
+        removeTodonotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetCases.pending, (state) => {
+            .addCase(GetTodos.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetCases.fulfilled, (state, action) => {
+            .addCase(GetTodos.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetCases.rejected, (state, action) => {
+            .addCase(GetTodos.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetCase.pending, (state) => {
+            .addCase(GetTodo.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetCase.fulfilled, (state, action) => {
+            .addCase(GetTodo.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetCase.rejected, (state, action) => {
+            .addCase(GetTodo.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddCases.pending, (state) => {
+            .addCase(AddTodos.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddCases.fulfilled, (state, action) => {
+            .addCase(AddTodos.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddCases.rejected, (state, action) => {
+            .addCase(AddTodos.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditCases.pending, (state) => {
+            .addCase(EditTodos.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditCases.fulfilled, (state, action) => {
+            .addCase(EditTodos.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditCases.rejected, (state, action) => {
+            .addCase(EditTodos.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteCases.pending, (state) => {
+            .addCase(DeleteTodos.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeleteCases.fulfilled, (state, action) => {
+            .addCase(DeleteTodos.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeleteCases.rejected, (state, action) => {
+            .addCase(DeleteTodos.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -183,9 +181,9 @@ export const CasesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedCase,
-    fillCasenotification,
-    removeCasenotification,
-} = CasesSlice.actions;
+    RemoveSelectedTodo,
+    fillTodonotification,
+    removeTodonotification,
+} = TodosSlice.actions;
 
-export default CasesSlice.reducer;
+export default TodosSlice.reducer;

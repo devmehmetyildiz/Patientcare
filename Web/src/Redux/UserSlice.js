@@ -1,85 +1,85 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetStockdefines = createAsyncThunk(
-    'Stockdefines/GetStockdefines',
+export const GetUsers = createAsyncThunk(
+    'Users/GetUsers',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Warehouse, ROUTES.STOCKDEFINE);
+            const response = await instanse.get(config.services.Userrole, ROUTES.USER);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStockdefinenotification(errorPayload));
+            dispatch(fillUsernotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetStockdefine = createAsyncThunk(
-    'Stockdefines/GetStockdefine',
+export const GetUser = createAsyncThunk(
+    'Users/GetUser',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Warehouse, `${ROUTES.STOCKDEFINE}/${guid}`);
+            const response = await instanse.get(config.services.Userrole, `${ROUTES.USER}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStockdefinenotification(errorPayload));
+            dispatch(fillUsernotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddStockdefines = createAsyncThunk(
-    'Stockdefines/AddStockdefines',
+export const AddUsers = createAsyncThunk(
+    'Users/AddUsers',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Warehouse, ROUTES.STOCKDEFINE, data);
-            dispatch(fillStockdefinenotification({
+            const response = await instanse.post(config.services.Userrole, ROUTES.USER, data);
+            dispatch(fillUsernotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Eklendi',
             }));
-            history.push('/Stockdefines');
+            history.push('/Users');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStockdefinenotification(errorPayload));
+            dispatch(fillUsernotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditStockdefines = createAsyncThunk(
-    'Stockdefines/EditStockdefines',
+export const EditUsers = createAsyncThunk(
+    'Users/EditUsers',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.Warehouse, ROUTES.STOCKDEFINE, data);
-            dispatch(fillStockdefinenotification({
+            const response = await instanse.put(config.services.Userrole, ROUTES.USER, data);
+            dispatch(fillUsernotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Güncellendi',
             }));
-            history.push('/Stockdefines');
+            history.push('/Users');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStockdefinenotification(errorPayload));
+            dispatch(fillUsernotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeleteStockdefines = createAsyncThunk(
-    'Stockdefines/DeleteStockdefines',
+export const DeleteUsers = createAsyncThunk(
+    'Users/DeleteUsers',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Warehouse, `${ROUTES.STOCKDEFINE}/${data.Uuid}`);
-            dispatch(fillStockdefinenotification({
+            const response = await instanse.delete(config.services.Userrole, `${ROUTES.USER}/${data.Uuid}`);
+            dispatch(fillUsernotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Silindi',
@@ -87,14 +87,14 @@ export const DeleteStockdefines = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStockdefinenotification(errorPayload));
+            dispatch(fillUsernotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const StockdefinesSlice = createSlice({
-    name: 'Stockdefines',
+export const UsersSlice = createSlice({
+    name: 'Users',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const StockdefinesSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedStockdefine: (state) => {
+        RemoveSelectedUser: (state) => {
             state.selected_record = {};
         },
-        fillStockdefinenotification: (state, action) => {
+        fillUsernotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removeStockdefinenotification: (state) => {
+        removeUsernotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetStockdefines.pending, (state) => {
+            .addCase(GetUsers.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetStockdefines.fulfilled, (state, action) => {
+            .addCase(GetUsers.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetStockdefines.rejected, (state, action) => {
+            .addCase(GetUsers.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetStockdefine.pending, (state) => {
+            .addCase(GetUser.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetStockdefine.fulfilled, (state, action) => {
+            .addCase(GetUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetStockdefine.rejected, (state, action) => {
+            .addCase(GetUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddStockdefines.pending, (state) => {
+            .addCase(AddUsers.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddStockdefines.fulfilled, (state, action) => {
+            .addCase(AddUsers.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddStockdefines.rejected, (state, action) => {
+            .addCase(AddUsers.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditStockdefines.pending, (state) => {
+            .addCase(EditUsers.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditStockdefines.fulfilled, (state, action) => {
+            .addCase(EditUsers.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditStockdefines.rejected, (state, action) => {
+            .addCase(EditUsers.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteStockdefines.pending, (state) => {
+            .addCase(DeleteUsers.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeleteStockdefines.fulfilled, (state, action) => {
+            .addCase(DeleteUsers.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeleteStockdefines.rejected, (state, action) => {
+            .addCase(DeleteUsers.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const StockdefinesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedStockdefine,
-    fillStockdefinenotification,
-    removeStockdefinenotification,
-} = StockdefinesSlice.actions;
+    RemoveSelectedUser,
+    fillUsernotification,
+    removeUsernotification,
+} = UsersSlice.actions;
 
-export default StockdefinesSlice.reducer;
+export default UsersSlice.reducer;

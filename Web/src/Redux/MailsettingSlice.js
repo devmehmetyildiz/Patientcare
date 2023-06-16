@@ -1,100 +1,100 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetPrinttemplates = createAsyncThunk(
-    'Printtemplates/GetPrinttemplates',
+export const GetMailsettings = createAsyncThunk(
+    'Mailsettings/GetMailsettings',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.System, ROUTES.PRINTTEMPLATE);
+            const response = await instanse.get(config.services.System, ROUTES.MAILSETTING);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPrinttemplatenotification(errorPayload));
+            dispatch(fillMailsettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetPrinttemplate = createAsyncThunk(
-    'Printtemplates/GetPrinttemplate',
+export const GetMailsetting = createAsyncThunk(
+    'Mailsettings/GetMailsetting',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.System, `${ROUTES.PRINTTEMPLATE}/${guid}`);
+            const response = await instanse.get(config.services.System, `${ROUTES.MAILSETTING}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPrinttemplatenotification(errorPayload));
+            dispatch(fillMailsettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddPrinttemplates = createAsyncThunk(
-    'Printtemplates/AddPrinttemplates',
+export const AddMailsettings = createAsyncThunk(
+    'Mailsettings/AddMailsettings',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.System, ROUTES.PRINTTEMPLATE, data);
-            dispatch(fillPrinttemplatenotification({
+            const response = await instanse.post(config.services.System, ROUTES.MAILSETTING, data);
+            dispatch(fillMailsettingnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Eklendi',
+                code: 'Mail Ayarı',
+                description: 'Mail Ayarı başarı ile Eklendi',
             }));
-            history.push('/Printtemplates');
+            history.push('/Mailsettings');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPrinttemplatenotification(errorPayload));
+            dispatch(fillMailsettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditPrinttemplates = createAsyncThunk(
-    'Printtemplates/EditPrinttemplates',
+export const EditMailsettings = createAsyncThunk(
+    'Mailsettings/EditMailsettings',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.System, ROUTES.PRINTTEMPLATE, data);
-            dispatch(fillPrinttemplatenotification({
+            const response = await instanse.put(config.services.System, ROUTES.MAILSETTING, data);
+            dispatch(fillMailsettingnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Güncellendi',
+                code: 'Mail Ayarı',
+                description: 'Mail Ayarı başarı ile Güncellendi',
             }));
-            history.push('/Printtemplates');
+            history.push('/Mailsettings');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPrinttemplatenotification(errorPayload));
+            dispatch(fillMailsettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeletePrinttemplates = createAsyncThunk(
-    'Printtemplates/DeletePrinttemplates',
+export const DeleteMailsettings = createAsyncThunk(
+    'Mailsettings/DeleteMailsettings',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.System, `${ROUTES.PRINTTEMPLATE}/${data.Uuid}`);
-            dispatch(fillPrinttemplatenotification({
+            const response = await instanse.delete(config.services.System, `${ROUTES.MAILSETTING}/${data.Uuid}`);
+            dispatch(fillMailsettingnotification({
                 type: 'Success',
-                code: 'Departman',
-                description: 'Departman başarı ile Silindi',
+                code: 'Mail Ayarı',
+                description: 'Mail Ayarı başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPrinttemplatenotification(errorPayload));
+            dispatch(fillMailsettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const PrinttemplatesSlice = createSlice({
-    name: 'Printtemplates',
+export const MailsettingsSlice = createSlice({
+    name: 'Mailsettings',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const PrinttemplatesSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedPrinttemplate: (state) => {
+        RemoveSelectedMailsetting: (state) => {
             state.selected_record = {};
         },
-        fillPrinttemplatenotification: (state, action) => {
+        fillMailsettingnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removePrinttemplatenotification: (state) => {
+        removeMailsettingnotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetPrinttemplates.pending, (state) => {
+            .addCase(GetMailsettings.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetPrinttemplates.fulfilled, (state, action) => {
+            .addCase(GetMailsettings.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetPrinttemplates.rejected, (state, action) => {
+            .addCase(GetMailsettings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetPrinttemplate.pending, (state) => {
+            .addCase(GetMailsetting.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetPrinttemplate.fulfilled, (state, action) => {
+            .addCase(GetMailsetting.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetPrinttemplate.rejected, (state, action) => {
+            .addCase(GetMailsetting.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddPrinttemplates.pending, (state) => {
+            .addCase(AddMailsettings.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddPrinttemplates.fulfilled, (state, action) => {
+            .addCase(AddMailsettings.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddPrinttemplates.rejected, (state, action) => {
+            .addCase(AddMailsettings.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditPrinttemplates.pending, (state) => {
+            .addCase(EditMailsettings.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditPrinttemplates.fulfilled, (state, action) => {
+            .addCase(EditMailsettings.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditPrinttemplates.rejected, (state, action) => {
+            .addCase(EditMailsettings.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeletePrinttemplates.pending, (state) => {
+            .addCase(DeleteMailsettings.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeletePrinttemplates.fulfilled, (state, action) => {
+            .addCase(DeleteMailsettings.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeletePrinttemplates.rejected, (state, action) => {
+            .addCase(DeleteMailsettings.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const PrinttemplatesSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPrinttemplate,
-    fillPrinttemplatenotification,
-    removePrinttemplatenotification,
-} = PrinttemplatesSlice.actions;
+    RemoveSelectedMailsetting,
+    fillMailsettingnotification,
+    removeMailsettingnotification,
+} = MailsettingsSlice.actions;
 
-export default PrinttemplatesSlice.reducer;
+export default MailsettingsSlice.reducer;

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import PurchaseorderstockmovementsEdit from '../../Pages/Purchaseorderstockmovements/PurchaseorderstockmovementsEdit'
-import { EditPurchaseorderstockmovements, GetPurchaseorderstockmovement, RemoveSelectedPurchaseorderstockmovement, removePurchaseorderstockmovementnotification, fillPurchaseorderstockmovementnotification } from '../../Redux/Reducers/PurchaseorderstockmovementReducer'
-import { GetPurchaseorderstocks, removePurchaseorderstocknotification } from '../../Redux/Reducers/PurchaseorderstockReducer'
+import { EditPurchaseorderstockmovements, GetPurchaseorderstockmovement, RemoveSelectedPurchaseorderstockmovement, removePurchaseorderstockmovementnotification, fillPurchaseorderstockmovementnotification } from '../../Redux/PurchaseorderstockmovementSlice'
+import { GetPurchaseorderstocks, removePurchaseorderstocknotification } from '../../Redux/PurchaseorderstockSlice'
 
 
 const mapStateToProps = (state) => ({

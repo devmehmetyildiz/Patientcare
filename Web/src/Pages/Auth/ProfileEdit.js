@@ -117,7 +117,7 @@ export default class ProfileEdit extends Component {
             })
         } else {
             this.handleFile()
-            EditUsers({ ...Profile.meta, ...data }, history, "/Home")
+            EditUsers({ data: { ...Profile.meta, ...data }, history, redirectUrl: "/Home" })
         }
     }
 
@@ -133,7 +133,7 @@ export default class ProfileEdit extends Component {
     }
 
     handleFile = () => {
-        const { EditFiles,  Profile } = this.props
+        const { EditFiles, Profile } = this.props
         const { imgChanged, selectedimage, file } = this.state
 
         if (imgChanged) {
@@ -152,7 +152,7 @@ export default class ProfileEdit extends Component {
                         formData.append(`list[${index}].${element}`, data[element])
                     });
                 })
-                EditFiles(formData)
+                EditFiles({ data: formData })
             }
             if (selectedimage && Object.keys(file).length > 0) {
 
@@ -168,7 +168,7 @@ export default class ProfileEdit extends Component {
                         formData.append(`list[${index}].${element}`, data[element])
                     });
                 })
-                EditFiles(formData)
+                EditFiles({ data: formData })
 
             }
             if (selectedimage && Object.keys(file).length === 0) {
@@ -195,7 +195,7 @@ export default class ProfileEdit extends Component {
                     });
                 })
 
-                EditFiles(formData)
+                EditFiles({ data: formData })
 
             }
         }

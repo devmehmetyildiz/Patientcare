@@ -1,100 +1,100 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetMailsettings = createAsyncThunk(
-    'Mailsettings/GetMailsettings',
+export const GetDepartments = createAsyncThunk(
+    'Departments/GetDepartments',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.System, ROUTES.MAILSETTING);
+            const response = await instanse.get(config.services.Setting, ROUTES.DEPARTMENT);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillMailsettingnotification(errorPayload));
+            dispatch(fillDepartmentnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetMailsetting = createAsyncThunk(
-    'Mailsettings/GetMailsetting',
+export const GetDepartment = createAsyncThunk(
+    'Departments/GetDepartment',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.System, `${ROUTES.MAILSETTING}/${guid}`);
+            const response = await instanse.get(config.services.Setting, `${ROUTES.DEPARTMENT}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillMailsettingnotification(errorPayload));
+            dispatch(fillDepartmentnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddMailsettings = createAsyncThunk(
-    'Mailsettings/AddMailsettings',
+export const AddDepartments = createAsyncThunk(
+    'Departments/AddDepartments',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.System, ROUTES.MAILSETTING, data);
-            dispatch(fillMailsettingnotification({
+            const response = await instanse.post(config.services.Setting, ROUTES.DEPARTMENT, data);
+            dispatch(fillDepartmentnotification({
                 type: 'Success',
-                code: 'Mail Ayarı',
-                description: 'Mail Ayarı başarı ile Eklendi',
+                code: 'Departman',
+                description: 'Departman başarı ile Eklendi',
             }));
-            history.push('/Mailsettings');
+            history.push('/Departments');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillMailsettingnotification(errorPayload));
+            dispatch(fillDepartmentnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditMailsettings = createAsyncThunk(
-    'Mailsettings/EditMailsettings',
+export const EditDepartments = createAsyncThunk(
+    'Departments/EditDepartments',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.System, ROUTES.MAILSETTING, data);
-            dispatch(fillMailsettingnotification({
+            const response = await instanse.put(config.services.Setting, ROUTES.DEPARTMENT, data);
+            dispatch(fillDepartmentnotification({
                 type: 'Success',
-                code: 'Mail Ayarı',
-                description: 'Mail Ayarı başarı ile Güncellendi',
+                code: 'Departman',
+                description: 'Departman başarı ile Güncellendi',
             }));
-            history.push('/Mailsettings');
+            history.push('/Departments');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillMailsettingnotification(errorPayload));
+            dispatch(fillDepartmentnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeleteMailsettings = createAsyncThunk(
-    'Mailsettings/DeleteMailsettings',
+export const DeleteDepartments = createAsyncThunk(
+    'Departments/DeleteDepartments',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.System, `${ROUTES.MAILSETTING}/${data.Uuid}`);
-            dispatch(fillMailsettingnotification({
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.DEPARTMENT}/${data.Uuid}`);
+            dispatch(fillDepartmentnotification({
                 type: 'Success',
-                code: 'Mail Ayarı',
-                description: 'Mail Ayarı başarı ile Silindi',
+                code: 'Departman',
+                description: 'Departman başarı ile Silindi',
             }));
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillMailsettingnotification(errorPayload));
+            dispatch(fillDepartmentnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const MailsettingsSlice = createSlice({
-    name: 'Mailsettings',
+export const DepartmentsSlice = createSlice({
+    name: 'Departments',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const MailsettingsSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedMailsetting: (state) => {
+        RemoveSelectedDepartment: (state) => {
             state.selected_record = {};
         },
-        fillMailsettingnotification: (state, action) => {
+        fillDepartmentnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removeMailsettingnotification: (state) => {
+        removeDepartmentnotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetMailsettings.pending, (state) => {
+            .addCase(GetDepartments.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetMailsettings.fulfilled, (state, action) => {
+            .addCase(GetDepartments.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetMailsettings.rejected, (state, action) => {
+            .addCase(GetDepartments.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetMailsetting.pending, (state) => {
+            .addCase(GetDepartment.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetMailsetting.fulfilled, (state, action) => {
+            .addCase(GetDepartment.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetMailsetting.rejected, (state, action) => {
+            .addCase(GetDepartment.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddMailsettings.pending, (state) => {
+            .addCase(AddDepartments.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddMailsettings.fulfilled, (state, action) => {
+            .addCase(AddDepartments.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddMailsettings.rejected, (state, action) => {
+            .addCase(AddDepartments.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditMailsettings.pending, (state) => {
+            .addCase(EditDepartments.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditMailsettings.fulfilled, (state, action) => {
+            .addCase(EditDepartments.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditMailsettings.rejected, (state, action) => {
+            .addCase(EditDepartments.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteMailsettings.pending, (state) => {
+            .addCase(DeleteDepartments.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeleteMailsettings.fulfilled, (state, action) => {
+            .addCase(DeleteDepartments.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeleteMailsettings.rejected, (state, action) => {
+            .addCase(DeleteDepartments.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const MailsettingsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedMailsetting,
-    fillMailsettingnotification,
-    removeMailsettingnotification,
-} = MailsettingsSlice.actions;
+    RemoveSelectedDepartment,
+    fillDepartmentnotification,
+    removeDepartmentnotification,
+} = DepartmentsSlice.actions;
 
-export default MailsettingsSlice.reducer;
+export default DepartmentsSlice.reducer;

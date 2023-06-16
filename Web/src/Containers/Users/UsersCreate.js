@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import UsersCreate from "../../Pages/Users/UsersCreate"
-import { AddUsers, fillUsernotification, removeUsernotification } from "../../Redux/Reducers/UserReducer"
-import { GetRoles, removeRolenotification } from "../../Redux/Reducers/RoleReducer"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/Reducers/DepartmentReducer"
-import { GetStations, removeStationnotification } from "../../Redux/Reducers/StationReducer"
+import { AddUsers, fillUsernotification, removeUsernotification } from "../../Redux/UserSlice"
+import { GetRoles, removeRolenotification } from "../../Redux/RoleSlice"
+import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
+import { GetStations, removeStationnotification } from "../../Redux/StationSlice"
 
 const mapStateToProps = (state) => ({
     Users: state.Users,

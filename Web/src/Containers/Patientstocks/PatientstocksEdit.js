@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import PatientstocksEdit from '../../Pages/Patientstocks/PatientstocksEdit'
-import { EditPatientstocks, GetPatientstock, RemoveSelectedPatientstock, removePatientstocknotification, fillPatientstocknotification } from '../../Redux/Reducers/PatientstockReducer'
-import { GetStockdefines, removeStockdefinenotification } from '../../Redux/Reducers/StockdefineReducer'
-import { GetDepartments, removeDepartmentnotification } from '../../Redux/Reducers/DepartmentReducer'
-import { GetPatients, Getpreregistrations, removePatientnotification } from "../../Redux/Reducers/PatientReducer"
+import { EditPatientstocks, GetPatientstock, RemoveSelectedPatientstock, removePatientstocknotification, fillPatientstocknotification } from '../../Redux/PatientstockSlice'
+import { GetStockdefines, removeStockdefinenotification } from '../../Redux/StockdefineSlice'
+import { GetDepartments, removeDepartmentnotification } from '../../Redux/DepartmentSlice'
+import { GetPatients, Getpreregistrations, removePatientnotification } from "../../Redux/PatientSlice"
 
 const mapStateToProps = (state) => ({
     Patientstocks: state.Patientstocks,

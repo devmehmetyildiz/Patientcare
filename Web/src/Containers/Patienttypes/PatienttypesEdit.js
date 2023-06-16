@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PatienttypesEdit from '../../Pages/Patienttypes/PatienttypesEdit'
-import { EditPatienttypes, GetPatienttype, RemoveSelectedPatienttype, removePatienttypenotification, fillPatienttypenotification } from '../../Redux/Reducers/PatienttypeReducer'
+import { EditPatienttypes, GetPatienttype, RemoveSelectedPatienttype, removePatienttypenotification, fillPatienttypenotification } from '../../Redux/PatienttypeSlice'
 
 const mapStateToProps = (state) => ({
   Patienttypes: state.Patienttypes,

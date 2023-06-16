@@ -1,85 +1,85 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../../Utils/Constants";
-import AxiosErrorHelper from "../../Utils/AxiosErrorHelper";
-import instanse from "../Actions/axios";
-import config from "../../Config";
+import { ROUTES } from "../Utils/Constants";
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
+import instanse from "./axios";
+import config from "../Config";
 
-export const GetPatientstockmovements = createAsyncThunk(
-    'Patientstockmovements/GetPatientstockmovements',
+export const GetPrinttemplates = createAsyncThunk(
+    'Printtemplates/GetPrinttemplates',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT);
+            const response = await instanse.get(config.services.System, ROUTES.PRINTTEMPLATE);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientstockmovementnotification(errorPayload));
+            dispatch(fillPrinttemplatenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetPatientstockmovement = createAsyncThunk(
-    'Patientstockmovements/GetPatientstockmovement',
+export const GetPrinttemplate = createAsyncThunk(
+    'Printtemplates/GetPrinttemplate',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Warehouse, `${ROUTES.PATIENTSTOCKMOVEMENT}/${guid}`);
+            const response = await instanse.get(config.services.System, `${ROUTES.PRINTTEMPLATE}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientstockmovementnotification(errorPayload));
+            dispatch(fillPrinttemplatenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddPatientstockmovements = createAsyncThunk(
-    'Patientstockmovements/AddPatientstockmovements',
+export const AddPrinttemplates = createAsyncThunk(
+    'Printtemplates/AddPrinttemplates',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT, data);
-            dispatch(fillPatientstockmovementnotification({
+            const response = await instanse.post(config.services.System, ROUTES.PRINTTEMPLATE, data);
+            dispatch(fillPrinttemplatenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Eklendi',
             }));
-            history.push('/Patientstockmovements');
+            history.push('/Printtemplates');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientstockmovementnotification(errorPayload));
+            dispatch(fillPrinttemplatenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditPatientstockmovements = createAsyncThunk(
-    'Patientstockmovements/EditPatientstockmovements',
+export const EditPrinttemplates = createAsyncThunk(
+    'Printtemplates/EditPrinttemplates',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.put(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT, data);
-            dispatch(fillPatientstockmovementnotification({
+            const response = await instanse.put(config.services.System, ROUTES.PRINTTEMPLATE, data);
+            dispatch(fillPrinttemplatenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Güncellendi',
             }));
-            history.push('/Patientstockmovements');
+            history.push('/Printtemplates');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientstockmovementnotification(errorPayload));
+            dispatch(fillPrinttemplatenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeletePatientstockmovements = createAsyncThunk(
-    'Patientstockmovements/DeletePatientstockmovements',
+export const DeletePrinttemplates = createAsyncThunk(
+    'Printtemplates/DeletePrinttemplates',
     async (data, { dispatch }) => {
         try {
             delete data['edit'];
             delete data['delete'];
-            const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PATIENTSTOCKMOVEMENT}/${data.Uuid}`);
-            dispatch(fillPatientstockmovementnotification({
+            const response = await instanse.delete(config.services.System, `${ROUTES.PRINTTEMPLATE}/${data.Uuid}`);
+            dispatch(fillPrinttemplatenotification({
                 type: 'Success',
                 code: 'Departman',
                 description: 'Departman başarı ile Silindi',
@@ -87,14 +87,14 @@ export const DeletePatientstockmovements = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientstockmovementnotification(errorPayload));
+            dispatch(fillPrinttemplatenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const PatientstockmovementsSlice = createSlice({
-    name: 'Patientstockmovements',
+export const PrinttemplatesSlice = createSlice({
+    name: 'Printtemplates',
     initialState: {
         list: [],
         selected_record: {},
@@ -104,76 +104,76 @@ export const PatientstockmovementsSlice = createSlice({
         isDispatching: false
     },
     reducers: {
-        RemoveSelectedPatientstockmovement: (state) => {
+        RemoveSelectedPrinttemplate: (state) => {
             state.selected_record = {};
         },
-        fillPatientstockmovementnotification: (state, action) => {
+        fillPrinttemplatenotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removePatientstockmovementnotification: (state) => {
+        removePrinttemplatenotification: (state) => {
             state.notifications.splice(0, 1);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetPatientstockmovements.pending, (state) => {
+            .addCase(GetPrinttemplates.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetPatientstockmovements.fulfilled, (state, action) => {
+            .addCase(GetPrinttemplates.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetPatientstockmovements.rejected, (state, action) => {
+            .addCase(GetPrinttemplates.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetPatientstockmovement.pending, (state) => {
+            .addCase(GetPrinttemplate.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetPatientstockmovement.fulfilled, (state, action) => {
+            .addCase(GetPrinttemplate.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetPatientstockmovement.rejected, (state, action) => {
+            .addCase(GetPrinttemplate.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddPatientstockmovements.pending, (state) => {
+            .addCase(AddPrinttemplates.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddPatientstockmovements.fulfilled, (state, action) => {
+            .addCase(AddPrinttemplates.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddPatientstockmovements.rejected, (state, action) => {
+            .addCase(AddPrinttemplates.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditPatientstockmovements.pending, (state) => {
+            .addCase(EditPrinttemplates.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditPatientstockmovements.fulfilled, (state, action) => {
+            .addCase(EditPrinttemplates.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditPatientstockmovements.rejected, (state, action) => {
+            .addCase(EditPrinttemplates.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeletePatientstockmovements.pending, (state) => {
+            .addCase(DeletePrinttemplates.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(DeletePatientstockmovements.fulfilled, (state, action) => {
+            .addCase(DeletePrinttemplates.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(DeletePatientstockmovements.rejected, (state, action) => {
+            .addCase(DeletePrinttemplates.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });
@@ -181,9 +181,9 @@ export const PatientstockmovementsSlice = createSlice({
 });
 
 export const {
-    RemoveSelectedPatientstockmovement,
-    fillPatientstockmovementnotification,
-    removePatientstockmovementnotification,
-} = PatientstockmovementsSlice.actions;
+    RemoveSelectedPrinttemplate,
+    fillPrinttemplatenotification,
+    removePrinttemplatenotification,
+} = PrinttemplatesSlice.actions;
 
-export default PatientstockmovementsSlice.reducer;
+export default PrinttemplatesSlice.reducer;
