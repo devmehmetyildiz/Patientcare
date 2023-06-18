@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
+import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -11,7 +11,7 @@ import Literals from './Literals'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-
+import DepartmentDelete from "../../Containers/Departments/DepartmentsDelete"
 export class Departments extends Component {
 
   constructor(props) {
@@ -36,7 +36,7 @@ export class Departments extends Component {
 
   render() {
 
-    const { Departments, DeleteDepartments, Profile, handleSelectedDepartment, handleDeletemodal } = this.props
+    const { Departments, Profile, handleSelectedDepartment, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Departments
 
     const Columns = [

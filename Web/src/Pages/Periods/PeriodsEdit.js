@@ -4,7 +4,16 @@ import { Breadcrumb, Button, Divider, Form, Header } from 'semantic-ui-react'
 import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
-
+import { FormContext } from '../../Provider/FormProvider'
+import Literals from './Literals'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import FormInput from '../../Utils/FormInput'
+import validator from '../../Utils/Validator'
 export default class PeriodsEdit extends Component {
   constructor(props) {
     super(props)
@@ -26,64 +35,69 @@ export default class PeriodsEdit extends Component {
 
   componentDidUpdate() {
     const { removePeriodnotification, Periods } = this.props
+    const { selected_record, isLoading } = Periods
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
+      this.setState({
+        isDatafetched: true
+      })
+      this.context.setFormstates(selected_record)
+    }
     Notification(Periods.notifications, removePeriodnotification)
   }
 
   render() {
 
-    const { Periods } = this.props
-    const { selected_record, isLoading, isDispatching } = Periods
+    const { Periods, Profile } = this.props
+    const { isLoading, isDispatching } = Periods
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]' >
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Periods"}>
-                  <Breadcrumb.Section>Kontrol Periyodları</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Periods"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input defaultValue={selected_record.Name} label="Kontrol Grup Adı" placeholder="Kontrol Grup Adı" name="Name" fluid />
+                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               </Form.Field>
               <Form.Group widths={"equal"}>
-                <Form.Input defaultValue={selected_record.Occuredtime} type='time' label="Gerçekleşme Saati" placeholder="Gerçekleşme Saati" name="Occuredtime" fluid />
-                <Form.Input defaultValue={selected_record.Checktime} type='time' label="Geçikme Saati" placeholder="Geçikme Saati" name="Checktime" fluid />
+                <FormInput type='time' placeholder={Literals.Columns.Occuredtime[Profile.Language]} name="Occuredtime" />
+                <FormInput type='time' placeholder={Literals.Columns.Checktime[Profile.Language]} name="Checktime" />
               </Form.Group>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
+              <Footerwrapper>
                 <Link to="/Periods">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Güncelle</Button>
-              </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { EditPeriods, history, fillPeriodnotification, Periods } = this.props
+    const { EditPeriods, history, fillPeriodnotification, Periods, Profile } = this.props
     const data = formToObject(e.target)
     let errors = []
-    if (!data.Name || data.Name === '') {
-      errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'İsim Boş Olamaz' })
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
     }
-    if (!data.Occuredtime || data.Occuredtime === '') {
-      errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'Gerçekleşme tarihi seçilmedi' })
+    if (!validator.isString(data.Occuredtime)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Occuredtimerequired[Profile.Language] })
     }
-    if (!data.Checktime || data.Checktime === '') {
-      errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'Geçikme tarihi seçilmedi' })
+    if (!validator.isString(data.Checktime)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Checktimerequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
@@ -95,3 +109,4 @@ export default class PeriodsEdit extends Component {
 
   }
 }
+PeriodsEdit.contextType = FormContext

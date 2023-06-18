@@ -1,11 +1,19 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
+import { Dropdown, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
-
+import FormInput from '../../Utils/FormInput'
+import Literals from './Literals'
+import validator from "../../Utils/Validator"
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 export default class PatientstocksCreate extends Component {
   constructor(props) {
     super(props)
@@ -36,7 +44,7 @@ export default class PatientstocksCreate extends Component {
   }
 
   render() {
-    const { Patients, Patientstocks, Departments, Stockdefines } = this.props
+    const { Patients, Patientstocks, Departments, Stockdefines, Profile } = this.props
 
     const Departmentoptions = Departments.list.map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -50,65 +58,50 @@ export default class PatientstocksCreate extends Component {
 
     return (
       Stockdefines.isLoading || Stockdefines.isDispatching || Patientstocks.isLoading || Patientstocks.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Patientstocks"}>
-                  <Breadcrumb.Section >Ürünler</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Patientstocks"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
                 <Form.Field>
-                  <label className='text-[#000000de]'>{this.state.isInprepatients ? "Ön Kayıtlı Hastalar" : "Kurumdaki Hastalar"}
+                  <label className='text-[#000000de]'>{this.state.isInprepatients ? Literals.Columns.NotInTheDepartment[Profile.Language] : Literals.Columns.InTheDepartment[Profile.Language]}
                     <Button onClick={(e) => { this.handleChangePatienttype(e) }} className='cursor-pointer ' circular size='mini' icon="redo"></Button></label>
-                  <Dropdown loading={Patients.isLoading} fluid selection options={Patientoptions} onChange={this.handleChangePatient} />
+                  <Dropdown loading={Patients.isLoading} value={this.state.selectedpatient} fluid selection options={Patientoptions} onChange={this.handleChangePatient} />
                 </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Ürün
-                    <Button style={{ visibility: 'hidden' }} onClick={(e) => { e.preventDefault() }} circular size='mini' icon="redo"></Button>
-                  </label>
-                  <Dropdown placeholder='Ürün' fluid selection options={Stockdefineoptions} onChange={this.handleChangeStockdefine} />
-                </Form.Field>
+                <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} value={this.state.selectedstockdefine} options={Stockdefineoptions} onChange={this.handleChangeStockdefine} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths='equal'>
+                <FormInput placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
+                <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Barkod No" placeholder="Barkod No" name="Barcodeno" fluid />
-                <Form.Input label="Miktar" placeholder="Miktar" name="Amount" fluid step="0.01" type='number' />
+                <FormInput placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
+                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} options={Departmentoptions} onChange={this.handleChangeDepartment} formtype="dropdown" />
               </Form.Group>
-              <Form.Group widths='equal'>
-                <Form.Field>
-                  <Form.Input label="Skt" placeholder="Skt" name="Skt" fluid type='date' defaultValue={this.getLocalDate()} />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Departmanlar</label>
-                  <Dropdown placeholder='Departmanlar' fluid selection options={Departmentoptions} onChange={this.handleChangeDepartment} />
-                </Form.Field>
-              </Form.Group>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
+              <Footerwrapper>
                 <Link to="/Patientstocks">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Oluştur</Button>
-              </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddPatientstocks, history, fillPatientstocknotification } = this.props
+    const { AddPatientstocks, history, fillPatientstocknotification, Profile } = this.props
     const data = formToObject(e.target)
     data.DepartmentID = this.state.selecteddepartments
     data.StockdefineID = this.state.selectedstockdefine
@@ -121,24 +114,24 @@ export default class PatientstocksCreate extends Component {
     data.Amount = parseFloat(data.Amount)
 
     let errors = []
-    if (!data.DepartmentID || data.DepartmentID === '') {
-      errors.push({ type: 'Error', code: 'Ürünler', description: 'Departman Seçili Değil' })
+    if (!validator.isUUID(data.DepartmentID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
     }
-    if (!data.PatientID || data.PatientID === '') {
-      errors.push({ type: 'Error', code: 'Ürünler', description: 'Hasta Seçili Değil' })
+    if (!validator.isUUID(data.PatientID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PatientRequired[Profile.Language] })
     }
-    if (!data.StockdefineID || data.StockdefineID === '') {
-      errors.push({ type: 'Error', code: 'Ürünler', description: 'Ürün Seçili Değil' })
+    if (!validator.isUUID(data.StockdefineID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StokdefineRequired[Profile.Language] })
     }
-    if (!data.Amount || data.Amount === '' || data.Amount === 0) {
-      errors.push({ type: 'Error', code: 'Ürünler', description: 'Miktar girilmedi' })
+    if (!validator.isNumber(data.Amount)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.AmountRequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
         fillPatientstocknotification(error)
       })
     } else {
-      AddPatientstocks({data, history})
+      AddPatientstocks({ data, history })
     }
   }
 

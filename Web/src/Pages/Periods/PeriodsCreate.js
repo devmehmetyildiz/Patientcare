@@ -5,7 +5,15 @@ import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
-
+import Literals from './Literals'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import validator from '../../Utils/Validator'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import FormInput from '../../Utils/FormInput'
 export default class PeriodsCreate extends Component {
 
   componentDidUpdate() {
@@ -15,69 +23,66 @@ export default class PeriodsCreate extends Component {
 
   render() {
 
-    const { Periods } = this.props
+    const { Periods, Profile } = this.props
     const { isLoading, isDispatching } = Periods
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Periods"}>
-                  <Breadcrumb.Section>Kontrol Periyodları</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Periods"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input label="Kontrol Grup Adı" placeholder="Kontrol Grup Adı" name="Name" fluid />
+                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               </Form.Field>
               <Form.Group widths={"equal"}>
-                <Form.Input type='time' label="Gerçekleşme Saati" placeholder="Gerçekleşme Saati" name="Occuredtime" fluid />
-                <Form.Input type='time' label="Geçikme Saati" placeholder="Geçikme Saati" name="Checktime" fluid />
+                <FormInput type='time' placeholder={Literals.Columns.Occuredtime[Profile.Language]} name="Occuredtime" />
+                <FormInput type='time' placeholder={Literals.Columns.Checktime[Profile.Language]} name="Checktime" />
               </Form.Group>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
+              <Footerwrapper>
                 <Link to="/Periods">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Oluştur</Button>
-              </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddPeriods, history, fillPeriodnotification } = this.props
+    const { AddPeriods, history, fillPeriodnotification, Profile } = this.props
 
     const data = formToObject(e.target)
 
     let errors = []
-    if (!data.Name || data.Name === '') {
-      errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'İsim Boş Olamaz' })
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
     }
-    if (!data.Occuredtime || data.Occuredtime === '') {
-      errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'Gerçekleşme tarihi seçilmedi' })
+    if (!validator.isString(data.Occuredtime)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Occuredtimerequired[Profile.Language] })
     }
-    if (!data.Checktime || data.Checktime === '') {
-      errors.push({ type: 'Error', code: 'Kontrol Grupları', description: 'Geçikme tarihi seçilmedi' })
+    if (!validator.isString(data.Checktime)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Checktimerequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
         fillPeriodnotification(error)
       })
     } else {
-      AddPeriods({data, history})
+      AddPeriods({ data, history })
     }
   }
 }

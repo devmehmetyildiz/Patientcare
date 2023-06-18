@@ -12,12 +12,16 @@ const Literals = {
             en: 'Unique ID'
         },
         Name: {
-            tr: 'Müşteri tür Adı',
-            en: 'Costumer type Name'
+            tr: 'Periyot Adı',
+            en: 'Period Name'
         },
-        Departmentstxt: {
-            tr: 'Departmanlar',
-            en: 'Departments'
+        Occuredtime: {
+            tr: 'Gerçekleşme Tarihi',
+            en: 'Occured Time'
+        },
+        Checktime: {
+            tr: 'Kontrol Süresi',
+            en: 'Check Time'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -46,8 +50,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Müşteri Türleri",
-            en: "Costumer Types"
+            tr: "Periyotlar",
+            en: "Periyodlar"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -58,8 +62,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Müşteri Türü Silme",
-            en: "Delete Costumer type"
+            tr: "Periyot Silme",
+            en: "Delete Period"
         }
     },
     Button: {
@@ -87,20 +91,24 @@ const Literals = {
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Müşteri Türü Yok",
-            en: "There is no Costumer type found"
+            tr: "Tanımlı Periyot Yok",
+            en: "There is no Period found"
         },
         Deletecheck: {
-            tr: "müşteri türünü silmek istediğinize emin misiniz?",
-            en: "costumer type will delete, are you sure?"
+            tr: "periyodunu silmek istediğinize emin misiniz?",
+            en: "period will delete, are you sure?"
         },
         Namerequired: {
-            tr: "İsim Gerekli",
-            en: "Name Required"
+            tr: "Periyot Adı Gerekli",
+            en: "Period Required"
         },
-        Departmentsrequired: {
-            tr: "Departmanlar Gerekli",
-            en: "Departments Required"
+        Occuredtimerequired: {
+            tr: "Gerçekleşme Süresi Gerekli",
+            en: "Occured Time Required"
+        },
+        Checktimerequired: {
+            tr: "Kontrol Süresi Gerekli",
+            en: "Check Time Required"
         },
 
     }

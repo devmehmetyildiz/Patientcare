@@ -1,11 +1,19 @@
 import React, { Component } from 'react'
 import { Link, } from 'react-router-dom'
-import { Checkbox, Divider, Form } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
+import { Checkbox, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
-
+import FormInput from '../../Utils/FormInput'
+import Literals from './Literals'
+import validator from "../../Utils/Validator"
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 export default class MailsettingsCreate extends Component {
 
   constructor(props) {
@@ -18,104 +26,101 @@ export default class MailsettingsCreate extends Component {
 
   componentDidUpdate() {
     const { removeMailsettingnotification, Mailsettings } = this.props
-    const { notifications } = Mailsettings
-
-    Notification(notifications, removeMailsettingnotification)
+    Notification(Mailsettings.notifications, removeMailsettingnotification)
   }
 
   render() {
 
-    const { Mailsettings } = this.props
+    const { Mailsettings, Profile } = this.props
     const { isLoading, isDispatching } = Mailsettings
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Mailsettings"}>
-                  <Breadcrumb.Section >Mail Ayarları</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Mailsettings"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Group widths={"equal"}>
-                <Form.Input label="Mail Ayar Adı" placeholder="Mail Ayar Adı" name="Name" fluid />
-                <Form.Input label="Mail Kullanıcısı" placeholder="Mail Kullanıcısı" name="User" fluid />
+                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput required placeholder={Literals.Columns.User[Profile.Language]} name="User" />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <Form.Input type='password' label="Mail Kullanıcı Şifresi" placeholder="Mail Kullanıcı Şifresi" name="Password" fluid />
-                <Form.Input label="Smtp Port" placeholder="Smtp Port" name="Smtpport" fluid />
+                <FormInput required placeholder={Literals.Columns.Password[Profile.Language]} name="Password" type='password' />
+                <FormInput required placeholder={Literals.Columns.Smtpport[Profile.Language]} name="Smtpport" />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <Form.Input label="Smtp Host" placeholder="Smtp Host" name="Smtphost" fluid />
-                <Form.Input label="Mailaddress" placeholder="Mailaddress" name="Mailaddress" fluid />
+                <FormInput required placeholder={Literals.Columns.Smtphost[Profile.Language]} name="Smtphost" />
+                <FormInput required placeholder={Literals.Columns.Mailaddress[Profile.Language]} name="Mailaddress" />
               </Form.Group>
               <Form.Group widths={"equal"}>
                 <Form.Field>
                   <Checkbox toggle className='m-2'
+                    checked={this.state.isbodyhtml}
                     onClick={(e) => { this.setState({ isbodyhtml: !this.state.isbodyhtml }) }}
-                    label="Body html mi?" />
+                    label={Literals.Columns.Isbodyhtml[Profile.Language]} />
                 </Form.Field>
                 <Form.Field>
                   <Checkbox toggle className='m-2'
+                    checked={this.state.issettingactive}
                     onClick={(e) => { this.setState({ issettingactive: !this.state.issettingactive }) }}
-                    label="Aktif mi?" />
+                    label={Literals.Columns.Issettingactive[Profile.Language]} />
                 </Form.Field>
               </Form.Group>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
+              <Footerwrapper>
                 <Link to="/Mailsettings">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Oluştur</Button>
-              </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddMailsettings, history, fillMailsettingnotification } = this.props
+    const { AddMailsettings, history, fillMailsettingnotification, Profile } = this.props
 
     const data = formToObject(e.target)
     data.Isbodyhtml = this.state.isbodyhtml
     data.Issettingactive = this.state.issettingactive
 
     let errors = []
-    if (!data.Name || data.Name === '') {
-      errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'İsim Boş Olamaz' })
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
     }
-    if (!data.User || data.User === '') {
-      errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'Mail kullanıcısı Boş Olamaz' })
+    if (!validator.isString(data.User)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Userrequired[Profile.Language] })
     }
-    if (!data.Password || data.Password === '') {
-      errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'Mail kullanıcı parolası Boş Olamaz' })
+    if (!validator.isString(data.Password)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Passwordsrequired[Profile.Language] })
     }
-    if (!data.Smtpport || data.Smtpport === '') {
-      errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'Smtp Port Boş Olamaz' })
+    if (!validator.isString(data.Smtpport)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Smtpportrequired[Profile.Language] })
     }
-    if (!data.Smtphost || data.Smtphost === '') {
-      errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'Smtp Host Boş Olamaz' })
+    if (!validator.isString(data.Smtphost)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Smtphostrequired[Profile.Language] })
     }
-    if (!data.Mailaddress || data.Mailaddress === '') {
-      errors.push({ type: 'Error', code: 'Mail Ayarları', description: 'E-Mail Adresi Boş Olamaz' })
+    if (!validator.isString(data.Mailaddress)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Mailaddressrequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
         fillMailsettingnotification(error)
       })
     } else {
-      AddMailsettings({data, history})
+      AddMailsettings({ data, history })
     }
   }
 

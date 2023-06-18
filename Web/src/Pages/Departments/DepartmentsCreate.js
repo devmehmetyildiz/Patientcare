@@ -5,7 +5,15 @@ import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
-
+import FormInput from '../../Utils/FormInput'
+import Literals from './Literals'
+import validator from "../../Utils/Validator"
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 export class DepartmentsCreate extends Component {
 
   constructor(props) {
@@ -29,7 +37,7 @@ export class DepartmentsCreate extends Component {
   }
 
   render() {
-    const { Departments, Stations } = this.props
+    const { Departments, Stations, Profile } = this.props
 
     const Stationoptions = Stations.list.map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
@@ -37,44 +45,33 @@ export class DepartmentsCreate extends Component {
 
     return (
       Departments.isLoading || Departments.isDispatching || Stations.isLoading || Stations.isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Departments"}>
-                  <Breadcrumb.Section >Departmanlar</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Departments"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
+              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput required placeholder={Literals.Columns.stationstxt[Profile.Language]} clearable search multiple options={Stationoptions} value={this.state.selectedstations} onChange={this.handleChange} formtype="dropdown" />
               <Form.Field>
-                <Form.Input label="Departman Adı" placeholder="Departman Adı" name="Name" fluid />
+                <Checkbox toggle className='m-2' checked={this.state.isHavepatient} onClick={() => { this.setState({ isHavepatient: !this.state.isHavepatient }) }} label={Literals.Columns.Ishavepatients[Profile.Language]} />
               </Form.Field>
-              <Form.Field>
-                <label className='text-[#000000de]'>Tanımlı İstasyonlar</label>
-                <Dropdown label="İstasyonlar" placeholder='İstasyonlar' clearable search fluid multiple selection options={Stationoptions} onChange={this.handleChange} />
-              </Form.Field>
-              <Form.Field>
-                <Checkbox toggle className='m-2'
-                  checked={this.state.isHavepatient}
-                  onClick={() => { this.setState({ isHavepatient: !this.state.isHavepatient }) }}
-                  label={"Hasta tutacak mı?"} />
-              </Form.Field>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
+              <Footerwrapper>
                 <Link to="/Departments">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Oluştur</Button>
-              </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
@@ -82,7 +79,7 @@ export class DepartmentsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddDepartments, history, fillDepartmentnotification, Stations } = this.props
+    const { AddDepartments, history, fillDepartmentnotification, Stations, Profile } = this.props
     const { list } = Stations
     const data = formToObject(e.target)
     data.Stations = this.state.selectedstations.map(station => {
@@ -91,18 +88,18 @@ export class DepartmentsCreate extends Component {
     data.Ishavepatients = this.state.isHavepatient
 
     let errors = []
-    if (!data.Name || data.Name === '') {
-      errors.push({ type: 'Error', code: 'Departmanlar', description: 'İsim Boş Olamaz' })
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
     }
-    if (!data.Stations || data.Stations.length <= 0) {
-      errors.push({ type: 'Error', code: 'Departmanlar', description: 'Hiç Bir İstasyon seçili değil' })
+    if (!validator.isArray(data.Stations)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Stationsrequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
         fillDepartmentnotification(error)
       })
     } else {
-      AddDepartments({data, history})
+      AddDepartments({ data, history })
     }
   }
 

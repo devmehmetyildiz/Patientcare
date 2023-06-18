@@ -7,6 +7,9 @@ import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
 import Editor from "@monaco-editor/react";
 import InnerHTML from '../../Utils/DangerouslySetHtmlContent'
+import FormInput from '../../Utils/FormInput'
+import Literals from './Literals'
+import validator from '../../Utils/Validator'
 export default class PrinttemplatesCreate extends Component {
 
   constructor(props) {
@@ -40,43 +43,36 @@ export default class PrinttemplatesCreate extends Component {
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Printtemplates"}>
-                  <Breadcrumb.Section >Yazdırma Tasarımları</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Printtemplates"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
             <Form className='' onSubmit={this.handleSubmit}>
               <Tab className='station-tab'
                 panes={[
                   {
-                    menuItem: "Kayıt",
+                    menuItem:Literals.Columns.Savescreen[Profile.Language],
                     pane: {
                       key: 'save',
                       content: <React.Fragment>
                         <Form.Group widths={"equal"}>
-                          <Form.Input label="Taslak Adı" placeholder="Taslak Adı" name="Name" fluid />
-                          <Form.Input label="Kaynak Değer" placeholder="Kaynak Değer" name="Valuekey" fluid />
+                          <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                          <FormInput placeholder={Literals.Columns.Valuekey[Profile.Language]} name="Valuekey" />
                         </Form.Group>
-                        <Form.Group widths={"equal"}>
-                          <Form.Field>
-                            <label className='text-[#000000de]'>Geçerli Departman</label>
-                            <Dropdown placeholder='Geçerli Departman' clearable search fluid selection options={Departmentoptions} onChange={(e, { value }) => { this.setState({ selectedDepartment: value }) }} />
-                          </Form.Field>
-                        </Form.Group>
+                        <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selectedDepartment} clearable search options={Departmentoptions} onChange={(e, { value }) => { this.setState({ selectedDepartment: value }) }} formtype="dropdown" />
                       </React.Fragment>
                     }
                   },
                   {
-                    menuItem: "Tasarım",
+                    menuItem: Literals.Columns.Editorscreen[Profile.Language],
                     pane: {
                       key: 'design',
                       content: <div className='max-h-[calc(66vh-10px)] overflow-y-auto overflow-x-hidden'>
@@ -106,47 +102,46 @@ export default class PrinttemplatesCreate extends Component {
                   }
                 ]}
                 renderActiveOnly={false} />
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
+              <Footerwrapper>
                 <Link to="/Printtemplates">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Oluştur</Button>
-              </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddPrinttemplates, history, fillPrinttemplatenotification } = this.props
+    const { AddPrinttemplates, history, fillPrinttemplatenotification, Profile } = this.props
 
     const data = formToObject(e.target)
     data.DepartmentID = this.state.selectedDepartment
     data.Printtemplate = this.state.template
 
     let errors = []
-    if (!data.Name || data.Name === '') {
-      errors.push({ type: 'Error', code: 'Yazırma Tasarımları', description: 'İsim Boş Olamaz' })
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description:Literals.Messages.Namerequired[Profile.Language]  })
     }
-    if (!data.Valuekey || data.Valuekey === '') {
-      errors.push({ type: 'Error', code: 'Yazırma Tasarımları', description: 'Kaynak Değerleri Boş Olamaz' })
+    if (!validator.isString(data.Valuekey)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.val[Profile.Language] })
     }
-    if (!data.DepartmentID || data.DepartmentID === '') {
-      errors.push({ type: 'Error', code: 'Yazırma Tasarımları', description: 'Departman seçili değil' })
+    if (!validator.isUUID(data.DepartmentID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: 'Departman seçili değil' })
     }
-    if (!data.Printtemplate || data.Printtemplate === '') {
-      errors.push({ type: 'Error', code: 'Yazırma Tasarımları', description: 'Tasarım Yazılmadı' })
+    if (!validator.isString(data.Printtemplate)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: 'Tasarım Yazılmadı' })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
         fillPrinttemplatenotification(error)
       })
     } else {
-      AddPrinttemplates({data, history})
+      AddPrinttemplates({ data, history })
     }
   }
 

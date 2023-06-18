@@ -1,11 +1,19 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
+import { Form } from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
-
+import Literals from './Literals'
+import validator from "../../Utils/Validator"
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import FormInput from '../../Utils/FormInput'
 export default class PatientdefinesCreate extends Component {
 
   constructor(props) {
@@ -37,7 +45,7 @@ export default class PatientdefinesCreate extends Component {
 
 
   render() {
-    const { Costumertypes, Patienttypes, Patientdefines } = this.props
+    const { Costumertypes, Patienttypes, Patientdefines, Profile } = this.props
 
     const Costumertypeoptions = Costumertypes.list.map(costumertype => {
       return { key: costumertype.Uuid, text: costumertype.Name, value: costumertype.Uuid }
@@ -48,121 +56,98 @@ export default class PatientdefinesCreate extends Component {
     })
 
     const Liveoptions = [
-      { key: 0, text: 'HAYIR YAŞAMIYOR', value: false },
-      { key: 1, text: 'EVET YAŞIYOR', value: true }
+      { key: 0, text: Literals.Options.Liveoptions.value0[Profile.Language], value: false },
+      { key: 1, text: Literals.Options.Liveoptions.value1[Profile.Language], value: true }
     ]
     const Genderoptions = [
-      { key: 0, text: 'ERKEK', value: "ERKEK" },
-      { key: 1, text: 'KADIN', value: "KADIN" }
+      { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
+      { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
     ]
     const Affinityoptions = [
-      { key: 0, text: 'ÖZ', value: "ÖZ" },
-      { key: 1, text: 'ÜVEY', value: "ÜVEY" }
+      { key: 0, text: Literals.Options.Affinityoptions.value0[Profile.Language], value: "0" },
+      { key: 1, text: Literals.Options.Affinityoptions.value1[Profile.Language], value: "1" }
     ]
 
     return (
       Patientdefines.isLoading || Patientdefines.isDispatching || Patienttypes.isLoading
         || Patienttypes.isDispatching || Costumertypes.isLoading || Costumertypes.isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Patientdefines"}>
-                  <Breadcrumb.Section >Hasta Tanımları</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Patientdefines"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <Form.Input label="Hasta Adı" placeholder="Hasta Adı" name="Firstname" fluid />
-                <Form.Input label="Hasta Soyadı" placeholder="Hasta Soyadı" name="Lastname" fluid />
-                <Form.Input label="Baba Adı" placeholder="Baba Adı" name="Fathername" fluid />
-                <Form.Input label="Anne Adı" placeholder="Anne Adı" name="Mothername" fluid />
+                <FormInput required placeholder={Literals.Columns.Firstname[Profile.Language]} name="Firstname" />
+                <FormInput required placeholder={Literals.Columns.Lastname[Profile.Language]} name="Lastname" />
+                <FormInput placeholder={Literals.Columns.Fathername[Profile.Language]} name="Fathername" />
+                <FormInput placeholder={Literals.Columns.Mothername[Profile.Language]} name="Mothername" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Anne Yakınlık Durumu</label>
-                  <Dropdown placeholder='Anne Yakınlık Durumu' fluid selection options={Affinityoptions} onChange={(e, { value }) => { this.setState({ selectedMotheralaffinity: value }) }} />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Baba Yakınlık Durumu</label>
-                  <Dropdown placeholder='Baba Yakınlık Durumu' fluid selection options={Affinityoptions} onChange={(e, { value }) => { this.setState({ selectedFatheralaffinity: value }) }} />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Anne Yaşıyor mu?</label>
-                  <Dropdown placeholder='Anne Yaşıyor mu' fluid selection options={Liveoptions} onChange={(e, { value }) => { this.setState({ selectedMotherstatus: value }) }} />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Baba Yaşıyor mu?</label>
-                  <Dropdown placeholder='Baba Yaşıyor mu' fluid selection options={Liveoptions} onChange={(e, { value }) => { this.setState({ selectedFatherstatus: value }) }} />
-                </Form.Field>
+                <FormInput placeholder={Literals.Columns.Motherbiologicalaffinity[Profile.Language]} options={Affinityoptions} value={this.state.selectedMotheralaffinity} onChange={(e, { value }) => { this.setState({ selectedMotheralaffinity: value }) }} formtype="dropdown" />
+                <FormInput placeholder={Literals.Columns.Fatherbiologicalaffinity[Profile.Language]} options={Affinityoptions} value={this.state.selectedFatheralaffinity} onChange={(e, { value }) => { this.setState({ selectedFatheralaffinity: value }) }} formtype="dropdown" />
+                <FormInput placeholder={Literals.Columns.Ismotheralive[Profile.Language]} options={Liveoptions} value={this.state.selectedMotherstatus} onChange={(e, { value }) => { this.setState({ selectedMotherstatus: value }) }} formtype="dropdown" />
+                <FormInput placeholder={Literals.Columns.Isfatheralive[Profile.Language]} options={Liveoptions} value={this.state.selectedFatherstatus} onChange={(e, { value }) => { this.setState({ selectedFatherstatus: value }) }} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="TC Kimlik No" placeholder="TC Kimlik No" name="CountryID" fluid />
-                <Form.Input label="Doğum Tarihi" placeholder="Doğum Tarihi" name="Dateofbirth" type='date' fluid />
-                <Form.Input label="Doğum Yeri" placeholder="Doğum Yeri" name="Placeofbirth" fluid />
-                <Form.Input label="Ölüm Tarihi" placeholder="Ölüm Tarihi" name="Dateofdeath" type='date' fluid />
+                <FormInput required placeholder={Literals.Columns.CountryID[Profile.Language]} name="CountryID" />
+                <FormInput placeholder={Literals.Columns.Dateofbirth[Profile.Language]} name="Dateofbirth" type='date' />
+                <FormInput placeholder={Literals.Columns.Placeofbirth[Profile.Language]} name="Placeofbirth" />
+                <FormInput placeholder={Literals.Columns.Dateofdeath[Profile.Language]} name="Dateofdeath" type='date' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Ölüm Yeri" placeholder="Ölüm Yeri" name="Placeofdeath" fluid />
-                <Form.Input label="Ölüm Sebebi" placeholder="Ölüm Sebebi" name="Deathinfo" fluid />
-                <Form.Field>
-                  <label className='text-[#000000de]'>Cinsiyet</label>
-                  <Dropdown placeholder='Cinsiyet' fluid selection options={Genderoptions} onChange={(e, { value }) => { this.setState({ selectedGenderstatus: value }) }} />
-                </Form.Field>
-                <Form.Input label="Kardeş Durumu" placeholder="Kardeş Durumu" name="Marialstatus" fluid />
+                <FormInput placeholder={Literals.Columns.Placeofbirth[Profile.Language]} name="Placeofdeath" />
+                <FormInput placeholder={Literals.Columns.Deathinfo[Profile.Language]} name="Deathinfo" />
+                <FormInput placeholder={Literals.Columns.Gender[Profile.Language]} options={Genderoptions} value={this.state.selectedGenderstatus} onChange={(e, { value }) => { this.setState({ selectedGenderstatus: value }) }} formtype="dropdown" />
+                <FormInput placeholder={Literals.Columns.Marialstatus[Profile.Language]} name="Marialstatus" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Çocuk Sayısı" placeholder="Çocuk Sayısı" name="Childnumber" type='number' fluid />
-                <Form.Input label="Engelli Çocuk Sayısı" placeholder="Engelli Çocuk Sayısı" name="Disabledchildnumber" type='number' fluid />
-                <Form.Input label="Kardeş Durumu" placeholder="Kardeş Durumu" name="Siblingstatus" fluid />
-                <Form.Input label="Sgk Durumu" placeholder="Sgk Durumu" name="Sgkstatus" fluid />
+                <FormInput placeholder={Literals.Columns.Childnumber[Profile.Language]} name="Childnumber" type='number' />
+                <FormInput placeholder={Literals.Columns.Disabledchildnumber[Profile.Language]} name="Disabledchildnumber" type='number' />
+                <FormInput placeholder={Literals.Columns.Siblingstatus[Profile.Language]} name="Siblingstatus" />
+                <FormInput placeholder={Literals.Columns.Sgkstatus[Profile.Language]} name="Sgkstatus" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Maaş Durumu" placeholder="Maaş Durumu" name="Budgetstatus" fluid />
-                <Form.Input label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="City" fluid />
-                <Form.Input label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="Town" fluid />
-                <Form.Input label="Tanımlı Adres 1" placeholder="Tanımlı Adres 1" name="Address1" fluid />
+                <FormInput placeholder={Literals.Columns.Budgetstatus[Profile.Language]} name="Budgetstatus" />
+                <FormInput placeholder={Literals.Columns.City[Profile.Language]} name="City" />
+                <FormInput placeholder={Literals.Columns.Town[Profile.Language]} name="Town" />
+                <FormInput placeholder={Literals.Columns.Address1[Profile.Language]} name="Address1" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Tanımlı Adres 2" placeholder="Tanımlı Adres 2" name="Address2" fluid />
-                <Form.Input label="Kayıtlı Ülke" placeholder="Kayıtlı Ülke" name="Country" fluid />
-                <Form.Input label="İletişim No 1" placeholder="İletişim No 1" name="Contactnumber1" fluid />
-                <Form.Input label="İletişim No 2" placeholder="İletişim No 2" name="Contactnumber2" fluid />
+                <FormInput placeholder={Literals.Columns.Address2[Profile.Language]} name="Address2" />
+                <FormInput placeholder={Literals.Columns.Country[Profile.Language]} name="Country" />
+                <FormInput placeholder={Literals.Columns.Contactnumber1[Profile.Language]} name="Contactnumber1" />
+                <FormInput placeholder={Literals.Columns.Contactnumber2[Profile.Language]} name="Contactnumber2" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="İletişim Kişi 1" placeholder="İletişim Kişi 1" name="Contactname1" fluid />
-                <Form.Input label="İletişim Kişi 2" placeholder="İletişim Kişi 2" name="Contactname2" fluid />
-                <Form.Field>
-                  <label className='text-[#000000de]'>Müşteri Türü</label>
-                  <Dropdown placeholder='Müşteri Türü' fluid selection options={Costumertypeoptions} onChange={(e, { value }) => { this.setState({ selectedcostumertype: value }) }} />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Hasta Türü</label>
-                  <Dropdown placeholder='Hasta Türü' fluid selection options={Patienttypeoptions} onChange={(e, { value }) => { this.setState({ selectedpatienttype: value }) }} />
-                </Form.Field>
+                <FormInput placeholder={Literals.Columns.Contactname1[Profile.Language]} name="Contactname1" />
+                <FormInput placeholder={Literals.Columns.Contactname2[Profile.Language]} name="Contactname2" />
+                <FormInput required placeholder={Literals.Columns.CostumertypeName[Profile.Language]} options={Costumertypeoptions} value={this.state.selectedcostumertype} onChange={(e, { value }) => { this.setState({ selectedcostumertype: value }) }} formtype="dropdown" />
+                <FormInput required placeholder={Literals.Columns.PatienttypeName[Profile.Language]} options={Patienttypeoptions} value={this.state.selectedpatienttype} onChange={(e, { value }) => { this.setState({ selectedpatienttype: value }) }} formtype="dropdown" />
               </Form.Group>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
+              <Footerwrapper>
                 <Link to="/Patientdefines">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Oluştur</Button>
-              </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddPatientdefines, history, fillPatientdefinenotification } = this.props
+    const { AddPatientdefines, history, fillPatientdefinenotification, Profile } = this.props
     const data = formToObject(e.target)
     data.PatienttypeID = this.state.selectedpatienttype
     data.CostumertypeID = this.state.selectedcostumertype
@@ -189,18 +174,27 @@ export default class PatientdefinesCreate extends Component {
     data.Childnumber && (data.Childnumber = parseInt(data.Childnumber))
 
     let errors = []
-    if (!data.Firstname || data.Firstname === '') {
-      errors.push({ type: 'Error', code: 'Hasta Tanımları', description: 'İsim Boş Olamaz' })
+    if (!validator.isString(data.Firstname)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Firstnamerequired[Profile.Language] })
     }
-    if (!data.Lastname || data.Lastname === '') {
-      errors.push({ type: 'Error', code: 'Hasta Tanımları', description: 'Soyisim Boş Olamaz' })
+    if (!validator.isString(data.Lastname)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Lastnamerequired[Profile.Language] })
+    }
+    if (!validator.isUUID(data.CostumertypeID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Costumertyperequired[Profile.Language] })
+    }
+    if (!validator.isUUID(data.PatienttypeID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Patienttyperequired[Profile.Language] })
+    }
+    if (!validator.isString(data.CountryID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CountryIDrequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
         fillPatientdefinenotification(error)
       })
     } else {
-      AddPatientdefines({data, history})
+      AddPatientdefines({ data, history })
     }
   }
 }

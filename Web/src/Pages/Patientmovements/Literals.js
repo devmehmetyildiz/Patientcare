@@ -11,13 +11,45 @@ const Literals = {
             tr: 'Tekil ID',
             en: 'Unique ID'
         },
-        Name: {
-            tr: 'Müşteri tür Adı',
-            en: 'Costumer type Name'
+        PatientdefineFirstname: {
+            tr: 'Hasta Adı',
+            en: 'Patient Name'
         },
-        Departmentstxt: {
-            tr: 'Departmanlar',
-            en: 'Departments'
+        Patientmovementtype: {
+            tr: 'Hareket Türü',
+            en: 'Patient Movement'
+        },
+        IsDeactive: {
+            tr: 'İptal mi?',
+            en: 'Is Deactive?'
+        },
+        OldPatientmovementtype: {
+            tr: 'Eski Hareket',
+            en: 'Old Movement'
+        },
+        NewPatientmovementtype: {
+            tr: 'Yeni Hareket',
+            en: 'New Movement'
+        },
+        IsTodoneed: {
+            tr: 'Yapılacaklar Gerekli mi?',
+            en: 'Is Todo Need?'
+        },
+        IsTodocompleted: {
+            tr: 'Yapılacaklar Tamamlandı mı?',
+            en: 'Is Todo Completed?'
+        },
+        IsComplated: {
+            tr: 'Tamamlandı mı?',
+            en: 'Is Completed?'
+        },
+        Iswaitingactivation: {
+            tr: 'Aktivasyon Bekleniyor mu?',
+            en: 'Is Waiting Activation'
+        },
+        Movementdate: {
+            tr: 'Hareket Tarihi',
+            en: 'Movement Date'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -46,8 +78,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Müşteri Türleri",
-            en: "Costumer Types"
+            tr: "Hasta Hareketleri",
+            en: "Patient Movements"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -58,8 +90,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Müşteri Türü Silme",
-            en: "Delete Costumer type"
+            tr: "Hasta Hareketi Silme",
+            en: "Delete Patient Movements"
         }
     },
     Button: {
@@ -87,22 +119,21 @@ const Literals = {
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Müşteri Türü Yok",
-            en: "There is no Costumer type found"
+            tr: "Tanımlı Hasta Hareketi Yok",
+            en: "There is no patient movement found"
         },
         Deletecheck: {
-            tr: "müşteri türünü silmek istediğinize emin misiniz?",
-            en: "costumer type will delete, are you sure?"
+            tr: "hasta hareketini silmek istediğinize emin misiniz?",
+            en: "patient movement will delete, are you sure?"
         },
-        Namerequired: {
-            tr: "İsim Gerekli",
-            en: "Name Required"
+        Yes: {
+            tr: "EVET",
+            en: "YES"
         },
-        Departmentsrequired: {
-            tr: "Departmanlar Gerekli",
-            en: "Departments Required"
-        },
-
+        No: {
+            tr: "HAYIR",
+            en: "NO"
+        }
     }
 }
 

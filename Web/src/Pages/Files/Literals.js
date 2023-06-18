@@ -12,12 +12,36 @@ const Literals = {
             en: 'Unique ID'
         },
         Name: {
-            tr: 'Müşteri tür Adı',
-            en: 'Costumer type Name'
+            tr: 'Dosya Adı',
+            en: 'File Name'
         },
-        Departmentstxt: {
-            tr: 'Departmanlar',
-            en: 'Departments'
+        ParentID: {
+            tr: 'Üst ID',
+            en: 'Parent ID'
+        },
+        Filename: {
+            tr: 'Orjinal Adı',
+            en: 'Original Name'
+        },
+        Filefolder: {
+            tr: 'Dosya Klasör',
+            en: 'File Folder'
+        },
+        Filepath: {
+            tr: 'Dosya Dizini',
+            en: 'File path'
+        },
+        File: {
+            tr: 'Dosya',
+            en: 'File'
+        },
+        Filetype: {
+            tr: 'Dosya Türü',
+            en: 'File Type'
+        },
+        Usagetype: {
+            tr: 'Kullanım Türü',
+            en: 'Usage Type'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -46,8 +70,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Müşteri Türleri",
-            en: "Costumer Types"
+            tr: "Dosyalar",
+            en: "Files"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -58,8 +82,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Müşteri Türü Silme",
-            en: "Delete Costumer type"
+            tr: "Dosya Silme",
+            en: "Delete File"
         }
     },
     Button: {
@@ -83,24 +107,28 @@ const Literals = {
             tr: "Geri Dön",
             en: "Go Back"
         },
+        AddFile: {
+            tr: "Dosya Ekle",
+            en: "Add File"
+        },
 
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Müşteri Türü Yok",
-            en: "There is no Costumer type found"
+            tr: "Tanımlı Dosya Yok",
+            en: "There is no files found"
         },
         Deletecheck: {
-            tr: "müşteri türünü silmek istediğinize emin misiniz?",
-            en: "costumer type will delete, are you sure?"
+            tr: "dosyasını silmek istediğinize emin misiniz?",
+            en: "file will delete, are you sure?"
         },
         Namerequired: {
-            tr: "İsim Gerekli",
-            en: "Name Required"
+            tr: "Dosya Adı Gerekli",
+            en: "File Name Required"
         },
-        Departmentsrequired: {
-            tr: "Departmanlar Gerekli",
-            en: "Departments Required"
+        Filesrequired: {
+            tr: "Dosyalar Gerekli",
+            en: "No File uploaded "
         },
 
     }

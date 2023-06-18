@@ -12,12 +12,8 @@ const Literals = {
             en: 'Unique ID'
         },
         Name: {
-            tr: 'Müşteri tür Adı',
-            en: 'Costumer type Name'
-        },
-        Departmentstxt: {
-            tr: 'Departmanlar',
-            en: 'Departments'
+            tr: 'Hasta Tür Adı',
+            en: 'Patient Type Name'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -46,8 +42,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Müşteri Türleri",
-            en: "Costumer Types"
+            tr: "Hasta Türü",
+            en: "Patient Types"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -58,8 +54,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Müşteri Türü Silme",
-            en: "Delete Costumer type"
+            tr: "Hasta Türü Silme",
+            en: "Delete Patient Types"
         }
     },
     Button: {
@@ -87,20 +83,16 @@ const Literals = {
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Müşteri Türü Yok",
-            en: "There is no Costumer type found"
+            tr: "Tanımlı Hasta Türü Yok",
+            en: "There is no Patient Type found"
         },
         Deletecheck: {
-            tr: "müşteri türünü silmek istediğinize emin misiniz?",
-            en: "costumer type will delete, are you sure?"
+            tr: "hasta türünü silmek istediğinize emin misiniz?",
+            en: "patient type will delete, are you sure?"
         },
         Namerequired: {
-            tr: "İsim Gerekli",
-            en: "Name Required"
-        },
-        Departmentsrequired: {
-            tr: "Departmanlar Gerekli",
-            en: "Departments Required"
+            tr: "Hasta Tür Adı Gerekli",
+            en: "Patient Type Name Required"
         },
 
     }
