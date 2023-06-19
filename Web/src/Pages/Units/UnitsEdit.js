@@ -4,6 +4,18 @@ import { Breadcrumb, Button, Divider, Dropdown, Form, Header } from 'semantic-ui
 import Popup from '../../Utils/Popup'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
+import Literals from './Literals'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import validator from '../../Utils/Validator'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import FormInput from '../../Utils/FormInput'
+import { FormContext } from '../../Provider/FormProvider'
+
+
 export default class UnitsEdit extends Component {
 
   constructor(props) {
@@ -34,6 +46,7 @@ export default class UnitsEdit extends Component {
           return department.Uuid
         }), isDatafetched: true, selectedstatusOption: selected_record.Unittype
       })
+      this.context.setFormstates(selected_record)
     }
   }
 
@@ -70,51 +83,35 @@ export default class UnitsEdit extends Component {
 
     return (
       Departments.isLoading || Departments.isDispatching || Units.isLoading || Units.isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Units"}>
-                  <Breadcrumb.Section >Birimler</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Güncelle</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Units"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <Form.Input label="Birim Adı" placeholder="Birim Adı" name="Name" fluid defaultValue={Units.selected_record.Name} />
-                <Form.Field>
-                  <label className='text-[#000000de]'>Birim Türü</label>
-                  <Dropdown placeholder='Birim Türü' fluid selection options={unitstatusOption} onChange={this.handleChangeOption} value={this.state.selectedstatusOption} />
-                </Form.Field>
+                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput placeholder={Literals.Columns.Unittype[Profile.Language]} fluid selection options={unitstatusOption} onChange={this.handleChangeOption} />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Departmanlar</label>
-                  <Dropdown
-                    placeholder='Departmanlar'
-                    clearable
-                    search
-                    fluid
-                    multiple
-                    value={this.state.selecteddepartments}
-                    selection
-                    options={Departmentoptions} onChange={this.handleChange} />
-                </Form.Field>
+                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} clearable search fluid multiple selection options={Departmentoptions} onChange={this.handleChange} />
               </Form.Group>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
+              <Footerwrapper>
                 <Link to="/Units">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Güncelle</Button>
-              </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
@@ -131,21 +128,20 @@ export default class UnitsEdit extends Component {
     })
 
     let errors = []
-    if (!data.Name || data.Name === '') {
-      errors.push({ type: 'Error', code: 'Birimler', description: 'İsim Boş Olamaz' })
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
     }
-    if ((Number.isNaN(data.Unittype))) {
-      errors.push({ type: 'Error', code: 'Birimler', description: 'Tür Seçili Değil' })
+    if (!validator.isNumber(data.Unittype)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.UnittypeRequired[Profile.Language] })
     }
-    if (!data.Departments || data.Departments.length <= 0) {
-      errors.push({ type: 'Error', code: 'Birimler', description: 'Hiç Bir Departman seçili değil' })
+    if (!validator.isArray(data.Departments)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
         fillUnitnotification(error)
       })
     } else {
-
       EditUnits({ data: { ...Units.selected_record, ...data }, history })
     }
   }
@@ -158,3 +154,4 @@ export default class UnitsEdit extends Component {
     this.setState({ selectedstatusOption: value })
   }
 }
+UnitsEdit.contextType = FormContext

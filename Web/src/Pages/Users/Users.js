@@ -6,7 +6,11 @@ import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import Notification from '../../Utils/Notification'
-
+import Literals from './Literals'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import UsersDelete from '../../Containers/Users/UsersDelete'
 export default class Users extends Component {
 
   constructor(props) {
@@ -32,39 +36,36 @@ export default class Users extends Component {
 
 
   render() {
-
-    const Columns = [
-      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Kullanıcı Adı', accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kullanıcı Adı (Büyük)', accessor: 'NormalizedUsername', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'E-Posta', accessor: 'Email', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'E-Posta Doğrulama', accessor: 'EmailConfirmed', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Son Hatalı Giriş Sayısı', accessor: 'AccessFailedCount', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'İsim', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Soyisim', accessor: 'Surname', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Telefon numarası', accessor: 'PhoneNumber', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Telefon numarası Doğrulama', accessor: 'PhoneNumberConfirmed', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Şehir', accessor: 'City', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'İlçe', accessor: 'Town', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Adres', accessor: 'Address', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Dil', accessor: 'Language', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Kullanıcı ID', accessor: 'UserID', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Varsayılan Departman', accessor: 'Defaultdepartment', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'İstasyonlar', accessor: 'Stationstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
-      { Header: 'Departmanlar', accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
-      { Header: 'Roller', accessor: 'Rolestxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.rolesCellhandler(col) },
-      { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleme Zamanı', accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
-
-
-    const { Users, DeleteUsers, Profile } = this.props
+    const { Users, DeleteUsers, Profile, handleDeletemodal, handleSelectedUser } = this.props
     const { isLoading, isDispatching } = Users
 
+    const Columns = [
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.NormalizedUsername[Profile.Language], accessor: 'NormalizedUsername', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Email[Profile.Language], accessor: 'Email', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.EmailConfirmed[Profile.Language], accessor: 'EmailConfirmed', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.AccessFailedCount[Profile.Language], accessor: 'AccessFailedCount', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Surname[Profile.Language], accessor: 'Surname', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.PhoneNumber[Profile.Language], accessor: 'PhoneNumber', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.PhoneNumberConfirmed[Profile.Language], accessor: 'PhoneNumberConfirmed', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.City[Profile.Language], accessor: 'City', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Town[Profile.Language], accessor: 'Town', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Address[Profile.Language], accessor: 'Address', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Language[Profile.Language], accessor: 'Language', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.UserID[Profile.Language], accessor: 'UserID', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Defaultdepartment[Profile.Language], accessor: 'Defaultdepartment', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Stations[Profile.Language], accessor: 'Stationstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
+      { Header: Literals.Columns.Departments[Profile.Language], accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Roles[Profile.Language], accessor: 'Rolestxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.rolesCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const metaKey = "Users"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
@@ -93,72 +94,44 @@ export default class Users extends Component {
         Rolestxt: rolestext,
         Departmentstxt: departmentext,
         edit: <Link to={`/Users/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+          handleSelectedUser(item)
+          handleDeletemodal(true)
+        }} />
       }
     })
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>
-          <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-            <div className='w-full mx-auto align-middle'>
-              <Header style={{ backgroundColor: 'transparent', border: 'none' }} as='h1' attached='top' >
-                <Grid columns='2' >
-                  <GridColumn width={8} className="">
-                    <Breadcrumb size='big'>
-                      <Link to={"/Users"}>
-                        <Breadcrumb.Section>Kullanıcılar</Breadcrumb.Section>
-                      </Link>
-                    </Breadcrumb>
-                  </GridColumn>
-                  <GridColumn width={8} >
-                    <Link to={"/Users/Create"}>
-                      <Button color='blue' floated='right' className='list-right-green-button'>
-                        Oluştur
-                      </Button>
+          <Pagewrapper>
+            <Headerwrapper>
+              <Grid columns='2' >
+                <GridColumn width={8} className="">
+                  <Breadcrumb size='big'>
+                    <Link to={"/Users"}>
+                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
-                    <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                  </GridColumn>
-                </Grid>
-              </Header>
-            </div>
-            <Divider className='w-full  h-[1px]' />
+                  </Breadcrumb>
+                </GridColumn>
+                <GridColumn width={8} >
+                  <Link to={"/Users/Create"}>
+                    <Button color='blue' floated='right' className='list-right-green-button'>
+                      {Literals.Page.Pagecreateheader[Profile.Language]}
+                    </Button>
+                  </Link>
+                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
+                </GridColumn>
+              </Grid>
+            </Headerwrapper>
+            <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />
-              </div> : <NoDataScreen message="Tanımlı Kullanıcı Yok" />
+              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
-          </div>
-          <Modal
-            onClose={() => this.setState({ open: false })}
-            onOpen={() => this.setState({ open: true })}
-            open={this.state.open}
-          >
-            <Modal.Header>Kullanıcı Silme</Modal.Header>
-            <Modal.Content image>
-              <Modal.Description>
-                <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Username} ` : null} </span>
-                  Kullanıcısını silmek istediğinize emin misiniz?
-                </p>
-              </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='black' onClick={() => this.setState({ open: false, selectedrecord: {} })}>
-                Vazgeç
-              </Button>
-              <Button
-                content="Sil"
-                labelPosition='right'
-                icon='checkmark'
-                onClick={() => {
-                  DeleteUsers(this.state.selectedrecord)
-                  this.setState({ open: false, selectedrecord: {} })
-                }}
-                positive
-              />
-            </Modal.Actions>
-          </Modal>
+          </Pagewrapper>
+          <UsersDelete />
         </React.Fragment>
     )
   }

@@ -13,6 +13,7 @@ import validator from '../../Utils/Validator'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
+import { FormContext } from '../../Provider/FormProvider'
 export default class TodogroupdefinesEdit extends Component {
   constructor(props) {
     super(props)
@@ -44,6 +45,7 @@ export default class TodogroupdefinesEdit extends Component {
         }), isDatafetched: true,
         selectedDepartment: selected_record.DepartmentID
       })
+      this.context.setFormstates(selected_record)
     }
     Notification(Todogroupdefines.notifications, removeTodogroupdefinenotification)
     Notification(Tododefines.notifications, removeTododefinenotification)
@@ -129,3 +131,4 @@ export default class TodogroupdefinesEdit extends Component {
     this.setState({ selectedtodos: value })
   }
 }
+TodogroupdefinesEdit.contextType = FormContext
