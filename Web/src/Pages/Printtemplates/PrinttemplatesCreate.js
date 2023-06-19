@@ -7,9 +7,15 @@ import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
 import Editor from "@monaco-editor/react";
 import InnerHTML from '../../Utils/DangerouslySetHtmlContent'
-import FormInput from '../../Utils/FormInput'
 import Literals from './Literals'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import validator from '../../Utils/Validator'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import FormInput from '../../Utils/FormInput'
 export default class PrinttemplatesCreate extends Component {
 
   constructor(props) {
@@ -34,7 +40,7 @@ export default class PrinttemplatesCreate extends Component {
 
   render() {
 
-    const { Printtemplates, Departments } = this.props
+    const { Printtemplates, Departments,Profile } = this.props
     const { isLoading, isDispatching } = Printtemplates
 
     const Departmentoptions = Departments.list.map(department => {

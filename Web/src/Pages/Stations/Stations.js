@@ -8,6 +8,10 @@ import Notification from '../../Utils/Notification'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import Literals from './Literals'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import StationsDelete from '../../Containers/Stations/StationsDelete'
 
 export default class Stations extends Component {
 
@@ -31,7 +35,7 @@ export default class Stations extends Component {
 
   render() {
 
-    const { Stations, DeleteStations, Profile } = this.props
+    const { Stations, DeleteStations, Profile, handleDeletemodal, handleSelectedStation } = this.props
     const { isLoading, isDispatching } = Stations
 
     const Columns = [
@@ -61,73 +65,45 @@ export default class Stations extends Component {
       return {
         ...item,
         edit: <Link to={`/Stations/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+          handleSelectedStation(item)
+          handleDeletemodal(true)
+        }} />
       }
     })
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>
-          <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-            <div className='w-full mx-auto align-middle'>
-              <Header style={{ backgroundColor: 'transparent', border: 'none' }} as='h1' attached='top' >
-                <Grid columns='2' >
-                  <GridColumn width={8} className="">
-                    <Breadcrumb size='big'>
-                      <Link to={"/Stations"}>
-                        <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-                      </Link>
-                    </Breadcrumb>
-                  </GridColumn>
-                  <GridColumn width={8} >
-                    <Link to={"/Stations/Create"}>
-                      <Button color='blue' floated='right' className='list-right-green-button'>
-                        {Literals.Button.Create[Profile.Language]}
-                      </Button>
+          <Pagewrapper>
+            <Headerwrapper>
+              <Grid columns='2' >
+                <GridColumn width={8} className="">
+                  <Breadcrumb size='big'>
+                    <Link to={"/Stations"}>
+                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
-                    <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                  </GridColumn>
-                </Grid>
-              </Header>
-            </div>
-            <Divider className='w-full  h-[1px]' />
+                  </Breadcrumb>
+                </GridColumn>
+                <GridColumn width={8} >
+                  <Link to={"/Stations/Create"}>
+                    <Button color='blue' floated='right' className='list-right-green-button'>
+                      {Literals.Page.Pagecreateheader[Profile.Language]}
+                    </Button>
+                  </Link>
+                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
+                </GridColumn>
+              </Grid>
+            </Headerwrapper>
+            <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />
-              </div> : <NoDataScreen message={Literals.Messages.Nostationfind[Profile.Language]} />
+              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
-          </div>
-          <Modal
-            onClose={() => this.setState({ open: false })}
-            onOpen={() => this.setState({ open: true })}
-            open={this.state.open}
-          >
-            <Modal.Header>{Literals.Page.Pagedeleteheader[Profile.Language]}</Modal.Header>
-            <Modal.Content image>
-              <Modal.Description>
-                <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
-                  {Literals.Messages.Deletestationcheck[Profile.Language]}
-                </p>
-              </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='black' onClick={() => this.setState({ open: false, selectedrecord: {} })}>
-                {Literals.Button.Giveup[Profile.Language]}
-              </Button>
-              <Button
-                content={Literals.Button.Delete[Profile.Language]}
-                labelPosition='right'
-                icon='checkmark'
-                onClick={() => {
-                  DeleteStations(this.state.selectedrecord)
-                  this.setState({ open: false, selectedrecord: {} })
-                }}
-                positive
-              />
-            </Modal.Actions>
-          </Modal>
-        </React.Fragment >
+          </Pagewrapper>
+          <StationsDelete />
+        </React.Fragment>
     )
   }
 

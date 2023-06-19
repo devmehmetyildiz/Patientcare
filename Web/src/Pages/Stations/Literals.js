@@ -79,11 +79,11 @@ const Literals = {
 
     },
     Messages: {
-        Nostationfind: {
+        Nodatafind: {
             tr: "Tanımlı İstasyon Yok",
             en: "There is no station found"
         },
-        Deletestationcheck: {
+        Deletecheck: {
             tr: "istasyonunu silmek istediğinize emin misiniz?",
             en: "station will delete, are you sure?"
         },

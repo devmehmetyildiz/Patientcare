@@ -122,7 +122,8 @@ export const PurchaseordersSlice = createSlice({
         notifications: [],
         isLoading: false,
         isDispatching: false,
-        isDeletemodalopen: false
+        isDeletemodalopen: false,
+        isCompletemodalopen: false
     },
     reducers: {
         handleSelectedPurchaseorder: (state, action) => {
@@ -138,6 +139,9 @@ export const PurchaseordersSlice = createSlice({
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
+        },
+        handleCompletemodal: (state, action) => {
+            state.isCompletemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -219,7 +223,8 @@ export const {
     handleSelectedPurchaseorder,
     fillPurchaseordernotification,
     removePurchaseordernotification,
-    handleDeletemodal
+    handleDeletemodal,
+    handleCompletemodal
 } = PurchaseordersSlice.actions;
 
 export default PurchaseordersSlice.reducer;

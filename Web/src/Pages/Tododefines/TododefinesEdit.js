@@ -1,10 +1,19 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Checkbox, Divider, Dropdown, Form, Header } from 'semantic-ui-react'
+import { Breadcrumb, Button, Checkbox, Form } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
-
+import Literals from './Literals'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import validator from '../../Utils/Validator'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import FormInput from '../../Utils/FormInput'
+import { FormContext } from '../../Provider/FormProvider'
 export default class TododefinesEdit extends Component {
   constructor(props) {
     super(props)
@@ -38,6 +47,7 @@ export default class TododefinesEdit extends Component {
           return period.Uuid
         })
       })
+      this.context.setFormstates(selected_record)
     }
     Notification(notifications, removeTododefinenotification)
     Notification(Periods.notifications, removePeriodnotification)
@@ -45,8 +55,8 @@ export default class TododefinesEdit extends Component {
 
   render() {
 
-    const { Tododefines, Periods } = this.props
-    const { selected_record, isLoading, isDispatching } = Tododefines
+    const { Tododefines, Periods, Profile } = this.props
+    const { isLoading, isDispatching } = Tododefines
 
     const Periodsoptions = Periods.list.map(period => {
       return { key: period.Uuid, text: period.Name, value: period.Uuid }
@@ -54,69 +64,56 @@ export default class TododefinesEdit extends Component {
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]' >
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Tododefines"}>
-                  <Breadcrumb.Section>Yapılacaklar</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Güncelle</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Tododefines"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Group widths={'equal'}>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Yapılacak İş</label>
-                  <Form.Input defaultValue={selected_record.Name} placeholder="Yapılacak İş" name="Name" fluid />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Açıklama</label>
-                  <Form.Input defaultValue={selected_record.Info} placeholder="Açıklama" name="Info" fluid />
-                </Form.Field>
+                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Kontroller</label>
-                  <Dropdown value={this.state.selectedPeriods} label="Kontroller" placeholder='Kontroller' clearable search fluid multiple selection options={Periodsoptions} onChange={(e, { value }) => { this.setState({ selectedPeriods: value }) }} />
-                </Form.Field>
+                <FormInput placeholder={Literals.Columns.Periods[Profile.Language]} value={this.state.selectedPeriods} clearable search multiple options={Periodsoptions} onChange={(e, { value }) => { this.setState({ selectedPeriods: value }) }} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <Form.Field>
                   <Checkbox toggle className='m-2'
-                    checked={this.state.isRequired}
                     onClick={(e) => { this.setState({ isRequired: !this.state.isRequired }) }}
-                    label="Zorunlu alan mı?" />
+                    label={Literals.Columns.IsRequired[Profile.Language]} />
                 </Form.Field>
                 <Form.Field>
                   <Checkbox toggle className='m-2'
-                    checked={this.state.isNeedactivation}
                     onChange={(e) => {
                       this.setState({ isNeedactivation: !this.state.isNeedactivation })
                     }}
-                    label="Onay Gerekir mi?" />
+                    label={Literals.Columns.IsNeedactivation[Profile.Language]} />
                 </Form.Field>
               </Form.Group>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
+              <Footerwrapper>
                 <Link to="/Tododefines">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Güncelle</Button>
-              </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { EditTododefines, history, removeTododefinenotification, Tododefines, Periods } = this.props
+    const { EditTododefines, history, removeTododefinenotification, Tododefines, Periods, Profile } = this.props
     const data = formToObject(e.target)
     data.Periods = this.state.selectedPeriods.map(period => {
       return Periods.list.find(u => u.Uuid === period)
@@ -124,11 +121,11 @@ export default class TododefinesEdit extends Component {
     data.IsNeedactivation = this.state.isNeedactivation
     data.IsRequired = this.state.isRequired
     let errors = []
-    if (!data.Name || data.Name === '') {
-      errors.push({ type: 'Error', code: 'Yapılacaklar', description: 'İsim Boş Olamaz' })
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
     }
-    if (!data.Periods || data.Periods.length <= 0) {
-      errors.push({ type: 'Error', code: 'Yapılacaklar', description: 'Hiç Bir Kontrol seçili değil' })
+    if (!validator.isArray(data.Periods)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PeriodsRequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
@@ -150,3 +147,4 @@ export default class TododefinesEdit extends Component {
   }
 
 }
+TododefinesEdit.contextType = FormContext

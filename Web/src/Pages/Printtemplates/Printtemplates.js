@@ -32,7 +32,7 @@ export default class Printtemplates extends Component {
   }
 
   render() {
-    const { Printtemplates, DeletePrinttemplates, Profile, handleDeletemodal, handleSelectedPrinttemplate } = this.props
+    const { Printtemplates, Profile, handleDeletemodal, handleSelectedPrinttemplate } = this.props
     const { isLoading, isDispatching } = Printtemplates
 
     const Columns = [

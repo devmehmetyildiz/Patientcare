@@ -5,7 +5,16 @@ import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
-
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import Literals from './Literals'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import FormInput from '../../Utils/FormInput'
+import validator from '../../Utils/Validator'
+import { FormContext } from '../../Provider/FormProvider'
 export default class PurchaseorderstocksEdit extends Component {
   constructor(props) {
     super(props)
@@ -45,15 +54,16 @@ export default class PurchaseorderstocksEdit extends Component {
         selectedpurchaseorder: selected_record.purchaseorderID,
         isDatafetched: true
       })
+      this.context.setFormstates(selected_record)
     }
-    Notification(Purchaseorders, removePurchaseordernotification)
-    Notification(Departments, removeDepartmentnotification)
-    Notification(Stockdefines, removeStockdefinenotification)
-    Notification(Purchaseorderstocks, removePurchaseorderstocknotification)
+    Notification(Purchaseorders.notifications, removePurchaseordernotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
+    Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
   }
 
   render() {
-    const { Purchaseorderstocks, Purchaseorders, Departments, Stockdefines } = this.props
+    const { Purchaseorderstocks, Purchaseorders, Departments, Stockdefines, Profile } = this.props
     const { selected_record } = Purchaseorderstocks
 
     const Departmentoptions = Departments.list.map(department => {
@@ -69,76 +79,64 @@ export default class PurchaseorderstocksEdit extends Component {
 
     return (
       Stockdefines.isLoading || Stockdefines.isDispatching || Purchaseorderstocks.isLoading || Purchaseorderstocks.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Purchaseorderstocks"}>
-                  <Breadcrumb.Section >Ürünler</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Güncelle</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Purchaseorderstocks"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Sipariş</label>
-                  <Dropdown placeholder='Sipariş' fluid selection options={Purchaseorderoptions} onChange={this.handleChangePurchase} value={this.state.selectedpurchaseorder} />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Ürün</label>
-                  <Dropdown placeholder='Ürün' fluid selection options={Stockdefineoptions} onChange={this.handleChangeStockdefine} value={this.state.selectedstockdefine} />
-                </Form.Field>
+                <FormInput placeholder={Literals.Columns.Purchaseorder[Profile.Language]} value={this.state.selectedpurchaseorder} options={Purchaseorderoptions} onChange={this.handleChangePurchase} formtype='dropdown' />
+                <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} value={this.state.selectedstockdefine} options={Stockdefineoptions} onChange={this.handleChangeStockdefine} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
+                <FormInput placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
+                <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <Form.Input label="Barkod No" placeholder="Barkod No" name="Barcodeno" fluid defaultValue={selected_record.Barcodeno} />
+                <FormInput placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
+                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} options={Departmentoptions} onChange={this.handleChangeDepartment} formtype='dropdown' />
               </Form.Group>
-              <Form.Group widths='equal'>
-                <Form.Field>
-                  <Form.Input label="Skt" placeholder="Skt" name="Skt" fluid type='date' defaultValue={this.getLocalDate(selected_record.Skt)} />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Departmanlar</label>
-                  <Dropdown placeholder='Departmanlar' fluid selection options={Departmentoptions} onChange={this.handleChangeDepartment} value={this.state.selecteddepartments} />
-                </Form.Field>
-              </Form.Group>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
+              <Footerwrapper>
                 <Link to="/Purchaseorderstocks">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Güncelle</Button>
-              </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { EditPurchaseorderstocks, history, fillPurchaseorderstocknotification, Purchaseorderstocks } = this.props
+    const { EditPurchaseorderstocks, history, fillPurchaseorderstocknotification, Purchaseorderstocks, Profile } = this.props
     const data = formToObject(e.target)
     data.DepartmentID = this.state.selecteddepartments
     data.StockdefineID = this.state.selectedstockdefine
     data.purchaseorderID = this.state.selectedpurchaseorder
 
     let errors = []
-    if (!data.DepartmentID || data.DepartmentID === '') {
-      errors.push({ type: 'Error', code: 'Ürünler', description: 'Departman Seçili Değil' })
+    if (!validator.isUUID(data.DepartmentID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
     }
-    if (!data.PurchaseorderID || data.PurchaseorderID === '') {
-      errors.push({ type: 'Error', code: 'Ürünler', description: 'Sipariş Seçili Değil' })
+    if (!validator.isUUID(data.PurchaseorderID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PurchasenumberRequired[Profile.Language] })
     }
-    if (!data.StockdefineID || data.StockdefineID === '') {
-      errors.push({ type: 'Error', code: 'Ürünler', description: 'Ürün Seçili Değil' })
+    if (!validator.isUUID(data.StockdefineID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StokdefineRequired[Profile.Language] })
+    }
+    if (!validator.isNumber(data.Amount)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.AmountRequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
@@ -167,3 +165,4 @@ export default class PurchaseorderstocksEdit extends Component {
     }
   }
 }
+PurchaseorderstocksEdit.contextType = FormContext

@@ -5,7 +5,15 @@ import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
-
+import Literals from './Literals'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import validator from '../../Utils/Validator'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import FormInput from '../../Utils/FormInput'
 export class RolesCreate extends Component {
 
     constructor(props) {
@@ -30,29 +38,24 @@ export class RolesCreate extends Component {
 
     render() {
         const { Roles } = this.props
-        const { privileges, privilegegroups, isLoading, isDispatching } = Roles
+        const { privileges, privilegegroups, isLoading, isDispatching, Profile } = Roles
 
         return (
             isLoading || isDispatching ? <LoadingPage /> :
-                <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-                    <div className='w-full mx-auto align-middle'>
-                        <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-                            <Breadcrumb size='big'>
-                                <Link to={"/Roles"}>
-                                    <Breadcrumb.Section >Roller</Breadcrumb.Section>
-                                </Link>
-                                <Breadcrumb.Divider icon='right chevron' />
-                                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
-                            </Breadcrumb>
-                        </Header>
-                    </div>
-                    <Divider className='w-full  h-[1px]' />
-                    <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-                        <Form className='' onSubmit={this.handleSubmit}>
-                            <Form.Field>
-                                <label className='text-[#000000de]'>Rol Adı</label>
-                                <Form.Input placeholder="Rol Adı" name="Name" fluid />
-                            </Form.Field>
+                <Pagewrapper>
+                    <Headerwrapper>
+                        <Headerbredcrump>
+                            <Link to={"/Roles"}>
+                                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                            </Link>
+                            <Breadcrumb.Divider icon='right chevron' />
+                            <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+                        </Headerbredcrump>
+                    </Headerwrapper>
+                    <Pagedivider />
+                    <Contentwrapper>
+                        <Form onSubmit={this.handleSubmit}>
+                            <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                             <div className='mb-4 outline outline-[1px] rounded-md outline-gray-200 p-4 overflow-y-auto max-h-[calc(100vh-26.2rem)]'>
                                 {privilegegroups.map(privilegegroup => {
                                     return <div key={privilegegroup} className="mb-8">
@@ -68,7 +71,7 @@ export class RolesCreate extends Component {
                                         <div className='grid grid-cols-3 gap-2'>
                                             {privileges.filter(u => u.group.includes(privilegegroup)).map((privilege, index) => {
                                                 return <Checkbox toggle className='m-2'
-                                                    checked={this.state.selectedPrivileges.find(u => u.code === privilege.code) ? true : false}
+                                                    checked={(this.state.selectedPrivileges.length > 0 ? this.state.selectedPrivileges : []).find(u => u.code === privilege.code) ? true : false}
                                                     onClick={(e) => { this.handleClickprivilege(e) }}
                                                     id={privilege.code}
                                                     key={index}
@@ -78,16 +81,15 @@ export class RolesCreate extends Component {
                                     </div>
                                 })}
                             </div>
-                            <div className='flex flex-row w-full justify-between py-4  items-center'>
+                            <Footerwrapper>
                                 <Link to="/Roles">
-                                    <Button floated="left" color='grey'>Geri Dön</Button>
+                                    <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                                 </Link>
-                                <Button floated="right" type='submit' color='blue'>Oluştur</Button>
-                            </div>
+                                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                            </Footerwrapper>
                         </Form>
-                    </div>
-
-                </div>
+                    </Contentwrapper>
+                </Pagewrapper >
         )
     }
 
@@ -95,17 +97,17 @@ export class RolesCreate extends Component {
     handleSubmit = (e) => {
         e.preventDefault()
 
-        const { AddRoles, history, fillRolenotification } = this.props
+        const { AddRoles, history, fillRolenotification, Profile } = this.props
 
         const data = formToObject(e.target)
         data.Privileges = this.state.selectedPrivileges.map(u => { return u.code })
 
         let errors = []
-        if (!data.Name || data.Name === '') {
-            errors.push({ type: 'Error', code: 'Roller', description: 'İsim Boş Olamaz' })
+        if (!validator.isString(data.Name)) {
+            errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
         }
-        if (!this.state.selectedPrivileges || this.state.selectedPrivileges.length <= 0) {
-            errors.push({ type: 'Error', code: 'Roller', description: 'Hiç Bir Yetki seçili değil' })
+        if (!validator.isArray(data.Privileges)) {
+            errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PrivilegesRequired[Profile.Language] })
         }
         if (errors.length > 0) {
             errors.forEach(error => {

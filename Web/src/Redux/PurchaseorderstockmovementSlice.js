@@ -8,7 +8,7 @@ export const GetPurchaseorderstockmovements = createAsyncThunk(
     'Purchaseorderstockmovements/GetPurchaseorderstockmovements',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.PURCHASEORDERSTOCKMOVEMENT);
+            const response = await instanse.get(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCKMOVEMENT);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

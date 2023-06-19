@@ -1,10 +1,18 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Dropdown, Form, Header } from 'semantic-ui-react'
+import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
-
+import Literals from './Literals'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import validator from '../../Utils/Validator'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import FormInput from '../../Utils/FormInput'
 export default class StockdefinesEdit extends Component {
   constructor(props) {
     super(props)
@@ -37,6 +45,7 @@ export default class StockdefinesEdit extends Component {
         selecteddepartment: selected_record.Department.Uuid, selectedunit: selected_record.Unit.Uuid, isDatafetched: true
       })
     }
+    this.context.setFormstates(selected_record)
     Notification(Stockdefines.notifications, removeStockdefinenotification)
     Notification(Departments.notifications, removeDepartmentnotification)
     Notification(Units.notifications, removeUnitnotification)
@@ -44,7 +53,7 @@ export default class StockdefinesEdit extends Component {
 
   render() {
 
-    const { Departments, Stockdefines, Units } = this.props
+    const { Departments, Stockdefines, Units, Profile, history } = this.props
 
     const Departmentoption = Departments.list.map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
@@ -55,44 +64,36 @@ export default class StockdefinesEdit extends Component {
 
     return (
       Units.isLoading || Units.isDispatching || Departments.isLoading || Departments.isDispatching || Stockdefines.isLoading || Stockdefines.isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Stockdefines"}>
-                  <Breadcrumb.Section >Ürün Tanımları</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
-              <Form.Field>
-                <Form.Input label="Stok Tanımı" placeholder="Stok Tanımı" name="Name" fluid defaultValue={Stockdefines.selected_record.Name} />
-                <Form.Input label="Açıklama" placeholder="Açıklama" name="Description" fluid defaultValue={Stockdefines.selected_record.Description} />
-              </Form.Field>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Stockdefines"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Group widths={"equal"}>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Departman</label>
-                  <Dropdown placeholder='Departman' clearable fluid selection value={this.state.selecteddepartment} options={Departmentoption} onChange={this.handleChangeDepartement} />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Birim</label>
-                  <Dropdown placeholder='Birim' clearable fluid selection value={this.state.selectedunit} options={Unitoption} onChange={this.handleChangeUnit} />
-                </Form.Field>
+                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput placeholder={Literals.Columns.Description[Profile.Language]} name="Description" fluid />
               </Form.Group>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
-                <Link to="/Departments">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>Güncelle</Button>
-              </div>
+              <Form.Group widths={"equal"}>
+                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartment} clearable options={Departmentoption} onChange={this.handleChangeDepartement} formtype='dropdown' />
+                <FormInput placeholder={Literals.Columns.Unit[Profile.Language]} value={this.state.selectedunit} clearable options={Unitoption} onChange={this.handleChangeUnit} formtype='dropdown' />
+              </Form.Group>
+              <Footerwrapper>
+                {history && <Link to="/Stockdefines">
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+                </Link>}
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
@@ -100,20 +101,20 @@ export default class StockdefinesEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { EditStockdefines, history, fillStockdefinenotification, Stockdefines, Units, Departments } = this.props
+    const { EditStockdefines, history, fillStockdefinenotification, Stockdefines, Profile } = this.props
     const data = formToObject(e.target)
     data.UnitID = this.state.selectedunit
     data.DepartmentID = this.state.selecteddepartment
 
     let errors = []
-    if (!data.Name || data.Name === '') {
-      errors.push({ type: 'Error', code: 'Ürün Tanımları', description: 'İsim Boş Olamaz' })
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
     }
-    if (!Departments.list.find(u => u.Uuid === this.state.selecteddepartment)) {
-      errors.push({ type: 'Error', code: 'Ürün Tanımları', description: 'Departman seçili değil' })
+    if (!validator.isUUID(data.DepartmentID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentsRequired[Profile.Language] })
     }
-    if (!Units.list.find(u => u.Uuid === this.state.selectedunit)) {
-      errors.push({ type: 'Error', code: 'Ürün Tanımları', description: 'Birim seçili değil' })
+    if (!validator.isUUID(data.UnitID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.UnitsRequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

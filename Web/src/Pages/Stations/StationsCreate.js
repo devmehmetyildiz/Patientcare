@@ -1,13 +1,19 @@
 import React, { Component } from 'react'
 import { Link, } from 'react-router-dom'
-import { Divider, Form } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
+import { Form } from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import Literals from './Literals'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 export default class StationsCreate extends Component {
 
 
@@ -23,34 +29,29 @@ export default class StationsCreate extends Component {
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Stations"}>
-                  <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={(e) => { this.handleSubmit(e) }}>
-              <Form.Field>
-                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" required />
-              </Form.Field>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Stations"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
+              <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" required />
+              <Footerwrapper>
                 <Link to="/Stations">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue' >{Literals.Button.Create[Profile.Language]}</Button>
-              </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
@@ -59,7 +60,7 @@ export default class StationsCreate extends Component {
 
     const { AddStations, history, fillStationnotification, Profile } = this.props
 
-    const data = { ...formToObject(e.target) }
+    const data = formToObject(e.target)
 
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -70,7 +71,6 @@ export default class StationsCreate extends Component {
         fillStationnotification(error)
       })
     } else {
-      this.setState({ inputvalues: data })
       AddStations({ data, history })
     }
   }
