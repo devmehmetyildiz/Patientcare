@@ -4,11 +4,12 @@ import { IoIosArrowDown } from "react-icons/io";
 import { MdSettings } from "react-icons/md";
 import { Collapse } from 'react-collapse';
 import { withRouter } from 'react-router-dom';
-
+import Literals from "../Utils/Literalregistrar"
 
 export function Sidebar(props) {
 
-    const { iconOnly, isMobile } = props
+    const { iconOnly, isMobile, Profile } = props
+
     const [Pages, setPages] = useState([
         {
             id: 1,
@@ -60,23 +61,23 @@ export function Sidebar(props) {
             isOpened: false,
             icon: <MdSettings className='text-green-800' />,
             items: [
-                { id: 1, subtitle: "Roller", url: "/Roles" },
-                { id: 2, subtitle: "Departmanlar", url: "/Departments" },
-                { id: 3, subtitle: "İstasyonlar", url: "/Stations" },
-                { id: 4, subtitle: "Kullanıcılar", url: "/Users" },
-                { id: 5, subtitle: "Durumlar", url: "/Cases" },
-                { id: 6, subtitle: "Birimler", url: "/Units" },
-                { id: 7, subtitle: "Stok Tanımları", url: "/Stockdefines" },
-                { id: 8, subtitle: "Kullanııclar", url: "/Users" },
-                { id: 9, subtitle: "Dosyalar", url: "/Files" },
-                { id: 10, subtitle: "Hasta Türleri", url: "/Patienttypes" },
-                { id: 11, subtitle: "Müşteri Türleri", url: "/Costumertypes" },
-                { id: 12, subtitle: "Yapılacaklar Tanımları", url: "/Tododefines" },
-                { id: 13, subtitle: "Yapılacaklar Grup Tanımları", url: "/Todogroupdefines" },
-                { id: 14, subtitle: "Kontrol Grupları", url: "/Checkperiods" },
-                { id: 15, subtitle: "Kontrol Periyodları", url: "/Periods" },
-                { id: 16, subtitle: "Mail Ayarları", url: "/Mailsettings" },
-                { id: 17, subtitle: "Yazdırma Taslakları", url: "/Printtemplates" },
+                { id: 1, subtitle: Literals.Roles.Page.Pageheader[Profile.Language], url: "/Roles" },
+                { id: 2, subtitle: Literals.Departments.Page.Pageheader[Profile.Language], url: "/Departments" },
+                { id: 3, subtitle: Literals.Stations.Page.Pageheader[Profile.Language], url: "/Stations" },
+                { id: 4, subtitle: Literals.Users.Page.Pageheader[Profile.Language], url: "/Users" },
+                { id: 5, subtitle: Literals.Cases.Page.Pageheader[Profile.Language], url: "/Cases" },
+                { id: 6, subtitle: Literals.Units.Page.Pageheader[Profile.Language], url: "/Units" },
+                { id: 7, subtitle: Literals.Stockdefines.Page.Pageheader[Profile.Language], url: "/Stockdefines" },
+                { id: 8, subtitle: Literals.Users.Page.Pageheader[Profile.Language], url: "/Users" },
+                { id: 9, subtitle: Literals.Files.Page.Pageheader[Profile.Language], url: "/Files" },
+                { id: 10, subtitle: Literals.Patienttypes.Page.Pageheader[Profile.Language], url: "/Patienttypes" },
+                { id: 11, subtitle: Literals.Costumertypes.Page.Pageheader[Profile.Language], url: "/Costumertypes" },
+                { id: 12, subtitle: Literals.Tododefines.Page.Pageheader[Profile.Language], url: "/Tododefines" },
+                { id: 13, subtitle: Literals.Todogroupdefines.Page.Pageheader[Profile.Language], url: "/Todogroupdefines" },
+                { id: 14, subtitle: Literals.Checkperiods.Page.Pageheader[Profile.Language], url: "/Checkperiods" },
+                { id: 15, subtitle: Literals.Periods.Page.Pageheader[Profile.Language], url: "/Periods" },
+                { id: 16, subtitle: Literals.Mailsettings.Page.Pageheader[Profile.Language], url: "/Mailsettings" },
+                { id: 17, subtitle: Literals.Printtemplates.Page.Pageheader[Profile.Language], url: "/Printtemplates" },
             ]
         },
     ])
@@ -142,7 +143,7 @@ export function Sidebar(props) {
                                     }}>
                                     {item.url ? <h3 className='m-0 cursor-pointer hover:text-[#2b7694] dark:hover:text-white text-TextColor font-bold font-Common'>{item.title}</h3> : <h3 className='text-TextColor font-bold font-Common'>{item.title}</h3>}
                                     <div className='h-full overflow-auto'>
-                                        <Collapse  isOpened={settedPage === item.id ? true : (item.isOpened ? item.isOpened : false)}>
+                                        <Collapse isOpened={settedPage === item.id ? true : (item.isOpened ? item.isOpened : false)}>
                                             {(item.items || []).map((subitem, index) => {
                                                 return <h1
                                                     key={index + index + index}
