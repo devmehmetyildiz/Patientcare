@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Icon, Button, Modal, Table, Label, Checkbox } from 'semantic-ui-react'
+import Literals from './Literals'
 
 class ColumnChooser extends Component {
   constructor(props) {
@@ -35,22 +36,23 @@ class ColumnChooser extends Component {
 
   render() {
 
+    const { Profile } = this.props
     const { decoratedColumns } = this.state
 
     return <React.Fragment>
-      <Button color='violet' floated='right' onClick={() => { this.setState({ opened: !this.state.opened }) }} >Görünüm</Button>
+      <Button color='violet' floated='right' onClick={() => { this.setState({ opened: !this.state.opened }) }} >{Literals.Columns.Visible[Profile.Language]}</Button>
       <Modal
         open={this.state.opened}
         size={'tiny'}
         centered={true}>
-        <Modal.Header><Icon name='columns' /> Kolon görünümünü ayarlama</Modal.Header>
+        <Modal.Header><Icon name='columns' />{Literals.Page.Pageheader[Profile.Language]}</Modal.Header>
         <Modal.Content scrolling>
           <Table celled className='list-table ' key='product-create-type-conversion-table ' >
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell width={1}>Sıra</Table.HeaderCell>
-                <Table.HeaderCell width={2}>Görünüm</Table.HeaderCell>
-                <Table.HeaderCell width={1}>Kolon Adı</Table.HeaderCell>
+                <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
+                <Table.HeaderCell width={2}>{Literals.Columns.Visible[Profile.Language]}</Table.HeaderCell>
+                <Table.HeaderCell width={1}>{Literals.Columns.Columnname[Profile.Language]}</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -74,8 +76,8 @@ class ColumnChooser extends Component {
           </Table>
         </Modal.Content>
         <Modal.Actions>
-          <Button type='button' negative onClick={() => this.setState({ opened: false })}>Vazgeç</Button>
-          <Button floated='right' type='submit' positive onClick={() => this.saveChanges()}>Kaydet</Button>
+          <Button type='button' negative onClick={() => this.setState({ opened: false })}>{Literals.Button.Giveup[Profile.Language]}</Button>
+          <Button floated='right' type='submit' positive onClick={() => this.saveChanges()}>{Literals.Button.Create[Profile.Language]}</Button>
         </Modal.Actions>
       </Modal>
     </React.Fragment>
@@ -99,7 +101,7 @@ class ColumnChooser extends Component {
         Config: JSON.stringify(decoratedColumns)
       }
     this.setState({ opened: false })
-    SaveTableMeta({data})
+    SaveTableMeta({ data })
   }
 
   orderChanged = (property, value) => {

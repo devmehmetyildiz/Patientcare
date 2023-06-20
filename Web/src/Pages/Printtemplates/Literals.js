@@ -58,8 +58,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Periyotlar",
-            en: "Periyodlar"
+            tr: "Yazdırma Taslakları",
+            en: "Print Templates"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -70,8 +70,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Periyot Silme",
-            en: "Delete Period"
+            tr: "Yazırma Taslağı Silme",
+            en: "Delete Print Template"
         }
     },
     Button: {
@@ -99,24 +99,28 @@ const Literals = {
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Periyot Yok",
-            en: "There is no Period found"
+            tr: "Tanımlı Yazırma Taslağı Yok",
+            en: "There is no Print Template found"
         },
         Deletecheck: {
-            tr: "periyodunu silmek istediğinize emin misiniz?",
-            en: "period will delete, are you sure?"
+            tr: "yazırma taslağını silmek istediğinize emin misiniz?",
+            en: "print template will delete, are you sure?"
         },
         Namerequired: {
-            tr: "Periyot Adı Gerekli",
-            en: "Period Required"
+            tr: "Yazdırma Taslak Adı Gerekli",
+            en: "Print Template Required"
         },
-        Occuredtimerequired: {
-            tr: "Gerçekleşme Süresi Gerekli",
-            en: "Occured Time Required"
+        Valuekeyrequired: {
+            tr: "Kaynak Değerdir Gerekli",
+            en: "Value Key Required"
         },
-        Checktimerequired: {
-            tr: "Kontrol Süresi Gerekli",
-            en: "Check Time Required"
+        Printtemplaterequired: {
+            tr: "Taslak Gerekli",
+            en: "Template Required"
+        },
+        Departmentrequired: {
+            tr: "Departman Gerekli",
+            en: "Department Required"
         },
 
     }

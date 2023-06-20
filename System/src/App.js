@@ -1,10 +1,11 @@
 const express = require('express');
 const app = express();
 const config = require('./Config');
+const { spawn } = require('child_process');
 
 require("./Middlewares/Databaseconnector")()
   .then(() => {
-    
+
     const cors = require('cors');
     const bodyParser = require('body-parser')
     const session = require('express-session')
@@ -56,7 +57,8 @@ require("./Middlewares/Databaseconnector")()
       const httpServer = http.createServer(app)
       httpServer.listen(config.port, () => {
         if (config.env === 'development') {
-        console.log(`${config.session.name} service is running at http://localhost:${httpServer.address().port} for public usage`)
+          console.log(`${config.session.name} service is running at http://localhost:${httpServer.address().port} for public usage`)
+
           db.applog_systemModel.create({
             Event: "App opened at: " + new Date()
           }).catch(() => {

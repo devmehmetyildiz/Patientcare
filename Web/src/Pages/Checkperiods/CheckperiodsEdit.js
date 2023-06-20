@@ -51,6 +51,7 @@ export default class CheckperiodsEdit extends Component {
       })
       this.context.setFormstates(selected_record)
     }
+    console.log('Checkperiods: ', Checkperiods);
     Notification(Periods.notifications, removePeriodnotification)
     Notification(Checkperiods.notifications, removeCheckperiodnotification)
   }

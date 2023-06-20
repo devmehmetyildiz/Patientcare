@@ -35,7 +35,7 @@ export class Roles extends Component {
   render() {
     const { Roles, Profile, handleDeletemodal, handleSelectedRole } = this.props
     const { isLoading, isDispatching } = Roles
-
+    
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
@@ -66,7 +66,7 @@ export class Roles extends Component {
       return {
         ...item,
         Privilegestxt: text,
-        edit: <Link to={`/roles/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        edit: <Link to={`/Roles/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedRole(item)
           handleDeletemodal(true)

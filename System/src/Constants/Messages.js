@@ -24,6 +24,18 @@ const messages = {
         tr: 'Yazdırma taslağı aktif değil',
       }
     },
+    RULE_NOT_FOUND: {
+      code: 'RULE_NOT_FOUND', description: {
+        en: 'The rule not found',
+        tr: 'Kural bulunamadı',
+      }
+    },
+    RULE_NOT_ACTIVE: {
+      code: 'RULE_NOT_ACTIVE', description: {
+        en: 'The rule not active',
+        tr: 'Kural aktif değil',
+      }
+    },
 
   },
   VALIDATION_ERROR: {
@@ -75,29 +87,47 @@ const messages = {
         tr: 'Bu işlem için ayar aktif mi? bilgisi gerekli',
       }
     },
-   MAILSETTINGID_REQUIRED: {
+    MAILSETTINGID_REQUIRED: {
       code: 'MAILSETTINGID_REQUIRED', description: {
         en: 'The mailsettingid required',
         tr: 'Bu işlem için mailsettingid gerekli',
       }
     },
-   UNSUPPORTED_MAILSETTINGID: {
+    UNSUPPORTED_MAILSETTINGID: {
       code: 'UNSUPPORTED_MAILSETTINGID', description: {
         en: 'unsupported mailsettingid',
         tr: 'Tanımsız mailsettingid',
       }
     },
 
-   PRINTTEMPLATEID_REQUIRED: {
+    PRINTTEMPLATEID_REQUIRED: {
       code: 'PRINTTEMPLATEID_REQUIRED', description: {
         en: 'The printtemplateid required',
         tr: 'Bu işlem için printtemplateid gerekli',
+      }
+    },
+    RULE_REQUIRED: {
+      code: 'RULE_REQUIRED', description: {
+        en: 'The rule required',
+        tr: 'Bu işlem için kural gerekli',
       }
     },
     UNSUPPORTED_PRINTTEMPLATEID: {
       code: 'UNSUPPORTED_PRINTTEMPLATEID', description: {
         en: 'unsupported printtemplateid',
         tr: 'Tanımsız printtemplateid',
+      }
+    },
+    RULEID_REQUIRED: {
+      code: 'RULEID_REQUIRED', description: {
+        en: 'The ruleId required',
+        tr: 'Bu işlem için ruleId gerekli',
+      }
+    },
+    UNSUPPORTED_RULEID: {
+      code: 'UNSUPPORTED_RULEID', description: {
+        en: 'unsupported ruleId',
+        tr: 'Tanımsız ruleId',
       }
     },
 

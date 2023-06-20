@@ -13,6 +13,7 @@ import validator from '../../Utils/Validator'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
+import { FormContext } from '../../Provider/FormProvider'
 export default class UsersEdit extends Component {
 
   constructor(props) {
@@ -59,6 +60,8 @@ export default class UsersEdit extends Component {
         selectedlanguage: selected_record.Language,
         isDatafetched: true
       })
+      console.log('selected_record: ', selected_record);
+      this.context.setFormstates(selected_record)
     }
     Notification(Departments.notifications, removeDepartmentnotification)
     Notification(Users.notifications, removeUsernotification)
@@ -69,8 +72,7 @@ export default class UsersEdit extends Component {
 
   render() {
 
-    const { Departments, Users, Stations, Roles } = this.props
-    const { selected_record } = Users
+    const { Departments, Users, Stations, Roles, Profile } = this.props
 
     const Stationoptions = Stations.list.map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
@@ -82,8 +84,8 @@ export default class UsersEdit extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
     const Languageoptions = [
-      { key: 'TR', text: 'TR', value: 'TR' },
-      { key: 'EN', text: 'EN', value: 'EN' },
+      { key: 1, text: 'EN', value: 'en' },
+      { key: 2, text: 'TR', value: 'tr' },
     ]
 
 
@@ -92,71 +94,53 @@ export default class UsersEdit extends Component {
         Roles.isLoading || Roles.isDispatching ||
         Users.isLoading || Users.isDispatching ||
         Stations.isLoading || Stations.isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Users"}>
-                  <Breadcrumb.Section >Kullanıcılar</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Güncelle</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit} preventDefault={false}>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Users"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Group widths={'equal'}>
-                <Form.Input label="İsim" placeholder="İsim" name="Name" fluid defaultValue={selected_record.Name} />
-                <Form.Input label="Soyisim" placeholder="Soyisim" name="Surname" fluid defaultValue={selected_record.Surname} />
-                <Form.Input label="E Posta" placeholder="E posta" name="Email" fluid defaultValue={selected_record.Email} />
+                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput placeholder={Literals.Columns.Surname[Profile.Language]} name="Surname" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Input label="Kullanıcı Adı" placeholder="Kullanıcı Adı" name="Username" fluid defaultValue={selected_record.Username} />
-                <Form.Input label="Kullanıcı Numarası" placeholder="Kullanıcı Numarası" name="UserID" type='number' fluid defaultValue={selected_record.UserID} />
-                <Form.Field>
-                  <label className='text-[#000000de]'>Dil</label>
-                  <Dropdown label="Dil" fluid selection options={Languageoptions} onChange={this.handleChangeLanguage} value={this.state.selectedlanguage} />
-                </Form.Field>
+                <FormInput placeholder={Literals.Columns.Email[Profile.Language]} name="Email" />
+                <FormInput placeholder={Literals.Columns.Username[Profile.Language]} name="Username" />
+                <FormInput placeholder={Literals.Columns.UserID[Profile.Language]} name="UserID" type='Number' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Input label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="City" fluid defaultValue={selected_record.City} />
-                <Form.Input label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="Town" fluid defaultValue={selected_record.Town} />
-                <Form.Input label="Adres" placeholder="Adres" name="Address" fluid defaultValue={selected_record.Address} />
+                <FormInput placeholder={Literals.Columns.City[Profile.Language]} name="City" />
+                <FormInput placeholder={Literals.Columns.Town[Profile.Language]} name="Town" />
+                <FormInput placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Field>
-                  <label className='text-[#000000de]'>İstasyonlar</label>
-                  <Dropdown label="İstasyonlar" clearable search fluid multiple selection options={Stationoptions} onChange={this.handleChangeStation} value={this.state.selectedstations} />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Departmanlar</label>
-                  <Dropdown label="İstasyonlar" clearable search fluid multiple selection options={Departmentoptions} onChange={this.handleChangeDepartment} value={this.state.selecteddepartments} />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Roller</label>
-                  <Dropdown label="İstasyonlar" clearable search fluid multiple selection options={Roleoptions} onChange={this.handleChangeRoles} value={this.state.selectedroles} />
-                </Form.Field>
+                <FormInput placeholder={Literals.Columns.Stations[Profile.Language]} value={this.state.selectedstations} clearable search multiple options={Stationoptions} onChange={this.handleChangeStation} formtype='dropdown' />
+                <FormInput placeholder={Literals.Columns.Departments[Profile.Language]} value={this.state.selecteddepartments} clearable search multiple options={Departmentoptions} onChange={this.handleChangeDepartment} formtype='dropdown' />
+                <FormInput placeholder={Literals.Columns.Roles[Profile.Language]} value={this.state.selectedroles} clearable search multiple options={Roleoptions} onChange={this.handleChangeRoles} formtype='dropdown' />
               </Form.Group>
-              <Form.Field>
-                <label className='text-[#000000de]'>Dil</label>
-                <Dropdown label="Dil" fluid selection options={Languageoptions} onChange={this.handleChangeLanguage} />
-              </Form.Field>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
+              <FormInput placeholder={Literals.Columns.Language[Profile.Language]} value={this.state.selectedlanguage} options={Languageoptions} onChange={this.handleChangeLanguage} formtype='dropdown' />
+              <Footerwrapper>
                 <Link to="/Users">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>Güncelle</Button>
-              </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
   handleSubmit = (e) => {
     e.preventDefault()
-    const { EditUsers, history, fillUsernotification, Roles, Departments, Stations, Users } = this.props
+    const { EditUsers, history, fillUsernotification, Roles, Departments, Stations, Users, Profile } = this.props
     const data = formToObject(e.target)
     data.UserID = parseInt(data.UserID, 10)
     data.Stations = this.state.selectedstations.map(station => {
@@ -171,29 +155,29 @@ export default class UsersEdit extends Component {
     data.Language = this.state.selectedlanguage
 
     let errors = []
-    if (!data.Name || data.Name === '') {
-      errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'İsim boş olamaz' })
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
     }
-    if (!data.Surname || data.Surname === '') {
-      errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Soy isim boş olamaz' })
+    if (!validator.isString(data.Surname)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.SurnameRequired[Profile.Language] })
     }
-    if (!data.Username || data.Username === '') {
-      errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Kullanıcı adı boş olamaz' })
+    if (!validator.isString(data.Username)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.UsernameRequired[Profile.Language] })
     }
-    if (!data.Email || data.Email === '') {
-      errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'E-posta boş olamaz' })
+    if (!validator.isString(data.Email)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.EmailRequired[Profile.Language] })
     }
-    if (!data.Stations || data.Stations.length <= 0) {
-      errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Hiç Bir İstasyon seçili değil' })
+    if (!validator.isArray(data.Stations)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StationsRequired[Profile.Language] })
     }
-    if (!data.Departments || data.Departments.length <= 0) {
-      errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Hiç Bir Departman seçili değil' })
+    if (!validator.isArray(data.Departments)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentsRequired[Profile.Language] })
     }
-    if (!data.Roles || data.Roles.length <= 0) {
-      errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Hiç Bir Rol seçili değil' })
+    if (!validator.isArray(data.Roles)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.RolesRequired[Profile.Language] })
     }
-    if (!data.Language || data.Language === '') {
-      errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Dil seçili değil' })
+    if (!validator.isString(data.Language)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.LanguageRequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
@@ -217,3 +201,4 @@ export default class UsersEdit extends Component {
     this.setState({ selectedlanguage: value })
   }
 }
+UsersEdit.contextType = FormContext

@@ -26,9 +26,9 @@ const Literals = {
             tr: 'Açıklama',
             en: 'Info'
         },
-        Periods: {
-            tr: 'Periyodlar',
-            en: 'Periods'
+        Checkperiods: {
+            tr: 'Kontrol Periyodları',
+            en: 'Check Periods'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -109,9 +109,9 @@ const Literals = {
             tr: "Yapılacak tanımını silmek istediğinize emin misiniz?",
             en: "Todo define will delete, are you sure?"
         },
-        PeriodsRequired: {
-            tr: "Periyotlar Gerekli",
-            en: "Periods Required"
+        CheckperiodsRequired: {
+            tr: "Kontrol periyotları Gerekli",
+            en: "Checkperiods Required"
         },
         NameRequired: {
             tr: "Yapılacak Adı Gerekli",

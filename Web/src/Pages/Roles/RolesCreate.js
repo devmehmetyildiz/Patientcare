@@ -23,7 +23,6 @@ export class RolesCreate extends Component {
         }
     }
 
-
     componentDidMount() {
         const { GetPrivileges, GetPrivilegegroups } = this.props
         GetPrivileges()
@@ -37,8 +36,8 @@ export class RolesCreate extends Component {
 
 
     render() {
-        const { Roles } = this.props
-        const { privileges, privilegegroups, isLoading, isDispatching, Profile } = Roles
+        const { Roles, Profile } = this.props
+        const { privileges, privilegegroups, isLoading, isDispatching } = Roles
 
         return (
             isLoading || isDispatching ? <LoadingPage /> :
@@ -55,7 +54,7 @@ export class RolesCreate extends Component {
                     <Pagedivider />
                     <Contentwrapper>
                         <Form onSubmit={this.handleSubmit}>
-                            <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                            <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                             <div className='mb-4 outline outline-[1px] rounded-md outline-gray-200 p-4 overflow-y-auto max-h-[calc(100vh-26.2rem)]'>
                                 {privilegegroups.map(privilegegroup => {
                                     return <div key={privilegegroup} className="mb-8">

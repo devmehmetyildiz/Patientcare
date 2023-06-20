@@ -42,7 +42,7 @@ export default class PatienttypesCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Footerwrapper>
                 <Link to="/Patienttypes">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>

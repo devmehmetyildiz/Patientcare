@@ -36,7 +36,7 @@ export default class Users extends Component {
 
 
   render() {
-    const { Users, DeleteUsers, Profile, handleDeletemodal, handleSelectedUser } = this.props
+    const { Users, Profile, handleDeletemodal, handleSelectedUser } = this.props
     const { isLoading, isDispatching } = Users
 
     const Columns = [

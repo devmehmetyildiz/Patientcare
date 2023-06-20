@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Dropdown, Form, Header } from 'semantic-ui-react'
-import Popup from '../../Utils/Popup'
+import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Literals from './Literals'
@@ -14,6 +13,7 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
+import Notification from '../../Utils/Notification'
 
 
 export default class UnitsEdit extends Component {
@@ -38,7 +38,7 @@ export default class UnitsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Units } = this.props
+    const { Departments, Units, removeDepartmentnotification, removeUnitnotification } = this.props
     const { selected_record, isLoading } = Units
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
@@ -48,21 +48,13 @@ export default class UnitsEdit extends Component {
       })
       this.context.setFormstates(selected_record)
     }
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Units.notifications, removeUnitnotification)
   }
 
   render() {
 
-    const { Units, Departments, removeDepartmentnotification, removeUnitnotification } = this.props
-    if (Units.notifications && Units.notifications.length > 0) {
-      let msg = Units.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeUnitnotification()
-    }
-    if (Departments.notifications && Departments.notifications.length > 0) {
-      let msg = Departments.notifications[0]
-      Popup(msg.type, msg.code, msg.description)
-      removeDepartmentnotification()
-    }
+    const { Units, Departments, Profile } = this.props
 
     const Departmentoptions = Departments.list.map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -97,11 +89,11 @@ export default class UnitsEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput placeholder={Literals.Columns.Unittype[Profile.Language]} fluid selection options={unitstatusOption} onChange={this.handleChangeOption} />
+                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput required placeholder={Literals.Columns.Unittype[Profile.Language]} value={this.state.selectedstatusOption} options={unitstatusOption} onChange={this.handleChangeOption} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} clearable search fluid multiple selection options={Departmentoptions} onChange={this.handleChange} />
+                <FormInput required placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} clearable search multiple options={Departmentoptions} onChange={this.handleChange} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Units">
@@ -119,7 +111,7 @@ export default class UnitsEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { EditUnits, history, fillUnitnotification, Departments, Units } = this.props
+    const { EditUnits, history, fillUnitnotification, Departments, Units, Profile } = this.props
     const { list } = Departments
     const data = formToObject(e.target)
     data.Unittype = this.state.selectedstatusOption

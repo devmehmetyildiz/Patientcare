@@ -19,8 +19,8 @@ export default class StockdefinesCreate extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selecteddepartment: {},
-      selectedunit: {}
+      selecteddepartment: "",
+      selectedunit: ""
     }
   }
 
@@ -63,12 +63,12 @@ export default class StockdefinesCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths={"equal"}>
-                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput placeholder={Literals.Columns.Description[Profile.Language]} name="Description" fluid />
+                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput  placeholder={Literals.Columns.Description[Profile.Language]} name="Description" fluid />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartment} clearable options={Departmentoptions} onChange={this.handleChangeDepartement} formtype='dropdown' />
-                <FormInput placeholder={Literals.Columns.Unit[Profile.Language]} value={this.state.selectedunit} clearable options={Unitoptions} onChange={this.handleChangeUnit} formtype='dropdown' />
+                <FormInput required placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartment} clearable options={Departmentoptions} onChange={this.handleChangeDepartement} formtype='dropdown' />
+                <FormInput required placeholder={Literals.Columns.Unit[Profile.Language]} value={this.state.selectedunit} clearable options={Unitoptions} onChange={this.handleChangeUnit} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 {history && <Link to="/Stockdefines">

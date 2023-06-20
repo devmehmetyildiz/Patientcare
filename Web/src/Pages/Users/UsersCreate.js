@@ -44,7 +44,7 @@ export default class UsersCreate extends Component {
 
   render() {
 
-    const { Departments, Users, Stations, Roles } = this.props
+    const { Departments, Users, Stations, Roles, Profile } = this.props
 
     const Stationoptions = Stations.list.map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
@@ -80,26 +80,26 @@ export default class UsersCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths={'equal'}>
-                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput placeholder={Literals.Columns.Surname[Profile.Language]} name="Surname" />
-                <FormInput placeholder={Literals.Columns.Password[Profile.Language]} name="Password" type='password' />
+                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput required placeholder={Literals.Columns.Surname[Profile.Language]} name="Surname" />
+                <FormInput required placeholder={Literals.Columns.Password[Profile.Language]} name="Password" type='password' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput placeholder={Literals.Columns.Email[Profile.Language]} name="Email" />
-                <FormInput placeholder={Literals.Columns.Username[Profile.Language]} name="Username" />
-                <FormInput placeholder={Literals.Columns.UserID[Profile.Language]} name="UserID" type='Number' />
+                <FormInput required placeholder={Literals.Columns.Email[Profile.Language]} name="Email" />
+                <FormInput required placeholder={Literals.Columns.Username[Profile.Language]} name="Username" />
+                <FormInput required placeholder={Literals.Columns.UserID[Profile.Language]} name="UserID" type='Number' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput placeholder={Literals.Columns.City[Profile.Language]} name="City" />
-                <FormInput placeholder={Literals.Columns.Town[Profile.Language]} name="Town" />
-                <FormInput placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
+                <FormInput required placeholder={Literals.Columns.City[Profile.Language]} name="City" />
+                <FormInput required placeholder={Literals.Columns.Town[Profile.Language]} name="Town" />
+                <FormInput required placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput placeholder={Literals.Columns.Stations[Profile.Language]} value={this.state.selectedstations} clearable search multiple options={Stationoptions} onChange={this.handleChangeStation} formtype='dropdown' />
-                <FormInput placeholder={Literals.Columns.Departments[Profile.Language]} value={this.state.selecteddepartments} clearable search multiple options={Departmentoptions} onChange={this.handleChangeDepartment} formtype='dropdown' />
-                <FormInput placeholder={Literals.Columns.Roles[Profile.Language]} value={this.state.selectedroles} clearable search multiple options={Roleoptions} onChange={this.handleChangeRoles} formtype='dropdown' />
+                <FormInput required placeholder={Literals.Columns.Stations[Profile.Language]} value={this.state.selectedstations} clearable search multiple options={Stationoptions} onChange={this.handleChangeStation} formtype='dropdown' />
+                <FormInput required placeholder={Literals.Columns.Departments[Profile.Language]} value={this.state.selecteddepartments} clearable search multiple options={Departmentoptions} onChange={this.handleChangeDepartment} formtype='dropdown' />
+                <FormInput required placeholder={Literals.Columns.Roles[Profile.Language]} value={this.state.selectedroles} clearable search multiple options={Roleoptions} onChange={this.handleChangeRoles} formtype='dropdown' />
               </Form.Group>
-              <FormInput placeholder={Literals.Columns.Language[Profile.Language]} value={this.state.selectedlanguage} options={Languageoptions} onChange={this.handleChangeLanguage} formtype='dropdown' />
+              <FormInput required placeholder={Literals.Columns.Language[Profile.Language]} value={this.state.selectedlanguage} options={Languageoptions} onChange={this.handleChangeLanguage} formtype='dropdown' />
               <Footerwrapper>
                 <Link to="/Users">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -114,7 +114,7 @@ export default class UsersCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddUsers, history, fillUsernotification, Roles, Departments, Stations } = this.props
+    const { AddUsers, history, fillUsernotification, Roles, Departments, Stations, Profile } = this.props
     const data = formToObject(e.target)
     data.UserID = parseInt(data.UserID, 10)
     data.Stations = this.state.selectedstations.map(station => {

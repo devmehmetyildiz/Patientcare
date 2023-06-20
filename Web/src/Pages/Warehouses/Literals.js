@@ -1,6 +1,5 @@
 const Literals = {
     Options: {
-
     },
     Columns: {
         Id: {
@@ -12,16 +11,48 @@ const Literals = {
             en: 'Unique ID'
         },
         Name: {
-            tr: 'Periyot Adı',
-            en: 'Period Name'
+            tr: 'Ambar Adı',
+            en: 'Warehouse Name'
         },
-        Occuredtime: {
-            tr: 'Gerçekleşme Tarihi',
-            en: 'Occured Time'
+        Stockdefine: {
+            tr: 'Ürün Tanımı',
+            en: 'Stock Define'
         },
-        Checktime: {
-            tr: 'Kontrol Süresi',
-            en: 'Check Time'
+        Department: {
+            tr: 'Departman',
+            en: 'Department'
+        },
+        Stocks: {
+            tr: 'Stoklar',
+            en: 'Stocks'
+        },
+        Skt: {
+            tr: 'Skt',
+            en: 'Skt'
+        },
+        Barcodeno: {
+            tr: 'Barkod No',
+            en: 'Barcode No'
+        },
+        Maxamount: {
+            tr: 'Max Miktar',
+            en: 'Max Amount'
+        },
+        Amount: {
+            tr: 'Miktar',
+            en: 'Amount'
+        },
+        Usageamount: {
+            tr: 'Kullanılan Miktar',
+            en: 'Usage Amount'
+        },
+        Source: {
+            tr: 'Kaynak',
+            en: 'Source'
+        },
+        Info: {
+            tr: 'Açıklama',
+            en: 'Info'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -50,8 +81,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Periyotlar",
-            en: "Periods"
+            tr: "Ambarlar",
+            en: "Warehouses"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -62,8 +93,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Periyot Silme",
-            en: "Delete Period"
+            tr: "Ambar Silme",
+            en: "Delete Warehouses"
         }
     },
     Button: {
@@ -91,26 +122,29 @@ const Literals = {
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Periyot Yok",
-            en: "There is no Period found"
+            tr: "Tanımlı Ambar Yok",
+            en: "There is no warehouses found"
         },
         Deletecheck: {
-            tr: "periyodunu silmek istediğinize emin misiniz?",
-            en: "period will delete, are you sure?"
+            tr: "Ambarı silmek istediğinize emin misiniz?",
+            en: "Warehouse will delete, are you sure?"
         },
-        Namerequired: {
-            tr: "Periyot Adı Gerekli",
-            en: "Period Required"
+        NameRequired: {
+            tr: "İsim Gerekli",
+            en: "Name Required"
         },
-        Occuredtimerequired: {
-            tr: "Gerçekleşme Süresi Gerekli",
-            en: "Occured Time Required"
+        InfoRequired: {
+            tr: "Açıklama Gerekli",
+            en: "Info Required"
         },
-        Checktimerequired: {
-            tr: "Kontrol Süresi Gerekli",
-            en: "Check Time Required"
+        Yes: {
+            tr: "EVET",
+            en: "YES"
         },
-
+        No: {
+            tr: "HAYIR",
+            en: "NO"
+        }
     }
 }
 

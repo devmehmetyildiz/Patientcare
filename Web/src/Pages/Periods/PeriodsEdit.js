@@ -66,11 +66,11 @@ export default class PeriodsEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Field>
-                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               </Form.Field>
               <Form.Group widths={"equal"}>
-                <FormInput type='time' placeholder={Literals.Columns.Occuredtime[Profile.Language]} name="Occuredtime" />
-                <FormInput type='time' placeholder={Literals.Columns.Checktime[Profile.Language]} name="Checktime" />
+                <FormInput required type='time' placeholder={Literals.Columns.Occuredtime[Profile.Language]} name="Occuredtime" />
+                <FormInput required type='time' placeholder={Literals.Columns.Checktime[Profile.Language]} name="Checktime" />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Periods">

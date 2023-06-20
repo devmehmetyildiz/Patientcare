@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
+import { Form } from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
@@ -71,11 +71,11 @@ export default class CasesCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput placeholder={Literals.Columns.Unittype[Profile.Language]} fluid selection options={unitstatusOption} onChange={this.handleChangeOption} />
+                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput required placeholder={Literals.Columns.Unittype[Profile.Language]} value={this.state.selectedstatusOption} options={unitstatusOption} onChange={this.handleChangeOption} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} clearable search fluid multiple selection options={Departmentoptions} onChange={this.handleChange} />
+                <FormInput required placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} clearable search multiple options={Departmentoptions} onChange={this.handleChange} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Units">

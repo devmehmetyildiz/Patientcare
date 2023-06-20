@@ -7,15 +7,13 @@ import Notification from '../../Utils/Notification'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import WarehousesList from './WarehousesList'
+import Literals from './Literals'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import WarehousesDelete from '../../Containers/Warehouses/WarehousesDelete'
 
 export default class Warehouses extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-      selectedrecord: {}
-    }
-  }
 
   componentDidMount() {
     const { GetWarehouses } = this.props
@@ -29,6 +27,8 @@ export default class Warehouses extends Component {
 
 
   render() {
+    const { Warehouses, handleDeletemodal, handleSelectedWarehouse, Profile } = this.props
+    const { isLoading, isDispatching } = Warehouses
 
     const Columns = [
       {
@@ -40,21 +40,16 @@ export default class Warehouses extends Component {
           </span>
         ),
       },
-      { Header: 'Id', accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Tekil ID', accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'İsim', accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Açıklama', accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: 'Oluşturan Kullanıcı', accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleyen Kullanıcı', accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Oluşturma Zamanı', accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: 'Güncelleme Zamanı', accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { accessor: 'edit', Header: "Güncelle", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { accessor: 'delete', Header: "Sil", canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
-
-
-    const { Warehouses, DeleteWarehouses, Profile } = this.props
-    const { isLoading, isDispatching } = Warehouses
-
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const metaKey = "Warehouses"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
@@ -67,86 +62,54 @@ export default class Warehouses extends Component {
       }) : []
     };
 
-    const list = (Warehouses.list || []).forEach(item => {
+    const list = (Warehouses.list || []).map(item => {
       return {
         ...item,
-        edit: <Link to={`/Stations/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => { this.setState({ selectedrecord: item, open: true }) }} />
+        edit: <Link to={`/Warehouses/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+          handleSelectedWarehouse(item)
+          handleDeletemodal(true)
+        }} />
       }
     })
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>
-          <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-            <div className='w-full mx-auto align-middle'>
-              <Header style={{ backgroundColor: 'transparent', border: 'none' }} as='h1' attached='top' >
-                <Grid columns='2' >
-                  <GridColumn width={8} className="">
-                    <Breadcrumb size='big'>
-                      <Link to={"/Warehouses"}>
-                        <Breadcrumb.Section>Ambarlar</Breadcrumb.Section>
-                      </Link>
-                    </Breadcrumb>
-                  </GridColumn>
-                  <GridColumn width={8} >
-                    <Link to={"/Warehouses/Create"}>
-                      <Button color='blue' floated='right' className='list-right-green-button'>
-                        Oluştur
-                      </Button>
+          <Pagewrapper>
+            <Headerwrapper>
+              <Grid columns='2' >
+                <GridColumn width={8} className="">
+                  <Breadcrumb size='big'>
+                    <Link to={"/Warehouses"}>
+                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
-                    <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                  </GridColumn>
-                </Grid>
-              </Header>
-            </div>
-            <Divider className='w-full  h-[1px]' />
+                  </Breadcrumb>
+                </GridColumn>
+                <GridColumn width={8} >
+                  <Link to={"/Warehouses/Create"}>
+                    <Button color='blue' floated='right' className='list-right-green-button'>
+                      {Literals.Page.Pagecreateheader[Profile.Language]}
+                    </Button>
+                  </Link>
+                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
+                </GridColumn>
+              </Grid>
+            </Headerwrapper>
+            <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
                 <WarehousesList
                   Data={list}
                   Columns={Columns}
                   initialConfig={initialConfig}
+                  Profile={Profile}
                 />
-              </div> : <NoDataScreen message="Tanımlı Ambar Yok" />
+              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
-          </div>
-          <Modal
-            onClose={() => this.setState({ open: false })}
-            onOpen={() => this.setState({ open: true })}
-            open={this.state.open}
-          >
-            <Modal.Header>Ambar Silme</Modal.Header>
-            <Modal.Content image>
-              <Modal.Description>
-                <p>
-                  <span className='font-bold'>{Object.keys(this.state.selectedrecord).length > 0 ? `${this.state.selectedrecord.Name} ` : null} </span>
-                  ambarını silmek istediğinize emin misiniz?
-                </p>
-              </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='black' onClick={() => this.setState({ open: false, selectedrecord: {} })}>
-                Vazgeç
-              </Button>
-              <Button
-                content="Sil"
-                labelPosition='right'
-                icon='checkmark'
-                onClick={() => {
-                  DeleteWarehouses(this.state.selectedrecord)
-                  this.setState({ open: false, selectedrecord: {} })
-                }}
-                positive
-              />
-            </Modal.Actions>
-          </Modal>
-        </React.Fragment >
+          </Pagewrapper>
+          <WarehousesDelete />
+        </React.Fragment>
     )
   }
-
-  handleChangeModal = (value) => {
-    this.setState({ modal: value })
-  }
-
 }

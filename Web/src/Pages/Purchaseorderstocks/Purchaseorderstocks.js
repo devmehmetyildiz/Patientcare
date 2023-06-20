@@ -35,12 +35,12 @@ export default class Purchaseorderstocks extends Component {
 
   render() {
 
-    const { Purchaseorderstocks, DeletePurchaseorderstocks, Profile, handleDeletemodal, handleSelectedPurchaseorderstocks } = this.props
+    const { Purchaseorderstocks, Profile, handleDeletemodal, handleSelectedPurchaseorderstocks } = this.props
     const { isLoading, isDispatching } = Purchaseorderstocks
 
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Patient[Profile.Language], accessor: 'PatientPatientdefineFirstname', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.patientdefineCellhandler(col) },
+      { Header: Literals.Columns.Purchaseorder[Profile.Language], accessor: 'Purchaseorder.Purchasenumber', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Department[Profile.Language], accessor: 'Stockdefine.Department.Name', sortable: true, canGroupBy: true, canFilter: true },

@@ -64,7 +64,6 @@ export default class PurchaseorderstocksEdit extends Component {
 
   render() {
     const { Purchaseorderstocks, Purchaseorders, Departments, Stockdefines, Profile } = this.props
-    const { selected_record } = Purchaseorderstocks
 
     const Departmentoptions = Departments.list.map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }

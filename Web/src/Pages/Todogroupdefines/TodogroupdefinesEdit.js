@@ -79,10 +79,10 @@ export default class TodogroupdefinesEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Form.Group widths={'equal'}>
-                <FormInput placeholder={Literals.Columns.Tododefines[Profile.Language]} value={this.state.selectedTododefines} clearable multiple selection options={Tododefineoptions} onChange={(e, { value }) => { this.setState({ selectedTododefines: value }) }} formtype='dropdown' />
-                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selectedDepartment} clearable selection options={Departmentoptions} onChange={(e, { value }) => { this.setState({ selectedDepartment: value }) }} formtype='dropdown' />
+                <FormInput required placeholder={Literals.Columns.Tododefines[Profile.Language]} value={this.state.selectedTododefines} clearable multiple selection options={Tododefineoptions} onChange={(e, { value }) => { this.setState({ selectedTododefines: value }) }} formtype='dropdown' />
+                <FormInput required placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selectedDepartment} clearable selection options={Departmentoptions} onChange={(e, { value }) => { this.setState({ selectedDepartment: value }) }} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Todogroupdefines">

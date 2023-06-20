@@ -13,6 +13,7 @@ import validator from '../../Utils/Validator'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
+import { FormContext } from '../../Provider/FormProvider'
 export default class StockdefinesEdit extends Component {
   constructor(props) {
     super(props)
@@ -78,12 +79,12 @@ export default class StockdefinesEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths={"equal"}>
-                <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput placeholder={Literals.Columns.Description[Profile.Language]} name="Description" fluid />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartment} clearable options={Departmentoption} onChange={this.handleChangeDepartement} formtype='dropdown' />
-                <FormInput placeholder={Literals.Columns.Unit[Profile.Language]} value={this.state.selectedunit} clearable options={Unitoption} onChange={this.handleChangeUnit} formtype='dropdown' />
+                <FormInput required placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartment} clearable options={Departmentoption} onChange={this.handleChangeDepartement} formtype='dropdown' />
+                <FormInput required placeholder={Literals.Columns.Unit[Profile.Language]} value={this.state.selectedunit} clearable options={Unitoption} onChange={this.handleChangeUnit} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 {history && <Link to="/Stockdefines">
@@ -132,3 +133,4 @@ export default class StockdefinesEdit extends Component {
     this.setState({ selecteddepartment: value })
   }
 }
+StockdefinesEdit.contextType = FormContext

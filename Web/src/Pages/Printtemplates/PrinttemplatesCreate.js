@@ -70,10 +70,10 @@ export default class PrinttemplatesCreate extends Component {
                       key: 'save',
                       content: <React.Fragment>
                         <Form.Group widths={"equal"}>
-                          <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                          <FormInput placeholder={Literals.Columns.Valuekey[Profile.Language]} name="Valuekey" />
+                          <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                          <FormInput required placeholder={Literals.Columns.Valuekey[Profile.Language]} name="Valuekey" />
                         </Form.Group>
-                        <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selectedDepartment} clearable search options={Departmentoptions} onChange={(e, { value }) => { this.setState({ selectedDepartment: value }) }} formtype="dropdown" />
+                        <FormInput required placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selectedDepartment} clearable search options={Departmentoptions} onChange={(e, { value }) => { this.setState({ selectedDepartment: value }) }} formtype="dropdown" />
                       </React.Fragment>
                     }
                   },
@@ -134,13 +134,13 @@ export default class PrinttemplatesCreate extends Component {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description:Literals.Messages.Namerequired[Profile.Language]  })
     }
     if (!validator.isString(data.Valuekey)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.val[Profile.Language] })
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Valuekeyrequired[Profile.Language] })
     }
     if (!validator.isUUID(data.DepartmentID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: 'Departman seçili değil' })
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Departmentrequired[Profile.Language] })
     }
     if (!validator.isString(data.Printtemplate)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: 'Tasarım Yazılmadı' })
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Printtemplaterequired[Profile.Language]})
     }
     if (errors.length > 0) {
       errors.forEach(error => {

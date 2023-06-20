@@ -19,7 +19,7 @@ export default class Tododefines extends Component {
     this.state = {
       open: false,
       selectedrecord: [],
-      periodStatus: []
+      checkperiodStatus: []
     }
   }
 
@@ -29,8 +29,8 @@ export default class Tododefines extends Component {
   }
 
   componentDidUpdate() {
-    const { notifications, removeTododefinenotification } = this.props
-    Notification(notifications, removeTododefinenotification)
+    const { Tododefines, removeTododefinenotification } = this.props
+    Notification(Tododefines.notifications, removeTododefinenotification)
   }
 
   render() {
@@ -44,7 +44,7 @@ export default class Tododefines extends Component {
       { Header: Literals.Columns.IsRequired[Profile.Language], accessor: 'IsRequired', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.IsNeedactivation[Profile.Language], accessor: 'IsNeedactivation', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Periods[Profile.Language], accessor: 'Periodstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.periodCellhandler(col) },
+      { Header: Literals.Columns.Checkperiods[Profile.Language], accessor: 'Checkperiodtxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.checkperiodCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -64,12 +64,12 @@ export default class Tododefines extends Component {
     };
 
     const list = (Tododefines.list || []).map(item => {
-      var text = item.Periods.map((period) => {
-        return period.Name;
+      var text = item.Checkperiods.map((checkperiod) => {
+        return checkperiod.Name;
       }).join(", ")
       return {
         ...item,
-        Periodstxt: text,
+        Checkperiodtxt: text,
         edit: <Link to={`/Tododefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedTododefine(item)
@@ -117,31 +117,31 @@ export default class Tododefines extends Component {
     this.setState({ modal: value })
   }
 
-  expandPeriods = (rowid) => {
-    const prevData = this.state.periodStatus
+  expandCheckperiods = (rowid) => {
+    const prevData = this.state.checkperiodStatus
     prevData.push(rowid)
-    this.setState({ periodStatus: [...prevData] })
+    this.setState({ checkperiodStatus: [...prevData] })
   }
 
-  shrinkPeriods = (rowid) => {
+  shrinkCheckperiods = (rowid) => {
     const index = this.state.periodStatus.indexOf(rowid)
-    const prevData = this.state.periodStatus
+    const prevData = this.state.checkperiodStatus
     if (index > -1) {
       prevData.splice(index, 1)
-      this.setState({ periodStatus: [...prevData] })
+      this.setState({ checkperiodStatus: [...prevData] })
     }
   }
 
-  periodCellhandler = (col) => {
+  checkperiodCellhandler = (col) => {
     if (col.value) {
       if (!col.cell.isGrouped) {
         const itemId = col.row.original.Id
-        const itemPeriods = col.row.original.Periods
+        const itemCheckperiods = col.row.original.Checkperiods
         return col.value.length - 35 > 20 ?
           (
-            !this.state.periodStatus.includes(itemId) ?
-              [col.value.slice(0, 35) + ' ...(' + itemPeriods.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandPeriods(itemId)}> ...Daha Fazla Göster</Link>] :
-              [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkPeriods(itemId)}> ...Daha Az Göster</Link>]
+            !this.state.checkperiodStatus.includes(itemId) ?
+              [col.value.slice(0, 35) + ' ...(' + itemCheckperiods.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandCheckperiods(itemId)}> ...Daha Fazla Göster</Link>] :
+              [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkCheckperiods(itemId)}> ...Daha Az Göster</Link>]
           ) : col.value
       }
       return col.value

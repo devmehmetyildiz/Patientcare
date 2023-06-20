@@ -10,7 +10,7 @@ const Routes = [
   { method: 'post', path: '/Users', controller: 'User', action: 'AddUser' },
   { method: 'post', path: '/Users/Register', controller: 'User', action: 'Register' },
   { method: 'put', path: '/Users', controller: 'User', action: 'UpdateUser' },
-  { method: 'delete', path: '/Users', controller: 'User', action: 'DeleteUser' },
+  { method: 'delete', path: '/Users/:userId', controller: 'User', action: 'DeleteUser' },
 
   { method: 'get', path: '/Roles', controller: 'Role', action: 'GetRoles' },
   { method: 'get', path: '/Roles/GetActiveuserprivileges', controller: 'Role', action: 'GetActiveuserprivileges' },
@@ -20,7 +20,7 @@ const Routes = [
   { method: 'get', path: '/Roles/Getprivilegesbyuserid/:userId', controller: 'Role', action: 'Getprivilegesbyuserid' },
   { method: 'post', path: '/Roles', controller: 'Role', action: 'AddRole' },
   { method: 'put', path: '/Roles', controller: 'Role', action: 'UpdateRole' },
-  { method: 'delete', path: '/Roles', controller: 'Role', action: 'DeleteRole' },
+  { method: 'delete', path: '/Roles/:roleId', controller: 'Role', action: 'DeleteRole' },
 ]
 
 module.exports = Routes

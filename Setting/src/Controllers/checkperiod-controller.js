@@ -115,24 +115,11 @@ async function AddCheckperiod(req, res, next) {
         }
 
         await t.commit()
-        const checkperiods = await db.checkperiodModel.findAll({ where: { Isactive: true } })
-        for (const checkperiod of checkperiods) {
-            let perioduuids = await db.checkperiodperiodModel.findAll({
-                where: {
-                    CheckperiodID: checkperiod.Uuid,
-                }
-            });
-            checkperiod.Periods = await db.periodModel.findAll({
-                where: {
-                    Uuid: perioduuids.map(u => { return u.PeriodID })
-                }
-            })
-        }
-        res.status(200).json(checkperiods)
     } catch (err) {
         await t.rollback()
         next(sequelizeErrorCatcher(err))
     }
+    GetCheckperiods(req,res,next)
 }
 
 async function UpdateCheckperiod(req, res, next) {
@@ -169,6 +156,7 @@ async function UpdateCheckperiod(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const checkperiod = db.checkperiodModel.findOne({ where: { Uuid: Uuid } })
         if (!checkperiod) {
@@ -178,7 +166,6 @@ async function UpdateCheckperiod(req, res, next) {
             return next(createAccessDenied([messages.ERROR.CHECKPERIOD_NOT_ACTIVE], req.language))
         }
 
-        const t = await db.sequelize.transaction();
 
         await db.checkperiodModel.update({
             ...req.body,
@@ -198,24 +185,10 @@ async function UpdateCheckperiod(req, res, next) {
         }
 
         await t.commit()
-        const checkperiods = await db.checkperiodModel.findAll({ where: { Isactive: true } })
-        for (const checkperiod of checkperiods) {
-            let perioduuids = await db.checkperiodperiodModel.findAll({
-                where: {
-                    CheckperiodID: checkperiod.Uuid,
-                }
-            });
-            checkperiod.Periods = await db.periodModel.findAll({
-                where: {
-                    Uuid: perioduuids.map(u => { return u.PeriodID })
-                }
-            })
-        }
-        res.status(200).json(checkperiods)
     } catch (error) {
         next(sequelizeErrorCatcher(error))
     }
-
+    GetCheckperiods(req,res,next)
 
 }
 
@@ -234,6 +207,7 @@ async function DeleteCheckperiod(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const checkperiod = db.checkperiodModel.findOne({ where: { Uuid: Uuid } })
         if (!checkperiod) {
@@ -242,31 +216,15 @@ async function DeleteCheckperiod(req, res, next) {
         if (checkperiod.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.CHECKPERIOD_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.checkperiodperiodModel.destroy({ where: { CheckperiodID: Uuid }, transaction: t });
         await db.checkperiodModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-
-        const checkperiods = await db.checkperiodModel.findAll({ where: { Isactive: true } })
-        for (const checkperiod of checkperiods) {
-            let perioduuids = await db.checkperiodperiodModel.findAll({
-                where: {
-                    CheckperiodID: checkperiod.Uuid,
-                }
-            });
-            checkperiod.Periods = await db.periodModel.findAll({
-                where: {
-                    Uuid: perioduuids.map(u => { return u.PeriodID })
-                }
-            })
-        }
-        res.status(200).json(checkperiods)
     } catch (error) {
         await t.rollback();
         next(sequelizeErrorCatcher(error))
     }
-
+    GetCheckperiods(req,res,next)
 }
 
 

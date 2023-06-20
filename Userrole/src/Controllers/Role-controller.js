@@ -166,19 +166,11 @@ async function AddRole(req, res, next) {
         }
 
         await t.commit()
-        const roles = await db.roleModel.findAll({ where: { Isactive: true } })
-        for (const role of roles) {
-            role.Privileges = await db.roleprivilegeModel.findAll({
-                where: {
-                    RoleID: role.Uuid,
-                }
-            });
-        }
-        res.status(200).json(roles)
     } catch (err) {
         await t.rollback()
         next(sequelizeErrorCatcher(err))
     }
+    GetRoles(req, res, next)
 }
 
 async function UpdateRole(req, res, next) {
@@ -206,16 +198,15 @@ async function UpdateRole(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
-        const role = db.roleModel.findOne({ where: { Uuid: Uuid } })
+        const role = await db.roleModel.findOne({ where: { Uuid: Uuid } })
         if (!role) {
             return next(createNotfounderror([messages.ERROR.ROLE_NOT_FOUND], req.language))
         }
         if (role.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.ROLE_NOT_ACTIVE], req.language))
         }
-
-        const t = await db.sequelize.transaction();
 
         await db.roleModel.update({
             ...req.body,
@@ -231,20 +222,10 @@ async function UpdateRole(req, res, next) {
             }, { transaction: t })
         }
         await t.commit()
-        const roles = await db.roleModel.findAll({ where: { Isactive: true } })
-        for (const role of roles) {
-            role.Privileges = await db.roleprivilegeModel.findAll({
-                where: {
-                    RoleID: role.Uuid,
-                }
-            });
-        }
-        res.status(200).json(roles)
     } catch (error) {
         next(sequelizeErrorCatcher(error))
     }
-
-
+    GetRoles(req, res, next)
 }
 
 async function DeleteRole(req, res, next) {
@@ -262,33 +243,24 @@ async function DeleteRole(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
-        const role = db.roleModel.findOne({ where: { Uuid: Uuid } })
+        const role = await db.roleModel.findOne({ where: { Uuid: Uuid } })
         if (!role) {
             return next(createNotfounderror([messages.ERROR.ROLE_NOT_FOUND], req.language))
         }
         if (!role.Isactive) {
             return next(createNotfounderror([messages.ERROR.ROLE_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.roleprivilegeModel.destroy({ where: { RoleID: Uuid }, transaction: t });
         await db.roleModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-        const roles = await db.roleModel.findAll({ where: { Isactive: true } })
-        for (const role of roles) {
-            role.Privileges = await db.roleprivilegeModel.findAll({
-                where: {
-                    RoleID: role.Uuid,
-                }
-            });
-        }
-        res.status(200).json(roles)
     } catch (error) {
         await t.rollback();
         next(sequelizeErrorCatcher(error))
     }
-
+    GetRoles(req, res, next)
 }
 
 

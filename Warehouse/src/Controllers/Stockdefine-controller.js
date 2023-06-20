@@ -105,9 +105,6 @@ async function AddStockdefine(req, res, next) {
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
-    if (!validator.isString(Description)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DESCIRIPTION_REQUIRED)
-    }
     if (!DepartmentID || !validator.isUUID(DepartmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
@@ -146,16 +143,12 @@ async function UpdateStockdefine(req, res, next) {
     const {
         Name,
         Uuid,
-        Description,
         UnitID,
         DepartmentID,
     } = req.body
 
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
-    }
-    if (!validator.isString(Description)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DESCIRIPTION_REQUIRED)
     }
     if (!DepartmentID || !validator.isUUID(DepartmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)

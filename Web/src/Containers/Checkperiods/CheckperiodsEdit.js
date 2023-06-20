@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import CheckperiodsEdit from '../../Pages/Checkperiods/CheckperiodsEdit'
-import { GetCheckperiod, EditCheckperiods, handleSelectedCheckperiod, fillCheckperiodnotification } from '../../Redux/CheckperiodSlice'
+import { GetCheckperiod, removeCheckperiodnotification, EditCheckperiods, handleSelectedCheckperiod, fillCheckperiodnotification } from '../../Redux/CheckperiodSlice'
 import { GetPeriods, removePeriodnotification } from '../../Redux/PeriodSlice'
 
 const mapStateToProps = (state) => ({
@@ -11,7 +11,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     GetCheckperiod, EditCheckperiods, handleSelectedCheckperiod, fillCheckperiodnotification,
-    GetPeriods, removePeriodnotification
+    GetPeriods, removePeriodnotification, removeCheckperiodnotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckperiodsEdit)

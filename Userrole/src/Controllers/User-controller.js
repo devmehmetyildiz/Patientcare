@@ -511,16 +511,11 @@ async function AddUser(req, res, next) {
             }, { transaction: t });
         }
         await t.commit()
-        const users = await db.userModel.findAll({ where: { Isactive: true } })
-        users.forEach(element => {
-            element.PasswordHash && delete element.PasswordHash
-        });
-        res.status(200).json(users)
     } catch (error) {
         await t.rollback()
         next(sequelizeErrorCatcher(error))
     }
-
+    GetUsers(req, res, next)
 }
 
 async function UpdateUser(req, res, next) {
@@ -625,16 +620,11 @@ async function UpdateUser(req, res, next) {
             }, { transaction: t });
         }
         await t.commit()
-        const users = await db.userModel.findAll({ where: { Isactive: true } })
-        users.forEach(element => {
-            element.PasswordHash && delete element.PasswordHash
-        });
-        res.status(200).json(users)
     } catch (error) {
         await t.rollback()
         next(sequelizeErrorCatcher(error))
     }
-
+    GetUsers(req, res, next)
 }
 
 async function DeleteUser(req, res, next) {
@@ -653,7 +643,7 @@ async function DeleteUser(req, res, next) {
     }
 
     try {
-        const user = db.userModel.findOne({ where: { Uuid: Uuid } })
+        const user =await db.userModel.findOne({ where: { Uuid: Uuid } })
         if (!user) {
             return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
         }
@@ -668,15 +658,11 @@ async function DeleteUser(req, res, next) {
         await db.userroleModel.destroy({ where: { UserID: Uuid }, transaction: t });
         await db.userstationModel.destroy({ where: { UserID: Uuid }, transaction: t });
         await t.commit();
-        const users = await db.userModel.findAll({ where: { Isactive: true } })
-        users.forEach(element => {
-            element.PasswordHash && delete element.PasswordHash
-        });
-        res.status(200).json(users)
     } catch (error) {
         await t.rollback();
         next(sequelizeErrorCatcher(error))
     }
+    GetUsers(req, res, next)
 }
 
 async function GetActiveUsername(req, res, next) {

@@ -113,25 +113,11 @@ async function AddTodogroupdefine(req, res, next) {
         }
 
         await t.commit()
-        const todogroupdefines = await db.todogroupdefineModel.findAll({ where: { Isactive: true } })
-        for (const todogroupdefine of todogroupdefines) {
-            let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
-                where: {
-                    GroupID: todogroupdefine.Uuid,
-                }
-            });
-            todogroupdefine.Tododefines = await db.tododefineModel.findAll({
-                where: {
-                    Uuid: tododefineuuids.map(u => { return u.TodoID })
-                }
-            })
-            todogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: todogroupdefine.DepartmentID } })
-        }
-        res.status(200).json(todogroupdefines)
     } catch (err) {
         await t.rollback()
         next(sequelizeErrorCatcher(err))
     }
+    GetTodogroupdefines(req,res,next)
 }
 
 async function UpdateTodogroupdefine(req, res, next) {
@@ -161,7 +147,8 @@ async function UpdateTodogroupdefine(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-
+    
+    const t = await db.sequelize.transaction();
     try {
         const todogroupdefine = db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!todogroupdefine) {
@@ -171,14 +158,13 @@ async function UpdateTodogroupdefine(req, res, next) {
             return next(createAccessDenied([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language))
         }
 
-        const t = await db.sequelize.transaction();
-
+        
         await db.todogroupdefineModel.update({
             ...req.body,
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
-
+        
         await db.todogroupdefinetododefineModel.destroy({ where: { GroupID: Uuid }, transaction: t });
         for (const tododefine of Tododefines) {
             if (!tododefine.Uuid || !validator.isUUID(tododefine.Uuid)) {
@@ -190,25 +176,10 @@ async function UpdateTodogroupdefine(req, res, next) {
             }, { transaction: t });
         }
         await t.commit()
-        const todogroupdefines = await db.todogroupdefineModel.findAll({ where: { Isactive: true } })
-        for (const todogroupdefine of todogroupdefines) {
-            let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
-                where: {
-                    GroupID: todogroupdefine.Uuid,
-                }
-            });
-            todogroupdefine.Tododefines = await db.tododefineModel.findAll({
-                where: {
-                    Uuid: tododefineuuids.map(u => { return u.TodoID })
-                }
-            })
-            todogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: todogroupdefine.DepartmentID } })
-        }
-        res.status(200).json(todogroupdefines)
     } catch (error) {
         next(sequelizeErrorCatcher(error))
     }
-
+    GetTodogroupdefines(req,res,next)
 
 }
 
@@ -227,6 +198,7 @@ async function DeleteTodogroupdefine(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const todogroupdefine = db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!todogroupdefine) {
@@ -235,31 +207,15 @@ async function DeleteTodogroupdefine(req, res, next) {
         if (todogroupdefine.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.todogroupdefinetododefineModel.destroy({ where: { GroupID: Uuid }, transaction: t });
-        await db.tododefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.todogroupdefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-        const todogroupdefines = await db.todogroupdefineModel.findAll({ where: { Isactive: true } })
-        for (const todogroupdefine of todogroupdefines) {
-            let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
-                where: {
-                    GroupID: todogroupdefine.Uuid,
-                }
-            });
-            todogroupdefine.Tododefines = await db.tododefineModel.findAll({
-                where: {
-                    Uuid: tododefineuuids.map(u => { return u.TodoID })
-                }
-            })
-            todogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: todogroupdefine.DepartmentID } })
-        }
-        res.status(200).json(todogroupdefines)
     } catch (error) {
         await t.rollback();
         next(sequelizeErrorCatcher(error))
     }
-
+    GetTodogroupdefines(req,res,next)
 }
 
 module.exports = {

@@ -13,7 +13,8 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import validator from '../../Utils/Validator'
-export class RolesEdit extends Component {
+import { FormContext } from '../../Provider/FormProvider'
+export default class RolesEdit extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -38,6 +39,7 @@ export class RolesEdit extends Component {
         const { privileges, selected_record, privilegegroups, isLoading } = Roles
         if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && privileges.length > 0 && privilegegroups.length > 0 && !isLoading && !this.state.isDatafetched) {
             this.setState({ selectedPrivileges: selected_record.Privileges, isDatafetched: true })
+            this.context.setFormstates(selected_record)
         }
         Notification(Roles.notifications, removeRolenotification)
     }
@@ -62,7 +64,7 @@ export class RolesEdit extends Component {
                     <Pagedivider />
                     <Contentwrapper>
                         <Form onSubmit={this.handleSubmit}>
-                            <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                            <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                             <div className='mb-4 outline outline-[1px] rounded-md outline-gray-200 p-4 overflow-y-auto max-h-[calc(100vh-26.2rem)]'>
                                 {privilegegroups.map(privilegegroup => {
                                     return <div key={privilegegroup} className="mb-8">
@@ -146,4 +148,4 @@ export class RolesEdit extends Component {
             : this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return el.code !== e.target.id; }) })
     }
 }
-export default RolesEdit
+RolesEdit.contextType = FormContext

@@ -79,7 +79,7 @@ export default class StocksCreate extends Component {
                 <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
+                <FormInput placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt"  type="date" defaultValue={'2023-06-20'} />
                 <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} options={Departmentoptions} onChange={this.handleChangeDepartment} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
@@ -102,6 +102,7 @@ export default class StocksCreate extends Component {
     e.preventDefault()
     const { AddStocks, history, fillStocknotification, Profile } = this.props
     const data = formToObject(e.target)
+    console.log('data: ', data);
     data.DepartmentID = this.state.selecteddepartments
     data.StockdefineID = this.state.selectedstockdefine
     data.WarehouseID = this.state.selectedwarehouse
@@ -115,7 +116,7 @@ export default class StocksCreate extends Component {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
     }
     if (!validator.isUUID(data.WarehouseID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description:Literals.Messages.WarehouseRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.WarehouseRequired[Profile.Language] })
     }
     if (!validator.isUUID(data.StockdefineID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StokdefineRequired[Profile.Language] })
@@ -145,9 +146,11 @@ export default class StocksCreate extends Component {
 
 
   getLocalDate = () => {
-    var curr = new Date();
-    curr.setDate(curr.getDate() + 3);
-    var date = curr.toISOString().substring(0, 10);
-    return date
+    var today = new Date();
+    let test = today.toLocaleString('tr-TR', { timeZone: 'UTC' }).substring(0, 10)
+    console.log('test: ', test);
+    let value = today.toISOString().substring(0, 10)
+    console.log('value: ', value);
+    return '2023-06-20'
   }
 }
