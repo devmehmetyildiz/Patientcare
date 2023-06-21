@@ -6,8 +6,10 @@ import config from "../Config";
 
 export const GetCases = createAsyncThunk(
     'Cases/GetCases',
-    async (_, { dispatch }) => {
+    async (_, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language
             const response = await instanse.get(config.services.Setting, ROUTES.CASE);
             return response.data;
         } catch (error) {
@@ -34,8 +36,10 @@ export const GetCase = createAsyncThunk(
 
 export const AddCases = createAsyncThunk(
     'Cases/AddCases',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language
             const response = await instanse.post(config.services.Setting, ROUTES.CASE, data);
             dispatch(fillCasenotification({
                 type: 'Success',

@@ -49,7 +49,7 @@ export default class Preregistrations extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.nameCellhandler(col) },
-      { Header: Literals.Columns.Patientdefine[Profile.Language], accessor: 'Patientdefine.CountryID', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.CountryID[Profile.Language], accessor: 'Patientdefine.CountryID', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Registerdate[Profile.Language], accessor: 'Registerdate', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
       { Header: Literals.Columns.Approvaldate[Profile.Language], accessor: 'Approvaldate', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
       { Header: Literals.Columns.Case[Profile.Language], accessor: 'Case.Name', sortable: true, canGroupBy: true, canFilter: true, },
@@ -75,15 +75,15 @@ export default class Preregistrations extends Component {
     };
 
     const list = (Patients.list || []).map(item => {
-      var filestext = item.Files.map((file) => {
+      let filestext = item.Files.map((file) => {
         return file.Name;
       }).join(", ")
-      item.Filestxt = filestext;
-      var stockstext = item.Stocks.map((stock) => {
+      let stockstext = item.Stocks.map((stock) => {
         return stock.Stockdefine?.Name;
       }).join(", ")
       return {
         ...item,
+        Filestxt: filestext,
         Stockstxt: stockstext,
         actions: <React.Fragment>
           <Popup

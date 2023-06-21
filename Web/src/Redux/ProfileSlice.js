@@ -66,6 +66,7 @@ export const GetUserMeta = createAsyncThunk(
     async (_, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Userrole, 'Users/GetActiveUserMeta');
+            console.log('response.data: ', response.data);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
