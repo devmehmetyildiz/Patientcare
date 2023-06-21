@@ -32,7 +32,7 @@ async function GetPatienttype(req, res, next) {
         const patienttype = await db.patienttypeModel.findOne({ where: { Uuid: req.params.patienttypeId } });
         res.status(200).json(patienttype)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -66,12 +66,11 @@ async function AddPatienttype(req, res, next) {
         }, { transaction: t })
 
         await t.commit()
-        const patienttypes = await db.patienttypeModel.findAll({ where: { Isactive: true } })
-        res.status(200).json(patienttypes)
     } catch (err) {
         await t.rollback()
-        next(sequelizeErrorCatcher(err))
+        return next(sequelizeErrorCatcher(err))
     }
+    GetPatienttypes(req, res, next)
 }
 
 async function UpdatePatienttype(req, res, next) {
@@ -95,6 +94,7 @@ async function UpdatePatienttype(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const patienttype = db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
         if (!patienttype) {
@@ -104,8 +104,6 @@ async function UpdatePatienttype(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PATIENTTYPE_NOT_ACTIVE], req.language))
         }
 
-        const t = await db.sequelize.transaction();
-
         await db.patienttypeModel.update({
             ...req.body,
             Updateduser: "System",
@@ -113,13 +111,10 @@ async function UpdatePatienttype(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
-        const patienttypes = await db.patienttypeModel.findAll({ where: { Isactive: true } })
-        res.status(200).json(patienttypes)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
-
+    GetPatienttypes(req, res, next)
 }
 
 async function DeletePatienttype(req, res, next) {
@@ -137,6 +132,7 @@ async function DeletePatienttype(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const patienttype = db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
         if (!patienttype) {
@@ -145,17 +141,14 @@ async function DeletePatienttype(req, res, next) {
         if (patienttype.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.PATIENTTYPE_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.patienttypeModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-        const patienttypes = await db.patienttypeModel.findAll({ where: { Isactive: true } })
-        res.status(200).json(patienttypes)
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
+    GetPatienttypes(req, res, next)
 }
 
 module.exports = {

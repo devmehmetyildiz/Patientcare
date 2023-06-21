@@ -13,6 +13,9 @@ module.exports = sequelize.define('rulelogModel', {
     Log: {
         type: Sequelize.TEXT
     },
+    Date: {
+        type: Sequelize.DATE
+    },
 }, {
     tableName: 'rolelogs', // replace with the name of your existing table
     timestamps: false

@@ -25,6 +25,7 @@ import Todogroupdefines from "../Pages/Todogroupdefines/Literals"
 import Units from "../Pages/Units/Literals"
 import Users from "../Pages/Users/Literals"
 import Warehouses from "../Pages/Warehouses/Literals"
+import Rules from "../Pages/Rules/Literals"
 
 const Literals = {
     Cases,
@@ -53,7 +54,8 @@ const Literals = {
     Todogroupdefines,
     Units,
     Users,
-    Warehouses
+    Warehouses,
+    Rules
 }
 
 export default Literals

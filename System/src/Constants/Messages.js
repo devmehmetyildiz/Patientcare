@@ -36,7 +36,12 @@ const messages = {
         tr: 'Kural aktif değil',
       }
     },
-
+    RULELOG_NOT_FOUND: {
+      code: 'RULELOG_NOT_FOUND', description: {
+        en: 'The rule log not found',
+        tr: 'Kural bulunamadı',
+      }
+    },
   },
   VALIDATION_ERROR: {
     NAME_REQUIRED: {

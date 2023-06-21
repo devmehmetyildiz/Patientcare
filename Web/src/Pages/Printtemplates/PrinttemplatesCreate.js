@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link, } from 'react-router-dom'
-import { Divider, Dropdown, Form, Grid, GridColumn, Tab } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
+import { Form, Grid, GridColumn, Tab } from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
@@ -40,7 +40,7 @@ export default class PrinttemplatesCreate extends Component {
 
   render() {
 
-    const { Printtemplates, Departments,Profile } = this.props
+    const { Printtemplates, Departments, Profile } = this.props
     const { isLoading, isDispatching } = Printtemplates
 
     const Departmentoptions = Departments.list.map(department => {
@@ -65,7 +65,7 @@ export default class PrinttemplatesCreate extends Component {
               <Tab className='station-tab'
                 panes={[
                   {
-                    menuItem:Literals.Columns.Savescreen[Profile.Language],
+                    menuItem: Literals.Columns.Savescreen[Profile.Language],
                     pane: {
                       key: 'save',
                       content: <React.Fragment>
@@ -131,7 +131,7 @@ export default class PrinttemplatesCreate extends Component {
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description:Literals.Messages.Namerequired[Profile.Language]  })
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
     }
     if (!validator.isString(data.Valuekey)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Valuekeyrequired[Profile.Language] })
@@ -140,7 +140,7 @@ export default class PrinttemplatesCreate extends Component {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Departmentrequired[Profile.Language] })
     }
     if (!validator.isString(data.Printtemplate)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Printtemplaterequired[Profile.Language]})
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Printtemplaterequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

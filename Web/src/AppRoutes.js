@@ -9,6 +9,10 @@ const Roles = lazy(() => import('./Containers/Roles/Roles'));
 const RolesCreate = lazy(() => import('./Containers/Roles/RolesCreate'));
 const RolesEdit = lazy(() => import('./Containers/Roles/RolesEdit'));
 
+const Rules = lazy(() => import('./Containers/Rules/Rules'));
+const RulesCreate = lazy(() => import('./Containers/Rules/RulesCreate'));
+const RulesEdit = lazy(() => import('./Containers/Rules/RulesEdit'));
+
 const Departments = lazy(() => import('./Containers/Departments/Departments'));
 const DepartmentsCreate = lazy(() => import('./Containers/Departments/DepartmentsCreate'));
 const DepartmentsEdit = lazy(() => import('./Containers/Departments/DepartmentsEdit'));
@@ -221,6 +225,9 @@ class AppRoutes extends Component {
       { exact: true, path: "/Periods", auth: true, component: Periods },
       { exact: true, path: "/Periods/Create", auth: true, component: PeriodsCreate },
       { exact: true, path: "/Periods/:PeriodID/Edit", auth: true, component: PeriodsEdit },
+      { exact: true, path: "/Rules", auth: true, component: Rules },
+      { exact: true, path: "/Rules/Create", auth: true, component: RulesCreate },
+      { exact: true, path: "/Rules/:RuleID/Edit", auth: true, component: RulesEdit },
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate },
       { exact: true, path: "/Preregistrations/:PatientID/Edit", auth: true, component: PreregistrationsEdit },

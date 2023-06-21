@@ -30,13 +30,16 @@ export const ROUTES = {
     WAREHOUSE: 'Warehouses',
     PATIENTSTOCK: 'Patientstocks',
     PATIENTSTOCKMOVEMENT: 'Patientstockmovements',
+
     TODODEFINE: 'Tododefines',
     TODOGROUPDEFINE: 'Todogroupdefines',
     PATIENTMOVEMENT: 'Patientmovements',
     CHECKPERIOD: 'Checkperiods',
     PERIOD: 'Periods',
+
     MAILSETTING: 'Mailsettings',
     PRINTTEMPLATE: 'Printtemplates',
+    RULE: 'Rules'
 
 }
 

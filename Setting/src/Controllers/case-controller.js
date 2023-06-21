@@ -23,7 +23,7 @@ async function GetCases(req, res, next) {
         }
         res.status(200).json(cases)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -49,7 +49,7 @@ async function GetCompleteCase(req, res, next) {
         })
         res.status(200).json(casedata)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -75,7 +75,7 @@ async function GetDeactivateCase(req, res, next) {
         })
         res.status(200).json(casedata)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -112,8 +112,7 @@ async function GetCase(req, res, next) {
         })
         res.status(200).json(casedata)
     } catch (error) {
-        sequelizeErrorCatcher(error)
-        next()
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -174,24 +173,11 @@ async function AddCase(req, res, next) {
         }
 
         await t.commit()
-        const cases = await db.caseModel.findAll({ where: { Isactive: true } })
-        for (const casedata of cases) {
-            let departmentuuids = await db.casedepartmentModel.findAll({
-                where: {
-                    CaseID: casedata.Uuid,
-                }
-            });
-            casedata.Departments = await db.departmentModel.findAll({
-                where: {
-                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
-                }
-            })
-        }
-        res.status(200).json(cases)
     } catch (err) {
         await t.rollback()
-        next(sequelizeErrorCatcher(err))
+        return next(sequelizeErrorCatcher(err))
     }
+    GetCases(req, res, next)
 }
 
 async function UpdateCase(req, res, next) {
@@ -231,6 +217,7 @@ async function UpdateCase(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const casedata = db.caseModel.findOne({ where: { Uuid: Uuid } })
         if (!casedata) {
@@ -239,8 +226,6 @@ async function UpdateCase(req, res, next) {
         if (casedata.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.CASE_NOT_ACTIVE], req.language))
         }
-
-        const t = await db.sequelize.transaction();
 
         await db.caseModel.update({
             ...req.body,
@@ -259,25 +244,10 @@ async function UpdateCase(req, res, next) {
             }, { transaction: t });
         }
         await t.commit()
-        const cases = await db.caseModel.findAll({ where: { Isactive: true } })
-        for (const casedata of cases) {
-            let departmentuuids = await db.casedepartmentModel.findAll({
-                where: {
-                    CaseID: casedata.Uuid,
-                }
-            });
-            casedata.Departments = await db.departmentModel.findAll({
-                where: {
-                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
-                }
-            })
-        }
-        res.status(200).json(cases)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
-
+    GetCases(req, res, next)
 }
 
 async function DeleteCase(req, res, next) {
@@ -295,6 +265,7 @@ async function DeleteCase(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const casedata = db.caseModel.findOne({ where: { Uuid: Uuid } })
         if (!casedata) {
@@ -303,30 +274,15 @@ async function DeleteCase(req, res, next) {
         if (casedata.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.CASE_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.casedepartmentModel.destroy({ where: { CaseID: Uuid }, transaction: t });
         await db.caseModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-        const cases = await db.caseModel.findAll({ where: { Isactive: true } })
-        for (const casedata of cases) {
-            let departmentuuids = await db.casedepartmentModel.findAll({
-                where: {
-                    CaseID: casedata.Uuid,
-                }
-            });
-            casedata.Departments = await db.departmentModel.findAll({
-                where: {
-                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
-                }
-            })
-        }
-        res.status(200).json(cases)
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
+    GetCases(req, res, next)
 }
 
 module.exports = {

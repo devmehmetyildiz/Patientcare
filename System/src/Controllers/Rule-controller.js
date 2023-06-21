@@ -5,6 +5,7 @@ const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
+const jobs = require('../Jobs')
 
 async function GetRules(req, res, next) {
     try {
@@ -29,12 +30,12 @@ async function GetRulelogs(req, res, next) {
     }
 
     try {
-        const rulelogs = await db.rulelogModel.findAll({ where: { RuleID: req.params.ruleId } });
+        const rulelogs = await db.rulelogModel.findAll({
+            where: { RuleID: req.params.ruleId }, order: [
+                ['Id', 'DESC']],
+        });
         if (!rulelogs) {
-            return next(createNotfounderror([messages.ERROR.RULE_NOT_FOUND], req.language))
-        }
-        if (!rulelogs.Isactive) {
-            return next(createNotfounderror([messages.ERROR.RULE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.RULELOG_NOT_FOUND], req.language))
         }
         res.status(200).json(rulelogs)
     } catch (error) {
@@ -123,8 +124,10 @@ async function AddRule(req, res, next) {
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
-
         await t.commit()
+
+        await jobs.CroneJobs()
+
     } catch (err) {
         await t.rollback()
         return next(sequelizeErrorCatcher(err))
@@ -175,6 +178,9 @@ async function UpdateRule(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
+
+        await jobs.stopChildProcess(Uuid)
+        await jobs.CroneJobs()
     } catch (error) {
         await t.rollback()
         return next(sequelizeErrorCatcher(error))
@@ -209,6 +215,48 @@ async function DeleteRule(req, res, next) {
 
         await db.ruleModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
+        await jobs.stopChildProcess(Uuid)
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetRules(req, res, next)
+}
+
+async function StopRule(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.ruleId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.RULEID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_RULEID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const rule = await db.ruleModel.findOne({ where: { Uuid: Uuid } })
+        if (!rule) {
+            return next(createNotfounderror([messages.ERROR.RULE_NOT_FOUND], req.language))
+        }
+        if (!rule.Isactive) {
+            return next(createAccessDenied([messages.ERROR.RULE_NOT_ACTIVE], req.language))
+        }
+
+        await db.ruleModel.update({
+            ...req.body,
+            Status: 0,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await t.commit();
+        await jobs.stopChildProcess(Uuid)
     } catch (error) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
@@ -223,5 +271,6 @@ module.exports = {
     UpdateRule,
     DeleteRule,
     GetRulelogs,
-    ClearRulelogs
+    ClearRulelogs,
+    StopRule
 }

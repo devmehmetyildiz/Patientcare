@@ -23,7 +23,7 @@ async function GetCheckperiods(req, res, next) {
         }
         res.status(200).json(checkperiods)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -60,7 +60,7 @@ async function GetCheckperiod(req, res, next) {
         })
         res.status(200).json(checkperiod)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -117,9 +117,9 @@ async function AddCheckperiod(req, res, next) {
         await t.commit()
     } catch (err) {
         await t.rollback()
-        next(sequelizeErrorCatcher(err))
+        return next(sequelizeErrorCatcher(err))
     }
-    GetCheckperiods(req,res,next)
+    GetCheckperiods(req, res, next)
 }
 
 async function UpdateCheckperiod(req, res, next) {
@@ -186,9 +186,9 @@ async function UpdateCheckperiod(req, res, next) {
 
         await t.commit()
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-    GetCheckperiods(req,res,next)
+    GetCheckperiods(req, res, next)
 
 }
 
@@ -222,9 +222,9 @@ async function DeleteCheckperiod(req, res, next) {
         await t.commit();
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-    GetCheckperiods(req,res,next)
+    GetCheckperiods(req, res, next)
 }
 
 

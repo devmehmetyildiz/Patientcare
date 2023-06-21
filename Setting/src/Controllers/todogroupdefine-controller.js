@@ -24,7 +24,7 @@ async function GetTodogroupdefines(req, res, next) {
         }
         res.status(200).json(todogroupdefines)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -62,7 +62,7 @@ async function GetTodogroupdefine(req, res, next) {
         todogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: todogroupdefine.DepartmentID } })
         res.status(200).json(todogroupdefine)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -115,9 +115,9 @@ async function AddTodogroupdefine(req, res, next) {
         await t.commit()
     } catch (err) {
         await t.rollback()
-        next(sequelizeErrorCatcher(err))
+        return next(sequelizeErrorCatcher(err))
     }
-    GetTodogroupdefines(req,res,next)
+    GetTodogroupdefines(req, res, next)
 }
 
 async function UpdateTodogroupdefine(req, res, next) {
@@ -147,7 +147,7 @@ async function UpdateTodogroupdefine(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-    
+
     const t = await db.sequelize.transaction();
     try {
         const todogroupdefine = db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
@@ -158,13 +158,13 @@ async function UpdateTodogroupdefine(req, res, next) {
             return next(createAccessDenied([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language))
         }
 
-        
+
         await db.todogroupdefineModel.update({
             ...req.body,
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
-        
+
         await db.todogroupdefinetododefineModel.destroy({ where: { GroupID: Uuid }, transaction: t });
         for (const tododefine of Tododefines) {
             if (!tododefine.Uuid || !validator.isUUID(tododefine.Uuid)) {
@@ -177,9 +177,9 @@ async function UpdateTodogroupdefine(req, res, next) {
         }
         await t.commit()
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-    GetTodogroupdefines(req,res,next)
+    GetTodogroupdefines(req, res, next)
 
 }
 
@@ -213,9 +213,9 @@ async function DeleteTodogroupdefine(req, res, next) {
         await t.commit();
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-    GetTodogroupdefines(req,res,next)
+    GetTodogroupdefines(req, res, next)
 }
 
 module.exports = {

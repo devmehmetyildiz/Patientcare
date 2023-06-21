@@ -28,6 +28,7 @@ import CheckperiodSlice from "./CheckperiodSlice";
 import MailsettingSlice from "./MailsettingSlice";
 import PrinttemplateSlice from "./PrinttemplateSlice";
 import TodoSlice from "./TodoSlice";
+import RuleSlice from "./RuleSlice";
 
 const Slices = combineReducers({
     Units: UnitSlice,
@@ -58,7 +59,8 @@ const Slices = combineReducers({
     Checkperiods: CheckperiodSlice,
     Mailsettings: MailsettingSlice,
     Printtemplates: PrinttemplateSlice,
-    Todos: TodoSlice
+    Todos: TodoSlice,
+    Rules: RuleSlice
 });
 
 export default Slices;

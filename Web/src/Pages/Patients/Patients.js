@@ -323,10 +323,11 @@ export default class Patients extends Component {
 
   generatePDF = (html) => {
     const pdf = new jsPDF({
-      orientation: "portrait", // or "landscape"
-      unit: "px",
-      format: "a4", // or [width, height]
-      preserveObjectStacking: true
+      orientation: 'p',
+      unit: 'px',
+      format: 'a4',
+      putOnlyUsedFonts: true,
+      floatPrecision: 16 // or "smart", default is 16
     });
     pdf.addFont(myTurkishFont, 'AbhayaLibre-Medium', 'normal');
     pdf.setFont('AbhayaLibre-Medium');

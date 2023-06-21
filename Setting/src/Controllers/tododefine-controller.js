@@ -23,7 +23,7 @@ async function GetTododefines(req, res, next) {
         }
         res.status(200).json(tododefines)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -54,7 +54,7 @@ async function GetTododefine(req, res, next) {
         })
         res.status(200).json(tododefine)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -115,7 +115,7 @@ async function AddTododefine(req, res, next) {
         await t.commit()
     } catch (err) {
         await t.rollback()
-        next(sequelizeErrorCatcher(err))
+        return next(sequelizeErrorCatcher(err))
     }
     GetTododefines(req, res, next)
 }
@@ -156,7 +156,7 @@ async function UpdateTododefine(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-    
+
     const t = await db.sequelize.transaction();
     try {
         const tododefine = db.tododefineModel.findOne({ where: { Uuid: Uuid } })
@@ -185,7 +185,7 @@ async function UpdateTododefine(req, res, next) {
         }
         await t.commit()
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
     GetTododefines(req, res, next)
 }
@@ -220,7 +220,7 @@ async function DeleteTododefine(req, res, next) {
         await t.commit();
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
     GetTododefines(req, res, next)
 }

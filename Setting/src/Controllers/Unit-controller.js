@@ -23,7 +23,7 @@ async function GetUnits(req, res, next) {
         }
         res.status(200).json(units)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -60,7 +60,7 @@ async function GetUnit(req, res, next) {
         })
         res.status(200).json(unit)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -111,24 +111,11 @@ async function AddUnit(req, res, next) {
         }
 
         await t.commit()
-        const units = await db.unitModel.findAll({ where: { Isactive: true } })
-        for (const unit of units) {
-            let departmentuuids = await db.unitdepartmentModel.findAll({
-                where: {
-                    UnitID: unit.Uuid,
-                }
-            });
-            unit.Departments = await db.departmentModel.findAll({
-                where: {
-                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
-                }
-            })
-        }
-        res.status(200).json(units)
     } catch (err) {
         await t.rollback()
-        next(sequelizeErrorCatcher(err))
+        return next(sequelizeErrorCatcher(err))
     }
+    GetUnits(req,res,next)
 }
 
 async function UpdateUnit(req, res, next) {
@@ -159,7 +146,8 @@ async function UpdateUnit(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-
+    
+    const t = await db.sequelize.transaction();
     try {
         const unit = db.unitModel.findOne({ where: { Uuid: Uuid } })
         if (!unit) {
@@ -168,9 +156,7 @@ async function UpdateUnit(req, res, next) {
         if (unit.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.UNIT_NOT_ACTIVE], req.language))
         }
-
-        const t = await db.sequelize.transaction();
-
+        
         await db.unitModel.update({
             ...req.body,
             Updateduser: "System",
@@ -188,24 +174,11 @@ async function UpdateUnit(req, res, next) {
             }, { transaction: t });
         }
         await t.commit()
-        const units = await db.unitModel.findAll({ where: { Isactive: true } })
-        for (const unit of units) {
-            let departmentuuids = await db.unitdepartmentModel.findAll({
-                where: {
-                    UnitID: unit.Uuid,
-                }
-            });
-            unit.Departments = await db.departmentModel.findAll({
-                where: {
-                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
-                }
-            })
-        }
-        res.status(200).json(units)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
     }
-
+    GetUnits(req,res,next)
 
 }
 
@@ -223,7 +196,8 @@ async function DeleteUnit(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-
+    
+    const t = await db.sequelize.transaction();
     try {
         const unit = db.unitModel.findOne({ where: { Uuid: Uuid } })
         if (!unit) {
@@ -232,30 +206,15 @@ async function DeleteUnit(req, res, next) {
         if (unit.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.UNIT_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.unitdepartmentModel.destroy({ where: { UnitID: Uuid }, transaction: t });
         await db.unitModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-        const units = await db.unitModel.findAll({ where: { Isactive: true } })
-        for (const unit of units) {
-            let departmentuuids = await db.unitdepartmentModel.findAll({
-                where: {
-                    UnitID: unit.Uuid,
-                }
-            });
-            unit.Departments = await db.departmentModel.findAll({
-                where: {
-                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
-                }
-            })
-        }
-        res.status(200).json(units)
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
+    GetUnits(req,res,next)
 }
 
 module.exports = {

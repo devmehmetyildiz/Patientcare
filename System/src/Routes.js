@@ -12,11 +12,12 @@ const Routes = [
     { method: 'delete', path: '/Printtemplates/:printtemplateId', controller: 'Printtemplate', action: 'DeletePrinttemplate' },
 
     { method: 'get', path: '/Rules/Getrulelogs/:ruleId', controller: 'Rule', action: 'GetRulelogs' },
-    { method: 'get', path: '/Rules/Clearrulelogs/:ruleId', controller: 'Rule', action: 'ClearRulelogs' },
     { method: 'get', path: '/Rules/:ruleId', controller: 'Rule', action: 'GetRule' },
     { method: 'get', path: '/Rules', controller: 'Rule', action: 'GetRules' },
     { method: 'post', path: '/Rules', controller: 'Rule', action: 'AddRule' },
     { method: 'put', path: '/Rules', controller: 'Rule', action: 'UpdateRule' },
+    { method: 'delete', path: '/Rules/StopRule/:ruleId', controller: 'Rule', action: 'StopRule' },
+    { method: 'delete', path: '/Rules/Clearrulelogs/:ruleId', controller: 'Rule', action: 'ClearRulelogs' },
     { method: 'delete', path: '/Rules/:ruleId', controller: 'Rule', action: 'DeleteRule' },
 
 ]

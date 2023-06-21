@@ -23,7 +23,7 @@ async function GetDepartments(req, res, next) {
         }
         res.status(200).json(departments)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -60,7 +60,7 @@ async function GetDepartment(req, res, next) {
         })
         res.status(200).json(department)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -112,25 +112,11 @@ async function AddDepartment(req, res, next) {
         }
 
         await t.commit()
-        const departments = await db.departmentModel.findAll({ where: { Isactive: true } })
-        for (const department of departments) {
-            let stationuuids = await db.departmentstationModel.findAll({
-                where: {
-                    DepartmentID: department.Uuid,
-                }
-            });
-            department.Stations = await db.stationModel.findAll({
-                where: {
-                    Uuid: stationuuids.map(u => { return u.StationID })
-                }
-            })
-        }
-        res.status(200).json(departments)
     } catch (err) {
         await t.rollback()
-        next(sequelizeErrorCatcher(err))
-
+        return next(sequelizeErrorCatcher(err))
     }
+    GetDepartments(req, res, next)
 }
 
 async function UpdateDepartment(req, res, next) {
@@ -162,6 +148,7 @@ async function UpdateDepartment(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const department = db.departmentModel.findOne({ where: { Uuid: Uuid } })
         if (!department) {
@@ -170,9 +157,7 @@ async function UpdateDepartment(req, res, next) {
         if (department.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.DEPARTMENT_NOT_ACTIVE], req.language))
         }
-
-        const t = await db.sequelize.transaction();
-
+        
         await db.departmentModel.update({
             ...req.body,
             Updateduser: "System",
@@ -190,25 +175,10 @@ async function UpdateDepartment(req, res, next) {
             }, { transaction: t });
         }
         await t.commit()
-        const departments = await db.departmentModel.findAll({ where: { Isactive: true } })
-        for (const department of departments) {
-            let stationuuids = await db.departmentstationModel.findAll({
-                where: {
-                    DepartmentID: department.Uuid,
-                }
-            });
-            department.Stations = await db.stationModel.findAll({
-                where: {
-                    Uuid: stationuuids.map(u => { return u.StationID })
-                }
-            })
-        }
-        res.status(200).json(departments)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
-
+    GetDepartments(req, res, next)
 }
 
 async function DeleteDepartment(req, res, next) {
@@ -239,25 +209,11 @@ async function DeleteDepartment(req, res, next) {
         await db.departmentstationModel.destroy({ where: { DepartmentID: Uuid }, transaction: t });
         await db.departmentModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-        const departments = await db.departmentModel.findAll({ where: { Isactive: true } })
-        for (const department of departments) {
-            let stationuuids = await db.departmentstationModel.findAll({
-                where: {
-                    DepartmentID: department.Uuid,
-                }
-            });
-            department.Stations = await db.stationModel.findAll({
-                where: {
-                    Uuid: stationuuids.map(u => { return u.StationID })
-                }
-            })
-        }
-        res.status(200).json(departments)
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
+    GetDepartments(req, res, next)
 }
 
 module.exports = {

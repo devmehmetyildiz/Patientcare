@@ -11,7 +11,7 @@ async function GetPeriods(req, res, next) {
         const periods = await db.periodModel.findAll({ where: { Isactive: true } })
         res.status(200).json(periods)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -32,7 +32,7 @@ async function GetPeriod(req, res, next) {
         const period = await db.periodModel.findOne({ where: { Uuid: req.params.periodId } });
         res.status(200).json(period)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -73,12 +73,11 @@ async function AddPeriod(req, res, next) {
         }, { transaction: t })
 
         await t.commit()
-        const periods = await db.periodModel.findAll({ where: { Isactive: true } })
-        res.status(200).json(periods)
     } catch (err) {
         await t.rollback()
-        next(sequelizeErrorCatcher(err))
+        return next(sequelizeErrorCatcher(err))
     }
+    GetPeriods(req, res, next)
 }
 
 async function UpdatePeriod(req, res, next) {
@@ -110,6 +109,7 @@ async function UpdatePeriod(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
     try {
         const period = db.periodModel.findOne({ where: { Uuid: Uuid } })
         if (!period) {
@@ -119,8 +119,6 @@ async function UpdatePeriod(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PERIOD_NOT_ACTIVE], req.language))
         }
 
-        const t = await db.sequelize.transaction();
-
         await db.periodModel.update({
             ...req.body,
             Updateduser: "System",
@@ -128,13 +126,10 @@ async function UpdatePeriod(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await t.commit()
-        const periods = await db.periodModel.findAll({ where: { Isactive: true } })
-        res.status(200).json(periods)
     } catch (error) {
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
-
+    GetPeriods(req, res, next)
 }
 
 async function DeletePeriod(req, res, next) {
@@ -164,13 +159,11 @@ async function DeletePeriod(req, res, next) {
 
         await db.periodModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
-        const periods = await db.periodModel.findAll({ where: { Isactive: true } })
-        res.status(200).json(periods)
     } catch (error) {
         await t.rollback();
-        next(sequelizeErrorCatcher(error))
+        return next(sequelizeErrorCatcher(error))
     }
-
+    GetPeriods(req, res, next)
 }
 
 module.exports = {
