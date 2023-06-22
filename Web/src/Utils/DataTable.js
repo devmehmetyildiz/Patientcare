@@ -31,6 +31,7 @@ function DefaultColumnFilter({
     )
 }
 
+
 export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
     const columns = useMemo(() => Columns, [Columns])
     const data = useMemo(() => Data, [Data])

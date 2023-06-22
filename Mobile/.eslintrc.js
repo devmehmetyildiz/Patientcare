@@ -3,6 +3,7 @@ module.exports = {
   extends: '@react-native-community',
   rules: {
     'prettier/prettier': 0,
-    'comma-dangle': ['error', 'never']
-  }
+    "comma-dangle": "off",
+    //   'styled-components-a11y/rule-name': 2
+  },
 };

@@ -48,7 +48,7 @@ export const Getpreregistrations = createAsyncThunk(
 
 export const AddPatients = createAsyncThunk(
     'Patients/AddPatients',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history, url }, { dispatch }) => {
         try {
             const response = await instanse.post(config.services.Business, ROUTES.PATIENT, data);
             dispatch(fillPatientnotification({
@@ -56,7 +56,7 @@ export const AddPatients = createAsyncThunk(
                 code: 'Veri Kaydetme',
                 description: 'Hasta başarı ile Eklendi',
             }));
-            history.push('/Patients');
+            history.push(url ? url : '/Patients')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -68,7 +68,7 @@ export const AddPatients = createAsyncThunk(
 
 export const EditPatients = createAsyncThunk(
     'Patients/EditPatients',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history, url }, { dispatch }) => {
         try {
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT, data);
             dispatch(fillPatientnotification({
@@ -76,7 +76,7 @@ export const EditPatients = createAsyncThunk(
                 code: 'Veri Güncelleme',
                 description: 'Hasta başarı ile Güncellendi',
             }));
-            history.push('/Patients');
+            history.push(url ? url : '/Patients')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -87,7 +87,7 @@ export const EditPatients = createAsyncThunk(
 );
 export const EditPatientstocks = createAsyncThunk(
     'Patients/EditPatientstocks',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history, url }, { dispatch }) => {
         try {
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Editpatientstocks", data);
             dispatch(fillPatientnotification({
@@ -95,7 +95,7 @@ export const EditPatientstocks = createAsyncThunk(
                 code: 'Veri Güncelleme',
                 description: 'Hasta stoğu başarı ile Güncellendi',
             }));
-            history.push('/Patients');
+            history.push(url ? url : '/Patients')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

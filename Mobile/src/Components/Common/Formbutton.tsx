@@ -3,10 +3,10 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default class Formbutton extends Component<Buttonprops, {}> {
     render() {
-        const { title } = this.props
+        const { title, onPress } = this.props;
         return (
             <View style={style.signInbuttonwrapper}>
-                <TouchableOpacity style={style.sigInbutton}>
+                <TouchableOpacity style={style.sigInbutton} onPress={onPress}>
                     <Text style={style.signInbuttontxt}>{title}</Text>
                 </TouchableOpacity>
             </View>
@@ -38,4 +38,5 @@ const style = StyleSheet.create({
 
 class Buttonprops {
     title?: string;
+    onPress?: any;
 }

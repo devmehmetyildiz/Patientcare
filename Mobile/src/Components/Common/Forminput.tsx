@@ -7,7 +7,9 @@ export default class Forminput extends Component<Formprops, {}> {
         const {
             placeholder,
             password,
-            icon
+            icon,
+            value,
+            onChangeText
         } = this.props;
 
         return (
@@ -15,7 +17,13 @@ export default class Forminput extends Component<Formprops, {}> {
                 <Text style={style.formlabel}>{placeholder}</Text>
                 <View style={style.forminputwrapper}>
                     <Icon name={icon} size={20} color="#2E85B2" />
-                    <TextInput placeholder={placeholder} style={style.forminput} secureTextEntry={password} />
+                    <TextInput
+                        placeholder={placeholder}
+                        style={style.forminput}
+                        secureTextEntry={password}
+                        value={value}
+                        onChangeText={onChangeText}
+                    />
                 </View>
             </View>
         );
@@ -38,15 +46,15 @@ const style = StyleSheet.create({
         width: '100%',
         borderRadius: 10,
         borderColor: '#CDC9C9',
-        flexDirection:'row',
-        justifyContent:'center',
-        alignItems:'center'
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     forminput: {
         borderWidth: 0,
-        height:40,
-        width:'90%',
-        textAlign:'left'
+        height: 40,
+        width: '90%',
+        textAlign: 'left'
     },
     formlabel: {
         textAlign: 'left',
@@ -61,5 +69,7 @@ const style = StyleSheet.create({
 class Formprops {
     placeholder?: string;
     password?: boolean;
-    icon?:string;
+    icon?: string;
+    onChangeText?: any;
+    value?: any;
 }

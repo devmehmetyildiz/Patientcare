@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { Text } from 'react-native'
 
-export default class Layout extends Component {
+export default class Navbar extends Component {
     render() {
         return (
-            <Text>Layout</Text>
+            <Text>
+                Navbar
+            </Text>
         )
     }
 }
