@@ -1,11 +1,12 @@
-import { TokenModel, Webserviceconfig } from '../Models';
+import { TokenModel, WebserviceconfigModel } from '../Models';
 import axios from 'axios';
+import Errorhandler from '../Utils/Errorhandler';
 
 export class Webservice {
-    static _config: Webserviceconfig;
+    static _config: WebserviceconfigModel;
     static _token: TokenModel;
 
-    public static Configure(configuration: Webserviceconfig) {
+    public static Configure(configuration: WebserviceconfigModel) {
         this._config = configuration;
     }
 
@@ -15,33 +16,12 @@ export class Webservice {
 
     public static async doGet(baseurl: string, path: string) {
         try {
-            const config = {
-                headers: {
-                    "Content-Type": 'application/json',
-                    'Authorization': `Bearer ${this._token?.accessToken}`
-                }
-            }
-            const response = await this.getRequest(baseurl, path, config);
-            console.log('response111: ', response);
-            //    const result = await response.json();
-            //  return result;
+            const response = await this.getRequest(baseurl, '1' + path);
+            return response;
         } catch (error) {
-            let err: any = error
-            console.log('errcode', err.code);
-            console.log('errresponse', err.response);
+            throw Errorhandler(error)
         }
     }
-
-    private static getRequest(service: string, url: string, config: any) {
-        return new Promise((resolve, reject) => {
-            axios.get(service + url, config)
-                .then(response => resolve(response))
-                .catch(function (error) {
-                    reject(error)
-                })
-        })
-    }
-
 
     public static async doPost(baseurl: string, path: string, data: any) {
         try {
@@ -95,5 +75,66 @@ export class Webservice {
         } catch (error) {
             console.log('errordelete', error);
         }
+    }
+
+    private static getRequest(service: string, url: string) {
+        const config = {
+            headers: {
+                "Content-Type": 'application/json',
+                'Authorization': `Bearer ${this._token?.accessToken}`
+            }
+        }
+        return new Promise((resolve, reject) => {
+            axios.get(service + url, config)
+                .then(response => resolve(response.data))
+                .catch(function (error) {
+                    reject(error)
+                })
+        })
+    }
+    private static postRequest(service: string, url: string, data: any) {
+        const config = {
+            headers: {
+                "Content-Type": 'application/json',
+                'Authorization': `Bearer ${this._token?.accessToken}`
+            }
+        }
+        return new Promise((resolve, reject) => {
+            axios.post(service + url, data, config)
+                .then(response => resolve(response))
+                .catch(function (error) {
+                    reject(error)
+                })
+        })
+    }
+    private static putRequest(service: string, url: string, data: any) {
+        const config = {
+            headers: {
+                "Content-Type": 'application/json',
+                'Authorization': `Bearer ${this._token?.accessToken}`
+            }
+        }
+        return new Promise((resolve, reject) => {
+            axios.put(service + url, data, config)
+                .then(response => resolve(response))
+                .catch(function (error) {
+                    reject(error)
+                })
+        })
+    }
+    private static deleteRequest(service: string, url: string) {
+        const config = {
+            headers: {
+                "Content-Type": 'application/json',
+                'Authorization': `Bearer ${this._token?.accessToken}`
+            }
+        }
+        return new Promise((resolve, reject) => {
+            axios.delete(service + url, config)
+                .then(response => resolve(response))
+                .catch(function (error) {
+                    reject(error)
+                })
+        })
     }
 }

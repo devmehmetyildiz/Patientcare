@@ -8,7 +8,10 @@ class Navigationservice {
     }
 
     public static GoTo(key: string, parameters?: any) {
-        navigationRef.navigate(key as never, parameters as never);
+        navigationRef.reset({
+            index: 0,
+            routes: [{ name: key, params: parameters }]
+        })
     }
 
     public static GoBack() {

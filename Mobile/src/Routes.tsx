@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { Component } from 'react';
-import { navigationRef } from './Utils/Navigationservice';
+import { navigationRef } from './Services/Navigationservice';
 import Login from './Pages/Login/Login';
 import Cases from './Pages/Cases/Cases';
 import Home from './Pages/Home/Home';

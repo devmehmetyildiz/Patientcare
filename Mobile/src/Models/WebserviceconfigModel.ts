@@ -1,4 +1,4 @@
-class Webserviceconfig {
+class WebserviceconfigModel {
     authUrl: string;
     userroleUrl: string;
     settingUrl: string;
@@ -8,4 +8,4 @@ class Webserviceconfig {
     businessUrl: string;
 }
 
-export { Webserviceconfig };
+export { WebserviceconfigModel };

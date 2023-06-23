@@ -4,7 +4,7 @@ import Images from '../../Assets/Images';
 import { Formbutton, Forminput } from '../../Components/Common';
 import { ProfileService } from '../../Services';
 import { styled } from 'styled-components/native';
-export default class Login extends Component<{}, LoginStates> {
+export default class Login extends Component<{ redirectPage: string }, LoginStates> {
 
     private _profileService: ProfileService;
 
@@ -39,7 +39,7 @@ export default class Login extends Component<{}, LoginStates> {
     }
 
     handleSubmit = () => {
-        this._profileService.Login(this.state.Username, this.state.Password);
+        this._profileService.Login(this.state.Username, this.state.Password, this.props.redirectPage);
     };
 }
 
