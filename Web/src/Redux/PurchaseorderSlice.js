@@ -74,7 +74,7 @@ export const EditPurchaseorders = createAsyncThunk(
 
 export const CompletePurchaseorders = createAsyncThunk(
     'Purchaseorders/CompletePurchaseorders',
-    async ({ data, history }, { dispatch }) => {
+    async (data, { dispatch }) => {
         try {
             const response = await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDER + `/Complete`, data);
             dispatch(fillPurchaseordernotification({
@@ -82,7 +82,6 @@ export const CompletePurchaseorders = createAsyncThunk(
                 code: 'Veri Güncelleme',
                 description: 'Satın alma başarı ile Tamamlandı',
             }));
-            history.push('/Purchaseorders');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

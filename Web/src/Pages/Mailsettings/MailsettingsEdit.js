@@ -66,9 +66,12 @@ export default class MailsettingsEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Form.Group widths={"equal"}>
+                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput required placeholder={Literals.Columns.User[Profile.Language]} name="User" />
+              </Form.Group>
+              <Form.Group widths={"equal"}>
+                <FormInput required placeholder={Literals.Columns.Password[Profile.Language]} name="Password" type='password' />
                 <FormInput required placeholder={Literals.Columns.Smtpport[Profile.Language]} name="Smtpport" />
               </Form.Group>
               <Form.Group widths={"equal"}>

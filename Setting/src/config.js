@@ -23,6 +23,7 @@ const config = {
     Userrole: process.env.USERROLE_URL,
     Warehouse: process.env.WAREHOUSE_URL,
     File: process.env.FILE_URL,
+    Web : process.env.WEB_URL
   }
 }
 

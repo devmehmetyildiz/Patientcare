@@ -6,6 +6,7 @@ const Routes = [
   { method: 'post', path: '/Users/SaveTableMeta', controller: 'User', action: 'Saveusertablemetaconfig' },
   { method: 'get', path: '/Users/:userId', controller: 'User', action: 'GetUser' },
   { method: 'get', path: '/Users/Getbyusername/:username', controller: 'User', action: 'Getbyusername' },
+  { method: 'get', path: '/Users/Getbyemail/:email', controller: 'User', action: 'Getbyemail' },
   { method: 'get', path: '/Users/Getusersalt/:userId', controller: 'User', action: 'Getusersalt' },
   { method: 'post', path: '/Users', controller: 'User', action: 'AddUser' },
   { method: 'post', path: '/Users/Register', controller: 'User', action: 'Register' },

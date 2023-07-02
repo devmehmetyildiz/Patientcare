@@ -1,13 +1,13 @@
 import { connect } from 'react-redux'
 import Passwordforget from "../../Pages/Auth/Passwordforget"
-import { removenotification, fillnotification } from "../../Redux/ProfileSlice"
+import { removenotification, fillnotification, Createpasswordforget } from "../../Redux/ProfileSlice"
 
 const mapStateToProps = (state) => ({
     Profile: state.Profile
 })
 
 const mapDispatchToProps = {
-    removenotification, fillnotification
+    removenotification, fillnotification, Createpasswordforget
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Passwordforget)

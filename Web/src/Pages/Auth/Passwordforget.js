@@ -32,7 +32,7 @@ export default class Passwordforget extends Component {
                 <p>Parolamı Unuttum</p>
               </Header>
               <Form size='large' className='p-4' onSubmit={this.RegisterHandler}>
-                <Form.Input type='email' transparent placeholder="E-Posta" name="email" fluid icon='mail' iconPosition='left' />
+                <Form.Input type='email' transparent placeholder="E-Posta" name="Email" fluid icon='mail' iconPosition='left' />
                 <Divider />
                 <div className='mt-4 w-full flex justify-end items-center'>
                   <div className='w-1/3 '>
@@ -55,7 +55,7 @@ export default class Passwordforget extends Component {
 
   RegisterHandler = (event) => {
     event.preventDefault()
-    const { history, register, Profile, fillnotification } = this.props
+    const { Createpasswordforget, Profile, fillnotification } = this.props
 
     if (Profile.isLogging) {
       return false
@@ -63,7 +63,7 @@ export default class Passwordforget extends Component {
 
     const data = formToObject(event.target)
     let errors = []
-    if (!data.email || data.email === '') {
+    if (!data.Email || data.Email === '') {
       errors.push({ type: 'Error', code: 'Kayıt İşlemi', description: 'lütfen mail adresi giriniz' })
     }
     if (errors.length > 0) {
@@ -71,7 +71,7 @@ export default class Passwordforget extends Component {
         fillnotification(error)
       })
     } else {
-      register(data.email, history)
+      Createpasswordforget({ email: data.Email })
     }
   }
 }

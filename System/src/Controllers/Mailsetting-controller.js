@@ -41,6 +41,21 @@ async function GetMailsetting(req, res, next) {
         return next(sequelizeErrorCatcher(error))
     }
 }
+async function GetActiveMailsetting(req, res, next) {
+
+    try {
+        const mailsetting = await db.mailsettingModel.findOne({ where: { Issettingactive: true } });
+        if (!mailsetting) {
+            return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_FOUND], req.language))
+        }
+        if (!mailsetting.Isactive) {
+            return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_ACTIVE], req.language))
+        }
+        res.status(200).json(mailsetting)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
 
 async function AddMailsetting(req, res, next) {
 
@@ -220,4 +235,5 @@ module.exports = {
     AddMailsetting,
     UpdateMailsetting,
     DeleteMailsetting,
+    GetActiveMailsetting
 }

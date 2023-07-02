@@ -197,7 +197,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                                 prepareRow(row)
                                 return (
                                     <React.Fragment key={`rw-${row.id}`}>
-                                        <tr {...row.getRowProps()} style={{ backgroundColor: row.original?.case ? row.original.case?.casecolor : null }} >
+                                        <tr {...row.getRowProps()} style={{ backgroundColor: row.original?.Case ? row.original.Case?.Casecolor : null }} >
                                             {row.cells.map(cell => {
                                                 return (
                                                     <td  {...cell.getCellProps({ className: cell.column.className })}>

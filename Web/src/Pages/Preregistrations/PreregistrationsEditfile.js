@@ -31,9 +31,11 @@ export default class PreregistrationsEditfile extends Component {
         const { selected_record, isLoading } = Patients
         if (selected_record && Object.keys(selected_record).length > 0 &&
             selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
-            var response = (selected_record.Files || [])
-            response.forEach(element => {
-                element.key = Math.random()
+            var response = (selected_record.Files || []).map(element => {
+                return {
+                    ...element,
+                    key: Math.random()
+                }
             });
             this.setState({
                 selectedFiles: response, isDatafetched: true

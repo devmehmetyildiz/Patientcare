@@ -27,12 +27,12 @@ export default function FormInput(props) {
                     content={<Label color='red' ribbon>{Attention[language]}</Label>}
                     on='click'
                     hideOnScroll
-                    position='left center'
+                    position='right center'
                 />}
                 {props.attention && <Popup
                     trigger={<Icon link name='question circle' />}
                     content={<Label color='blue' ribbon>{props.attention}</Label>}
-                    position='left center'
+                    position='right center'
                     on='click'
                 />}
             </div>

@@ -123,6 +123,25 @@ export const SaveTableMeta = createAsyncThunk(
     }
 );
 
+export const Createpasswordforget = createAsyncThunk(
+    'Profile/Createpasswordforget',
+    async ({ email }, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Auth, 'Password/Createrequest/' + email);
+            dispatch(fillnotification({
+                type: 'Success',
+                code: 'Elder Camp',
+                description: 'Parola Sıfırlama Talebiniz alınmıştır. Lütfen mail adresinizi kontrol ediniz',
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const ProfileSlice = createSlice({
     name: 'Profile',
     initialState: {
@@ -138,7 +157,8 @@ export const ProfileSlice = createSlice({
         auth: false,
         tablemeta: [],
         Language: "tr",
-        resetpasswordStatus: false
+        resetpasswordStatus: false,
+        passwordrequestsended: false
     },
     reducers: {
         fillnotification: (state, action) => {
@@ -244,6 +264,21 @@ export const ProfileSlice = createSlice({
                 state.isLogging = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(Createpasswordforget.pending, (state) => {
+                state.isLogging = true;
+                state.passwordrequestsended = false;
+                state.errMsg = null;
+            })
+            .addCase(Createpasswordforget.fulfilled, (state, action) => {
+                state.isLogging = false;
+                state.passwordrequestsended = true;
+            })
+            .addCase(Createpasswordforget.rejected, (state, action) => {
+                state.isLogging = false;
+                state.passwordrequestsended = false;
+                state.errMsg = action.error.message;
+            })
+
     },
 });
 

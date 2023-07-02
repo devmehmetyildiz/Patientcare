@@ -24,7 +24,6 @@ async function Register(req, res, next) {
             Email,
             Password,
         } = req.body
-        console.log('req.body: ', req.body);
         let validationErrors = []
         if (!validator.isString(Username)) {
             validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
@@ -294,6 +293,29 @@ async function Getbyusername(req, res, next) {
     }
     try {
         const user = await db.userModel.findOne({ where: { Username: req.params.username } })
+        if (!user) {
+            return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+        }
+        if (!user.Isactive) {
+            return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+        }
+        res.status(200).json(user)
+    } catch (error) {
+        next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function Getbyemail(req, res, next) {
+
+    let validationErrors = []
+    if (req.params.email === undefined) {
+        validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    try {
+        const user = await db.userModel.findOne({ where: { Email: req.params.email } })
         if (!user) {
             return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
         }
@@ -716,5 +738,6 @@ module.exports = {
     GetActiveUsername,
     GetActiveUserMeta,
     Getusertablemetaconfig,
-    Saveusertablemetaconfig
+    Saveusertablemetaconfig,
+    Getbyemail
 }

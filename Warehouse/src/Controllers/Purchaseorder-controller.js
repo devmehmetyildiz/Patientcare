@@ -475,7 +475,7 @@ async function CompletePurchaseorder(req, res, next) {
                     WarehouseID: WarehouseID,
                     CreatedUser: 'System',
                     CreateTime: new Date(),
-                    IsActive: true,
+                    Isactive: true,
                 }, { transaction: t })
                 await db.stockmovementModel.create({
                     Uuid: uuid(),
@@ -487,7 +487,7 @@ async function CompletePurchaseorder(req, res, next) {
                     Newvalue: amount,
                     CreatedUser: 'System',
                     CreateTime: new Date(),
-                    IsActive: true
+                    Isactive: true
                 }, { transaction: t })
             } else {
                 let previousamount = 0;

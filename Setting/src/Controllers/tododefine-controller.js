@@ -103,7 +103,7 @@ async function AddTododefine(req, res, next) {
         }, { transaction: t })
 
         for (const checkperiod of Checkperiods) {
-            if (!checkperiod.Uuid || !validator.isUUID(period.checkperiod)) {
+            if (!checkperiod.Uuid || !validator.isUUID(checkperiod.Uuid)) {
                 return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID, req.language))
             }
             await db.tododefinecheckperiodModel.create({

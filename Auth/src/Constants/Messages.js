@@ -61,6 +61,18 @@ const messages = {
         tr: 'Kullanıcı rolü bulunamadı',
       }
     },
+    REQUEST_NOT_ACTIVE: {
+      code: 'REQUEST_NOT_ACTIVE', description: {
+        en: 'Password reset request not active',
+        tr: 'Parola sıfırlama talebi aktif değil',
+      }
+    },
+    REQUEST_NOT_FOUND: {
+      code: 'REQUEST_NOT_FOUND', description: {
+        en: 'Password reset request not found',
+        tr: 'Parola Sıfırlama talebi bulunamadı',
+      }
+    },
   },
   VALIDATION_ERROR: {
     NAME_REQUIRED: {
@@ -73,6 +85,12 @@ const messages = {
       code: 'GRANTTYPE_REQUIRED', description: {
         en: 'The Grant type required',
         tr: 'Bu işlem için grant type gerekli',
+      }
+    },
+    REQUESTID_REQUIRED: {
+      code: 'REQUESTID_REQUIRED', description: {
+        en: 'The request id required',
+        tr: 'Bu işlem için talep idsi gerekli',
       }
     },
     INVALID_GRANTTYPE: {

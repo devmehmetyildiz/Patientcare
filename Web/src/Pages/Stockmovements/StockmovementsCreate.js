@@ -65,7 +65,7 @@ export default class PurchaseorderstockmovementsCreate extends Component {
               <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} value={this.state.selectedstock} options={Stockoptions} onChange={this.handleChangeStock} formtype='dropdown' />
               <Form.Group widths='equal'>
                 <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
-                <FormInput placeholder={Literals.Columns.Movementtype[Profile.Language]} value={this.state.selectedmovement} options={Movementoptions} onChange={this.handleChangeMovement} fromtype='dropdown' />
+                <FormInput placeholder={Literals.Columns.Movementtype[Profile.Language]} value={this.state.selectedmovement} options={Movementoptions} onChange={this.handleChangeMovement} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Purchaseorderstockmovements">

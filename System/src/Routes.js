@@ -1,4 +1,5 @@
 const Routes = [
+    { method: 'get', path: '/Mailsettings/GetActiveMailsetting', controller: 'Mailsetting', action: 'GetActiveMailsetting' },
     { method: 'get', path: '/Mailsettings/:mailsettingId', controller: 'Mailsetting', action: 'GetMailsetting' },
     { method: 'get', path: '/Mailsettings', controller: 'Mailsetting', action: 'GetMailsettings' },
     { method: 'post', path: '/Mailsettings', controller: 'Mailsetting', action: 'AddMailsetting' },
