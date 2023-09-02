@@ -1,11 +1,11 @@
 const messages = require('../Constants/Messages')
 const createValidationError = require('../Utilities/Error').createValidation
-const crypto = require('crypto')
+const bcrypt = require('bcrypt')
 const uuid = require('uuid').v4
-const { sequelizeErrorCatcher, createAccessDenied, createAutherror, requestErrorCatcher,createNotfounderror } = require("../Utilities/Error")
-const priveleges = require('../Constants/Privileges')
+const { sequelizeErrorCatcher, createAutherror, requestErrorCatcher, createNotfounderror } = require("../Utilities/Error")
 const axios = require('axios')
 const config = require('../Config')
+const Createlog = require('../Utilities/Createlog')
 
 function Testserver(req, res, next) {
     res.status(200).json({ message: "success" })
@@ -47,7 +47,9 @@ async function ValidateToken(req, res, next) {
     if (!accessToken) {
         return next(createAutherror(messages.ERROR.ACCESS_TOKEN_NOT_FOUND, req.language))
     }
-    if (accessToken.ExpiresAt <= new Date()) {
+    const g1 = new Date(accessToken.ExpiresAt)
+    const g2 = new Date()
+    if (g1.getTime() <= g2.getTime()) {
         return next(createAutherror(messages.ERROR.ACCESS_TOKEN_INVALID, req.language))
     }
     return res.status(200).json(accessToken)
@@ -57,11 +59,11 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
     let validationErrors = []
 
     if (!req.body.Username) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_IS_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
     }
 
     if (!req.body.Password) {
-        validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_IS_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -95,7 +97,7 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
     }
 
     if (!await ValidatePassword(req.body.Password, user.PasswordHash, usersalt.Salt)) {
-        return next(createAutherror([messages.ERROR.PASSWORD_DIDNT_MATCH], req.language))
+        return next(createAutherror([messages.ERROR.PASSWORD_DIDNTMATCH], req.language))
     }
 
     let accessToken = {
@@ -103,16 +105,19 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
         accessToken: uuid(),
         refreshToken: uuid(),
         ExpiresAt: new Date(new Date().getTime() + 59 * 60000),
+        RefreshtokenexpiresAt: new Date(new Date().getTime() + 59 * 60000),
     }
 
     try {
         await db.accesstokenModel.destroy({ where: { Userid: user.Uuid } })
-
+        req.identity = {}
+        req.identity.user = user
         await db.accesstokenModel.create({
             Userid: user.Uuid,
             Accesstoken: accessToken.accessToken,
             Refreshtoken: accessToken.refreshToken,
             ExpiresAt: accessToken.ExpiresAt,
+            RefreshtokenexpiresAt: accessToken.RefreshtokenexpiresAt,
             Createduser: "System",
             Createtime: new Date(),
             Updateduser: null,
@@ -121,9 +126,10 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
             Deletetime: null,
             Isactive: true
         })
+        req.body.Password = ''
+        Createlog(req)
     } catch (err) {
-        sequelizeErrorCatcher(err)
-        next()
+        return next(sequelizeErrorCatcher(err))
     }
 
     res.cookie("patientcare", accessToken.accessToken, {
@@ -136,7 +142,7 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
     let validationErrors = []
 
     if (!req.body.refreshToken) {
-        validationErrors.push(messages.VALIDATION_ERROR.REFRESH_TOKEN_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.REFRESHTOKEN_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -148,27 +154,31 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
         return next(createNotfounderror([messages.ERROR.REFRESH_TOKEN_NOT_FOUND], req.language))
     }
 
-    if (token.ExpiresAt <= new Date()) {
+    const g1 = new Date(token.RefreshtokenexpiresAt)
+    const g2 = new Date()
+    if (g1.getTime() <= g2.getTime()) {
         return next(createValidationError([messages.ERROR.REFRESH_TOKEN_EXPIRED], req.language))
     }
-    const user = null
+    let user = null
     try {
-        user = await axios({
+        const userresponce = await axios({
             method: 'GET',
             url: config.services.Userrole + `Users/${token.Userid}`,
             headers: {
                 session_key: config.session.secret
             }
         })
+        user = userresponce.data
     } catch (error) {
-        return requestErrorCatcher(error, "USERROLE")
+        return next(requestErrorCatcher(error, "USERROLE"))
     }
 
     let accessToken = {
         token_type: 'bearer',
         accessToken: uuid(),
         refreshToken: uuid(),
-        ExpiresAt: new Date(new Date().getTime() + 0 * 60000),
+        ExpiresAt: new Date(new Date().getTime() + 59 * 60000),
+        RefreshtokenexpiresAt: new Date(new Date().getTime() + 59 * 60000),
     }
 
     try {
@@ -179,6 +189,7 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
             Accesstoken: accessToken.accessToken,
             Refreshtoken: accessToken.refreshToken,
             ExpiresAt: accessToken.ExpiresAt,
+            RefreshtokenexpiresAt: accessToken.RefreshtokenexpiresAt,
             Createduser: "System",
             Createtime: new Date(),
             Updateduser: null,
@@ -188,8 +199,7 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
             Isactive: true
         })
     } catch (err) {
-        sequelizeErrorCatcher(err)
-        next()
+        return next(sequelizeErrorCatcher(err))
     }
 
     res.status(200).json(accessToken)
@@ -197,14 +207,13 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
 
 async function ValidatePassword(UserPassword, DbPassword, salt) {
     try {
-        let hash = crypto.pbkdf2Sync(UserPassword, salt, 1000, 64, 'sha512').toString('hex');
+        let hash = await bcrypt.hash(UserPassword, salt)
         if (hash === DbPassword) {
             return true
         } else {
             return false
         }
     } catch (error) {
-        sequelizeErrorCatcher(error)
         return false
     }
 }

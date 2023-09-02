@@ -1,6 +1,6 @@
 const messages = require('../Constants/Messages')
 const createValidationError = require('../Utilities/Error').createValidation
-const crypto = require('crypto')
+const bcrypt = require('bcrypt')
 const uuid = require('uuid').v4
 const { sequelizeErrorCatcher, createAccessDenied, createAutherror, requestErrorCatcher, createNotfounderror } = require("../Utilities/Error")
 const axios = require('axios')
@@ -52,7 +52,7 @@ async function Createrequest(req, res, next) {
       Uuid: requestUuid,
       UserID: user.Uuid,
       Emailsended: false,
-      Reseturl: config.services.Auth + 'Validateresetrequest/' + requestUuid,
+      Reseturl: config.services.Auth + 'Password/Validateresetrequest/' + requestUuid,
       Emailconfirmed: false,
       Newpassword: null,
       Oldpassword: null,
@@ -61,7 +61,6 @@ async function Createrequest(req, res, next) {
       Createtime: new Date(),
       Isactive: true
     }
-
 
     const transporter = nodemailer.createTransport({
       host: emailsetting.Smtphost,
@@ -77,7 +76,7 @@ async function Createrequest(req, res, next) {
     await transporter.sendMail({
       from: emailsetting.Mailaddress, // sender address
       to: user.Email, // list of receivers
-      subject: "Patient Care Parola Sıfırlama Talebiniz Alınmıştır", // Subject line
+      subject: "Star Note Parola Sıfırlama Talebiniz Alınmıştır", // Subject line
       text: "Bu mesaj uygulama tarafından gönderilmiştir", // plain text body
       html: Createresettemplate(user.Username, passwordresetrequest.Reseturl),
     })
@@ -108,12 +107,16 @@ async function Validateresetrequest(req, res, next) {
       return next(createNotfounderror([messages.ERROR.REQUEST_NOT_ACTIVE], req.language))
     }
 
-    await db.passwordrefreshrequestModel.Update({
+    if (request.Userfetchedcount >= 0 || request.Emailconfirmed >= 0) {
+      return next(createAutherror([messages.ERROR.RESET_REQUEST_REJECTED], req.language))
+    }
+
+    await db.passwordrefreshrequestModel.update({
       ...request,
       Emailconfirmed: true,
       Updateduser: 'System',
       Updatetime: new Date()
-    })
+    }, { where: { Uuid: request.Uuid } })
 
     res.redirect(config.services.Web + "Passwordreset/" + request.Uuid)
   } catch (error) {
@@ -169,8 +172,7 @@ async function Changepassword(req, res, next) {
       return next(requestErrorCatcher(error, 'Userrole'))
     }
 
-    const hash = crypto.pbkdf2Sync(Password, usersalt.Salt, 1000, 64, 'sha512').toString('hex');
-
+    const hash = bcrypt.hash(Password, usersalt.Salt)
     try {
       await axios({
         method: 'PUT',

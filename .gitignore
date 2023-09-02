@@ -28,6 +28,10 @@ File/dist/
 File/node_modules/
 File/build/
 File/.env
+Log/dist/
+Log/node_modules/
+Log/build/
+Log/.env
 Web/node_modules/
 Web/build/
 Web/.env

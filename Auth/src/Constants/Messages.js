@@ -73,6 +73,18 @@ const messages = {
         tr: 'Parola Sıfırlama talebi bulunamadı',
       }
     },
+    PASSWORD_DIDNTMATCH: {
+      code: 'PASSWORD_DIDNTMATCH', description: {
+        en: 'Password wrong',
+        tr: 'Parola hatalı',
+      }
+    },
+    RESET_REQUEST_REJECTED: {
+      code: 'RESET_REQUEST_REJECTED', description: {
+        en: 'Reset request already used',
+        tr: 'Sıfırlama Talebi zaten kullanılmış',
+      }
+    },
   },
   VALIDATION_ERROR: {
     NAME_REQUIRED: {
@@ -157,6 +169,12 @@ const messages = {
       code: 'EMAIL_DUPLICATE', description: {
         en: 'E-mail already active',
         tr: 'E-posta zaten mevcut',
+      }
+    },
+    REFRESHTOKEN_REQUIRED: {
+      code: 'REFRESHTOKEN_REQUIRED', description: {
+        en: 'Refresh token required',
+        tr: 'Refresh token Gerekli',
       }
     },
   }
