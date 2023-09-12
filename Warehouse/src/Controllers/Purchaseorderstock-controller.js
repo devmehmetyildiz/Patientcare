@@ -11,44 +11,6 @@ const axios = require('axios')
 async function GetPurchaseorderstocks(req, res, next) {
     try {
         const purchaseorderstocks = await db.purchaseorderstockModel.findAll({ where: { Isactive: true } })
-        if (purchaseorderstocks && purchaseorderstocks.length > 0) {
-            let departments = []
-            let units = []
-            try {
-                const departmentsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Units`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                departments = departmentsresponse.data
-                units = unitsresponse.data
-            } catch (error) {
-                return next(requestErrorCatcher(error, 'Setting'))
-            }
-            for (const purchaseorderstock of purchaseorderstocks) {
-                let amount = 0.0;
-                let movements = await db.purchaseorderstockmovementModel.findAll({ where: { StockID: purchaseorderstock.Uuid } })
-                movements.forEach(movement => {
-                    amount += (movement.Amount * movement.Movementtype);
-                });
-                purchaseorderstock.Amount = amount
-                purchaseorderstock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: purchaseorderstock.StockdefineID } })
-                if (purchaseorderstock.Stockdefine) {
-                    purchaseorderstock.Stockdefine.Unit = units.find(u => u.Uuid === purchaseorderstock.Stockdefine.UnitID)
-                    purchaseorderstock.Stockdefine.Department = departments.find(u => u.Uuid === purchaseorderstock.Stockdefine.DepartmentID)
-                }
-                purchaseorderstock.Purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: purchaseorderstock.PurchaseorderID } })
-            }
-        }
         res.status(200).json(purchaseorderstocks)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -75,36 +37,6 @@ async function GetPurchaseorderstock(req, res, next) {
         }
         if (!purchaseorderstock.Isactive) {
             return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
-        }
-        try {
-            purchaseorderstock.Purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: purchaseorderstock.PurchaseorderID } })
-            purchaseorderstock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: purchaseorderstock.StockdefineID } })
-            let amount = 0.0;
-            let movements = await db.purchaseorderstockModel.findAll({ where: { StockID: purchaseorderstock.Uuid } })
-            movements.forEach(movement => {
-                amount += (movement.Amount * movement.Movementtype);
-            });
-            purchaseorderstock.Amount = amount
-            if (purchaseorderstock.Stockdefine) {
-                const departmentsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments/${purchaseorderstock.Stockdefine.DepartmentID}`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Units/${purchaseorderstock.Stockdefine.UnitID}`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                purchaseorderstock.Stockdefine.Department = departmentsresponse.data
-                purchaseorderstock.Stockdefine.Unit = unitsresponse.data
-            }
-        } catch (error) {
-            return next(requestErrorCatcher(error, 'Setting'))
         }
         res.status(200).json(purchaseorderstock)
     } catch (error) {

@@ -10,40 +10,6 @@ const axios = require('axios')
 async function GetPurchaseorderstockmovements(req, res, next) {
     try {
         const purchaseorderstockmovements = await db.purchaseorderstockmovementModel.findAll({ where: { Isactive: true } })
-        let departments = []
-        let units = []
-        if (purchaseorderstockmovements && purchaseorderstockmovements.length > 0) {
-            try {
-                const departmentresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + 'Departments',
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + 'Units',
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                departments = departmentresponse.data
-                units = unitresponse.data
-            } catch (error) {
-                return next(requestErrorCatcher(error, 'Setting'))
-            }
-        }
-        for (const purchaseorderstockmovement of purchaseorderstockmovements) {
-            purchaseorderstockmovement.Stock = await db.purchaseorderstockModel.findOne({ where: { Uuid: purchaseorderstockmovement.StockID } })
-            if (purchaseorderstockmovement.Stock) {
-                purchaseorderstockmovement.Stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: purchaseorderstockmovement.Stock.StockdefineID } })
-                if (purchaseorderstockmovement.Stock.Stockdefine) {
-                    purchaseorderstockmovement.Stock.Stockdefine.Department = departments.find(u => u.Uuid === purchaseorderstockmovement.Stock.Stockdefine.DepartmentID)
-                    purchaseorderstockmovement.Stock.Stockdefine.Unit = units.find(u => u.Uuid === purchaseorderstockmovement.Stock.Stockdefine.UnitID)
-                }
-            }
-        }
         res.status(200).json(purchaseorderstockmovements)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -70,32 +36,6 @@ async function GetPurchaseorderstockmovement(req, res, next) {
         }
         if (!purchaseorderstockmovement.Isactive) {
             return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
-        }
-        purchaseorderstockmovement.Stock = await db.purchaseorderstockModel.findOne({ where: { Uuid: purchaseorderstockmovement.StockID } })
-        if (purchaseorderstockmovement.Stock) {
-            purchaseorderstockmovement.Stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: purchaseorderstockmovement.Stock.StockdefineID } })
-            if (purchaseorderstockmovement.Stock.Stockdefine) {
-                try {
-                    const departmentresponse = await axios({
-                        method: 'GET',
-                        url: config.services.Setting + `Departments/${purchaseorderstockmovement.Stock.Stockdefine.DepartmentID}`,
-                        headers: {
-                            session_key: config.session.secret
-                        }
-                    })
-                    const unitresponse = await axios({
-                        method: 'GET',
-                        url: config.services.Setting + `Units/${purchaseorderstockmovement.Stock.Stockdefine.UnitID}`,
-                        headers: {
-                            session_key: config.session.secret
-                        }
-                    })
-                    purchaseorderstockmovement.Stock.Stockdefine.Department = departmentresponse.data
-                    purchaseorderstockmovement.Stock.Stockdefine.Unit = unitresponse.data
-                } catch (error) {
-                    return next(requestErrorCatcher(error, 'Setting'))
-                }
-            }
         }
         res.status(200).json(purchaseorderstockmovement)
     } catch (error) {

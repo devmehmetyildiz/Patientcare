@@ -9,41 +9,7 @@ const axios = require('axios')
 
 async function GetStockmovements(req, res, next) {
     try {
-        const stockmovements = await db.stockmovementModel.findAll({ where: { Isactive: true } })
-        let departments = []
-        let units = []
-        if (stockmovements && stockmovements.length > 0) {
-            try {
-                const departmentresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + 'Departments',
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + 'Units',
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                departments = departmentresponse.data
-                units = unitresponse.data
-            } catch (error) {
-                return next(requestErrorCatcher(error, 'Setting'))
-            }
-        }
-        for (const stockmovement of stockmovements) {
-            stockmovement.Stock = await db.stockModel.findOne({ where: { Uuid: stockmovement.StockID } })
-            if (stockmovement.Stock) {
-                stockmovement.Stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stockmovement.Stock.StockdefineID } })
-                if (stockmovement.Stock.Stockdefine) {
-                    stockmovement.Stock.Stockdefine.Department = departments.find(u => u.Uuid === stockmovement.Stock.Stockdefine.DepartmentID)
-                    stockmovement.Stock.Stockdefine.Unit = units.find(u => u.Uuid === stockmovement.Stock.Stockdefine.UnitID)
-                }
-            }
-        }
+        const stockmovements = await db.stockmovementModel.findAll()
         res.status(200).json(stockmovements)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -70,32 +36,6 @@ async function GetStockmovement(req, res, next) {
         }
         if (!stockmovement.Isactive) {
             return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
-        }
-        stockmovement.Stock = await db.stockModel.findOne({ where: { Uuid: stockmovement.StockID } })
-        if (stockmovement.Stock) {
-            stockmovement.Stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stockmovement.Stock.StockdefineID } })
-            if (stockmovement.Stock.Stockdefine) {
-                try {
-                    const departmentresponse = await axios({
-                        method: 'GET',
-                        url: config.services.Setting + `Departments/${stockmovement.Stock.Stockdefine.DepartmentID}`,
-                        headers: {
-                            session_key: config.session.secret
-                        }
-                    })
-                    const unitresponse = await axios({
-                        method: 'GET',
-                        url: config.services.Setting + `Units/${stockmovement.Stock.Stockdefine.UnitID}`,
-                        headers: {
-                            session_key: config.session.secret
-                        }
-                    })
-                    stockmovement.Stock.Stockdefine.Department = departmentresponse.data
-                    stockmovement.Stock.Stockdefine.Unit = unitresponse.data
-                } catch (error) {
-                    return next(requestErrorCatcher(error, 'Setting'))
-                }
-            }
         }
         res.status(200).json(stockmovement)
     } catch (error) {
