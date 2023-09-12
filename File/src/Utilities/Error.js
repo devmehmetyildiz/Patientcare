@@ -102,12 +102,11 @@ function createNotfounderror(param, language) {
 }
 
 function createAccessDenied(privilege, language, descriptions) {
-  let code = privilege.replace(/\.?([A-Z])/g, function (x, y) { return "_" + y }).replace(/^_/, "").toUpperCase()
+  let code = privilege.replace('', '_').toUpperCase()
 
   let description = {
     en: `The ${descriptions[language]} access denied, you must have '${privilege}' privilege to do this operation`,
     tr: `${descriptions[language]} erişimi reddedildi, bu işlemi gerçekleştirebilmek için '${privilege}' yetkisine sahip olmalısın`,
-    ru: `Отказано в доступе к ${descriptions[language]}, для выполнения этого действия у вас должна быть привилегия '${privilege}'`
   }
   return create('FORBIDDEN', `${code}_ACCESS_DENIED`, description[language])
 }

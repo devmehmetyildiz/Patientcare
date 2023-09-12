@@ -10,16 +10,12 @@ async function GetCostumertypes(req, res, next) {
     try {
         const costumertypes = await db.costumertypeModel.findAll({ where: { Isactive: true } })
         for (const costumertype of costumertypes) {
-            let departmentuuids = await db.costumertypedepartmentModel.findAll({
+            costumertype.Departmentuuids = await db.costumertypedepartmentModel.findAll({
                 where: {
                     CostumertypeID: costumertype.Uuid,
-                }
+                },
+                attributes: ['DepartmentID']
             });
-            costumertype.Departments = await db.departmentModel.findAll({
-                where: {
-                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
-                }
-            })
         }
         res.status(200).json(costumertypes)
     } catch (error) {
@@ -48,16 +44,12 @@ async function GetCostumertype(req, res, next) {
         if (!costumertpe.Isactive) {
             return createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_ACTIVE])
         }
-        let departmentuuids = await db.costumertypedepartmentModel.findAll({
+        costumertype.Departmentuuids = await db.costumertypedepartmentModel.findAll({
             where: {
-                CostumertypeID: costumertpe.Uuid,
-            }
+                CostumertypeID: costumertype.Uuid,
+            },
+            attributes: ['DepartmentID']
         });
-        costumertpe.Departments = await db.departmentModel.findAll({
-            where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
-            }
-        })
         res.status(200).json(costumertpe)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

@@ -10,16 +10,12 @@ async function GetTododefines(req, res, next) {
     try {
         const tododefines = await db.tododefineModel.findAll({ where: { Isactive: true } })
         for (const tododefine of tododefines) {
-            let checkperioduuids = await db.tododefinecheckperiodModel.findAll({
+            tododefine.Checkperioduuids = await db.tododefinecheckperiodModel.findAll({
                 where: {
                     TododefineID: tododefine.Uuid,
-                }
+                },
+                attributes: ['CheckperiodID']
             });
-            tododefine.Checkperiods = await db.checkperiodModel.findAll({
-                where: {
-                    Uuid: checkperioduuids.map(u => { return u.CheckperiodID })
-                }
-            })
         }
         res.status(200).json(tododefines)
     } catch (error) {
@@ -42,16 +38,12 @@ async function GetTododefine(req, res, next) {
 
     try {
         const tododefine = await db.tododefineModel.findOne({ where: { Uuid: req.params.tododefineId } });
-        let checkperioduuids = await db.tododefinecheckperiodModel.findAll({
+        tododefine.Checkperioduuids = await db.tododefinecheckperiodModel.findAll({
             where: {
                 TododefineID: tododefine.Uuid,
-            }
+            },
+            attributes: ['CheckperiodID']
         });
-        tododefine.Checkperiods = await db.checkperiodModel.findAll({
-            where: {
-                Uuid: checkperioduuids.map(u => { return u.CheckperiodID })
-            }
-        })
         res.status(200).json(tododefine)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

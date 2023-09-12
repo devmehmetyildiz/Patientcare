@@ -10,16 +10,12 @@ async function GetUnits(req, res, next) {
     try {
         const units = await db.unitModel.findAll({ where: { Isactive: true } })
         for (const unit of units) {
-            let departmentuuids = await db.unitdepartmentModel.findAll({
+            unit.Departmentuuids = await db.unitdepartmentModel.findAll({
                 where: {
                     UnitID: unit.Uuid,
-                }
+                },
+                attributes: ['DepartmentID']
             });
-            unit.Departments = await db.departmentModel.findAll({
-                where: {
-                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
-                }
-            })
         }
         res.status(200).json(units)
     } catch (error) {
@@ -48,16 +44,12 @@ async function GetUnit(req, res, next) {
         if (!unit.Isactive) {
             return createNotfounderror([messages.ERROR.UNIT_NOT_ACTIVE])
         }
-        let departmentuuids = await db.unitdepartmentModel.findAll({
+        unit.Departmentuuids = await db.unitdepartmentModel.findAll({
             where: {
                 UnitID: unit.Uuid,
-            }
+            },
+            attributes: ['DepartmentID']
         });
-        unit.Departments = await db.departmentModel.findAll({
-            where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
-            }
-        })
         res.status(200).json(unit)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -115,7 +107,7 @@ async function AddUnit(req, res, next) {
         await t.rollback()
         return next(sequelizeErrorCatcher(err))
     }
-    GetUnits(req,res,next)
+    GetUnits(req, res, next)
 }
 
 async function UpdateUnit(req, res, next) {
@@ -146,7 +138,7 @@ async function UpdateUnit(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-    
+
     const t = await db.sequelize.transaction();
     try {
         const unit = db.unitModel.findOne({ where: { Uuid: Uuid } })
@@ -156,7 +148,7 @@ async function UpdateUnit(req, res, next) {
         if (unit.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.UNIT_NOT_ACTIVE], req.language))
         }
-        
+
         await db.unitModel.update({
             ...req.body,
             Updateduser: "System",
@@ -178,7 +170,7 @@ async function UpdateUnit(req, res, next) {
         await t.rollback()
         return next(sequelizeErrorCatcher(error))
     }
-    GetUnits(req,res,next)
+    GetUnits(req, res, next)
 
 }
 
@@ -196,7 +188,7 @@ async function DeleteUnit(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-    
+
     const t = await db.sequelize.transaction();
     try {
         const unit = db.unitModel.findOne({ where: { Uuid: Uuid } })
@@ -214,7 +206,7 @@ async function DeleteUnit(req, res, next) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
-    GetUnits(req,res,next)
+    GetUnits(req, res, next)
 }
 
 module.exports = {

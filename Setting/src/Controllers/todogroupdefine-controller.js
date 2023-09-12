@@ -10,17 +10,12 @@ async function GetTodogroupdefines(req, res, next) {
     try {
         const todogroupdefines = await db.todogroupdefineModel.findAll({ where: { Isactive: true } })
         for (const todogroupdefine of todogroupdefines) {
-            let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
+            todogroupdefine.Tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
                 where: {
                     GroupID: todogroupdefine.Uuid,
-                }
+                },
+                attributes: ['TodoID']
             });
-            todogroupdefine.Tododefines = await db.tododefineModel.findAll({
-                where: {
-                    Uuid: tododefineuuids.map(u => { return u.TodoID })
-                }
-            })
-            todogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: todogroupdefine.DepartmentID } })
         }
         res.status(200).json(todogroupdefines)
     } catch (error) {
@@ -49,17 +44,12 @@ async function GetTodogroupdefine(req, res, next) {
         if (!todogroupdefine.Isactive) {
             return createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE])
         }
-        let tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
+        todogroupdefine.Tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
             where: {
                 GroupID: todogroupdefine.Uuid,
-            }
+            },
+            attributes: ['TodoID']
         });
-        todogroupdefine.Tododefines = await db.tododefineModel.findAll({
-            where: {
-                Uuid: tododefineuuids.map(u => { return u.TodoID })
-            }
-        })
-        todogroupdefine.Department = await db.departmentModel.findOne({ where: { Uuid: todogroupdefine.DepartmentID } })
         res.status(200).json(todogroupdefine)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

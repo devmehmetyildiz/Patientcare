@@ -10,16 +10,12 @@ async function GetCases(req, res, next) {
     try {
         const cases = await db.caseModel.findAll({ where: { Isactive: true } })
         for (const casedata of cases) {
-            let departmentuuids = await db.casedepartmentModel.findAll({
+            casedata.Departmentuuids = await db.casedepartmentModel.findAll({
                 where: {
                     CaseID: casedata.Uuid,
-                }
+                },
+                attributes: ['DepartmentID']
             });
-            casedata.Departments = await db.departmentModel.findAll({
-                where: {
-                    Uuid: departmentuuids.map(u => { return u.DepartmentID })
-                }
-            })
         }
         res.status(200).json(cases)
     } catch (error) {
@@ -37,16 +33,12 @@ async function GetCompleteCase(req, res, next) {
         if (!casedata.Isactive) {
             return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE])
         }
-        let departmentuuids = await db.casedepartmentModel.findAll({
+        casedata.Departmentuuids = await db.casedepartmentModel.findAll({
             where: {
                 CaseID: casedata.Uuid,
-            }
+            },
+            attributes: ['DepartmentID']
         });
-        casedata.Departments = await db.departmentModel.findAll({
-            where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
-            }
-        })
         res.status(200).json(casedata)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -63,16 +55,12 @@ async function GetDeactivateCase(req, res, next) {
         if (!casedata.Isactive) {
             return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE])
         }
-        let departmentuuids = await db.casedepartmentModel.findAll({
+        casedata.Departmentuuids = await db.casedepartmentModel.findAll({
             where: {
                 CaseID: casedata.Uuid,
-            }
+            },
+            attributes: ['DepartmentID']
         });
-        casedata.Departments = await db.departmentModel.findAll({
-            where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
-            }
-        })
         res.status(200).json(casedata)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -100,16 +88,12 @@ async function GetCase(req, res, next) {
         if (!casedata.Isactive) {
             return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE])
         }
-        let departmentuuids = await db.casedepartmentModel.findAll({
+        casedata.Departmentuuids = await db.casedepartmentModel.findAll({
             where: {
                 CaseID: casedata.Uuid,
-            }
+            },
+            attributes: ['DepartmentID']
         });
-        casedata.Departments = await db.departmentModel.findAll({
-            where: {
-                Uuid: departmentuuids.map(u => { return u.DepartmentID })
-            }
-        })
         res.status(200).json(casedata)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

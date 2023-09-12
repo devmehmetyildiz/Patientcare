@@ -38,6 +38,28 @@ async function GetbyparentID(req, res, next) {
         return next(sequelizeErrorCatcher(error))
     }
 }
+
+async function GetbyorderfileID(req, res, next) {
+
+    let validationErrors = []
+    if (!req.params.orderfileId) {
+        validationErrors.push(messages.VALIDATION_ERROR.PARENTID_REQUIRED)
+    }
+    if (!validator.isUUID(req.params.orderfileId)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PARENTID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    try {
+        const files = await db.fileModel.findAll({ where: { ParentID: req.params.orderfileId } });
+        res.status(200).json(files)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
 async function GetFile(req, res, next) {
 
     let validationErrors = []
@@ -129,9 +151,7 @@ async function Downloadfile(req, res, next) {
 async function AddFile(req, res, next) {
 
     let data = req.fields
-    console.log('data: ', data);
     let files = req.files
-    console.log('files: ', files);
     let requestArray = []
     let objKeys = Object.keys(data).map(element => {
         return element.split('.')[0]
@@ -197,12 +217,12 @@ async function UpdateFile(req, res, next) {
         requestArray.push(object)
     }
 
-    const t = await db.sequelize.transaction();
+    //  const t = await db.sequelize.transaction();
     try {
 
         for (const filedata of requestArray) {
 
-            if (!filedata.Uuid) {
+            if (!validator.isUUID(filedata.Uuid)) {
                 let fileuuid = uuid()
                 filedata.Filefolder = fileuuid
                 filedata.Uuid = fileuuid
@@ -218,7 +238,8 @@ async function UpdateFile(req, res, next) {
                     Createduser: "System",
                     Createtime: new Date(),
                     Isactive: true
-                }, { transaction: t })
+                    //  }, { transaction: t })
+                })
             } else {
 
                 const file = await db.fileModel.findOne({ where: { Uuid: filedata.Uuid } })
@@ -233,9 +254,10 @@ async function UpdateFile(req, res, next) {
                     if (!isFileremoved) {
                         return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
                     }
-                    await db.fileModel.destroy({ where: { Uuid: file.Uuid }, transaction: t });
+                    // await db.fileModel.destroy({ where: { Uuid: file.Uuid }, transaction: t });
+                    await db.fileModel.destroy({ where: { Uuid: file.Uuid } });
                 } else {
-                    if (filedata.File) {
+                    if (filedata.fileChanged) {
                         const isFileremoved = await Removefileandfolderfromftp(file)
                         if (!isFileremoved) {
                             return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
@@ -244,15 +266,17 @@ async function UpdateFile(req, res, next) {
                         filedata.Filetype = filedata.File.type
                         filedata.Filename = filedata.File.name
                     }
+                    delete filedata.Id
                     await db.fileModel.update({
                         ...filedata,
                         Updateduser: "System",
                         Updatetime: new Date(),
-                    }, { where: { Uuid: filedata.Uuid } }, { transaction: t })
+                        //  }, { where: { Uuid: filedata.Uuid } }, { transaction: t })
+                    }, { where: { Uuid: filedata.Uuid } })
                 }
             }
         }
-        await t.commit()
+        // await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
@@ -404,5 +428,6 @@ module.exports = {
     UpdateFile,
     DeleteFile,
     Downloadfile,
-    GetbyparentID
+    GetbyparentID,
+    GetbyorderfileID
 }

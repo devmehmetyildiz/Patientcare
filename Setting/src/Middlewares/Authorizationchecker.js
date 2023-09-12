@@ -48,6 +48,9 @@ async function authorizationChecker(req, res, next) {
                                 {
                                     method: 'POST',
                                     url: config.services.Auth + 'Oauth/ValidateToken',
+                                    headers: {
+                                        session_key: config.session.secret
+                                    },
                                     data: {
                                         accessToken: bearerToken
                                     }

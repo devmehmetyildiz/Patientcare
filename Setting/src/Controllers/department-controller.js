@@ -10,16 +10,12 @@ async function GetDepartments(req, res, next) {
     try {
         const departments = await db.departmentModel.findAll({ where: { Isactive: true } })
         for (const department of departments) {
-            let stationuuids = await db.departmentstationModel.findAll({
+            department.Stationuuids = await db.departmentstationModel.findAll({
                 where: {
                     DepartmentID: department.Uuid,
-                }
+                },
+                attributes: ['StationID']
             });
-            department.Stations = await db.stationModel.findAll({
-                where: {
-                    Uuid: stationuuids.map(u => { return u.StationID })
-                }
-            })
         }
         res.status(200).json(departments)
     } catch (error) {
@@ -48,16 +44,12 @@ async function GetDepartment(req, res, next) {
         if (!department.Isactive) {
             return createNotfounderror([messages.ERROR.DEPARTMENT_NOT_ACTIVE])
         }
-        let stationuuids = await db.departmentstationModel.findAll({
+        department.Stationuuids = await db.departmentstationModel.findAll({
             where: {
                 DepartmentID: department.Uuid,
-            }
+            },
+            attributes: ['StationID']
         });
-        department.Stations = await db.stationModel.findAll({
-            where: {
-                Uuid: stationuuids.map(u => { return u.StationID })
-            }
-        })
         res.status(200).json(department)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -157,7 +149,7 @@ async function UpdateDepartment(req, res, next) {
         if (department.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.DEPARTMENT_NOT_ACTIVE], req.language))
         }
-        
+
         await db.departmentModel.update({
             ...req.body,
             Updateduser: "System",

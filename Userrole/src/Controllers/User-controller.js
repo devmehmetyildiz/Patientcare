@@ -4,7 +4,7 @@ const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const crypto = require('crypto')
+const bcrypt = require('bcrypt')
 const axios = require('axios')
 const config = require("../Config")
 
@@ -39,8 +39,9 @@ async function Register(req, res, next) {
             return next(createValidationError(validationErrors, req.language))
         }
 
-        const salt = crypto.randomBytes(16).toString('hex');
-        const hash = crypto.pbkdf2Sync(Password, salt, 1000, 64, 'sha512').toString('hex');
+
+        const salt = await bcrypt.genSalt(16)
+        const hash = await bcrypt.hash(Password, salt)
         let useruuid = uuid()
         let adminRoleuuid = uuid()
 
@@ -99,7 +100,7 @@ async function Register(req, res, next) {
             res.status(200).json({
                 messages: "Admin User Created Successfully"
             })
-        } catch (err) {
+        } catch (error) {
             await t.rollback()
             next(sequelizeErrorCatcher(error))
         }
@@ -112,75 +113,36 @@ async function Register(req, res, next) {
 async function GetUsers(req, res, next) {
     try {
         const users = await db.userModel.findAll({ where: { Isactive: true } })
-        if (users && users.length > 0) {
-            let departments = []
-            let stations = []
+        for (const user of users) {
+            user.Roleuuids = await db.userroleModel.findAll({
+                where: {
+                    UserID: user.Uuid
+                },
+                attributes: ['RoleID']
+            })
+            user.Departmentuuids = await db.userdepartmentModel.findAll({
+                where: {
+                    UserID: user.Uuid,
+                },
+                attributes: ['DepartmentID']
+            });
+            user.Stationuuids = await db.userstationModel.findAll({
+                where: {
+                    UserID: user.Uuid
+                },
+                attributes: ['StationID']
+            })
             try {
-                const departmentsresponse = await axios({
+                const fileresponse = await axios({
                     method: 'GET',
-                    url: config.services.Setting + `Departments`,
+                    url: config.services.File + `Files/GetbyparentID/${user.Uuid}`,
                     headers: {
                         session_key: config.session.secret
                     }
                 })
-                const stationsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Stations`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-
-                departments = departmentsresponse.data
-                stations = stationsresponse.data
+                user.Files = fileresponse.data
             } catch (error) {
                 return next(requestErrorCatcher(error, 'Setting'))
-            }
-            for (const user of users) {
-                let departmentuuids = await db.userdepartmentModel.findAll({
-                    where: {
-                        UserID: user.Uuid,
-                    }
-                });
-                let rolesuuids = await db.userroleModel.findAll({
-                    where: {
-                        UserID: user.Uuid
-                    }
-                })
-                let stationuuids = await db.userstationModel.findAll({
-                    where: {
-                        UserID: user.Uuid
-                    }
-                })
-                user.Roles = await db.roleModel.findAll({
-                    where: {
-                        Uuid: rolesuuids.map(u => { return u.RoleID })
-                    }
-                })
-                user.Departments = departmentuuids.map(userdepartment => {
-                    let data = departments.find(u => u.Uuid === userdepartment.DepartmentID)
-                    if (data) {
-                        return data
-                    }
-                })
-                user.Stations = stationuuids.map(userstation => {
-                    let data = stations.find(u => u.Uuid === userstation.StationID)
-                    if (data) {
-                        return data
-                    }
-                })
-                try {
-                    const fileresponse = await axios({
-                        method: 'GET',
-                        url: config.services.File + `Files/GetbyparentID/${user.Uuid}`,
-                        headers: {
-                            session_key: config.session.secret
-                        }
-                    })
-                    user.Files = fileresponse.data
-                } catch (error) {
-                    return next(requestErrorCatcher(error, 'Setting'))
-                }
             }
         }
         users.forEach(element => {
@@ -189,6 +151,15 @@ async function GetUsers(req, res, next) {
         res.status(200).json(users)
     } catch (error) {
         next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function GetUserscount(req, res, next) {
+    try {
+        const users = await db.userModel.count()
+        res.status(200).json(users)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
     }
 }
 
@@ -212,23 +183,7 @@ async function GetUser(req, res, next) {
         if (!user.Isactive) {
             return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
         }
-        let departments = []
-        let stations = []
         try {
-            const departmentsresponse = await axios({
-                method: 'GET',
-                url: config.services.Setting + `Departments`,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            const stationsresponse = await axios({
-                method: 'GET',
-                url: config.services.Setting + `Stations`,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
             const fileresponse = await axios({
                 method: 'GET',
                 url: config.services.File + `Files/GetbyparentID/${user.Uuid}`,
@@ -237,42 +192,26 @@ async function GetUser(req, res, next) {
                 }
             })
             user.Files = fileresponse.data
-            departments = departmentsresponse.data
-            stations = stationsresponse.data
         } catch (error) {
             next(requestErrorCatcher(error, 'Setting'))
         }
-        let departmentuuids = await db.userdepartmentModel.findAll({
+        user.Roleuuids = await db.userroleModel.findAll({
+            where: {
+                UserID: user.Uuid
+            },
+            attributes: ['RoleID']
+        })
+        user.Departmentuuids = await db.userdepartmentModel.findAll({
             where: {
                 UserID: user.Uuid,
-            }
+            },
+            attributes: ['DepartmentID']
         });
-        let rolesuuids = await db.userroleModel.findAll({
+        user.Stationuuids = await db.userstationModel.findAll({
             where: {
                 UserID: user.Uuid
-            }
-        })
-        let stationuuids = await db.userstationModel.findAll({
-            where: {
-                UserID: user.Uuid
-            }
-        })
-        user.Roles = await db.roleModel.findAll({
-            where: {
-                Uuid: rolesuuids.map(u => { return u.RoleID })
-            }
-        })
-        user.Departments = departmentuuids.map(userdepartment => {
-            let data = departments.find(u => u.Uuid === userdepartment.DepartmentID)
-            if (data) {
-                return data
-            }
-        })
-        user.Stations = stationuuids.map(userstation => {
-            let data = stations.find(u => u.Uuid === userstation.StationID)
-            if (data) {
-                return data
-            }
+            },
+            attributes: ['StationID']
         })
 
         user.PasswordHash && delete user.PasswordHash
@@ -478,8 +417,8 @@ async function AddUser(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
-    const salt = crypto.randomBytes(16).toString('hex');
-    const hash = crypto.pbkdf2Sync(Password, salt, 1000, 64, 'sha512').toString('hex');
+    const salt = await bcrypt.genSalt(16)
+    const hash = bcrypt.hash(Password, salt)
     let useruuid = uuid()
 
     const t = await db.sequelize.transaction();
@@ -665,7 +604,7 @@ async function DeleteUser(req, res, next) {
     }
 
     try {
-        const user =await db.userModel.findOne({ where: { Uuid: Uuid } })
+        const user = await db.userModel.findOne({ where: { Uuid: Uuid } })
         if (!user) {
             return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
         }
@@ -674,11 +613,14 @@ async function DeleteUser(req, res, next) {
         }
         const t = await db.sequelize.transaction();
 
-        await db.userModel.destroy({ where: { uuid: Uuid }, transaction: t });
-        await db.usersaltModel.destroy({ where: { Userid: Uuid }, transaction: t });
-        await db.userdepartmentModel.destroy({ where: { UserID: Uuid }, transaction: t });
-        await db.userroleModel.destroy({ where: { UserID: Uuid }, transaction: t });
-        await db.userstationModel.destroy({ where: { UserID: Uuid }, transaction: t });
+        //await db.userModel.destroy({ where: { uuid: Uuid }, transaction: t });
+        //await db.usersaltModel.destroy({ where: { Userid: Uuid }, transaction: t });
+        //await db.userroleModel.destroy({ where: { UserID: Uuid }, transaction: t });
+        await db.userModel.update({
+            Updateduser: "System",
+            Updatetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -703,6 +645,80 @@ async function GetActiveUserMeta(req, res, next) {
     return res.send(req.identity.user)
 }
 
+async function Resettablemeta(req, res, next) {
+    const key = req.params.metaKey
+    if (!req.identity.user) {
+        return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+    }
+    try {
+        await db.tablemetaconfigModel.destroy({ where: { Meta: key, UserID: req.identity.user.Uuid } })
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    Getusertablemetaconfig(req, res, next)
+}
+
+async function Changepassword(req, res, next) {
+    let validationErrors = []
+    const {
+        Oldpassword,
+        Newpassword,
+        Newpasswordre,
+    } = req.body
+
+    if (!validator.isString(Newpassword)) {
+        validationErrors.push(messages.VALIDATION_ERROR.NEWPASSWORD_REQUIRED)
+    }
+    if (!validator.isString(Newpasswordre)) {
+        validationErrors.push(messages.VALIDATION_ERROR.NEWPASSWORD_REQUIRED)
+    }
+    if (!validator.isString(Oldpassword)) {
+        validationErrors.push(messages.VALIDATION_ERROR.OLDPASSWORD_REQUIRED)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    if (Newpassword !== Newpasswordre) {
+        return next(createNotfounderror([messages.VALIDATION_ERROR.PASSWORD_DIDNT_MATCH], req.language))
+    }
+
+    let newSalt = ""
+    let usersalt = null
+    try {
+        usersalt = await db.usersaltModel.findOne({ where: { UserID: req.identity?.user?.Uuid } })
+        if (!usersalt) {
+            return next(createNotfounderror([messages.ERROR.USERSALT_NOT_FOUND], req.language))
+        }
+        if (!ValidatePassword(Oldpassword, req.identity?.user?.PasswordHash, usersalt.Salt)) {
+            return next(createValidationError([messages.VALIDATION_ERROR.OLDPASSWORD_DIDNT_MATCH], req.language))
+        }
+        newSalt = await bcrypt.genSalt(16)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    const t = await db.sequelize.transaction();
+    try {
+        const hash = bcrypt.hash(Newpassword, salt)
+        await db.userModel.update({
+            ...req.identity?.user,
+            PasswordHash: hash,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: req.identity?.user?.Uuid } }, { transaction: t })
+        await db.usersaltModel.update({
+            ...usersalt,
+            Salt: newSalt,
+        }, { where: { UserID: req.identity?.user?.Uuid } }, { transaction: t })
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    res.status(200).json({
+        messages: "Password changed Successfully"
+    })
+}
+
 function GetUserByEmail(next, Email, language) {
     return new Promise((resolve, reject) => {
         db.userModel.findOne({ where: { Email: Email } })
@@ -725,6 +741,18 @@ function GetUserByUsername(next, Username, language) {
     })
 }
 
+async function ValidatePassword(UserPassword, DbPassword, salt) {
+    try {
+        let hash = bcrypt.hash(UserPassword, salt)
+        if (hash === DbPassword) {
+            return true
+        } else {
+            return false
+        }
+    } catch (error) {
+        return false
+    }
+}
 
 module.exports = {
     GetUsers,
@@ -739,5 +767,8 @@ module.exports = {
     GetActiveUserMeta,
     Getusertablemetaconfig,
     Saveusertablemetaconfig,
-    Getbyemail
+    Getbyemail,
+    Resettablemeta,
+    GetUserscount,
+    Changepassword
 }

@@ -10,16 +10,12 @@ async function GetCheckperiods(req, res, next) {
     try {
         const checkperiods = await db.checkperiodModel.findAll({ where: { Isactive: true } })
         for (const checkperiod of checkperiods) {
-            let perioduuids = await db.checkperiodperiodModel.findAll({
+            checkperiod.Perioduuids = await db.checkperiodperiodModel.findAll({
                 where: {
                     CheckperiodID: checkperiod.Uuid,
-                }
+                },
+                attributes: ['PeriodID']
             });
-            checkperiod.Periods = await db.periodModel.findAll({
-                where: {
-                    Uuid: perioduuids.map(u => { return u.PeriodID })
-                }
-            })
         }
         res.status(200).json(checkperiods)
     } catch (error) {
@@ -48,16 +44,12 @@ async function GetCheckperiod(req, res, next) {
         if (!checkperiod.Isactive) {
             return createNotfounderror([messages.ERROR.CHECKPERIOD_NOT_ACTIVE])
         }
-        let perioduuids = await db.checkperiodperiodModel.findAll({
+        checkperiod.Perioduuids = await db.checkperiodperiodModel.findAll({
             where: {
                 CheckperiodID: checkperiod.Uuid,
-            }
+            },
+            attributes: ['PeriodID']
         });
-        checkperiod.Periods = await db.periodModel.findAll({
-            where: {
-                Uuid: perioduuids.map(u => { return u.PeriodID })
-            }
-        })
         res.status(200).json(checkperiod)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
