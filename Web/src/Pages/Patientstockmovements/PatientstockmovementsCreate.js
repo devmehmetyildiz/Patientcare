@@ -14,14 +14,10 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import { FormContext } from '../../Provider/FormProvider'
 export default class PatientstockmovementsCreate extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectedstock: "",
-      selectedmovement: "",
-    }
-  }
+
+  PAGE_NAME = "PatientstockmovementsCreate"
 
   componentDidMount() {
     const { GetPatientstocks } = this.props
@@ -35,7 +31,7 @@ export default class PatientstockmovementsCreate extends Component {
   }
 
   render() {
-    const { Patientstockmovements, Patientstocks, Profile } = this.props
+    const { Patientstockmovements, Patientstocks, Profile, history } = this.props
 
     const Patientstockoptions = Patientstocks.list.map(stock => {
       return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
@@ -61,15 +57,15 @@ export default class PatientstockmovementsCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} value={this.state.selectedstock} options={Patientstockoptions} onChange={this.handleChangeStock} formtype="dropdown" />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockID" options={Patientstockoptions} formtype="dropdown" />
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" />
-                <FormInput placeholder={Literals.Columns.Movementtype[Profile.Language]} value={this.state.selectedmovement} options={Movementoptions} onChange={this.handleChangeMovement} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype="dropdown" />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Patientstockmovements">
+                {history && <Link to="/Patientstockmovements">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
+                </Link>}
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>
@@ -83,8 +79,8 @@ export default class PatientstockmovementsCreate extends Component {
     e.preventDefault()
     const { AddPatientstockmovements, history, fillPatientstockmovementnotification, Profile } = this.props
     const data = formToObject(e.target)
-    data.StockID = this.state.selectedstock
-    data.Movementtype = this.state.selectedmovement
+    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
+    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
     data.Movementdate = new Date()
     data.Newvalue = 0
     data.Prevvalue = 0
@@ -109,20 +105,5 @@ export default class PatientstockmovementsCreate extends Component {
       AddPatientstockmovements({ data, history })
     }
   }
-
-
-  handleChangeStock = (e, { value }) => {
-    this.setState({ selectedstock: value })
-  }
-  handleChangeMovement = (e, { value }) => {
-    this.setState({ selectedmovement: value })
-  }
-
-
-  getLocalDate = () => {
-    var curr = new Date();
-    curr.setDate(curr.getDate() + 3);
-    var date = curr.toISOString().substring(0, 10);
-    return date
-  }
 }
+PatientstockmovementsCreate.contextType = FormContext

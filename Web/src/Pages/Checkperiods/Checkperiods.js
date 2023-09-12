@@ -22,19 +22,21 @@ export default class Checkperiods extends Component {
   }
 
   componentDidMount() {
-    const { GetCheckperiods, } = this.props
+    const { GetCheckperiods, GetPeriods } = this.props
     GetCheckperiods()
+    GetPeriods()
   }
 
   componentDidUpdate() {
-    const { Checkperiods, removeCheckperiodnotification } = this.props
+    const { Checkperiods, Periods, removePeriodnotification, removeCheckperiodnotification } = this.props
     Notification(Checkperiods.notifications, removeCheckperiodnotification)
+    Notification(Periods.notifications, removePeriodnotification)
   }
 
   render() {
 
 
-    const { Checkperiods, Profile, handleSelectedCheckperiod, handleDeletemodal } = this.props
+    const { Checkperiods, Periods, Profile, handleSelectedCheckperiod, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Checkperiods
 
     const Columns = [
@@ -63,9 +65,11 @@ export default class Checkperiods extends Component {
     };
 
     const list = (Checkperiods.list || []).map(item => {
-      var text = item.Periods.map((period) => {
-        return period.Name;
+
+      var text = (item.Perioduuids || []).map(u => {
+        return (Periods.list || []).find(period => period.Uuid === u.PeriodID)?.Name
       }).join(", ")
+
       return {
         ...item,
         Periodstxt: text,
@@ -128,10 +132,13 @@ export default class Checkperiods extends Component {
   }
 
   periodCellhandler = (col) => {
+
+    const { Periods } = this.props
+
     if (col.value) {
       if (!col.cell.isGrouped) {
         const itemId = col.row.original.Id
-        const itemPeriods = col.row.original.Periods
+        const itemPeriods = (col.row.original.Perioduuids || []).map(u => { return (Periods.list || []).find(period => period.Uuid === u.PeriodID) })
         return col.value.length - 35 > 20 ?
           (
             !this.state.periodStatus.includes(itemId) ?

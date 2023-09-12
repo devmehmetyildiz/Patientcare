@@ -15,6 +15,9 @@ import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 export default class RolesEdit extends Component {
+
+    PAGE_NAME = 'RolesEdit'
+
     constructor(props) {
         super(props)
         this.state = {
@@ -24,13 +27,14 @@ export default class RolesEdit extends Component {
     }
 
     componentDidMount() {
-        const { GetRole, GetPrivileges, GetPrivilegegroups, match, history } = this.props
-        if (match.params.RoleID) {
-            GetRole(match.params.RoleID)
+        const { GetRole, GetPrivileges, GetPrivilegegroups, match, history, RoleID } = this.props
+        let Id = RoleID || match.params.RoleID
+        if (validator.isUUID(Id)) {
+            GetRole(Id)
             GetPrivileges()
             GetPrivilegegroups()
         } else {
-            history.push("/Roles")
+            history && history.push("/Roles")
         }
     }
 
@@ -39,14 +43,14 @@ export default class RolesEdit extends Component {
         const { privileges, selected_record, privilegegroups, isLoading } = Roles
         if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && privileges.length > 0 && privilegegroups.length > 0 && !isLoading && !this.state.isDatafetched) {
             this.setState({ selectedPrivileges: selected_record.Privileges, isDatafetched: true })
-            this.context.setFormstates(selected_record)
+            this.context.setForm(this.PAGE_NAME, selected_record)
         }
-        Notification(Roles.notifications, removeRolenotification)
+        Notification(Roles.notifications, removeRolenotification, this.context.clearForm)
     }
 
     render() {
 
-        const { Roles, Profile } = this.props
+        const { Roles, Profile, history } = this.props
         const { privileges, privilegegroups, isLoading, isDispatching } = Roles
 
         return (
@@ -64,7 +68,7 @@ export default class RolesEdit extends Component {
                     <Pagedivider />
                     <Contentwrapper>
                         <Form onSubmit={this.handleSubmit}>
-                            <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                            <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                             <div className='mb-4 outline outline-[1px] rounded-md outline-gray-200 p-4 overflow-y-auto max-h-[calc(100vh-26.2rem)]'>
                                 {privilegegroups.map(privilegegroup => {
                                     return <div key={privilegegroup} className="mb-8">
@@ -91,9 +95,12 @@ export default class RolesEdit extends Component {
                                 })}
                             </div>
                             <Footerwrapper>
-                                <Link to="/Roles">
-                                    <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                                </Link>
+                                <Form.Group widths={'equal'}>
+                                    {history && <Link to="/Roles">
+                                        <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+                                    </Link>}
+                                    <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.setForm(this.PAGE_NAME, Roles.selected_record) }}>{Literals.Button.Clear[Profile.Language]}</Button>
+                                </Form.Group>
                                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
                             </Footerwrapper>
                         </Form>

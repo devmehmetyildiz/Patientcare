@@ -4,6 +4,34 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Costumer type added successfully',
+        tr: 'Müşteri Türü Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Costumer type updated successfully',
+        tr: 'Müşteri Türü Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Costumer type Deleted successfully',
+        tr: 'Müşteri Türü Başarı ile Silindi'
+    },
+}
+
+
 export const GetCostumertypes = createAsyncThunk(
     'Costumertypes/GetCostumertypes',
     async (_, { dispatch }) => {
@@ -34,15 +62,44 @@ export const GetCostumertype = createAsyncThunk(
 
 export const AddCostumertypes = createAsyncThunk(
     'Costumertypes/AddCostumertypes',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Setting, ROUTES.COSTUMERTYPE, data);
             dispatch(fillCostumertypenotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Müşteri türü başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Costumertypes');
+            dispatch(fillCostumertypenotification({
+                type: 'Clear',
+                code: 'CostumerypesCreate',
+                description: '',
+            }));
+            history && history.push('/Costumertypes');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCostumertypenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddRecordCostumertypes = createAsyncThunk(
+    'Costumertypes/AddRecordCostumertypes',
+    async ({ data, history }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Setting, ROUTES.COSTUMERTYPE + '/AddRecord', data);
+            dispatch(fillCostumertypenotification({
+                type: 'Success',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
+            }));
+            history && history.push('/Costumertypes');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +111,22 @@ export const AddCostumertypes = createAsyncThunk(
 
 export const EditCostumertypes = createAsyncThunk(
     'Costumertypes/EditCostumertypes',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Setting, ROUTES.COSTUMERTYPE, data);
             dispatch(fillCostumertypenotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Müşteri türü başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Costumertypes');
+            dispatch(fillCostumertypenotification({
+                type: 'Clear',
+                code: 'CostumertypesUpdate',
+                description: '',
+            }));
+            history && history.push('/Costumertypes');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +138,17 @@ export const EditCostumertypes = createAsyncThunk(
 
 export const DeleteCostumertypes = createAsyncThunk(
     'Costumertypes/DeleteCostumertypes',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.COSTUMERTYPE}/${data.Uuid}`);
             dispatch(fillCostumertypenotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Müşteri türü başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {
@@ -156,6 +222,17 @@ export const CostumertypesSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(AddCostumertypes.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddRecordCostumertypes.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddRecordCostumertypes.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddRecordCostumertypes.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

@@ -18,11 +18,13 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 export default class WarehousesEdit extends Component {
 
+  PAGE_NAME = "WarehousesEdit"
 
   componentDidMount() {
-    const { GetWarehouse, match, history } = this.props
-    if (match.params.WarehouseID) {
-      GetWarehouse(match.params.WarehouseID)
+    const { WarehouseID, GetWarehouse, match, history } = this.props
+    let Id = WarehouseID || match?.params?.WarehouseID
+    if (validator.isUUID(Id)) {
+      GetWarehouse(Id)
     } else {
       history.push("/Warehouses")
     }
@@ -35,7 +37,7 @@ export default class WarehousesEdit extends Component {
       this.setState({
         isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
     Notification(Warehouses.notifications, removeWarehousenotification)
   }
@@ -60,8 +62,8 @@ export default class WarehousesEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               <Footerwrapper>
                 <Link to="/Warehouses">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>

@@ -14,14 +14,10 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import FormInput from '../../Utils/FormInput'
 import validator from "../../Utils/Validator"
+import { FormContext } from '../../Provider/FormProvider'
 export default class CostumertypesCreate extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      selecteddepartments: []
-    }
-  }
+  PAGE_NAME = "CostumertypesCreate"
 
   componentDidMount() {
     const { GetDepartments } = this.props
@@ -35,7 +31,7 @@ export default class CostumertypesCreate extends Component {
   }
 
   render() {
-    const { Costumertypes, Departments, Profile } = this.props
+    const { Costumertypes, Departments, Profile, history } = this.props
 
     const Departmentoptions = Departments.list.map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -56,12 +52,12 @@ export default class CostumertypesCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} clearable search multiple options={Departmentoptions} value={this.state.selecteddepartments} onChange={this.handleChange} formtype="dropdown" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" />
               <Footerwrapper>
-                <Link to="/Costumertypes">
+                {history && <Link to="/Costumertypes">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
+                </Link>}
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>
@@ -74,10 +70,9 @@ export default class CostumertypesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddCostumertypes, history, fillCostumertypenotification, Departments, Profile } = this.props
-    const { list } = Departments
     const data = formToObject(e.target)
-    data.Departments = this.state.selecteddepartments.map(department => {
-      return list.find(u => u.Uuid === department)
+    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+      return (Departments.list || []).find(u => u.Uuid === id)
     })
 
     let errors = []
@@ -95,12 +90,5 @@ export default class CostumertypesCreate extends Component {
       AddCostumertypes({ data, history })
     }
   }
-
-  handleChange = (e, { value }) => {
-    this.setState({ selecteddepartments: value })
-  }
-
-  handleChangeOption = (e, { value }) => {
-    this.setState({ selectedstatusOption: value })
-  }
 }
+CostumertypesCreate.contextType = FormContext

@@ -25,25 +25,27 @@ export class Departments extends Component {
 
 
   componentDidMount() {
-    const { GetDepartments, } = this.props
+    const { GetDepartments, GetStations } = this.props
     GetDepartments()
+    GetStations()
   }
 
   componentDidUpdate() {
-    const { Departments, removeDepartmentnotification } = this.props
+    const { Departments, Stations, removeStationnotification, removeDepartmentnotification } = this.props
     Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Stations.notifications, removeStationnotification)
   }
 
   render() {
 
-    const { Departments, Profile, handleSelectedDepartment, handleDeletemodal } = this.props
+    const { Departments, Stations, Profile, handleSelectedDepartment, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Departments
 
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.stationstxt[Profile.Language], accessor: 'stationstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
+      { Header: Literals.Columns.stationstxt[Profile.Language], accessor: 'Stationstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
       { Header: Literals.Columns.Ishavepatients[Profile.Language], accessor: 'Ishavepatients', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
@@ -64,12 +66,12 @@ export class Departments extends Component {
     };
 
     const list = (Departments.list || []).map(item => {
-      var text = item.Stations.map((station) => {
-        return station.Name;
+      var text = (item.Stationuuids || []).map(u => {
+        return (Stations.list || []).find(station => station.Uuid === u.StationID)?.Name
       }).join(", ")
       return {
         ...item,
-        stationstxt: text,
+        Stationstxt: text,
         edit: <Link to={`/Departments/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedDepartment(item)
@@ -130,10 +132,13 @@ export class Departments extends Component {
   }
 
   stationCellhandler = (col) => {
+
+    const { Stations } = this.props
+
     if (col.value) {
       if (!col.cell.isGrouped) {
         const itemId = col.row.original.Id
-        const itemStations = col.row.original.Stations
+        const itemStations = (col.row.original.Stationuuids || []).map(u => { return (Stations.list || []).find(station => station.Uuid === u.StationID) })
         return col.value.length - 35 > 20 ?
           (
             !this.state.stationsStatus.includes(itemId) ?

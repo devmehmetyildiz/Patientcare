@@ -14,8 +14,11 @@ import validator from '../../Utils/Validator'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
+import { FormContext } from '../../Provider/FormProvider'
 
 export default class WarehousesCreate extends Component {
+
+  PAGE_NAME = "WarehousesCreate"
 
   componentDidUpdate() {
     const { Warehouses, removeWarehousenotification } = this.props
@@ -42,8 +45,8 @@ export default class WarehousesCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               <Footerwrapper>
                 <Link to="/Warehouses">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -78,6 +81,5 @@ export default class WarehousesCreate extends Component {
       AddWarehouses({ data, history })
     }
   }
-
-
 }
+WarehousesCreate.contextType = FormContext

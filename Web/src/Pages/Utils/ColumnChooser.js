@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Icon, Button, Modal, Table, Label, Checkbox } from 'semantic-ui-react'
+import { Icon, Button, Modal, Table, Label, Checkbox, Form } from 'semantic-ui-react'
 import Literals from './Literals'
+import validator from './../../Utils/Validator';
 
 class ColumnChooser extends Component {
   constructor(props) {
@@ -19,18 +20,42 @@ class ColumnChooser extends Component {
       const metaColumns = JSON.parse(tableMeta.Config)
       const decoratedColumns = metaColumns.length === columns.length ?
         metaColumns.map((item, index) => {
-          return { order: index, isVisible: item.isVisible, name: columns.find(u => u.accessor === item.key)?.Header, key: item.key }
+          return { order: index, isVisible: item.isVisible, name: columns.find(u => u.accessor === item.key)?.Header, key: item.key, isGroup: item.isGroup }
         }) :
         columns.map((item, index) => {
-          return { order: index, isVisible: true, name: item.Header, key: item.accessor }
+          return { order: index, isVisible: true, name: item.Header, key: item.accessor, isGroup: false }
         })
       this.setState({ decoratedColumns: decoratedColumns })
     } else {
       const defaultHiddens = ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
       const decoratedColumns = columns.map((item, index) => {
-        return { order: index, isVisible: defaultHiddens.includes(item.accessor) ? false : true, name: item.Header, key: item.accessor }
+        return { order: index, isVisible: defaultHiddens.includes(item.accessor) ? false : true, name: item.Header, key: item.accessor, isGroup: false }
       })
       this.setState({ decoratedColumns: decoratedColumns })
+    }
+  }
+
+  componentDidUpdate(prev) {
+    const { metaKey, meta, columns } = this.props
+    if (prev.metaKey !== metaKey) {
+      let tableMeta = (meta || []).find(u => u.Meta === metaKey)
+      if (tableMeta) {
+        const metaColumns = JSON.parse(tableMeta.Config)
+        const decoratedColumns = metaColumns.length === columns.length ?
+          metaColumns.map((item, index) => {
+            return { order: index, isVisible: item.isVisible, name: columns.find(u => u.accessor === item.key)?.Header, key: item.key, isGroup: item.isGroup }
+          }) :
+          columns.map((item, index) => {
+            return { order: index, isVisible: true, name: item.Header, key: item.accessor, isGroup: false }
+          })
+        this.setState({ decoratedColumns: decoratedColumns })
+      } else {
+        const defaultHiddens = ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
+        const decoratedColumns = columns.map((item, index) => {
+          return { order: index, isVisible: defaultHiddens.includes(item.accessor) ? false : true, name: item.Header, key: item.accessor, isGroup: false }
+        })
+        this.setState({ decoratedColumns: decoratedColumns })
+      }
     }
   }
 
@@ -52,11 +77,12 @@ class ColumnChooser extends Component {
               <Table.Row>
                 <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
                 <Table.HeaderCell width={2}>{Literals.Columns.Visible[Profile.Language]}</Table.HeaderCell>
+                <Table.HeaderCell width={1}>{Literals.Columns.Group[Profile.Language]}</Table.HeaderCell>
                 <Table.HeaderCell width={1}>{Literals.Columns.Columnname[Profile.Language]}</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {(decoratedColumns.length > 0 ? decoratedColumns.sort((a, b) => a.order - b.order) : []).map((column, index) => {
+              {(decoratedColumns.length > 0 ? decoratedColumns.sort((a, b) => a.order - b.order) : []).filter(u => validator.isString(u.name)).map((column, index) => {
                 return <Table.Row key={Math.random()}>
                   <Table.Cell>
                     <Button.Group basic size='small'>
@@ -67,6 +93,9 @@ class ColumnChooser extends Component {
                   <Table.Cell>
                     <Checkbox toggle className='m-2' checked={column.isVisible} onClick={(e) => { this.visibleChanged(column.key) }} />
                   </Table.Cell>
+                  <Table.Cell>
+                    <Checkbox disabled={!column.isVisible} readOnly={!column.isVisible} toggle className='m-2' checked={column.isGroup} onClick={(e) => { column.isVisible && this.groupChanged(column.key) }} />
+                  </Table.Cell>
                   <Table.Cell className='table-last-section'>
                     <Label>{`${column.name}`}</Label>
                   </Table.Cell>
@@ -76,8 +105,11 @@ class ColumnChooser extends Component {
           </Table>
         </Modal.Content>
         <Modal.Actions>
-          <Button type='button' negative onClick={() => this.setState({ opened: false })}>{Literals.Button.Giveup[Profile.Language]}</Button>
-          <Button floated='right' type='submit' positive onClick={() => this.saveChanges()}>{Literals.Button.Create[Profile.Language]}</Button>
+          <Button type='button' floated='left' negative onClick={() => this.resetTable()}>{Literals.Button.Reset[Profile.Language]}</Button>
+          <Form.Group widths={'equal'}>
+            <Button type='button' negative onClick={() => this.setState({ opened: false })}>{Literals.Button.Giveup[Profile.Language]}</Button>
+            <Button floated='right' type='submit' positive onClick={() => this.saveChanges()}>{Literals.Button.Create[Profile.Language]}</Button>
+          </Form.Group>
         </Modal.Actions>
       </Modal>
     </React.Fragment>
@@ -104,6 +136,11 @@ class ColumnChooser extends Component {
     SaveTableMeta({ data })
   }
 
+  resetTable = () => {
+    const { metaKey, ResetTableMeta } = this.props
+    ResetTableMeta(metaKey)
+  }
+
   orderChanged = (property, value) => {
     const Columns = this.state.decoratedColumns
     const index = Columns.findIndex(column => column.key === property)
@@ -117,6 +154,15 @@ class ColumnChooser extends Component {
     const Columns = this.state.decoratedColumns
     const index = Columns.findIndex(column => column.key === property)
     Columns[index].isVisible = !Columns[index].isVisible
+    if (!Columns[index].isVisible) {
+      Columns[index].isGroup = false
+    }
+    this.setState({ decoratedColumns: Columns })
+  }
+  groupChanged = (property) => {
+    const Columns = this.state.decoratedColumns
+    const index = Columns.findIndex(column => column.key === property)
+    Columns[index].isGroup = !Columns[index].isGroup
     this.setState({ decoratedColumns: Columns })
   }
 }

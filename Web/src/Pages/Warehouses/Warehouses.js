@@ -12,22 +12,36 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import WarehousesDelete from '../../Containers/Warehouses/WarehousesDelete'
+import ExcelImport from '../../Containers/Utils/ExcelImport'
+import ExcelExport from '../../Containers/Utils/ExcelExport'
 
 export default class Warehouses extends Component {
 
   componentDidMount() {
-    const { GetWarehouses } = this.props
+    const { GetWarehouses, GetDepartments, GetUnits, GetStockdefines, GetStockmovements, GetStocks } = this.props
+    GetDepartments()
+    GetUnits()
+    GetStockdefines()
+    GetStockmovements()
     GetWarehouses()
+    GetStocks()
   }
 
   componentDidUpdate() {
-    const { Warehouses, removeWarehousenotification } = this.props
+    const { Warehouses, removeWarehousenotification, Departments, removeDepartmentnotification, Stocks,
+      Units, removeUnitnotification, Stockdefines, removeStockdefinenotification, removeStocknotification,
+      Stockmovements, removeStockmovementnotification } = this.props
     Notification(Warehouses.notifications, removeWarehousenotification)
+    Notification(Stocks.notifications, removeStocknotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Units.notifications, removeUnitnotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
+    Notification(Stockmovements.notifications, removeStockmovementnotification)
   }
 
 
   render() {
-    const { Warehouses, handleDeletemodal, handleSelectedWarehouse, Profile } = this.props
+    const { Warehouses, Departments, Units, Stocks, Stockmovements, Stockdefines, handleDeletemodal, handleSelectedWarehouse, Profile, AddRecordCases } = this.props
     const { isLoading, isDispatching } = Warehouses
 
     const Columns = [
@@ -59,10 +73,13 @@ export default class Warehouses extends Component {
       }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
       columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
-      }) : []
+      }) : [],
+      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
+        return item.key
+      }) : [],
     };
 
-    const list = (Warehouses.list || []).map(item => {
+    const list = (Warehouses.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Warehouses/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
@@ -93,6 +110,8 @@ export default class Warehouses extends Component {
                     </Button>
                   </Link>
                   <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
+                  <ExcelImport columns={Columns} addData={AddRecordCases} />
+                  <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />
                 </GridColumn>
               </Grid>
             </Headerwrapper>
@@ -104,6 +123,11 @@ export default class Warehouses extends Component {
                   Columns={Columns}
                   initialConfig={initialConfig}
                   Profile={Profile}
+                  Departments={Departments}
+                  Units={Units}
+                  Stockmovements={Stockmovements}
+                  Stockdefines={Stockdefines}
+                  Stocks={Stocks}
                 />
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }

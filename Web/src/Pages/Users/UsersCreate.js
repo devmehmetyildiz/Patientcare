@@ -13,18 +13,11 @@ import validator from '../../Utils/Validator'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
+import { FormContext } from '../../Provider/FormProvider'
 
 export default class UsersCreate extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectedstations: [],
-      selectedroles: [],
-      selectedlanguage: {},
-      selecteddepartments: [],
-    }
-  }
+  PAGE_NAME = "UsersCreate"
 
   componentDidMount() {
     const { GetStations, GetRoles, GetDepartments } = this.props
@@ -80,26 +73,26 @@ export default class UsersCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths={'equal'}>
-                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput required placeholder={Literals.Columns.Surname[Profile.Language]} name="Surname" />
-                <FormInput required placeholder={Literals.Columns.Password[Profile.Language]} name="Password" type='password' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Surname[Profile.Language]} name="Surname" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Password[Profile.Language]} name="Password" type='password' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput required placeholder={Literals.Columns.Email[Profile.Language]} name="Email" />
-                <FormInput required placeholder={Literals.Columns.Username[Profile.Language]} name="Username" />
-                <FormInput required placeholder={Literals.Columns.UserID[Profile.Language]} name="UserID" type='Number' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Email[Profile.Language]} name="Email" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Username[Profile.Language]} name="Username" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.UserID[Profile.Language]} name="UserID" type='Number' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput required placeholder={Literals.Columns.City[Profile.Language]} name="City" />
-                <FormInput required placeholder={Literals.Columns.Town[Profile.Language]} name="Town" />
-                <FormInput required placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.City[Profile.Language]} name="City" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Town[Profile.Language]} name="Town" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput required placeholder={Literals.Columns.Stations[Profile.Language]} value={this.state.selectedstations} clearable search multiple options={Stationoptions} onChange={this.handleChangeStation} formtype='dropdown' />
-                <FormInput required placeholder={Literals.Columns.Departments[Profile.Language]} value={this.state.selecteddepartments} clearable search multiple options={Departmentoptions} onChange={this.handleChangeDepartment} formtype='dropdown' />
-                <FormInput required placeholder={Literals.Columns.Roles[Profile.Language]} value={this.state.selectedroles} clearable search multiple options={Roleoptions} onChange={this.handleChangeRoles} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stations[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departments[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Roles[Profile.Language]} name="Roles" multiple options={Roleoptions} formtype='dropdown' />
               </Form.Group>
-              <FormInput required placeholder={Literals.Columns.Language[Profile.Language]} value={this.state.selectedlanguage} options={Languageoptions} onChange={this.handleChangeLanguage} formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Language[Profile.Language]} name="Language" options={Languageoptions} formtype='dropdown' />
               <Footerwrapper>
                 <Link to="/Users">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -117,16 +110,16 @@ export default class UsersCreate extends Component {
     const { AddUsers, history, fillUsernotification, Roles, Departments, Stations, Profile } = this.props
     const data = formToObject(e.target)
     data.UserID = parseInt(data.UserID, 10)
-    data.Stations = this.state.selectedstations.map(station => {
-      return Stations.list.find(u => u.Uuid === station)
+    data.Stations = this.context.formstates[`${this.PAGE_NAME}/Stations`].map(id => {
+      return (Stations.list || []).find(u => u.Uuid === id)
     })
-    data.Roles = this.state.selectedroles.map(roles => {
-      return Roles.list.find(u => u.Uuid === roles)
+    data.Roles = this.context.formstates[`${this.PAGE_NAME}/Roles`].map(id => {
+      return (Roles.list || []).find(u => u.Uuid === id)
     })
-    data.Departments = this.state.selecteddepartments.map(department => {
-      return Departments.list.find(u => u.Uuid === department)
+    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+      return (Departments.list || []).find(u => u.Uuid === id)
     })
-    data.Language = this.state.selectedlanguage
+    data.Language = this.context.formstates[`${this.PAGE_NAME}/Language`]
 
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -164,17 +157,5 @@ export default class UsersCreate extends Component {
       AddUsers({ data, history })
     }
   }
-
-  handleChangeStation = (e, { value }) => {
-    this.setState({ selectedstations: value })
-  }
-  handleChangeDepartment = (e, { value }) => {
-    this.setState({ selecteddepartments: value })
-  }
-  handleChangeRoles = (e, { value }) => {
-    this.setState({ selectedroles: value })
-  }
-  handleChangeLanguage = (e, { value }) => {
-    this.setState({ selectedlanguage: value })
-  }
 }
+UsersCreate.contextType = FormContext

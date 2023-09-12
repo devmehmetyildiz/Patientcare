@@ -16,19 +16,21 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 
 export default class DepartmentsEdit extends Component {
+
+  PAGE_NAME = "DepartmentsEdit"
+
   constructor(props) {
     super(props)
     this.state = {
-      selectedstations: [],
       isDatafetched: false,
-      isHavepatient: false
     }
   }
 
   componentDidMount() {
-    const { GetDepartment, match, history, GetStations } = this.props
-    if (match.params.DepartmentID) {
-      GetDepartment(match.params.DepartmentID)
+    const { GetDepartment, match, history, GetStations, DepartmentID } = this.props
+    let Id = DepartmentID || match?.params?.DepartmentID
+    if (validator.isUUID(Id)) {
+      GetDepartment(Id)
       GetStations()
     } else {
       history.push("/Departments")
@@ -40,11 +42,9 @@ export default class DepartmentsEdit extends Component {
     const { selected_record, isLoading } = Departments
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Stations.list.length > 0 && !Stations.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedstations: selected_record.Stations.map(station => {
-          return station.Uuid
-        }), isDatafetched: true, isHavepatient: selected_record.Ishavepatients
+        isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, Stations: selected_record.Stationuuids.map(u => { return u.StationID }) })
     }
     Notification(Departments.notifications, removeDepartmentnotification)
     Notification(Stations.notifications, removeStationnotification)
@@ -52,7 +52,7 @@ export default class DepartmentsEdit extends Component {
 
   render() {
 
-    const { Departments, Stations, Profile } = this.props
+    const { Departments, Stations, Profile, history } = this.props
 
     const Stationoptions = Stations.list.map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
@@ -73,15 +73,13 @@ export default class DepartmentsEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput required placeholder={Literals.Columns.stationstxt[Profile.Language]} clearable search multiple options={Stationoptions} value={this.state.selectedstations} onChange={this.handleChange} formtype="dropdown" />
-              <Form.Field>
-                <Checkbox toggle className='m-2' checked={this.state.isHavepatient} onClick={() => { this.setState({ isHavepatient: !this.state.isHavepatient }) }} label={Literals.Columns.Ishavepatients[Profile.Language]} />
-              </Form.Field>
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype="dropdown" />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Ishavepatients[Profile.Language]} name="Ishavepatients" formtype="checkbox" />
               <Footerwrapper>
-                <Link to="/Departments">
+                {history && <Link to="/Departments">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
+                </Link>}
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>
@@ -95,12 +93,12 @@ export default class DepartmentsEdit extends Component {
     e.preventDefault()
 
     const { EditDepartments, history, fillDepartmentnotification, Stations, Departments, Profile } = this.props
-    const { list } = Stations
     const data = formToObject(e.target)
-    data.Stations = this.state.selectedstations.map(station => {
-      return list.find(u => u.Uuid === station)
+    data.Ishavepatients = this.context.formstates[`${this.PAGE_NAME}/Ishavepatients`]
+    data.Stations = this.context.formstates[`${this.PAGE_NAME}/Stations`].map(id => {
+      return (Stations.list || []).find(u => u.Uuid === id)
     })
-    data.Ishavepatients = this.state.isHavepatient
+
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
@@ -115,10 +113,6 @@ export default class DepartmentsEdit extends Component {
     } else {
       EditDepartments({ data: { ...Departments.selected_record, ...data }, history })
     }
-  }
-
-  handleChange = (e, { value }) => {
-    this.setState({ selectedstations: value })
   }
 }
 DepartmentsEdit.contextType = FormContext

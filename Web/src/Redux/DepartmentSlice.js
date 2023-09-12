@@ -4,6 +4,33 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Department added successfully',
+        tr: 'Departman Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Department updated successfully',
+        tr: 'Departman Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Department Deleted successfully',
+        tr: 'Departman Başarı ile Silindi'
+    },
+}
+
 export const GetDepartments = createAsyncThunk(
     'Departments/GetDepartments',
     async (_, { dispatch }) => {
@@ -34,15 +61,44 @@ export const GetDepartment = createAsyncThunk(
 
 export const AddDepartments = createAsyncThunk(
     'Departments/AddDepartments',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Setting, ROUTES.DEPARTMENT, data);
             dispatch(fillDepartmentnotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Departman başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Departments');
+            dispatch(fillDepartmentnotification({
+                type: 'Clear',
+                code: 'DepartmentsCreate',
+                description: '',
+            }));
+            history && history.push('/Departments');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillDepartmentnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddRecordDepartments = createAsyncThunk(
+    'Departments/AddRecordDepartments',
+    async ({ data, history }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Setting, ROUTES.DEPARTMENT + '/AddRecord', data);
+            dispatch(fillDepartmentnotification({
+                type: 'Success',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
+            }));
+            history && history.push('/Departments');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +110,22 @@ export const AddDepartments = createAsyncThunk(
 
 export const EditDepartments = createAsyncThunk(
     'Departments/EditDepartments',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Setting, ROUTES.DEPARTMENT, data);
             dispatch(fillDepartmentnotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Departman başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Departments');
+            dispatch(fillDepartmentnotification({
+                type: 'Clear',
+                code: 'DepartmentsUpdate',
+                description: '',
+            }));
+            history && history.push('/Departments');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +137,17 @@ export const EditDepartments = createAsyncThunk(
 
 export const DeleteDepartments = createAsyncThunk(
     'Departments/DeleteDepartments',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.DEPARTMENT}/${data.Uuid}`);
             dispatch(fillDepartmentnotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Departman başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {
@@ -156,6 +221,17 @@ export const DepartmentsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(AddDepartments.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddRecordDepartments.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddRecordDepartments.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddRecordDepartments.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

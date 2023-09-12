@@ -14,8 +14,10 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import { FormContext } from '../../Provider/FormProvider'
 export default class StationsCreate extends Component {
 
+  PAGE_NAME = "StationsCreate"
 
   componentDidUpdate() {
     const { removeStationnotification, Stations } = this.props
@@ -42,7 +44,7 @@ export default class StationsCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" required />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" required />
               <Footerwrapper>
                 <Link to="/Stations">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -75,4 +77,4 @@ export default class StationsCreate extends Component {
     }
   }
 }
-
+StationsCreate.contextType = FormContext

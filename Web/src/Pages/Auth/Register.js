@@ -17,7 +17,7 @@ export class Register extends Component {
         const { Profile } = this.props
 
         return (
-            <div style={{ backgroundImage: `url(${img.loginbg})` }} className=' font-Common w-full h-[100vh] justify-center items-center flex ' >
+            <div style={{ backgroundImage: `url(${img.loginbg})` }} className=' font-Common w-full h-[100vh] justify-center items-center flex bg-gray-100' >
                 <div className='bg-white rounded-lg w-4/5 md:w-[40vmin] lg:w-[40vmin]  shadow-sm shadow-white'>
                     <div className=' bg-[#42A5F5] w-[20%] pb-[20%]   rounded-tl-lg rounded-br-[100%] ' />
                     <Grid textAlign='center' verticalAlign='middle'>
@@ -27,7 +27,7 @@ export class Register extends Component {
                             </div>
                             <Header as='h3' color='blue' textAlign='center'>
                                 <br />
-                                <p>Patient Care Hasta Bakım Sistemi</p>
+                                <p>Patient Care Hasta Bakım Uygulaması</p>
                             </Header>
                             <Form size='large' className='p-4' onSubmit={this.RegisterHandler}>
                                 <Form.Input transparent placeholder="Kullanıcı Adı" name="Username" fluid icon='user' iconPosition='left' />
@@ -78,7 +78,7 @@ export class Register extends Component {
                 fillnotification(error)
             })
         } else {
-              register({data, history})
+            register({ data, history })
         }
     }
 }

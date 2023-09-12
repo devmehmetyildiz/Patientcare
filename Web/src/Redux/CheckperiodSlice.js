@@ -4,8 +4,35 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Check period added successfully',
+        tr: 'Kontrol Grubu Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Check period updated successfully',
+        tr: 'Kontrol Grubu Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Check period Deleted successfully',
+        tr: 'Kontrol Grubu Başarı ile Silindi'
+    },
+}
+
 export const GetCheckperiods = createAsyncThunk(
-    'checkperiods/GetCheckperiods',
+    'Checkperiods/GetCheckperiods',
     async (_, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Setting, ROUTES.CHECKPERIOD);
@@ -19,7 +46,7 @@ export const GetCheckperiods = createAsyncThunk(
 );
 
 export const GetCheckperiod = createAsyncThunk(
-    'checkperiods/GetCheckperiod',
+    'Checkperiods/GetCheckperiod',
     async (guid, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Setting, `${ROUTES.CHECKPERIOD}/${guid}`);
@@ -33,16 +60,45 @@ export const GetCheckperiod = createAsyncThunk(
 );
 
 export const AddCheckperiods = createAsyncThunk(
-    'checkperiods/AddCheckperiods',
-    async ({ data, history }, { dispatch }) => {
+    'Checkperiods/AddCheckperiods',
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Setting, ROUTES.CHECKPERIOD, data);
             dispatch(fillCheckperiodnotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Kontrol grubu başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Checkperiods');
+            dispatch(fillCheckperiodnotification({
+                type: 'Clear',
+                code: 'CheckperiodsCreate',
+                description: '',
+            }));
+            history && history.push('/Checkperiods');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCheckperiodnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddRecordCheckperiods = createAsyncThunk(
+    'Checkperiods/AddRecordCheckperiods',
+    async ({ data, history }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Setting, ROUTES.CHECKPERIOD + '/AddRecord', data);
+            dispatch(fillCheckperiodnotification({
+                type: 'Success',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
+            }));
+            history && history.push('/Checkperiods');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -53,16 +109,23 @@ export const AddCheckperiods = createAsyncThunk(
 );
 
 export const EditCheckperiods = createAsyncThunk(
-    'checkperiods/EditCheckperiods',
-    async ({ data, history }, { dispatch }) => {
+    'Checkperiods/EditCheckperiods',
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Setting, ROUTES.CHECKPERIOD, data);
             dispatch(fillCheckperiodnotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Kontrol grubu başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Checkperiods');
+            dispatch(fillCheckperiodnotification({
+                type: 'Clear',
+                code: 'CheckperiodsUpdate',
+                description: '',
+            }));
+            history && history.push('/Checkperiods');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -73,16 +136,18 @@ export const EditCheckperiods = createAsyncThunk(
 );
 
 export const DeleteCheckperiods = createAsyncThunk(
-    'checkperiods/DeleteCheckperiods',
-    async (data, { dispatch }) => {
+    'Checkperiods/DeleteCheckperiods',
+    async ({ data }, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.CHECKPERIOD}/${data.Uuid}`);
             dispatch(fillCheckperiodnotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Kontrol grubu başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {
@@ -93,8 +158,8 @@ export const DeleteCheckperiods = createAsyncThunk(
     }
 );
 
-export const checkperiodsSlice = createSlice({
-    name: 'checkperiods',
+export const CheckperiodsSlice = createSlice({
+    name: 'Checkperiods',
     initialState: {
         list: [],
         selected_record: {},
@@ -159,6 +224,17 @@ export const checkperiodsSlice = createSlice({
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(AddRecordCheckperiods.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddRecordCheckperiods.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddRecordCheckperiods.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(EditCheckperiods.pending, (state) => {
                 state.isDispatching = true;
             })
@@ -189,6 +265,6 @@ export const {
     fillCheckperiodnotification,
     removeCheckperiodnotification,
     handleDeletemodal
-} = checkperiodsSlice.actions;
+} = CheckperiodsSlice.actions;
 
-export default checkperiodsSlice.reducer;
+export default CheckperiodsSlice.reducer;

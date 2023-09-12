@@ -24,19 +24,21 @@ export default class Cases extends Component {
 
 
   componentDidMount() {
-    const { GetCases } = this.props
+    const { GetCases, GetDepartments } = this.props
     GetCases()
+    GetDepartments()
   }
 
   componentDidUpdate() {
-    const { Cases, removeCasenotification } = this.props
+    const { Cases, Departments, removeDepartmentnotification, removeCasenotification } = this.props
     Notification(Cases.notifications, removeCasenotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
   }
 
   render() {
 
 
-    const { Cases, Profile, handleSelectedCase, handleDeletemodal } = this.props
+    const { Cases, Profile, Departments, handleSelectedCase, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Cases
     const casestatusOption = [
       {
@@ -79,12 +81,16 @@ export default class Cases extends Component {
       }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
       columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
-      }) : []
+      }) : [],
+      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
+        return item.key
+      }) : [],
     };
 
     const list = (Cases.list || []).map(item => {
-      var text = item.Departments.map((department) => {
-        return department.Name;
+
+      var text = (item.Departmentuuids || []).map(u => {
+        return (Departments.list || []).find(department => department.Uuid === u.DepartmentID)?.Name
       }).join(", ")
 
       return {
@@ -160,10 +166,13 @@ export default class Cases extends Component {
   }
 
   departmentCellhandler = (col) => {
+
+    const { Departments } = this.props
+
     if (col.value) {
       if (!col.cell.isGrouped) {
         const itemId = col.row.original.Id
-        const itemDepartments = col.row.original.Departments
+        const itemDepartments = (col.row.original.Departmentuuids || []).map(u => { return (Departments.list || []).find(department => department.Uuid === u.DepartmentID) })
         return col.value.length - 35 > 20 ?
           (
             !this.state.departmentStatus.includes(itemId) ?

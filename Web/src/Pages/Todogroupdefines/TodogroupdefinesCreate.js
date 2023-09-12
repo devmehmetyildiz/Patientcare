@@ -14,15 +14,10 @@ import validator from '../../Utils/Validator'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
+import { FormContext } from '../../Provider/FormProvider'
 export default class TodogroupdefinesCreate extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectedTododefines: [],
-      selectedDepartment: "",
-    }
-  }
+  PAGE_NAME = "TodogroupdefinesCreate"
 
   componentDidMount() {
     const { GetTododefines, GetDepartments } = this.props
@@ -64,10 +59,10 @@ export default class TodogroupdefinesCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Form.Group widths={'equal'}>
-                <FormInput required placeholder={Literals.Columns.Tododefines[Profile.Language]} value={this.state.selectedTododefines} clearable multiple selection options={Tododefineoptions} onChange={(e, { value }) => { this.setState({ selectedTododefines: value }) }} formtype='dropdown' />
-                <FormInput required placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selectedDepartment} clearable selection options={Departmentoptions} onChange={(e, { value }) => { this.setState({ selectedDepartment: value }) }} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Tododefines[Profile.Language]} name="Tododefines" multiple options={Tododefineoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Todogroupdefines">
@@ -86,12 +81,11 @@ export default class TodogroupdefinesCreate extends Component {
     e.preventDefault()
 
     const { AddTodogroupdefines, history, fillTodogroupdefinenotification, Tododefines, Profile } = this.props
-    const { list } = Tododefines
     const data = formToObject(e.target)
-    data.Tododefines = this.state.selectedTododefines.map(tododefines => {
-      return list.find(u => u.Uuid === tododefines)
+    data.Tododefines = this.context.formstates[`${this.PAGE_NAME}/Tododefines`].map(id => {
+      return (Tododefines.list || []).find(u => u.Uuid === id)
     })
-    data.DepartmentID = this.state.selectedDepartment
+    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
 
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -111,6 +105,5 @@ export default class TodogroupdefinesCreate extends Component {
       AddTodogroupdefines({ data, history })
     }
   }
-
-
 }
+TodogroupdefinesCreate.contextType = FormContext

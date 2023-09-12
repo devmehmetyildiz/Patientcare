@@ -4,6 +4,33 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Patient Stock Added successfully',
+        tr: 'Hasta Stoğu Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Patient Stock updated successfully',
+        tr: 'Hasta Stoğu Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Patient Stock Deleted successfully',
+        tr: 'Hasta Stoğu Başarı ile Silindi'
+    },
+}
+
 export const GetPatientstocks = createAsyncThunk(
     'Patientstocks/GetPatientstocks',
     async (_, { dispatch }) => {
@@ -34,15 +61,22 @@ export const GetPatientstock = createAsyncThunk(
 
 export const AddPatientstocks = createAsyncThunk(
     'Patientstocks/AddPatientstocks',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Warehouse, ROUTES.PATIENTSTOCK, data);
             dispatch(fillPatientstocknotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Hasta stoğu başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Patientstocks');
+            dispatch(fillPatientstocknotification({
+                type: 'Clear',
+                code: 'PatientstocksCreate',
+                description: '',
+            }));
+            history && history.push('/Patientstocks');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +88,22 @@ export const AddPatientstocks = createAsyncThunk(
 
 export const EditPatientstocks = createAsyncThunk(
     'Patientstocks/EditPatientstocks',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Warehouse, ROUTES.PATIENTSTOCK, data);
             dispatch(fillPatientstocknotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Hasta stoğu başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Patientstocks');
+            dispatch(fillPatientstocknotification({
+                type: 'Clear',
+                code: 'PatientstocksUpdate',
+                description: '',
+            }));
+            history && history.push('/Patientstocks');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +115,17 @@ export const EditPatientstocks = createAsyncThunk(
 
 export const DeletePatientstocks = createAsyncThunk(
     'Patientstocks/DeletePatientstocks',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PATIENTSTOCK}/${data.Uuid}`);
             dispatch(fillPatientstocknotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Hasta stoğu başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {

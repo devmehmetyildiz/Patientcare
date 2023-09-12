@@ -15,8 +15,11 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import Editor from '@monaco-editor/react'
+import { FormContext } from '../../Provider/FormProvider'
 
 export default class RulesCreate extends Component {
+
+    PAGE_NAME = 'RulesCreate'
 
     constructor(props) {
         super(props)
@@ -29,11 +32,11 @@ export default class RulesCreate extends Component {
 
     componentDidUpdate() {
         const { Rules, removeRulenotification } = this.props
-        Notification(Rules.notifications, removeRulenotification)
+        Notification(Rules.notifications, removeRulenotification, this.context.clearForm)
     }
 
     render() {
-        const { Rules, Profile } = this.props
+        const { Rules, Profile, history } = this.props
         const { isLoading, isDispatching } = Rules
 
         return (
@@ -57,9 +60,10 @@ export default class RulesCreate extends Component {
                                         menuItem: Literals.Columns.Savescreen[Profile.Language],
                                         pane: {
                                             key: 'save',
-                                            content: <React.Fragment className='max-h-[calc(66vh-10px)] overflow-y-auto overflow-x-hidden'>
-                                                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                                            </React.Fragment>
+                                            content: <div className='max-h-[calc(66vh-10px)] overflow-y-auto overflow-x-hidden'>
+                                                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                                                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Status[Profile.Language]} name="Status" formtype={'checkbox'} />
+                                            </div>
                                         }
                                     },
                                     {
@@ -81,9 +85,12 @@ export default class RulesCreate extends Component {
                                 ]}
                                 renderActiveOnly={false} />
                             <Footerwrapper>
-                                <Link to="/Roles">
-                                    <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                                </Link>
+                                <Form.Group widths={'equal'}>
+                                    {history && <Link to="/Rules">
+                                        <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+                                    </Link>}
+                                    <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.clearForm(this.PAGE_NAME) }}>{Literals.Button.Clear[Profile.Language]}</Button>
+                                </Form.Group>
                                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
                             </Footerwrapper>
                         </Form>
@@ -100,7 +107,7 @@ export default class RulesCreate extends Component {
 
         const data = formToObject(e.target)
         data.Rule = this.state.template
-        data.Status = false
+        data.Status = this.context.formstates[`${this.PAGE_NAME}/Status`]
         let errors = []
         if (!validator.isString(data.Name)) {
             errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
@@ -126,3 +133,4 @@ export default class RulesCreate extends Component {
         this.templateEditorRef.current.onDidChangeModelContent(this.handleTemplateEditorChange)
     }
 }
+RulesCreate.contextType = FormContext

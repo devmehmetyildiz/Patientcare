@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Modal } from 'semantic-ui-react'
+import { Divider, Icon, Loader, Modal } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
@@ -24,13 +24,23 @@ export default class Purchaseorderstocks extends Component {
   }
 
   componentDidMount() {
-    const { GetPurchaseorderstocks } = this.props
+    const { GetPurchaseorderstocks, GetStockdefines, GetDepartments, GetPurchaseorderstockmovements, GetPurchaseorders } = this.props
     GetPurchaseorderstocks()
+    GetStockdefines()
+    GetDepartments()
+    GetPurchaseorders()
+    GetPurchaseorderstockmovements()
   }
 
   componentDidUpdate() {
-    const { Purchaseorderstocks, removePurchaseorderstocknotification } = this.props
-    Notification(Purchaseorderstocks, removePurchaseorderstocknotification)
+    const { Purchaseorderstocks, Stockdefines, Departments, Purchaseorders,
+      Purchaseorderstockmovements, removePurchaseorderstocknotification, removeStockdefinenotification,
+      removeDepartmentnotification, removePurchaseordernotification, removePurchaseorderstockmovementnotification } = this.props
+    Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
+    Notification(Purchaseorders.notifications, removePurchaseordernotification)
+    Notification(Purchaseorderstockmovements.notifications, removePurchaseorderstockmovementnotification)
   }
 
   render() {
@@ -40,13 +50,13 @@ export default class Purchaseorderstocks extends Component {
 
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Purchaseorder[Profile.Language], accessor: 'Purchaseorder.Purchasenumber', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Purchaseorder[Profile.Language], accessor: 'PurchaseorderID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.purchaseorderCellhandler(col) },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'Stockdefine.Department.Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
+      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
       { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Source[Profile.Language], accessor: 'Source', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
@@ -65,10 +75,13 @@ export default class Purchaseorderstocks extends Component {
       }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
       columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
-      }) : []
+      }) : [],
+      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
+        return item.key
+      }) : [],
     };
 
-    const list = (Purchaseorderstocks.list || []).map(item => {
+    const list = (Purchaseorderstocks.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         watch: <Link to={`/Purchaseorderstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
@@ -117,6 +130,47 @@ export default class Purchaseorderstocks extends Component {
 
   handleChangeModal = (value) => {
     this.setState({ modal: value })
+  }
+
+  stockdefineCellhandler = (col) => {
+    const { Stockdefines } = this.props
+    if (Stockdefines.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Stockdefines.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
+  purchaseorderCellhandler = (col) => {
+    const { Purchaseorders } = this.props
+    if (Purchaseorders.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Purchaseorders.list || []).find(u => u.Uuid === col.value)?.Purchasenumber
+    }
+  }
+
+  departmentCellhandler = (col) => {
+    const { Departments } = this.props
+    if (Departments.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Departments.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
+
+  amountCellhandler = (col) => {
+    const { Purchaseorderstockmovements, Purchaseorderstocks } = this.props
+    if (Purchaseorderstockmovements.isLoading || Purchaseorderstocks.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const selectedStock = (Purchaseorderstocks.list || []).find(u => u.Id === col.row.original.Id)
+      let amount = 0.0;
+      let movements = (Purchaseorderstockmovements.list || []).filter(u => u.StockID === selectedStock.Uuid && u.Isactive)
+      movements.forEach(movement => {
+        amount += (movement.Amount * movement.Movementtype);
+      });
+      return amount
+    }
   }
 
 }

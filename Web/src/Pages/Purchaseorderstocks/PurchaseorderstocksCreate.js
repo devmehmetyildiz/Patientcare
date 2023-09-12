@@ -14,17 +14,10 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
+import { FormContext } from '../../Provider/FormProvider'
 export default class PurchaseorderstocksCreate extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      selecteddepartments: "",
-      selectedstockdefine: "",
-      selectedpurchaseorder: "",
-      open: false
-    }
-  }
 
+  PAGE_NAME = "PurchaseorderstocksCreate"
 
   componentDidMount() {
     const { GetDepartments, GetStockdefines, GetPurchaseorders } = this.props
@@ -72,16 +65,16 @@ export default class PurchaseorderstocksCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Purchaseorder[Profile.Language]} value={this.state.selectedpurchaseorder} options={Purchaseorderoptions} onChange={this.handleChangePurchase} formtype='dropdown' />
-                <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} value={this.state.selectedstockdefine} options={Stockdefineoptions} onChange={this.handleChangeStockdefine} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchaseorder[Profile.Language]} name="PurchaseorderID" options={Purchaseorderoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
-                <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
-                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} options={Departmentoptions} onChange={this.handleChangeDepartment} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Purchaseorderstocks">
@@ -101,9 +94,9 @@ export default class PurchaseorderstocksCreate extends Component {
     const { AddPurchaseorderstocks, history, fillPurchaseorderstocknotification, Profile } = this.props
     const data = formToObject(e.target)
     data.Amount = parseFloat(data.Amount)
-    data.DepartmentID = this.state.selecteddepartments
-    data.StockdefineID = this.state.selectedstockdefine
-    data.PurchaseorderID = this.state.selectedpurchaseorder
+    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
+    data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
+    data.PurchaseorderID = this.context.formstates[`${this.PAGE_NAME}/PurchaseorderID`]
     data.Status = 0
     data.IsActive = true
     data.Maxamount = data.Amount
@@ -121,7 +114,7 @@ export default class PurchaseorderstocksCreate extends Component {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StokdefineRequired[Profile.Language] })
     }
     if (!validator.isNumber(data.Amount)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.AmountRequired[Profile.Language]})
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.AmountRequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
@@ -132,18 +125,6 @@ export default class PurchaseorderstocksCreate extends Component {
     }
   }
 
-  handleChangeDepartment = (e, { value }) => {
-    this.setState({ selecteddepartments: value })
-  }
-
-  handleChangeStockdefine = (e, { value }) => {
-    this.setState({ selectedstockdefine: value })
-  }
-  handleChangePurchase = (e, { value }) => {
-    this.setState({ selectedpurchaseorder: value })
-  }
-
-
   getLocalDate = () => {
     var curr = new Date();
     curr.setDate(curr.getDate() + 3);
@@ -151,3 +132,4 @@ export default class PurchaseorderstocksCreate extends Component {
     return date
   }
 }
+PurchaseorderstocksCreate.contextType = FormContext

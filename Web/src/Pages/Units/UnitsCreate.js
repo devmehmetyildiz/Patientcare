@@ -14,15 +14,10 @@ import validator from '../../Utils/Validator'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
-export default class CasesCreate extends Component {
+import { FormContext } from '../../Provider/FormProvider'
+export default class UnitsCreate extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      selecteddepartments: [],
-      selectedstatusOption: {}
-    }
-  }
+  PAGE_NAME = "UnitsCreate"
 
   componentDidMount() {
     const { GetDepartments } = this.props
@@ -71,11 +66,11 @@ export default class CasesCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput required placeholder={Literals.Columns.Unittype[Profile.Language]} value={this.state.selectedstatusOption} options={unitstatusOption} onChange={this.handleChangeOption} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unittype[Profile.Language]} name="Unittype" options={unitstatusOption} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput required placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} clearable search multiple options={Departmentoptions} onChange={this.handleChange} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Units">
@@ -92,11 +87,10 @@ export default class CasesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddUnits, history, fillUnitnotification, Departments, Profile } = this.props
-    const { list } = Departments
     const data = formToObject(e.target)
-    data.Unittype = this.state.selectedstatusOption
-    data.Departments = this.state.selecteddepartments.map(department => {
-      return list.find(u => u.Uuid === department)
+    data.Unittype = this.context.formstates[`${this.PAGE_NAME}/Unittype`]
+    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+      return (Departments.list || []).find(u => u.Uuid === id)
     })
 
     let errors = []
@@ -117,12 +111,5 @@ export default class CasesCreate extends Component {
       AddUnits({ data, history })
     }
   }
-
-  handleChange = (e, { value }) => {
-    this.setState({ selecteddepartments: value })
-  }
-
-  handleChangeOption = (e, { value }) => {
-    this.setState({ selectedstatusOption: value })
-  }
 }
+UnitsCreate.contextType = FormContext

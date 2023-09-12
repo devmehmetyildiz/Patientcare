@@ -4,6 +4,33 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Periods added successfully',
+        tr: 'Periyot Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Periods updated successfully',
+        tr: 'Periyot Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Periods Deleted successfully',
+        tr: 'Periyot Başarı ile Silindi'
+    },
+}
+
 export const GetPeriods = createAsyncThunk(
     'Periods/GetPeriods',
     async (_, { dispatch }) => {
@@ -34,15 +61,44 @@ export const GetPeriod = createAsyncThunk(
 
 export const AddPeriods = createAsyncThunk(
     'Periods/AddPeriods',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Setting, ROUTES.PERIOD, data);
             dispatch(fillPeriodnotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Periyod başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Periods');
+            dispatch(fillPeriodnotification({
+                type: 'Clear',
+                code: 'PeriodsCreate',
+                description: '',
+            }));
+            history && history.push('/Periods');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPeriodnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddRecordPeriods = createAsyncThunk(
+    'Periods/AddRecordPeriods',
+    async ({ data, history }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Setting, ROUTES.PERIOD + '/AddRecord', data);
+            dispatch(fillPeriodnotification({
+                type: 'Success',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
+            }));
+            history && history.push('/Periods');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +110,22 @@ export const AddPeriods = createAsyncThunk(
 
 export const EditPeriods = createAsyncThunk(
     'Periods/EditPeriods',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Setting, ROUTES.PERIOD, data);
             dispatch(fillPeriodnotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Periyod başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Periods');
+            dispatch(fillPeriodnotification({
+                type: 'Clear',
+                code: 'PeriodsUpdate',
+                description: '',
+            }));
+            history && history.push('/Periods');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +137,17 @@ export const EditPeriods = createAsyncThunk(
 
 export const DeletePeriods = createAsyncThunk(
     'Periods/DeletePeriods',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.PERIOD}/${data.Uuid}`);
             dispatch(fillPeriodnotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Periyod başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {
@@ -156,6 +221,17 @@ export const PeriodsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(AddPeriods.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddRecordPeriods.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddRecordPeriods.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddRecordPeriods.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

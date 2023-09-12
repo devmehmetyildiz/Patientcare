@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import {  Icon } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
@@ -22,17 +22,21 @@ export default class Todogroupdefines extends Component {
     }
 
     componentDidMount() {
-        const { GetTodogroupdefines, } = this.props
+        const { GetTodogroupdefines, GetTododefines, GetDepartments } = this.props
         GetTodogroupdefines()
+        GetTododefines()
+        GetDepartments()
     }
 
     componentDidUpdate() {
-        const { Todogroupdefines, removeTodogroupdefinenotification } = this.props
+        const { Todogroupdefines, Departments, removeDepartmentnotification, Tododefines, removeTododefinenotification, removeTodogroupdefinenotification } = this.props
         Notification(Todogroupdefines.notifications, removeTodogroupdefinenotification)
+        Notification(Tododefines.notifications, removeTododefinenotification)
+        Notification(Departments.notifications, removeDepartmentnotification)
     }
 
     render() {
-        const { Todogroupdefines, Profile, handleDeletemodal, handleSelectedTodogroupdefine } = this.props
+        const { Todogroupdefines, Departments, Tododefines, Profile, handleDeletemodal, handleSelectedTodogroupdefine } = this.props
         const { isLoading, isDispatching } = Todogroupdefines
 
         const Columns = [
@@ -40,7 +44,7 @@ export default class Todogroupdefines extends Component {
             { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
             { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
             { Header: Literals.Columns.Tododefines[Profile.Language], accessor: 'Tododefinestxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.tododefineCellhandler(col) },
-            { Header: Literals.Columns.Department[Profile.Language], accessor: 'Department.Name', sortable: true, canGroupBy: true, canFilter: true, },
+            { Header: Literals.Columns.Department[Profile.Language], accessor: 'Department', sortable: true, canGroupBy: true, canFilter: true, },
             { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
             { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
             { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -60,12 +64,13 @@ export default class Todogroupdefines extends Component {
         };
 
         const list = (Todogroupdefines.list || []).map(item => {
-            var text = item.Tododefines.map((todo) => {
-                return todo.Name;
+            var text = (item.Tododefineuuids || []).map(u => {
+                return (Tododefines.list || []).find(tododefine => tododefine.Uuid === u.TodoID)?.Name
             }).join(", ")
             return {
                 ...item,
                 Tododefinestxt: text,
+                Department: (Departments.list || []).find(u => u.Uuid === item.DepartmentID)?.Name,
                 edit: <Link to={`/Todogroupdefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
                 delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
                     handleSelectedTodogroupdefine(item)
@@ -125,10 +130,11 @@ export default class Todogroupdefines extends Component {
     }
 
     tododefineCellhandler = (col) => {
+        const { Tododefines } = this.props
         if (col.value) {
             if (!col.cell.isGrouped) {
                 const itemId = col.row.original.Id
-                const itemTodos = col.row.original.Tododefines
+                const itemTodos = (col.row.original.Tododefineuuids || []).map(u => { return (Tododefines.list || []).find(tododefine => tododefine.Uuid === u.TodoID) })
                 return col.value.length - 35 > 20 ?
                     (
                         !this.state.tododefineStatus.includes(itemId) ?

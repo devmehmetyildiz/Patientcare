@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Modal } from 'semantic-ui-react'
+import { Divider, Icon, Loader, Modal } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import { MOVEMENTTYPES } from '../../Utils/Constants'
@@ -25,13 +25,20 @@ export default class Purchaseorderstockmovements extends Component {
   }
 
   componentDidMount() {
-    const { GetPurchaseorderstockmovements } = this.props
+    const { GetPurchaseorderstockmovements, GetUnits, GetStockdefines, GetPurchaseorderstocks } = this.props
     GetPurchaseorderstockmovements()
+    GetUnits()
+    GetStockdefines()
+    GetPurchaseorderstocks()
   }
 
   componentDidUpdate() {
-    const { Purchaseorderstockmovements, removePurchaseorderstockmovementnotification, } = this.props
+    const { Purchaseorderstockmovements, removePurchaseorderstockmovementnotification, Units, Stockdefines, Purchaseorderstocks,
+      removeUnitnotification, removeStockdefinenotification, removePurchaseorderstocknotification } = this.props
     Notification(Purchaseorderstockmovements.notifications, removePurchaseorderstockmovementnotification)
+    Notification(Units.notifications, removeUnitnotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
+    Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
   }
 
   render() {
@@ -41,8 +48,7 @@ export default class Purchaseorderstockmovements extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'Stock.Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'Stock.Stockdefine.Department.Name', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockCellhandler(col) },
       { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Movementtype[Profile.Language], accessor: 'Movementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
@@ -65,10 +71,13 @@ export default class Purchaseorderstockmovements extends Component {
       }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
       columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
-      }) : []
+      }) : [],
+      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
+        return item.key
+      }) : [],
     };
 
-    const list = (Purchaseorderstockmovements.list || []).map(item => {
+    const list = (Purchaseorderstockmovements.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         watch: <Link to={`/Purchaseorderstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
@@ -87,11 +96,11 @@ export default class Purchaseorderstockmovements extends Component {
             <Headerwrapper>
               <Grid columns='2' >
                 <GridColumn width={8} className="">
-                    <Breadcrumb size='big'>
-                      <Link to={"/Purchaseorderstockmovements"}>
-                        <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-                      </Link>
-                    </Breadcrumb>
+                  <Breadcrumb size='big'>
+                    <Link to={"/Purchaseorderstockmovements"}>
+                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                    </Link>
+                  </Breadcrumb>
                 </GridColumn>
                 <GridColumn width={8} >
                   <Link to={"/Purchaseorderstockmovements/Create"}>
@@ -120,7 +129,29 @@ export default class Purchaseorderstockmovements extends Component {
   }
 
   amountCellhandler = (col) => {
-    return <p>{`${col.value}  ${col.row.original.Stock.Stockdefine.Unit.Name}`}</p>
+    const { Purchaseorderstockmovements, Purchaseorderstocks, Stockdefines, Units } = this.props
+    if (Purchaseorderstocks.isLoading || Stockdefines.isLoading || Units.isLoading || Purchaseorderstockmovements.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const stockmovement = (Purchaseorderstockmovements.list || []).find(u => u.Id === col.row.original.Id)
+      const stock = (Purchaseorderstocks.list || []).find(u => u.Uuid === stockmovement?.StockID)
+      const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
+      const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
+      return <p>{`${col.value}  ${unit?.Name}`}</p>
+    }
+
+  }
+
+  stockCellhandler = (col) => {
+    const { Purchaseorderstocks, Stockdefines } = this.props
+    if (Purchaseorderstocks.isLoading || Stockdefines.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const stock = (Purchaseorderstocks.list || []).find(u => u.Uuid === col.value)
+      const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
+      return stockdefine?.Name
+    }
+
   }
 
   movementCellhandler = (col) => {

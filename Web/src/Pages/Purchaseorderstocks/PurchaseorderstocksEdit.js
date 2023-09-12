@@ -16,21 +16,22 @@ import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 export default class PurchaseorderstocksEdit extends Component {
+
+  PAGE_NAME = "PurchaseorderstocksEdit"
+
   constructor(props) {
     super(props)
     this.state = {
-      selecteddepartments: "",
-      selectedstockdefine: "",
-      selectedpurchaseorder: "",
-      open: false
+      isDatafetched: false
     }
   }
 
 
   componentDidMount() {
-    const { GetPurchaseorderstock, GetPurchaseorders, match, history, GetDepartments, GetStockdefines } = this.props
-    if (match.params.PurchaseorderstockID) {
-      GetPurchaseorderstock(match.params.PurchaseorderstockID)
+    const { PurchaseorderstockID, GetPurchaseorderstock, GetPurchaseorders, match, history, GetDepartments, GetStockdefines } = this.props
+    let Id = PurchaseorderstockID || match?.params?.PurchaseorderstockID
+    if (validator.isUUID(Id)) {
+      GetPurchaseorderstock(Id)
       GetDepartments()
       GetStockdefines()
       GetPurchaseorders()
@@ -49,9 +50,6 @@ export default class PurchaseorderstocksEdit extends Component {
       && Purchaseorderstocks.list.length > 0 && !Purchaseorderstocks.isLoading
       && Stockdefines.list.length > 0 && !Stockdefines.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selecteddepartments: selected_record.departmentid,
-        selectedstockdefine: selected_record.stockdefineID,
-        selectedpurchaseorder: selected_record.purchaseorderID,
         isDatafetched: true
       })
       this.context.setFormstates(selected_record)
@@ -92,16 +90,16 @@ export default class PurchaseorderstocksEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Purchaseorder[Profile.Language]} value={this.state.selectedpurchaseorder} options={Purchaseorderoptions} onChange={this.handleChangePurchase} formtype='dropdown' />
-                <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} value={this.state.selectedstockdefine} options={Stockdefineoptions} onChange={this.handleChangeStockdefine} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchaseorder[Profile.Language]} name="PurchaseorderID" options={Purchaseorderoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
-                <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
-                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} options={Departmentoptions} onChange={this.handleChangeDepartment} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Purchaseorderstocks">
@@ -120,9 +118,9 @@ export default class PurchaseorderstocksEdit extends Component {
     e.preventDefault()
     const { EditPurchaseorderstocks, history, fillPurchaseorderstocknotification, Purchaseorderstocks, Profile } = this.props
     const data = formToObject(e.target)
-    data.DepartmentID = this.state.selecteddepartments
-    data.StockdefineID = this.state.selectedstockdefine
-    data.purchaseorderID = this.state.selectedpurchaseorder
+    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
+    data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
+    data.PurchaseorderID = this.context.formstates[`${this.PAGE_NAME}/PurchaseorderID`]
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
@@ -144,17 +142,6 @@ export default class PurchaseorderstocksEdit extends Component {
     } else {
       EditPurchaseorderstocks({ data: { ...Purchaseorderstocks.selected_record, ...data }, history })
     }
-  }
-
-  handleChangeDepartment = (e, { value }) => {
-    this.setState({ selecteddepartments: value })
-  }
-
-  handleChangeStockdefine = (e, { value }) => {
-    this.setState({ selectedstockdefine: value })
-  }
-  handleChangePurchase = (e, { value }) => {
-    this.setState({ selectedpurchaseorder: value })
   }
 
   getLocalDate = (inputdate) => {

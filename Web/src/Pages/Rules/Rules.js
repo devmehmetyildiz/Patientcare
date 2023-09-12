@@ -51,10 +51,13 @@ export class Rules extends Component {
       }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
       columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
-      }) : []
+      }) : [],
+      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
+        return item.key
+      }) : [],
     };
 
-    const list = (Rules.list || []).map(item => {
+    const list = (Rules.list || []).filter(u=>u.Isactive).map(item => {
       return {
         ...item,
         Stop: item.Status === 1 ? <Icon link size='large' color='red' name='hand paper' onClick={() => {

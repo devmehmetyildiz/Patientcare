@@ -133,7 +133,7 @@ const Passwordforget = lazy(() => import('./Containers/Auth/Passwordforget'));
 const Home = lazy(() => import('./Pages/Home'));
 
 
-class AppRoutes extends Component {
+class Routes extends Component {
   render() {
 
     const routes = [
@@ -251,4 +251,4 @@ class AppRoutes extends Component {
   }
 }
 
-export default AppRoutes;
+export default Routes;

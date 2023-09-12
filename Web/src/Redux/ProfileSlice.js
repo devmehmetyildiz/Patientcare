@@ -12,12 +12,13 @@ export const logIn = createAsyncThunk(
             const response = await instanse.post(config.services.Auth, `Oauth/Login`, data);
             const localcookies = new Cookies();
             localcookies.set('patientcare', response.data.accessToken, { path: '/' })
+            localcookies.set('patientcareRefresh', response.data.refreshToken, { path: '/' })
             dispatch(fillnotification({
                 type: 'Success',
                 code: 'Elder Camp',
                 description: 'Elder camp giriş yapıldı',
             }));
-            redirectUrl ? window.location = (redirectUrl) : window.location = ('Home')
+            redirectUrl ? window.location = (redirectUrl) : window.location = ('Orders')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -37,7 +38,47 @@ export const register = createAsyncThunk(
                 code: 'Elder Camp',
                 description: 'Admin kullanıcı oluşturuldu.',
             }));
-            history.push("/Login")
+            history && history.push("/Login")
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const Changepassword = createAsyncThunk(
+    'Profile/Changepassword',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Userrole, 'Users/Changepassword', data);
+            dispatch(fillnotification({
+                type: 'Success',
+                code: 'Elder Camp',
+                description: 'Password Changed Successfully',
+            }));
+            history && history.goBack()
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const Resetpassword = createAsyncThunk(
+    'Profile/Resetpassword',
+    async ({ data, history }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Auth, 'Password/Resetpassword', data);
+            dispatch(fillnotification({
+                type: 'Success',
+                code: 'Elder Camp',
+                description: 'Password Changed Successfully',
+            }));
+            history && history.goBack()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -66,7 +107,6 @@ export const GetUserMeta = createAsyncThunk(
     async (_, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Userrole, 'Users/GetActiveUserMeta');
-            console.log('response.data: ', response.data);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -104,6 +144,21 @@ export const GetTableMeta = createAsyncThunk(
     }
 );
 
+export const ResetTableMeta = createAsyncThunk(
+    'Profile/ResetTableMeta',
+    async (metaKey, { dispatch }) => {
+        console.log('metaKey: ', metaKey);
+        try {
+            const response = await instanse.delete(config.services.Userrole, ROUTES.USER + `/Resettablemeta/${metaKey}`);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const SaveTableMeta = createAsyncThunk(
     'Profile/SaveTableMeta',
     async ({ data, history }, { dispatch }) => {
@@ -130,7 +185,7 @@ export const Createpasswordforget = createAsyncThunk(
             const response = await instanse.get(config.services.Auth, 'Password/Createrequest/' + email);
             dispatch(fillnotification({
                 type: 'Success',
-                code: 'Elder Camp',
+                code: 'Star Note',
                 description: 'Parola Sıfırlama Talebiniz alınmıştır. Lütfen mail adresinizi kontrol ediniz',
             }));
             return response.data;
@@ -142,11 +197,14 @@ export const Createpasswordforget = createAsyncThunk(
     }
 );
 
+
+
 export const ProfileSlice = createSlice({
     name: 'Profile',
     initialState: {
         changePassword: false,
         isLogging: false,
+        isFetching: false,
         user: null,
         errMsg: null,
         isDispatching: false,
@@ -169,6 +227,12 @@ export const ProfileSlice = createSlice({
         removenotification: (state) => {
             state.notifications.splice(0, 1);
         },
+        removeauth: (state) => {
+            state.auth = false
+        },
+        handleauth: (state) => {
+            state.auth = true
+        },
         logOut: () => {
             const localcookies = new Cookies();
             localcookies.remove('patientcare')
@@ -182,6 +246,7 @@ export const ProfileSlice = createSlice({
                 state.errMsg = null;
             })
             .addCase(logIn.fulfilled, (state, action) => {
+                state.auth = true;
                 state.isLogging = false;
             })
             .addCase(logIn.rejected, (state, action) => {
@@ -196,6 +261,17 @@ export const ProfileSlice = createSlice({
                 state.isLogging = false;
             })
             .addCase(register.rejected, (state, action) => {
+                state.isLogging = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(Changepassword.pending, (state) => {
+                state.isLogging = true;
+                state.errMsg = null;
+            })
+            .addCase(Changepassword.fulfilled, (state, action) => {
+                state.isLogging = false;
+            })
+            .addCase(Changepassword.rejected, (state, action) => {
                 state.isLogging = false;
                 state.errMsg = action.error.message;
             })
@@ -235,6 +311,18 @@ export const ProfileSlice = createSlice({
                 state.isLogging = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(ResetTableMeta.pending, (state) => {
+                state.isLogging = true;
+                state.errMsg = null;
+            })
+            .addCase(ResetTableMeta.fulfilled, (state, action) => {
+                state.isLogging = false;
+                state.tablemeta = action.payload
+            })
+            .addCase(ResetTableMeta.rejected, (state, action) => {
+                state.isLogging = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(SaveTableMeta.pending, (state) => {
                 state.isLogging = true;
                 state.errMsg = null;
@@ -250,6 +338,7 @@ export const ProfileSlice = createSlice({
             .addCase(GetUserMeta.pending, (state) => {
                 state.isLogging = true;
                 state.errMsg = null;
+                state.meta = {}
             })
             .addCase(GetUserMeta.fulfilled, (state, action) => {
                 state.isLogging = false;
@@ -278,14 +367,26 @@ export const ProfileSlice = createSlice({
                 state.passwordrequestsended = false;
                 state.errMsg = action.error.message;
             })
-
+            .addCase(Resetpassword.pending, (state) => {
+                state.isLogging = true;
+                state.errMsg = null;
+            })
+            .addCase(Resetpassword.fulfilled, (state, action) => {
+                state.isLogging = false;
+            })
+            .addCase(Resetpassword.rejected, (state, action) => {
+                state.isLogging = false;
+                state.errMsg = action.error.message;
+            })
     },
 });
 
 export const {
     fillnotification,
     removenotification,
-    logOut
+    logOut,
+    removeauth,
+    handleauth
 } = ProfileSlice.actions;
 
 export default ProfileSlice.reducer;

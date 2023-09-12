@@ -14,20 +14,24 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
+import { FormContext } from '../../Provider/FormProvider'
 export default class StockmovementsEdit extends Component {
+
+  PAGe_NAME = "StockmovementsEdit"
+
   constructor(props) {
     super(props)
     this.state = {
-      selectedstock: "",
-      selectedmovement: "",
+      isDatafetched: false,
     }
   }
 
 
   componentDidMount() {
-    const { GetStockmovement, GetStocks, match, history } = this.props
-    if (match.params.StockmovementID) {
-      GetStockmovement(match.params.StockmovementID)
+    const { GetStockmovement, GetStocks, match, history, StockmovementID } = this.props
+    let Id = StockmovementID || match.params.StockmovementID
+    if (validator.isUUID(Id)) {
+      GetStockmovement(Id)
       GetStocks()
     } else {
       history.push("/Stockmovements")
@@ -42,11 +46,9 @@ export default class StockmovementsEdit extends Component {
       && Stocks.list.length > 0 && !Stocks.isLoading
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedstock: selected_record.StockID,
-        selectedmovement: selected_record.Movementtype,
         isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
     Notification(Stocks.notifications, removeStocknotification)
     Notification(Stockmovements.notifications, removeStockmovementnotification)
@@ -69,7 +71,7 @@ export default class StockmovementsEdit extends Component {
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
-              <Link to={"/Purchaseorderstockmovements"}>
+              <Link to={"/Stockmovements"}>
                 <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
@@ -79,13 +81,13 @@ export default class StockmovementsEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} value={this.state.selectedstock} options={Stockoptions} onChange={this.handleChangeStock} formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockoptions} name="StockdefineID" formtype='dropdown' />
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
-                <FormInput placeholder={Literals.Columns.Movementtype[Profile.Language]} value={this.state.selectedmovement} options={Movementoptions} onChange={this.handleChangeMovement} fromtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Purchaseorderstockmovements">
+                <Link to="/Stockmovements">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
@@ -101,9 +103,8 @@ export default class StockmovementsEdit extends Component {
     e.preventDefault()
     const { EditStockmovements, history, fillStockmovementnotification, Stockmovements, Profile } = this.props
     const data = formToObject(e.target)
-
-    data.Movementtype = this.state.selectedmovement
-    data.StockID = this.state.selectedstock
+    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
+    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
     data.Amount = parseFloat(data.Amount)
     let errors = []
     if (!validator.isNumber(data.Movementtype)) {
@@ -140,3 +141,4 @@ export default class StockmovementsEdit extends Component {
     return date
   }
 }
+StockmovementsEdit.contextType = FormContext

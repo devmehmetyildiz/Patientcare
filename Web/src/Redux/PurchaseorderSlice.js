@@ -4,6 +4,37 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Purchaseorder added successfully',
+        tr: 'Sipariş Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Purchaseorder updated successfully',
+        tr: 'Sipariş Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Purchaseorder Deleted successfully',
+        tr: 'Sipariş Başarı ile Silindi'
+    },
+    completedescription: {
+        en: 'Purchaseorder Deleted successfully',
+        tr: 'Sipariş başarı ile Tamamlandı'
+    },
+}
+
 export const GetPurchaseorders = createAsyncThunk(
     'Purchaseorders/GetPurchaseorders',
     async (_, { dispatch }) => {
@@ -34,15 +65,22 @@ export const GetPurchaseorder = createAsyncThunk(
 
 export const AddPurchaseorders = createAsyncThunk(
     'Purchaseorders/AddPurchaseorders',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Warehouse, ROUTES.PURCHASEORDER, data);
             dispatch(fillPurchaseordernotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Satın alma başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Purchaseorders');
+            dispatch(fillPurchaseordernotification({
+                type: 'Clear',
+                code: 'PurchaseordersCreate',
+                description: '',
+            }));
+            history && history.push('/Purchaseorders');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +92,22 @@ export const AddPurchaseorders = createAsyncThunk(
 
 export const EditPurchaseorders = createAsyncThunk(
     'Purchaseorders/EditPurchaseorders',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDER, data);
             dispatch(fillPurchaseordernotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Satın alma başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Purchaseorders');
+            dispatch(fillPurchaseordernotification({
+                type: 'Clear',
+                code: 'PurchaseordersUpdate',
+                description: '',
+            }));
+            history && history.push('/Purchaseorders');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,13 +119,15 @@ export const EditPurchaseorders = createAsyncThunk(
 
 export const CompletePurchaseorders = createAsyncThunk(
     'Purchaseorders/CompletePurchaseorders',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDER + `/Complete`, data);
             dispatch(fillPurchaseordernotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Satın alma başarı ile Tamamlandı',
+                code: Literals.updatecode[Language],
+                description: Literals.completedescription[Language],
             }));
             return response.data;
         } catch (error) {
@@ -93,15 +140,17 @@ export const CompletePurchaseorders = createAsyncThunk(
 
 export const DeletePurchaseorders = createAsyncThunk(
     'Purchaseorders/DeletePurchaseorders',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             delete data['edit'];
             delete data['delete'];
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PURCHASEORDER}/${data.Uuid}`);
             dispatch(fillPurchaseordernotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Satın alma başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {

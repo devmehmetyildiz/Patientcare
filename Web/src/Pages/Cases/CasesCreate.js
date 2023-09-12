@@ -14,16 +14,11 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import { FormContext } from '../../Provider/FormProvider'
+import Departments from '../../Containers/Departments/Departments'
 export default class CasesCreate extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      selecteddepartments: [],
-      selectedstatusOption: 0
-    }
-  }
-
+  PAGE_NAME = 'CasesCreate'
 
   componentDidMount() {
     const { GetDepartments } = this.props
@@ -38,7 +33,7 @@ export default class CasesCreate extends Component {
 
 
   render() {
-    const { Cases, Departments, Profile } = this.props
+    const { Cases, Departments, Profile, history } = this.props
 
     const Departmentoptions = Departments.list.map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -78,20 +73,20 @@ export default class CasesCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput required placeholder={Literals.Columns.Casecolor[Profile.Language]} name="Casecolor" attention="blue,red,green..." />
-                <FormInput required placeholder={Literals.Columns.CaseStatus[Profile.Language]} options={casestatusOption} onChange={this.handleChangeOption} value={this.state.selectedstatusOption} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Casecolor[Profile.Language]} name="Casecolor" attention="blue,red,green..." />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.CaseStatus[Profile.Language]} name="CaseStatus" options={casestatusOption} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} clearable search multiple options={Departmentoptions} onChange={this.handleChange} value={this.state.selecteddepartments} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Cases">
+                {history && <Link to="/Cases">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
+                </Link>}
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>
@@ -103,14 +98,12 @@ export default class CasesCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddCases, history, fillCasenotification, Departments, Profile } = this.props
-    const { list } = Departments
+    const { AddCases, history, Departments, fillCasenotification, Profile } = this.props
     const data = formToObject(e.target)
-    data.Departments = this.state.selecteddepartments.map(department => {
-      return list.find(u => u.Uuid === department)
+    data.CaseStatus = this.context.formstates[`${this.PAGE_NAME}/CaseStatus`]
+    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+      return (Departments.list || []).find(u => u.Uuid === id)
     })
-    data.CaseStatus = this.state.selectedstatusOption
-
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
@@ -135,12 +128,5 @@ export default class CasesCreate extends Component {
       AddCases({ data, history })
     }
   }
-
-  handleChange = (e, { value }) => {
-    this.setState({ selecteddepartments: value })
-  }
-
-  handleChangeOption = (e, { value }) => {
-    this.setState({ selectedstatusOption: value })
-  }
 }
+CasesCreate.contextType = FormContext

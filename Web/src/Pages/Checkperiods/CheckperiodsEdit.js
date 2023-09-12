@@ -17,21 +17,21 @@ import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
 export default class CheckperiodsEdit extends Component {
 
+  PAGE_NAME = 'CheckperiodsEdit'
+
   constructor(props) {
     super(props)
     this.state = {
-      selectedPeriods: [],
-      selectedDays: [],
-      selectedType: null,
       isDatafetched: false,
     }
   }
 
 
   componentDidMount() {
-    const { GetPeriods, GetCheckperiod, match, history, } = this.props
-    if (validator.isUUID(match.params.CheckperiodID)) {
-      GetCheckperiod(match.params.CheckperiodID)
+    const { GetPeriods, GetCheckperiod, match, history, CheckperiodID } = this.props
+    let Id = CheckperiodID || match?.params?.CheckperiodID
+    if (validator.isUUID(Id)) {
+      GetCheckperiod(Id)
       GetPeriods()
     } else {
       history.push("/Checkperiods")
@@ -45,19 +45,16 @@ export default class CheckperiodsEdit extends Component {
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
       Periods.list.length > 0 && !Periods.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedPeriods: selected_record.Periods.map(period => {
-          return period.Uuid
-        }), isDatafetched: true, selectedDays: selected_record.Occureddays.split(',').map(element => element.trim()), selectedType: selected_record.Periodtype
+        isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, Periods: selected_record.Perioduuids.map(u => { return u.PeriodID }) })
     }
-    console.log('Checkperiods: ', Checkperiods);
     Notification(Periods.notifications, removePeriodnotification)
     Notification(Checkperiods.notifications, removeCheckperiodnotification)
   }
 
   render() {
-    const { Checkperiods, Periods, Profile } = this.props
+    const { Checkperiods, Periods, Profile, history } = this.props
 
     const Periodoptions = Periods.list.map(period => {
       return { key: period.Uuid, text: period.Name, value: period.Uuid }
@@ -95,16 +92,16 @@ export default class CheckperiodsEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Form.Group widths={"equal"}>
-                <FormInput required placeholder={Literals.Columns.Occureddays[Profile.Language]} clearable search multiple options={Dayoptions} value={this.state.selectedDays} onChange={(e, { value }) => { this.setState({ selectedDays: value }) }} formtype="dropdown" />
-                <FormInput required placeholder={Literals.Columns.Periodtype[Profile.Language]} clearable search options={Periodtypeoption} value={this.state.selectedType} onChange={(e, { value }) => { this.setState({ selectedType: value }) }} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Occureddays[Profile.Language]} name="Occureddays" multiple options={Dayoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodtype[Profile.Language]} name="Periodtype" options={Periodtypeoption} formtype="dropdown" />
               </Form.Group>
-              <FormInput required placeholder={Literals.Columns.Periodstxt[Profile.Language]} clearable search multiple options={Periodoptions} value={this.state.selectedPeriods} onChange={(e, { value }) => { this.setState({ selectedPeriods: value }) }} formtype="dropdown" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodstxt[Profile.Language]} name="Periods" multiple options={Periodoptions} formtype="dropdown" />
               <Footerwrapper>
-                <Link to="/Checkperiods">
+                {history && <Link to="/Checkperiods">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
+                </Link>}
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>
@@ -118,17 +115,12 @@ export default class CheckperiodsEdit extends Component {
     e.preventDefault()
 
     const { EditCheckperiods, history, fillCheckperiodnotification, Periods, Checkperiods, Profile } = this.props
-    const { list } = Periods
-    const { selectedDays, selectedPeriods, selectedType } = this.state
     const data = formToObject(e.target)
-    data.Periods = selectedPeriods.map(station => {
-      return list.find(u => u.Uuid === station)
+    data.Periodtype = this.context.formstates[`${this.PAGE_NAME}/Periodtype`]
+    data.Occureddays = this.context.formstates[`${this.PAGE_NAME}/Occureddays`]
+    data.Periods = this.context.formstates[`${this.PAGE_NAME}/Periods`].map(id => {
+      return (Periods.list || []).find(u => u.Uuid === id)
     })
-    var days = selectedDays.map((day) => {
-      return day;
-    }).join(", ")
-    data.Occureddays = days
-    data.Periodtype = parseInt(selectedType);
 
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -150,10 +142,6 @@ export default class CheckperiodsEdit extends Component {
     } else {
       EditCheckperiods({ data: { ...Checkperiods.selected_record, ...data }, history })
     }
-  }
-
-  handleChange = (e, { value }) => {
-    this.setState({ selectedstations: value })
   }
 }
 CheckperiodsEdit.contextType = FormContext

@@ -1,21 +1,48 @@
 import React from 'react'
-import { Header } from 'semantic-ui-react'
+import { Header, Loader } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import Literals from './Literals'
 
-export default function WarehousesList({ Data, Columns, initialConfig, Profile }) {
+export default function WarehousesList({ Data, Columns, Stocks, initialConfig, Profile, Departments, Units, Stockmovements, Stockdefines }) {
+
+
+  const stockdefineCellhandler = (col) => {
+    if (Stockdefines.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Stockdefines.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
+
+  const departmentCellhandler = (col) => {
+    if (Departments.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Departments.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
 
   const renderRowSubComponent = React.useCallback(
     ({ row }) => {
-      let stocks = []
-      const decoratedstocks = Data.filter(u => u.Id === row.original.Id)
-      decoratedstocks.forEach(element => {
-        stocks = stocks.concat(element.Stocks)
-      });
+      const warehouse = Data.find(u => u.Id === row.original.Id)
+      let stocks = (Stocks.list || []).filter(u => u.WarehouseID === warehouse.Uuid)
+
+      const decoratedStocks = (stocks || []).map(stock => {
+        let amount = 0.0;
+        let movements = (Stockmovements.list || []).filter(u => u.StockID === stock.Uuid && u.Isactive)
+        for (const movement of movements) {
+          amount += (movement.Amount * movement.Movementtype);
+        }
+        return {
+          ...stock,
+          Amount: amount
+        }
+      })
+
       const stockcolumns = [
         { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-        { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: Literals.Columns.Department[Profile.Language], accessor: 'Stockdefine.Department.Name', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => stockdefineCellhandler(col) },
+        { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => departmentCellhandler(col) },
         { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
         { Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
         { Header: Literals.Columns.Maxamount[Profile.Language], accessor: 'Maxamount', sortable: true, canGroupBy: true, canFilter: true },
@@ -28,11 +55,11 @@ export default function WarehousesList({ Data, Columns, initialConfig, Profile }
         <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>{Literals.Columns.Stocks[Profile.Language]}</Header>
         <DataTable
           Columns={stockcolumns}
-          Data={stocks.sort((a, b) => a.Order - b.Order)}
+          Data={decoratedStocks.sort((a, b) => a.Order - b.Order)}
         />
       </div>
     }
-    , [])
+    , [Data, Departments, Units, Stockmovements, Stockdefines, Stocks])
 
 
   return (

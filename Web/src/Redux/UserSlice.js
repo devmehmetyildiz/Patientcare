@@ -4,6 +4,33 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'User added successfully',
+        tr: 'Kullanıcı Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'User updated successfully',
+        tr: 'Kullanıcı Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'User Deleted successfully',
+        tr: 'Kullanıcı Başarı ile Silindi'
+    },
+}
+
 export const GetUsers = createAsyncThunk(
     'Users/GetUsers',
     async (_, { dispatch }) => {
@@ -34,15 +61,22 @@ export const GetUser = createAsyncThunk(
 
 export const AddUsers = createAsyncThunk(
     'Users/AddUsers',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Userrole, ROUTES.USER, data);
             dispatch(fillUsernotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Kullanıcı başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Users');
+            dispatch(fillUsernotification({
+                type: 'Clear',
+                code: 'UsersCreate',
+                description: '',
+            }));
+            history && history.push('/Users');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +88,25 @@ export const AddUsers = createAsyncThunk(
 
 export const EditUsers = createAsyncThunk(
     'Users/EditUsers',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Userrole, ROUTES.USER, data);
             dispatch(fillUsernotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Kullanıcı başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Users');
+            dispatch(fillUsernotification({
+                type: 'Clear',
+                code: 'UsersEdit',
+                description: '',
+            }));
+            if (redirectUrl && redirectUrl === 'Goback') {
+                history && history.goBack()
+            }
+            history && history.push('/Users');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +118,17 @@ export const EditUsers = createAsyncThunk(
 
 export const DeleteUsers = createAsyncThunk(
     'Users/DeleteUsers',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             delete data['edit'];
             delete data['delete'];
             const response = await instanse.delete(config.services.Userrole, `${ROUTES.USER}/${data.Uuid}`);
             dispatch(fillUsernotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Kullanıcı başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {

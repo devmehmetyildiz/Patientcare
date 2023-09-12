@@ -6,6 +6,33 @@ import config from "../Config";
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'File added successfully',
+        tr: 'Dosya Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'File updated successfully',
+        tr: 'Dosya Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'File Deleted successfully',
+        tr: 'Dosya Başarı ile Silindi'
+    },
+}
+
 export const GetFiles = createAsyncThunk(
     'Files/GetFiles',
     async (_, { dispatch }) => {
@@ -36,8 +63,10 @@ export const GetFile = createAsyncThunk(
 
 export const AddFiles = createAsyncThunk(
     'Files/AddFiles',
-    async ({ data, history, url }, { dispatch }) => {
+    async ({ data, history, url }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const localcookies = new Cookies();
             const response = await axios({
                 method: `post`,
@@ -47,10 +76,15 @@ export const AddFiles = createAsyncThunk(
             })
             dispatch(fillFilenotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Dosya başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push(url ? url : '/Files')
+            dispatch(fillFilenotification({
+                type: 'Clear',
+                code: 'FilesCreate',
+                description: '',
+            }));
+            history && history.push(url ? url : '/Files')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -62,8 +96,10 @@ export const AddFiles = createAsyncThunk(
 
 export const EditFiles = createAsyncThunk(
     'Files/EditFiles',
-    async ({ data, history, url }, { dispatch }) => {
+    async ({ data, history, url }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const localcookies = new Cookies();
             const response = await axios({
                 method: `put`,
@@ -73,8 +109,13 @@ export const EditFiles = createAsyncThunk(
             })
             dispatch(fillFilenotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Dosya başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            dispatch(fillFilenotification({
+                type: 'Clear',
+                code: 'FilesEdit',
+                description: '',
             }));
             history && history.push(url ? url : '/Files')
             return response.data;
@@ -88,15 +129,17 @@ export const EditFiles = createAsyncThunk(
 
 export const DeleteFiles = createAsyncThunk(
     'Files/DeleteFiles',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             delete data['edit'];
             delete data['delete'];
             const response = await instanse.delete(config.services.File, `${ROUTES.FILE}/${data.Uuid}`);
             dispatch(fillFilenotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Dosya başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {

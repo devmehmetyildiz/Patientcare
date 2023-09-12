@@ -14,15 +14,10 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
+import { FormContext } from '../../Provider/FormProvider'
 export default class PurchaseorderstockmovementsCreate extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectedstock: "",
-      selectedmovement: "",
-    }
-  }
 
+  PAGE_NAME = "PurchaseorderstockmovementsCreate"
 
   componentDidMount() {
     const { GetPurchaseorderstocks } = this.props
@@ -63,10 +58,10 @@ export default class PurchaseorderstockmovementsCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} value={this.state.selectedstock} options={Purchaseorderstockoptions} onChange={this.handleChangeStock} formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockID" options={Purchaseorderstockoptions} formtype='dropdown' />
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
-                <FormInput placeholder={Literals.Columns.Movementtype[Profile.Language]} value={this.state.selectedmovement} options={Movementoptions} onChange={this.handleChangeMovement} fromtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} fromtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Purchaseorderstockmovements">
@@ -88,8 +83,8 @@ export default class PurchaseorderstockmovementsCreate extends Component {
     data.Movementdate = new Date()
     data.Newvalue = 0
     data.Prevvalue = 0
-    data.Movementtype = this.state.selectedmovement
-    data.StockID = this.state.selectedstock
+    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
+    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
     data.Status = 0
     data.Amount = parseFloat(data.Amount)
 
@@ -112,15 +107,6 @@ export default class PurchaseorderstockmovementsCreate extends Component {
     }
   }
 
-
-  handleChangeStock = (e, { value }) => {
-    this.setState({ selectedstock: value })
-  }
-  handleChangeMovement = (e, { value }) => {
-    this.setState({ selectedmovement: value })
-  }
-
-
   getLocalDate = () => {
     var curr = new Date();
     curr.setDate(curr.getDate() + 3);
@@ -128,3 +114,4 @@ export default class PurchaseorderstockmovementsCreate extends Component {
     return date
   }
 }
+PurchaseorderstockmovementsCreate.contextType = FormContext

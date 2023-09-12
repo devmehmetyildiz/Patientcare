@@ -16,21 +16,22 @@ import validator from '../../Utils/Validator'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
 export default class StocksEdit extends Component {
+
+  PAGe_NAME = "StocksEdit"
+
   constructor(props) {
     super(props)
     this.state = {
-      selecteddepartments: "",
-      selectedstockdefine: "",
-      selectedwarehouse: "",
-      open: false
+      isDatafetched: false
     }
   }
 
 
   componentDidMount() {
-    const { GetStock, GetWarehouses, match, history, GetDepartments, GetStockdefines } = this.props
-    if (match.params.StockID) {
-      GetStock(match.params.StockID)
+    const { StockID, GetStock, GetWarehouses, match, history, GetDepartments, GetStockdefines } = this.props
+    let Id = StockID || match.params.StockID
+    if (validator.isUUID(Id)) {
+      GetStock(Id)
       GetDepartments()
       GetStockdefines()
       GetWarehouses()
@@ -51,12 +52,9 @@ export default class StocksEdit extends Component {
       && Warehouses.list.length > 0 && !Warehouses.isLoading
       && Stockdefines.list.length > 0 && !Stockdefines.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selecteddepartments: selected_record.DepartmentID,
-        selectedstockdefine: selected_record.StockdefineID,
-        selectedwarehouse: selected_record.WarehouseID,
         isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
     Notification(Stocks.notifications, removeStocknotification)
     Notification(Warehouses.notifications, removeWarehousenotification)
@@ -93,19 +91,19 @@ export default class StocksEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} onChange={this.handleChangeWarehouse} value={this.state.selectedwarehouse} formtype='dropdown' />
-                <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} onChange={this.handleChangeStockdefine} value={this.state.selectedstockdefine} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
-                <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
-                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} options={Departmentoptions} onChange={this.handleChangeDepartment} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type="date" defaultValue={'2023-06-20'} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoptions} name="DepartmentID" formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Stocks">
@@ -124,9 +122,9 @@ export default class StocksEdit extends Component {
     e.preventDefault()
     const { EditStocks, history, fillStocknotification, Stocks, Profile } = this.props
     const data = formToObject(e.target)
-    data.DepartmentID = this.state.selecteddepartments
-    data.StockdefineID = this.state.selectedstockdefine
-    data.WarehouseID = this.state.selectedwarehouse
+    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
+    data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
+    data.WarehouseID = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
@@ -145,17 +143,6 @@ export default class StocksEdit extends Component {
     } else {
       EditStocks({ data: { ...Stocks.selected_record, ...data }, history })
     }
-  }
-
-  handleChangeDepartment = (e, { value }) => {
-    this.setState({ selecteddepartments: value })
-  }
-
-  handleChangeStockdefine = (e, { value }) => {
-    this.setState({ selectedstockdefine: value })
-  }
-  handleChangeWarehouse = (e, { value }) => {
-    this.setState({ selectedwarehouse: value })
   }
 
   getLocalDate = (inputdate) => {

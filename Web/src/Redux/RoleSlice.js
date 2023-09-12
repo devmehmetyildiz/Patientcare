@@ -4,6 +4,34 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Role added successfully',
+        tr: 'Rol Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Role updated successfully',
+        tr: 'Rol Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Role Deleted successfully',
+        tr: 'Rol Başarı ile Silindi'
+    },
+}
+
+
 export const GetRoles = createAsyncThunk(
     'Roles/GetRoles',
     async (_, { dispatch }) => {
@@ -62,15 +90,22 @@ export const GetPrivilegegroups = createAsyncThunk(
 
 export const AddRoles = createAsyncThunk(
     'Roles/AddRoles',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Userrole, ROUTES.ROLE, data);
             dispatch(fillRolenotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Rol başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Roles');
+            dispatch(fillRolenotification({
+                type: 'Clear',
+                code: 'RolesCreate',
+                description: '',
+            }));
+            history && history.push('/Roles');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -82,15 +117,22 @@ export const AddRoles = createAsyncThunk(
 
 export const EditRoles = createAsyncThunk(
     'Roles/EditRoles',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Userrole, ROUTES.ROLE, data);
             dispatch(fillRolenotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Rol başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Roles');
+            dispatch(fillRolenotification({
+                type: 'Clear',
+                code: 'RolesUpdate',
+                description: '',
+            }));
+            history && history.push('/Roles');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -102,15 +144,17 @@ export const EditRoles = createAsyncThunk(
 
 export const DeleteRoles = createAsyncThunk(
     'Roles/DeleteRoles',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Userrole, `${ROUTES.ROLE}/${data.Uuid}`);
             dispatch(fillRolenotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Rol başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {

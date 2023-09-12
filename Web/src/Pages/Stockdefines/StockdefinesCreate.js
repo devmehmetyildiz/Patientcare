@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form } from 'semantic-ui-react'
-import { Breadcrumb, Button} from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
@@ -14,15 +14,10 @@ import validator from '../../Utils/Validator'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
+import { FormContext } from '../../Provider/FormProvider'
 export default class StockdefinesCreate extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      selecteddepartment: "",
-      selectedunit: ""
-    }
-  }
+  PAGE_NAME = "StockdefinesCreate"
 
   componentDidMount() {
     const { GetDepartments, GetUnits } = this.props
@@ -40,11 +35,11 @@ export default class StockdefinesCreate extends Component {
   render() {
     const { Departments, Units, Stockdefines, history, Profile } = this.props
 
-    const Departmentoptions = Departments.list.map(department => {
-      return { key: department.Uuid, text: department.Name, value: department.Uuid }
+    const Departmentoption = Departments.list.map(station => {
+      return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
-    const Unitoptions = Units.list.map(unit => {
-      return { key: unit.Uuid, text: unit.Name, value: unit.Uuid }
+    const Unitoption = Units.list.map(station => {
+      return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
 
     return (
@@ -63,12 +58,12 @@ export default class StockdefinesCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths={"equal"}>
-                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput  placeholder={Literals.Columns.Description[Profile.Language]} name="Description" fluid />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Description[Profile.Language]} name="Description" />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput required placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartment} clearable options={Departmentoptions} onChange={this.handleChangeDepartement} formtype='dropdown' />
-                <FormInput required placeholder={Literals.Columns.Unit[Profile.Language]} value={this.state.selectedunit} clearable options={Unitoptions} onChange={this.handleChangeUnit} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoption} name="DepartmentID" formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unit[Profile.Language]} options={Unitoption} name="UnitID" formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 {history && <Link to="/Stockdefines">
@@ -88,18 +83,18 @@ export default class StockdefinesCreate extends Component {
 
     const { AddStockdefines, history, fillStockdefinenotification, Profile } = this.props
     const data = formToObject(e.target)
-    data.UnitID = this.state.selectedunit
-    data.DepartmentID = this.state.selecteddepartment
+    data.UnitID = this.context.formstates[`${this.PAGE_NAME}/UnitID`]
+    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description:  Literals.Messages.NameRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
     }
     if (!validator.isUUID(data.DepartmentID)) {
-      errors.push({ type: 'Error', code:  Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentsRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentsRequired[Profile.Language] })
     }
     if (!validator.isUUID(data.UnitID)) {
-      errors.push({ type: 'Error', code:  Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.UnitsRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.UnitsRequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
@@ -117,3 +112,4 @@ export default class StockdefinesCreate extends Component {
     this.setState({ selecteddepartment: value })
   }
 }
+StockdefinesCreate.contextType = FormContext

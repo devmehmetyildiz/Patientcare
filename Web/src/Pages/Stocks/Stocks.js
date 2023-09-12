@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon } from 'semantic-ui-react'
+import { Icon, Loader } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
@@ -23,13 +23,21 @@ export default class Stocks extends Component {
   }
 
   componentDidMount() {
-    const { GetStocks } = this.props
+    const { GetStocks, GetStockdefines, GetDepartments, GetStockmovements, GetWarehouses } = this.props
     GetStocks()
+    GetStockdefines()
+    GetDepartments()
+    GetStockmovements()
+    GetWarehouses()
   }
 
   componentDidUpdate() {
-    const { Stocks, removeStocknotification } = this.props
+    const { Stocks, Warehouses, removeWarehousenotification, removeStocknotification, Departments, Stockdefines, Stockmovements, removeStockdefinenotification, removeDepartmentnotification, removeStockmovementnotification } = this.props
     Notification(Stocks.notifications, removeStocknotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Stockmovements.notifications, removeStockmovementnotification)
+    Notification(Warehouses.notifications, removeWarehousenotification)
   }
 
 
@@ -41,12 +49,13 @@ export default class Stocks extends Component {
 
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'Stockdefine.Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'Stockdefine.Department.Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.warehouseCellhandler(col) },
+      { Header: Literals.Columns.Warehouse[Profile.Language], accessor: 'WarehouseID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
+      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
+      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
       { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Source[Profile.Language], accessor: 'Source', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
@@ -65,10 +74,13 @@ export default class Stocks extends Component {
       }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
       columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
-      }) : []
+      }) : [],
+      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
+        return item.key
+      }) : [],
     };
 
-    const list = (Stocks.list || []).map(item => {
+    const list = (Stocks.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         watch: <Link to={`/Stockmovement/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
@@ -114,5 +126,46 @@ export default class Stocks extends Component {
           <StocksDelete />
         </React.Fragment>
     )
+  }
+
+  stockdefineCellhandler = (col) => {
+    const { Stockdefines } = this.props
+    if (Stockdefines.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Stockdefines.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
+  warehouseCellhandler = (col) => {
+    const { Warehouses } = this.props
+    if (Warehouses.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Warehouses.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
+
+  departmentCellhandler = (col) => {
+    const { Departments } = this.props
+    if (Departments.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Departments.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
+
+  amountCellhandler = (col) => {
+    const { Stockmovements, Stocks } = this.props
+    if (Stockmovements.isLoading || Stocks.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const selectedStock = (Stocks.list || []).find(u => u.Id === col.row.original.Id)
+      let amount = 0.0;
+      let movements = (Stockmovements.list || []).filter(u => u.StockID === selectedStock.Uuid && u.Isactive)
+      movements.forEach(movement => {
+        amount += (movement.Amount * movement.Movementtype);
+      });
+      return amount
+    }
   }
 }

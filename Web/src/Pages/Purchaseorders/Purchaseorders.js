@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon } from 'semantic-ui-react'
+import { Icon, Loader } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
@@ -24,22 +24,32 @@ export default class Purchaseorders extends Component {
   }
 
   componentDidMount() {
-    const { GetPurchaseorders, GetPurchaseorderstocks } = this.props
+    const { GetPurchaseorders, GetPurchaseorderstocks, GetStockdefines, GetDepartments, GetPurchaseorderstockmovements, GetCases } = this.props
     GetPurchaseorders()
     GetPurchaseorderstocks()
+    GetStockdefines()
+    GetDepartments()
+    GetPurchaseorderstockmovements()
+    GetCases()
   }
 
   componentDidUpdate() {
-    const { Purchaseorders, removePurchaseordernotification, Purchaseorderstocks,
-      removePurchaseorderstocknotification } = this.props
+    const { Purchaseorders, removePurchaseordernotification, Purchaseorderstocks, Cases,
+      removePurchaseorderstocknotification, Departments, Stockdefines, Purchaseorderstockmovements,
+      removePurchaseorderstockmovementnotification, removeCasenotification,
+      removeDepartmentnotification, removeStockdefinenotification } = this.props
     Notification(Purchaseorders.notifications, removePurchaseordernotification)
     Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
+    Notification(Purchaseorderstockmovements.notifications, removePurchaseorderstockmovementnotification)
+    Notification(Cases.notifications, removeCasenotification)
   }
 
   render() {
 
-
-    const { Purchaseorders, Profile, handleCompletemodal, handleDeletemodal, handleSelectedPurchaseorder } = this.props
+    const { Purchaseorders, Profile, handleCompletemodal, handleDeletemodal, handleSelectedPurchaseorder,
+      Departments, Stockdefines, Purchaseorderstocks, Purchaseorderstockmovements } = this.props
     const { isLoading, isDispatching } = Purchaseorders
 
     const Columns = [
@@ -61,7 +71,7 @@ export default class Purchaseorders extends Component {
       { Header: Literals.Columns.Companypersonelname[Profile.Language], accessor: 'Companypersonelname', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Purchasedate[Profile.Language], accessor: 'Purchasedate', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.CaseName[Profile.Language], accessor: 'Case.Name', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.CaseName[Profile.Language], accessor: 'CaseID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.caseCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -78,10 +88,13 @@ export default class Purchaseorders extends Component {
       }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
       columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
-      }) : []
+      }) : [],
+      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
+        return item.key
+      }) : [],
     };
 
-    const list = (Purchaseorders.list || []).map(item => {
+    const list = (Purchaseorders.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         complete: <Icon link size='large' color='red' name='check square' onClick={() => {
@@ -127,6 +140,10 @@ export default class Purchaseorders extends Component {
                   Columns={Columns}
                   initialConfig={initialConfig}
                   Profile={Profile}
+                  Departments={Departments}
+                  Stockdefines={Stockdefines}
+                  Purchaseorderstocks={Purchaseorderstocks}
+                  Purchaseorderstockmovements={Purchaseorderstockmovements}
                 />
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
@@ -145,4 +162,12 @@ export default class Purchaseorders extends Component {
     this.setState({ expandedRow: newvalue })
   }
 
+  caseCellhandler = (col) => {
+    const { Cases } = this.props
+    if (Cases.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Cases.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
 }

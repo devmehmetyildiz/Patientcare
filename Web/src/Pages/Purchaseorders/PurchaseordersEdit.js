@@ -22,18 +22,16 @@ export default class PurchaseordersEdit extends Component {
     super(props)
     this.state = {
       selectedStocks: [],
-      selectedCase: '',
       isDatafetched: false,
-      selectedWarehouse: '',
-      inputvalues: {},
       open: false
     }
   }
 
   componentDidMount() {
-    const { GetPurchaseorder, match, history, GetStockdefines, GetCases, GetDepartments, GetWarehouses } = this.props
-    if (match.params.PurchaseorderID) {
-      GetPurchaseorder(match.params.PurchaseorderID)
+    const { PurchaseorderID, GetPurchaseorder, match, history, GetStockdefines, GetCases, GetDepartments, GetWarehouses } = this.props
+    let Id = PurchaseorderID || match?.params?.PurchaseorderID
+    if (validator.isUUID(Id)) {
+      GetPurchaseorder(Id)
       GetStockdefines()
       GetCases()
       GetDepartments()
@@ -55,7 +53,7 @@ export default class PurchaseordersEdit extends Component {
       && Departments.list.length > 0 && !Departments.isLoading
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedStocks: selected_record.Stocks, isDatafetched: true, selectedCase: selected_record.CaseID, selectedWarehouse: selected_record.WarehouseID
+        selectedStocks: selected_record.Stocks, isDatafetched: true
       })
       this.context.setFormstates(selected_record)
     }
@@ -111,23 +109,23 @@ export default class PurchaseordersEdit extends Component {
                       content: <React.Fragment>
                         <div className='h-[calc(62vh-10px)]'>
                           <Form.Group widths={'equal'}>
-                            <FormInput placeholder={Literals.Columns.Warehouse[Profile.Language]} value={this.state.selectedWarehouse} options={Warehousesoption} onChange={(e, data) => { this.setState({ selectedWarehouse: data.value }) }} formtype='dropdown' />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} name="WarehouseID" options={Warehousesoption} formtype='dropdown' />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
-                            <FormInput placeholder={Literals.Columns.Company[Profile.Language]} name="Company" />
-                            <FormInput placeholder={Literals.Columns.Purchaseprice[Profile.Language]} name="Purchaseprice" type='number' />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Company[Profile.Language]} name="Company" />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchaseprice[Profile.Language]} name="Purchaseprice" type='number' />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
-                            <FormInput placeholder={Literals.Columns.Companypersonelname[Profile.Language]} name="Companypersonelname" />
-                            <FormInput placeholder={Literals.Columns.Purchasenumber[Profile.Language]} name="Purchasenumber" />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Companypersonelname[Profile.Language]} name="Companypersonelname" />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchasenumber[Profile.Language]} name="Purchasenumber" />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
-                            <FormInput placeholder={Literals.Columns.CaseName[Profile.Language]} value={this.state.selectedCase} clearable search options={Casesoption} onChange={(e, data) => { this.setState({ selectedCase: data.value }) }} formtype='dropdown' />
-                            <FormInput placeholder={Literals.Columns.Personelname[Profile.Language]} name="Personelname" />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CaseName[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Personelname[Profile.Language]} name="Personelname" />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
-                            <FormInput placeholder={Literals.Columns.Purchasedate[Profile.Language]} name="Purchasedate" type='date' />
-                            <FormInput placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchasedate[Profile.Language]} name="Purchasedate" type='date' />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
                           </Form.Group>
                         </div>
                       </React.Fragment>
@@ -245,8 +243,8 @@ export default class PurchaseordersEdit extends Component {
       Companypersonelname: formData.Companypersonelname,
       Personelname: formData.Personelname,
       Purchasedate: formData.Purchasedate,
-      CaseID: this.state.selectedCase,
-      WarehouseID: this.state.selectedWarehouse,
+      CaseID: this.context.formstates[`${this.PAGE_NAME}/CaseID`],
+      WarehouseID: this.context.formstates[`${this.PAGE_NAME}/WarehouseID`],
       Stocks: stocks
     }
 

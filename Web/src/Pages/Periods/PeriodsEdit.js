@@ -15,6 +15,9 @@ import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 export default class PeriodsEdit extends Component {
+
+  PAGE_NAME = "PeriodsEdit"
+
   constructor(props) {
     super(props)
     const isDatafetched = false
@@ -24,9 +27,10 @@ export default class PeriodsEdit extends Component {
   }
 
   componentDidMount() {
-    const { GetPeriod, match, history } = this.props
-    if (match.params.PeriodID) {
-      GetPeriod(match.params.PeriodID)
+    const { GetPeriod, match, history, PeriodID } = this.props
+    let Id = PeriodID || match?.params?.PeriodID
+    if (validator.isUUID(Id)) {
+      GetPeriod(Id)
     } else {
       history.push("/Periods")
     }
@@ -40,14 +44,14 @@ export default class PeriodsEdit extends Component {
       this.setState({
         isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
     Notification(Periods.notifications, removePeriodnotification)
   }
 
   render() {
 
-    const { Periods, Profile } = this.props
+    const { Periods, Profile, history } = this.props
     const { isLoading, isDispatching } = Periods
 
     return (
@@ -66,16 +70,16 @@ export default class PeriodsEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Field>
-                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               </Form.Field>
               <Form.Group widths={"equal"}>
-                <FormInput required type='time' placeholder={Literals.Columns.Occuredtime[Profile.Language]} name="Occuredtime" />
-                <FormInput required type='time' placeholder={Literals.Columns.Checktime[Profile.Language]} name="Checktime" />
+                <FormInput page={this.PAGE_NAME} required type='time' placeholder={Literals.Columns.Occuredtime[Profile.Language]} name="Occuredtime" />
+                <FormInput page={this.PAGE_NAME} required type='time' placeholder={Literals.Columns.Checktime[Profile.Language]} name="Checktime" />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Periods">
+                {history && <Link to="/Periods">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
+                </Link>}
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>

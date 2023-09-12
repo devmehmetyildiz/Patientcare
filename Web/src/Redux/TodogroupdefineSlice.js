@@ -4,6 +4,33 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Todo Group Define added successfully',
+        tr: 'Yapılacak Grup Tanımı Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Todo Group Define updated successfully',
+        tr: 'Yapılacak Grup Tanımı Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Todo Group Define Deleted successfully',
+        tr: 'Yapılacak Grup Tanımı Başarı ile Silindi'
+    },
+}
+
 export const GetTodogroupdefines = createAsyncThunk(
     'Todogroupdefines/GetTodogroupdefines',
     async (_, { dispatch }) => {
@@ -34,15 +61,44 @@ export const GetTodogroupdefine = createAsyncThunk(
 
 export const AddTodogroupdefines = createAsyncThunk(
     'Todogroupdefines/AddTodogroupdefines',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Setting, ROUTES.TODOGROUPDEFINE, data);
             dispatch(fillTodogroupdefinenotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Yapılacaklar grup tanımı başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Todogroupdefines');
+            dispatch(fillTodogroupdefinenotification({
+                type: 'Clear',
+                code: 'TodogroupdefinesCreate',
+                description: '',
+            }));
+            history && history.push('/Todogroupdefines');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillTodogroupdefinenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddRecordTodogroupdefines = createAsyncThunk(
+    'Todogroupdefines/AddRecordTodogroupdefines',
+    async ({ data, history }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Setting, ROUTES.TODOGROUPDEFINE + '/AddRecord', data);
+            dispatch(fillTodogroupdefinenotification({
+                type: 'Success',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
+            }));
+            history && history.push('/Todogroupdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +110,22 @@ export const AddTodogroupdefines = createAsyncThunk(
 
 export const EditTodogroupdefines = createAsyncThunk(
     'Todogroupdefines/EditTodogroupdefines',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Setting, ROUTES.TODOGROUPDEFINE, data);
             dispatch(fillTodogroupdefinenotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Yapılacaklar grup tanımı başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Todogroupdefines');
+            dispatch(fillTodogroupdefinenotification({
+                type: 'Clear',
+                code: 'TodogroupdefinesUpdate',
+                description: '',
+            }));
+            history && history.push('/Todogroupdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +137,17 @@ export const EditTodogroupdefines = createAsyncThunk(
 
 export const DeleteTodogroupdefines = createAsyncThunk(
     'Todogroupdefines/DeleteTodogroupdefines',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.TODOGROUPDEFINE}/${data.Uuid}`);
             dispatch(fillTodogroupdefinenotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Yapılacaklar grup tanımı başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {
@@ -156,6 +221,17 @@ export const TodogroupdefinesSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(AddTodogroupdefines.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddRecordTodogroupdefines.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddRecordTodogroupdefines.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddRecordTodogroupdefines.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Checkbox, Divider, Form } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -14,7 +14,10 @@ import validator from '../../Utils/Validator'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
-export class RolesCreate extends Component {
+import { FormContext } from '../../Provider/FormProvider'
+export default class RolesCreate extends Component {
+
+    PAGE_NAME = 'RolesCreate'
 
     constructor(props) {
         super(props)
@@ -31,12 +34,12 @@ export class RolesCreate extends Component {
 
     componentDidUpdate() {
         const { Roles, removeRolenotification } = this.props
-        Notification(Roles.notifications, removeRolenotification)
+        Notification(Roles.notifications, removeRolenotification, this.context.clearForm)
     }
 
 
     render() {
-        const { Roles, Profile } = this.props
+        const { Roles, Profile, history } = this.props
         const { privileges, privilegegroups, isLoading, isDispatching } = Roles
 
         return (
@@ -54,8 +57,8 @@ export class RolesCreate extends Component {
                     <Pagedivider />
                     <Contentwrapper>
                         <Form onSubmit={this.handleSubmit}>
-                            <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                            <div className='mb-4 outline outline-[1px] rounded-md outline-gray-200 p-4 overflow-y-auto max-h-[calc(100vh-26.2rem)]'>
+                            <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                            <div className='mb-4 outline outline-[1px] rounded-md outline-gray-200 p-4 overflow-y-auto max-h-[calc(100vh-30.2rem)]'>
                                 {privilegegroups.map(privilegegroup => {
                                     return <div key={privilegegroup} className="mb-8">
                                         <div className='flex flex-row justify-start items-center'>
@@ -81,9 +84,12 @@ export class RolesCreate extends Component {
                                 })}
                             </div>
                             <Footerwrapper>
-                                <Link to="/Roles">
-                                    <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                                </Link>
+                                <Form.Group widths={'equal'}>
+                                    {history && <Link to="/Roles">
+                                        <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+                                    </Link>}
+                                    <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.clearForm(this.PAGE_NAME) }}>{Literals.Button.Clear[Profile.Language]}</Button>
+                                </Form.Group>
                                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
                             </Footerwrapper>
                         </Form>
@@ -139,4 +145,4 @@ export class RolesCreate extends Component {
             : this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return el.code !== e.target.id; }) })
     }
 }
-export default RolesCreate
+RolesCreate.contextType = FormContext

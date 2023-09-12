@@ -5,6 +5,9 @@ import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
+import Literals from './Literals'
+import validator from '../../Utils/Validator'
+import FormInput from '../../Utils/FormInput'
 
 export default class PasswordChange extends Component {
 
@@ -26,30 +29,30 @@ export default class PasswordChange extends Component {
             <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
               <Breadcrumb size='big'>
                 <Link to={"/Home"}>
-                  <Breadcrumb.Section>Profil</Breadcrumb.Section>
+                  <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                 </Link>
                 <Breadcrumb.Divider icon='right chevron' />
                 <Breadcrumb.Section>{username}</Breadcrumb.Section>
                 <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Parola Değişikliği</Breadcrumb.Section>
               </Breadcrumb>
             </Header>
           </div>
           <Divider className='w-full  h-[1px]' />
           <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-            <Form className='' onSubmit={this.handleSubmit}>
-              <Form.Field>
-                <Form.Input type='password' label="Güncel Parolanız" placeholder="Güncel Parolanız" name="oldpassword" fluid />
-              </Form.Field>
+            <Form onSubmit={this.handleSubmit}>
+              <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Oldpassword[Profile.Language]} name="Oldpassword" />
               <Form.Group widths={"equal"}>
-                <Form.Input type='password' label="Yeni Parolanız" placeholder="Yeni Parolanız" name="newpassword" fluid />
-                <Form.Input type='password' label="Yeni Parola Yeniden" placeholder="Yeni Parola Yeniden" name="newpasswordRe" fluid />
+                <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Newpassword[Profile.Language]} name="Newpassword" />
+                <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Newpasswordre[Profile.Language]} name="Newpasswordre" />
               </Form.Group>
               <div className='flex flex-row w-full justify-between py-4  items-center'>
-                <Link to="/Home">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>Oluştur</Button>
+                <div onClick={(e) => {
+                  e.preventDefault()
+                  this.props.history.goBack()
+                }}>
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+                </div>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
               </div>
             </Form>
           </div>
@@ -61,23 +64,23 @@ export default class PasswordChange extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { ChangePassword, history, fillnotification, Profile } = this.props
+    const { history, fillnotification, Profile, Changepassword } = this.props
 
     const data = formToObject(e.target)
 
     let errors = []
-    if (!data.oldpassword || !data.oldpassword === '') {
-      errors.push({ type: 'Error', code: 'Profil', description: 'Eski şifrenizi girmediniz' })
+    if (!validator.isString(data.Oldpassword)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Oldpasswordrequired[Profile.Language] })
     }
-    if (!data.newpassword || !data.newpassword === '') {
-      errors.push({ type: 'Error', code: 'Profil', description: 'Yeni şifrenizi girmediniz' })
+    if (!validator.isString(data.Newpassword)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Newpasswordrequired[Profile.Language] })
     }
-    if (!data.newpasswordRe || !data.newpasswordRe === '') {
-      errors.push({ type: 'Error', code: 'Profil', description: 'Yeni şifrenizi girmediniz' })
+    if (!validator.isString(data.Newpasswordre)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Newpasswordrerequired[Profile.Language] })
     }
-    if (data.newpassword && data.newpasswordRe) {
-      if (data.newpassword !== data.newpasswordRe) {
-        errors.push({ type: 'Error', code: 'Profil', description: 'Yeni girilen şifreler eşleşmiyor' })
+    if (data.Newpassword && data.Newpasswordre) {
+      if (data.Newpassword !== data.Newpasswordre) {
+        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Passworddidntmatch[Profile.Language] })
       }
     }
     if (errors.length > 0) {
@@ -85,13 +88,7 @@ export default class PasswordChange extends Component {
         fillnotification(error)
       })
     } else {
-      ChangePassword({
-        username: Profile.username,
-        oldpassword: data.oldpassword,
-        newpassword: data.newpassword
-      }, history)
+      Changepassword({ data, history })
     }
   }
-
-
 }

@@ -15,19 +15,21 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
 export default class TodogroupdefinesEdit extends Component {
+
+  PAGE_NAME = "TodogroupdefinesEdit"
+
   constructor(props) {
     super(props)
     this.state = {
-      selectedTododefines: [],
       isDatafetched: false,
-      selectedDepartment: "",
     }
   }
 
   componentDidMount() {
-    const { GetTodogroupdefine, match, history, GetTododefines, GetDepartments } = this.props
-    if (match.params.TodogroupdefineID) {
-      GetTodogroupdefine(match.params.TodogroupdefineID)
+    const { TodogroupdefineID, GetTodogroupdefine, match, history, GetTododefines, GetDepartments } = this.props
+    let Id = TodogroupdefineID || match?.params?.TodogroupdefineID
+    if (validator.isUUID(Id)) {
+      GetTodogroupdefine(Id)
       GetTododefines()
       GetDepartments()
     } else {
@@ -40,12 +42,9 @@ export default class TodogroupdefinesEdit extends Component {
     const { selected_record, isLoading } = Todogroupdefines
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Tododefines.list.length > 0 && !Tododefines.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedTododefines: selected_record.Tododefines.map(todos => {
-          return todos.Uuid
-        }), isDatafetched: true,
-        selectedDepartment: selected_record.DepartmentID
+        isDatafetched: true,
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, Tododefines: selected_record.Tododefineuuids.map(u => { return u.TododefineID }) })
     }
     Notification(Todogroupdefines.notifications, removeTodogroupdefinenotification)
     Notification(Tododefines.notifications, removeTododefinenotification)
@@ -79,10 +78,10 @@ export default class TodogroupdefinesEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Form.Group widths={'equal'}>
-                <FormInput required placeholder={Literals.Columns.Tododefines[Profile.Language]} value={this.state.selectedTododefines} clearable multiple selection options={Tododefineoptions} onChange={(e, { value }) => { this.setState({ selectedTododefines: value }) }} formtype='dropdown' />
-                <FormInput required placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selectedDepartment} clearable selection options={Departmentoptions} onChange={(e, { value }) => { this.setState({ selectedDepartment: value }) }} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Tododefines[Profile.Language]} name="Tododefines" multiple options={Tododefineoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Todogroupdefines">
@@ -101,12 +100,12 @@ export default class TodogroupdefinesEdit extends Component {
     e.preventDefault()
 
     const { EditTodogroupdefines, history, fillTodogroupdefinenotification, Todogroupdefines, Profile, Tododefines } = this.props
-    const { list } = Tododefines
     const data = formToObject(e.target)
-    data.Tododefines = this.state.selectedTododefines.map(tododefines => {
-      return list.find(u => u.Uuid === tododefines)
+    data.Tododefines = this.context.formstates[`${this.PAGE_NAME}/Tododefines`].map(id => {
+      return (Tododefines.list || []).find(u => u.Uuid === id)
     })
-    data.DepartmentID = this.state.selectedDepartment
+    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
+
 
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -127,8 +126,5 @@ export default class TodogroupdefinesEdit extends Component {
     }
   }
 
-  handleChange = (e, { value }) => {
-    this.setState({ selectedtodos: value })
-  }
 }
 TodogroupdefinesEdit.contextType = FormContext

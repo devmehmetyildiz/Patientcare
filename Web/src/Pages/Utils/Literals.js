@@ -14,9 +14,25 @@ const Literals = {
             tr: 'Görünüm',
             en: 'Visible'
         },
+        Group: {
+            tr: 'Gruplama',
+            en: 'Group By'
+        },
+        Excelimport: {
+            tr: 'Excel Ekle',
+            en: 'Excel İmport'
+        },
+        Excelexport: {
+            tr: 'Excel Aktar',
+            en: 'Excel Export'
+        },
         Columnname: {
             tr: 'Kolon Adı',
             en: 'Column Name'
+        },
+        File: {
+            tr: 'Dosya',
+            en: 'File'
         },
     },
     Page: {
@@ -24,6 +40,15 @@ const Literals = {
             tr: "Kolon Görünümü Ayarlama",
             en: "Column Visible Management"
         },
+        Pageheaderexcelimport: {
+            tr: "Excel Veri Ekleme",
+            en: "Excel Data Import"
+        },
+        Pageheaderexcelexport: {
+            tr: "Excel Veri Aktarma",
+            en: "Excel Data Export"
+        },
+
     },
     Button: {
         Create: {
@@ -33,6 +58,14 @@ const Literals = {
         Giveup: {
             tr: "Vazgeç",
             en: "Give up"
+        },
+        Reset: {
+            tr: "Sıfırla",
+            en: "Reset"
+        },
+        Visible: {
+            tr: 'Görünüm',
+            en: 'Visible'
         },
 
     },

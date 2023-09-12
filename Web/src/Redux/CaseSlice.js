@@ -4,12 +4,38 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Case added successfully',
+        tr: 'Durum Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Case updated successfully',
+        tr: 'Durum Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Case Deleted successfully',
+        tr: 'Durum Başarı ile Silindi'
+    },
+}
+
+
 export const GetCases = createAsyncThunk(
     'Cases/GetCases',
-    async (_, { dispatch, getState }) => {
+    async (_, { dispatch }) => {
         try {
-            const state = getState()
-            const Language = state.Profile.Language
             const response = await instanse.get(config.services.Setting, ROUTES.CASE);
             return response.data;
         } catch (error) {
@@ -39,14 +65,41 @@ export const AddCases = createAsyncThunk(
     async ({ data, history }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Setting, ROUTES.CASE, data);
             dispatch(fillCasenotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Durum başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Cases');
+            dispatch(fillCasenotification({
+                type: 'Clear',
+                code: 'CasesCreate',
+                description: '',
+            }));
+            history && history.push('/Cases');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCasenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddRecordCases = createAsyncThunk(
+    'Cases/AddRecordCases',
+    async ({ data, history }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Setting, ROUTES.CASE + '/AddRecord', data);
+            dispatch(fillCasenotification({
+                type: 'Success',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
+            }));
+            history && history.push('/Cases');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -58,15 +111,22 @@ export const AddCases = createAsyncThunk(
 
 export const EditCases = createAsyncThunk(
     'Cases/EditCases',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Setting, ROUTES.CASE, data);
             dispatch(fillCasenotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Durum başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Cases');
+            dispatch(fillCasenotification({
+                type: 'Clear',
+                code: 'CasesUpdate',
+                description: '',
+            }));
+            history && history.push('/Cases');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -78,15 +138,17 @@ export const EditCases = createAsyncThunk(
 
 export const DeleteCases = createAsyncThunk(
     'Cases/DeleteCases',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.CASE}/${data.Uuid}`);
             dispatch(fillCasenotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Durum başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {
@@ -160,6 +222,17 @@ export const CasesSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(AddCases.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddRecordCases.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddRecordCases.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddRecordCases.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

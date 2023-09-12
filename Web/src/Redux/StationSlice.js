@@ -4,6 +4,33 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Station added successfully',
+        tr: 'İstasyon Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Station updated successfully',
+        tr: 'İstasyon Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Station Deleted successfully',
+        tr: 'İstasyon Başarı ile Silindi'
+    },
+}
+
 export const GetStations = createAsyncThunk(
     'Stations/GetStations',
     async (_, { dispatch }) => {
@@ -34,15 +61,44 @@ export const GetStation = createAsyncThunk(
 
 export const AddStations = createAsyncThunk(
     'Stations/AddStations',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Setting, ROUTES.STATION, data);
             dispatch(fillStationnotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'İstasyon başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Stations');
+            dispatch(fillStationnotification({
+                type: 'Clear',
+                code: 'StationsCreate',
+                description: '',
+            }));
+            history && history.push('/Stations');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillStationnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddRecordStations = createAsyncThunk(
+    'Stations/AddRecordStations',
+    async ({ data, history }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Setting, ROUTES.STATION + '/AddRecord', data);
+            dispatch(fillStationnotification({
+                type: 'Success',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
+            }));
+            history && history.push('/Stations');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +110,22 @@ export const AddStations = createAsyncThunk(
 
 export const EditStations = createAsyncThunk(
     'Stations/EditStations',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Setting, ROUTES.STATION, data);
             dispatch(fillStationnotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'İstasyon başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Stations');
+            dispatch(fillStationnotification({
+                type: 'Clear',
+                code: 'StationsUpdate',
+                description: '',
+            }));
+            history && history.push('/Stations');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +137,17 @@ export const EditStations = createAsyncThunk(
 
 export const DeleteStations = createAsyncThunk(
     'Stations/DeleteStations',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.STATION}/${data.Uuid}`);
             dispatch(fillStationnotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'İstasyon başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {
@@ -156,6 +221,17 @@ export const StationsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(AddStations.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddRecordStations.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddRecordStations.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddRecordStations.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

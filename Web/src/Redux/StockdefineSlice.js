@@ -4,6 +4,33 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Stock define added successfully',
+        tr: 'Ürün Tanımı Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Stock define updated successfully',
+        tr: 'Ürün Tanımı Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Stock define Deleted successfully',
+        tr: 'Ürün Tanımı Başarı ile Silindi'
+    },
+}
+
 export const GetStockdefines = createAsyncThunk(
     'Stockdefines/GetStockdefines',
     async (_, { dispatch }) => {
@@ -34,15 +61,22 @@ export const GetStockdefine = createAsyncThunk(
 
 export const AddStockdefines = createAsyncThunk(
     'Stockdefines/AddStockdefines',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Warehouse, ROUTES.STOCKDEFINE, data);
             dispatch(fillStockdefinenotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Stok tanımı başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Stockdefines');
+            dispatch(fillStockdefinenotification({
+                type: 'Clear',
+                code: 'StockdefinesCreate',
+                description: '',
+            }));
+            history && history.push('/Stockdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +88,22 @@ export const AddStockdefines = createAsyncThunk(
 
 export const EditStockdefines = createAsyncThunk(
     'Stockdefines/EditStockdefines',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Warehouse, ROUTES.STOCKDEFINE, data);
             dispatch(fillStockdefinenotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Stok tanımı başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Stockdefines');
+            dispatch(fillStockdefinenotification({
+                type: 'Clear',
+                code: 'StockdefinesUpdate',
+                description: '',
+            }));
+            history && history.push('/Stockdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +115,17 @@ export const EditStockdefines = createAsyncThunk(
 
 export const DeleteStockdefines = createAsyncThunk(
     'Stockdefines/DeleteStockdefines',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.STOCKDEFINE}/${data.Uuid}`);
             dispatch(fillStockdefinenotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Stok tanımı başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {

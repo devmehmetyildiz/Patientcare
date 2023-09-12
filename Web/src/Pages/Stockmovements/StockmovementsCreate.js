@@ -14,14 +14,10 @@ import validator from '../../Utils/Validator'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
-export default class PurchaseorderstockmovementsCreate extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectedstock: "",
-      selectedmovement: "",
-    }
-  }
+import { FormContext } from '../../Provider/FormProvider'
+export default class StockmovementsCreate extends Component {
+
+  PAGE_NAME = "StockmovementsCreate"
 
   componentDidMount() {
     const { GetStocks } = this.props
@@ -52,7 +48,7 @@ export default class PurchaseorderstockmovementsCreate extends Component {
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
-              <Link to={"/Purchaseorderstockmovements"}>
+              <Link to={"/Stockmovements"}>
                 <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
@@ -62,13 +58,13 @@ export default class PurchaseorderstockmovementsCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} value={this.state.selectedstock} options={Stockoptions} onChange={this.handleChangeStock} formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockoptions} name="StockdefineID" formtype='dropdown' />
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
-                <FormInput placeholder={Literals.Columns.Movementtype[Profile.Language]} value={this.state.selectedmovement} options={Movementoptions} onChange={this.handleChangeMovement} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Purchaseorderstockmovements">
+                <Link to="/Stockmovements">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
@@ -87,9 +83,9 @@ export default class PurchaseorderstockmovementsCreate extends Component {
     data.Movementdate = new Date()
     data.Newvalue = 0
     data.Prevvalue = 0
-    data.Movementtype = this.state.selectedmovement
-    data.StockID = this.state.selectedstock
     data.Status = 0
+    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
+    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
     data.Amount = parseFloat(data.Amount)
 
     let errors = []
@@ -127,3 +123,4 @@ export default class PurchaseorderstockmovementsCreate extends Component {
     return date
   }
 }
+StockmovementsCreate.contextType = FormContext

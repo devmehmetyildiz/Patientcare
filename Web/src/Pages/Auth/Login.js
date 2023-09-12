@@ -18,17 +18,17 @@ class Login extends Component {
         const { Profile } = this.props
 
         return (
-            <div style={{ backgroundImage: `url(${img.loginbg})` }} className=' font-Common w-full h-[100vh] justify-center items-center flex ' >
+            <div style={{ backgroundImage: `url(${img.loginbg})` }} className=' font-Common w-full h-[100vh] justify-center items-center flex bg-gray-100' >
                 <div className='bg-white rounded-lg w-4/5 md:w-[40vmin] lg:w-[40vmin]  shadow-sm shadow-white'>
-                    <div className=' bg-[#42A5F5] w-[20%] pb-[20%]   rounded-tl-lg rounded-br-[100%] ' />
+                    <div className=' bg-[#2355a0] w-[20%] pb-[20%]   rounded-tl-lg rounded-br-[100%] ' />
                     <Grid textAlign='center' verticalAlign='middle'>
                         <Grid.Column verticalAlign='middle'>
                             <div className='w-full flex justify-center items-center'>
                                 <img className='w-1/3' src={img.patient} alt="" />
                             </div>
-                            <Header as='h3' color='blue' textAlign='center'>
+                            <Header as='h3' textAlign='center'>
                                 <br />
-                                <p>Patient Care Hasta Bakım Sistemi</p>
+                                <p className='text-[#2355a0]' >Patient Care Hasta Bakım Uygulaması</p>
                             </Header>
                             <Form size='large' className='p-4' onSubmit={this.LoginHandler}>
                                 <Form.Input transparent placeholder="Kullanıcı Adı" name="Username" fluid icon='user' iconPosition='left' />
@@ -36,9 +36,9 @@ class Login extends Component {
                                 <Form.Input type='password' transparent placeholder="Parola" name="Password" fluid icon='lock' iconPosition='left' />
                                 <Divider />
                                 <div className='mt-4 w-full flex flex-col justify-end items-end'>
-                                    <Link to='/Forgetpassword' className='text-[#3d3d3d] text-sm whitespace-nowrap'><Icon className='text-blue-300' name='key' /> Parolamı Unuttum</Link>
+                                    <Link to='/Forgetpassword' className='text-[#3d3d3d] text-sm whitespace-nowrap'><Icon className='text-[#2355a0]' name='key' /> Parolamı Unuttum</Link>
                                     <div className='w-1/3 mt-2'>
-                                        <Button loading={Profile.isLogging} className='mt-8' color='blue' fluid size='medium' >Giriş Yap</Button>
+                                        <Button  loading={Profile.isLogging} className='mt-8 !bg-[#2355a0]'  fluid size='medium' >Giriş Yap</Button>
                                     </div>
                                 </div>
                                 <div className='mt-4 flex flex-col justify-center items-center'>
@@ -69,7 +69,7 @@ class Login extends Component {
         const data = formToObject(event.target)
         if (data.Username && data.Password) {
             data.grant_type = "password"
-            logIn({data, history, redirectUrl})
+            logIn({ data, history, redirectUrl })
         } else {
             fillnotification({ type: 'Error', code: 'USERNAME_PASSWORD_REQUIRED', description: 'Lütfen Kullanıcı ve ya şifre giriniz' })
         }

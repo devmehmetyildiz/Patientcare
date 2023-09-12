@@ -4,6 +4,37 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Patient added successfully',
+        tr: 'Hasta Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Patient updated successfully',
+        tr: 'Hasta Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Patient Deleted successfully',
+        tr: 'Hasta Başarı ile Silindi'
+    },
+    completedescription: {
+        en: 'Patient Entered Organisation successfully',
+        tr: 'Hasta Başarı ile Kuruma Girdi'
+    },
+}
+
 export const GetPatients = createAsyncThunk(
     'Patients/GetPatients',
     async (_, { dispatch }) => {
@@ -48,15 +79,22 @@ export const Getpreregistrations = createAsyncThunk(
 
 export const AddPatients = createAsyncThunk(
     'Patients/AddPatients',
-    async ({ data, history, url }, { dispatch }) => {
+    async ({ data, history, url }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Business, ROUTES.PATIENT, data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Hasta başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push(url ? url : '/Patients')
+            dispatch(fillPatientnotification({
+                type: 'Clear',
+                code: 'PatientsCreate',
+                description: '',
+            }));
+            history && history.push(url ? url : '/Patients')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -68,15 +106,17 @@ export const AddPatients = createAsyncThunk(
 
 export const EditPatients = createAsyncThunk(
     'Patients/EditPatients',
-    async ({ data, history, url }, { dispatch }) => {
+    async ({ data, history, url }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT, data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Hasta başarı ile Güncellendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push(url ? url : '/Patients')
+            history && history.push(url ? url : '/Patients')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -87,15 +127,22 @@ export const EditPatients = createAsyncThunk(
 );
 export const EditPatientstocks = createAsyncThunk(
     'Patients/EditPatientstocks',
-    async ({ data, history, url }, { dispatch }) => {
+    async ({ data, history, url }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Editpatientstocks", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Hasta stoğu başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push(url ? url : '/Patients')
+            dispatch(fillPatientnotification({
+                type: 'Clear',
+                code: 'PatientsUpdate',
+                description: '',
+            }));
+            history && history.push(url ? url : '/Patients')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -106,15 +153,17 @@ export const EditPatientstocks = createAsyncThunk(
 );
 export const CompletePrepatients = createAsyncThunk(
     'Patients/CompletePrepatients',
-    async ({ data, history, url }, { dispatch }) => {
+    async ({ data, history, url }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Complete", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Hasta başarı ile Kuruma alındı',
+                code: Literals.updatecode[Language],
+                description: Literals.completedescription[Language],
             }));
-            history.push(url ? url : '/Patients')
+            history && history.push(url ? url : '/Patients')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -126,15 +175,17 @@ export const CompletePrepatients = createAsyncThunk(
 
 export const DeletePatients = createAsyncThunk(
     'Patients/DeletePatients',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENT}/${data.Uuid}`);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Hasta başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {

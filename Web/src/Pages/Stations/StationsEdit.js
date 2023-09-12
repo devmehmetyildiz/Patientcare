@@ -15,6 +15,9 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
 export default class StationsEdit extends Component {
+
+  PAGE_NAME = "StationsEdit"
+
   constructor(props) {
     super(props)
     this.state = {
@@ -23,9 +26,10 @@ export default class StationsEdit extends Component {
   }
 
   componentDidMount() {
-    const { GetStation, match, history } = this.props
-    if (match.params.StationID) {
-      GetStation(match.params.StationID)
+    const { GetStation, match, history, StationID } = this.props
+    let Id = StationID || match.params.StationID
+    if (validator.isUUID(Id)) {
+      GetStation(Id)
     } else {
       history.push("/Stations")
     }
@@ -38,7 +42,7 @@ export default class StationsEdit extends Component {
       this.setState({
         isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
     Notification(Stations.notifications, removeStationnotification)
   }
@@ -64,7 +68,7 @@ export default class StationsEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput placeholder={Literals.Columns.Name[Profile.Language]} name="Name" required />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" required />
               <Footerwrapper>
                 <Link to="/Stations">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>

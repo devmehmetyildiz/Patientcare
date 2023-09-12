@@ -18,19 +18,20 @@ import Notification from '../../Utils/Notification'
 
 export default class UnitsEdit extends Component {
 
+  PAGE_NAME = "UnitsEdit"
+
   constructor(props) {
     super(props)
     this.state = {
-      selecteddepartments: [],
       isDatafetched: false,
-      selectedstatusOption: {}
     }
   }
 
   componentDidMount() {
-    const { GetUnit, match, history, GetDepartments } = this.props
-    if (match.params.UnitID) {
-      GetUnit(match.params.UnitID)
+    const { GetUnit, match, history, GetDepartments, UnitID } = this.props
+    let Id = UnitID || match?.params?.UnitID
+    if (validator.isUUID(Id)) {
+      GetUnit(Id)
       GetDepartments()
     } else {
       history.push("/Units")
@@ -42,11 +43,9 @@ export default class UnitsEdit extends Component {
     const { selected_record, isLoading } = Units
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selecteddepartments: selected_record.Departments.map(department => {
-          return department.Uuid
-        }), isDatafetched: true, selectedstatusOption: selected_record.Unittype
+        isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, Departments: selected_record.Departmentuuids.map(u => { return u.DepartmentID }) })
     }
     Notification(Departments.notifications, removeDepartmentnotification)
     Notification(Units.notifications, removeUnitnotification)
@@ -89,11 +88,11 @@ export default class UnitsEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput required placeholder={Literals.Columns.Unittype[Profile.Language]} value={this.state.selectedstatusOption} options={unitstatusOption} onChange={this.handleChangeOption} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unittype[Profile.Language]} name="Unittype" options={unitstatusOption} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput required placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} clearable search multiple options={Departmentoptions} onChange={this.handleChange} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Units">
@@ -112,11 +111,10 @@ export default class UnitsEdit extends Component {
     e.preventDefault()
 
     const { EditUnits, history, fillUnitnotification, Departments, Units, Profile } = this.props
-    const { list } = Departments
     const data = formToObject(e.target)
-    data.Unittype = this.state.selectedstatusOption
-    data.Departments = this.state.selecteddepartments.map(department => {
-      return list.find(u => u.Uuid === department)
+    data.Unittype = this.context.formstates[`${this.PAGE_NAME}/Unittype`]
+    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+      return (Departments.list || []).find(u => u.Uuid === id)
     })
 
     let errors = []
@@ -136,14 +134,6 @@ export default class UnitsEdit extends Component {
     } else {
       EditUnits({ data: { ...Units.selected_record, ...data }, history })
     }
-  }
-
-  handleChange = (e, { value }) => {
-    this.setState({ selecteddepartments: value })
-  }
-
-  handleChangeOption = (e, { value }) => {
-    this.setState({ selectedstatusOption: value })
   }
 }
 UnitsEdit.contextType = FormContext

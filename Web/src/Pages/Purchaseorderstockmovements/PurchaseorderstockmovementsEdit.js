@@ -16,19 +16,14 @@ import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 export default class PurchaseorderstockmovementsEdit extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectedstock: "",
-      selectedmovement: "",
-    }
-  }
 
+  PAGE_NAME = "PurchaseorderstockmovementsEdit"
 
   componentDidMount() {
-    const { GetPurchaseorderstockmovement, GetPurchaseorderstocks, match, history } = this.props
-    if (match.params.PurchaseorderstockmovementID) {
-      GetPurchaseorderstockmovement(match.params.PurchaseorderstockmovementID)
+    const { PurchaseorderstockmovementID, GetPurchaseorderstockmovement, GetPurchaseorderstocks, match, history } = this.props
+    let Id = PurchaseorderstockmovementID || match?.params?.PurchaseorderstockmovementID
+    if (validator.isUUID(Id)) {
+      GetPurchaseorderstockmovement(Id)
       GetPurchaseorderstocks()
     } else {
       history.push("/Purchaseorderstockmovement")
@@ -43,8 +38,6 @@ export default class PurchaseorderstockmovementsEdit extends Component {
       && Purchaseorderstocks.list.length > 0 && !Purchaseorderstocks.isLoading
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedstock: selected_record.StockID,
-        selectedmovement: selected_record.Movementtype,
         isDatafetched: true
       })
       this.context.setFormstates(selected_record)
@@ -80,10 +73,10 @@ export default class PurchaseorderstockmovementsEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} value={this.state.selectedstock} options={Purchaseorderstockoptions} onChange={this.handleChangeStock} formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockID" options={Purchaseorderstockoptions} formtype='dropdown' />
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
-                <FormInput placeholder={Literals.Columns.Movementtype[Profile.Language]} value={this.state.selectedmovement} options={Movementoptions} onChange={this.handleChangeMovement} fromtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} fromtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Purchaseorderstockmovements">
@@ -102,8 +95,8 @@ export default class PurchaseorderstockmovementsEdit extends Component {
     e.preventDefault()
     const { EditPurchaseorderstockmovements, history, fillPurchaseorderstockmovementnotification, Profile, Purchaseorderstockmovements } = this.props
     const data = formToObject(e.target)
-    data.Movementtype = this.state.selectedmovement
-    data.StockID = this.state.selectedstock
+    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
+    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
     data.Amount = parseFloat(data.Amount)
     let errors = []
     if (!validator.isNumber(data.Movementtype)) {
@@ -123,15 +116,6 @@ export default class PurchaseorderstockmovementsEdit extends Component {
       EditPurchaseorderstockmovements({ data: { ...Purchaseorderstockmovements.selected_record, ...data }, history })
     }
   }
-
-
-  handleChangeStock = (e, { value }) => {
-    this.setState({ selectedstock: value })
-  }
-  handleChangeMovement = (e, { value }) => {
-    this.setState({ selectedmovement: value })
-  }
-
 
   getLocalDate = () => {
     var curr = new Date();

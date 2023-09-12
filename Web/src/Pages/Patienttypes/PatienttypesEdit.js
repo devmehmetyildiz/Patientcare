@@ -16,6 +16,9 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 
 export default class PatienttypesEdit extends Component {
+
+  PAGE_NAME = "PatienttypesEdit"
+
   constructor(props) {
     super(props)
     this.state = {
@@ -24,9 +27,10 @@ export default class PatienttypesEdit extends Component {
   }
 
   componentDidMount() {
-    const { GetPatienttype, match, history } = this.props
-    if (match.params.PatienttypeID) {
-      GetPatienttype(match.params.PatienttypeID)
+    const { GetPatienttype, match, history, PatienttypeID } = this.props
+    let Id = PatienttypeID || match?.params?.PatienttypeID
+    if (validator.isUUID(Id)) {
+      GetPatienttype(Id)
     } else {
       history.push("/Patienttypes")
     }
@@ -39,14 +43,14 @@ export default class PatienttypesEdit extends Component {
       this.setState({
         isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
     Notification(Patienttypes.notifications, removePatienttypenotification)
   }
 
   render() {
 
-    const { Patienttypes, Profile } = this.props
+    const { Patienttypes, Profile, history } = this.props
     const { isLoading, isDispatching } = Patienttypes
 
     return (
@@ -64,11 +68,11 @@ export default class PatienttypesEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Footerwrapper>
-                <Link to="/Patienttypes">
+                {history && <Link to="/Patienttypes">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
+                </Link>}
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>

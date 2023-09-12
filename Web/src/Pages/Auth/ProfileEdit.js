@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Form, Header, Image } from 'semantic-ui-react'
+import { Breadcrumb, Button, Divider, Dropdown, Form, Header, Image } from 'semantic-ui-react'
 import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -18,13 +18,17 @@ export default class ProfileEdit extends Component {
             file: {},
             isDatafetched: false,
             imgChanged: false,
-            fetchedFromapi: false
+            fetchedFromapi: false,
+            selectedLanguage: ''
         }
     }
 
     componentDidMount() {
-        const { GetUserMeta } = this.props
-        GetUserMeta()
+        const { Profile } = this.props
+        const { meta } = Profile
+        if (meta && meta.Id !== 0 && Object.keys(meta).length > 0) {
+            this.setState({ selectedLanguage: meta.Language })
+        }
     }
 
     componentDidUpdate() {
@@ -33,10 +37,7 @@ export default class ProfileEdit extends Component {
         if (meta && meta.Id !== 0 && Object.keys(meta).length > 0 && !this.state.isDatafetched) {
             if (meta.Files && Array.isArray(meta.Files)) {
                 let pp = meta.Files.find(u => u.Usagetype === "PP")
-                this.setState({ file: pp ? pp : {}, isDatafetched: true, fetchedFromapi: true, showImg: pp ? true : false }, () => {
-                    console.log('file: ', this.state);
-
-                })
+                this.setState({ file: pp ? pp : {}, isDatafetched: true, fetchedFromapi: true, showImg: pp ? true : false })
             }
         }
         Notification(notifications, removenotification)
@@ -47,6 +48,11 @@ export default class ProfileEdit extends Component {
 
         const { Profile } = this.props
         const { meta, username, isLogging, isDispatching } = Profile
+
+        const Languageoptions = [
+            { key: 1, text: 'EN', value: 'en' },
+            { key: 2, text: 'TR', value: 'tr' },
+        ]
 
         return (
             isLogging || isDispatching ? < LoadingPage /> :
@@ -87,12 +93,17 @@ export default class ProfileEdit extends Component {
                                     <Form.Group widths={'equal'}>
                                         <Form.Input label="Adres" placeholder="Adres" name="Address" fluid defaultValue={meta.Address} />
                                     </Form.Group>
+                                    <label className='text-[#000000de]'>Dil</label>
+                                    <Dropdown value={this.state.selectedLanguage} clearable selection fluid options={Languageoptions} onChange={(e, { value }) => { this.setState({ selectedLanguage: value }) }} />
                                 </Form.Field>
                             </Form.Group>
                             <div className='flex flex-row w-full justify-between py-4  items-center'>
-                                <Link to="/Users">
+                                <div onClick={(e) => {
+                                    e.preventDefault()
+                                    this.props.history.goBack()
+                                }}>
                                     <Button floated="left" color='grey'>Geri Dön</Button>
-                                </Link>
+                                </div>
                                 <Button floated="right" type='submit' color='blue'>Güncelle</Button>
                             </div>
                         </Form>
@@ -100,10 +111,12 @@ export default class ProfileEdit extends Component {
                 </div >
         )
     }
+
     handleSubmit = (e) => {
         e.preventDefault()
         const { EditUsers, history, fillnotification, Profile } = this.props
         const data = formToObject(e.target)
+        data.Language = this.state.selectedLanguage
         let errors = []
         if (!data.Name || data.Name === '') {
             errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'İsim boş olamaz' })
@@ -117,7 +130,7 @@ export default class ProfileEdit extends Component {
             })
         } else {
             this.handleFile()
-            EditUsers({ data: { ...Profile.meta, ...data }, history, redirectUrl: "/Home" })
+            EditUsers({ data: { ...Profile.meta, ...data }, history, redirectUrl: "Goback" })
         }
     }
 
@@ -138,7 +151,6 @@ export default class ProfileEdit extends Component {
 
         if (imgChanged) {
             if (!selectedimage && Object.keys(file).length > 0) {
-                alert("silicem")
                 let filecontent = { ...file }
                 filecontent.WillDelete = true
                 delete filecontent.Updatetime
@@ -194,9 +206,7 @@ export default class ProfileEdit extends Component {
                         formData.append(`list[${index}].${element}`, data[element])
                     });
                 })
-
                 EditFiles({ data: formData })
-
             }
         }
     }

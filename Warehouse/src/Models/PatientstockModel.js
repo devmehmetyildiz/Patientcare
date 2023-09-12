@@ -19,6 +19,9 @@ module.exports = sequelize.define('patientstockModel', {
     DepartmentID: {
         type: Sequelize.STRING
     },
+    Ismedicine: {
+        type: Sequelize.BOOLEAN
+    },
     Skt: {
         type: Sequelize.DATE
     },

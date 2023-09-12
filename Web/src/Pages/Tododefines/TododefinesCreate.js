@@ -15,15 +15,10 @@ import validator from '../../Utils/Validator'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
+import { FormContext } from '../../Provider/FormProvider'
 export default class TododefinesCreate extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      isRequired: false,
-      isNeedactivation: false,
-      selectedCheckperiods: []
-    }
-  }
+
+  PAGE_NAME = "TododefinesCreate"
 
   componentDidMount() {
     const { GetCheckperiods } = this.props
@@ -61,27 +56,15 @@ export default class TododefinesCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths={'equal'}>
-                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput required placeholder={Literals.Columns.Checkperiods[Profile.Language]} value={this.state.selectedCheckperiods} clearable search multiple options={Checkperiodsoptions} onChange={(e, { value }) => { this.setState({ selectedCheckperiods: value }) }} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Checkperiods[Profile.Language]} name="Checkperiods" multiple options={Checkperiodsoptions} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Field>
-                  <Checkbox toggle className='m-2'
-                    onClick={(e) => { this.setState({ isRequired: !this.state.isRequired }) }}
-                    label={Literals.Columns.IsRequired[Profile.Language]}
-                    checked={this.state.isRequired} />
-                </Form.Field>
-                <Form.Field>
-                  <Checkbox toggle className='m-2'
-                    onChange={(e) => {
-                      this.setState({ isNeedactivation: !this.state.isNeedactivation })
-                    }}
-                    label={Literals.Columns.IsNeedactivation[Profile.Language]}
-                    checked={this.state.isNeedactivation} />
-                </Form.Field>
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsRequired[Profile.Language]} name="IsRequired" formtype="checkbox" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsNeedactivation[Profile.Language]} name="IsNeedactivation" formtype="checkbox" />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Tododefines">
@@ -101,11 +84,11 @@ export default class TododefinesCreate extends Component {
     const { AddTododefines, history, fillTododefinenotification, Checkperiods, Profile } = this.props
 
     const data = formToObject(e.target)
-    data.Checkperiods = this.state.selectedCheckperiods.map(checkperiod => {
-      return Checkperiods.list.find(u => u.Uuid === checkperiod)
+    data.Checkperiods = this.context.formstates[`${this.PAGE_NAME}/Checkperiods`].map(id => {
+      return (Checkperiods.list || []).find(u => u.Uuid === id)
     })
-    data.IsRequired = this.state.isRequired
-    data.IsNeedactivation = this.state.isNeedactivation
+    data.IsRequired = this.context.formstates[`${this.PAGE_NAME}/IsRequired`]
+    data.IsNeedactivation = this.context.formstates[`${this.PAGE_NAME}/IsNeedactivation`]
 
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -122,6 +105,5 @@ export default class TododefinesCreate extends Component {
       AddTododefines({ data, history })
     }
   }
-
-
 }
+TododefinesCreate.contextType = FormContext

@@ -22,18 +22,20 @@ export default class Costumertypes extends Component {
   }
 
   componentDidMount() {
-    const { GetCostumertypes } = this.props
+    const { GetCostumertypes, GetDepartments } = this.props
     GetCostumertypes()
+    GetDepartments()
   }
 
   componentDidUpdate() {
-    const { Costumertypes, removeCostumertypenotification } = this.props
+    const { Costumertypes, Departments, removeDepartmentnotification, removeCostumertypenotification } = this.props
     Notification(Costumertypes.notifications, removeCostumertypenotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
   }
 
   render() {
 
-    const { Costumertypes, Profile, handleSelectedCostumertype, handleDeletemodal } = this.props
+    const { Costumertypes, Departments, Profile, handleSelectedCostumertype, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Costumertypes
 
     const Columns = [
@@ -60,9 +62,10 @@ export default class Costumertypes extends Component {
     };
 
     const list = (Costumertypes.list || []).map(item => {
-      var text = item.Departments.map((department) => {
-        return department.Name;
+      var text = (item.Departmentuuids || []).map(u => {
+        return (Departments.list || []).find(department => department.Uuid === u.DepartmentID)?.Name
       }).join(", ")
+
       return {
         ...item,
         Departmentstxt: text,
@@ -125,10 +128,13 @@ export default class Costumertypes extends Component {
   }
 
   departmentCellhandler = (col) => {
+
+    const { Departments } = this.props
+
     if (col.value) {
       if (!col.cell.isGrouped) {
         const itemId = col.row.original.Id
-        const itemDepartments = col.row.original.Departments
+        const itemDepartments = (col.row.original.Departmentuuids || []).map(u => { return (Departments.list || []).find(department => department.Uuid === u.DepartmentID) })
         return col.value.length - 35 > 20 ?
           (
             !this.state.departmentStatus.includes(itemId) ?

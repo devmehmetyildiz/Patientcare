@@ -4,6 +4,33 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Warehouse added successfully',
+        tr: 'Ambar Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Warehouse updated successfully',
+        tr: 'Ambar Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Warehouse Deleted successfully',
+        tr: 'Ambar Başarı ile Silindi'
+    },
+}
+
 export const GetWarehouses = createAsyncThunk(
     'Warehouses/GetWarehouses',
     async (_, { dispatch }) => {
@@ -34,15 +61,44 @@ export const GetWarehouse = createAsyncThunk(
 
 export const AddWarehouses = createAsyncThunk(
     'Warehouses/AddWarehouses',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Warehouse, ROUTES.WAREHOUSE, data);
             dispatch(fillWarehousenotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Ambar başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Warehouses');
+            dispatch(fillWarehousenotification({
+                type: 'Clear',
+                code: 'WarehousesCreate',
+                description: '',
+            }));
+            history && history.push('/Warehouses');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillWarehousenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddRecordWarehouses = createAsyncThunk(
+    'Warehouses/AddRecordWarehouses',
+    async ({ data, history }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, ROUTES.WAREHOUSE + '/AddRecord', data);
+            dispatch(fillWarehousenotification({
+                type: 'Success',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
+            }));
+            history && history.push('/Warehouses');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +110,22 @@ export const AddWarehouses = createAsyncThunk(
 
 export const EditWarehouses = createAsyncThunk(
     'Warehouses/EditWarehouses',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Warehouse, ROUTES.WAREHOUSE, data);
             dispatch(fillWarehousenotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Ambar başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Warehouses');
+            dispatch(fillWarehousenotification({
+                type: 'Clear',
+                code: 'WarehousesUpdate',
+                description: '',
+            }));
+            history && history.push('/Warehouses');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +137,17 @@ export const EditWarehouses = createAsyncThunk(
 
 export const DeleteWarehouses = createAsyncThunk(
     'Warehouses/DeleteWarehouses',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.WAREHOUSE}/${data.Uuid}`);
             dispatch(fillWarehousenotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Ambar başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {
@@ -156,6 +221,17 @@ export const WarehousesSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(AddWarehouses.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddRecordWarehouses.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddRecordWarehouses.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddRecordWarehouses.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

@@ -4,6 +4,33 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Patient Stock Movement added successfully',
+        tr: 'Hasta Stok Hareketi Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Patient Stock Movement updated successfully',
+        tr: 'Hasta Stok Hareketi Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Patient Stock Movement Deleted successfully',
+        tr: 'Hasta Stok Hareketi Başarı ile Silindi'
+    },
+}
+
 export const GetPatientstockmovements = createAsyncThunk(
     'Patientstockmovements/GetPatientstockmovements',
     async (_, { dispatch }) => {
@@ -34,15 +61,22 @@ export const GetPatientstockmovement = createAsyncThunk(
 
 export const AddPatientstockmovements = createAsyncThunk(
     'Patientstockmovements/AddPatientstockmovements',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT, data);
             dispatch(fillPatientstockmovementnotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Hasta Stok hareketi başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Patientstockmovements');
+            dispatch(fillPatientstockmovementnotification({
+                type: 'Clear',
+                code: 'PatientstockmovementsCreate',
+                description: '',
+            }));
+            history && history.push('/Patientstockmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +88,22 @@ export const AddPatientstockmovements = createAsyncThunk(
 
 export const EditPatientstockmovements = createAsyncThunk(
     'Patientstockmovements/EditPatientstockmovements',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Warehouse, ROUTES.PATIENTSTOCKMOVEMENT, data);
             dispatch(fillPatientstockmovementnotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Hasta Stok hareketi başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Patientstockmovements');
+            dispatch(fillPatientstockmovementnotification({
+                type: 'Clear',
+                code: 'PatientstockmovementsUpdate',
+                description: '',
+            }));
+            history && history.push('/Patientstockmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +115,17 @@ export const EditPatientstockmovements = createAsyncThunk(
 
 export const DeletePatientstockmovements = createAsyncThunk(
     'Patientstockmovements/DeletePatientstockmovements',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PATIENTSTOCKMOVEMENT}/${data.Uuid}`);
             dispatch(fillPatientstockmovementnotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Hasta Stok hareketi başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {

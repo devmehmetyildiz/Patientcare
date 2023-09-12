@@ -4,6 +4,33 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Mailsetting added successfully',
+        tr: 'Mail Ayarı Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Mailsetting updated successfully',
+        tr: 'Mail Ayarı Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Mailsetting Deleted successfully',
+        tr: 'Mail Ayarı Başarı ile Silindi'
+    },
+}
+
 export const GetMailsettings = createAsyncThunk(
     'Mailsettings/GetMailsettings',
     async (_, { dispatch }) => {
@@ -34,15 +61,22 @@ export const GetMailsetting = createAsyncThunk(
 
 export const AddMailsettings = createAsyncThunk(
     'Mailsettings/AddMailsettings',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.System, ROUTES.MAILSETTING, data);
             dispatch(fillMailsettingnotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Mail Ayarı başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Mailsettings');
+            dispatch(fillMailsettingnotification({
+                type: 'Clear',
+                code: 'MailsettingsCreate',
+                description: '',
+            }));
+            history && history.push('/Mailsettings');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +88,22 @@ export const AddMailsettings = createAsyncThunk(
 
 export const EditMailsettings = createAsyncThunk(
     'Mailsettings/EditMailsettings',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.System, ROUTES.MAILSETTING, data);
             dispatch(fillMailsettingnotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Mail Ayarı başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Mailsettings');
+            dispatch(fillMailsettingnotification({
+                type: 'Clear',
+                code: 'MailsettingsEdit',
+                description: '',
+            }));
+            history && history.push('/Mailsettings');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +115,17 @@ export const EditMailsettings = createAsyncThunk(
 
 export const DeleteMailsettings = createAsyncThunk(
     'Mailsettings/DeleteMailsettings',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             delete data['edit'];
             delete data['delete'];
             const response = await instanse.delete(config.services.System, `${ROUTES.MAILSETTING}/${data.Uuid}`);
             dispatch(fillMailsettingnotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Mail Ayarı başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {

@@ -25,13 +25,15 @@ export default class Units extends Component {
 
 
   componentDidMount() {
-    const { GetUnits } = this.props
+    const { GetUnits, GetDepartments } = this.props
     GetUnits()
+    GetDepartments()
   }
 
   componentDidUpdate() {
-    const { Units, removeUnitnotification } = this.props
+    const { Units, Departments, removeDepartmentnotification, removeUnitnotification } = this.props
     Notification(Units.notifications, removeUnitnotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
   }
 
 
@@ -50,7 +52,7 @@ export default class Units extends Component {
       }
     ]
 
-    const { Units, Profile, handleDeletemodal, handleSelectedUnit } = this.props
+    const { Units, Departments, Profile, handleDeletemodal, handleSelectedUnit } = this.props
     const { isLoading, isDispatching } = Units
 
     const Columns = [
@@ -78,8 +80,8 @@ export default class Units extends Component {
     };
 
     const list = (Units.list || []).map(item => {
-      var text = item.Departments.map((department) => {
-        return department.Name;
+      var text = (item.Departmentuuids || []).map(u => {
+        return (Departments.list || []).find(department => department.Uuid === u.DepartmentID)?.Name
       }).join(", ")
       return {
         ...item,
@@ -143,10 +145,11 @@ export default class Units extends Component {
   }
 
   departmentCellhandler = (col) => {
+    const { Departments } = this.props
     if (col.value) {
       if (!col.cell.isGrouped) {
         const itemId = col.row.original.Id
-        const itemDepartments = col.row.original.Departments
+        const itemDepartments = (col.row.original.Departmentuuids || []).map(u => { return (Departments.list || []).find(departmen => departmen.Uuid === u.DepartmentID) })
         return col.value.length - 35 > 20 ?
           (
             !this.state.departmentStatus.includes(itemId) ?

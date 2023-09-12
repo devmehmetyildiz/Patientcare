@@ -14,7 +14,10 @@ import validator from '../../Utils/Validator'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
+import { FormContext } from '../../Provider/FormProvider'
 export default class PeriodsCreate extends Component {
+
+  PAGE_NAME = "PeriodsCreate"
 
   componentDidUpdate() {
     const { removePeriodnotification, Periods } = this.props
@@ -23,7 +26,7 @@ export default class PeriodsCreate extends Component {
 
   render() {
 
-    const { Periods, Profile } = this.props
+    const { Periods, Profile, history } = this.props
     const { isLoading, isDispatching } = Periods
 
     return (
@@ -42,16 +45,16 @@ export default class PeriodsCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Field>
-                <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               </Form.Field>
               <Form.Group widths={"equal"}>
-                <FormInput required type='time' placeholder={Literals.Columns.Occuredtime[Profile.Language]} name="Occuredtime" />
-                <FormInput required type='time' placeholder={Literals.Columns.Checktime[Profile.Language]} name="Checktime" />
+                <FormInput page={this.PAGE_NAME} required type='time' placeholder={Literals.Columns.Occuredtime[Profile.Language]} name="Occuredtime" />
+                <FormInput page={this.PAGE_NAME} required type='time' placeholder={Literals.Columns.Checktime[Profile.Language]} name="Checktime" />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Periods">
+                {history && <Link to="/Periods">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
+                </Link>}
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>
@@ -63,7 +66,7 @@ export default class PeriodsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddPeriods, history, fillPeriodnotification, Profile } = this.props
+    const { AddPeriods, history, fillPeriodnotification, Profile, } = this.props
 
     const data = formToObject(e.target)
 
@@ -86,3 +89,4 @@ export default class PeriodsCreate extends Component {
     }
   }
 }
+PeriodsCreate.contextType = FormContext

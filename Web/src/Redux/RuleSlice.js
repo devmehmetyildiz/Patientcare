@@ -4,6 +4,37 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Rule added successfully',
+        tr: 'Kural Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Rule updated successfully',
+        tr: 'Kural Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Rule Deleted successfully',
+        tr: 'Kural Başarı ile Silindi'
+    },
+    cleardescription: {
+        en: 'Rule Logs Deleted succesfully',
+        tr: 'Kural kayıtları başarı ile temizlendi'
+    },
+}
+
 export const GetRules = createAsyncThunk(
     'Rules/GetRules',
     async (_, { dispatch }) => {
@@ -62,15 +93,22 @@ export const GetRulelogswithoutloading = createAsyncThunk(
 
 export const AddRules = createAsyncThunk(
     'Rules/AddRules',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.System, ROUTES.RULE, data);
             dispatch(fillRulenotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Kural başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Rules');
+            dispatch(fillRulenotification({
+                type: 'Clear',
+                code: 'RulesCreate',
+                description: '',
+            }));
+            history && history.push('/Rules');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -82,15 +120,22 @@ export const AddRules = createAsyncThunk(
 
 export const EditRules = createAsyncThunk(
     'Rules/EditRules',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.System, ROUTES.RULE, data);
             dispatch(fillRulenotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Kural başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Rules');
+            dispatch(fillRulenotification({
+                type: 'Clear',
+                code: 'RulesUpdate',
+                description: '',
+            }));
+            history && history.push('/Rules');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -102,14 +147,15 @@ export const EditRules = createAsyncThunk(
 
 export const StopRules = createAsyncThunk(
     'Rules/StopRules',
-    async (guid, { dispatch }) => {
-        console.log('guid: ', guid);
+    async (guid, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.System, `${ROUTES.RULE}/StopRule/${guid}`);
             dispatch(fillRulenotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Kural başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
             return response.data;
         } catch (error) {
@@ -122,15 +168,17 @@ export const StopRules = createAsyncThunk(
 
 export const DeleteRules = createAsyncThunk(
     'Rules/DeleteRules',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.System, `${ROUTES.RULE}/${data.Uuid}`);
             dispatch(fillRulenotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Kural başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {
@@ -143,13 +191,15 @@ export const DeleteRules = createAsyncThunk(
 
 export const ClearRulelogs = createAsyncThunk(
     'Rules/ClearRulelogs',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.System, `${ROUTES.RULE}/Clearrulelogs/${data.Uuid}`);
             dispatch(fillRulenotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Kural Logları başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.cleardescription[Language],
             }));
             return response.data;
         } catch (error) {

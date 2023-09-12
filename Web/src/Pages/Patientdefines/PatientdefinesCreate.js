@@ -14,21 +14,10 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import FormInput from '../../Utils/FormInput'
+import { FormContext } from '../../Provider/FormProvider'
 export default class PatientdefinesCreate extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectedpatienttype: "",
-      selectedcostumertype: "",
-      selectedMotherstatus: 0,
-      selectedFatherstatus: 0,
-      selectedGenderstatus: "",
-      selectedFatheralaffinity: "",
-      selectedMotheralaffinity: "",
-    }
-  }
-
+  PAGE_NAME = "PatientdefinesCreate"
 
   componentDidMount() {
     const { GetCostumertypes, GetPatienttypes } = this.props
@@ -45,7 +34,7 @@ export default class PatientdefinesCreate extends Component {
 
 
   render() {
-    const { Costumertypes, Patienttypes, Patientdefines, Profile } = this.props
+    const { Costumertypes, Patienttypes, Patientdefines, Profile, history } = this.props
 
     const Costumertypeoptions = Costumertypes.list.map(costumertype => {
       return { key: costumertype.Uuid, text: costumertype.Name, value: costumertype.Uuid }
@@ -85,57 +74,57 @@ export default class PatientdefinesCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput required placeholder={Literals.Columns.Firstname[Profile.Language]} name="Firstname" />
-                <FormInput required placeholder={Literals.Columns.Lastname[Profile.Language]} name="Lastname" />
-                <FormInput placeholder={Literals.Columns.Fathername[Profile.Language]} name="Fathername" />
-                <FormInput placeholder={Literals.Columns.Mothername[Profile.Language]} name="Mothername" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Firstname[Profile.Language]} name="Firstname" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Lastname[Profile.Language]} name="Lastname" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Fathername[Profile.Language]} name="Fathername" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Mothername[Profile.Language]} name="Mothername" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Motherbiologicalaffinity[Profile.Language]} options={Affinityoptions} value={this.state.selectedMotheralaffinity} onChange={(e, { value }) => { this.setState({ selectedMotheralaffinity: value }) }} formtype="dropdown" />
-                <FormInput placeholder={Literals.Columns.Fatherbiologicalaffinity[Profile.Language]} options={Affinityoptions} value={this.state.selectedFatheralaffinity} onChange={(e, { value }) => { this.setState({ selectedFatheralaffinity: value }) }} formtype="dropdown" />
-                <FormInput placeholder={Literals.Columns.Ismotheralive[Profile.Language]} options={Liveoptions} value={this.state.selectedMotherstatus} onChange={(e, { value }) => { this.setState({ selectedMotherstatus: value }) }} formtype="dropdown" />
-                <FormInput placeholder={Literals.Columns.Isfatheralive[Profile.Language]} options={Liveoptions} value={this.state.selectedFatherstatus} onChange={(e, { value }) => { this.setState({ selectedFatherstatus: value }) }} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Motherbiologicalaffinity[Profile.Language]} name="Motherbiologicalaffinity" options={Affinityoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Fatherbiologicalaffinity[Profile.Language]} name="Fatherbiologicalaffinity" options={Affinityoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Ismotheralive[Profile.Language]} name="Ismotheralive" options={Liveoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Isfatheralive[Profile.Language]} name="Isfatheralive" options={Liveoptions} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput required placeholder={Literals.Columns.CountryID[Profile.Language]} name="CountryID" />
-                <FormInput placeholder={Literals.Columns.Dateofbirth[Profile.Language]} name="Dateofbirth" type='date' />
-                <FormInput placeholder={Literals.Columns.Placeofbirth[Profile.Language]} name="Placeofbirth" />
-                <FormInput placeholder={Literals.Columns.Dateofdeath[Profile.Language]} name="Dateofdeath" type='date' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.CountryID[Profile.Language]} name="CountryID" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Dateofbirth[Profile.Language]} name="Dateofbirth" type='date' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Placeofbirth[Profile.Language]} name="Placeofbirth" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Dateofdeath[Profile.Language]} name="Dateofdeath" type='date' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Placeofbirth[Profile.Language]} name="Placeofdeath" />
-                <FormInput placeholder={Literals.Columns.Deathinfo[Profile.Language]} name="Deathinfo" />
-                <FormInput placeholder={Literals.Columns.Gender[Profile.Language]} options={Genderoptions} value={this.state.selectedGenderstatus} onChange={(e, { value }) => { this.setState({ selectedGenderstatus: value }) }} formtype="dropdown" />
-                <FormInput placeholder={Literals.Columns.Marialstatus[Profile.Language]} name="Marialstatus" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Placeofbirth[Profile.Language]} name="Placeofdeath" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Deathinfo[Profile.Language]} name="Deathinfo" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Gender[Profile.Language]} name="Gender" options={Genderoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Marialstatus[Profile.Language]} name="Marialstatus" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Childnumber[Profile.Language]} name="Childnumber" type='number' />
-                <FormInput placeholder={Literals.Columns.Disabledchildnumber[Profile.Language]} name="Disabledchildnumber" type='number' />
-                <FormInput placeholder={Literals.Columns.Siblingstatus[Profile.Language]} name="Siblingstatus" />
-                <FormInput placeholder={Literals.Columns.Sgkstatus[Profile.Language]} name="Sgkstatus" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Childnumber[Profile.Language]} name="Childnumber" type='number' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Disabledchildnumber[Profile.Language]} name="Disabledchildnumber" type='number' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Siblingstatus[Profile.Language]} name="Siblingstatus" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Sgkstatus[Profile.Language]} name="Sgkstatus" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Budgetstatus[Profile.Language]} name="Budgetstatus" />
-                <FormInput placeholder={Literals.Columns.City[Profile.Language]} name="City" />
-                <FormInput placeholder={Literals.Columns.Town[Profile.Language]} name="Town" />
-                <FormInput placeholder={Literals.Columns.Address1[Profile.Language]} name="Address1" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Budgetstatus[Profile.Language]} name="Budgetstatus" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.City[Profile.Language]} name="City" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Town[Profile.Language]} name="Town" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Address1[Profile.Language]} name="Address1" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Address2[Profile.Language]} name="Address2" />
-                <FormInput placeholder={Literals.Columns.Country[Profile.Language]} name="Country" />
-                <FormInput placeholder={Literals.Columns.Contactnumber1[Profile.Language]} name="Contactnumber1" />
-                <FormInput placeholder={Literals.Columns.Contactnumber2[Profile.Language]} name="Contactnumber2" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Address2[Profile.Language]} name="Address2" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Country[Profile.Language]} name="Country" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactnumber1[Profile.Language]} name="Contactnumber1" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactnumber2[Profile.Language]} name="Contactnumber2" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Contactname1[Profile.Language]} name="Contactname1" />
-                <FormInput placeholder={Literals.Columns.Contactname2[Profile.Language]} name="Contactname2" />
-                <FormInput required placeholder={Literals.Columns.CostumertypeName[Profile.Language]} options={Costumertypeoptions} value={this.state.selectedcostumertype} onChange={(e, { value }) => { this.setState({ selectedcostumertype: value }) }} formtype="dropdown" />
-                <FormInput required placeholder={Literals.Columns.PatienttypeName[Profile.Language]} options={Patienttypeoptions} value={this.state.selectedpatienttype} onChange={(e, { value }) => { this.setState({ selectedpatienttype: value }) }} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactname1[Profile.Language]} name="Contactname1" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactname2[Profile.Language]} name="Contactname2" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.CostumertypeName[Profile.Language]} name="CostumertypeID" options={Costumertypeoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.PatienttypeName[Profile.Language]} name="PatienttypeID" options={Patienttypeoptions} formtype="dropdown" />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Patientdefines">
+                {history && <Link to="/Patientdefines">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
+                </Link>}
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>
@@ -149,13 +138,13 @@ export default class PatientdefinesCreate extends Component {
     e.preventDefault()
     const { AddPatientdefines, history, fillPatientdefinenotification, Profile } = this.props
     const data = formToObject(e.target)
-    data.PatienttypeID = this.state.selectedpatienttype
-    data.CostumertypeID = this.state.selectedcostumertype
-    data.Ismotheralive = this.state.selectedMotherstatus
-    data.Isfatheralive = this.state.selectedFatherstatus
-    data.Gender = this.state.selectedGenderstatus
-    data.Motherbiologicalaffinity = this.state.selectedMotheralaffinity
-    data.Fatherbiologicalaffinity = this.state.selectedFatheralaffinity
+    data.PatienttypeID = this.context.formstates[`${this.PAGE_NAME}/PatienttypeID`]
+    data.CostumertypeID = this.context.formstates[`${this.PAGE_NAME}/CostumertypeID`]
+    data.Ismotheralive = this.context.formstates[`${this.PAGE_NAME}/Ismotheralive`]
+    data.Isfatheralive = this.context.formstates[`${this.PAGE_NAME}/Isfatheralive`]
+    data.Gender = this.context.formstates[`${this.PAGE_NAME}/Gender`]
+    data.Motherbiologicalaffinity = this.context.formstates[`${this.PAGE_NAME}/Motherbiologicalaffinity`]
+    data.Fatherbiologicalaffinity = this.context.formstates[`${this.PAGE_NAME}/selectedFatheralaffinity`]
 
     if (!data.Dateofbirth || data.Dateofbirth === '') {
       data.Dateofbirth = null
@@ -198,3 +187,4 @@ export default class PatientdefinesCreate extends Component {
     }
   }
 }
+PatientdefinesCreate.contextType = FormContext

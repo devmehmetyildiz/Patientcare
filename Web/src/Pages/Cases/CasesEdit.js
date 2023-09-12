@@ -16,22 +16,23 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 export default class CasesEdit extends Component {
 
+  PAGE_NAME = 'CasesEdit'
+
   constructor(props) {
     super(props)
     this.state = {
-      selecteddepartments: [],
       isDatafetched: false,
-      selectedstatusOption: {}
     }
   }
 
   componentDidMount() {
-    const { GetCase, match, history, GetDepartments } = this.props
-    if (validator.isUUID(match.params.CaseID)) {
-      GetCase(match.params.CaseID)
+    const { GetCase, match, history, GetDepartments, CaseID } = this.props
+    let Id = CaseID || match?.params?.CaseID
+    if (validator.isUUID(Id)) {
+      GetCase(Id)
       GetDepartments()
     } else {
-      history.push("/Cases")
+      history && history.push("/Cases")
     }
   }
 
@@ -39,12 +40,8 @@ export default class CasesEdit extends Component {
     const { Departments, Cases, removeCasenotification, removeDepartmentnotification } = this.props
     const { selected_record, isLoading } = Cases
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
-      this.setState({
-        selecteddepartments: selected_record.Departments.map(department => {
-          return department.Uuid
-        }), isDatafetched: true, selectedstatusOption: selected_record.CaseStatus
-      })
-      this.context.setFormstates(selected_record)
+      this.setState({ isDatafetched: true })
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, Departments: selected_record.Departmentuuids.map(u => { return u.DepartmentID }) })
     }
     Notification(Cases.notifications, removeCasenotification)
     Notification(Departments.notifications, removeDepartmentnotification)
@@ -52,7 +49,7 @@ export default class CasesEdit extends Component {
 
   render() {
 
-    const { Cases, Departments, Profile } = this.props
+    const { Cases, Departments, Profile, history } = this.props
 
     const Departmentoptions = Departments.list.map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -78,39 +75,39 @@ export default class CasesEdit extends Component {
 
     return (
       Cases.isLoading || Cases.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
-      <Pagewrapper>
-        <Headerwrapper>
-          <Headerbredcrump>
-            <Link to={"/Cases"}>
-              <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-            </Link>
-            <Breadcrumb.Divider icon='right chevron' />
-            <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
-          </Headerbredcrump>
-        </Headerwrapper>
-        <Pagedivider />
-        <Contentwrapper>
-          <Form onSubmit={this.handleSubmit}>
-            <Form.Group widths='equal'>
-              <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
-            </Form.Group>
-            <Form.Group widths='equal'>
-              <FormInput required placeholder={Literals.Columns.Casecolor[Profile.Language]} name="Casecolor" attention="blue,red,green..." />
-              <FormInput required placeholder={Literals.Columns.CaseStatus[Profile.Language]} options={casestatusOption} onChange={this.handleChangeOption} value={this.state.selectedstatusOption} formtype="dropdown" />
-            </Form.Group>
-            <Form.Group widths='equal'>
-              <FormInput required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} clearable search multiple options={Departmentoptions} onChange={this.handleChange} value={this.state.selecteddepartments} formtype="dropdown" />
-            </Form.Group>
-            <Footerwrapper>
-              <Link to="/Cases">
-                <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Cases"}>
+                <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
               </Link>
-              <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-            </Footerwrapper>
-          </Form>
-        </Contentwrapper>
-      </Pagewrapper >
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
+              <Form.Group widths='equal'>
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
+              </Form.Group>
+              <Form.Group widths='equal'>
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Casecolor[Profile.Language]} name="Casecolor" attention="blue,red,green..." />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.CaseStatus[Profile.Language]} name="CaseStatus" options={casestatusOption} formtype="dropdown" />
+              </Form.Group>
+              <Form.Group widths='equal'>
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" />
+              </Form.Group>
+              <Footerwrapper>
+                {history && <Link to="/Cases">
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+                </Link>}
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+              </Footerwrapper>
+            </Form>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
@@ -119,11 +116,10 @@ export default class CasesEdit extends Component {
     e.preventDefault()
 
     const { EditCases, history, fillCasenotification, Departments, Cases, Profile } = this.props
-    const { list } = Departments
     const data = formToObject(e.target)
-    data.CaseStatus = this.state.selectedstatusOption
-    data.Departments = this.state.selecteddepartments.map(department => {
-      return list.find(u => u.Uuid === department)
+    data.CaseStatus = this.context.formstates[`${this.PAGE_NAME}/CaseStatus`]
+    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+      return (Departments.list || []).find(u => u.Uuid === id)
     })
 
     let errors = []
@@ -149,14 +145,6 @@ export default class CasesEdit extends Component {
     } else {
       EditCases({ data: { ...Cases.selected_record, ...data }, history })
     }
-  }
-
-  handleChange = (e, { value }) => {
-    this.setState({ selecteddepartments: value })
-  }
-
-  handleChangeOption = (e, { value }) => {
-    this.setState({ selectedstatusOption: value })
   }
 }
 CasesEdit.contextType = FormContext

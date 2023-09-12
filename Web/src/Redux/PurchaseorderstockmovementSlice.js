@@ -4,6 +4,33 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Purchaseorder stock movement added successfully',
+        tr: 'Satın alma sipariş stok hareketi Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Purchaseorder stock movement updated successfully',
+        tr: 'Satın alma sipariş stok hareketi Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Purchaseorder stock movement Deleted successfully',
+        tr: 'Satın alma sipariş stok hareketi Başarı ile Silindi'
+    },
+}
+
 export const GetPurchaseorderstockmovements = createAsyncThunk(
     'Purchaseorderstockmovements/GetPurchaseorderstockmovements',
     async (_, { dispatch }) => {
@@ -34,15 +61,22 @@ export const GetPurchaseorderstockmovement = createAsyncThunk(
 
 export const AddPurchaseorderstockmovements = createAsyncThunk(
     'Purchaseorderstockmovements/AddPurchaseorderstockmovements',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCKMOVEMENT, data);
             dispatch(fillPurchaseorderstockmovementnotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Satın alma stok hareketi başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Purchaseorderstockmovements');
+            dispatch(fillPurchaseorderstockmovementnotification({
+                type: 'Clear',
+                code: 'PurchaseorderstockmovementsCreate',
+                description: '',
+            }));
+            history && history.push('/Purchaseorderstockmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +88,22 @@ export const AddPurchaseorderstockmovements = createAsyncThunk(
 
 export const EditPurchaseorderstockmovements = createAsyncThunk(
     'Purchaseorderstockmovements/EditPurchaseorderstockmovements',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDERSTOCKMOVEMENT, data);
             dispatch(fillPurchaseorderstockmovementnotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Satın alma stok hareketi başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Purchaseorderstockmovements');
+            dispatch(fillPurchaseorderstockmovementnotification({
+                type: 'Clear',
+                code: 'PurchaseorderstockmovementsUpdate',
+                description: '',
+            }));
+            history && history.push('/Purchaseorderstockmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +115,17 @@ export const EditPurchaseorderstockmovements = createAsyncThunk(
 
 export const DeletePurchaseorderstockmovements = createAsyncThunk(
     'Purchaseorderstockmovements/DeletePurchaseorderstockmovements',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
             delete data['edit'];
             delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCKMOVEMENT}/${data.Uuid}`);
             dispatch(fillPurchaseorderstockmovementnotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Satın alma stok hareketi başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {

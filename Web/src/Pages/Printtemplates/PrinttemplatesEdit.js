@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link, } from 'react-router-dom'
-import { Divider, Dropdown, Form, Grid, GridColumn, Tab } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
+import { Form, Grid, GridColumn, Tab } from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
@@ -19,47 +19,44 @@ import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
 export default class PrinttemplatesEdit extends Component {
 
+  PAGE_NAME = 'PrinttemplatesEdit'
+
   constructor(props) {
     super(props)
     this.state = {
-      selectedDepartment: "",
       template: '',
       isDatafetched: false
     }
     this.templateEditorRef = React.createRef()
   }
   componentDidMount() {
-    const { GetPrinttemplate, match, history, GetDepartments } = this.props
-    if (match.params.PrinttemplateID) {
-      GetPrinttemplate(match.params.PrinttemplateID)
-      GetDepartments()
+    const { GetPrinttemplate, match, history, PrinttemplateID } = this.props
+    let Id = PrinttemplateID || match.params.PrinttemplateID
+    if (validator.isUUID(Id)) {
+      GetPrinttemplate(Id)
     } else {
       history.push("/Printtemplates")
     }
   }
 
   componentDidUpdate() {
-    const { Departments, Printtemplates, removeDepartmentnotification, removePrinttemplatenotification } = this.props
+    const { Printtemplates, removePrinttemplatenotification } = this.props
     const { selected_record, isLoading } = Printtemplates
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedDepartment: selected_record.DepartmentID, isDatafetched: true, template: selected_record.Printtemplate
+        isDatafetched: true, template: selected_record.Printtemplate
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Printtemplates.notifications, removePrinttemplatenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Printtemplates.notifications, removePrinttemplatenotification, this.context.clearForm)
   }
 
 
   render() {
 
-    const { Printtemplates, Departments, Profile } = this.props
+    const { Printtemplates, Profile, history } = this.props
     const { isLoading, isDispatching } = Printtemplates
 
-    const Departmentoptions = Departments.list.map(department => {
-      return { key: department.Uuid, text: department.Name, value: department.Uuid }
-    })
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
@@ -84,10 +81,9 @@ export default class PrinttemplatesEdit extends Component {
                       key: 'save',
                       content: <React.Fragment>
                         <Form.Group widths={"equal"}>
-                          <FormInput required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                          <FormInput required placeholder={Literals.Columns.Valuekey[Profile.Language]} name="Valuekey" />
+                          <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                          <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Valuekey[Profile.Language]} name="Valuekey" />
                         </Form.Group>
-                        <FormInput required placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selectedDepartment} clearable search options={Departmentoptions} onChange={(e, { value }) => { this.setState({ selectedDepartment: value }) }} formtype="dropdown" />
                       </React.Fragment>
                     }
                   },
@@ -123,9 +119,12 @@ export default class PrinttemplatesEdit extends Component {
                 ]}
                 renderActiveOnly={false} />
               <Footerwrapper>
-                <Link to="/Printtemplates">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
+                <Form.Group widths={'equal'}>
+                  {history && <Link to="/Printtemplates">
+                    <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+                  </Link>}
+                  <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.setForm(this.PAGE_NAME, Printtemplates.selected_record) }}>{Literals.Button.Clear[Profile.Language]}</Button>
+                </Form.Group>
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>
@@ -140,7 +139,6 @@ export default class PrinttemplatesEdit extends Component {
     const { EditPrinttemplates, history, fillPrinttemplatenotification, Printtemplates, Profile } = this.props
 
     const data = formToObject(e.target)
-    data.DepartmentID = this.state.selectedDepartment
     data.Printtemplate = this.state.template
 
     let errors = []
@@ -149,9 +147,6 @@ export default class PrinttemplatesEdit extends Component {
     }
     if (!validator.isString(data.Valuekey)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Valuekeyrequired[Profile.Language] })
-    }
-    if (!validator.isUUID(data.DepartmentID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Departmentrequired[Profile.Language] })
     }
     if (!validator.isString(data.Printtemplate)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Printtemplaterequired[Profile.Language] })

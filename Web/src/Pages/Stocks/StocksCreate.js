@@ -14,17 +14,10 @@ import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import { FormContext } from '../../Provider/FormProvider'
 export default class StocksCreate extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      selecteddepartments: "",
-      selectedstockdefine: "",
-      selectedwarehouse: "",
-      open: false
-    }
-  }
 
+  PAGE_NAME = "StocksCreate"
 
   componentDidMount() {
     const { GetDepartments, GetStockdefines, GetWarehouses } = this.props
@@ -71,19 +64,19 @@ export default class StocksCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} onChange={this.handleChangeWarehouse} value={this.state.selectedwarehouse} formtype='dropdown' />
-                <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} onChange={this.handleChangeStockdefine} value={this.state.selectedstockdefine} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
-                <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt"  type="date" defaultValue={'2023-06-20'} />
-                <FormInput placeholder={Literals.Columns.Department[Profile.Language]} value={this.state.selecteddepartments} options={Departmentoptions} onChange={this.handleChangeDepartment} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type="date" defaultValue={'2023-06-20'} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoptions} name="DepartmentID" formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Stocks">
@@ -102,10 +95,9 @@ export default class StocksCreate extends Component {
     e.preventDefault()
     const { AddStocks, history, fillStocknotification, Profile } = this.props
     const data = formToObject(e.target)
-    console.log('data: ', data);
-    data.DepartmentID = this.state.selecteddepartments
-    data.StockdefineID = this.state.selectedstockdefine
-    data.WarehouseID = this.state.selectedwarehouse
+    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
+    data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
+    data.WarehouseID = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
     data.Status = 0
     data.Source = "Single Request"
     data.Amount = parseFloat(data.Amount)
@@ -133,24 +125,11 @@ export default class StocksCreate extends Component {
     }
   }
 
-  handleChangeDepartment = (e, { value }) => {
-    this.setState({ selecteddepartments: value })
-  }
-
-  handleChangeStockdefine = (e, { value }) => {
-    this.setState({ selectedstockdefine: value })
-  }
-  handleChangeWarehouse = (e, { value }) => {
-    this.setState({ selectedwarehouse: value })
-  }
-
-
   getLocalDate = () => {
     var today = new Date();
     let test = today.toLocaleString('tr-TR', { timeZone: 'UTC' }).substring(0, 10)
-    console.log('test: ', test);
     let value = today.toISOString().substring(0, 10)
-    console.log('value: ', value);
     return '2023-06-20'
   }
 }
+StocksCreate.contextType = FormContext

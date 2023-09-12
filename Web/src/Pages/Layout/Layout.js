@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import AppRoutes from '../../AppRoutes'
+import AppRoutes from '../../Routes'
 import Navbar from '../../Common/Navbar'
 import { Sidebar } from '../../Common/Sidebar'
 import notification from '../../Utils/Notification'

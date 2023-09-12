@@ -16,20 +16,20 @@ export default class Passwordforget extends Component {
     const { Profile } = this.props
 
     return (
-      <div style={{ backgroundImage: `url(${img.loginbg})` }} className=' font-Common w-full h-[100vh] justify-center items-center flex ' >
+      <div style={{ backgroundImage: `url(${img.loginbg})` }} className=' font-Common w-full h-[100vh] justify-center items-center flex bg-gray-100' >
         <div className='bg-white rounded-lg w-4/5 md:w-[40vmin] lg:w-[40vmin]  shadow-sm shadow-white'>
-          <div className=' bg-[#42A5F5] w-[20%] pb-[20%]   rounded-tl-lg rounded-br-[100%] ' />
+          <div className=' bg-[#2355a0] w-[20%] pb-[20%]   rounded-tl-lg rounded-br-[100%] ' />
           <Grid textAlign='center' verticalAlign='middle'>
             <Grid.Column verticalAlign='middle'>
               <div className='w-full flex justify-center items-center'>
-                <img className='w-1/3' src={img.patient} alt="" />
+                <img className='w-1/3' src={img.translatoricon} alt="" />
               </div>
-              <Header as='h3' color='blue' textAlign='center'>
+              <Header as='h3' textAlign='center'>
                 <br />
-                <p>Patient Care Hasta Bakım Sistemi</p>
+                <p className='text-[#2355a0]' >StarNote Tercüme Takip</p>
               </Header>
               <Header as='h4' color='blue' textAlign='center'>
-                <p>Parolamı Unuttum</p>
+                <p className='text-[#2355a0]' >Parolamı Unuttum</p>
               </Header>
               <Form size='large' className='p-4' onSubmit={this.RegisterHandler}>
                 <Form.Input type='email' transparent placeholder="E-Posta" name="Email" fluid icon='mail' iconPosition='left' />
@@ -52,7 +52,6 @@ export default class Passwordforget extends Component {
       </div>
     )
   }
-
   RegisterHandler = (event) => {
     event.preventDefault()
     const { Createpasswordforget, Profile, fillnotification } = this.props

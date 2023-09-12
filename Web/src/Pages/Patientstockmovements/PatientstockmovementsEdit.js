@@ -16,18 +16,21 @@ import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
 import FormInput from '../../Utils/FormInput'
 export default class PatientstockmovementsEdit extends Component {
+
+  PAGE_NAME = "PatientstockmovementsEdit"
+
   constructor(props) {
     super(props)
     this.state = {
-      selectedstock: "",
-      selectedmovement: "",
+      isDatafetched: false,
     }
   }
 
   componentDidMount() {
-    const { GetPatientstockmovement, GetPatientstocks, match, history } = this.props
-    if (match.params.PatientstockmovementID) {
-      GetPatientstockmovement(match.params.PatientstockmovementID)
+    const { GetPatientstockmovement, GetPatientstocks, match, history, PatientstockmovementID } = this.props
+    let Id = PatientstockmovementID || match?.params?.PatientstockmovementID
+    if (validator.isUUID(Id)) {
+      GetPatientstockmovement(Id)
       GetPatientstocks()
     } else {
       history.push("/Patientstockmovement")
@@ -41,18 +44,16 @@ export default class PatientstockmovementsEdit extends Component {
       && Patientstocks.list.length > 0 && !Patientstocks.isLoading
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
-        selectedstock: selected_record.stockID,
-        selectedmovement: selected_record.movementtype,
         isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
     Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
     Notification(Patientstocks.notifications, removePatientstocknotification)
   }
 
   render() {
-    const { Patientstockmovements, Patientstocks,Profile } = this.props
+    const { Patientstockmovements, Patientstocks, Profile, history } = this.props
 
     const Patientstockoptions = Patientstocks.list.map(stock => {
       return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
@@ -78,15 +79,15 @@ export default class PatientstockmovementsEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput placeholder={Literals.Columns.Stockdefine[Profile.Language]} value={this.state.selectedstock} options={Patientstockoptions} onChange={this.handleChangeStock} formtype="dropdown" />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockID" options={Patientstockoptions} formtype="dropdown" />
               <Form.Group widths='equal'>
-                <FormInput placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" />
-                <FormInput placeholder={Literals.Columns.Movementtype[Profile.Language]} value={this.state.selectedmovement} options={Movementoptions} onChange={this.handleChangeMovement} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype="dropdown" />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Patientstockmovements">
+                {history && <Link to="/Patientstockmovements">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
+                </Link>}
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>
@@ -100,8 +101,8 @@ export default class PatientstockmovementsEdit extends Component {
     e.preventDefault()
     const { EditPatientstockmovements, history, fillPatientstockmovementnotification, Patientstockmovements, Profile } = this.props
     const data = formToObject(e.target)
-    data.StockID = this.state.selectedstock
-    data.Movementtype = this.state.selectedmovement
+    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
+    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
     data.Movementdate = new Date()
     data.Movementtype && (data.Movementdate = parseInt(data.Movementtype))
     data.Amount && (data.Amount = parseFloat(data.Amount))
@@ -123,22 +124,6 @@ export default class PatientstockmovementsEdit extends Component {
     } else {
       EditPatientstockmovements({ data: { ...Patientstockmovements.selected_record, ...data }, history })
     }
-  }
-
-
-  handleChangeStock = (e, { value }) => {
-    this.setState({ selectedstock: value })
-  }
-  handleChangeMovement = (e, { value }) => {
-    this.setState({ selectedmovement: value })
-  }
-
-
-  getLocalDate = () => {
-    var curr = new Date();
-    curr.setDate(curr.getDate() + 3);
-    var date = curr.toISOString().substring(0, 10);
-    return date
   }
 }
 PatientstockmovementsEdit.contextType = FormContext

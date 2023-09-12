@@ -4,6 +4,33 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
+const Literals = {
+    addcode: {
+        en: 'Data Save',
+        tr: 'Veri Kaydetme'
+    },
+    adddescription: {
+        en: 'Print template added successfully',
+        tr: 'Yazdırma taslağı Başarı ile eklendi'
+    },
+    updatecode: {
+        en: 'Data Update',
+        tr: 'Veri Güncelleme'
+    },
+    updatedescription: {
+        en: 'Print template updated successfully',
+        tr: 'Yazdırma taslağı Başarı ile güncellendi'
+    },
+    deletecode: {
+        en: 'Data Delete',
+        tr: 'Veri Silme'
+    },
+    deletedescription: {
+        en: 'Print template Deleted successfully',
+        tr: 'Yazdırma taslağı Başarı ile Silindi'
+    },
+}
+
 export const GetPrinttemplates = createAsyncThunk(
     'Printtemplates/GetPrinttemplates',
     async (_, { dispatch }) => {
@@ -34,15 +61,22 @@ export const GetPrinttemplate = createAsyncThunk(
 
 export const AddPrinttemplates = createAsyncThunk(
     'Printtemplates/AddPrinttemplates',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.System, ROUTES.PRINTTEMPLATE, data);
             dispatch(fillPrinttemplatenotification({
                 type: 'Success',
-                code: 'Veri Kaydetme',
-                description: 'Yazırma taslağı başarı ile Eklendi',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            history.push('/Printtemplates');
+            dispatch(fillPrinttemplatenotification({
+                type: 'Clear',
+                code: 'PrinttemplatesCreate',
+                description: '',
+            }));
+            history && history.push('/Printtemplates');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -54,15 +88,22 @@ export const AddPrinttemplates = createAsyncThunk(
 
 export const EditPrinttemplates = createAsyncThunk(
     'Printtemplates/EditPrinttemplates',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data, history }, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.System, ROUTES.PRINTTEMPLATE, data);
             dispatch(fillPrinttemplatenotification({
                 type: 'Success',
-                code: 'Veri Güncelleme',
-                description: 'Yazırma taslağı başarı ile Güncellendi',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
             }));
-            history.push('/Printtemplates');
+            dispatch(fillPrinttemplatenotification({
+                type: 'Clear',
+                code: 'PrinttemplatesEdit',
+                description: '',
+            }));
+            history && history.push('/Printtemplates');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -74,15 +115,17 @@ export const EditPrinttemplates = createAsyncThunk(
 
 export const DeletePrinttemplates = createAsyncThunk(
     'Printtemplates/DeletePrinttemplates',
-    async (data, { dispatch }) => {
+    async (data, { dispatch, getState }) => {
         try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
             delete data['edit'];
             delete data['delete'];
             const response = await instanse.delete(config.services.System, `${ROUTES.PRINTTEMPLATE}/${data.Uuid}`);
             dispatch(fillPrinttemplatenotification({
                 type: 'Success',
-                code: 'Veri Silme',
-                description: 'Yazırma taslağı başarı ile Silindi',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {
