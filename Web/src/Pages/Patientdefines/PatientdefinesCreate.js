@@ -36,11 +36,11 @@ export default class PatientdefinesCreate extends Component {
   render() {
     const { Costumertypes, Patienttypes, Patientdefines, Profile, history } = this.props
 
-    const Costumertypeoptions = Costumertypes.list.map(costumertype => {
+    const Costumertypeoptions = (Costumertypes.list || []).filter(u => u.Isactive).map(costumertype => {
       return { key: costumertype.Uuid, text: costumertype.Name, value: costumertype.Uuid }
     })
 
-    const Patienttypeoptions = Patienttypes.list.map(patienttype => {
+    const Patienttypeoptions = (Patienttypes.list || []).filter(u => u.Isactive).map(patienttype => {
       return { key: patienttype.Uuid, text: patienttype.Name, value: patienttype.Uuid }
     })
 

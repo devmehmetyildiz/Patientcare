@@ -55,7 +55,7 @@ export default class UnitsEdit extends Component {
 
     const { Units, Departments, Profile } = this.props
 
-    const Departmentoptions = Departments.list.map(department => {
+    const Departmentoptions = (Departments.list || []).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 

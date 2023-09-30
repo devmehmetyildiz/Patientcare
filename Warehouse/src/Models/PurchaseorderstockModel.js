@@ -16,6 +16,12 @@ module.exports = sequelize.define('purchaseorderstockModel', {
     DepartmentID: {
         type: Sequelize.STRING
     },
+    Ismedicine: {
+        type: Sequelize.BOOLEAN
+    },
+    Isapproved: {
+        type: Sequelize.BOOLEAN
+    },
     Skt: {
         type: Sequelize.DATE
     },

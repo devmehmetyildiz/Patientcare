@@ -75,8 +75,9 @@ export function Sidebar(props) {
             icon: <TbActivity className='text-green-400' />,
             items: [
                 { id: 1, subtitle: Literals.Warehouses.Page.Pageheader[Profile.Language], url: "/Warehouses" },
-                { id: 2, subtitle: Literals.Stocks.Page.Pageheader[Profile.Language], url: "/Stocks" },
-                { id: 3, subtitle: Literals.Stockmovements.Page.Pageheader[Profile.Language], url: "/Stockmovements" },
+                { id: 2, subtitle: Literals.Medicines.Page.Pageheader[Profile.Language], url: "/Medicines" },
+                { id: 3, subtitle: Literals.Stocks.Page.Pageheader[Profile.Language], url: "/Stocks" },
+                { id: 4, subtitle: Literals.Stockmovements.Page.Pageheader[Profile.Language], url: "/Stockmovements" },
             ]
         },
         {

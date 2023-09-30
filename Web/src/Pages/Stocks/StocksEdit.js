@@ -65,13 +65,13 @@ export default class StocksEdit extends Component {
   render() {
     const { Stocks, Warehouses, Departments, Stockdefines, Profile } = this.props
 
-    const Departmentoptions = Departments.list.map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
-    const Stockdefineoptions = Stockdefines.list.map(define => {
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
-    const Warehouseoptions = Warehouses.list.map(warehouse => {
+    const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
       return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
     })
 

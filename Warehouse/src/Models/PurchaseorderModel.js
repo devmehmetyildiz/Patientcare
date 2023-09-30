@@ -37,6 +37,9 @@ module.exports = sequelize.define('purchaseorderModel', {
     CaseID: {
         type: Sequelize.STRING
     },
+    Isapproved: {
+        type: Sequelize.BOOLEAN
+    },
     Createduser: {
         type: Sequelize.STRING
     },

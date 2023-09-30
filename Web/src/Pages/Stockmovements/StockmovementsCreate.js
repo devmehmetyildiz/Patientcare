@@ -20,28 +20,45 @@ export default class StockmovementsCreate extends Component {
   PAGE_NAME = "StockmovementsCreate"
 
   componentDidMount() {
-    const { GetStocks } = this.props
+    const { GetStocks, GetStockdefines } = this.props
     GetStocks()
+    GetStockdefines()
+
+
   }
 
   componentDidUpdate() {
-    const { Stockmovements, removeStockmovementnotification,
+    const { Stockmovements, Stockdefines, removeStockdefinenotification, removeStockmovementnotification,
       Stocks, removeStocknotification } = this.props
     Notification(Stockmovements.notifications, removeStockmovementnotification)
     Notification(Stocks.notifications, removeStocknotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
   }
 
   render() {
-    const { Stockmovements, Stocks, Profile } = this.props
+    const { Stockmovements, Stocks, Stockdefines, Profile, location } = this.props
 
-    const Stockoptions = Stocks.list.map(stock => {
-      return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
+    const Stockoptions = (Stocks.list || []).filter(u => u.Isactive).map(stock => {
+      return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
     })
 
     const Movementoptions = [
       { key: -1, text: Literals.Options.Movementoptions.value0[Profile.Language], value: -1 },
       { key: 1, text: Literals.Options.Movementoptions.value1[Profile.Language], value: 1 },
     ]
+
+    console.log('this.context.formstates[`${this.PAGE_NAME}/StockID`]): ', this.context.formstates[`${this.PAGE_NAME}/StockID`]);
+    if (!validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/StockID`])) {
+      const search = new URLSearchParams(location.search)
+      const StockID = search.get('StockID') ? search.get('StockID') : ''
+      if (validator.isUUID(StockID) && (Stocks.list || []).find(u => u.Uuid === StockID)) {
+        this.context.setFormstates({
+          ...this.context.formstates,
+          [`${this.PAGE_NAME}/StockID`]: StockID ? StockID : '',
+        })
+      }
+    }
+
 
     return (
       Stocks.isLoading || Stocks.isDispatching || Stockmovements.isLoading || Stockmovements.isDispatching ? <LoadingPage /> :
@@ -58,7 +75,7 @@ export default class StockmovementsCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockoptions} name="StockdefineID" formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockoptions} name="StockID" formtype='dropdown' />
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
@@ -106,15 +123,6 @@ export default class StockmovementsCreate extends Component {
       AddStockmovements({ data, history })
     }
   }
-
-
-  handleChangeStock = (e, { value }) => {
-    this.setState({ selectedstock: value })
-  }
-  handleChangeMovement = (e, { value }) => {
-    this.setState({ selectedmovement: value })
-  }
-
 
   getLocalDate = () => {
     var curr = new Date();

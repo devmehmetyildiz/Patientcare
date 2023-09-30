@@ -348,6 +348,7 @@ async function CompletePurchaseorder(req, res, next) {
 
         await db.purchaseorderModel.update({
             ...req.body,
+            Isapproved: true,
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
@@ -355,7 +356,7 @@ async function CompletePurchaseorder(req, res, next) {
         for (const purchaseorderstock of Stocks) {
 
             let amount = 0;
-            let movements = await db.purchaseorderstockmovementModel.findAll({ where: { StockID: purchaseorderstock.Uuid } })
+            let movements = await db.purchaseorderstockmovementModel.findAll({ where: { StockID: purchaseorderstock.Uuid, Isapproved: true } })
             for (const movement of movements) {
                 amount += (movement.Amount * movement.Movementtype);
             }
@@ -373,6 +374,7 @@ async function CompletePurchaseorder(req, res, next) {
                 let newstockUuid = uuid()
                 await db.stockModel.create({
                     Uuid: newstockUuid,
+                    Isapproved: true,
                     Barcodeno: purchaseorderstock.Barcodeno,
                     DepartmentID: purchaseorderstock.DepartmentID,
                     Info: purchaseorderstock.Info,
@@ -385,6 +387,7 @@ async function CompletePurchaseorder(req, res, next) {
                 }, { transaction: t })
                 await db.stockmovementModel.create({
                     Uuid: uuid(),
+                    Isapproved: true,
                     StockID: newstockUuid,
                     Amount: amount,
                     Movementdate: new Date(),
@@ -403,6 +406,7 @@ async function CompletePurchaseorder(req, res, next) {
                 }
                 await db.stockmovementModel.create({
                     Uuid: uuid(),
+                    Isapproved: true,
                     StockID: foundedstock.Uuid,
                     Amount: amount,
                     Movementdate: new Date(),
@@ -416,9 +420,15 @@ async function CompletePurchaseorder(req, res, next) {
             }
 
             let body = DataCleaner(purchaseorderstock)
+            await db.purchaseorderstockmovementModel.update({
+                Isapproved: true,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { StockID: purchaseorderstock.Uuid } }, { transaction: t })
             await db.purchaseorderstockModel.update({
                 ...body,
                 Status: 1,
+                Isapproved: true,
                 Updateduser: "System",
                 Updatetime: new Date(),
             }, { where: { Uuid: purchaseorderstock.Uuid } }, { transaction: t })

@@ -37,10 +37,10 @@ export default class TodogroupdefinesCreate extends Component {
   render() {
     const { Todogroupdefines, Departments, Tododefines, Profile } = this.props
 
-    const Tododefineoptions = Tododefines.list.map(tododefine => {
+    const Tododefineoptions = (Tododefines.list || []).filter(u => u.Isactive).map(tododefine => {
       return { key: tododefine.Uuid, text: tododefine.Name, value: tododefine.Uuid }
     })
-    const Departmentoptions = Departments.list.map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 

@@ -35,10 +35,10 @@ export default class StockdefinesCreate extends Component {
   render() {
     const { Departments, Units, Stockdefines, history, Profile } = this.props
 
-    const Departmentoption = Departments.list.map(station => {
+    const Departmentoption = (Departments.list || []).filter(u => u.Isactive).map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
-    const Unitoption = Units.list.map(station => {
+    const Unitoption = (Units.list || []).filter(u => u.Isactive).map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
 

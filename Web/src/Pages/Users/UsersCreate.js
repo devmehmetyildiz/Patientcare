@@ -39,13 +39,13 @@ export default class UsersCreate extends Component {
 
     const { Departments, Users, Stations, Roles, Profile } = this.props
 
-    const Stationoptions = Stations.list.map(station => {
+    const Stationoptions = (Stations.list || []).filter(u => u.Isactive).map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
-    const Roleoptions = Roles.list.map(roles => {
+    const Roleoptions = (Roles.list || []).filter(u => u.Isactive).map(roles => {
       return { key: roles.Uuid, text: roles.Name, value: roles.Uuid }
     })
-    const Departmentoptions = Departments.list.map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 

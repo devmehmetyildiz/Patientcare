@@ -54,7 +54,7 @@ export default class TododefinesEdit extends Component {
     const { Tododefines, Checkperiods, Profile } = this.props
     const { isLoading, isDispatching } = Tododefines
 
-    const Checkperiodsoptions = Checkperiods.list.map(checkperiod => {
+    const Checkperiodsoptions = (Checkperiods.list || []).filter(u => u.Isactive).map(checkperiod => {
       return { key: checkperiod.Uuid, text: checkperiod.Name, value: checkperiod.Uuid }
     })
 

@@ -33,7 +33,7 @@ export default class DepartmentsCreate extends Component {
   render() {
     const { Departments, Stations, Profile, history } = this.props
 
-    const Stationoptions = Stations.list.map(station => {
+    const Stationoptions = (Stations.list || []).filter(u => u.Isactive).map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
 

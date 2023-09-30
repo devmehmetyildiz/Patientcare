@@ -70,18 +70,18 @@ export default class PurchaseordersEdit extends Component {
     const { Cases, Departments, Stockdefines, Warehouses, Purchaseorders, Profile } = this.props
     const { isLoading, isDispatching } = Purchaseorders
 
-    const Stockdefinesoption = (Stockdefines.list || []).map(stockdefine => {
+    const Stockdefinesoption = (Stockdefines.list || []).filter(u => u.Isactive).map(stockdefine => {
       return { key: stockdefine.Uuid, text: stockdefine.Name, value: stockdefine.Uuid }
     })
 
-    const Departmentsoption = (Departments.list || []).map(department => {
+    const Departmentsoption = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const Casesoption = (Cases.list || []).filter(u => u.caseStatus !== 1).map(cases => {
+    const Casesoption = (Cases.list || []).filter(u => u.Isactive).filter(u => u.caseStatus !== 1).map(cases => {
       return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
     })
-    const Warehousesoption = (Warehouses.list || []).map(warehouse => {
+    const Warehousesoption = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
       return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
     })
 

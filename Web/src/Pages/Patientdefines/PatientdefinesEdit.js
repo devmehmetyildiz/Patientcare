@@ -55,11 +55,11 @@ export default class PatientdefinesEdit extends Component {
   render() {
     const { Costumertypes, Patienttypes, Patientdefines, Profile, history } = this.props
 
-    const Costumertypeoptions = Costumertypes.list.map(costumertype => {
+    const Costumertypeoptions = (Costumertypes.list || []).filter(u => u.Isactive).map(costumertype => {
       return { key: costumertype.Uuid, text: costumertype.Name, value: costumertype.Uuid }
     })
 
-    const Patienttypeoptions = Patienttypes.list.map(patienttype => {
+    const Patienttypeoptions = (Patienttypes.list || []).filter(u => u.Isactive).map(patienttype => {
       return { key: patienttype.Uuid, text: patienttype.Name, value: patienttype.Uuid }
     })
 
@@ -92,7 +92,7 @@ export default class PatientdefinesEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-            <Form.Group widths='equal'>
+              <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Firstname[Profile.Language]} name="Firstname" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Lastname[Profile.Language]} name="Lastname" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Fathername[Profile.Language]} name="Fathername" />

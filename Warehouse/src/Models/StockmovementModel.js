@@ -10,6 +10,9 @@ module.exports = sequelize.define('stockmovementModel', {
     StockID: {
         type: Sequelize.STRING
     },
+    Isapproved: {
+        type: Sequelize.BOOLEAN
+    },
     Movementtype: {
         type: Sequelize.INTEGER
     },

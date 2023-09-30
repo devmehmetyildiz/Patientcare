@@ -12,7 +12,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import StocksDelete from '../../Containers/Stocks/StocksDelete'
-export default class Stocks extends Component {
+
+export default class Medicines extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -62,11 +63,11 @@ export default class Stocks extends Component {
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.change[Profile.Language], accessor: 'change', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
+      { Header: Literals.Columns.watch[Profile.Language], accessor: 'watch', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
-    const metaKey = "Stocks"
+    const metaKey = "Medicines"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
@@ -80,12 +81,12 @@ export default class Stocks extends Component {
       }) : [],
     };
 
-    const list = (Stocks.list || []).filter(u => u.Isactive).map(item => {
+    const list = (Stocks.list || []).filter(u => u.Isactive && u.Ismedicines).map(item => {
       return {
         ...item,
-        change: <Link to={`/Stockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
+        watch: <Link to={`/Medicinemovement/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
         kill: <Icon link size='large' className='text-[#c5a47e] hover:text-[#ca975c]' name='bomb' onClick={() => { this.setState({ selectedrecord: item, openDeactivate: true }) }} />,
-        edit: <Link to={`/Stocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        edit: <Link to={`/Medicines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedStock(item)
           handleDeletemodal(true)
@@ -101,13 +102,13 @@ export default class Stocks extends Component {
               <Grid columns='2' >
                 <GridColumn width={8} className="">
                   <Breadcrumb size='big'>
-                    <Link to={"/Stocks"}>
+                    <Link to={"/Medicines"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
                 <GridColumn width={8} >
-                  <Link to={"/Stocks/Create"}>
+                  <Link to={"/Medicines/Create"}>
                     <Button color='blue' floated='right' className='list-right-green-button'>
                       {Literals.Page.Pagecreateheader[Profile.Language]}
                     </Button>

@@ -20,6 +20,7 @@ import Stations from "../Pages/Stations/Literals"
 import Stockdefines from "../Pages/Stockdefines/Literals"
 import Stockmovements from "../Pages/Stockmovements/Literals"
 import Stocks from "../Pages/Stocks/Literals"
+import Medicines from "../Pages/Medicines/Literals"
 import Tododefines from "../Pages/Tododefines/Literals"
 import Todogroupdefines from "../Pages/Todogroupdefines/Literals"
 import Units from "../Pages/Units/Literals"
@@ -55,7 +56,8 @@ const Literals = {
     Units,
     Users,
     Warehouses,
-    Rules
+    Rules,
+    Medicines
 }
 
 export default Literals

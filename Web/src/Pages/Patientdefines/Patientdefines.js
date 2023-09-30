@@ -14,22 +14,19 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import PatientdefinesDelete from "../../Containers/Patientdefines/PatientdefinesDelete"
 export default class Patientdefines extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-      selectedrecord: {}
-    }
-  }
-
   componentDidMount() {
-    const { GetPatientdefines } = this.props
+    const { GetPatientdefines, GetPatienttypes, GetCostumertypes } = this.props
     GetPatientdefines()
+    GetPatienttypes()
+    GetCostumertypes()
   }
 
   componentDidUpdate() {
-    const { Patientdefines, removePatientdefinenotification } = this.props
+    const { Patientdefines, removePatientdefinenotification, Patienttypes, removePatienttypenotification,
+      Costumertypes, removeCostumertypeNotification } = this.props
     Notification(Patientdefines.notifications, removePatientdefinenotification)
+    Notification(Patienttypes.notifications, removePatienttypenotification)
+    Notification(Costumertypes.notifications, removeCostumertypeNotification)
   }
 
   render() {
@@ -88,7 +85,10 @@ export default class Patientdefines extends Component {
       }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
       columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
-      }) : []
+      }) : [],
+      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
+        return item.key
+      }) : [],
     };
 
 

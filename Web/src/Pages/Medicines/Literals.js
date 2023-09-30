@@ -11,8 +11,8 @@ const Literals = {
             en: 'Unique ID'
         },
         Stockdefine: {
-            tr: 'Stok Adı',
-            en: 'Stock Name'
+            tr: 'İlaç Adı',
+            en: 'Medicine Name'
         },
         Warehouse: {
             tr: 'Ambar Adı',
@@ -62,9 +62,9 @@ const Literals = {
             tr: 'Güncelle',
             en: 'Edit'
         },
-        change: {
-            tr: 'Miktar Gir',
-            en: 'Enter Amount'
+        watch: {
+            tr: 'İzle',
+            en: 'Watch'
         },
         delete: {
             tr: 'Sil',
@@ -73,8 +73,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Stoklar",
-            en: "Stocks"
+            tr: "İlaçlar",
+            en: "Medicines"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -85,8 +85,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Stok Silme",
-            en: "Delete Stocks"
+            tr: "İlaç Silme",
+            en: "Delete Medicines"
         }
     },
     Button: {
@@ -114,12 +114,12 @@ const Literals = {
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Stok Yok",
-            en: "There is no stock found"
+            tr: "Tanımlı İlaç Yok",
+            en: "There is no medicine found"
         },
         Deletecheck: {
-            tr: "Stok hareketini silmek istediğinize emin misiniz?",
-            en: "Stock will delete, are you sure?"
+            tr: "İlacını silmek istediğinize emin misiniz?",
+            en: "Medicine will delete, are you sure?"
         },
         DepartmentRequired: {
             tr: "Departman Gerekli",

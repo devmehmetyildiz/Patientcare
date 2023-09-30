@@ -28,18 +28,19 @@ export default class StockmovementsEdit extends Component {
 
 
   componentDidMount() {
-    const { GetStockmovement, GetStocks, match, history, StockmovementID } = this.props
+    const { GetStockmovement, GetStocks, GetStockdefines, match, history, StockmovementID } = this.props
     let Id = StockmovementID || match.params.StockmovementID
     if (validator.isUUID(Id)) {
       GetStockmovement(Id)
       GetStocks()
+      GetStockdefines()
     } else {
       history.push("/Stockmovements")
     }
   }
 
   componentDidUpdate() {
-    const { Stocks, Stockmovements,
+    const { Stocks, Stockmovements, Stockdefines, removeStockdefinenotification,
       removeStockmovementnotification, removeStocknotification } = this.props
     const { selected_record, isLoading } = Stockmovements
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
@@ -51,14 +52,15 @@ export default class StockmovementsEdit extends Component {
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
     Notification(Stocks.notifications, removeStocknotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
     Notification(Stockmovements.notifications, removeStockmovementnotification)
   }
 
   render() {
-    const { Stockmovements, Stocks, Profile } = this.props
+    const { Stockmovements, Stocks, Profile, Stockdefines } = this.props
 
-    const Stockoptions = Stocks.list.map(stock => {
-      return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
+    const Stockoptions = (Stocks.list || []).filter(u => u.Isactive).map(stock => {
+      return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
     })
 
     const Movementoptions = [
@@ -81,7 +83,7 @@ export default class StockmovementsEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockoptions} name="StockdefineID" formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockoptions} name="StockID" formtype='dropdown' />
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
@@ -124,15 +126,6 @@ export default class StockmovementsEdit extends Component {
       EditStockmovements({ data: { ...Stockmovements.selected_record, ...data }, history })
     }
   }
-
-
-  handleChangeStock = (e, { value }) => {
-    this.setState({ selectedstock: value })
-  }
-  handleChangeMovement = (e, { value }) => {
-    this.setState({ selectedmovement: value })
-  }
-
 
   getLocalDate = () => {
     var curr = new Date();

@@ -34,7 +34,7 @@ export default class PurchaseorderstockmovementsCreate extends Component {
   render() {
     const { Purchaseorderstockmovements, Purchaseorderstocks, Profile } = this.props
 
-    const Purchaseorderstockoptions = Purchaseorderstocks.list.map(stock => {
+    const Purchaseorderstockoptions = (Purchaseorderstocks.list || []).filter(u => u.Isactive).map(stock => {
       return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
     })
 

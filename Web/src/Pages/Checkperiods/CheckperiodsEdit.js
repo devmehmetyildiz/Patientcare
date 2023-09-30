@@ -56,7 +56,7 @@ export default class CheckperiodsEdit extends Component {
   render() {
     const { Checkperiods, Periods, Profile, history } = this.props
 
-    const Periodoptions = Periods.list.map(period => {
+    const Periodoptions = (Periods.list || []).filter(u => u.Isactive).map(period => {
       return { key: period.Uuid, text: period.Name, value: period.Uuid }
     })
 

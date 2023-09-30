@@ -1,17 +1,16 @@
 import axios from 'axios';
 import cookies from 'universal-cookie';
 
-
-const acInstanse = axios.create({
-    withCredentials: true
-});
-const localcookies = new cookies();
-acInstanse.defaults.headers.common['Authorization'] = "Bearer " + localcookies.get('patientcare')
-acInstanse.defaults.headers.common['Language'] = localcookies.get('Language')
-
 function getRequest(service, url) {
     return new Promise((resolve, reject) => {
-        acInstanse.get(service + url)
+        const localcookies = new cookies();
+        axios.get(service + url,
+            {
+                headers: {
+                    Authorization: "Bearer " + localcookies.get('patientcare'),
+                    Language: localcookies.get('Language')
+                }
+            })
             .then(response => resolve(response))
             .catch(error => reject(error))
     })
@@ -19,7 +18,14 @@ function getRequest(service, url) {
 
 function postRequest(service, url, data) {
     return new Promise((resolve, reject) => {
-        acInstanse.post(service + url, data)
+        const localcookies = new cookies();
+        axios.post(service + url, data,
+            {
+                headers: {
+                    Authorization: "Bearer " + localcookies.get('patientcare'),
+                    Language: localcookies.get('Language')
+                }
+            })
             .then(response => resolve(response))
             .catch(error => reject(error))
     })
@@ -27,7 +33,14 @@ function postRequest(service, url, data) {
 
 function putRequest(service, url, data) {
     return new Promise((resolve, reject) => {
-        acInstanse.put(service + url, data)
+        const localcookies = new cookies();
+        axios.put(service + url, data,
+            {
+                headers: {
+                    Authorization: "Bearer " + localcookies.get('patientcare'),
+                    Language: localcookies.get('Language')
+                }
+            })
             .then(response => resolve(response))
             .catch(error => reject(error))
     })
@@ -35,7 +48,14 @@ function putRequest(service, url, data) {
 
 function deleteRequest(service, url, data) {
     return new Promise((resolve, reject) => {
-        acInstanse.delete(service + url, data)
+        const localcookies = new cookies();
+        axios.delete(service + url,
+            {
+                headers: {
+                    Authorization: "Bearer " + localcookies.get('patientcare'),
+                    Language: localcookies.get('Language')
+                }
+            })
             .then(response => resolve(response))
             .catch(error => reject(error))
     })

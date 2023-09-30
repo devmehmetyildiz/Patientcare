@@ -55,7 +55,7 @@ export default class PatientstockmovementsEdit extends Component {
   render() {
     const { Patientstockmovements, Patientstocks, Profile, history } = this.props
 
-    const Patientstockoptions = Patientstocks.list.map(stock => {
+    const Patientstockoptions = (Patientstocks.list || []).filter(u => u.Isactive).map(stock => {
       return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
     })
 

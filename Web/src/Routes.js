@@ -91,6 +91,10 @@ const Stocks = lazy(() => import('./Containers/Stocks/Stocks'));
 const StocksCreate = lazy(() => import('./Containers/Stocks/StocksCreate'));
 const StocksEdit = lazy(() => import('./Containers/Stocks/StocksEdit'));
 
+const Medicines = lazy(() => import('./Containers/Medicines/Medicines'));
+const MedicinesCreate = lazy(() => import('./Containers/Medicines/MedicinesCreate'));
+const MedicinesEdit = lazy(() => import('./Containers/Medicines/MedicinesEdit'));
+
 const Stockmovements = lazy(() => import('./Containers/Stockmovements/Stockmovements'));
 const StockmovementsCreate = lazy(() => import('./Containers/Stockmovements/StockmovementsCreate'));
 const StockmovementsEdit = lazy(() => import('./Containers/Stockmovements/StockmovementsEdit'));
@@ -124,8 +128,6 @@ const MailsettingsEdit = lazy(() => import('./Containers/Mailsettings/Mailsettin
 const Printtemplates = lazy(() => import('./Containers/Printtemplates/Printtemplates'));
 const PrinttemplatesCreate = lazy(() => import('./Containers/Printtemplates/PrinttemplatesCreate'));
 const PrinttemplatesEdit = lazy(() => import('./Containers/Printtemplates/PrinttemplatesEdit'));
-
-const Stockmovementsdetail = lazy(() => import('./Containers/Stocks/Stockmovementsdetail'));
 
 const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
 const PasswordChange = lazy(() => import('./Containers/Auth/PasswordChange'));
@@ -162,11 +164,12 @@ class Routes extends Component {
       { exact: true, path: "/Stocks", auth: true, component: Stocks },
       { exact: true, path: "/Stocks/Create", auth: true, component: StocksCreate },
       { exact: true, path: "/Stocks/:StockID/Edit", auth: true, component: StocksEdit },
+      { exact: true, path: "/Medicines", auth: true, component: Medicines },
+      { exact: true, path: "/Medicines/Create", auth: true, component: MedicinesCreate },
+      { exact: true, path: "/Medicines/:StockID/Edit", auth: true, component: MedicinesEdit },
       { exact: true, path: "/Stockmovements", auth: true, component: Stockmovements },
       { exact: true, path: "/Stockmovements/Create", auth: true, component: StockmovementsCreate },
       { exact: true, path: "/Stockmovements/:StockmovementID/Edit", auth: true, component: StockmovementsEdit },
-      { exact: true, path: "/Stockmovement/:StockmovementID", auth: true, component: Stockmovementsdetail },
-      { exact: true, path: "/Stockmovement", auth: true, component: Stockmovementsdetail },
       { exact: true, path: "/Users", auth: true, component: Users },
       { exact: true, path: "/Users/Create", auth: true, component: UsersCreate },
       { exact: true, path: "/Users/:UserID/Edit", auth: true, component: UsersEdit },

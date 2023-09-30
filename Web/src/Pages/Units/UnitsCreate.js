@@ -33,7 +33,7 @@ export default class UnitsCreate extends Component {
   render() {
     const { Units, Departments, Profile } = this.props
 
-    const Departmentoptions = Departments.list.map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 

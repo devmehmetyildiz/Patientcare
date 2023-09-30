@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form } from 'semantic-ui-react'
-import { Breadcrumb, Button } from 'semantic-ui-react'
+import { Divider, Dropdown, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Literals from './Literals'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
@@ -14,30 +13,31 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
-export default class PurchaseorderstocksCreate extends Component {
 
-  PAGE_NAME = "PurchaseorderstocksCreate"
+export default class MedicinesCreate extends Component {
+
+  PAGE_NAME = "MedicinesCreate"
 
   componentDidMount() {
-    const { GetDepartments, GetStockdefines, GetPurchaseorders } = this.props
+    const { GetDepartments, GetStockdefines, GetWarehouses } = this.props
     GetDepartments()
     GetStockdefines()
-    GetPurchaseorders()
+    GetWarehouses()
   }
 
   componentDidUpdate() {
-    const { Purchaseorders, Purchaseorderstocks, removePurchaseordernotification, Departments, Stockdefines,
-      removeStockdefinenotification, removePurchaseorderstocknotification, removeDepartmentnotification } = this.props
-
-    Notification(Purchaseorders.notifications, removePurchaseordernotification)
+    const { Stocks, Warehouses, removeWarehousenotification, removeStocknotification,
+      Departments, Stockdefines, removeStockdefinenotification, removeDepartmentnotification } = this.props
+    Notification(Stocks.notifications, removeStocknotification)
+    Notification(Warehouses.notifications, removeWarehousenotification)
     Notification(Departments.notifications, removeDepartmentnotification)
     Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
   }
 
   render() {
-    const { Purchaseorders, Purchaseorderstocks, Departments, Stockdefines, Profile } = this.props
+    const { Stocks, Warehouses, Departments, Stockdefines, Profile } = this.props
 
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -45,16 +45,16 @@ export default class PurchaseorderstocksCreate extends Component {
     const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
-    const Purchaseorderoptions = (Purchaseorders.list || []).filter(u => u.Isactive).map(order => {
-      return { key: order.Uuid, text: order.Purchasenumber, value: order.Uuid }
+    const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
+      return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
     })
 
     return (
-      Stockdefines.isLoading || Stockdefines.isDispatching || Purchaseorderstocks.isLoading || Purchaseorderstocks.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
+      Stockdefines.isLoading || Stockdefines.isDispatching || Stocks.isLoading || Stocks.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
-              <Link to={"/Purchaseorderstocks"}>
+              <Link to={"/Medicines"}>
                 <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
@@ -65,19 +65,22 @@ export default class PurchaseorderstocksCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchaseorder[Profile.Language]} name="PurchaseorderID" options={Purchaseorderoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type="date" defaultValue={'2023-06-20'} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoptions} name="DepartmentID" formtype='dropdown' />
+              </Form.Group>
+              <Form.Group widths='equal'>
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Purchaseorderstocks">
+                <Link to="/Medicines">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
@@ -91,24 +94,22 @@ export default class PurchaseorderstocksCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddPurchaseorderstocks, history, fillPurchaseorderstocknotification, Profile } = this.props
+    const { AddStocks, history, fillStocknotification, Profile } = this.props
     const data = formToObject(e.target)
-    data.Amount = parseFloat(data.Amount)
     data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
     data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
-    data.PurchaseorderID = this.context.formstates[`${this.PAGE_NAME}/PurchaseorderID`]
+    data.WarehouseID = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
     data.Status = 0
-    data.IsActive = true
-    data.Maxamount = data.Amount
     data.Source = "Single Request"
+    data.Amount = parseFloat(data.Amount)
     data.Isonusage = false
     data.Order = 1
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
     }
-    if (!validator.isUUID(data.PurchaseorderID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PurchasenumberRequired[Profile.Language] })
+    if (!validator.isUUID(data.WarehouseID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.WarehouseRequired[Profile.Language] })
     }
     if (!validator.isUUID(data.StockdefineID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StokdefineRequired[Profile.Language] })
@@ -118,18 +119,18 @@ export default class PurchaseorderstocksCreate extends Component {
     }
     if (errors.length > 0) {
       errors.forEach(error => {
-        fillPurchaseorderstocknotification(error)
+        fillStocknotification(error)
       })
     } else {
-      AddPurchaseorderstocks({ data, history })
+      AddStocks({ data, history })
     }
   }
 
   getLocalDate = () => {
-    var curr = new Date();
-    curr.setDate(curr.getDate() + 3);
-    var date = curr.toISOString().substring(0, 10);
-    return date
+    var today = new Date();
+    let test = today.toLocaleString('tr-TR', { timeZone: 'UTC' }).substring(0, 10)
+    let value = today.toISOString().substring(0, 10)
+    return '2023-06-20'
   }
 }
-PurchaseorderstocksCreate.contextType = FormContext
+MedicinesCreate.contextType = FormContext

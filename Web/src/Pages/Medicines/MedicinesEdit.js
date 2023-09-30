@@ -5,7 +5,6 @@ import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Literals from './Literals'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
@@ -14,10 +13,11 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
-export default class PurchaseorderstocksEdit extends Component {
+export default class MedicinesEdit extends Component {
 
-  PAGE_NAME = "PurchaseorderstocksEdit"
+  PAGe_NAME = "MedicinesEdit"
 
   constructor(props) {
     super(props)
@@ -28,40 +28,42 @@ export default class PurchaseorderstocksEdit extends Component {
 
 
   componentDidMount() {
-    const { PurchaseorderstockID, GetPurchaseorderstock, GetPurchaseorders, match, history, GetDepartments, GetStockdefines } = this.props
-    let Id = PurchaseorderstockID || match?.params?.PurchaseorderstockID
+    const { StockID, GetStock, GetWarehouses, match, history, GetDepartments, GetStockdefines } = this.props
+    let Id = StockID || match.params.StockID
     if (validator.isUUID(Id)) {
-      GetPurchaseorderstock(Id)
+      GetStock(Id)
       GetDepartments()
       GetStockdefines()
-      GetPurchaseorders()
+      GetWarehouses()
     } else {
-      history.push("/Purchaseorderstocks")
+      history.push("/Medicines")
     }
   }
 
+
   componentDidUpdate() {
-    const { Departments, Stockdefines, Purchaseorderstocks, Purchaseorders, removePurchaseordernotification,
-      removePurchaseorderstocknotification, removeStockdefinenotification, removeDepartmentnotification } = this.props
-    const { selected_record, isLoading } = Purchaseorderstocks
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0
+    const { Departments, Stockdefines, Stocks, Warehouses,
+      removeWarehousenotification, removeStocknotification, removeStockdefinenotification,
+      removeDepartmentnotification } = this.props
+
+    const { selected_record, isLoading } = Stocks
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
       && Departments.list.length > 0 && !Departments.isLoading
-      && Purchaseorders.list.length > 0 && !Purchaseorders.isLoading
-      && Purchaseorderstocks.list.length > 0 && !Purchaseorderstocks.isLoading
+      && Warehouses.list.length > 0 && !Warehouses.isLoading
       && Stockdefines.list.length > 0 && !Stockdefines.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Purchaseorders.notifications, removePurchaseordernotification)
+    Notification(Stocks.notifications, removeStocknotification)
+    Notification(Warehouses.notifications, removeWarehousenotification)
     Notification(Departments.notifications, removeDepartmentnotification)
     Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
   }
 
   render() {
-    const { Purchaseorderstocks, Purchaseorders, Departments, Stockdefines, Profile } = this.props
+    const { Stocks, Warehouses, Departments, Stockdefines, Profile } = this.props
 
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -69,17 +71,16 @@ export default class PurchaseorderstocksEdit extends Component {
     const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
-    const Purchaseorderoptions = (Purchaseorders.list || []).map(order => {
-      return { key: order.Uuid, text: order.Purchasenumber, value: order.Uuid }
+    const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
+      return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
     })
 
-
     return (
-      Stockdefines.isLoading || Stockdefines.isDispatching || Purchaseorderstocks.isLoading || Purchaseorderstocks.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
+      Stockdefines.isLoading || Stockdefines.isDispatching || Stocks.isLoading || Stocks.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
-              <Link to={"/Purchaseorderstocks"}>
+              <Link to={"/Medicines"}>
                 <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
@@ -90,19 +91,22 @@ export default class PurchaseorderstocksEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchaseorder[Profile.Language]} name="PurchaseorderID" options={Purchaseorderoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type="date" defaultValue={'2023-06-20'} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoptions} name="DepartmentID" formtype='dropdown' />
+              </Form.Group>
+              <Form.Group widths='equal'>
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Purchaseorderstocks">
+                <Link to="/Medicines">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
@@ -116,31 +120,28 @@ export default class PurchaseorderstocksEdit extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { EditPurchaseorderstocks, history, fillPurchaseorderstocknotification, Purchaseorderstocks, Profile } = this.props
+    const { EditStocks, history, fillStocknotification, Stocks, Profile } = this.props
     const data = formToObject(e.target)
     data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
     data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
-    data.PurchaseorderID = this.context.formstates[`${this.PAGE_NAME}/PurchaseorderID`]
+    data.WarehouseID = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
     }
-    if (!validator.isUUID(data.PurchaseorderID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PurchasenumberRequired[Profile.Language] })
+    if (!validator.isUUID(data.WarehouseID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.WarehouseRequired[Profile.Language] })
     }
     if (!validator.isUUID(data.StockdefineID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StokdefineRequired[Profile.Language] })
     }
-    if (!validator.isNumber(data.Amount)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.AmountRequired[Profile.Language] })
-    }
     if (errors.length > 0) {
       errors.forEach(error => {
-        fillPurchaseorderstocknotification(error)
+        fillStocknotification(error)
       })
     } else {
-      EditPurchaseorderstocks({ data: { ...Purchaseorderstocks.selected_record, ...data }, history })
+      EditStocks({ data: { ...Stocks.selected_record, ...data }, history })
     }
   }
 
@@ -151,4 +152,4 @@ export default class PurchaseorderstocksEdit extends Component {
     }
   }
 }
-PurchaseorderstocksEdit.contextType = FormContext
+MedicinesEdit.contextType = FormContext
