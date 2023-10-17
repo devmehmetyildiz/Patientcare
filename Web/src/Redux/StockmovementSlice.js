@@ -29,6 +29,10 @@ const Literals = {
         en: 'Stock movement Deleted successfully',
         tr: 'Stok Hareketi Başarı ile Silindi'
     },
+    approvedescription: {
+        en: 'Stock movement approved successfully',
+        tr: 'Stok Hareketi Başarı ile Onaylandı'
+    },
 }
 
 export const GetStockmovements = createAsyncThunk(
@@ -61,7 +65,7 @@ export const GetStockmovement = createAsyncThunk(
 
 export const AddStockmovements = createAsyncThunk(
     'Stockmovements/AddStockmovements',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +80,7 @@ export const AddStockmovements = createAsyncThunk(
                 code: 'StockmovementsCreate',
                 description: '',
             }));
-            history && history.push('/Stockmovements');
+            history && history.push(redirectUrl ? redirectUrl : '/Stockmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +92,7 @@ export const AddStockmovements = createAsyncThunk(
 
 export const EditStockmovements = createAsyncThunk(
     'Stockmovements/EditStockmovements',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -103,7 +107,7 @@ export const EditStockmovements = createAsyncThunk(
                 code: 'StockmovementsUpdate',
                 description: '',
             }));
-            history && history.push('/Stockmovements');
+            history && history.push(redirectUrl ? redirectUrl : '/Stockmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -136,6 +140,29 @@ export const DeleteStockmovements = createAsyncThunk(
     }
 );
 
+export const ApproveStockmovements = createAsyncThunk(
+    'Stockmovements/ApproveStockmovements',
+    async (data, { dispatch, getState }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, `${ROUTES.STOCKMOVEMENT}/Approve/${data.Uuid}`);
+            dispatch(fillStockmovementnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.approvedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillStockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const StockmovementsSlice = createSlice({
     name: 'Stockmovements',
     initialState: {
@@ -145,7 +172,8 @@ export const StockmovementsSlice = createSlice({
         notifications: [],
         isLoading: false,
         isDispatching: false,
-        isDeletemodalopen: false
+        isDeletemodalopen: false,
+        isApprovemodalopen: false
     },
     reducers: {
         handleSelectedStockmovement: (state, action) => {
@@ -161,7 +189,10 @@ export const StockmovementsSlice = createSlice({
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
-        }
+        },
+        handleApprovemodal: (state, action) => {
+            state.isApprovemodalopen = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -213,6 +244,17 @@ export const StockmovementsSlice = createSlice({
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(ApproveStockmovements.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(ApproveStockmovements.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(ApproveStockmovements.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(DeleteStockmovements.pending, (state) => {
                 state.isDispatching = true;
             })
@@ -231,7 +273,8 @@ export const {
     handleSelectedStockmovement,
     fillStockmovementnotification,
     removeStockmovementnotification,
-    handleDeletemodal
+    handleDeletemodal,
+    handleApprovemodal
 } = StockmovementsSlice.actions;
 
 export default StockmovementsSlice.reducer;

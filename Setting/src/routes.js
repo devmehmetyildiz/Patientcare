@@ -60,6 +60,24 @@ const Routes = [
   { method: 'post', path: '/Units', controller: 'Unit', action: 'AddUnit' },
   { method: 'put', path: '/Units', controller: 'Unit', action: 'UpdateUnit' },
   { method: 'delete', path: '/Units/:unitId', controller: 'Unit', action: 'DeleteUnit' },
+
+  { method: 'get', path: '/Floors/:floorId', controller: 'Floor', action: 'GetFloor' },
+  { method: 'get', path: '/Floors', controller: 'Floor', action: 'GetFloors' },
+  { method: 'post', path: '/Floors', controller: 'Floor', action: 'AddFloor' },
+  { method: 'put', path: '/Floors', controller: 'Floor', action: 'UpdateFloor' },
+  { method: 'delete', path: '/Floors/:floorId', controller: 'Floor', action: 'DeleteFloor' },
+
+  { method: 'get', path: '/Beds/:bedId', controller: 'Bed', action: 'GetBed' },
+  { method: 'get', path: '/Beds', controller: 'Bed', action: 'GetBeds' },
+  { method: 'post', path: '/Beds', controller: 'Bed', action: 'AddBed' },
+  { method: 'put', path: '/Beds', controller: 'Bed', action: 'UpdateBed' },
+  { method: 'delete', path: '/Beds/:bedId', controller: 'Bed', action: 'DeleteBed' },
+
+  { method: 'get', path: '/Rooms/:roomId', controller: 'Room', action: 'GetRoom' },
+  { method: 'get', path: '/Rooms', controller: 'Room', action: 'GetRooms' },
+  { method: 'post', path: '/Rooms', controller: 'Room', action: 'AddRoom' },
+  { method: 'put', path: '/Rooms', controller: 'Room', action: 'UpdateRoom' },
+  { method: 'delete', path: '/Rooms/:roomId', controller: 'Room', action: 'DeleteRoom' },
 ]
 
 module.exports = Routes

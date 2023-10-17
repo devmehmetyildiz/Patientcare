@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Accordion, Breadcrumb, Button, Card, Divider, Dropdown, Grid, GridColumn, GridRow, Header, Icon, Image, Loader, Modal, Segment, Table, Transition } from 'semantic-ui-react'
+import { Accordion, Breadcrumb, Button, Card, Divider, Dropdown, Grid, GridColumn, GridRow, Header, Icon, Image, List, Loader, Modal, Popup, Segment, Tab, Table, Transition } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import Notification from "../../Utils/Notification"
@@ -10,303 +10,270 @@ import { ROUTES } from '../../Utils/Constants'
 import jsPDF from 'jspdf';
 import myTurkishFont from '../../Assets/fonts/AbhayaLibre-Medium.ttf';
 import config from '../../Config'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Literals from './Literals'
+import ColumnChooser from '../../Containers/Utils/ColumnChooser'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import DataTable from '../../Utils/DataTable'
+import { Collapse } from 'react-collapse';
+
 export default class Patients extends Component {
+
   constructor(props) {
     super(props)
     this.state = {
-      openCheckperiod: false,
-      openTodos: false,
-      openPrintpreview: false,
-      selectedpatient: {},
-      activeIndex: [0],
-      selectedPrintdesign: {},
-      isPreviewloading: false,
-      decoratedBody: null
+      open: false,
+      selectedrecord: {},
+      stocksStatus: [],
+      filesStatus: [],
+      collapseStatus: []
     }
   }
 
+
   componentDidMount() {
-    const { GetPatients, GetPrinttemplates } = this.props
+    const {
+      GetPatients,
+      GetPatientdefines,
+      GetRooms,
+      GetBeds,
+      GetFloors,
+      GetCases,
+      GetFiles,
+      GetPatientstocks,
+      GetStockdefines,
+    } = this.props
     GetPatients()
-    GetPrinttemplates()
+    GetPatientdefines()
+    GetRooms()
+    GetBeds()
+    GetFloors()
+    GetCases()
+    GetFiles()
+    GetPatientstocks()
+    GetStockdefines()
   }
 
   componentDidUpdate() {
-    const { Patients, removePatientnotification, Checkperiods, removeCheckperiodnotification, removeTodogroupdefinenotification,
-      removePrinttemplatenotification, Printtemplates, Todogroupdefines } = this.props
+    const {
+      Patients, removePatientnotification,
+      Patientdefines, removePatientdefinenotification,
+      Rooms, removeRoomsnotification,
+      Beds, removeBednotification,
+      Floors, removeFloornotification,
+      Cases, removeCasenotification,
+      Files, removeFilenotification,
+      Patientstocks, removePatientstocknotification,
+      Stockdefines, removeStockdefinenotification,
+    } = this.props
     Notification(Patients.notifications, removePatientnotification)
-    Notification(Checkperiods.notifications, removeCheckperiodnotification)
-    Notification(Todogroupdefines.notifications, removeTodogroupdefinenotification)
-    Notification(Todogroupdefines.notifications, removeTodogroupdefinenotification)
-    Notification(Printtemplates.notifications, removePrinttemplatenotification)
+    Notification(Patientdefines.notifications, removePatientdefinenotification)
+    Notification(Rooms.notifications, removeRoomsnotification)
+    Notification(Beds.notifications, removeBednotification)
+    Notification(Floors.notifications, removeFloornotification)
+    Notification(Cases.notifications, removeCasenotification)
+    Notification(Patientstocks.notifications, removePatientstocknotification)
+    Notification(Files.notifications, removeFilenotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
   }
 
   render() {
-    const { Patients, Checkperiods, Todogroupdefines, GetTodogroupdefines, GetCheckperiods, EditPatientcheckperiods,
-      EditPatienttodogroupdefines, setPatient, Printtemplates } = this.props
-    const { list, isLoading, isDispatching } = Patients
-    const { activeIndex } = this.state
+    const { Patients, Profile, Floors, Rooms, Patientdefines } = this.props
+    const { isLoading, isDispatching } = Patients
 
-    const floorList = [...new Set(list.map(item => { return item.Floornumber }))]
+    const Columns = [
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'PatientdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.patientdefineCellhandler(col) },
+      { Header: Literals.Columns.Registerdate[Profile.Language], accessor: 'Registerdate', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.Approvaldate[Profile.Language], accessor: 'Approvaldate', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.Floor[Profile.Language], accessor: 'FloorID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.floorCellhandler(col) },
+      { Header: Literals.Columns.Room[Profile.Language], accessor: 'RoomID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.roomCellhandler(col) },
+      { Header: Literals.Columns.Bed[Profile.Language], accessor: 'BedID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.bedCellhandler(col) },
+      { Header: Literals.Columns.Case[Profile.Language], accessor: 'CaseID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.caseCellhandler(col) },
+      { Header: Literals.Columns.Stocks[Profile.Language], accessor: 'Stockstxt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockCellhandler(col) },
+      { Header: Literals.Columns.Files[Profile.Language], accessor: 'Filestxt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.filesCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }
+    ]
 
-    const triggerSetting = (
-      <div className='flex flex-row justify-center items-center select-none'>
-        <Icon name='setting' />
-      </div>
-    )
+    const metaKey = "Patients"
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    const initialConfig = {
+      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
+        return item.key
+      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
+      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
+        return item.key
+      }) : [],
+      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
+        return item.key
+      }) : [],
+    };
 
-    const triggerPrint = (
-      <div className='flex flex-row justify-center items-center select-none'>
-        <Icon name='print' />
-      </div>
-    )
+    const list = (Patients.list || []).filter(u => !u.Iswaitingactivation).map(item => {
+      return {
+        ...item,
+        Filestxt: '',
+        Stockstxt: '',
+        actions: <Popup
+          trigger={<Icon className='cursor-pointer' name='ellipsis vertical' />}
+          content={<div className='flex flex-col justify-start items-start w-full gap-2'>
+            <Link to={`/Patients/${item.Uuid}`} ><Icon color='black' className='row-edit' name='magnify' /> {Literals.Columns.detail[Profile.Language]} </Link>
+          </div>}
+          on='click'
+          hideOnScroll
+          position='left center'
+        />
+      }
+    })
 
+    const filledFloors = [...new Set((Patients.list || []).filter(u => !u.Iswaitingactivation).map(patient => {
+      return patient.FloorID
+    }))]
+
+    const filledFloorwithrooms = (filledFloors || []).map(floorID => {
+      return {
+        floor: floorID,
+        rooms: [...new Set(((Patients.list || []).filter(u => u.FloorID === floorID && !u.Iswaitingactivation).map(u => {
+          return u.RoomID
+        })))]
+      }
+    })
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>
-          <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-            <div className='w-full mx-auto align-middle'>
-              <Header style={{ backgroundColor: 'transparent', border: 'none' }} as='h1' attached='top' >
-                <Grid columns='2' >
-                  <GridColumn width={8} className="">
-                    <Breadcrumb size='big'>
-                      <Link to={"/Patients"}>
-                        <Breadcrumb.Section>Kurumdaki Hastalar</Breadcrumb.Section>
-                      </Link>
-                    </Breadcrumb>
-                  </GridColumn>
-                </Grid>
-              </Header>
-            </div>
-            <Divider className='w-full  h-[1px]' />
-            <Segment className='w-full overflow-y-auto max-h-[calc(100vh-2.2rem)]'>
-              {list.length > 0 ?
-                <div className='w-full mx-auto '>
-                  <Accordion
-                    className='transition-all ease-in-out duration-500'
-                    styled
-                    fluid
-                  >
-                    {floorList.map((floor, index) => {
-                      return <React.Fragment key={index}>
-                        <Accordion.Title
-                          active={activeIndex.includes(index)}
-                          index={index}
-                          onClick={this.handleClick}>
-                          <Icon name='dropdown' />
-                          {`${floor}.Kat`}
-                        </Accordion.Title>
-                        <Accordion.Content active={activeIndex.includes(index)}>
-                          <Transition visible={activeIndex.includes(index)} animation='slide left' duration={500}>
-                            <Grid stackable divided >
-                              {list.filter(u => u.Floornumber === floor).map((patient, index) => {
-                                return <Grid.Column key={index} mobile={9} tablet={6} computer={3}>
-                                  <Card>
-                                    <Card.Content>
-                                      {(patient.Files || []).filter(u => u.Usagetype === 'PP').length > 0 ?
-                                        <Image
-                                          floated='right'
-                                          size='mini'
-                                          src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${(patient.Files || []).find(u => u.Usagetype === 'PP')?.Uuid}`}
-                                        />
-                                        : <Image
-                                          floated='right'
-                                          size='mini'
-                                          src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'
-                                        />}
-                                      <Card.Header>{`${patient?.Patientdefine?.Firstname} ${patient?.Patientdefine?.Lastname}`}</Card.Header>
-                                      <Card.Meta>{`${patient?.Patientdefine?.Costumertype?.Name}`}</Card.Meta>
-                                      <Card.Meta>{`Oda no:${patient?.Roomnumber}  Yatak no:${patient?.Bednumber}`}
-                                      </Card.Meta>
-                                      <Card.Description>
-                                        <Grid>
-                                          <GridRow>
-                                            <div className='ml-2'>
-                                              <Icon name='bell' />
-                                            </div>
-                                            <div className='ml-2'>
-                                              <Dropdown icon={null} trigger={triggerPrint} style={{ zIndex: 0 }} basic className="h-full block ">
-                                                <Dropdown.Menu className=''>
-                                                  <Dropdown.Header icon='tags' content='Raporlar' />
-                                                  <Dropdown.Divider />
-                                                  {(Printtemplates.list || []).length > 0 ?
-                                                    Printtemplates.list.map(printdesign => {
-                                                      return <Dropdown.Item key={Math.random()}>
-                                                        <div
-                                                          onClick={() => {
-                                                            setPatient(patient)
-                                                            this.setState({ openPrintpreview: true, selectedPrintdesign: printdesign, isPreviewloading: true, decoratedBody: PrintBodyReplacer(printdesign.Printtemplate, patient) }
-                                                            )
-                                                          }} className='text-[#3d3d3d] hover:text-[#3d3d3d]'><Icon className='id card ' />{printdesign.Name}</div>
-                                                      </Dropdown.Item>
-                                                    })
-                                                    : <React.Fragment />}
-                                                </Dropdown.Menu>
-                                              </Dropdown>
-                                            </div>
-                                            <div className='ml-2'>
-                                              <Dropdown icon={null} trigger={triggerSetting} style={{ zIndex: 0 }} basic className="h-full block ">
-                                                <Dropdown.Menu className=''>
-                                                  <Dropdown.Header icon='tags' content='Hasta Ayarları' />
-                                                  <Dropdown.Divider />
-                                                  <Dropdown.Item>
-                                                    <div
-                                                      onClick={() => {
-                                                        GetTodogroupdefines()
-                                                        setPatient(patient)
-                                                        this.setState({ openTodos: true, selectedpatient: patient })
-                                                      }} className='text-[#3d3d3d] hover:text-[#3d3d3d]'><Icon className='id card ' />Yapılacaklar</div>
-                                                  </Dropdown.Item>
-                                                  <Dropdown.Item>
-                                                    <div
-                                                      onClick={() => {
-                                                        GetCheckperiods()
-                                                        setPatient(patient)
-                                                        this.setState({ openCheckperiod: true, selectedpatient: patient })
-                                                      }} className='text-[#3d3d3d] hover:text-[#3d3d3d]'> <Icon className='lock' /> Kontrol Periyodu Ekle </div>
-                                                  </Dropdown.Item>
-                                                </Dropdown.Menu>
-                                              </Dropdown>
-                                            </div>
-                                          </GridRow>
-                                        </Grid>
-                                      </Card.Description>
-                                    </Card.Content>
-                                    <Card.Content >
-                                      <div className='ui two buttons'>
-                                        <Button basic color='green'>
-                                          İlaç Ver
-                                        </Button>
-                                        <Button basic color='red'>
-                                          İlaç Al
-                                        </Button>
-                                      </div>
-                                    </Card.Content>
-                                  </Card>
-                                </Grid.Column>
-                              })}
-                            </Grid>
-                          </Transition>
-                        </Accordion.Content>
+          <Pagewrapper>
+            <Headerwrapper>
+              <Grid columns='2' >
+                <GridColumn width={8} className="">
+                  <Breadcrumb size='big'>
+                    <Link to={"/Patients"}>
+                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                    </Link>
+                  </Breadcrumb>
+                </GridColumn>
+                <GridColumn width={8} >
+                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
+                </GridColumn>
+              </Grid>
+            </Headerwrapper>
+            <Pagedivider />
+            <Contentwrapper>
+              <Tab className='station-tab'
+                panes={[
+                  {
+                    menuItem: Literals.Columns.Gridscreen[Profile.Language],
+                    pane: {
+                      key: 'grid',
+                      content: <React.Fragment>
+                        {list.length > 0 ?
+                          <div className='w-full mx-auto '>
+                            <DataTable Columns={Columns} Data={list} Config={initialConfig} />
+                          </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+                        }
                       </React.Fragment>
-                    })}
-                  </Accordion>
-                </div> : <NoDataScreen message="Kurumda Hasta Yok" />
-              }
-            </Segment>
-          </div >
-          <Modal
-            onClose={() => this.setState({ openCheckperiod: false })}
-            onOpen={() => this.setState({ openCheckperiod: true })}
-            open={this.state.openCheckperiod}
-          >
-            <Modal.Header>Hasta Kontrol Periyodları</Modal.Header>
-            <Modal.Header>{`${Patients.selected_patient?.Patientdefine?.Firstname} ${Patients.selected_patient?.Patientdefine?.Lastname}`}</Modal.Header>
-            <Modal.Content image>
-              <Modal.Description>
-                <Table celled className='list-table ' key='product-create-type-conversion-table ' >
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.HeaderCell width={4}>Kontrol Periyodları</Table.HeaderCell>
-                      <Table.HeaderCell width={1}>Atama</Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {Checkperiods.list.length > 0 ?
-                      (Checkperiods.isLoading || Patients.isCheckperiodloading) ? <Loader /> :
-                        Checkperiods.list.map(item => {
-                          return <Table.Row>
-                            <Table.Cell>{item.Name}{item.Uuid === Patients.selected_patient?.CheckperiodID && <Icon name='check' />}</Table.Cell>
-                            <Table.Cell>
-                              {item.Uuid !== Patients.selected_patient?.checkperiodID && <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => {
-                                EditPatientcheckperiods({ ...Patients.selected_patient, checkperiodID: item.Uuid })
-                              }}>Hastaya Ata</Button>}
-                            </Table.Cell>
-                          </Table.Row>
-                        })
-                      :
-                      <p>Tanımlı Kontrol Periyodu yok</p>}
-                  </Table.Body>
-                </Table>
-              </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='black' onClick={() => this.setState({ openCheckperiod: false })}>
-                Kapat
-              </Button>
-            </Modal.Actions>
-          </Modal>
-          <Modal
-            onClose={() => this.setState({ openTodos: false })}
-            onOpen={() => this.setState({ openTodos: true })}
-            open={this.state.openTodos}
-          >
-            <Modal.Header>Hasta Yapılacakları</Modal.Header>
-            <Modal.Header>{`${this.state.selectedpatient?.Patientdefine?.Firstname} ${this.state.selectedpatient?.Patientdefine?.Lastname}`}</Modal.Header>
-            <Modal.Content image>
-              <Modal.Description>
-                <Table celled className='list-table ' key='product-create-type-conversion-table ' >
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.HeaderCell width={4}>Kontrol Periyodları</Table.HeaderCell>
-                      <Table.HeaderCell width={1}>Atama</Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {Todogroupdefines.list.length > 0 ?
-                      (Todogroupdefines.isLoading || Patients.isTodogroupdefineloading) ? <Loader /> :
-                        Todogroupdefines.list.map(item => {
-                          return <Table.Row>
-                            <Table.Cell>{item.Name}{item.Uuid === Patients.selected_patient?.TodogroupdefineID && <Icon name='check' />}</Table.Cell>
-                            <Table.Cell>
-                              {item.Uuid !== Patients.selected_patient?.todogroupdefineID && <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => {
-                                EditPatienttodogroupdefines({ ...Patients.selected_patient, todogroupdefineID: item.Uuid })
-                              }}>Hastaya Ata</Button>}
-                            </Table.Cell>
-                          </Table.Row>
-                        })
-                      :
-                      <p>Tanımlı Yapılacaklar Grubu yok</p>}
-                  </Table.Body>
-                </Table>
-              </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='black' onClick={() => this.setState({ openTodos: false })}>
-                Kapat
-              </Button>
-            </Modal.Actions>
-          </Modal>
-          <Modal
-            onClose={() => this.setState({ openPrintpreview: false })}
-            onOpen={() => this.setState({ openPrintpreview: true })}
-            open={this.state.openPrintpreview}
-          >
-            <Modal.Header as={'h1'}>Hasta Raporu</Modal.Header>
-            <Modal.Header as={'h2'}>{`${this.state.selectedPrintdesign?.Name}`}</Modal.Header>
-            <Modal.Content image>
-              <Modal.Description>
-                <div className='p-2 shadow-lg shadow-gray-300 w-full flex justify-center items-center'>
-                  <InnerHTML html={
-                    this.state.selectedPrintdesign?.Printtemplate ? this.state.decoratedBody
-                      : '<div class="print-design-preview-message">No code to show.</div>'
-                  } />
-                </div>
-              </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='black' onClick={() => this.setState({ openPrintpreview: false })}>
-                Kapat
-              </Button>
-              <Button color='black' onClick={() => this.generatePDF(this.state.decoratedBody)}>
-                Yazdır
-              </Button>
-
-            </Modal.Actions>
-          </Modal>
+                    }
+                  },
+                  {
+                    menuItem: Literals.Columns.Cardscren[Profile.Language],
+                    pane: {
+                      key: 'card',
+                      content: <React.Fragment>
+                        <List>
+                          {(filledFloorwithrooms || []).map((item) => {
+                            return <List.Item key={Math.random()}>
+                              <List.Icon size='large' name='bed' />
+                              <List.Content>
+                                <div className='cursor-pointer' onClick={() => { this.handleCollapstatus(item.floor) }}>
+                                  <List.Header as={'h3'}>{(Floors.list || []).find(u => u.Uuid === item.floor)?.Name}</List.Header>
+                                </div>
+                                <List.List>
+                                  <Collapse isOpened={this.state.collapseStatus.includes(item.floor)}>
+                                    {(item.rooms || []).map((room) => {
+                                      return <React.Fragment key={Math.random()}>
+                                        <Pagedivider />
+                                        <List.Item >
+                                          <List.Content>
+                                            <div className='cursor-pointer flex flex-row justify-start items-center' onClick={() => { this.handleCollapstatus(item.floor + room) }}>
+                                              <List.Icon size='small' name='file' />
+                                              <List.Header as={'h4'}>{(Rooms.list || []).find(u => u.Uuid === room)?.Name}</List.Header>
+                                            </div>
+                                            <Collapse isOpened={this.state.collapseStatus.includes(item.floor + room)}>
+                                              <List.List>
+                                                <div className='w-full flex flex-row justify-start items-center '>
+                                                  {(Patients.list || []).filter(u =>
+                                                    u.FloorID === item.floor &&
+                                                    u.RoomID === room &&
+                                                    !u.Iswaitingactivation).map(patient => {
+                                                      const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient.PatientdefineID)
+                                                      return <div className='m-2' key={Math.random()}>
+                                                        <Card>
+                                                          <Card.Content>
+                                                            <Image
+                                                              floated='right'
+                                                              size='mini'
+                                                              src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'
+                                                            />
+                                                            <Card.Header>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}`}</Card.Header>
+                                                            <Card.Meta>Friends of Elliot</Card.Meta>
+                                                            <Card.Description>
+                                                              Steve wants to add you to the group <strong>best friends</strong>
+                                                            </Card.Description>
+                                                          </Card.Content>
+                                                          <Card.Content extra>
+                                                            <div className='ui two buttons'>
+                                                              <Button basic color='green'>
+                                                                Approve
+                                                              </Button>
+                                                              <Button basic color='red'>
+                                                                Decline
+                                                              </Button>
+                                                            </div>
+                                                          </Card.Content>
+                                                        </Card>
+                                                      </div>
+                                                    })}
+                                                </div>
+                                              </List.List>
+                                            </Collapse>
+                                          </List.Content>
+                                        </List.Item>
+                                      </React.Fragment>
+                                    })}
+                                  </Collapse>
+                                </List.List>
+                              </List.Content>
+                            </List.Item>
+                          })}
+                        </List>
+                      </React.Fragment>
+                    }
+                  }
+                ]}
+                renderActiveOnly={false} />
+            </Contentwrapper>
+          </Pagewrapper>
         </React.Fragment >
     )
+  }
+
+  handleCollapstatus = (floorID) => {
+    const isHave = this.state.collapseStatus.includes(floorID)
+    if (isHave) {
+      let previous = this.state.collapseStatus.filter(u => u !== floorID)
+      this.setState({ collapseStatus: previous })
+    } else {
+      let previous = this.state.collapseStatus
+      previous.push(floorID)
+      this.setState({ collapseStatus: previous })
+    }
   }
 
   handleClick = (e, titleProps) => {
@@ -321,26 +288,147 @@ export default class Patients extends Component {
     }
   }
 
-  generatePDF = (html) => {
-    const pdf = new jsPDF({
-      orientation: 'p',
-      unit: 'px',
-      format: 'a4',
-      putOnlyUsedFonts: true,
-      floatPrecision: 16 // or "smart", default is 16
-    });
-    pdf.addFont(myTurkishFont, 'AbhayaLibre-Medium', 'normal');
-    pdf.setFont('AbhayaLibre-Medium');
-    const options = {
-      callback: () => {
-        pdf.save("download.pdf");
-      }
-    };
-
-    // Convert the HTML element to PDF with the specified options
-    pdf.html(html, options);
+  patientdefineCellhandler = (col) => {
+    const { Patientdefines } = this.props
+    if (Patientdefines.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === col.value)
+      return `${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`
+    }
+  }
+  floorCellhandler = (col) => {
+    const { Floors } = this.props
+    if (Floors.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return `${(Floors.list || []).find(u => u.Uuid === col.value)?.Name}`
+    }
   }
 
+  roomCellhandler = (col) => {
+    const { Rooms } = this.props
+    if (Rooms.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return `${(Rooms.list || []).find(u => u.Uuid === col.value)?.Name}`
+    }
+  }
+
+  bedCellhandler = (col) => {
+    const { Beds } = this.props
+    if (Beds.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return `${(Beds.list || []).find(u => u.Uuid === col.value)?.Name}`
+    }
+  }
+
+  caseCellhandler = (col) => {
+    const { Cases } = this.props
+    if (Cases.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return `${(Cases.list || []).find(u => u.Uuid === col.value)?.Name}`
+    }
+  }
+
+  dateCellhandler = (col) => {
+    if (col.value) {
+      return col.value.split('T')[0]
+    }
+    return null
+  }
+
+  stockCellhandler = (col) => {
+
+    const { Patientstocks, Stockdefines } = this.props
+
+    const itemId = col?.row?.original?.Uuid
+    const itemStocks = (Patientstocks.list || []).filter(u => u.PatientID === itemId)
+    let stockstext = itemStocks.map((stock) => {
+      return (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)?.Name
+    }).join(", ")
+
+    if (!col.cell.isGrouped) {
+      return stockstext.length - 35 > 20 ?
+        (
+          !this.state.stocksStatus.includes(itemId) ?
+            [stockstext.slice(0, 35) + ' ...(' + itemStocks.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandStocks(itemId)}> ...Daha Fazla Göster</Link>] :
+            [stockstext, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkStocks(itemId)}> ...Daha Az Göster</Link>]
+        ) : stockstext
+    }
+    return stockstext
+  }
+
+  filesCellhandler = (col) => {
+
+    const { Files } = this.props
+    const itemId = col?.row?.original?.Uuid
+    const itemFiles = (Files.list || []).filter(u => u.ParentID === itemId)
+    let filestext = itemFiles.map((file) => {
+      return file.Name;
+    }).join(", ")
+
+    if (!col.cell.isGrouped) {
+      return filestext.length - 35 > 20 ?
+        (
+          !this.state.filesStatus.includes(itemId) ?
+            [filestext.slice(0, 35) + ' ...(' + itemFiles.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandFiles(itemId)}> ...Daha Fazla Göster</Link>] :
+            [filestext, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkFiles(itemId)}> ...Daha Az Göster</Link>]
+        ) : filestext
+    }
+    return filestext
+  }
+
+  expandStocks = (rowid) => {
+    const prevData = this.state.stocksStatus
+    prevData.push(rowid)
+    this.setState({ stocksStatus: [...prevData] })
+  }
+
+  shrinkStocks = (rowid) => {
+    const index = this.state.stocksStatus.indexOf(rowid)
+    const prevData = this.state.stocksStatus
+    if (index > -1) {
+      prevData.splice(index, 1)
+      this.setState({ stocksStatus: [...prevData] })
+    }
+  }
+  expandFiles = (rowid) => {
+    const prevData = this.state.filesStatus
+    prevData.push(rowid)
+    this.setState({ filesStatus: [...prevData] })
+  }
+
+  shrinkFiles = (rowid) => {
+    const index = this.state.filesStatus.indexOf(rowid)
+    const prevData = this.state.filesStatus
+    if (index > -1) {
+      prevData.splice(index, 1)
+      this.setState({ filesStatus: [...prevData] })
+    }
+  }
+
+  /*   generatePDF = (html) => {
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'px',
+        format: 'a4',
+        putOnlyUsedFonts: true,
+        floatPrecision: 16 // or "smart", default is 16
+      });
+      pdf.addFont(myTurkishFont, 'AbhayaLibre-Medium', 'normal');
+      pdf.setFont('AbhayaLibre-Medium');
+      const options = {
+        callback: () => {
+          pdf.save("download.pdf");
+        }
+      };
+      // Convert the HTML element to PDF with the specified options
+      pdf.html(html, options);
+    }
+   */
 
 }
 

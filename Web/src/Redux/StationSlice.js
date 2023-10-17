@@ -61,7 +61,7 @@ export const GetStation = createAsyncThunk(
 
 export const AddStations = createAsyncThunk(
     'Stations/AddStations',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +76,7 @@ export const AddStations = createAsyncThunk(
                 code: 'StationsCreate',
                 description: '',
             }));
-            history && history.push('/Stations');
+            history && history.push(redirectUrl ? redirectUrl : '/Stations');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +88,7 @@ export const AddStations = createAsyncThunk(
 
 export const AddRecordStations = createAsyncThunk(
     'Stations/AddRecordStations',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -98,7 +98,7 @@ export const AddRecordStations = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            history && history.push('/Stations');
+            history && history.push(redirectUrl ? redirectUrl : '/Stations');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -110,7 +110,7 @@ export const AddRecordStations = createAsyncThunk(
 
 export const EditStations = createAsyncThunk(
     'Stations/EditStations',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -125,7 +125,7 @@ export const EditStations = createAsyncThunk(
                 code: 'StationsUpdate',
                 description: '',
             }));
-            history && history.push('/Stations');
+            history && history.push(redirectUrl ? redirectUrl : '/Stations');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

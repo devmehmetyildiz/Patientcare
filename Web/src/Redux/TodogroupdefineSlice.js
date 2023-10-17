@@ -61,7 +61,7 @@ export const GetTodogroupdefine = createAsyncThunk(
 
 export const AddTodogroupdefines = createAsyncThunk(
     'Todogroupdefines/AddTodogroupdefines',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +76,7 @@ export const AddTodogroupdefines = createAsyncThunk(
                 code: 'TodogroupdefinesCreate',
                 description: '',
             }));
-            history && history.push('/Todogroupdefines');
+            history && history.push(redirectUrl ? redirectUrl : '/Todogroupdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +88,7 @@ export const AddTodogroupdefines = createAsyncThunk(
 
 export const AddRecordTodogroupdefines = createAsyncThunk(
     'Todogroupdefines/AddRecordTodogroupdefines',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -98,7 +98,7 @@ export const AddRecordTodogroupdefines = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            history && history.push('/Todogroupdefines');
+            history && history.push(redirectUrl ? redirectUrl : '/Todogroupdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -110,7 +110,7 @@ export const AddRecordTodogroupdefines = createAsyncThunk(
 
 export const EditTodogroupdefines = createAsyncThunk(
     'Todogroupdefines/EditTodogroupdefines',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -125,7 +125,7 @@ export const EditTodogroupdefines = createAsyncThunk(
                 code: 'TodogroupdefinesUpdate',
                 description: '',
             }));
-            history && history.push('/Todogroupdefines');
+            history && history.push(redirectUrl ? redirectUrl : '/Todogroupdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

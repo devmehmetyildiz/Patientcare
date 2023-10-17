@@ -29,8 +29,14 @@ import MailsettingSlice from "./MailsettingSlice";
 import PrinttemplateSlice from "./PrinttemplateSlice";
 import TodoSlice from "./TodoSlice";
 import RuleSlice from "./RuleSlice";
+import RoomSlice from "./RoomSlice";
+import BedSlice from "./BedSlice";
+import FloorSlice from "./FloorSlice";
 
 const Slices = combineReducers({
+    Rooms: RoomSlice,
+    Beds: BedSlice,
+    Floors: FloorSlice,
     Units: UnitSlice,
     Profile: ProfileSlice,
     Roles: RoleSlice,

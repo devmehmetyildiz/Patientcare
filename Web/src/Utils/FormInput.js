@@ -5,7 +5,7 @@ import store from '..';
 import validator from './Validator';
 export default function FormInput(props) {
 
-    const { display, page, isFormvisible, disableOnchange } = props
+    const { display, additionalicon, page, isFormvisible, disableOnchange } = props
     const name = `${page}/${props.name}`
     const context = React.useContext(FormContext)
     const [formdata, setFormdata] = useState(context.formstates)
@@ -51,6 +51,7 @@ export default function FormInput(props) {
                         position='left center'
                         on='click'
                     />}
+                    {additionalicon && additionalicon}
                 </div>
                 {!props.formtype ?
                     <Form.Input icon={display ? true : false} {...contextProp} value={formdata[name] ? formdata[name] : ''} onChange={(e) => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Modal } from 'semantic-ui-react'
+import { Divider, Icon, Loader, Modal } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -22,13 +22,15 @@ export default class Printtemplates extends Component {
   }
 
   componentDidMount() {
-    const { GetPrinttemplates } = this.props
+    const { GetPrinttemplates, GetDepartments } = this.props
     GetPrinttemplates()
+    GetDepartments()
   }
 
   componentDidUpdate() {
-    const { Printtemplates, removePrinttemplatenotification } = this.props
+    const { Printtemplates, Departments, removeDepartmentnotification, removePrinttemplatenotification } = this.props
     Notification(Printtemplates.notifications, removePrinttemplatenotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
   }
 
   render() {
@@ -40,7 +42,7 @@ export default class Printtemplates extends Component {
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Valuekey[Profile.Language], accessor: 'Valuekey', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'Department.Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -105,8 +107,12 @@ export default class Printtemplates extends Component {
     )
   }
 
-  handleChangeModal = (value) => {
-    this.setState({ modal: value })
+  departmentCellhandler = (col) => {
+    const { Departments } = this.props
+    if (Departments.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Departments.list || []).find(u => u.Uuid === col.value)?.Name
+    }
   }
-
 }

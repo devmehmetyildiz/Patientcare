@@ -7,6 +7,8 @@ import {
 
 const mapStateToProps = (state) => ({
     Stockmovements: state.Stockmovements,
+    Stocks: state.Stocks,
+    Stockdefines: state.Stockdefines,
     Profile: state.Profile
 })
 

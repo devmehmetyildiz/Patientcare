@@ -12,6 +12,42 @@ const messages = {
         tr: 'Durum aktif değil',
       }
     },
+    BED_NOT_FOUND: {
+      code: 'BED_NOT_FOUND', description: {
+        en: 'Bed not found',
+        tr: 'Yatak bulunamadı',
+      }
+    },
+    BED_NOT_ACTIVE: {
+      code: 'BED_NOT_ACTIVE', description: {
+        en: 'Bed not active',
+        tr: 'Yatak aktif değil',
+      }
+    },
+    ROOM_NOT_FOUND: {
+      code: 'ROOM_NOT_FOUND', description: {
+        en: 'Room not found',
+        tr: 'Oda bulunamadı',
+      }
+    },
+    ROOM_NOT_ACTIVE: {
+      code: 'ROOM_NOT_ACTIVE', description: {
+        en: 'Room not active',
+        tr: 'Oda aktif değil',
+      }
+    },
+    FLOOR_NOT_FOUND: {
+      code: 'FLOOR_NOT_FOUND', description: {
+        en: 'Floor not found',
+        tr: 'Kat bulunamadı',
+      }
+    },
+    FLOOR_NOT_ACTIVE: {
+      code: 'FLOOR_NOT_ACTIVE', description: {
+        en: 'Floor not active',
+        tr: 'Kat aktif değil',
+      }
+    },
     FILE_NOT_FOUND: {
       code: 'FILE_NOT_FOUND', description: {
         en: 'File not found',
@@ -367,6 +403,42 @@ const messages = {
       code: 'ISNEEDACTIVATION_REQUIRED', description: {
         en: 'The isneedactivation required',
         tr: 'Bu işlem için aktivasyon gereklimi bilgisi gerekli',
+      }
+    },
+    BEDID_REQUIRED: {
+      code: 'BEDID_REQUIRED', description: {
+        en: 'The bed id required',
+        tr: 'Bu işlem için yatak numarası gerekli',
+      }
+    },
+    ROOMID_REQUIRED: {
+      code: 'ROOMID_REQUIRED', description: {
+        en: 'The room id required',
+        tr: 'Bu işlem için oda numarası gerekli',
+      }
+    },
+    FLOORID_REQUIRED: {
+      code: 'FLOORID_REQUIRED', description: {
+        en: 'The floor id required',
+        tr: 'Bu işlem için kat numarası gerekli',
+      }
+    },
+    UNSUPPORTED_BEDID: {
+      code: 'UNSUPPORTED_BEDID', description: {
+        en: 'bed id is unsupported',
+        tr: 'Yatak numarası geçersiz',
+      }
+    },
+    UNSUPPORTED_ROOMID: {
+      code: 'UNSUPPORTED_ROOMID', description: {
+        en: 'room id is unsupported',
+        tr: 'Oda numarası geçersiz',
+      }
+    },
+    UNSUPPORTED_FLOORID: {
+      code: 'UNSUPPORTED_FLOORID', description: {
+        en: 'floor id is unsupported',
+        tr: 'Kat numarası geçersiz',
       }
     },
   }

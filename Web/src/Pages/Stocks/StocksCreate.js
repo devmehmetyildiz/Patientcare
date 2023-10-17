@@ -41,7 +41,7 @@ export default class StocksCreate extends Component {
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
-    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive).map(define => {
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
     const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
@@ -68,11 +68,7 @@ export default class StocksCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
-              </Form.Group>
-              <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type="date" defaultValue={'2023-06-20'} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoptions} name="DepartmentID" formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
@@ -125,11 +121,5 @@ export default class StocksCreate extends Component {
     }
   }
 
-  getLocalDate = () => {
-    var today = new Date();
-    let test = today.toLocaleString('tr-TR', { timeZone: 'UTC' }).substring(0, 10)
-    let value = today.toISOString().substring(0, 10)
-    return '2023-06-20'
-  }
 }
 StocksCreate.contextType = FormContext

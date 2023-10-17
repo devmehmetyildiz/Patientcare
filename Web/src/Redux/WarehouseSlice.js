@@ -61,7 +61,7 @@ export const GetWarehouse = createAsyncThunk(
 
 export const AddWarehouses = createAsyncThunk(
     'Warehouses/AddWarehouses',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +76,7 @@ export const AddWarehouses = createAsyncThunk(
                 code: 'WarehousesCreate',
                 description: '',
             }));
-            history && history.push('/Warehouses');
+            history && history.push(redirectUrl ? redirectUrl : '/Warehouses');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +88,7 @@ export const AddWarehouses = createAsyncThunk(
 
 export const AddRecordWarehouses = createAsyncThunk(
     'Warehouses/AddRecordWarehouses',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -98,7 +98,7 @@ export const AddRecordWarehouses = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            history && history.push('/Warehouses');
+            history && history.push(redirectUrl ? redirectUrl : '/Warehouses');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -110,7 +110,7 @@ export const AddRecordWarehouses = createAsyncThunk(
 
 export const EditWarehouses = createAsyncThunk(
     'Warehouses/EditWarehouses',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -125,7 +125,7 @@ export const EditWarehouses = createAsyncThunk(
                 code: 'WarehousesUpdate',
                 description: '',
             }));
-            history && history.push('/Warehouses');
+            history && history.push(redirectUrl ? redirectUrl : '/Warehouses');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

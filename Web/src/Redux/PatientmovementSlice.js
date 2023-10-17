@@ -61,7 +61,7 @@ export const GetPatientmovement = createAsyncThunk(
 
 export const AddPatientmovements = createAsyncThunk(
     'Patientmovements/AddPatientmovements',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +76,7 @@ export const AddPatientmovements = createAsyncThunk(
                 code: 'PatientmovementsCreate',
                 description: '',
             }));
-            history && history.push('/Patientmovements');
+            history && history.push(redirectUrl ? redirectUrl : '/Patientmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +88,7 @@ export const AddPatientmovements = createAsyncThunk(
 
 export const EditPatientmovements = createAsyncThunk(
     'Patientmovements/EditPatientmovements',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -103,7 +103,7 @@ export const EditPatientmovements = createAsyncThunk(
                 code: 'PatientmovementsUpdate',
                 description: '',
             }));
-            history && history.push('/Patientmovements');
+            history && history.push(redirectUrl ? redirectUrl : '/Patientmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

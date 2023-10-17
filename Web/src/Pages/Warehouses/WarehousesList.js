@@ -51,13 +51,22 @@ export default function WarehousesList({ Data, Columns, Stocks, initialConfig, P
         { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
         { Header: Literals.Columns.Source[Profile.Language], accessor: 'Source', sortable: true, canGroupBy: true, canFilter: true },
       ]
-      return <div className='w-full p-4'>
-        <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>{Literals.Columns.Stocks[Profile.Language]}</Header>
-        <DataTable
-          Columns={stockcolumns}
-          Data={decoratedStocks.sort((a, b) => a.Order - b.Order)}
-        />
-      </div>
+      return <React.Fragment>
+        <div className='w-full p-4'>
+          <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>{Literals.Columns.Stocks[Profile.Language]}</Header>
+          <DataTable
+            Columns={stockcolumns}
+            Data={decoratedStocks.sort((a, b) => a.Order - b.Order).filter(u => !u.Ismedicine)}
+          />
+        </div>
+        <div className='w-full p-4'>
+          <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>{Literals.Columns.Medicines[Profile.Language]}</Header>
+          <DataTable
+            Columns={stockcolumns}
+            Data={decoratedStocks.sort((a, b) => a.Order - b.Order).filter(u => u.Ismedicine)}
+          />
+        </div>
+      </React.Fragment>
     }
     , [Data, Departments, Units, Stockmovements, Stockdefines, Stocks])
 

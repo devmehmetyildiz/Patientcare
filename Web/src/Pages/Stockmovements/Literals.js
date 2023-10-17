@@ -52,6 +52,10 @@ const Literals = {
             tr: 'Yeni Değer',
             en: 'New Value'
         },
+        Isapproved: {
+            tr: 'Onaylandı mı?',
+            en: 'Is Approved?'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'
@@ -71,6 +75,10 @@ const Literals = {
         edit: {
             tr: 'Güncelle',
             en: 'Edit'
+        },
+        approve: {
+            tr: 'Onayla',
+            en: 'Approve'
         },
         watch: {
             tr: 'İzle',
@@ -97,7 +105,11 @@ const Literals = {
         Pagedeleteheader: {
             tr: "Stok Hareketi Silme",
             en: "Delete Stock Movements"
-        }
+        },
+        Pageapproveheader: {
+            tr: "Stok Hareketi Onaylama",
+            en: "Approve Stock Movements"
+        },
     },
     Button: {
         Create: {
@@ -111,6 +123,10 @@ const Literals = {
         Delete: {
             tr: "Sil",
             en: "Delete"
+        },
+        Approve: {
+            tr: "Onayla",
+            en: "Approve"
         },
         Giveup: {
             tr: "Vazgeç",
@@ -131,6 +147,10 @@ const Literals = {
             tr: "Stok hareketini silmek istediğinize emin misiniz?",
             en: "Stock Movement will delete, are you sure?"
         },
+        Approvecheck: {
+            tr: "Stok hareketini onaylamak istediğinize emin misiniz?",
+            en: "Stock Movement will approve, are you sure?"
+        },
         Movementrequired: {
             tr: "Hareket Türü Gerekli",
             en: "Movement type required"
@@ -143,7 +163,7 @@ const Literals = {
             tr: "Miktar Gerekli",
             en: "Amount required"
         },
-        
+
         Yes: {
             tr: "EVET",
             en: "YES"

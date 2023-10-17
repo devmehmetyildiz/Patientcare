@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Modal } from 'semantic-ui-react'
+import { Divider, Icon, Loader, Modal } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -16,17 +16,21 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 export default class Stockdefines extends Component {
 
   componentDidMount() {
-    const { GetStockdefines } = this.props
+    const { GetStockdefines, GetDepartments, GetUnits } = this.props
     GetStockdefines()
+    GetDepartments()
+    GetUnits()
   }
 
   componentDidUpdate() {
-    const { Stockdefines, removeStockdefinenotification } = this.props
+    const { Stockdefines, removeStockdefinenotification, Departments, Units, removeDepartmentnotification, removeUnitnotification } = this.props
     Notification(Stockdefines.notifications, removeStockdefinenotification)
+    Notification(Departments.notifications, removeDepartmentnotification)
+    Notification(Units.notifications, removeUnitnotification)
   }
 
   render() {
-    const { Stockdefines,  Profile, handleDeletemodal, handleSelectedStockdefine } = this.props
+    const { Stockdefines, Profile, handleDeletemodal, handleSelectedStockdefine } = this.props
     const { isLoading, isDispatching } = Stockdefines
 
     const Columns = [
@@ -34,8 +38,9 @@ export default class Stockdefines extends Component {
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Description[Profile.Language], accessor: 'Description', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Unit[Profile.Language], accessor: 'Unit.Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'Department.Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Unit[Profile.Language], accessor: 'UnitID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.unitCellhandler(col) },
+      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Ismedicine[Profile.Language], accessor: 'Ismedicine', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -98,5 +103,28 @@ export default class Stockdefines extends Component {
           <StockdefinesDelete />
         </React.Fragment>
     )
+  }
+
+  departmentCellhandler = (col) => {
+    const { Departments } = this.props
+    if (Departments.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Departments.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
+
+  unitCellhandler = (col) => {
+    const { Units } = this.props
+    if (Units.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Units.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
+
+  boolCellhandler = (col) => {
+    const { Profile } = this.props
+    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 }

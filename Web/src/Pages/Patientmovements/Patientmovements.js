@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon } from 'semantic-ui-react'
+import { Icon, Loader } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
 import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
@@ -15,23 +15,18 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import PatientmovementsDelete from "../../Containers/Patientmovements/PatientmovementsDelete"
 export default class Patientmovements extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-      selectedrecord: {}
-    }
-  }
-
   componentDidMount() {
-    const { GetPatientmovements } = this.props
+    const { GetPatientmovements, GetPatients, GetPatientdefines } = this.props
     GetPatientmovements()
+    GetPatients()
+    GetPatientdefines()
   }
-
 
   componentDidUpdate() {
-    const { Patientmovements, removePatientmovementnotification } = this.props
+    const { Patientmovements, Patientdefines, Patients, removePatientdefinenotification, removePatientnotification, removePatientmovementnotification } = this.props
     Notification(Patientmovements.notifications, removePatientmovementnotification)
+    Notification(Patientdefines.notifications, removePatientdefinenotification)
+    Notification(Patients.notifications, removePatientnotification)
   }
 
   render() {
@@ -42,7 +37,7 @@ export default class Patientmovements extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.PatientdefineFirstname[Profile.Language], accessor: 'Patientdefine.Firstname', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.nameCellhandler(col) },
+      { Header: Literals.Columns.PatientdefineFirstname[Profile.Language], accessor: 'PatientID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.nameCellhandler(col) },
       { Header: Literals.Columns.Patientmovementtype[Profile.Language], accessor: 'Patientmovementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
       { Header: Literals.Columns.IsDeactive[Profile.Language], accessor: 'IsDeactive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.OldPatientmovementtype[Profile.Language], accessor: 'OldPatientmovementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
@@ -67,7 +62,10 @@ export default class Patientmovements extends Component {
       }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
       columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
         return item.key
-      }) : []
+      }) : [],
+      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
+        return item.key
+      }) : [],
     };
 
     const list = (Patientmovements.list || []).map(item => {
@@ -95,7 +93,7 @@ export default class Patientmovements extends Component {
                   </Breadcrumb>
                 </GridColumn>
                 <GridColumn width={8} >
-                  <Link to={"/Departments/Create"}>
+                  <Link to={"/Patientmovements/Create"}>
                     <Button color='blue' floated='right' className='list-right-green-button'>
                       {Literals.Page.Pagecreateheader[Profile.Language]}
                     </Button>
@@ -116,10 +114,6 @@ export default class Patientmovements extends Component {
     )
   }
 
-  handleChangeModal = (value) => {
-    this.setState({ modal: value })
-  }
-
   boolCellhandler = (col) => {
     return col.value !== null && (col.value ? "EVET" : "HAYIR")
   }
@@ -129,7 +123,15 @@ export default class Patientmovements extends Component {
   }
 
   nameCellhandler = (col) => {
-    return col ? col.cell.row.original?.Patient?.Patientdefine ? `${col.cell.row.original?.Patient?.Patientdefine?.Firstname} ${col.cell.row.original?.Patient?.Patientdefine?.Lastname}` : "Hasta Kaydı Bulunamadı" : "Tanımsız"
+
+    const { Patients, Patientdefines } = this.props
+    if (Patientdefines.isLoading || Patients.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const patient = (Patients.list || []).find(u => u.Uuid === col.value)
+      const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+      return `${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`
+    }
   }
 
 }

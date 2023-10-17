@@ -1,6 +1,167 @@
 const Literals = {
     Options: {
-
+        usageType0: {
+            tr: 'Genel Dosyalar',
+            en: 'General Files'
+        },
+        usageType1: {
+            tr: 'Hasta Dosyaları',
+            en: 'Patient Files'
+        },
+        usageType2: {
+            tr: 'Fotoğraf',
+            en: 'Profile Photo'
+        },
+        usageType3: {
+            tr: 'İlk Görüşme Formu',
+            en: 'İlk Görüşme Formu'
+        },
+        usageType4: {
+            tr: 'Engelli Teslim Etme-Alma Formu',
+            en: 'Engelli Teslim Etme-Alma Formu'
+        },
+        usageType5: {
+            tr: 'İlk Kabul Formu',
+            en: 'İlk Kabul Formu'
+        },
+        usageType6: {
+            tr: 'Engelli Mülkiyeti Teslim Alma Formu',
+            en: 'Engelli Mülkiyeti Teslim Alma Formu'
+        },
+        usageType7: {
+            tr: 'Genel Vucut Kontrol Formu',
+            en: 'Genel Vucut Kontrol Formu'
+        },
+        TableColumnsOrder: {
+            tr: 'Sıra',
+            en: 'Order'
+        },
+        TableColumnsFileName: {
+            tr: 'Dosya Adı',
+            en: 'File Name'
+        },
+        TableColumnsUsagetype: {
+            tr: 'Kullanım Türü',
+            en: 'Usage Type'
+        },
+        TableColumnsFile: {
+            tr: 'Dosya',
+            en: 'File'
+        },
+        TableColumnsUploadStatus: {
+            tr: 'Yüklenme Durumu',
+            en: 'Upload Status'
+        },
+        TableColumnsDelete: {
+            tr: 'Sil',
+            en: 'Delete'
+        },
+        TableColumnsStockdefine: {
+            tr: 'Ürün Tanımı',
+            en: 'Stock Define'
+        },
+        TableColumnsDepartment: {
+            tr: 'Departman',
+            en: 'Department'
+        },
+        TableColumnsBarcode: {
+            tr: 'Barkod',
+            en: 'Barcode'
+        },
+        TableColumnsSkt: {
+            tr: 'Skt',
+            en: 'Skt'
+        },
+        TableColumnsAmount: {
+            tr: 'Miktar',
+            en: 'Amount'
+        },
+        TableColumnsInfo: {
+            tr: 'Açıklama',
+            en: 'Info'
+        },
+    },
+    Complete: {
+        Totalcount: {
+            tr: 'Toplam',
+            en: 'Total'
+        },
+        Define: {
+            tr: 'Tanım',
+            en: 'Define'
+        },
+        Medicines: {
+            tr: 'İlaçlar',
+            en: 'Medicines'
+        },
+        Stocks: {
+            tr: 'Stoklar',
+            en: 'Stocks'
+        },
+        Files: {
+            tr: 'Dosyalar',
+            en: 'Files'
+        },
+        Firstname: {
+            tr: 'İlkisim',
+            en: 'Firstname'
+        },
+        Lastname: {
+            tr: 'Soyisim',
+            en: 'Lastname'
+        },
+        CountryID: {
+            tr: 'TC',
+            en: 'TC'
+        },
+        Fathername: {
+            tr: 'Baba Adı',
+            en: 'Father Name'
+        },
+        Mothername: {
+            tr: 'Anne Adı',
+            en: 'Mother Name'
+        },
+        Requiredfiles: {
+            tr: 'Gerekli Dosyalar',
+            en: 'Required Files'
+        },
+        Warehouse: {
+            tr: 'Ambar',
+            en: 'Warehouse'
+        },
+        Floor: {
+            tr: 'Kat',
+            en: 'Floor'
+        },
+        Room: {
+            tr: 'Oda',
+            en: 'Room'
+        },
+        Bed: {
+            tr: 'Yatak',
+            en: 'Bed'
+        },
+        Iswilltransfer: {
+            tr: 'Transfer Edilicek mi?',
+            en: 'Will Transfer?'
+        },
+        Warehouserequired: {
+            tr: 'Ambar Gerekli',
+            en: 'Warehouse Required'
+        },
+        Floorrequired: {
+            tr: 'Kat Gerekli',
+            en: 'Floor Required'
+        },
+        Bedrequired: {
+            tr: 'Yatak Gerekli',
+            en: 'Bed Required'
+        },
+        Roomrequired: {
+            tr: 'Oda Gerekli',
+            en: 'Room Required'
+        },
     },
     Columns: {
         Id: {
@@ -15,6 +176,46 @@ const Literals = {
             tr: 'Hasta Adı',
             en: 'Patient Name'
         },
+        Newregister: {
+            tr: 'Yeni Giriş',
+            en: 'New Register'
+        },
+        Firstname: {
+            tr: 'İlk İsim',
+            en: 'First Name'
+        },
+        Lastname: {
+            tr: 'Son İsim',
+            en: 'Last Name'
+        },
+        Fathername: {
+            tr: 'Baba Adı',
+            en: 'Father Name'
+        },
+        Mothername: {
+            tr: 'Anne Adı',
+            en: 'Mother Name'
+        },
+        Dateofbirth: {
+            tr: 'Doğum Tarihi',
+            en: 'Date of Birth'
+        },
+        Placeofbirth: {
+            tr: 'Doğum Yeri',
+            en: 'Place of Birth'
+        },
+        Gender: {
+            tr: 'Cinsiyet',
+            en: 'Gender'
+        },
+        Firstname: {
+            tr: 'İlk İsim',
+            en: 'First Name'
+        },
+        Registered: {
+            tr: 'Kayıtlı Hasta',
+            en: 'Registered'
+        },
         CountryID: {
             tr: 'TC Kimlik No',
             en: 'Country ID'
@@ -27,6 +228,14 @@ const Literals = {
             tr: 'Kuruma Giriş Tarihi',
             en: 'Approval Date'
         },
+        Deparment: {
+            tr: 'Departman',
+            en: 'Department'
+        },
+        Patientdefine: {
+            tr: 'Hasta Tanımı',
+            en: 'Patientdefine'
+        },
         Case: {
             tr: 'Durum',
             en: 'Case'
@@ -38,6 +247,10 @@ const Literals = {
         Files: {
             tr: 'Dosyalar',
             en: 'Files'
+        },
+        Medicines: {
+            tr: 'İlaçlar',
+            en: 'Medicines'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -97,15 +310,39 @@ const Literals = {
             tr: "Güncelle",
             en: "Update"
         },
+        Pageeditfileheader: {
+            tr: "Dosya Güncelle",
+            en: "Edit File"
+        },
+        Pageeditstockheader: {
+            tr: "Stok Güncelle",
+            en: "Edit Stock"
+        },
         Pagedeleteheader: {
             tr: "Ön Kayıt Silme",
             en: "Delete Pre Registration"
-        }
+        },
+        Pagecompleteheader: {
+            tr: "Ön Kayıt Onaylama",
+            en: "Complete Pre Registration"
+        },
     },
     Button: {
         Create: {
             tr: "Oluştur",
             en: "Create"
+        },
+        Addnewfile: {
+            tr: "Dosya Ekle",
+            en: "Add File"
+        },
+        AddnewMedicine: {
+            tr: "İlaç Ekle",
+            en: "Add Medicine"
+        },
+        AddnewStock: {
+            tr: "Ürün Ekle",
+            en: "Add Stock"
         },
         Update: {
             tr: "Güncelle",
@@ -134,18 +371,63 @@ const Literals = {
             tr: "ön kayıtlı hastasını silmek istediğinize emin misiniz?",
             en: "pre registration patient will delete, are you sure?"
         },
-        /* Namerequired: {
-            tr: "Periyot Adı Gerekli",
-            en: "Period Required"
+        Popupmessage: {
+            tr: "Hasta Girişi için Tıklayınız",
+            en: "Enter for Patient Register"
         },
-        Occuredtimerequired: {
-            tr: "Gerçekleşme Süresi Gerekli",
-            en: "Occured Time Required"
+        Departmentrequired: {
+            tr: "Departman Gerekli",
+            en: "Department Required"
         },
-        Checktimerequired: {
-            tr: "Kontrol Süresi Gerekli",
-            en: "Check Time Required"
-        }, */
+        Filenamerequired: {
+            tr: "Dosya Adı Gerekli",
+            en: "File Name Required"
+        },
+        CaseID: {
+            tr: "Durum Gerekli",
+            en: "Case Required"
+        },
+        Registerdaterequired: {
+            tr: "Kayıt Tarihi Gerekli",
+            en: "Register date Required"
+        },
+        Approvaldaterequired: {
+            tr: "Kuruma Giriş tarihi Gerekli",
+            en: "Approval date required"
+        },
+        Patientdefinerequired: {
+            tr: "Hasta TC veya Hasta Tanımı Gerekli",
+            en: "Patient country ID or Patient define Required"
+        },
+        Stockdefinedefinerequired: {
+            tr: "Ürün Tanımı Gerekli",
+            en: "Stockdefine required"
+        },
+        Sktdefinerequired: {
+            tr: "Skt Gerekli",
+            en: "Skt required"
+        },
+        Barcodenorequired: {
+            tr: "Barkod Gerekli",
+            en: "Barcode required"
+        },
+        Amountrequired: {
+            tr: "Miktar Gerekli",
+            en: "Amount required"
+        },
+        Registerdaterequired: {
+            tr: "Kuruma Giriş Tarihi Gerekli",
+            en: "Register Date required"
+        },
+        Approvaldaterequired: {
+            tr: "Kuruma Alınma Tarihi Gerekli",
+            en: "Approval Date required"
+        },
+        filerequired: {
+            tr: "Eksik",
+            en: "Needed"
+        },
+
 
     }
 }

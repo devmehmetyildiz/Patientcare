@@ -92,7 +92,6 @@ export default class Cases extends Component {
       var text = (item.Departmentuuids || []).map(u => {
         return (Departments.list || []).find(department => department.Uuid === u.DepartmentID)?.Name
       }).join(", ")
-
       return {
         ...item,
         Departmentstxt: text,

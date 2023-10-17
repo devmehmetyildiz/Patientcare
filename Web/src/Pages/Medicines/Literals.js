@@ -42,6 +42,10 @@ const Literals = {
             tr: 'Kaynak',
             en: 'Source'
         },
+        Isapproved: {
+            tr: 'Onaylandı mı?',
+            en: 'Is Approved?'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'
@@ -62,9 +66,13 @@ const Literals = {
             tr: 'Güncelle',
             en: 'Edit'
         },
-        watch: {
-            tr: 'İzle',
-            en: 'Watch'
+        change: {
+            tr: 'Miktar Gir',
+            en: 'Enter Amount'
+        },
+        approve: {
+            tr: 'Onayla',
+            en: 'Approve'
         },
         delete: {
             tr: 'Sil',
@@ -87,7 +95,11 @@ const Literals = {
         Pagedeleteheader: {
             tr: "İlaç Silme",
             en: "Delete Medicines"
-        }
+        },
+        Pageapproveheader: {
+            tr: "İlaç Onaylama",
+            en: "Approve Medicines"
+        },
     },
     Button: {
         Create: {
@@ -101,6 +113,10 @@ const Literals = {
         Delete: {
             tr: "Sil",
             en: "Delete"
+        },
+        Approve: {
+            tr: "Onayla",
+            en: "Approve"
         },
         Giveup: {
             tr: "Vazgeç",
@@ -120,6 +136,10 @@ const Literals = {
         Deletecheck: {
             tr: "İlacını silmek istediğinize emin misiniz?",
             en: "Medicine will delete, are you sure?"
+        },
+        Approvecheck: {
+            tr: "İlacını onaylamak istediğinize emin misiniz?",
+            en: "Medicine will approve, are you sure?"
         },
         DepartmentRequired: {
             tr: "Departman Gerekli",

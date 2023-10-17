@@ -42,6 +42,10 @@ const Literals = {
             tr: 'Kaynak',
             en: 'Source'
         },
+        Isapproved: {
+            tr: 'Onaylandı mı?',
+            en: 'Is Approved?'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'
@@ -66,6 +70,10 @@ const Literals = {
             tr: 'Miktar Gir',
             en: 'Enter Amount'
         },
+        approve: {
+            tr: 'Onayla',
+            en: 'Approve'
+        },
         delete: {
             tr: 'Sil',
             en: 'Delete'
@@ -87,7 +95,11 @@ const Literals = {
         Pagedeleteheader: {
             tr: "Stok Silme",
             en: "Delete Stocks"
-        }
+        },
+        Pageapproveheader: {
+            tr: "Stok Onaylama",
+            en: "Approve Stocks"
+        },
     },
     Button: {
         Create: {
@@ -101,6 +113,10 @@ const Literals = {
         Delete: {
             tr: "Sil",
             en: "Delete"
+        },
+        Approve: {
+            tr: "Onayla",
+            en: "Approve"
         },
         Giveup: {
             tr: "Vazgeç",
@@ -118,8 +134,12 @@ const Literals = {
             en: "There is no stock found"
         },
         Deletecheck: {
-            tr: "Stok hareketini silmek istediğinize emin misiniz?",
-            en: "Stock will delete, are you sure?"
+            tr: "Stoğunu onaylamak istediğinize emin misiniz?",
+            en: "Stock will approved, are you sure?"
+        },
+        Approvecheck: {
+            tr: "Stoğunu onaylamak istediğinize emin misiniz?",
+            en: "Stock will approve, are you sure?"
         },
         DepartmentRequired: {
             tr: "Departman Gerekli",

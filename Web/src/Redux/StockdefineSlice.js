@@ -61,7 +61,7 @@ export const GetStockdefine = createAsyncThunk(
 
 export const AddStockdefines = createAsyncThunk(
     'Stockdefines/AddStockdefines',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +76,7 @@ export const AddStockdefines = createAsyncThunk(
                 code: 'StockdefinesCreate',
                 description: '',
             }));
-            history && history.push('/Stockdefines');
+            history && history.push(redirectUrl ? redirectUrl : '/Stockdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +88,7 @@ export const AddStockdefines = createAsyncThunk(
 
 export const EditStockdefines = createAsyncThunk(
     'Stockdefines/EditStockdefines',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -103,7 +103,7 @@ export const EditStockdefines = createAsyncThunk(
                 code: 'StockdefinesUpdate',
                 description: '',
             }));
-            history && history.push('/Stockdefines');
+            history && history.push(redirectUrl ? redirectUrl : '/Stockdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

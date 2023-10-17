@@ -61,7 +61,7 @@ export const GetDepartment = createAsyncThunk(
 
 export const AddDepartments = createAsyncThunk(
     'Departments/AddDepartments',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +76,7 @@ export const AddDepartments = createAsyncThunk(
                 code: 'DepartmentsCreate',
                 description: '',
             }));
-            history && history.push('/Departments');
+            history && history.push(redirectUrl ? redirectUrl : '/Departments');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +88,7 @@ export const AddDepartments = createAsyncThunk(
 
 export const AddRecordDepartments = createAsyncThunk(
     'Departments/AddRecordDepartments',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -98,7 +98,7 @@ export const AddRecordDepartments = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            history && history.push('/Departments');
+            history && history.push(redirectUrl ? redirectUrl : '/Departments');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -110,7 +110,7 @@ export const AddRecordDepartments = createAsyncThunk(
 
 export const EditDepartments = createAsyncThunk(
     'Departments/EditDepartments',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -125,7 +125,7 @@ export const EditDepartments = createAsyncThunk(
                 code: 'DepartmentsUpdate',
                 description: '',
             }));
-            history && history.push('/Departments');
+            history && history.push(redirectUrl ? redirectUrl : '/Departments');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

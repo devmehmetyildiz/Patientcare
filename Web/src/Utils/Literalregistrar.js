@@ -8,6 +8,7 @@ import Patientdefines from "../Pages/Patientdefines/Literals"
 import Patientmovements from "../Pages/Patientmovements/Literals"
 import Patientstockmovements from "../Pages/Patientstockmovements/Literals"
 import Patientstocks from "../Pages/Patientstocks/Literals"
+import Patientmedicines from "../Pages/Patientmedicines/Literals"
 import Patienttypes from "../Pages/Patienttypes/Literals"
 import Periods from "../Pages/Periods/Literals"
 import Preregistrations from "../Pages/Preregistrations/Literals"
@@ -27,6 +28,9 @@ import Units from "../Pages/Units/Literals"
 import Users from "../Pages/Users/Literals"
 import Warehouses from "../Pages/Warehouses/Literals"
 import Rules from "../Pages/Rules/Literals"
+import Beds from "../Pages/Beds/Literals"
+import Rooms from "../Pages/Rooms/Literals"
+import Floors from "../Pages/Floors/Literals"
 
 const Literals = {
     Cases,
@@ -39,6 +43,7 @@ const Literals = {
     Patientmovements,
     Patientstockmovements,
     Patientstocks,
+    Patientmedicines,
     Patienttypes,
     Periods,
     Preregistrations,
@@ -57,7 +62,10 @@ const Literals = {
     Users,
     Warehouses,
     Rules,
-    Medicines
+    Medicines,
+    Rooms,
+    Beds,
+    Floors
 }
 
 export default Literals

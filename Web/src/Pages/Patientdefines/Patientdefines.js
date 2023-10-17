@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon } from 'semantic-ui-react'
+import { Icon, Loader } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -68,8 +68,8 @@ export default class Patientdefines extends Component {
       { Header: Literals.Columns.Contactnumber2[Profile.Language], accessor: 'Contactnumber2', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Contactname1[Profile.Language], accessor: 'Contactname1', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Contactname2[Profile.Language], accessor: 'Contactname2', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.CostumertypeName[Profile.Language], accessor: 'Costumertype.Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.PatienttypeName[Profile.Language], accessor: 'Patienttype.Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.CostumertypeName[Profile.Language], accessor: 'CostumertypeID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.costumertypeCellhandler(col) },
+      { Header: Literals.Columns.PatienttypeName[Profile.Language], accessor: 'PatienttypeID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.patienttypeCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -138,13 +138,27 @@ export default class Patientdefines extends Component {
     )
   }
 
-  handleChangeModal = (value) => {
-    this.setState({ modal: value })
-  }
-
   boolCellhandler = (col) => {
     const { Profile } = this.props
     return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+  }
+
+  costumertypeCellhandler = (col) => {
+    const { Costumertypes } = this.props
+    if (Costumertypes.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Costumertypes.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
+
+  patienttypeCellhandler = (col) => {
+    const { Patienttypes } = this.props
+    if (Patienttypes.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Patienttypes.list || []).find(u => u.Uuid === col.value)?.Name
+    }
   }
 
 }

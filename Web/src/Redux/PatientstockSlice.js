@@ -29,6 +29,10 @@ const Literals = {
         en: 'Patient Stock Deleted successfully',
         tr: 'Hasta Stoğu Başarı ile Silindi'
     },
+    approvedescription: {
+        en: 'Patient Stock Approved Successfully',
+        tr: 'Hasta Stoğu Başarı ile Onaylandı'
+    },
 }
 
 export const GetPatientstocks = createAsyncThunk(
@@ -61,7 +65,7 @@ export const GetPatientstock = createAsyncThunk(
 
 export const AddPatientstocks = createAsyncThunk(
     'Patientstocks/AddPatientstocks',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +80,7 @@ export const AddPatientstocks = createAsyncThunk(
                 code: 'PatientstocksCreate',
                 description: '',
             }));
-            history && history.push('/Patientstocks');
+            history && history.push(redirectUrl ? redirectUrl : '/Patientstocks');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +92,7 @@ export const AddPatientstocks = createAsyncThunk(
 
 export const EditPatientstocks = createAsyncThunk(
     'Patientstocks/EditPatientstocks',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -103,7 +107,7 @@ export const EditPatientstocks = createAsyncThunk(
                 code: 'PatientstocksUpdate',
                 description: '',
             }));
-            history && history.push('/Patientstocks');
+            history && history.push(redirectUrl ? redirectUrl : '/Patientstocks');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -136,6 +140,29 @@ export const DeletePatientstocks = createAsyncThunk(
     }
 );
 
+export const ApprovePatientstocks = createAsyncThunk(
+    'Patientstocks/ApprovePatientstocks',
+    async (data, { dispatch, getState }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, `${ROUTES.PATIENTSTOCK}/Approve/${data.Uuid}`);
+            dispatch(fillPatientstocknotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.approvedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientstocknotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const PatientstocksSlice = createSlice({
     name: 'Patientstocks',
     initialState: {
@@ -145,7 +172,8 @@ export const PatientstocksSlice = createSlice({
         notifications: [],
         isLoading: false,
         isDispatching: false,
-        isDeletemodalopen: false
+        isDeletemodalopen: false,
+        isApprovemodalopen: false
     },
     reducers: {
         handleSelectedPatientstock: (state, action) => {
@@ -161,6 +189,9 @@ export const PatientstocksSlice = createSlice({
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
+        },
+        handleApprovemodal: (state, action) => {
+            state.isApprovemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -213,6 +244,17 @@ export const PatientstocksSlice = createSlice({
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(ApprovePatientstocks.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(ApprovePatientstocks.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(ApprovePatientstocks.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(DeletePatientstocks.pending, (state) => {
                 state.isDispatching = true;
             })
@@ -231,7 +273,8 @@ export const {
     handleSelectedPatientstock,
     fillPatientstocknotification,
     removePatientstocknotification,
-    handleDeletemodal
+    handleDeletemodal,
+    handleApprovemodal
 } = PatientstocksSlice.actions;
 
 export default PatientstocksSlice.reducer;

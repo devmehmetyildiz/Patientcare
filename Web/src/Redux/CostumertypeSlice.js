@@ -62,7 +62,7 @@ export const GetCostumertype = createAsyncThunk(
 
 export const AddCostumertypes = createAsyncThunk(
     'Costumertypes/AddCostumertypes',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -77,7 +77,7 @@ export const AddCostumertypes = createAsyncThunk(
                 code: 'CostumerypesCreate',
                 description: '',
             }));
-            history && history.push('/Costumertypes');
+            history && history.push(redirectUrl ? redirectUrl : '/Costumertypes');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -89,7 +89,7 @@ export const AddCostumertypes = createAsyncThunk(
 
 export const AddRecordCostumertypes = createAsyncThunk(
     'Costumertypes/AddRecordCostumertypes',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,7 +99,7 @@ export const AddRecordCostumertypes = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            history && history.push('/Costumertypes');
+            history && history.push(redirectUrl ? redirectUrl : '/Costumertypes');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -111,7 +111,7 @@ export const AddRecordCostumertypes = createAsyncThunk(
 
 export const EditCostumertypes = createAsyncThunk(
     'Costumertypes/EditCostumertypes',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -126,7 +126,7 @@ export const EditCostumertypes = createAsyncThunk(
                 code: 'CostumertypesUpdate',
                 description: '',
             }));
-            history && history.push('/Costumertypes');
+            history && history.push(redirectUrl ? redirectUrl : '/Costumertypes');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

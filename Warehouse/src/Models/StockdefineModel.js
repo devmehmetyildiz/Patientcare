@@ -19,6 +19,9 @@ module.exports = sequelize.define('stockdefineModel', {
     DepartmentID: {
         type: Sequelize.STRING
     },
+    Ismedicine: {
+        type: Sequelize.BOOLEAN
+    },
     Createduser: {
         type: Sequelize.STRING
     },

@@ -42,7 +42,7 @@ export default class MedicinesCreate extends Component {
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
-    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive).map(define => {
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && u.Ismedicine).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
     const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
@@ -102,6 +102,7 @@ export default class MedicinesCreate extends Component {
     data.Status = 0
     data.Source = "Single Request"
     data.Amount = parseFloat(data.Amount)
+    data.Ismedicine = true
     data.Isonusage = false
     data.Order = 1
     let errors = []
@@ -122,7 +123,7 @@ export default class MedicinesCreate extends Component {
         fillStocknotification(error)
       })
     } else {
-      AddStocks({ data, history })
+      AddStocks({ data, history, redirectUrl: '/Medicines' })
     }
   }
 

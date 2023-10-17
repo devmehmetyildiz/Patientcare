@@ -114,60 +114,12 @@ async function Transferpatientstock(req, res, next) {
         t.rollback()
         return next(sequelizeErrorCatcher(error))
     }
-    res.status(200).json({succes:true})
+    res.status(200).json({ succes: true })
 }
 
 async function GetPatientstocks(req, res, next) {
     try {
         const patientstocks = await db.patientstockModel.findAll({ where: { Isactive: true } })
-        if (patientstocks && patientstocks.length > 0) {
-            let departments = []
-            let units = []
-            let patients = []
-            try {
-                const departmentsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Units`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const patientsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Business + `Patients/GetFullpatients`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                departments = departmentsresponse.data
-                units = unitsresponse.data
-                patients = patientsresponse.data
-            } catch (error) {
-                return next(requestErrorCatcher(error, 'Setting'))
-            }
-            for (const patientstock of patientstocks) {
-                let amount = 0.0;
-                let movements = await db.patientstockmovementModel.findAll({ where: { StockID: patientstock.Uuid } })
-                movements.forEach(movement => {
-                    amount += (movement.Amount * movement.Movementtype);
-                });
-                patientstock.Amount = amount
-                patientstock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: patientstock.StockdefineID } })
-                if (patientstock.Stockdefine) {
-                    patientstock.Stockdefine.Unit = units.find(u => u.Uuid === patientstock.Stockdefine.UnitID)
-                    patientstock.Stockdefine.Department = departments.find(u => u.Uuid === patientstock.Stockdefine.DepartmentID)
-                }
-                patientstock.Department = departments.find(u => u.Uuid === patientstock.DepartmentID)
-                patientstock.Patient = patients.find(u => u.Uuid === patientstock.PatientID)
-            }
-        }
         res.status(200).json(patientstocks)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -195,44 +147,6 @@ async function GetPatientstock(req, res, next) {
         if (!patientstock.Isactive) {
             return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
         }
-        try {
-            patientstock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: patientstock.StockdefineID } })
-            let amount = 0.0;
-            let movements = await db.patientstockmovementModel.findAll({ where: { StockID: patientstock.Uuid } })
-            movements.forEach(movement => {
-                amount += (movement.Amount * movement.Movementtype);
-            });
-            patientstock.Amount = amount
-            if (patientstock.Stockdefine) {
-                const departmentsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments/${patientstock.Stockdefine.DepartmentID}`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Units/${patientstock.Stockdefine.UnitID}`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const patientresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Business + `Patients/${patientstock.PatientID}`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                patientstock.Patient = patientresponse.data
-                patientstock.Stockdefine.Department = departmentsresponse.data
-                patientstock.Stockdefine.Unit = unitsresponse.data
-            }
-
-        } catch (error) {
-            return next(requestErrorCatcher(error, 'Setting'))
-        }
         res.status(200).json(patientstock)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -252,6 +166,7 @@ async function AddPatientstock(req, res, next) {
         Barcodeno,
         Status,
         Order,
+        Ismedicine
     } = req.body
 
     if (!validator.isUUID(PatientID)) {
@@ -269,10 +184,10 @@ async function AddPatientstock(req, res, next) {
     if (!validator.isUUID(DepartmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
-    if (!validator.isISODate(Skt)) {
+    if (Ismedicine && !validator.isISODate(Skt)) {
         validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
     }
-    if (!validator.isString(Barcodeno)) {
+    if (Ismedicine && !validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
     }
     if (!validator.isNumber(Status)) {
@@ -295,7 +210,8 @@ async function AddPatientstock(req, res, next) {
             Uuid: stockuuid,
             Createduser: "System",
             Createtime: new Date(),
-            Isactive: true
+            Isactive: true,
+            Isapproved: false
         }, { transaction: t })
 
         await db.patientstockmovementModel.create({
@@ -308,6 +224,7 @@ async function AddPatientstock(req, res, next) {
             Newvalue: req.body.Amount,
             Createduser: "System",
             Createtime: new Date(),
+            Isapproved: true,
             Isactive: true
         }, { transaction: t })
         await t.commit()
@@ -329,7 +246,8 @@ async function UpdatePatientstock(req, res, next) {
         Barcodeno,
         Status,
         Order,
-        Uuid
+        Uuid,
+        Ismedicine
     } = req.body
 
     if (!validator.isUUID(PatientID)) {
@@ -341,10 +259,10 @@ async function UpdatePatientstock(req, res, next) {
     if (!validator.isUUID(DepartmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
-    if (!validator.isISODate(Skt)) {
+    if (Ismedicine && !validator.isISODate(Skt)) {
         validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
     }
-    if (!validator.isString(Barcodeno)) {
+    if (Ismedicine && !validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
     }
     if (!validator.isNumber(Status)) {
@@ -402,7 +320,8 @@ async function UpdatePatientstocklist(req, res, next) {
                 Barcodeno,
                 Status,
                 Order,
-                Uuid
+                Uuid,
+                Ismedicine
             } = stockitem
 
             if (!validator.isUUID(PatientID)) {
@@ -414,10 +333,10 @@ async function UpdatePatientstocklist(req, res, next) {
             if (!validator.isUUID(DepartmentID)) {
                 validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
             }
-            if (!validator.isISODate(Skt)) {
+            if (Ismedicine && !validator.isISODate(Skt)) {
                 validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
             }
-            if (!validator.isString(Barcodeno)) {
+            if (Ismedicine && !validator.isString(Barcodeno)) {
                 validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
             }
             if (!validator.isNumber(Status)) {
@@ -456,6 +375,7 @@ async function UpdatePatientstocklist(req, res, next) {
                     Uuid: stockuuid,
                     Createduser: "System",
                     Createtime: new Date(),
+                    Isapproved: false,
                     Isactive: true
                 }, { transaction: t })
 
@@ -466,6 +386,7 @@ async function UpdatePatientstocklist(req, res, next) {
                     Movementdate: new Date(),
                     Movementtype: 1,
                     Prevvalue: 0,
+                    Isapproved: true,
                     Newvalue: stockitem.Amount,
                     Createduser: "System",
                     Createtime: new Date(),
@@ -481,10 +402,53 @@ async function UpdatePatientstocklist(req, res, next) {
     res.status(200).json({ success: true })
 }
 
+async function ApprovePatientstock(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.stockId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    const t = await db.sequelize.transaction();
+    try {
+        const patientstock = await db.patientstockModel.findOne({ where: { Uuid: Uuid } })
+        if (!patientstock) {
+            return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
+        }
+        if (patientstock.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+        }
+
+        await db.patientstockModel.update({
+            ...patientstock,
+            Isapproved: true,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatientstocks(req, res, next)
+}
+
 async function DeletePatientstock(req, res, next) {
 
     let validationErrors = []
-    const Uuid = req.params.patientstockId
+    const Uuid = req.params.stockId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
@@ -513,7 +477,7 @@ async function DeletePatientstock(req, res, next) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
-    GetPurchaseorderstocks(req, res, next)
+    GetPatientstocks(req, res, next)
 }
 
 function DataCleaner(data) {
@@ -548,5 +512,6 @@ module.exports = {
     UpdatePatientstock,
     DeletePatientstock,
     Transferpatientstock,
-    UpdatePatientstocklist
+    UpdatePatientstocklist,
+    ApprovePatientstock
 }

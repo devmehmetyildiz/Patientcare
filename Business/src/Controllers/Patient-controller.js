@@ -9,80 +9,7 @@ const axios = require('axios')
 
 async function GetPatients(req, res, next) {
     try {
-        const patients = await db.patientModel.findAll({ where: { Isactive: true, Iswaitingactivation: false } })
-        if (patients && patients.length > 0) {
-            let cases = []
-            let departments = []
-            let files = []
-            let stocks = []
-            let patienttypes = []
-            let costumertypes = []
-            try {
-                const casesresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Cases`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const departmentsresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const patienttypesresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Patienttypes`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const costumertypesresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Costumertypes`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const filesresponse = axios({
-                    method: 'GET',
-                    url: config.services.File + `Files`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const stocksresponse = axios({
-                    method: 'GET',
-                    url: config.services.Warehouse + `Patientstocks`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const res = await Promise.all([casesresponse, departmentsresponse,
-                    patienttypesresponse, costumertypesresponse, filesresponse, stocksresponse])
-                cases = res[0].data
-                departments = res[1].data
-                patienttypes = res[2].data
-                costumertypes = res[3].data
-                files = res[4].data
-                stocks = res[5].data
-                for (const patient of patients) {
-                    patient.Case = cases.find(u => u.Uuid === patient.CaseID)
-                    patient.Department = departments.find(u => u.Uuid === patient.DeparmentID)
-                    patient.Stocks = stocks.filter(u => u.PatientID === patient.Uuid)
-                    patient.Files = files.filter(u => u.ParentID === patient.Uuid)
-                    patient.Patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient.PatientdefineID } })
-                    if (patient.Patientdefine) {
-                        patient.Patientdefine.Patienttype = patienttypes.find(u => u.Uuid === patient.Patientdefine.PatienttypeID)
-                        patient.Patientdefine.Costumertype = costumertypes.find(u => u.Uuid === patient.Patientdefine.CostumertypeID)
-                    }
-                }
-            } catch (error) {
-                return next(requestErrorCatcher(error, 'Setting'))
-            }
-        }
+        const patients = await db.patientModel.findAll({ where: { Isactive: true } })
         res.status(200).json(patients)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -91,80 +18,7 @@ async function GetPatients(req, res, next) {
 
 async function GetPreregistrations(req, res, next) {
     try {
-        const patients = await db.patientModel.findAll({ where: { Isactive: true, Iswaitingactivation: true } })
-        if (patients && patients.length > 0) {
-            let cases = []
-            let departments = []
-            let files = []
-            let stocks = []
-            let patienttypes = []
-            let costumertypes = []
-            try {
-                const casesresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Cases`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const departmentsresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const patienttypesresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Patienttypes`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const costumertypesresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Costumertypes`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const filesresponse = axios({
-                    method: 'GET',
-                    url: config.services.File + `Files`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const stocksresponse = axios({
-                    method: 'GET',
-                    url: config.services.Warehouse + `Patientstocks`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const res = await Promise.all([casesresponse, departmentsresponse,
-                    patienttypesresponse, costumertypesresponse, filesresponse, stocksresponse])
-                cases = res[0].data
-                departments = res[1].data
-                patienttypes = res[2].data
-                costumertypes = res[3].data
-                files = res[4].data
-                stocks = res[5].data
-                for (const patient of patients) {
-                    patient.Case = cases.find(u => u.Uuid === patient.CaseID)
-                    patient.Department = departments.find(u => u.Uuid === patient.DeparmentID)
-                    patient.Stocks = stocks.filter(u => u.PatientID === patient.Uuid)
-                    patient.Files = files.filter(u => u.ParentID === patient.Uuid)
-                    patient.Patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient.PatientdefineID } })
-                    if (patient.Patientdefine) {
-                        patient.Patientdefine.Patienttype = patienttypes.find(u => u.Uuid === patient.Patientdefine.PatienttypeID)
-                        patient.Patientdefine.Costumertype = costumertypes.find(u => u.Uuid === patient.Patientdefine.CostumertypeID)
-                    }
-                }
-            } catch (error) {
-                return next(requestErrorCatcher(error, 'Setting'))
-            }
-        }
+        const patients = await db.patientModel.findAll({ where: { Isactive: true } })
         res.status(200).json(patients)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -174,69 +28,6 @@ async function GetPreregistrations(req, res, next) {
 async function GetFullpatients(req, res, next) {
     try {
         const patients = await db.patientModel.findAll({ where: { Isactive: true } })
-        if (patients && patients.length > 0) {
-            let cases = []
-            let departments = []
-            let files = []
-            let patienttypes = []
-            let costumertypes = []
-            try {
-                const casesresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Cases`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const departmentsresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const patienttypesresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Patienttypes`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const costumertypesresponse = axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Costumertypes`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const filesresponse = axios({
-                    method: 'GET',
-                    url: config.services.File + `Files`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const res = await Promise.all([casesresponse, departmentsresponse,
-                    patienttypesresponse, costumertypesresponse, filesresponse])
-                cases = res[0].data
-                departments = res[1].data
-                patienttypes = res[2].data
-                costumertypes = res[3].data
-                files = res[4].data
-                for (const patient of patients) {
-                    patient.Case = cases.find(u => u.Uuid === patient.CaseID)
-                    patient.Department = departments.find(u => u.Uuid === patient.DeparmentID)
-                    patient.Files = files.filter(u => u.ParentID === patient.Uuid)
-                    patient.Patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient.PatientdefineID } })
-                    if (patient.Patientdefine) {
-                        patient.Patientdefine.Patienttype = patienttypes.find(u => u.Uuid === patient.Patientdefine.PatienttypeID)
-                        patient.Patientdefine.Costumertype = costumertypes.find(u => u.Uuid === patient.Patientdefine.CostumertypeID)
-                    }
-                }
-            } catch (error) {
-                return next(requestErrorCatcher(error, 'Setting'))
-            }
-        }
         res.status(200).json(patients)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -258,57 +49,6 @@ async function GetPatient(req, res, next) {
 
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: req.params.patientId } });
-        patient.Patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient.PatientdefineID } })
-        if (patient.Patientdefine) {
-            const patienttypesresponse = await axios({
-                method: 'GET',
-                url: config.services.Setting + `Patienttypes/${patient.Patientdefine.PatienttypeID}`,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            const costumertypesresponse = await axios({
-                method: 'GET',
-                url: config.services.Setting + `Costumertypes/${patient.Patientdefine.CostumertypeID}`,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            patient.Patientdefine.Patienttype = patienttypesresponse.data
-            patient.Patientdefine.Costumertype = costumertypesresponse.data
-        }
-        const casesresponse = await axios({
-            method: 'GET',
-            url: config.services.Setting + `Cases/${patient.CaseID}`,
-            headers: {
-                session_key: config.session.secret
-            }
-        })
-        const departmentsresponse = await axios({
-            method: 'GET',
-            url: config.services.Setting + `Departments/${patient.DepartmentID}`,
-            headers: {
-                session_key: config.session.secret
-            }
-        })
-        const filesresponse = await axios({
-            method: 'GET',
-            url: config.services.File + `Files`,
-            headers: {
-                session_key: config.session.secret
-            }
-        })
-        const stocksresponse = await axios({
-            method: 'GET',
-            url: config.services.Warehouse + `Patientstocks`,
-            headers: {
-                session_key: config.session.secret
-            }
-        })
-        patient.Case = casesresponse.data
-        patient.Department = departmentsresponse.data
-        patient.Files = filesresponse.data.filter(u => u.ParentID === patient.Uuid)
-        patient.Stocks = stocksresponse.data.filter(u => u.PatientID === patient.Uuid)
         res.status(200).json(patient)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -327,27 +67,27 @@ async function AddPatient(req, res, next) {
         PatientdefineID
     } = req.body
 
-    if (!validator.isString(Patientdefine.Firstname) && !validator.isUUID(Patientdefine.Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED)
-    }
-    if (!validator.isString(Patientdefine.Lastname) && !validator.isUUID(Patientdefine.Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED)
-    }
+    /*  if (!validator.isString(Patientdefine.Firstname) && !validator.isUUID(Patientdefine.Uuid)) {
+         validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED)
+     }
+     if (!validator.isString(Patientdefine.Lastname) && !validator.isUUID(Patientdefine.Uuid)) {
+         validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED)
+     } */
     if (!validator.isString(Patientdefine.CountryID) && !validator.isUUID(Patientdefine.Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
     }
-    if (!validator.isString(Patientdefine.Fathername) && !validator.isUUID(Patientdefine.Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FATHERNAME_REQUIRED)
-    }
-    if (!validator.isString(Patientdefine.Mothername) && !validator.isUUID(Patientdefine.Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOTHERNAME_REQUIRED)
-    }
-    if (!validator.isString(Patientdefine.Placeofbirth) && !validator.isUUID(Patientdefine.Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PLACEOFBIRTH_REQUIRED)
-    }
-    if (!validator.isString(Patientdefine.Gender) && !validator.isUUID(Patientdefine.Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.GENDER_REQUIRED)
-    }
+    /*  if (!validator.isString(Patientdefine.Fathername) && !validator.isUUID(Patientdefine.Uuid)) {
+         validationErrors.push(messages.VALIDATION_ERROR.FATHERNAME_REQUIRED)
+     }
+     if (!validator.isString(Patientdefine.Mothername) && !validator.isUUID(Patientdefine.Uuid)) {
+         validationErrors.push(messages.VALIDATION_ERROR.MOTHERNAME_REQUIRED)
+     }
+     if (!validator.isString(Patientdefine.Placeofbirth) && !validator.isUUID(Patientdefine.Uuid)) {
+         validationErrors.push(messages.VALIDATION_ERROR.PLACEOFBIRTH_REQUIRED)
+     }
+     if (!validator.isString(Patientdefine.Gender) && !validator.isUUID(Patientdefine.Uuid)) {
+         validationErrors.push(messages.VALIDATION_ERROR.GENDER_REQUIRED)
+     } */
     if (Object.keys(Patientdefine).length <= 0 && !validator.isUUID(PatientdefineID)) {
         validationErrors.push(messages.ERROR.PATIENTDEFINE_NOT_FOUND)
     }
@@ -424,24 +164,25 @@ async function Completeprepatient(req, res, next) {
     const {
         PatientdefineID,
         WarehouseID,
-        Roomnumber,
-        Floornumber,
-        Bednumber
+        RoomID,
+        FloorID,
+        BedID,
+        Iswilltransfer
     } = req.body
 
     if (!validator.isUUID(PatientdefineID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
     }
-    if (!validator.isUUID(WarehouseID)) {
+    if (Iswilltransfer && !validator.isUUID(WarehouseID)) {
         validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
     }
-    if (!validator.isNumber(Roomnumber)) {
+    if (!validator.isString(RoomID)) {
         validationErrors.push(messages.VALIDATION_ERROR.ROOMNUMBER_REQUIRED)
     }
-    if (!validator.isNumber(Floornumber)) {
+    if (!validator.isString(FloorID)) {
         validationErrors.push(messages.VALIDATION_ERROR.FLOORNUMBER_REQUIRED)
     }
-    if (!validator.isNumber(Bednumber)) {
+    if (!validator.isString(BedID)) {
         validationErrors.push(messages.VALIDATION_ERROR.BEDNUMBER_REQUIRED)
     }
 
@@ -452,24 +193,25 @@ async function Completeprepatient(req, res, next) {
     let patient = req.body
 
     try {
-        await axios({
-            method: 'PUT',
-            url: config.services.Warehouse + `Patientstocks/Transferpatientstock`,
-            data: patient,
-            headers: {
-                session_key: config.session.secret
-            }
-        })
+        if (Iswilltransfer === true) {
+            await axios({
+                method: 'PUT',
+                url: config.services.Warehouse + `Patientstocks/Transferpatientstock`,
+                data: patient,
+                headers: {
+                    session_key: config.session.secret
+                }
+            })
+        }
     } catch (error) {
-        console.log('error111: ', error);
         return next(requestErrorCatcher(error, 'Warehouse'))
     }
-    
+
     const t = await db.sequelize.transaction();
     try {
         await db.patientModel.update({
             ...patient,
-            Iswaitingactivation:false,
+            Iswaitingactivation: false,
             Updateduser: "System",
             Updatetime: new Date(),
             Isactive: true

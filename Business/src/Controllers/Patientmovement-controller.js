@@ -9,12 +9,6 @@ const uuid = require('uuid').v4
 async function GetPatientmovements(req, res, next) {
     try {
         const patientmovements = await db.patientmovementModel.findAll({ where: { Isactive: true } })
-        for (const patientmovement of patientmovements) {
-            patientmovement.Patient = await db.patientModel.findOne({ where: { Uuid: patientmovement.PatientID } })
-            if (patientmovement.Patient) {
-                patientmovement.Patient.Patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patientmovement.Patient.PatientdefineID } })
-            }
-        }
         res.status(200).json(patientmovements)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -36,10 +30,6 @@ async function GetPatientmovement(req, res, next) {
 
     try {
         const patientmovement = await db.patientmovementModel.findOne({ where: { Uuid: req.params.patientmovementId } });
-        patientmovement.Patient = await db.patientModel.findOne({ where: { Uuid: patientmovement.PatientID } })
-        if (patientmovement.Patient) {
-            patientmovement.Patient.Patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patientmovement.Patient.PatientdefineID } })
-        }
         res.status(200).json(patientmovement)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

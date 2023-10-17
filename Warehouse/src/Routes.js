@@ -7,12 +7,16 @@ const Routes = [
 
   { method: 'get', path: '/Stocks/:stockId', controller: 'Stock', action: 'GetStock' },
   { method: 'get', path: '/Stocks', controller: 'Stock', action: 'GetStocks' },
+  { method: 'post', path: '/Stocks/TransferfromPatient', controller: 'Stock', action: 'TransferfromPatient' },
+  { method: 'post', path: '/Stocks/TransfertoPatient', controller: 'Stock', action: 'TransfertoPatient' },
+  { method: 'post', path: '/Stocks/Approve/:stockId', controller: 'Stock', action: 'ApproveStock' },
   { method: 'post', path: '/Stocks', controller: 'Stock', action: 'AddStock' },
   { method: 'put', path: '/Stocks', controller: 'Stock', action: 'UpdateStock' },
   { method: 'delete', path: '/Stocks/:stockId', controller: 'Stock', action: 'DeleteStock' },
 
   { method: 'get', path: '/Stockmovements/:stockmovementId', controller: 'Stockmovement', action: 'GetStockmovement' },
   { method: 'get', path: '/Stockmovements', controller: 'Stockmovement', action: 'GetStockmovements' },
+  { method: 'post', path: '/Stockmovements/Approve/:stockmovementId', controller: 'Stockmovement', action: 'ApproveStockmovement' },
   { method: 'post', path: '/Stockmovements', controller: 'Stockmovement', action: 'AddStockmovement' },
   { method: 'put', path: '/Stockmovements', controller: 'Stockmovement', action: 'UpdateStockmovement' },
   { method: 'delete', path: '/Stockmovements/:stockmovementId', controller: 'Stockmovement', action: 'DeleteStockmovement' },
@@ -39,6 +43,7 @@ const Routes = [
 
   { method: 'get', path: '/Patientstocks/:stockId', controller: 'Patientstock', action: 'GetPatientstock' },
   { method: 'get', path: '/Patientstocks', controller: 'Patientstock', action: 'GetPatientstocks' },
+  { method: 'post', path: '/Patientstocks/Approve/:stockId', controller: 'Patientstock', action: 'ApprovePatientstock' },
   { method: 'post', path: '/Patientstocks', controller: 'Patientstock', action: 'AddPatientstock' },
   { method: 'put', path: '/Patientstocks/Transferpatientstock', controller: 'Patientstock', action: 'Transferpatientstock' },
   { method: 'put', path: '/Patientstocks/UpdatePatientstocklist', controller: 'Patientstock', action: 'UpdatePatientstocklist' },
@@ -47,6 +52,7 @@ const Routes = [
 
   { method: 'get', path: '/Patientstockmovements/:stockmovementId', controller: 'Patientstockmovement', action: 'GetPatientstockmovement' },
   { method: 'get', path: '/Patientstockmovements', controller: 'Patientstockmovement', action: 'GetPatientstockmovements' },
+  { method: 'post', path: '/Patientstockmovements/Approve/:stockmovementId', controller: 'Patientstockmovement', action: 'ApprovePatientstockmovement' },
   { method: 'post', path: '/Patientstockmovements', controller: 'Patientstockmovement', action: 'AddPatientstockmovement' },
   { method: 'put', path: '/Patientstockmovements', controller: 'Patientstockmovement', action: 'UpdatePatientstockmovement' },
   { method: 'delete', path: '/Patientstockmovements/:stockmovementId', controller: 'Patientstockmovement', action: 'DeletePatientstockmovement' },

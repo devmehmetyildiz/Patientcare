@@ -7,9 +7,6 @@ module.exports = sequelize.define('patientstockModel', {
     Uuid: {
         type: Sequelize.STRING
     },
-    Name: {
-        type: Sequelize.STRING
-    },
     PatientID: {
         type: Sequelize.STRING
     },
@@ -20,6 +17,9 @@ module.exports = sequelize.define('patientstockModel', {
         type: Sequelize.STRING
     },
     Ismedicine: {
+        type: Sequelize.BOOLEAN
+    },
+    Isapproved: {
         type: Sequelize.BOOLEAN
     },
     Skt: {

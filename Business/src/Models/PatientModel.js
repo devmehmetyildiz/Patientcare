@@ -22,14 +22,14 @@ module.exports = sequelize.define('patientModel', {
     Releasedate: {
         type: Sequelize.DATE
     },
-    Roomnumber: {
-        type: Sequelize.INTEGER
+    RoomID: {
+        type: Sequelize.STRING
     },
-    Floornumber: {
-        type: Sequelize.INTEGER
+    FloorID: {
+        type: Sequelize.STRING
     },
-    Bednumber: {
-        type: Sequelize.INTEGER
+    BedID: {
+        type: Sequelize.STRING
     },
     DepartmentID: {
         type: Sequelize.STRING

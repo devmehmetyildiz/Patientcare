@@ -10,41 +10,6 @@ const axios = require('axios')
 async function GetPatientstockmovements(req, res, next) {
     try {
         const patientstockmovements = await db.patientstockmovementModel.findAll({ where: { Isactive: true } })
-        let departments = []
-        let units = []
-        if (patientstockmovements && patientstockmovements.length > 0) {
-            try {
-                const departmentresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + 'Departments',
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + 'Units',
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                departments = departmentresponse.data
-                units = unitresponse.data
-            } catch (error) {
-                return next(requestErrorCatcher(error, 'Setting'))
-            }
-        }
-        for (const patientstockmovement of patientstockmovements) {
-            patientstockmovement.Stock = await db.patientstockModel.findOne({ where: { Uuid: patientstockmovement.StockID } })
-            if (patientstockmovement.Stock) {
-                patientstockmovement.Stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: patientstockmovement.Stock.StockdefineID } })
-                patientstockmovement.Stock.Department = departments.find(u => u.Uuid === patientstockmovement.Stock.DepartmentID)
-                if (patientstockmovement.Stock.Stockdefine) {
-                    patientstockmovement.Stock.Stockdefine.Department = departments.find(u => u.Uuid === patientstockmovement.Stock.Stockdefine.DepartmentID)
-                    patientstockmovement.Stock.Stockdefine.Unit = units.find(u => u.Uuid === patientstockmovement.Stock.Stockdefine.UnitID)
-                }
-            }
-        }
         res.status(200).json(patientstockmovements)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -71,32 +36,6 @@ async function GetPatientstockmovement(req, res, next) {
         }
         if (!patientstockmovement.Isactive) {
             return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
-        }
-        patientstockmovement.Stock = await db.purchaseorderstockModel.findOne({ where: { Uuid: patientstockmovement.StockID } })
-        if (patientstockmovement.Stock) {
-            patientstockmovement.Stock.Stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: patientstockmovement.Stock.StockdefineID } })
-            if (patientstockmovement.Stock.Stockdefine) {
-                try {
-                    const departmentresponse = await axios({
-                        method: 'GET',
-                        url: config.services.Setting + `Departments/${patientstockmovement.Stock.Stockdefine.DepartmentID}`,
-                        headers: {
-                            session_key: config.session.secret
-                        }
-                    })
-                    const unitresponse = await axios({
-                        method: 'GET',
-                        url: config.services.Setting + `Units/${patientstockmovement.Stock.Stockdefine.UnitID}`,
-                        headers: {
-                            session_key: config.session.secret
-                        }
-                    })
-                    patientstockmovement.Stock.Stockdefine.Department = departmentresponse.data
-                    patientstockmovement.Stock.Stockdefine.Unit = unitresponse.data
-                } catch (error) {
-                    return next(requestErrorCatcher(error, 'Setting'))
-                }
-            }
         }
         res.status(200).json(patientstockmovement)
     } catch (error) {
@@ -156,6 +95,7 @@ async function AddPatientstockmovement(req, res, next) {
             Uuid: stockmovementuuid,
             Createduser: "System",
             Createtime: new Date(),
+            Isapproved: false,
             Isactive: true
         }, { transaction: t })
 
@@ -211,7 +151,7 @@ async function UpdatePatientstockmovement(req, res, next) {
     const t = await db.sequelize.transaction();
 
     try {
-        const patientstockmovement =await db.patientstockmovementModel.findOne({ where: { Uuid: Uuid } })
+        const patientstockmovement = await db.patientstockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!patientstockmovement) {
             return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
         }
@@ -232,10 +172,10 @@ async function UpdatePatientstockmovement(req, res, next) {
     GetPatientstockmovements(req, res, next)
 }
 
-async function DeletePatientstockmovement(req, res, next) {
+async function ApprovePatientstockmovement(req, res, next) {
 
     let validationErrors = []
-    const Uuid = req.params.patientstockmovementId
+    const Uuid = req.params.stockmovementId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
@@ -249,7 +189,45 @@ async function DeletePatientstockmovement(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const patientstockmovement =await db.patientstockmovementModel.findOne({ where: { Uuid: Uuid } })
+        const patientstockmovement = await db.patientstockmovementModel.findOne({ where: { Uuid: Uuid } })
+        if (!patientstockmovement) {
+            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
+        }
+        if (patientstockmovement.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.patientstockmovementModel.update({
+            ...patientstockmovement,
+            Isapproved: true,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatientstockmovements(req, res, next)
+}
+
+async function DeletePatientstockmovement(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.stockmovementId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const patientstockmovement = await db.patientstockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!patientstockmovement) {
             return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
         }
@@ -272,4 +250,5 @@ module.exports = {
     AddPatientstockmovement,
     UpdatePatientstockmovement,
     DeletePatientstockmovement,
+    ApprovePatientstockmovement
 }

@@ -90,7 +90,7 @@ export const GetPrivilegegroups = createAsyncThunk(
 
 export const AddRoles = createAsyncThunk(
     'Roles/AddRoles',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -105,7 +105,7 @@ export const AddRoles = createAsyncThunk(
                 code: 'RolesCreate',
                 description: '',
             }));
-            history && history.push('/Roles');
+            history && history.push(redirectUrl ? redirectUrl : '/Roles');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -117,7 +117,7 @@ export const AddRoles = createAsyncThunk(
 
 export const EditRoles = createAsyncThunk(
     'Roles/EditRoles',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -132,7 +132,7 @@ export const EditRoles = createAsyncThunk(
                 code: 'RolesUpdate',
                 description: '',
             }));
-            history && history.push('/Roles');
+            history && history.push(redirectUrl ? redirectUrl : '/Roles');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

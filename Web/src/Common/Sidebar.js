@@ -54,6 +54,7 @@ export function Sidebar(props) {
                 { id: 3, subtitle: Literals.Patientmovements.Page.Pageheader[Profile.Language], url: "/Patientmovements" },
                 { id: 4, subtitle: Literals.Patientdefines.Page.Pageheader[Profile.Language], url: "/Patientdefines" },
                 { id: 5, subtitle: Literals.Patientstocks.Page.Pageheader[Profile.Language], url: "/Patientstocks" },
+                { id: 5, subtitle: Literals.Patientmedicines.Page.Pageheader[Profile.Language], url: "/Patientmedicines" },
                 { id: 6, subtitle: Literals.Patientstockmovements.Page.Pageheader[Profile.Language], url: "/Patientstockmovements" },
             ]
         },
@@ -106,6 +107,9 @@ export function Sidebar(props) {
                 { id: 7, subtitle: Literals.Stockdefines.Page.Pageheader[Profile.Language], url: "/Stockdefines" },
                 { id: 8, subtitle: Literals.Users.Page.Pageheader[Profile.Language], url: "/Users" },
                 { id: 9, subtitle: Literals.Files.Page.Pageheader[Profile.Language], url: "/Files" },
+                { id: 9, subtitle: Literals.Floors.Page.Pageheader[Profile.Language], url: "/Floors" },
+                { id: 9, subtitle: Literals.Rooms.Page.Pageheader[Profile.Language], url: "/Rooms" },
+                { id: 9, subtitle: Literals.Beds.Page.Pageheader[Profile.Language], url: "/Beds" },
                 { id: 10, subtitle: Literals.Patienttypes.Page.Pageheader[Profile.Language], url: "/Patienttypes" },
                 { id: 11, subtitle: Literals.Costumertypes.Page.Pageheader[Profile.Language], url: "/Costumertypes" },
                 { id: 12, subtitle: Literals.Tododefines.Page.Pageheader[Profile.Language], url: "/Tododefines" },

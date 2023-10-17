@@ -10,34 +10,6 @@ const axios = require('axios')
 async function GetPatientdefines(req, res, next) {
     try {
         const patientdefines = await db.patientdefineModel.findAll({ where: { Isactive: true } })
-        if (patientdefines && patientdefines.length > 0) {
-            let patienttypes = []
-            let costumertypes = []
-            try {
-                const patienttypesresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Patienttypes`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const costumertypesresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Costumertypes`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                patienttypes = patienttypesresponse.data
-                costumertypes = costumertypesresponse.data
-                for (const patientdefine of patientdefines) {
-                    patientdefine.Patienttype = patienttypes.find(u => u.Uuid === patientdefine.PatienttypeID)
-                    patientdefine.Costumertype = costumertypes.find(u => u.Uuid === patientdefine.CostumertypeID)
-                }
-            } catch (error) {
-                return next(requestErrorCatcher(error, 'Setting'))
-            }
-        }
         res.status(200).json(patientdefines)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -47,7 +19,6 @@ async function GetPatientdefines(req, res, next) {
 async function GetPatientdefine(req, res, next) {
 
     let validationErrors = []
-    console.log('req.params: ', req.params);
     if (!req.params.patientdefineId) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
     }
@@ -91,28 +62,14 @@ async function AddPatientdefine(req, res, next) {
 
     let validationErrors = []
     const {
-        Firstname,
-        Lastname,
         CountryID,
-        CostumertypeID,
-        PatienttypeID
     } = req.body
 
-    if (!validator.isString(Firstname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED)
-    }
-    if (!validator.isString(Lastname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED)
-    }
+
     if (!validator.isString(CountryID)) {
         validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
     }
-    if (!validator.isString(CostumertypeID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED)
-    }
-    if (!validator.isString(PatienttypeID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
-    }
+
 
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -143,29 +100,15 @@ async function UpdatePatientdefine(req, res, next) {
 
     let validationErrors = []
     const {
-        Firstname,
-        Lastname,
         CountryID,
-        CostumertypeID,
-        PatienttypeID,
         Uuid
     } = req.body
 
-    if (!validator.isString(Firstname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED)
-    }
-    if (!validator.isString(Lastname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED)
-    }
+
     if (!validator.isString(CountryID)) {
         validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
     }
-    if (!validator.isString(CostumertypeID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED)
-    }
-    if (!validator.isString(PatienttypeID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
-    }
+
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
     }

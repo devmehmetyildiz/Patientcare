@@ -60,10 +60,20 @@ const PatientdefinesEdit = lazy(() => import('./Containers/Patientdefines/Patien
 const Patients = lazy(() => import('./Containers/Patients/Patients'));
 const PatientsCreate = lazy(() => import('./Containers/Patients/PatientsCreate'));
 const PatientsEdit = lazy(() => import('./Containers/Patients/PatientsEdit'));
+const PatientsDetail = lazy(() => import('./Containers/Patients/PatientsDetail'));
+const PatientsFiles = lazy(() => import('./Containers/Patients/PatientsFiles'));
+const PatientsAddstock = lazy(() => import('./Containers/Patients/PatientsAddstock'));
+const PatientsAddmedicine = lazy(() => import('./Containers/Patients/PatientsAddmedicine'));
+const PatientsRemovestock = lazy(() => import('./Containers/Patients/PatientsRemovestock'));
+const PatientsRemovemedicine = lazy(() => import('./Containers/Patients/PatientsRemovemedicine'));
 
 const Patientstocks = lazy(() => import('./Containers/Patientstocks/Patientstocks'));
 const PatientstocksCreate = lazy(() => import('./Containers/Patientstocks/PatientstocksCreate'));
 const PatientstocksEdit = lazy(() => import('./Containers/Patientstocks/PatientstocksEdit'));
+
+const Patientmedicines = lazy(() => import('./Containers/Patientmedicines/Patientmedicines'));
+const PatientmedicinesCreate = lazy(() => import('./Containers/Patientmedicines/PatientmedicinesCreate'));
+const PatientmedicinesEdit = lazy(() => import('./Containers/Patientmedicines/PatientmedicinesEdit'));
 
 const Patientstockmovements = lazy(() => import('./Containers/Patientstockmovements/Patientstockmovements'));
 const PatientstockmovementsCreate = lazy(() => import('./Containers/Patientstockmovements/PatientstockmovementsCreate'));
@@ -86,6 +96,7 @@ const PreregistrationsCreate = lazy(() => import('./Containers/Preregistrations/
 const PreregistrationsEdit = lazy(() => import('./Containers/Preregistrations/PreregistrationsEdit'));
 const PreregistrationsEditfile = lazy(() => import('./Containers/Preregistrations/PreregistrationsEditfile'));
 const PreregistrationsEditstock = lazy(() => import('./Containers/Preregistrations/PreregistrationsEditstock'));
+const PreregistrationsComplete = lazy(() => import('./Containers/Preregistrations/PreregistrationsComplete'));
 
 const Stocks = lazy(() => import('./Containers/Stocks/Stocks'));
 const StocksCreate = lazy(() => import('./Containers/Stocks/StocksCreate'));
@@ -128,6 +139,18 @@ const MailsettingsEdit = lazy(() => import('./Containers/Mailsettings/Mailsettin
 const Printtemplates = lazy(() => import('./Containers/Printtemplates/Printtemplates'));
 const PrinttemplatesCreate = lazy(() => import('./Containers/Printtemplates/PrinttemplatesCreate'));
 const PrinttemplatesEdit = lazy(() => import('./Containers/Printtemplates/PrinttemplatesEdit'));
+
+const Rooms = lazy(() => import('./Containers/Rooms/Rooms'));
+const RoomsCreate = lazy(() => import('./Containers/Rooms/RoomsCreate'));
+const RoomsEdit = lazy(() => import('./Containers/Rooms/RoomsEdit'));
+
+const Beds = lazy(() => import('./Containers/Beds/Beds'));
+const BedsCreate = lazy(() => import('./Containers/Beds/BedsCreate'));
+const BedsEdit = lazy(() => import('./Containers/Beds/BedsEdit'));
+
+const Floors = lazy(() => import('./Containers/Floors/Floors'));
+const FloorsCreate = lazy(() => import('./Containers/Floors/FloorsCreate'));
+const FloorsEdit = lazy(() => import('./Containers/Floors/FloorsEdit'));
 
 const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
 const PasswordChange = lazy(() => import('./Containers/Auth/PasswordChange'));
@@ -190,7 +213,13 @@ class Routes extends Component {
       { exact: true, path: "/Patientdefines/:PatientdefineID/Edit", auth: true, component: PatientdefinesEdit },
       { exact: true, path: "/Patients", auth: true, component: Patients },
       { exact: true, path: "/Patients/Create", auth: true, component: PatientsCreate },
+      { exact: true, path: "/Patients/:PatientID", auth: true, component: PatientsDetail },
+      { exact: true, path: "/Patients/:PatientID/Editfile", auth: true, component: PatientsFiles },
       { exact: true, path: "/Patients/:PatientID/Edit", auth: true, component: PatientsEdit },
+      { exact: true, path: "/Patients/:PatientID/Addstock", auth: true, component: PatientsAddstock },
+      { exact: true, path: "/Patients/:PatientID/Addmedicine", auth: true, component: PatientsAddmedicine },
+      { exact: true, path: "/Patients/:PatientID/Removestock", auth: true, component: PatientsRemovestock },
+      { exact: true, path: "/Patients/:PatientID/Removemedicine", auth: true, component: PatientsRemovemedicine },
       { exact: true, path: "/Warehouses", auth: true, component: Warehouses },
       { exact: true, path: "/Warehouses/Create", auth: true, component: WarehousesCreate },
       { exact: true, path: "/Warehouses/:WarehouseID/Edit", auth: true, component: WarehousesEdit },
@@ -203,6 +232,9 @@ class Routes extends Component {
       { exact: true, path: "/Patientstocks", auth: true, component: Patientstocks },
       { exact: true, path: "/Patientstocks/Create", auth: true, component: PatientstocksCreate },
       { exact: true, path: "/Patientstocks/:PatientstockID/Edit", auth: true, component: PatientstocksEdit },
+      { exact: true, path: "/Patientmedicines", auth: true, component: Patientmedicines },
+      { exact: true, path: "/Patientmedicines/Create", auth: true, component: PatientmedicinesCreate },
+      { exact: true, path: "/Patientmedicines/:PatientstockID/Edit", auth: true, component: PatientmedicinesEdit },
       { exact: true, path: "/Patientstockmovements", auth: true, component: Patientstockmovements },
       { exact: true, path: "/Patientstockmovements/Create", auth: true, component: PatientstockmovementsCreate },
       { exact: true, path: "/Patientstockmovements/:PatientstockmovementID/Edit", auth: true, component: PatientstockmovementsEdit },
@@ -231,11 +263,21 @@ class Routes extends Component {
       { exact: true, path: "/Rules", auth: true, component: Rules },
       { exact: true, path: "/Rules/Create", auth: true, component: RulesCreate },
       { exact: true, path: "/Rules/:RuleID/Edit", auth: true, component: RulesEdit },
+      { exact: true, path: "/Beds", auth: true, component: Beds },
+      { exact: true, path: "/Beds/Create", auth: true, component: BedsCreate },
+      { exact: true, path: "/Beds/:BedID/Edit", auth: true, component: BedsEdit },
+      { exact: true, path: "/Floors", auth: true, component: Floors },
+      { exact: true, path: "/Floors/Create", auth: true, component: FloorsCreate },
+      { exact: true, path: "/Floors/:FloorID/Edit", auth: true, component: FloorsEdit },
+      { exact: true, path: "/Rooms", auth: true, component: Rooms },
+      { exact: true, path: "/Rooms/Create", auth: true, component: RoomsCreate },
+      { exact: true, path: "/Rooms/:RoomID/Edit", auth: true, component: RoomsEdit },
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate },
       { exact: true, path: "/Preregistrations/:PatientID/Edit", auth: true, component: PreregistrationsEdit },
       { exact: true, path: "/Preregistrations/:PatientID/Editfile", auth: true, component: PreregistrationsEditfile },
       { exact: true, path: "/Preregistrations/:PatientID/Editstock", auth: true, component: PreregistrationsEditstock },
+      { exact: true, path: "/Preregistrations/:PatientID/Complete", auth: true, component: PreregistrationsComplete },
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange },
       { exact: true, path: "/Forgetpassword", auth: false, component: Passwordforget }

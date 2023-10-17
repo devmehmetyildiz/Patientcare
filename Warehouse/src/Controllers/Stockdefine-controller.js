@@ -10,34 +10,6 @@ const axios = require('axios')
 async function GetStockdefines(req, res, next) {
     try {
         const stockdefines = await db.stockdefineModel.findAll({ where: { Isactive: true } })
-        if (stockdefines && stockdefines.length > 0) {
-            let departments = []
-            let units = []
-            try {
-                const departmentsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Departments`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                const unitsresponse = await axios({
-                    method: 'GET',
-                    url: config.services.Setting + `Units`,
-                    headers: {
-                        session_key: config.session.secret
-                    }
-                })
-                departments = departmentsresponse.data
-                units = unitsresponse.data
-            } catch (error) {
-                next(requestErrorCatcher(error, 'Setting'))
-            }
-            for (const stockdefine of stockdefines) {
-                stockdefine.Department = departments.find(u => u.Uuid === stockdefine.DepartmentID)
-                stockdefine.Unit = units.find(u => u.Uuid === stockdefine.UnitID)
-            }
-        }
         res.status(200).json(stockdefines)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -66,26 +38,6 @@ async function GetStockdefine(req, res, next) {
             return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language))
         }
 
-        try {
-            const departmentsresponse = await axios({
-                method: 'GET',
-                url: config.services.Setting + `Departments/${stockdefine.DepartmentID}`,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            const unitsresponse = await axios({
-                method: 'GET',
-                url: config.services.Setting + `Units/${stockdefine.UnitID}`,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            stockdefine.Department = departmentsresponse.data
-            stockdefine.Unit = unitsresponse.data
-        } catch (error) {
-            return next(requestErrorCatcher(error, 'Setting'))
-        }
         res.status(200).json(stockdefine)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

@@ -39,7 +39,12 @@ export default class StockmovementsCreate extends Component {
     const { Stockmovements, Stocks, Stockdefines, Profile, location } = this.props
 
     const Stockoptions = (Stocks.list || []).filter(u => u.Isactive).map(stock => {
-      return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
+      if (stock.Barcodeno) {
+        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
+      }
+      else {
+        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name}`, value: stock.Uuid }
+      }
     })
 
     const Movementoptions = [
@@ -47,7 +52,6 @@ export default class StockmovementsCreate extends Component {
       { key: 1, text: Literals.Options.Movementoptions.value1[Profile.Language], value: 1 },
     ]
 
-    console.log('this.context.formstates[`${this.PAGE_NAME}/StockID`]): ', this.context.formstates[`${this.PAGE_NAME}/StockID`]);
     if (!validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/StockID`])) {
       const search = new URLSearchParams(location.search)
       const StockID = search.get('StockID') ? search.get('StockID') : ''

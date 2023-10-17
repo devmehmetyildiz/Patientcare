@@ -208,7 +208,8 @@ export const PatientsSlice = createSlice({
         isCheckperiodloading: false,
         isTodogroupdefineloading: false,
         selected_patient: {},
-        isDeletemodalopen: false
+        isDeletemodalopen: false,
+        isCompletemodalopen: false,
     },
     reducers: {
         handleSelectedPatient: (state, action) => {
@@ -227,7 +228,10 @@ export const PatientsSlice = createSlice({
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
-        }
+        },
+        handleCompletemodal: (state, action) => {
+            state.isCompletemodalopen = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -333,7 +337,8 @@ export const {
     fillPatientnotification,
     removePatientnotification,
     setPatient,
-    handleDeletemodal
+    handleDeletemodal,
+    handleCompletemodal
 } = PatientsSlice.actions;
 
 export default PatientsSlice.reducer;

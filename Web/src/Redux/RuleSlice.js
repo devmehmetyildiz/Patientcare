@@ -93,7 +93,7 @@ export const GetRulelogswithoutloading = createAsyncThunk(
 
 export const AddRules = createAsyncThunk(
     'Rules/AddRules',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -108,7 +108,7 @@ export const AddRules = createAsyncThunk(
                 code: 'RulesCreate',
                 description: '',
             }));
-            history && history.push('/Rules');
+            history && history.push(redirectUrl ? redirectUrl : '/Rules');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -120,7 +120,7 @@ export const AddRules = createAsyncThunk(
 
 export const EditRules = createAsyncThunk(
     'Rules/EditRules',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -135,7 +135,7 @@ export const EditRules = createAsyncThunk(
                 code: 'RulesUpdate',
                 description: '',
             }));
-            history && history.push('/Rules');
+            history && history.push(redirectUrl ? redirectUrl : '/Rules');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -226,6 +226,7 @@ export const RulesSlice = createSlice({
         isLogmodalopen: false,
     },
     reducers: {
+        
         handleSelectedRule: (state, action) => {
             state.selected_record = action.payload;
         },

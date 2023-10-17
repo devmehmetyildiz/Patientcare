@@ -37,6 +37,10 @@ const Literals = {
         en: 'Stock Deactivated  Successfully',
         tr: 'Stok Başarı ile İn Aktif edildi'
     },
+    approvedescription: {
+        en: 'Stock Approved Successfully',
+        tr: 'Stok Başarı ile Onaylandı'
+    },
 }
 
 export const GetStocks = createAsyncThunk(
@@ -69,7 +73,7 @@ export const GetStock = createAsyncThunk(
 
 export const AddStocks = createAsyncThunk(
     'Stocks/AddStocks',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -84,7 +88,61 @@ export const AddStocks = createAsyncThunk(
                 code: 'StocksCreate',
                 description: '',
             }));
-            history && history.push('/Stocks');
+            history && history.push(redirectUrl ? redirectUrl : '/Stocks');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillStocknotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const TransfertoPatient = createAsyncThunk(
+    'Stocks/TransfertoPatient',
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, ROUTES.STOCK + '/TransfertoPatient', data);
+            dispatch(fillStocknotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            dispatch(fillStocknotification({
+                type: 'Clear',
+                code: 'PatientsAddstock',
+                description: '',
+            }));
+            history && history.push(redirectUrl ? redirectUrl : '/Patients');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillStocknotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const TransferfromPatient = createAsyncThunk(
+    'Stocks/TransferfromPatient',
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, ROUTES.STOCK + '/TransferfromPatient', data);
+            dispatch(fillStocknotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            dispatch(fillStocknotification({
+                type: 'Clear',
+                code: 'PatientsAddmedicine',
+                description: '',
+            }));
+            history && history.push(redirectUrl ? redirectUrl : '/Patients');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -96,7 +154,7 @@ export const AddStocks = createAsyncThunk(
 
 export const MoveStocks = createAsyncThunk(
     'Stocks/MoveStocks',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -106,7 +164,7 @@ export const MoveStocks = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.movedescription[Language],
             }));
-            history && history.push('/Stocks');
+            history && history.push(redirectUrl ? redirectUrl : '/Stocks');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -118,7 +176,7 @@ export const MoveStocks = createAsyncThunk(
 
 export const DeactivateStocks = createAsyncThunk(
     'Stocks/DeactivateStocks',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -128,7 +186,7 @@ export const DeactivateStocks = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.deactivedescription[Language],
             }));
-            history && history.push('/Stocks');
+            history && history.push(redirectUrl ? redirectUrl : '/Stocks');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -140,7 +198,7 @@ export const DeactivateStocks = createAsyncThunk(
 
 export const EditStocks = createAsyncThunk(
     'Stocks/EditStocks',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -155,7 +213,7 @@ export const EditStocks = createAsyncThunk(
                 code: 'StocksUpdate',
                 description: '',
             }));
-            history && history.push('/Stocks');
+            history && history.push(redirectUrl ? redirectUrl : '/Stocks');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -188,6 +246,29 @@ export const DeleteStocks = createAsyncThunk(
     }
 );
 
+export const ApproveStocks = createAsyncThunk(
+    'Stocks/ApproveStocks',
+    async (data, { dispatch, getState }) => {
+        try {
+            delete data['edit'];
+            delete data['delete'];
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, `${ROUTES.STOCK}/Approve/${data.Uuid}`);
+            dispatch(fillStocknotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.approvedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillStocknotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const StocksSlice = createSlice({
     name: 'Stocks',
     initialState: {
@@ -197,7 +278,8 @@ export const StocksSlice = createSlice({
         notifications: [],
         isLoading: false,
         isDispatching: false,
-        isDeletemodalopen: false
+        isDeletemodalopen: false,
+        isApprovemodalopen: false
     },
     reducers: {
         handleSelectedStock: (state, action) => {
@@ -213,6 +295,9 @@ export const StocksSlice = createSlice({
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
+        },
+        handleApprovemodal: (state, action) => {
+            state.isApprovemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -265,6 +350,17 @@ export const StocksSlice = createSlice({
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(ApproveStocks.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(ApproveStocks.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(ApproveStocks.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(DeactivateStocks.pending, (state) => {
                 state.isDispatching = true;
             })
@@ -287,6 +383,26 @@ export const StocksSlice = createSlice({
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(TransferfromPatient.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(TransferfromPatient.fulfilled, (state, action) => {
+                state.isDispatching = false;
+            })
+            .addCase(TransferfromPatient.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(TransfertoPatient.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(TransfertoPatient.fulfilled, (state, action) => {
+                state.isDispatching = false;
+            })
+            .addCase(TransfertoPatient.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(DeleteStocks.pending, (state) => {
                 state.isDispatching = true;
             })
@@ -305,7 +421,8 @@ export const {
     handleSelectedStock,
     fillStocknotification,
     removeStocknotification,
-    handleDeletemodal
+    handleDeletemodal,
+    handleApprovemodal
 } = StocksSlice.actions;
 
 export default StocksSlice.reducer;

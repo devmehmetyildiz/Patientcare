@@ -1,6 +1,61 @@
 const Literals = {
     Options: {
-
+        usageType0: {
+            tr: 'Genel Dosyalar',
+            en: 'General Files'
+        },
+        usageType1: {
+            tr: 'Hasta Dosyaları',
+            en: 'Patient Files'
+        },
+        usageType2: {
+            tr: 'Fotoğraf',
+            en: 'Profile Photo'
+        },
+        usageType3: {
+            tr: 'İlk Görüşme Formu',
+            en: 'İlk Görüşme Formu'
+        },
+        usageType4: {
+            tr: 'Engelli Teslim Etme-Alma Formu',
+            en: 'Engelli Teslim Etme-Alma Formu'
+        },
+        usageType5: {
+            tr: 'İlk Kabul Formu',
+            en: 'İlk Kabul Formu'
+        },
+        usageType6: {
+            tr: 'Engelli Mülkiyeti Teslim Alma Formu',
+            en: 'Engelli Mülkiyeti Teslim Alma Formu'
+        },
+        usageType7: {
+            tr: 'Genel Vucut Kontrol Formu',
+            en: 'Genel Vucut Kontrol Formu'
+        },
+        TableColumnsOrder: {
+            tr: 'Sıra',
+            en: 'Order'
+        },
+        TableColumnsFileName: {
+            tr: 'Dosya Adı',
+            en: 'File Name'
+        },
+        TableColumnsUsagetype: {
+            tr: 'Kullanım Türü',
+            en: 'Usage Type'
+        },
+        TableColumnsFile: {
+            tr: 'Dosya',
+            en: 'File'
+        },
+        TableColumnsUploadStatus: {
+            tr: 'Yüklenme Durumu',
+            en: 'Upload Status'
+        },
+        TableColumnsDelete: {
+            tr: 'Sil',
+            en: 'Delete'
+        },
     },
     Columns: {
         Id: {
@@ -11,45 +66,57 @@ const Literals = {
             tr: 'Tekil ID',
             en: 'Unique ID'
         },
-        PatientdefineFirstname: {
-            tr: 'Hasta Adı',
-            en: 'Patient Name'
+        Gridscreen: {
+            tr: 'Tablo Görünümü',
+            en: 'Grid View'
         },
-        Patientmovementtype: {
-            tr: 'Hareket Türü',
-            en: 'Patient Movement'
+        Cardscren: {
+            tr: 'Kart Görünümü',
+            en: 'Card View'
         },
-        IsDeactive: {
-            tr: 'İptal mi?',
-            en: 'Is Deactive?'
+        Name: {
+            tr: 'Hasta',
+            en: 'Hasta'
         },
-        OldPatientmovementtype: {
-            tr: 'Eski Hareket',
-            en: 'Old Movement'
+        Registerdate: {
+            tr: 'Kayıt Tarihi',
+            en: 'Register Date'
         },
-        NewPatientmovementtype: {
-            tr: 'Yeni Hareket',
-            en: 'New Movement'
+        Approvaldate: {
+            tr: 'Giriş Tarihi',
+            en: 'Approval Date'
         },
-        IsTodoneed: {
-            tr: 'Yapılacaklar Gerekli mi?',
-            en: 'Is Todo Need?'
+        Floor: {
+            tr: 'Kat',
+            en: 'Floor'
         },
-        IsTodocompleted: {
-            tr: 'Yapılacaklar Tamamlandı mı?',
-            en: 'Is Todo Completed?'
+        Room: {
+            tr: 'Oda',
+            en: 'Room'
         },
-        IsComplated: {
-            tr: 'Tamamlandı mı?',
-            en: 'Is Completed?'
+        Bed: {
+            tr: 'Yatak',
+            en: 'Bed'
         },
-        Iswaitingactivation: {
-            tr: 'Aktivasyon Bekleniyor mu?',
-            en: 'Is Waiting Activation'
+        Case: {
+            tr: 'Durum',
+            en: 'Case'
         },
-        Movementdate: {
-            tr: 'Hareket Tarihi',
-            en: 'Movement Date'
+        Stocks: {
+            tr: 'Stoklar',
+            en: 'Stocks'
+        },
+        Files: {
+            tr: 'Dosyalar',
+            en: 'Files'
+        },
+        actions: {
+            tr: 'Eylemler',
+            en: 'Actions'
+        },
+        detail: {
+            tr: 'Detay',
+            en: 'Detail'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -76,6 +143,180 @@ const Literals = {
             en: 'Delete'
         },
     },
+    Details: {
+        Costumertype: {
+            tr: "Müşteri Türü",
+            en: "Costumer Type"
+        },
+        Patienttype: {
+            tr: "Hasta Türü",
+            en: "Patient Type"
+        },
+        Floor: {
+            tr: "Kat",
+            en: "Floor"
+        },
+        Room: {
+            tr: "Oda",
+            en: "Room"
+        },
+        Bed: {
+            tr: "Yatak",
+            en: "Bed"
+        },
+        Stockname: {
+            tr: "Stok Adı",
+            en: "Stock Name"
+        },
+        Amount: {
+            tr: "Miktar",
+            en: "Amount"
+        },
+        Unitname: {
+            tr: "Birim",
+            en: "Unit"
+        },
+        Movementdate: {
+            tr: "Tarih",
+            en: "Date"
+        },
+        Patientmovementype: {
+            tr: "Hareket",
+            en: "Movement"
+        },
+        Iswaitingactivation: {
+            tr: "Aktivasyon Durumu",
+            en: "Activation Status"
+        },
+        IsComplated: {
+            tr: "Tamamlanma Durumu",
+            en: "Complete Status"
+        },
+        Filename: {
+            tr: "Dosya Adı",
+            en: "File Name"
+        },
+        Filetype: {
+            tr: "Dosya Türü",
+            en: "File Type"
+        },
+        Usagetype: {
+            tr: "Kullanım Türü",
+            en: "Usage Type"
+        },
+        Last5incomemovement: {
+            tr: "Son 5 Eklenen Miktar",
+            en: "Last 5 Added Amount"
+        },
+        Last5outcomemovement: {
+            tr: "Son 5 Eksilen Miktar",
+            en: "Last 5 Used Amount"
+        },
+        Last5movement: {
+            tr: "Son 5 Hareket",
+            en: "Last 5 Movement"
+        },
+        Last5File: {
+            tr: "Son 5 Eklenen Dosya",
+            en: "Last 5 Added File"
+        },
+        PatientStocks: {
+            tr: "Hasta Stokları",
+            en: "Patient Stocks"
+        },
+        Patientmedicines: {
+            tr: "Hasta İlaçları",
+            en: "Patient Medicines"
+        },
+    },
+    AddStock: {
+        Availablestocks: {
+            tr: "Depodaki Ürünler",
+            en: "Warehouses Products"
+        },
+        Id: {
+            tr: "Id",
+            en: "Id"
+        },
+        Amount: {
+            tr: "Miktar",
+            en: "Amount"
+        },
+        Stockname: {
+            tr: "Ürün Adı",
+            en: "Stock Name"
+        },
+        Warehouse: {
+            tr: "Ambar",
+            en: "Warehouse"
+        },
+    },
+    RemoveStock: {
+        Availablestocks: {
+            tr: "Hastadaki Ürünler",
+            en: "Patients Products"
+        },
+        Id: {
+            tr: "Id",
+            en: "Id"
+        },
+        Amount: {
+            tr: "Miktar",
+            en: "Amount"
+        },
+        Stockname: {
+            tr: "Ürün Adı",
+            en: "Stock Name"
+        },
+        Warehouse: {
+            tr: "Ambar",
+            en: "Warehouse"
+        },
+    },
+    RemoveMedicine: {
+        Availablemedicines: {
+            tr: "Hastadaki İlaçlar",
+            en: "Patients Medicines"
+        },
+        Id: {
+            tr: "Id",
+            en: "Id"
+        },
+        Amount: {
+            tr: "Miktar",
+            en: "Amount"
+        },
+        Stockname: {
+            tr: "İlaç Adı",
+            en: "Medicine Name"
+        },
+        Warehouse: {
+            tr: "Ambar",
+            en: "Warehouse"
+        },
+    },
+    AddMedicine: {
+        Availablemedicines: {
+            tr: "Depodaki İlaçlar",
+            en: "Warehouses Medicines"
+        },
+        Id: {
+            tr: "Id",
+            en: "Id"
+        },
+        Amount: {
+            tr: "Miktar",
+            en: "Amount"
+        },
+        Medicinename: {
+            tr: "İlaç Adı",
+            en: "Medicine Name"
+        },
+        Warehouse: {
+            tr: "Ambar",
+            en: "Warehouse"
+        },
+    },
     Page: {
         Pageheader: {
             tr: "Hastalar",
@@ -85,9 +326,33 @@ const Literals = {
             tr: "Oluştur",
             en: "Create"
         },
+        Pagedetailheader: {
+            tr: "Detay",
+            en: "Detail"
+        },
+        Pageeditfileheader: {
+            tr: "Dosya Güncelle",
+            en: "Edit File"
+        },
         Pageeditheader: {
             tr: "Güncelle",
             en: "Update"
+        },
+        Pageaddstockheader: {
+            tr: "Ürün Ekle",
+            en: "Add Stock"
+        },
+        Pageremovestockheader: {
+            tr: "Ürün Çıkart",
+            en: "Remove Stock"
+        },
+        Pageremovemedicineheader: {
+            tr: "İlaç Çıkart",
+            en: "Remove Medicine"
+        },
+        Pageaddmedicineheader: {
+            tr: "İlaç Ekle",
+            en: "Add Medicine"
         },
         Pagedeleteheader: {
             tr: "Hasta Hareketi Silme",
@@ -103,6 +368,14 @@ const Literals = {
             tr: "Güncelle",
             en: "Update"
         },
+        Add: {
+            tr: "Ekle",
+            en: "Add"
+        },
+        Remove: {
+            tr: "Çıkart",
+            en: "Remove"
+        },
         Delete: {
             tr: "Sil",
             en: "Delete"
@@ -115,16 +388,83 @@ const Literals = {
             tr: "Geri Dön",
             en: "Go Back"
         },
-
+        Givemedicine: {
+            tr: "İlaç Ver",
+            en: "Give Medicine"
+        },
+        Addnewfile: {
+            tr: "Dosya Ekle",
+            en: "Add File"
+        },
+        Takemedicine: {
+            tr: "İlaç Al",
+            en: "Take Medicine"
+        },
+        GiveStock: {
+            tr: "Stok Ver",
+            en: "Give Stock"
+        },
+        TakeStock: {
+            tr: "Stok Al",
+            en: "Take Stock"
+        },
+        Changestatus: {
+            tr: "Hasta Durumu Değiştir",
+            en: "Change Patient Status"
+        },
+        Geton: {
+            tr: "Kuruma Girdir",
+            en: "Get On"
+        },
+        Getoff: {
+            tr: "Kurumdan Çıkart",
+            en: "Get Off"
+        },
+        Changetodos: {
+            tr: "Rutin Düzenle",
+            en: "Edit Rutines"
+        },
+        Editfiles: {
+            tr: "Dosyaları Düzenle",
+            en: "Edit Files"
+        },
+        Editdefine: {
+            tr: "Tanım Düzenle",
+            en: "Edit Define"
+        },
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Hasta Hareketi Yok",
-            en: "There is no patient movement found"
+            tr: "Tanımlı Hasta Yok",
+            en: "There is no patient found"
+        },
+        Nostockfind: {
+            tr: "Tanımlı Ürün Yok",
+            en: "There is no stock found"
+        },
+        Nomedicinefind: {
+            tr: "Tanımlı İlaç Yok",
+            en: "There is no medicine found"
+        },
+        WarehouseReuired: {
+            tr: "Ambar Gerekli ",
+            en: "Warehouse Required"
+        },
+        StockRequired: {
+            tr: "Ürün Gerekli ",
+            en: "Stock Required"
+        },
+        Needmoreamount: {
+            tr: "Ambarda Yeterli Ürün Yok ",
+            en: "There is no amount in this warehouse"
+        },
+        Needmoreamountinpatient: {
+            tr: "Hasta deposunda Yeterli Ürün Yok ",
+            en: "There is no amount in this patient warehouse"
         },
         Deletecheck: {
-            tr: "hasta hareketini silmek istediğinize emin misiniz?",
-            en: "patient movement will delete, are you sure?"
+            tr: "hastayı silmek istediğinize emin misiniz?",
+            en: "patient will delete, are you sure?"
         },
         Yes: {
             tr: "EVET",

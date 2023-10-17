@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import Stockmovements from '../../Pages/Stockmovements/Stockmovements'
 import {
-    GetStockmovements, removeStockmovementnotification,
+    GetStockmovements, removeStockmovementnotification, handleApprovemodal,
     fillStockmovementnotification, DeleteStockmovements, handleDeletemodal, handleSelectedStockmovement
 } from '../../Redux/StockmovementSlice'
 import { GetUnits, removeUnitnotification } from '../../Redux/UnitSlice'
@@ -20,7 +20,7 @@ const mapDispatchToProps = {
     GetStockmovements, removeStockmovementnotification, fillStockmovementnotification, DeleteStockmovements,
     handleDeletemodal, handleSelectedStockmovement, GetUnits, removeUnitnotification,
     GetStockdefines, removeStockdefinenotification,
-    GetStocks, removeStocknotification
+    GetStocks, removeStocknotification,handleApprovemodal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stockmovements)

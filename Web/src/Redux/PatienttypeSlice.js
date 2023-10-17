@@ -61,7 +61,7 @@ export const GetPatienttype = createAsyncThunk(
 
 export const AddPatienttypes = createAsyncThunk(
     'Patienttypes/AddPatienttypes',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +76,7 @@ export const AddPatienttypes = createAsyncThunk(
                 code: 'PatienttypesCreate',
                 description: '',
             }));
-            history && history.push('/Patienttypes');
+            history && history.push(redirectUrl ? redirectUrl : '/Patienttypes');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +88,7 @@ export const AddPatienttypes = createAsyncThunk(
 
 export const AddRecordPatienttypes = createAsyncThunk(
     'Patienttypes/AddRecordPatienttypes',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -98,7 +98,7 @@ export const AddRecordPatienttypes = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            history && history.push('/Patienttypes');
+            history && history.push(redirectUrl ? redirectUrl : '/Patienttypes');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -110,7 +110,7 @@ export const AddRecordPatienttypes = createAsyncThunk(
 
 export const EditPatienttypes = createAsyncThunk(
     'Patienttypes/EditPatienttypes',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -125,7 +125,7 @@ export const EditPatienttypes = createAsyncThunk(
                 code: 'PatienttypesUpdate',
                 description: '',
             }));
-            history && history.push('/Patienttypes');
+            history && history.push(redirectUrl ? redirectUrl : '/Patienttypes');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

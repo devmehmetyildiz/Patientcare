@@ -6,6 +6,12 @@ const messages = {
         tr: 'Stok tanımı bulunamadı',
       }
     },
+    AMOUNT_NOT_FOUND: {
+      code: 'AMOUNT_NOT_FOUND', description: {
+        en: 'Amount not found',
+        tr: 'Miktar bulunamadı',
+      }
+    },
     STOCKDEFINE_NOT_ACTIVE: {
       code: 'STOCKDEFINE_NOT_ACTIVE', description: {
         en: 'Stockdefine not active',
@@ -247,7 +253,7 @@ const messages = {
         tr: 'Bu işlem için patientId gerekli',
       }
     },
-   
+
 
     UNSUPPORTED_STOCKDEFINEID: {
       code: 'UNSUPPORTED_STOCKDEFINEID', description: {

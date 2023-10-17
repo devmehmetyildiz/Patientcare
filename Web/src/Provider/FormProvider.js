@@ -5,7 +5,6 @@ export const FormContext = React.createContext()
 
 const FormProvider = ({ children }) => {
     const [formstates, setFormstates] = useState({})
-    console.log('formstates: ', formstates);
 
     const setForm = (pageName, form) => {
         let newform = {}

@@ -15,7 +15,6 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import { FormContext } from '../../Provider/FormProvider'
-import Departments from '../../Containers/Departments/Departments'
 export default class CasesCreate extends Component {
 
   PAGE_NAME = 'CasesCreate'

@@ -61,7 +61,7 @@ export const GetUser = createAsyncThunk(
 
 export const AddUsers = createAsyncThunk(
     'Users/AddUsers',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +76,7 @@ export const AddUsers = createAsyncThunk(
                 code: 'UsersCreate',
                 description: '',
             }));
-            history && history.push('/Users');
+            history && history.push(redirectUrl ? redirectUrl : '/Users');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -106,7 +106,7 @@ export const EditUsers = createAsyncThunk(
             if (redirectUrl && redirectUrl === 'Goback') {
                 history && history.goBack()
             }
-            history && history.push('/Users');
+            history && history.push(redirectUrl ? redirectUrl : '/Users');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

@@ -68,7 +68,7 @@ export default class MedicinesEdit extends Component {
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
-    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive).map(define => {
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && u.Ismedicine).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
     const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
@@ -141,7 +141,7 @@ export default class MedicinesEdit extends Component {
         fillStocknotification(error)
       })
     } else {
-      EditStocks({ data: { ...Stocks.selected_record, ...data }, history })
+      EditStocks({ data: { ...Stocks.selected_record, ...data }, history, redirectUrl: '/Medicines' })
     }
   }
 

@@ -46,7 +46,7 @@ export default class WarehousesCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+              <FormInput page={this.PAGE_NAME}  placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               <Footerwrapper>
                 <Link to="/Warehouses">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -69,9 +69,6 @@ export default class WarehousesCreate extends Component {
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
-    }
-    if (!validator.isString(data.Info)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.InfoRequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

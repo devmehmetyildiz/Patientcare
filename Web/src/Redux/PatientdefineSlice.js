@@ -62,7 +62,7 @@ export const GetPatientdefine = createAsyncThunk(
 
 export const AddPatientdefines = createAsyncThunk(
     'Patientdefines/AddPatientdefines',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -77,7 +77,7 @@ export const AddPatientdefines = createAsyncThunk(
                 code: 'PatientdefinesCreate',
                 description: '',
             }));
-            history && history.push('/Patientdefines');
+            history && history.push(redirectUrl ? redirectUrl : '/Patientdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -89,7 +89,7 @@ export const AddPatientdefines = createAsyncThunk(
 
 export const AddRecordPatientdefines = createAsyncThunk(
     'Patientdefines/AddRecordPatientdefines',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,7 +99,7 @@ export const AddRecordPatientdefines = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            history && history.push('/Patientdefines');
+            history && history.push(redirectUrl ? redirectUrl : '/Patientdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -111,7 +111,7 @@ export const AddRecordPatientdefines = createAsyncThunk(
 
 export const EditPatientdefines = createAsyncThunk(
     'Patientdefines/EditPatientdefines',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -126,7 +126,7 @@ export const EditPatientdefines = createAsyncThunk(
                 code: 'PatientdefinesUpdate',
                 description: '',
             }));
-            history && history.push('/Patientdefines');
+            history && history.push(redirectUrl ? redirectUrl : '/Patientdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

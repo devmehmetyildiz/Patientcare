@@ -12,6 +12,7 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import StocksDelete from '../../Containers/Stocks/StocksDelete'
+import StocksApprove from '../../Containers/Stocks/StocksApprove'
 export default class Stocks extends Component {
   constructor(props) {
     super(props)
@@ -43,8 +44,7 @@ export default class Stocks extends Component {
 
   render() {
 
-
-    const { Stocks, Profile, handleDeletemodal, handleSelectedStock } = this.props
+    const { Stocks, Profile, handleDeletemodal, handleSelectedStock, handleApprovemodal } = this.props
     const { isLoading, isDispatching } = Stocks
 
     const Columns = [
@@ -53,16 +53,15 @@ export default class Stocks extends Component {
       { Header: Literals.Columns.Warehouse[Profile.Language], accessor: 'WarehouseID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.warehouseCellhandler(col) },
       { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
       { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Source[Profile.Language], accessor: 'Source', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.change[Profile.Language], accessor: 'change', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
+      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
@@ -80,16 +79,19 @@ export default class Stocks extends Component {
       }) : [],
     };
 
-    const list = (Stocks.list || []).filter(u => u.Isactive).map(item => {
+    const list = (Stocks.list || []).filter(u => u.Isactive && !u.Ismedicine).map(item => {
       return {
         ...item,
         change: <Link to={`/Stockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
-        kill: <Icon link size='large' className='text-[#c5a47e] hover:text-[#ca975c]' name='bomb' onClick={() => { this.setState({ selectedrecord: item, openDeactivate: true }) }} />,
         edit: <Link to={`/Stocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+          handleSelectedStock(item)
+          handleApprovemodal(true)
+        }} />,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedStock(item)
           handleDeletemodal(true)
-        }} />
+        }} />,
       }
     })
 
@@ -124,6 +126,7 @@ export default class Stocks extends Component {
             }
           </Pagewrapper>
           <StocksDelete />
+          <StocksApprove />
         </React.Fragment>
     )
   }
@@ -161,11 +164,16 @@ export default class Stocks extends Component {
     } else {
       const selectedStock = (Stocks.list || []).find(u => u.Id === col.row.original.Id)
       let amount = 0.0;
-      let movements = (Stockmovements.list || []).filter(u => u.StockID === selectedStock.Uuid && u.Isactive)
+      let movements = (Stockmovements.list || []).filter(u => u.StockID === selectedStock.Uuid && u.Isactive && u.Isapproved)
       movements.forEach(movement => {
         amount += (movement.Amount * movement.Movementtype);
       });
       return amount
     }
+  }
+
+  boolCellhandler = (col) => {
+    const { Profile } = this.props
+    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 }

@@ -5,19 +5,26 @@ import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
-
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import Literals from './Literals'
+import FormInput from '../../Utils/FormInput'
+import validator from '../../Utils/Validator'
+import { FormContext } from '../../Provider/FormProvider'
+import Pagedivider from '../../Common/Styled/Pagedivider'
 export default class PreregistrationsEdit extends Component {
+
+  PAGE_NAME = 'PreregistrationsEdit'
 
   constructor(props) {
     super(props)
     this.state = {
-      newRegister: false,
-      selectedDepartment: "",
-      selectedCase: "",
-      selectedPatientdefine: ""
+      isDatafetched: false
     }
   }
-
 
   componentDidMount() {
     const { GetPatientdefines, GetPatient, GetDepartments, GetCases, match, history } = this.props
@@ -43,10 +50,8 @@ export default class PreregistrationsEdit extends Component {
       !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true,
-        selectedCase: selected_record.CaseID,
-        selectedDepartment: selected_record.DepartmentID,
-        selectedPatientdefine: selected_record.PatientdefineID
       })
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
     Notification(Patients.notifications, removePatientnotification)
     Notification(Departments.notifications, removeDepartmentnotification)
@@ -57,8 +62,8 @@ export default class PreregistrationsEdit extends Component {
 
   render() {
 
-    const { Patientdefines, Patients, Departments, Cases } = this.props
-    const { isLoading, isDispatching, selected_record } = Patients
+    const { Patientdefines, Patients, Departments, Cases, history, Profile } = this.props
+    const { isLoading, isDispatching } = Patients
 
     const Patientdefineoptions = Patientdefines.list.map(define => {
       return { key: define.Uuid, text: `${define.Firstname} ${define.Lastname}-${define.CountryID}`, value: define.Uuid }
@@ -75,72 +80,71 @@ export default class PreregistrationsEdit extends Component {
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
-        <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-          <div className='w-full mx-auto align-middle'>
-            <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-              <Breadcrumb size='big'>
-                <Link to={"/Preregistrations"}>
-                  <Breadcrumb.Section >Ön Kayıtlar</Breadcrumb.Section>
-                </Link>
-                <Breadcrumb.Divider icon='right chevron' />
-                <Breadcrumb.Section>Oluştur</Breadcrumb.Section>
-              </Breadcrumb>
-            </Header>
-          </div>
-          <Divider className='w-full  h-[1px]' />
-          <div className='relative w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Preregistrations"}>
+                <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <Form.Field>
-                <label className='text-[#000000de]'>Hasta Tanımı </label>
-                <Dropdown value={this.state.selectedPatientdefine} label="Kayıtlı Hastalar" placeholder='Kayıtlı Hastalar' clearable search fluid selection options={Patientdefineoptions} onChange={(e, { value }) => { this.setState({ selectedPatientdefine: value }) }} />
-              </Form.Field>
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patientdefine[Profile.Language]} name="PatientdefineID" options={Patientdefineoptions} formtype="dropdown" />
               <Form.Group widths={'equal'}>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Departman</label>
-                  <Dropdown value={this.state.selectedDepartment} placeholder='Departman' fluid selection options={Departmentoptions} onChange={(e, { value }) => { this.setState({ selectedDepartment: value }) }} />
-                </Form.Field>
-                <Form.Field>
-                  <label className='text-[#000000de]'>Durum</label>
-                  <Dropdown value={this.state.selectedCase} placeholder='Durum' fluid selection options={Casesoptions} onChange={(e, { value }) => { this.setState({ selectedCase: value }) }} />
-                </Form.Field>
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Deparment[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoptions} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <Form.Input defaultValue={selected_record.Registerdate && selected_record.Registerdate.split('T')[0]} label="Kayıt Tarihi" placeholder="Kayıt Tarihi" name="Registerdate" type='date' fluid />
-                <Form.Input defaultValue={selected_record.Registerdate && selected_record.Registerdate.split('T')[0]} label="Kuruma Giriş Tarihi" placeholder="Kuruma Giriş Tarihi" name="Approvaldate" type='date' fluid />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Approvaldate[Profile.Language]} name="Approvaldate" type='date' />
               </Form.Group>
-              <div className='flex flex-row w-full justify-between py-4  items-center'>
-                <Link to="/Preregistrations">
-                  <Button floated="left" color='grey'>Geri Dön</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>Güncelle</Button>
-              </div>
+              <Footerwrapper>
+                {history && <Link to="/Preregistrations">
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+                </Link>}
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+              </Footerwrapper>
             </Form>
-          </div>
-        </div>
+          </Contentwrapper>
+        </Pagewrapper >
     )
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { fillPatientnotification, Patients, EditPatients, history } = this.props
+    const { fillPatientnotification, Patients, EditPatients, history, Profile } = this.props
     const data = formToObject(e.target)
-    if (data.Registerdate === '' || data.Registerdate === undefined) {
+    if (!validator.isISODate(data.Registerdate)) {
       data.Registerdate = null
     }
-    if (data.Approvaldate === '' || data.Approvaldate === undefined) {
+    if (!validator.isISODate(data.Approvaldate)) {
       data.Approvaldate = null
     }
-
-    data.CaseID = this.state.selectedCase
-    data.DepartmentID = this.state.selectedDepartment
-    data.PatientdefineID = this.state.selectedPatientdefine
+    data.CaseID = this.context.formstates[`${this.PAGE_NAME}/CaseID`]
+    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
+    data.PatientdefineID = this.context.formstates[`${this.PAGE_NAME}/PatientdefineID`]
 
     let errors = []
-    /* if (!data.name || data.name == '') {
-      errors.push({ type: 'Error', code: 'Patient PreRegis', description: 'İsim Boş Olamaz' })
-    } */
+    if (!validator.isUUID(data.PatientdefineID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Patientdefinerequired[Profile.Language] })
+    }
+    if (!validator.isUUID(data.DepartmentID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Departmentrequired[Profile.Language] })
+    }
+    if (!validator.isUUID(data.CaseID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CaseID[Profile.Language] })
+    }
+    if (!validator.isISODate(data.Registerdate)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Registerdaterequired[Profile.Language] })
+    }
+    if (!validator.isISODate(data.Approvaldate)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Approvaldaterequired[Profile.Language] })
+    }
     if (errors.length > 0) {
       errors.forEach(error => {
         fillPatientnotification(error)
@@ -151,3 +155,4 @@ export default class PreregistrationsEdit extends Component {
   }
 
 }
+PreregistrationsEdit.contextType = FormContext

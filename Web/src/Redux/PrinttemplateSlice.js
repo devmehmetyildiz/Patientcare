@@ -61,7 +61,7 @@ export const GetPrinttemplate = createAsyncThunk(
 
 export const AddPrinttemplates = createAsyncThunk(
     'Printtemplates/AddPrinttemplates',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +76,7 @@ export const AddPrinttemplates = createAsyncThunk(
                 code: 'PrinttemplatesCreate',
                 description: '',
             }));
-            history && history.push('/Printtemplates');
+            history && history.push(redirectUrl ? redirectUrl : '/Printtemplates');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +88,7 @@ export const AddPrinttemplates = createAsyncThunk(
 
 export const EditPrinttemplates = createAsyncThunk(
     'Printtemplates/EditPrinttemplates',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -103,7 +103,7 @@ export const EditPrinttemplates = createAsyncThunk(
                 code: 'PrinttemplatesEdit',
                 description: '',
             }));
-            history && history.push('/Printtemplates');
+            history && history.push(redirectUrl ? redirectUrl : '/Printtemplates');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

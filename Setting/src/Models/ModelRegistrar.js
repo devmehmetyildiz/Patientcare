@@ -16,11 +16,17 @@ const unitdepartmentModel = require('./UnitdepartmentModel')
 const unitModel = require('./UnitModel')
 const applog_settingModel = require('./Applog_settingModel')
 const tododefinecheckperiodModel = require('./TododefinecheckperiodModel')
+const floorModel = require('./FloorModel')
+const bedModel = require('./BedModel')
+const roomModel = require('./RoomModel')
 
 
 module.exports = {
-    casedepartmentModel,
+    floorModel,
+    bedModel,
+    roomModel,
     caseModel,
+    casedepartmentModel,
     checkperiodModel,
     checkperiodperiodModel,
     costumertypedepartmentModel,

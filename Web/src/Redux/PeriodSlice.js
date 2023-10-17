@@ -61,7 +61,7 @@ export const GetPeriod = createAsyncThunk(
 
 export const AddPeriods = createAsyncThunk(
     'Periods/AddPeriods',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +76,7 @@ export const AddPeriods = createAsyncThunk(
                 code: 'PeriodsCreate',
                 description: '',
             }));
-            history && history.push('/Periods');
+            history && history.push(redirectUrl ? redirectUrl : '/Periods');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +88,7 @@ export const AddPeriods = createAsyncThunk(
 
 export const AddRecordPeriods = createAsyncThunk(
     'Periods/AddRecordPeriods',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -98,7 +98,7 @@ export const AddRecordPeriods = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            history && history.push('/Periods');
+            history && history.push(redirectUrl ? redirectUrl : '/Periods');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -110,7 +110,7 @@ export const AddRecordPeriods = createAsyncThunk(
 
 export const EditPeriods = createAsyncThunk(
     'Periods/EditPeriods',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -125,7 +125,7 @@ export const EditPeriods = createAsyncThunk(
                 code: 'PeriodsUpdate',
                 description: '',
             }));
-            history && history.push('/Periods');
+            history && history.push(redirectUrl ? redirectUrl : '/Periods');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

@@ -61,7 +61,7 @@ export const GetCheckperiod = createAsyncThunk(
 
 export const AddCheckperiods = createAsyncThunk(
     'Checkperiods/AddCheckperiods',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +76,7 @@ export const AddCheckperiods = createAsyncThunk(
                 code: 'CheckperiodsCreate',
                 description: '',
             }));
-            history && history.push('/Checkperiods');
+            history && history.push(redirectUrl ? redirectUrl : '/Checkperiods');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +88,7 @@ export const AddCheckperiods = createAsyncThunk(
 
 export const AddRecordCheckperiods = createAsyncThunk(
     'Checkperiods/AddRecordCheckperiods',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -98,7 +98,7 @@ export const AddRecordCheckperiods = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            history && history.push('/Checkperiods');
+            history && history.push(redirectUrl ? redirectUrl : '/Checkperiods');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -110,7 +110,7 @@ export const AddRecordCheckperiods = createAsyncThunk(
 
 export const EditCheckperiods = createAsyncThunk(
     'Checkperiods/EditCheckperiods',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -125,7 +125,7 @@ export const EditCheckperiods = createAsyncThunk(
                 code: 'CheckperiodsUpdate',
                 description: '',
             }));
-            history && history.push('/Checkperiods');
+            history && history.push(redirectUrl ? redirectUrl : '/Checkperiods');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

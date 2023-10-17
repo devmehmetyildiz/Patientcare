@@ -62,7 +62,7 @@ export const GetCase = createAsyncThunk(
 
 export const AddCases = createAsyncThunk(
     'Cases/AddCases',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -77,7 +77,7 @@ export const AddCases = createAsyncThunk(
                 code: 'CasesCreate',
                 description: '',
             }));
-            history && history.push('/Cases');
+            history && history.push(redirectUrl ? redirectUrl : '/Cases');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -89,7 +89,7 @@ export const AddCases = createAsyncThunk(
 
 export const AddRecordCases = createAsyncThunk(
     'Cases/AddRecordCases',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,7 +99,7 @@ export const AddRecordCases = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            history && history.push('/Cases');
+            history && history.push(redirectUrl ? redirectUrl : '/Cases');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -111,7 +111,7 @@ export const AddRecordCases = createAsyncThunk(
 
 export const EditCases = createAsyncThunk(
     'Cases/EditCases',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -126,7 +126,7 @@ export const EditCases = createAsyncThunk(
                 code: 'CasesUpdate',
                 description: '',
             }));
-            history && history.push('/Cases');
+            history && history.push(redirectUrl ? redirectUrl : '/Cases');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

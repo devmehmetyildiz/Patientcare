@@ -65,6 +65,9 @@ export default class StockdefinesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoption} name="DepartmentID" formtype='dropdown' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unit[Profile.Language]} options={Unitoption} name="UnitID" formtype='dropdown' />
               </Form.Group>
+              <Form.Group widths={"equal"}>
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Ismedicine[Profile.Language]} name="Ismedicine" formtype='checkbox' />
+              </Form.Group>
               <Footerwrapper>
                 {history && <Link to="/Stockdefines">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -85,7 +88,7 @@ export default class StockdefinesCreate extends Component {
     const data = formToObject(e.target)
     data.UnitID = this.context.formstates[`${this.PAGE_NAME}/UnitID`]
     data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-
+    data.Ismedicine = this.context.formstates[`${this.PAGE_NAME}/Ismedicine`]
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
@@ -103,13 +106,6 @@ export default class StockdefinesCreate extends Component {
     } else {
       AddStockdefines({ data, history })
     }
-  }
-
-  handleChangeUnit = (e, { value }) => {
-    this.setState({ selectedunit: value })
-  }
-  handleChangeDepartement = (e, { value }) => {
-    this.setState({ selecteddepartment: value })
   }
 }
 StockdefinesCreate.contextType = FormContext

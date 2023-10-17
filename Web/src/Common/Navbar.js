@@ -47,7 +47,6 @@ export class Navbar extends Component {
     const { iconOnly, seticonOnly, Profile, isMobile } = this.props
     const ishavePP = (Profile?.meta?.Files || []).find(u => u.Usagetype === 'PP')
 
-
     const trigger = (
       <div className='flex flex-row justify-center items-center select-none'>
         {ishavePP ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${ishavePP.Uuid}`} className="rounded-full" style={{ width: '30px', height: '30px' }} /> : <FaUserAlt className='text-white' />}

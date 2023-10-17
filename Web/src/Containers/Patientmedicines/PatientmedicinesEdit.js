@@ -1,0 +1,21 @@
+import { connect } from 'react-redux'
+import PatientmedicinesEdit from '../../Pages/Patientmedicines/PatientmedicinesEdit'
+import { EditPatientstocks, GetPatientstock, handleSelectedPatientstock, removePatientstocknotification, fillPatientstocknotification } from '../../Redux/PatientstockSlice'
+import { GetStockdefines, removeStockdefinenotification } from '../../Redux/StockdefineSlice'
+import { GetDepartments, removeDepartmentnotification } from '../../Redux/DepartmentSlice'
+import { GetPatients, Getpreregistrations, removePatientnotification } from "../../Redux/PatientSlice"
+
+const mapStateToProps = (state) => ({
+    Patientstocks: state.Patientstocks,
+    Patients: state.Patients,
+    Stockdefines: state.Stockdefines,
+    Departments: state.Departments,
+    Profile: state.Profile
+})
+
+const mapDispatchToProps = {
+    EditPatientstocks, GetPatientstock, handleSelectedPatientstock, removePatientstocknotification, fillPatientstocknotification,
+    GetStockdefines, removeStockdefinenotification, GetDepartments, removeDepartmentnotification, GetPatients, Getpreregistrations, removePatientnotification
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PatientmedicinesEdit)

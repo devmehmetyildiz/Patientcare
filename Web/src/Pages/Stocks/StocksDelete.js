@@ -4,8 +4,10 @@ import Literals from './Literals'
 
 export default class StocksDelete extends Component {
   render() {
-    const { Profile, Stocks, DeleteStocks, handleDeletemodal, handleSelectedStock } = this.props
+    const { Profile, Stocks, DeleteStocks, handleDeletemodal, handleSelectedStock, Stockdefines } = this.props
     const { isDeletemodalopen, selected_record } = Stocks
+
+    const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === selected_record.StockdefineID)
     return (
       <Modal
         onClose={() => handleDeletemodal(false)}
@@ -16,7 +18,7 @@ export default class StocksDelete extends Component {
         <Modal.Content image>
           <Modal.Description>
             <p>
-              <span className='font-bold'>{selected_record?.Stockdefine?.Name} </span>
+              <span className='font-bold'>{stockdefine?.Name} </span>
               {Literals.Messages.Deletecheck[Profile.Language]}
             </p>
           </Modal.Description>

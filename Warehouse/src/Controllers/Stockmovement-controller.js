@@ -92,6 +92,7 @@ async function AddStockmovement(req, res, next) {
             Prevvalue: amount,
             Newvalue: Amount + amount,
             Uuid: stockmovementuuid,
+            Isapproved: false,
             Createduser: "System",
             Createtime: new Date(),
             Isactive: true
@@ -167,6 +168,44 @@ async function UpdateStockmovement(req, res, next) {
     GetStockmovements(req, res, next)
 }
 
+async function ApproveStockmovement(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.stockmovementId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const stockmovement = await db.stockmovementModel.findOne({ where: { Uuid: Uuid } })
+        if (!stockmovement) {
+            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
+        }
+        if (stockmovement.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.stockmovementModel.update({
+            ...stockmovement,
+            Isapproved: true,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetStockmovements(req, res, next)
+}
+
 async function DeleteStockmovement(req, res, next) {
 
     let validationErrors = []
@@ -207,4 +246,5 @@ module.exports = {
     AddStockmovement,
     UpdateStockmovement,
     DeleteStockmovement,
+    ApproveStockmovement
 }

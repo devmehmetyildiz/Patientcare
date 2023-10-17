@@ -31,6 +31,9 @@ module.exports = sequelize.define('stockModel', {
     Ismedicine: {
         type: Sequelize.BOOLEAN
     },
+    Isapproved: {
+        type: Sequelize.BOOLEAN
+    },
     Skt: {
         type: Sequelize.DATE
     },

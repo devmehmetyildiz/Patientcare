@@ -26,6 +26,10 @@ const Literals = {
             tr: 'Stoklar',
             en: 'Stocks'
         },
+        Medicines: {
+            tr: 'İlaçlar',
+            en: 'Medicines'
+        },
         Skt: {
             tr: 'Skt',
             en: 'Skt'

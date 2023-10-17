@@ -16,14 +16,6 @@ import PurchaseorderstockmovementsDelete from '../../Containers/Purchaseordersto
 
 export default class Purchaseorderstockmovements extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-      selectedrecord: {}
-    }
-  }
-
   componentDidMount() {
     const { GetPurchaseorderstockmovements, GetUnits, GetStockdefines, GetPurchaseorderstocks } = this.props
     GetPurchaseorderstockmovements()

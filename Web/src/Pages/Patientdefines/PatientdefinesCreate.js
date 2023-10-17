@@ -74,8 +74,8 @@ export default class PatientdefinesCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Firstname[Profile.Language]} name="Firstname" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Lastname[Profile.Language]} name="Lastname" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Firstname[Profile.Language]} name="Firstname" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Lastname[Profile.Language]} name="Lastname" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Fathername[Profile.Language]} name="Fathername" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Mothername[Profile.Language]} name="Mothername" />
               </Form.Group>
@@ -118,13 +118,14 @@ export default class PatientdefinesCreate extends Component {
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactname1[Profile.Language]} name="Contactname1" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactname2[Profile.Language]} name="Contactname2" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.CostumertypeName[Profile.Language]} name="CostumertypeID" options={Costumertypeoptions} formtype="dropdown" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.PatienttypeName[Profile.Language]} name="PatienttypeID" options={Patienttypeoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CostumertypeName[Profile.Language]} name="CostumertypeID" options={Costumertypeoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.PatienttypeName[Profile.Language]} name="PatienttypeID" options={Patienttypeoptions} formtype="dropdown" />
               </Form.Group>
               <Footerwrapper>
-                {history && <Link to="/Patientdefines">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
+                {history && <Button onClick={(e) => {
+                  e.preventDefault()
+                  history.length > 1 ? history.goBack() : history.push('/Patientdefines')
+                }} floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>}
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>
@@ -163,18 +164,7 @@ export default class PatientdefinesCreate extends Component {
     data.Childnumber && (data.Childnumber = parseInt(data.Childnumber))
 
     let errors = []
-    if (!validator.isString(data.Firstname)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Firstnamerequired[Profile.Language] })
-    }
-    if (!validator.isString(data.Lastname)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Lastnamerequired[Profile.Language] })
-    }
-    if (!validator.isUUID(data.CostumertypeID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Costumertyperequired[Profile.Language] })
-    }
-    if (!validator.isUUID(data.PatienttypeID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Patienttyperequired[Profile.Language] })
-    }
+
     if (!validator.isString(data.CountryID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CountryIDrequired[Profile.Language] })
     }

@@ -61,7 +61,7 @@ export const GetPurchaseorderstockmovement = createAsyncThunk(
 
 export const AddPurchaseorderstockmovements = createAsyncThunk(
     'Purchaseorderstockmovements/AddPurchaseorderstockmovements',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,7 +76,7 @@ export const AddPurchaseorderstockmovements = createAsyncThunk(
                 code: 'PurchaseorderstockmovementsCreate',
                 description: '',
             }));
-            history && history.push('/Purchaseorderstockmovements');
+            history && history.push(redirectUrl ? redirectUrl : '/Purchaseorderstockmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -88,7 +88,7 @@ export const AddPurchaseorderstockmovements = createAsyncThunk(
 
 export const EditPurchaseorderstockmovements = createAsyncThunk(
     'Purchaseorderstockmovements/EditPurchaseorderstockmovements',
-    async ({ data, history }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -103,7 +103,7 @@ export const EditPurchaseorderstockmovements = createAsyncThunk(
                 code: 'PurchaseorderstockmovementsUpdate',
                 description: '',
             }));
-            history && history.push('/Purchaseorderstockmovements');
+            history && history.push(redirectUrl ? redirectUrl : '/Purchaseorderstockmovements');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

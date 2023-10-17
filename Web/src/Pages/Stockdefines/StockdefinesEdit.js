@@ -20,12 +20,8 @@ export default class StockdefinesEdit extends Component {
 
   constructor(props) {
     super(props)
-    const selecteddepartment = {}
-    const selectedunit = {}
     const isDatafetched = false
     this.state = {
-      selecteddepartment,
-      selectedunit,
       isDatafetched
     }
   }
@@ -49,8 +45,8 @@ export default class StockdefinesEdit extends Component {
       this.setState({
         isDatafetched: true
       })
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    this.context.setForm(this.PAGE_NAME, selected_record)
     Notification(Stockdefines.notifications, removeStockdefinenotification)
     Notification(Departments.notifications, removeDepartmentnotification)
     Notification(Units.notifications, removeUnitnotification)
@@ -90,6 +86,9 @@ export default class StockdefinesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoption} name="DepartmentID" formtype='dropdown' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unit[Profile.Language]} options={Unitoption} name="UnitID" formtype='dropdown' />
               </Form.Group>
+              <Form.Group widths={"equal"}>
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Ismedicine[Profile.Language]} name="Ismedicine" formtype='checkbox' />
+              </Form.Group>
               <Footerwrapper>
                 {history && <Link to="/Stockdefines">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -110,7 +109,7 @@ export default class StockdefinesEdit extends Component {
     const data = formToObject(e.target)
     data.UnitID = this.context.formstates[`${this.PAGE_NAME}/UnitID`]
     data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-
+    data.Ismedicine = this.context.formstates[`${this.PAGE_NAME}/Ismedicine`]
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
@@ -128,13 +127,6 @@ export default class StockdefinesEdit extends Component {
     } else {
       EditStockdefines({ data: { ...Stockdefines.selected_record, ...data }, history })
     }
-  }
-
-  handleChangeUnit = (e, { value }) => {
-    this.setState({ selectedunit: value })
-  }
-  handleChangeDepartement = (e, { value }) => {
-    this.setState({ selecteddepartment: value })
   }
 }
 StockdefinesEdit.contextType = FormContext

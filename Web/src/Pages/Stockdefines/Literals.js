@@ -26,6 +26,10 @@ const Literals = {
             tr: 'Departman',
             en: 'Department'
         },
+        Ismedicine: {
+            tr: 'İlaç mı?',
+            en: 'Is Medicine'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'

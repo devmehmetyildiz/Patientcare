@@ -1,0 +1,94 @@
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { Form } from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
+import formToObject from 'form-to-object'
+import Notification from '../../Utils/Notification'
+import LoadingPage from '../../Utils/LoadingPage'
+import Literals from './Literals'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import FormInput from '../../Utils/FormInput'
+import validator from '../../Utils/Validator'
+import { FormContext } from '../../Provider/FormProvider'
+export default class BedsCreate extends Component {
+
+  PAGE_NAME = "BedsCreate"
+
+  componentDidMount() {
+    const { GetRooms } = this.props
+    GetRooms()
+  }
+
+  componentDidUpdate() {
+    const { Beds, removeBednotification,
+      Rooms, removeRoomnotification } = this.props
+    Notification(Beds.notification, removeBednotification)
+    Notification(Rooms.notification, removeRoomnotification)
+  }
+
+  render() {
+    const { Beds, Rooms, Profile } = this.props
+
+    const Roomsoptions = (Rooms.list || []).filter(u => u.Isactive).map(room => {
+      return { key: room.Uuid, text: room.Name, value: room.Uuid }
+    })
+
+
+    return (
+      Rooms.isLoading || Rooms.isDispatching || Beds.isLoading || Beds.isDispatching ? <LoadingPage /> :
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Beds"}>
+                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+            </Headerbredcrump>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Form onSubmit={this.handleSubmit}>
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.RoomID[Profile.Language]} name="RoomID" options={Roomsoptions} formtype='dropdown' />
+              <Footerwrapper>
+                <Link to="/Beds">
+                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+                </Link>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+              </Footerwrapper>
+            </Form>
+          </Contentwrapper>
+        </Pagewrapper >
+    )
+  }
+
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    const { AddBeds, history, fillBednotification, Profile } = this.props
+    const data = formToObject(e.target)
+    data.RoomID = this.context.formstates[`${this.PAGE_NAME}/RoomID`]
+
+    let errors = []
+    if (!validator.isUUID(data.RoomID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.RoomIDrequired[Profile.Language] })
+    }
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+    }
+    if (errors.length > 0) {
+      errors.forEach(error => {
+        fillBednotification(error)
+      })
+    } else {
+      AddBeds({ data, history })
+    }
+  }
+}
+BedsCreate.contextType = FormContext

@@ -20,6 +20,9 @@ export const ROUTES = {
     STATION: 'Stations',
     STOCKDEFINE: 'Stockdefines',
     UNIT: 'Units',
+    ROOM: 'Rooms',
+    BED: 'Beds',
+    FLOOR: 'Floors',
 
     PURCHASEORDER: 'Purchaseorders',
     PURCHASEORDERSTOCK: 'Purchaseorderstocks',

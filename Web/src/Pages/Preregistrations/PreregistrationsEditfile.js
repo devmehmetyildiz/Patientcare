@@ -5,7 +5,13 @@ import { ROUTES } from '../../Utils/Constants'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
 import config from '../../Config'
-
+import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import Literals from './Literals'
 export default class PreregistrationsEditfile extends Component {
 
     constructor(props) {
@@ -18,20 +24,22 @@ export default class PreregistrationsEditfile extends Component {
     }
 
     componentDidMount() {
-        const { GetPatient, match, history } = this.props
+        const { GetPatient, match, history, GetFiles, GetPatientdefines } = this.props
         if (match.params.PatientID) {
             GetPatient(match.params.PatientID)
+            GetFiles()
+            GetPatientdefines()
         } else {
             history.push("/Preregistrations")
         }
     }
 
     componentDidUpdate() {
-        const { Files, removeFilenotification, Patients, removePatientnotification } = this.props
+        const { Files, removeFilenotification, Patients, Patientdefines, removePatientnotification, removePatientdefinenotification } = this.props
         const { selected_record, isLoading } = Patients
-        if (selected_record && Object.keys(selected_record).length > 0 &&
+        if (selected_record && !Files.isLoading && Object.keys(selected_record).length > 0 &&
             selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
-            var response = (selected_record.Files || []).map(element => {
+            var response = (Files.list || []).filter(u => u.ParentID === selected_record.Uuid).map(element => {
                 return {
                     ...element,
                     key: Math.random()
@@ -42,58 +50,58 @@ export default class PreregistrationsEditfile extends Component {
             })
         }
         Notification(Files.notifications, removeFilenotification)
+        Notification(Patientdefines.notifications, removePatientdefinenotification)
         Notification(Patients.notifications, removePatientnotification)
     }
 
 
     render() {
 
-        const { Files, Patients } = this.props
+        const { Files, Patients, Profile, history, Patientdefines } = this.props
         const { selected_record, isLoading, isDispatching } = Patients
 
 
         const usagetypes = [
-            { key: 'Genel Depolama', value: 'Genel Depolama', text: 'Genel Depolama' },
-            { key: 'Hasta Dosyaları', value: 'Hasta Dosyaları', text: 'Hasta Dosyaları' },
-            { key: 'PP', value: 'PP', text: 'PP' },
-            { key: 'ilk görüşme formu', value: 'ilk görüşme formu', text: 'ilk görüşme formu' },
-            { key: 'engelli teslim etme-alma formu', value: 'engelli teslim etme-alma formu', text: 'engelli teslim etme-alma formu' },
-            { key: 'ilk kabul formu', value: 'ilk kabul formu', text: 'ilk kabul formu' },
-            { key: 'engelli mülkiyeti teslim alma formu', value: 'engelli mülkiyeti teslim alma formu', text: 'engelli mülkiyeti teslim alma formu' },
-            { key: 'genel vücut kontrol formu', value: 'genel vücut kontrol formu', text: 'genel vücut kontrol formu' },
+            { key: Literals.Options.usageType0[Profile.Language], text: Literals.Options.usageType0[Profile.Language], value: Literals.Options.usageType0[Profile.Language] },
+            { key: Literals.Options.usageType1[Profile.Language], text: Literals.Options.usageType1[Profile.Language], value: Literals.Options.usageType1[Profile.Language] },
+            { key: Literals.Options.usageType2[Profile.Language], text: Literals.Options.usageType2[Profile.Language], value: "PP" },
+            { key: Literals.Options.usageType3[Profile.Language], text: Literals.Options.usageType3[Profile.Language], value: Literals.Options.usageType3[Profile.Language] },
+            { key: Literals.Options.usageType4[Profile.Language], text: Literals.Options.usageType4[Profile.Language], value: Literals.Options.usageType4[Profile.Language] },
+            { key: Literals.Options.usageType5[Profile.Language], text: Literals.Options.usageType5[Profile.Language], value: Literals.Options.usageType5[Profile.Language] },
+            { key: Literals.Options.usageType6[Profile.Language], text: Literals.Options.usageType6[Profile.Language], value: Literals.Options.usageType6[Profile.Language] },
+            { key: Literals.Options.usageType7[Profile.Language], text: Literals.Options.usageType7[Profile.Language], value: Literals.Options.usageType7[Profile.Language] },
         ]
 
         return (
             Files.isLoading || Files.isDispatching || isLoading || isDispatching ? <LoadingPage /> :
-                <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-                    <div className='w-full mx-auto align-middle'>
-                        <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-                            <Breadcrumb size='big'>
-                                <Link to={"/Preregistrations"}>
-                                    <Breadcrumb.Section >Ön Kayıtlar</Breadcrumb.Section>
-                                </Link>
-                                <Breadcrumb.Divider icon='right chevron' />
-                                <Breadcrumb.Section>Dosyalar</Breadcrumb.Section>
-                            </Breadcrumb>
-                        </Header>
-                    </div>
-                    <Divider className='w-full  h-[1px]' />
-                    <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
+                <Pagewrapper>
+                    <Headerwrapper>
+                        <Headerbredcrump>
+                            <Link to={"/Preregistrations"}>
+                                <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                            </Link>
+                            <Breadcrumb.Divider icon='right chevron' />
+                            <Breadcrumb.Section>{Literals.Page.Pageeditfileheader[Profile.Language]}</Breadcrumb.Section>
+                        </Headerbredcrump>
+                    </Headerwrapper>
+                    <Pagedivider />
+                    <Contentwrapper>
                         <Header as='h2' icon textAlign='center'>
-                            {(selected_record.Files || []).filter(u => u.Usagetype === 'PP').length > 0 ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${(selected_record.Files || []).find(u => u.Usagetype === 'PP')?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
+                            {(Files.list || []).filter(u => u.Usagetype === 'PP' && u.ParentID === selected_record.Uuid).length > 0 ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${(Files.list || []).filter(u => u.ParentID === selected_record.Uuid).find(u => u.Usagetype === 'PP')?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
                                 : <Icon name='users' circular />}
-                            <Header.Content>{`${selected_record.Patientdefine?.Firstname} ${selected_record.Patientdefine?.Lastname} - ${selected_record.Patientdefine?.CountryID}`}</Header.Content>
+                            <Header.Content>{`${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.Firstname} 
+                            ${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.Lastname} - ${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.CountryID}`}</Header.Content>
                         </Header>
                         <Form onSubmit={this.handleSubmit}>
                             <Table celled className='list-table' key='product-create-type-conversion-table' >
                                 <Table.Header>
                                     <Table.Row>
-                                        <Table.HeaderCell width={1}>Sıra</Table.HeaderCell>
-                                        <Table.HeaderCell width={3}>Dosya Adı</Table.HeaderCell>
-                                        <Table.HeaderCell width={3}>Kullanım Türü</Table.HeaderCell>
-                                        <Table.HeaderCell width={9}>Dosya</Table.HeaderCell>
-                                        <Table.HeaderCell width={9}>Yüklenme Durumu</Table.HeaderCell>
-                                        <Table.HeaderCell width={1}>Sil</Table.HeaderCell>
+                                        <Table.HeaderCell width={1}>{Literals.Options.TableColumnsOrder[Profile.Language]}</Table.HeaderCell>
+                                        <Table.HeaderCell width={3}>{Literals.Options.TableColumnsFileName[Profile.Language]}</Table.HeaderCell>
+                                        <Table.HeaderCell width={3}>{Literals.Options.TableColumnsUploadStatus[Profile.Language]}</Table.HeaderCell>
+                                        <Table.HeaderCell width={9}>{Literals.Options.TableColumnsFile[Profile.Language]}</Table.HeaderCell>
+                                        <Table.HeaderCell width={9}>{Literals.Options.TableColumnsUploadStatus[Profile.Language]}</Table.HeaderCell>
+                                        <Table.HeaderCell width={1}>{Literals.Options.TableColumnsDelete[Profile.Language]}</Table.HeaderCell>
                                     </Table.Row>
                                 </Table.Header>
                                 <Table.Body>
@@ -106,10 +114,10 @@ export default class PreregistrationsEditfile extends Component {
                                                 </Button.Group>
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <Form.Input disabled={file.WillDelete} value={file.Name} placeholder="Dosya Adı" name="Name" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'Name', e.target.value) }} />
+                                                <Form.Input disabled={file.WillDelete} value={file.Name} placeholder={Literals.Options.TableColumnsFileName[Profile.Language]} name="Name" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'Name', e.target.value) }} />
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <Dropdown disabled={file.WillDelete} value={file.Usagetype} placeholder='Ürün Tanımı' name="Usagetype" clearable selection fluid options={usagetypes} onChange={(e, data) => { this.selectedFilesChangeHandler(file.key, 'Usagetype', data.value) }} />
+                                                <Dropdown disabled={file.WillDelete} value={file.Usagetype} placeholder={Literals.Options.TableColumnsUsagetype[Profile.Language]} name="Usagetype" clearable selection fluid options={usagetypes} onChange={(e, data) => { this.selectedFilesChangeHandler(file.key, 'Usagetype', data.value) }} />
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {file.fileChanged ? <Form.Input className='w-full flex justify-center items-center' disabled={file.WillDelete} type='File' name="File" fluid onChange={(e) => { this.selectedFilesChangeHandler(file.key, 'File', e) }} />
@@ -129,33 +137,33 @@ export default class PreregistrationsEditfile extends Component {
                                 <Table.Footer>
                                     <Table.Row>
                                         <Table.HeaderCell colSpan='7'>
-                                            <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNewFile() }}>Dosya Ekle</Button>
+                                            <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNewFile() }}>{Literals.Button.Addnewfile[Profile.Language]}</Button>
                                         </Table.HeaderCell>
                                     </Table.Row>
                                 </Table.Footer>
                             </Table>
-                            <div className='flex flex-row w-full justify-between py-4  items-center'>
-                                <Link to="/Preregistrations">
-                                    <Button floated="left" color='grey'>Geri Dön</Button>
-                                </Link>
-                                <Button floated="right" type='submit' color='blue'>Kaydet</Button>
-                            </div>
+                            <Footerwrapper>
+                                {history && <Link to="/Preregistrations">
+                                    <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
+                                </Link>}
+                                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                            </Footerwrapper>
                         </Form>
-                    </div>
-                </div>
+                    </Contentwrapper>
+                </Pagewrapper >
         )
     }
 
     handleSubmit = (e) => {
         e.preventDefault()
 
-        const { EditFiles, history, fillFilenotification } = this.props
+        const { EditFiles, history, fillFilenotification, Profile } = this.props
         const uncleanfiles = [...this.state.selectedFiles]
 
         let errors = []
         this.state.selectedFiles.forEach(data => {
             if (!data.Name || data.Name === '') {
-                errors.push({ type: 'Error', code: 'Files', description: 'İsim Boş Olamaz' })
+                errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Filenamerequired[Profile.Language] })
             }
         });
         if (errors.length > 0) {
