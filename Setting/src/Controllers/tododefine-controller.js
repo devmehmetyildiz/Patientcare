@@ -55,7 +55,6 @@ async function AddTododefine(req, res, next) {
     let validationErrors = []
     const {
         Name,
-        Info,
         IsRequired,
         IsNeedactivation,
         Checkperiods
@@ -63,9 +62,6 @@ async function AddTododefine(req, res, next) {
 
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
     }
     if (!validator.isBoolean(IsRequired)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISREQUIRED_REQUIRED)
@@ -118,7 +114,6 @@ async function UpdateTododefine(req, res, next) {
     const {
         Name,
         Uuid,
-        Info,
         IsRequired,
         IsNeedactivation,
         Checkperiods
@@ -126,9 +121,6 @@ async function UpdateTododefine(req, res, next) {
 
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
     }
     if (!validator.isBoolean(IsRequired)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISREQUIRED_REQUIRED)

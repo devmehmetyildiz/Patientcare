@@ -24,17 +24,19 @@ export default class Tododefines extends Component {
   }
 
   componentDidMount() {
-    const { GetTododefines } = this.props
+    const { GetTododefines, GetCheckperiods } = this.props
     GetTododefines()
+    GetCheckperiods()
   }
 
   componentDidUpdate() {
-    const { Tododefines, removeTododefinenotification } = this.props
+    const { Tododefines, Checkperiods, removeCheckperiodnotification, removeTododefinenotification } = this.props
     Notification(Tododefines.notifications, removeTododefinenotification)
+    Notification(Checkperiods.notifications, removeCheckperiodnotification)
   }
 
   render() {
-    const { Tododefines, Profile, handleDeletemodal, handleSelectedTododefine } = this.props
+    const { Tododefines, Profile, handleDeletemodal, handleSelectedTododefine, Checkperiods } = this.props
     const { isLoading, isDispatching } = Tododefines
 
     const Columns = [
@@ -64,8 +66,8 @@ export default class Tododefines extends Component {
     };
 
     const list = (Tododefines.list || []).map(item => {
-      var text = item.Checkperiods.map((checkperiod) => {
-        return checkperiod.Name;
+      var text = (item.Checkperioduuids || []).map(u => {
+        return (Checkperiods.list || []).find(checkperiod => checkperiod.Uuid === u.CheckperiodID)?.Name
       }).join(", ")
       return {
         ...item,
@@ -133,10 +135,13 @@ export default class Tododefines extends Component {
   }
 
   checkperiodCellhandler = (col) => {
+
+    const { Checkperiods } = this.props
+
     if (col.value) {
       if (!col.cell.isGrouped) {
         const itemId = col.row.original.Id
-        const itemCheckperiods = col.row.original.Checkperiods
+        const itemCheckperiods = (col.row.original.Checkperioduuids || []).map(u => { return (Checkperiods.list || []).find(checkperiod => checkperiod.Uuid === u.CheckperiodID) })
         return col.value.length - 35 > 20 ?
           (
             !this.state.checkperiodStatus.includes(itemId) ?

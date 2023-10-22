@@ -76,8 +76,7 @@ export const DeleteTodos = createAsyncThunk(
     'Todos/DeleteTodos',
     async (data, { dispatch }) => {
         try {
-            delete data['edit'];
-            delete data['delete'];
+          
             const response = await instanse.delete(config.services.Setting, `${ROUTES.TODO}/${data.Uuid}`);
             dispatch(fillTodonotification({
                 type: 'Success',

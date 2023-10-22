@@ -122,8 +122,7 @@ export const DeleteUsers = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            delete data['edit'];
-            delete data['delete'];
+          
             const response = await instanse.delete(config.services.Userrole, `${ROUTES.USER}/${data.Uuid}`);
             dispatch(fillUsernotification({
                 type: 'Success',

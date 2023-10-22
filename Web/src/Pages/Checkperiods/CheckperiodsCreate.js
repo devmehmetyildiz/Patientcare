@@ -37,18 +37,15 @@ export default class CheckperiodsCreate extends Component {
       return { key: period.Uuid, text: period.Name, value: period.Uuid }
     })
 
-    const Days = [
-      "PAZARTESİ",
-      "SALI",
-      "ÇARŞAMBA",
-      "PERŞEMBE",
-      "CUMA",
-      "CUMARTESİ",
-      "PAZAR"
+    const Dayoptions = [
+      { key: 0, text: Literals.Options.Dayoptions.value0[Profile.Language], value: 0 },
+      { key: 1, text: Literals.Options.Dayoptions.value1[Profile.Language], value: 1 },
+      { key: 2, text: Literals.Options.Dayoptions.value2[Profile.Language], value: 2 },
+      { key: 3, text: Literals.Options.Dayoptions.value3[Profile.Language], value: 3 },
+      { key: 4, text: Literals.Options.Dayoptions.value4[Profile.Language], value: 4 },
+      { key: 5, text: Literals.Options.Dayoptions.value5[Profile.Language], value: 5 },
+      { key: 6, text: Literals.Options.Dayoptions.value6[Profile.Language], value: 6 },
     ]
-    const Dayoptions = Days.map(day => {
-      return { key: day, text: day, value: day }
-    })
 
     const Periodtypeoption = [
       { key: 1, text: Literals.Options.Periodtypeoption.value0[Profile.Language], value: 1 },
@@ -74,7 +71,7 @@ export default class CheckperiodsCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Occureddays[Profile.Language]} name="Occureddays" multiple options={Dayoptions} formtype="dropdown" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodtype[Profile.Language]} name="Periodtype" options={Periodtypeoption} formtype="dropdown" />
               </Form.Group>
-              <FormInput required placeholder={Literals.Columns.Periodstxt[Profile.Language]} name="Periods" multiple options={Periodoptions} formtype="dropdown" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodstxt[Profile.Language]} name="Periods" multiple options={Periodoptions} formtype="dropdown" />
               <Footerwrapper>
                 {history && <Link to="/Checkperiods">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -95,7 +92,7 @@ export default class CheckperiodsCreate extends Component {
 
     const data = formToObject(e.target)
     data.Periodtype = this.context.formstates[`${this.PAGE_NAME}/Periodtype`]
-    data.Occureddays = this.context.formstates[`${this.PAGE_NAME}/Occureddays`]
+    data.Occureddays = this.context.formstates[`${this.PAGE_NAME}/Occureddays`].join(',')
     data.Periods = this.context.formstates[`${this.PAGE_NAME}/Periods`].map(id => {
       return (Periods.list || []).find(u => u.Uuid === id)
     })
@@ -110,7 +107,7 @@ export default class CheckperiodsCreate extends Component {
     if (!validator.isString(data.Occureddays)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Occureddaysrequired[Profile.Language] })
     }
-    if (!validator.isString(data.Occureddays)) {
+    if (!validator.isNumber(data.Periodtype)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PeriodTyperequired[Profile.Language] })
     }
     if (errors.length > 0) {

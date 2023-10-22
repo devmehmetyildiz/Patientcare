@@ -47,7 +47,11 @@ export default class CheckperiodsEdit extends Component {
       this.setState({
         isDatafetched: true
       })
-      this.context.setForm(this.PAGE_NAME, { ...selected_record, Periods: selected_record.Perioduuids.map(u => { return u.PeriodID }) })
+      this.context.setForm(this.PAGE_NAME, {
+        ...selected_record,
+        Periods: selected_record.Perioduuids.map(u => { return u.PeriodID }),
+        Occureddays: (selected_record.Occureddays || '').split(',').map(u => { return parseInt(u) })
+      })
     }
     Notification(Periods.notifications, removePeriodnotification)
     Notification(Checkperiods.notifications, removeCheckperiodnotification)
@@ -60,18 +64,15 @@ export default class CheckperiodsEdit extends Component {
       return { key: period.Uuid, text: period.Name, value: period.Uuid }
     })
 
-    const Days = [
-      "PAZARTESİ",
-      "SALI",
-      "ÇARŞAMBA",
-      "PERŞEMBE",
-      "CUMA",
-      "CUMARTESİ",
-      "PAZAR"
+    const Dayoptions = [
+      { key: 0, text: Literals.Options.Dayoptions.value0[Profile.Language], value: 0 },
+      { key: 1, text: Literals.Options.Dayoptions.value1[Profile.Language], value: 1 },
+      { key: 2, text: Literals.Options.Dayoptions.value2[Profile.Language], value: 2 },
+      { key: 3, text: Literals.Options.Dayoptions.value3[Profile.Language], value: 3 },
+      { key: 4, text: Literals.Options.Dayoptions.value4[Profile.Language], value: 4 },
+      { key: 5, text: Literals.Options.Dayoptions.value5[Profile.Language], value: 5 },
+      { key: 6, text: Literals.Options.Dayoptions.value6[Profile.Language], value: 6 },
     ]
-    const Dayoptions = Days.map(day => {
-      return { key: day, text: day, value: day }
-    })
 
     const Periodtypeoption = [
       { key: 1, text: Literals.Options.Periodtypeoption.value0[Profile.Language], value: 1 },
@@ -117,7 +118,7 @@ export default class CheckperiodsEdit extends Component {
     const { EditCheckperiods, history, fillCheckperiodnotification, Periods, Checkperiods, Profile } = this.props
     const data = formToObject(e.target)
     data.Periodtype = this.context.formstates[`${this.PAGE_NAME}/Periodtype`]
-    data.Occureddays = this.context.formstates[`${this.PAGE_NAME}/Occureddays`]
+    data.Occureddays = this.context.formstates[`${this.PAGE_NAME}/Occureddays`].join(',')
     data.Periods = this.context.formstates[`${this.PAGE_NAME}/Periods`].map(id => {
       return (Periods.list || []).find(u => u.Uuid === id)
     })

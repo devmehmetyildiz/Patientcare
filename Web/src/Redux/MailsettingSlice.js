@@ -119,8 +119,7 @@ export const DeleteMailsettings = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            delete data['edit'];
-            delete data['delete'];
+          
             const response = await instanse.delete(config.services.System, `${ROUTES.MAILSETTING}/${data.Uuid}`);
             dispatch(fillMailsettingnotification({
                 type: 'Success',

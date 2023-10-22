@@ -139,8 +139,7 @@ export const DeleteTododefines = createAsyncThunk(
     'Tododefines/DeleteTododefines',
     async (data, { dispatch, getState }) => {
         try {
-            delete data['edit'];
-            delete data['delete'];
+          
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.TODODEFINE}/${data.Uuid}`);

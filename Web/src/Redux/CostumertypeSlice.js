@@ -140,8 +140,7 @@ export const DeleteCostumertypes = createAsyncThunk(
     'Costumertypes/DeleteCostumertypes',
     async (data, { dispatch, getState }) => {
         try {
-            delete data['edit'];
-            delete data['delete'];
+          
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.COSTUMERTYPE}/${data.Uuid}`);

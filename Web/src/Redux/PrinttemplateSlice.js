@@ -119,8 +119,7 @@ export const DeletePrinttemplates = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            delete data['edit'];
-            delete data['delete'];
+          
             const response = await instanse.delete(config.services.System, `${ROUTES.PRINTTEMPLATE}/${data.Uuid}`);
             dispatch(fillPrinttemplatenotification({
                 type: 'Success',

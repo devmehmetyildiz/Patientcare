@@ -121,8 +121,7 @@ export const DeletePatientstockmovements = createAsyncThunk(
     'Patientstockmovements/DeletePatientstockmovements',
     async (data, { dispatch, getState }) => {
         try {
-            delete data['edit'];
-            delete data['delete'];
+          
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PATIENTSTOCKMOVEMENT}/${data.Uuid}`);
@@ -144,8 +143,7 @@ export const ApprovePatientstockmovements = createAsyncThunk(
     'Patientstockmovements/ApprovePatientstockmovements',
     async (data, { dispatch, getState }) => {
         try {
-            delete data['edit'];
-            delete data['delete'];
+          
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Warehouse, `${ROUTES.PATIENTSTOCKMOVEMENT}/Approve/${data.Uuid}`);

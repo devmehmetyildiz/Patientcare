@@ -170,8 +170,7 @@ export const DeleteRules = createAsyncThunk(
     'Rules/DeleteRules',
     async (data, { dispatch, getState }) => {
         try {
-            delete data['edit'];
-            delete data['delete'];
+          
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.System, `${ROUTES.RULE}/${data.Uuid}`);

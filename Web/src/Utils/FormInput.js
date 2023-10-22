@@ -35,7 +35,7 @@ export default function FormInput(props) {
     contextProp.isFormvisible && delete contextProp.isFormvisible
     return (
         (validator.isBoolean(isFormvisible) ? isFormvisible : true) ?
-            <div className='mx-2 w-full relative'>
+            <React.Fragment>
                 <Form.Field>
                     <div className='flex flex-row m-2'>
                         {!props.dontshowlabel && <label className='text-[#000000de]'>{props.placeholder}{props.modal ? props.modal : null}</label>}
@@ -54,6 +54,12 @@ export default function FormInput(props) {
                             on='click'
                         />}
                         {additionalicon && additionalicon}
+                        {validationmessage && (!isvalidate && <Popup
+                            trigger={<Icon link color='red' name='bell' />}
+                            content={<Label color='red' ribbon>{validationmessage}</Label>}
+                            position='left center'
+                            on='click'
+                        />)}
                     </div>
                     {!props.formtype ?
                         <Form.Input icon={display ? true : false} {...contextProp} value={formdata[name] ? formdata[name] : ''} onChange={(e) => {
@@ -92,8 +98,8 @@ export default function FormInput(props) {
                         </>
                     }
                 </Form.Field>
-                {validationmessage && (!isvalidate && <Label className='absolute -bottom-6 left-0' color='red' size='mini'>{validationmessage}</Label>)}
-            </div>
+
+            </React.Fragment>
             : null
     )
 }

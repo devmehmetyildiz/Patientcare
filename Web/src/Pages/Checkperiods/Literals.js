@@ -6,6 +6,36 @@ const Literals = {
                 en: "Continuous Control"
             },
         },
+        Dayoptions: {
+            value0: {
+                tr: 'PAZAR',
+                en: "SUNDAY"
+            },
+            value1: {
+                tr: 'PAZARTESİ',
+                en: "MONDAY"
+            },
+            value2: {
+                tr: 'SALI',
+                en: "TUESDAY"
+            },
+            value3: {
+                tr: 'ÇARŞAMBA',
+                en: "WEDNESDAY"
+            },
+            value4: {
+                tr: 'PERŞEMBE',
+                en: "THURSDAY"
+            },
+            value5: {
+                tr: 'CUMA',
+                en: "FRIDAY"
+            },
+            value6: {
+                tr: 'CUMARTESİ',
+                en: "SATURDAY"
+            },
+        },
     },
     Columns: {
         Id: {
@@ -59,7 +89,7 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Kontrol Grupları",
+            tr: "Kontrol Periyotları",
             en: "Check Periods"
         },
         Pagecreateheader: {
