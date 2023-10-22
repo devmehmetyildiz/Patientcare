@@ -495,7 +495,7 @@ async function UpdateUser(req, res, next) {
         Email,
         Departments,
         Roles,
-        Stations,
+        Stations
     } = req.body
 
     if (!validator.isString(Username)) {
@@ -719,6 +719,47 @@ async function Changepassword(req, res, next) {
     })
 }
 
+async function UpdateUsermeta(req, res, next) {
+
+    let validationErrors = []
+    const {
+        Uuid,
+    } = req.body
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const user = await db.userModel.findOne({ where: { Uuid: Uuid } })
+        if (!user) {
+            return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+        }
+        if (!user.Isactive) {
+            return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+        }
+
+        await db.userModel.update({
+            ...req.body,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        next(sequelizeErrorCatcher(error))
+    }
+    GetUsers(req, res, next)
+}
+
 function GetUserByEmail(next, Email, language) {
     return new Promise((resolve, reject) => {
         db.userModel.findOne({ where: { Email: Email } })
@@ -770,5 +811,6 @@ module.exports = {
     Getbyemail,
     Resettablemeta,
     GetUserscount,
-    Changepassword
+    Changepassword,
+    UpdateUsermeta
 }

@@ -12,6 +12,7 @@ import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import CasesDelete from '../../Containers/Cases/CasesDelete'
 import Pagedivider from '../../Common/Styled/Pagedivider'
+import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
 
 export default class Cases extends Component {
 
@@ -66,6 +67,9 @@ export default class Cases extends Component {
       { Header: Literals.Columns.CaseStatus[Profile.Language], accessor: 'CaseStatus', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.casesstatusCellhandler(col, casestatusOption) },
       { Header: Literals.Columns.Casecolor[Profile.Language], accessor: 'Casecolor', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.casecolorCellhandler(col) },
       { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Patientstatus[Profile.Language], accessor: 'Patientstatus', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.movementCellhandler(col) },
+      { Header: Literals.Columns.Iscalculateprice[Profile.Language], accessor: 'Iscalculateprice', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Isroutinework[Profile.Language], accessor: 'Isroutinework', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -182,5 +186,14 @@ export default class Cases extends Component {
       return col.value
     }
     return null
+  }
+
+  boolCellhandler = (col) => {
+    const { Profile } = this.props
+    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+  }
+
+  movementCellhandler = (col) => {
+    return PATIENTMOVEMENTTYPE.find(u => u.value === col.value) ? PATIENTMOVEMENTTYPE.find(u => u.value === col.value).Name : col.value
   }
 }

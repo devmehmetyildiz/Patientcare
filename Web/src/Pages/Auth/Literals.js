@@ -59,6 +59,10 @@ const Literals = {
 
     },
     Messages: {
+        RequestIDrequired: {
+            tr: "Sıfırlama Talebi bulunamadı",
+            en: "Reset Request not found"
+        },
         Oldpasswordrequired: {
             tr: "Eski parola gerekli",
             en: "Old password required"

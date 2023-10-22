@@ -11,6 +11,7 @@ import { GetPatientstocks, removePatientstocknotification } from "../../Redux/Pa
 import { GetPatientstockmovements, removePatientstockmovementnotification } from "../../Redux/PatientstockmovementSlice"
 import { GetUnits, removeUnitnotification } from "../../Redux/UnitSlice"
 import { GetStockdefines, removeStockdefinenotification } from "../../Redux/StockdefineSlice"
+import { GetCases, removeCasenotification } from "../../Redux/CaseSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -24,7 +25,8 @@ const mapStateToProps = (state) => ({
     Patientstocks: state.Patientstocks,
     Patientstockmovements: state.Patientstockmovements,
     Units: state.Units,
-    Stockdefines: state.Stockdefines
+    Stockdefines: state.Stockdefines,
+    Cases: state.Cases
 })
 
 const mapDispatchToProps = {
@@ -33,7 +35,7 @@ const mapDispatchToProps = {
     removeFloornotification, GetBeds, removeBednotification, GetFiles, GetPatientdefines, removePatientdefinenotification,
     removeFilenotification, GetPatients, removePatientnotification, fillPatientnotification,
     GetPatientstockmovements, removePatientstockmovementnotification, GetPatientstocks, removePatientstocknotification,
-    GetUnits, removeUnitnotification, GetStockdefines, removeStockdefinenotification
+    GetUnits, removeUnitnotification, GetStockdefines, removeStockdefinenotification, GetCases, removeCasenotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreregistrationsComplete)

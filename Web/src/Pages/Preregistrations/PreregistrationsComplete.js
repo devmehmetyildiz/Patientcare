@@ -30,12 +30,13 @@ export default class PreregistrationsComplete extends Component {
       WarehouseID: "",
       RoomID: "",
       FloorID: "",
-      BedID: ""
+      BedID: "",
+      CaseID: ""
     }
   }
 
   componentDidMount() {
-    const { GetStockdefines, GetWarehouses, GetUnits, GetPatients, GetRooms, GetFloors, GetBeds, GetFiles, GetPatientdefines, GetPatientstocks, GetPatientstockmovements } = this.props
+    const { GetStockdefines, GetWarehouses, GetUnits, GetPatients, GetRooms, GetFloors, GetBeds, GetFiles, GetPatientdefines, GetPatientstocks, GetPatientstockmovements, GetCases } = this.props
     GetPatients()
     GetStockdefines()
     GetWarehouses()
@@ -47,10 +48,12 @@ export default class PreregistrationsComplete extends Component {
     GetPatientstocks()
     GetPatientstockmovements()
     GetUnits()
+    GetCases()
   }
 
   componentDidUpdate() {
     const {
+      Cases, removeCasenotification,
       Patients, removePatientnotification,
       Warehouses, removeWarehousenotification,
       Rooms, removeRoomnotification,
@@ -77,11 +80,12 @@ export default class PreregistrationsComplete extends Component {
     Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
     Notification(Units.notifications, removeUnitnotification)
     Notification(Stockdefines.notifications, removeStockdefinenotification)
+    Notification(Cases.notifications, removeCasenotification)
 
     const isLoadingstatus = Patients.isLoading || Warehouses.isLoading || Rooms.isLoading
       || Beds.isLoading || Files.isLoading || Floors.isLoading || Patientdefines.isLoading
       || Patientstocks.isLoading || Patientstockmovements.isLoading || Stockdefines.isLoading
-      || Units.isLoading
+      || Units.isLoading || Cases.isLoading
     if (!isLoadingstatus && !this.state.isDatafetched) {
 
       let Id = match?.params?.PatientID
@@ -126,6 +130,7 @@ export default class PreregistrationsComplete extends Component {
   render() {
 
     const {
+      Cases,
       Patients,
       Warehouses,
       Rooms,
@@ -143,7 +148,7 @@ export default class PreregistrationsComplete extends Component {
     const isLoadingstatus = Patients.isLoading || Warehouses.isLoading || Rooms.isLoading
       || Beds.isLoading || Files.isLoading || Floors.isLoading || Patientdefines.isLoading
       || Patientstocks.isLoading || Patientstockmovements.isLoading || Stockdefines.isLoading
-      || Units.isLoading
+      || Units.isLoading || Cases.isLoading
     let Id = match?.params?.PatientID
     const selected_record = (Patients.list || []).find(u => u.Uuid === Id)
 
@@ -173,6 +178,11 @@ export default class PreregistrationsComplete extends Component {
     const Roomoptions = (Rooms.list || []).filter(u => u.Isactive && u.FloorID === this.context.formstates[`${this.PAGE_NAME}/FloorID`]).map(room => {
       return { key: room.Uuid, text: room.Name, value: room.Uuid }
     })
+
+    const Caseoptions = (Cases.list || []).filter(u => u.Isactive).map(casedata => {
+      return { key: casedata.Uuid, text: casedata.Name, value: casedata.Uuid }
+    })
+
     const Bedoptions = (
       validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/FloorID`]) &&
       validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/RoomID`])) ?
@@ -262,8 +272,13 @@ export default class PreregistrationsComplete extends Component {
                 {this.state.neededFilefounded.length > 0 ? <div className='flex flex-row justify-start items-center w-full mb-auto '>
                   <Form onSubmit={this.handleSubmit} className='w-full'>
                     <Form.Group widths={'equal'}>
-                      <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Warehouse[Profile.Language]} name="WarehouseID" options={Warehouseoptions} formtype="dropdown" />
                       <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Iswilltransfer[Profile.Language]} name="Iswilltransfer" formtype="checkbox" />
+                      {this.context.formstates[`${this.PAGE_NAME}/Iswilltransfer`] &&
+                        <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Warehouse[Profile.Language]} name="WarehouseID" options={Warehouseoptions} formtype="dropdown" />
+                      }
+                    </Form.Group>
+                    <Form.Group widths={'equal'}>
+                      <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Case[Profile.Language]} name="CaseID" options={Caseoptions} formtype="dropdown" />
                     </Form.Group>
                     <Form.Group widths={'equal'}>
                       <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Floor[Profile.Language]} name="FloorID" options={Flooroptions} formtype="dropdown" />
@@ -294,11 +309,12 @@ export default class PreregistrationsComplete extends Component {
     e.preventDefault()
     const { CompletePrepatients, history, fillPatientnotification, Profile } = this.props
     const data = formToObject(e.target)
-    data.WarehouseID = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
+    data.Iswilltransfer = this.context.formstates[`${this.PAGE_NAME}/Iswilltransfer`] || false
+    data.WarehouseID = data.Iswilltransfer && this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
     data.FloorID = this.context.formstates[`${this.PAGE_NAME}/FloorID`]
     data.RoomID = this.context.formstates[`${this.PAGE_NAME}/RoomID`]
     data.BedID = this.context.formstates[`${this.PAGE_NAME}/BedID`]
-    data.Iswilltransfer = this.context.formstates[`${this.PAGE_NAME}/Iswilltransfer`]
+    data.CaseID = this.context.formstates[`${this.PAGE_NAME}/CaseID`]
     let errors = []
     if (data.Iswilltransfer === true && !validator.isUUID(data.WarehouseID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Complete.Warehouserequired[Profile.Language] })
@@ -311,6 +327,9 @@ export default class PreregistrationsComplete extends Component {
     }
     if (!validator.isUUID(data.BedID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Complete.Bedrequired[Profile.Language] })
+    }
+    if (!validator.isUUID(data.CaseID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Complete.Caserequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

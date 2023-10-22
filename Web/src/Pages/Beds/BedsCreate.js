@@ -20,22 +20,24 @@ export default class BedsCreate extends Component {
   PAGE_NAME = "BedsCreate"
 
   componentDidMount() {
-    const { GetRooms } = this.props
+    const { GetRooms, GetFloors } = this.props
     GetRooms()
+    GetFloors()
   }
 
   componentDidUpdate() {
     const { Beds, removeBednotification,
-      Rooms, removeRoomnotification } = this.props
+      Rooms, Floors, removeFloornotification, removeRoomnotification } = this.props
     Notification(Beds.notification, removeBednotification)
     Notification(Rooms.notification, removeRoomnotification)
+    Notification(Floors.notification, removeFloornotification)
   }
 
   render() {
-    const { Beds, Rooms, Profile } = this.props
+    const { Beds, Rooms, Floors, Profile } = this.props
 
     const Roomsoptions = (Rooms.list || []).filter(u => u.Isactive).map(room => {
-      return { key: room.Uuid, text: room.Name, value: room.Uuid }
+      return { key: room.Uuid, text: `${room.Name} (${(Floors.list || []).find(u => u.Uuid === room.FloorID)?.Name})`, value: room.Uuid }
     })
 
 

@@ -31,26 +31,6 @@ async function GetPatientdefine(req, res, next) {
 
     try {
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: req.params.patientdefineId } });
-        try {
-            const patienttypesresponse = await axios({
-                method: 'GET',
-                url: config.services.Setting + `Patienttypes/${patientdefine.PatienttypeID}`,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            const costumertypesresponse = await axios({
-                method: 'GET',
-                url: config.services.Setting + `Costumertypes/${patientdefine.CostumertypeID}`,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            patientdefine.Patienttype = patienttypesresponse.data
-            patientdefine.Costumertype = costumertypesresponse.data
-        } catch (error) {
-            return next(requestErrorCatcher(error, 'Setting'))
-        }
         res.status(200).json(patientdefine)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

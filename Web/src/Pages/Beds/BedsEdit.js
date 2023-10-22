@@ -28,18 +28,19 @@ export default class BedsEdit extends Component {
   }
 
   componentDidMount() {
-    const { BedID, GetBed, GetRooms, match, history } = this.props
+    const { BedID, GetBed, GetRooms, GetFloors, match, history } = this.props
     let Id = BedID || match?.params?.BedID
     if (validator.isUUID(Id)) {
       GetBed(Id)
       GetRooms()
+      GetFloors()
     } else {
       history.push("/Beds")
     }
   }
 
   componentDidUpdate() {
-    const { Rooms, Beds,
+    const { Rooms, Beds, removeFloornotification, Floors,
       removeRoomnotification, removeBednotification } = this.props
     const { selected_record, isLoading } = Beds
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
@@ -52,13 +53,14 @@ export default class BedsEdit extends Component {
     }
     Notification(Beds.notifications, removeBednotification)
     Notification(Rooms.notifications, removeRoomnotification)
+    Notification(Floors.notification, removeFloornotification)
   }
 
   render() {
-    const { Beds, Rooms, Profile } = this.props
+    const { Beds, Rooms, Floors, Profile } = this.props
 
     const Roomsoptions = (Rooms.list || []).filter(u => u.Isactive).map(room => {
-      return { key: room.Uuid, text: room.Name, value: room.Uuid }
+      return { key: room.Uuid, text: `${room.Name} (${(Floors.list || []).find(u => u.Uuid === room.FloorID)?.Name})`, value: room.Uuid }
     })
 
     return (

@@ -217,7 +217,7 @@ export default class PatientsAddstock extends Component {
         fillStocknotification(error)
       })
     } else {
-      TransfertoPatient({ data, history, redirectUrl: `Patients/${Id}` })
+      TransfertoPatient({ data, history, redirectID: Id })
     }
   }
 

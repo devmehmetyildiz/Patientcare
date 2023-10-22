@@ -12,6 +12,18 @@ const messages = {
         tr: 'hasta bulunamadı',
       }
     },
+    OUTCASE_NOT_ACTIVE: {
+      code: 'OUTCASE_NOT_ACTIVE', description: {
+        en: 'Out Case Not Found',
+        tr: 'Ayrılma durumu bulunamadı',
+      }
+    },
+    INCASE_NOT_ACTIVE: {
+      code: 'INCASE_NOT_ACTIVE', description: {
+        en: 'In Case Not Found',
+        tr: 'Kurumda durumu bulunamadı',
+      }
+    },
     PATIENTDEFINE_NOT_FOUND: {
       code: 'PATIENTDEFINE_NOT_FOUND', description: {
         en: 'patient define not found',

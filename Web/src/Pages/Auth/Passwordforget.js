@@ -26,7 +26,7 @@ export default class Passwordforget extends Component {
               </div>
               <Header as='h3' textAlign='center'>
                 <br />
-                <p className='text-[#2355a0]' >StarNote Tercüme Takip</p>
+                <p className='text-[#2355a0]' >Patient Care Hasta Bakım Uygulaması</p>
               </Header>
               <Header as='h4' color='blue' textAlign='center'>
                 <p className='text-[#2355a0]' >Parolamı Unuttum</p>

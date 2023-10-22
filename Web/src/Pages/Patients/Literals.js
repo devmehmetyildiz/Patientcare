@@ -70,6 +70,10 @@ const Literals = {
             tr: 'Tablo Görünümü',
             en: 'Grid View'
         },
+        Activecase: {
+            tr: 'Aktif Durum',
+            en: 'Active Case'
+        },
         Cardscren: {
             tr: 'Kart Görünümü',
             en: 'Card View'
@@ -354,9 +358,21 @@ const Literals = {
             tr: "İlaç Ekle",
             en: "Add Medicine"
         },
+        Pageeditcaseheader: {
+            tr: "Durum Değiştir",
+            en: "Change Case"
+        },
         Pagedeleteheader: {
             tr: "Hasta Hareketi Silme",
             en: "Delete Patient Movements"
+        },
+        Pageoutheader: {
+            tr: "Hastayı Kurumdan Çıkar",
+            en: "Export Patient"
+        },
+        Pageinheader: {
+            tr: "Hastayı Kuruma Al",
+            en: "Inport Patient"
         }
     },
     Button: {
@@ -465,6 +481,14 @@ const Literals = {
         Deletecheck: {
             tr: "hastayı silmek istediğinize emin misiniz?",
             en: "patient will delete, are you sure?"
+        },
+        outcheck: {
+            tr: "hastayı kurumdan çıkartmak istediğinize eminmisiniz?",
+            en: "patient will go out from organization, are you sure?"
+        },
+        incheck: {
+            tr: "hastayı kuruma girdirmek istediğinize eminmisiniz?",
+            en: "patient will go in to organization, are you sure?"
         },
         Yes: {
             tr: "EVET",

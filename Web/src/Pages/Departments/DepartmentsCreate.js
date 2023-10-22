@@ -73,7 +73,7 @@ export default class DepartmentsCreate extends Component {
 
     const { AddDepartments, history, fillDepartmentnotification, Stations, Profile } = this.props
     const data = formToObject(e.target)
-    data.Ishavepatients = this.context.formstates[`${this.PAGE_NAME}/Ishavepatients`]
+    data.Ishavepatients = this.context.formstates[`${this.PAGE_NAME}/Ishavepatients`] || false
     data.Stations = this.context.formstates[`${this.PAGE_NAME}/Stations`].map(id => {
       return (Stations.list || []).find(u => u.Uuid === id)
     })

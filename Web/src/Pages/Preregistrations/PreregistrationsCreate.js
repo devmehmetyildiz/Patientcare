@@ -111,7 +111,7 @@ export default class PreregistrationsCreate extends Component {
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Mothername[Profile.Language]} name="Mothername" />
                   </Form.Group>
                   <Form.Group widths={'equal'}>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CountryID[Profile.Language]} name="CountryID" required />
+                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CountryID[Profile.Language]} name="CountryID" required  maxLength={11} validationfunc={this.validateTcNumber} validationmessage={"Geçerli Bir Tc Giriniz!"} />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Dateofbirth[Profile.Language]} name="Dateofbirth" type="date" />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Placeofbirth[Profile.Language]} name="Placeofbirth" />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Gender[Profile.Language]} name="Gender" options={Genderoptions} formtype="dropdown" />
@@ -215,5 +215,19 @@ export default class PreregistrationsCreate extends Component {
       AddPatients({ data: response, history, url: "/Preregistrations" })
     }
   }
+
+  validateTcNumber = (tcNumber) => {
+    if (/^[1-9][0-9]{10}$/.test(tcNumber)) {
+      const numberArray = tcNumber.split('').map(Number);
+      const lastDigit = numberArray.pop();
+      const sum = numberArray.reduce((acc, current, index) => acc + current, 0);
+      const tenthDigit = sum % 10;
+
+      if ((tenthDigit === lastDigit && numberArray[0] !== 0) || (sum % 10 === 0 && lastDigit === 0)) {
+        return true;
+      }
+    }
+    return false;
+  };
 }
 PreregistrationsCreate.contextType = FormContext

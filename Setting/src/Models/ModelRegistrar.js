@@ -1,6 +1,6 @@
 const casedepartmentModel = require('./CasedepartmentModel')
-const caseModel = require('./CaseModel')
 const checkperiodModel = require('./CheckperiodModel')
+const caseModel = require('./CaseModel')
 const checkperiodperiodModel = require('./CheckperiodperiodModel')
 const costumertypedepartmentModel = require('./CostumertypedepartmentModel')
 const costumertypeModel = require('./CostumertypeModel')
@@ -23,9 +23,9 @@ const roomModel = require('./RoomModel')
 
 module.exports = {
     floorModel,
+    caseModel,
     bedModel,
     roomModel,
-    caseModel,
     casedepartmentModel,
     checkperiodModel,
     checkperiodperiodModel,

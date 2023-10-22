@@ -67,27 +67,10 @@ async function AddPatient(req, res, next) {
         PatientdefineID
     } = req.body
 
-    /*  if (!validator.isString(Patientdefine.Firstname) && !validator.isUUID(Patientdefine.Uuid)) {
-         validationErrors.push(messages.VALIDATION_ERROR.FIRSTNAME_REQUIRED)
-     }
-     if (!validator.isString(Patientdefine.Lastname) && !validator.isUUID(Patientdefine.Uuid)) {
-         validationErrors.push(messages.VALIDATION_ERROR.LASTNAME_REQUIRED)
-     } */
+
     if (!validator.isString(Patientdefine.CountryID) && !validator.isUUID(Patientdefine.Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
     }
-    /*  if (!validator.isString(Patientdefine.Fathername) && !validator.isUUID(Patientdefine.Uuid)) {
-         validationErrors.push(messages.VALIDATION_ERROR.FATHERNAME_REQUIRED)
-     }
-     if (!validator.isString(Patientdefine.Mothername) && !validator.isUUID(Patientdefine.Uuid)) {
-         validationErrors.push(messages.VALIDATION_ERROR.MOTHERNAME_REQUIRED)
-     }
-     if (!validator.isString(Patientdefine.Placeofbirth) && !validator.isUUID(Patientdefine.Uuid)) {
-         validationErrors.push(messages.VALIDATION_ERROR.PLACEOFBIRTH_REQUIRED)
-     }
-     if (!validator.isString(Patientdefine.Gender) && !validator.isUUID(Patientdefine.Uuid)) {
-         validationErrors.push(messages.VALIDATION_ERROR.GENDER_REQUIRED)
-     } */
     if (Object.keys(Patientdefine).length <= 0 && !validator.isUUID(PatientdefineID)) {
         validationErrors.push(messages.ERROR.PATIENTDEFINE_NOT_FOUND)
     }
@@ -145,7 +128,7 @@ async function AddPatient(req, res, next) {
             IsDeactive: false,
             IsTodoneed: false,
             IsTodocompleted: false,
-            IsComplated: false,
+            IsComplated: true,
             Iswaitingactivation: false,
             Isactive: true
         }, { transaction: t })
@@ -218,12 +201,19 @@ async function Completeprepatient(req, res, next) {
         }, { where: { Uuid: patient.Uuid } }, { transaction: t })
 
 
+        const lastpatientmovement = await db.patientmovementModel.findOne({
+            order: [['Id', 'DESC']],
+            where: {
+                PatientID: patient?.Uuid
+            }
+        });
+
         let patientmovementuuid = uuid()
 
         await db.patientmovementModel.create({
             ...req.body,
             Uuid: patientmovementuuid,
-            OldPatientmovementtype: 0,
+            OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
             Patientmovementtype: 1,
             NewPatientmovementtype: 1,
             Createduser: "System",
@@ -233,7 +223,7 @@ async function Completeprepatient(req, res, next) {
             IsDeactive: false,
             IsTodoneed: false,
             IsTodocompleted: false,
-            IsComplated: false,
+            IsComplated: true,
             Iswaitingactivation: false,
             Isactive: true
         }, { transaction: t })
@@ -303,7 +293,7 @@ async function UpdatePatient(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const patient = db.patientModel.findOne({ where: { Uuid: Uuid } })
+        const patient = await db.patientModel.findOne({ where: { Uuid: Uuid } })
         if (!patient) {
             return next(createNotfounderror([messages.ERROR.PATIENTDEFINE_NOT_FOUND], req.language))
         }
@@ -316,6 +306,49 @@ async function UpdatePatient(req, res, next) {
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatients(req, res, next)
+}
+
+async function UpdatePatientcase(req, res, next) {
+
+    let validationErrors = []
+    const {
+        PatientID,
+        CaseID,
+    } = req.body
+
+    if (!validator.isUUID(PatientID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+    }
+    if (!validator.isUUID(CaseID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const patient =await db.patientModel.findOne({ where: { Uuid: PatientID } })
+        if (!patient) {
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
+        }
+        if (patient.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.patientModel.update({
+            ...patient,
+            CaseID: CaseID,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: PatientID } }, { transaction: t })
 
         await t.commit()
     } catch (error) {
@@ -341,7 +374,7 @@ async function DeletePatient(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const patient = db.patientModel.findOne({ where: { Uuid: Uuid } })
+        const patient =await db.patientModel.findOne({ where: { Uuid: Uuid } })
         if (!patient) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
@@ -358,6 +391,179 @@ async function DeletePatient(req, res, next) {
     GetPatients(req, res, next)
 }
 
+async function OutPatient(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.patientId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const patient = await db.patientModel.findOne({ where: { Uuid: Uuid } })
+        if (!patient) {
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
+        }
+        if (patient.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+        }
+        let cases = []
+        try {
+            const caseresponse = await axios({
+                method: 'GET',
+                url: config.services.Setting + "Cases",
+                headers: {
+                    session_key: config.session.secret
+                }
+            })
+            cases = caseresponse.data
+        } catch (error) {
+            return next(requestErrorCatcher(error, 'Setting'))
+        }
+
+        const outCase = cases.find(u => u.Patientstatus === 3)
+        if (!outCase) {
+            return next(createNotfounderror([messages.ERROR.OUTCASE_NOT_ACTIVE], req.language))
+        }
+
+
+        await db.patientModel.update({
+            ...patient,
+            CaseID: outCase.Uuid,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        const lastpatientmovement = await db.patientmovementModel.findOne({
+            order: [['Id', 'DESC']],
+            where: {
+                PatientID: patient?.Uuid
+            }
+        });
+
+        let patientmovementuuid = uuid()
+
+        await db.patientmovementModel.create({
+            ...req.body,
+            Uuid: patientmovementuuid,
+            OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
+            Patientmovementtype: 3,
+            NewPatientmovementtype: 3,
+            Createduser: "System",
+            Createtime: new Date(),
+            PatientID: Uuid,
+            Movementdate: new Date(),
+            IsDeactive: false,
+            IsTodoneed: false,
+            IsTodocompleted: false,
+            IsComplated: true,
+            Iswaitingactivation: false,
+            Isactive: true
+        }, { transaction: t })
+
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatient(req, res, next)
+}
+
+async function InPatient(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.patientId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const patient = await db.patientModel.findOne({ where: { Uuid: Uuid } })
+        if (!patient) {
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
+        }
+        if (patient.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+        }
+        let cases = []
+        try {
+            const caseresponse = await axios({
+                method: 'GET',
+                url: config.services.Setting + "Cases",
+                headers: {
+                    session_key: config.session.secret
+                }
+            })
+            cases = caseresponse.data
+        } catch (error) {
+            return next(requestErrorCatcher(error, 'Setting'))
+        }
+
+        const inCase = cases.find(u => u.Patientstatus === 1)
+        if (!inCase) {
+            return next(createNotfounderror([messages.ERROR.INCASE_NOT_ACTIVE], req.language))
+        }
+
+
+        await db.patientModel.update({
+            ...patient,
+            CaseID: inCase.Uuid,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        const lastpatientmovement = await db.patientmovementModel.findOne({
+            order: [['Id', 'DESC']],
+            where: {
+                PatientID: patient?.Uuid
+            }
+        });
+
+        let patientmovementuuid = uuid()
+
+        await db.patientmovementModel.create({
+            ...req.body,
+            Uuid: patientmovementuuid,
+            OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
+            Patientmovementtype: 1,
+            NewPatientmovementtype: 1,
+            Createduser: "System",
+            Createtime: new Date(),
+            PatientID: Uuid,
+            Movementdate: new Date(),
+            IsDeactive: false,
+            IsTodoneed: false,
+            IsTodocompleted: false,
+            IsComplated: true,
+            Iswaitingactivation: false,
+            Isactive: true
+        }, { transaction: t })
+
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatient(req, res, next)
+}
+
+
 module.exports = {
     GetPatients,
     Completeprepatient,
@@ -366,6 +572,9 @@ module.exports = {
     GetPatient,
     AddPatient,
     UpdatePatient,
+    UpdatePatientcase,
     DeletePatient,
-    Editpatientstocks
+    Editpatientstocks,
+    OutPatient,
+    InPatient
 }

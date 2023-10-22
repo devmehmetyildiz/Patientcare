@@ -74,7 +74,7 @@ export default class Patientmedicines extends Component {
       { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
-    const metaKey = "Patientstocks"
+    const metaKey = "Patientmedicines"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
@@ -92,7 +92,7 @@ export default class Patientmedicines extends Component {
       return {
         ...item,
         change: <Link to={`/Patientstockmovements/Create?PatientstockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
-        edit: <Link to={`/Patientstocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        edit: <Link to={`/Patientmedicines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
           handleSelectedPatientstock(item)
           handleApprovemodal(true)
@@ -112,13 +112,13 @@ export default class Patientmedicines extends Component {
               <Grid columns='2' >
                 <GridColumn width={8} className="">
                   <Breadcrumb size='big'>
-                    <Link to={"/Patientstocks"}>
+                    <Link to={"/Patientmedicines"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
                 <GridColumn width={8} >
-                  <Link to={"/Patientstocks/Create"}>
+                  <Link to={"/Patientmedicines/Create"}>
                     <Button color='blue' floated='right' className='list-right-green-button'>
                       {Literals.Page.Pagecreateheader[Profile.Language]}
                     </Button>

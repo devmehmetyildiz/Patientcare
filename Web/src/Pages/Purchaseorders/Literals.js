@@ -31,6 +31,10 @@ const Literals = {
             tr: 'Ürünler',
             en: 'Stocks'
         },
+        Medicinescreen: {
+            tr: 'İlaçlar',
+            en: 'Medicines'
+        },
         Purchaseorders: {
             tr: 'Sipariş Bilgileri',
             en: 'Purchase Order Knowledge'

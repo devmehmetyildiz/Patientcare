@@ -158,25 +158,15 @@ async function AddPatientstock(req, res, next) {
     let validationErrors = []
     const {
         PatientID,
-        Isonusage,
-        Source,
         StockdefineID,
         DepartmentID,
         Skt,
         Barcodeno,
-        Status,
-        Order,
         Ismedicine
     } = req.body
 
     if (!validator.isUUID(PatientID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
-    }
-    if (!validator.isBoolean(Isonusage)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISONUSAGE_REQUIRED)
-    }
-    if (!validator.isString(Source)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SOURCE_REQUIRED)
     }
     if (!validator.isUUID(StockdefineID)) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
@@ -189,12 +179,6 @@ async function AddPatientstock(req, res, next) {
     }
     if (Ismedicine && !validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
-    }
-    if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED)
-    }
-    if (!validator.isNumber(Order)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -244,8 +228,6 @@ async function UpdatePatientstock(req, res, next) {
         DepartmentID,
         Skt,
         Barcodeno,
-        Status,
-        Order,
         Uuid,
         Ismedicine
     } = req.body
@@ -264,12 +246,6 @@ async function UpdatePatientstock(req, res, next) {
     }
     if (Ismedicine && !validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
-    }
-    if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED)
-    }
-    if (!validator.isNumber(Order)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)

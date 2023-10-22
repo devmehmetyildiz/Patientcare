@@ -44,6 +44,18 @@ const Literals = {
             tr: 'Departmanlar',
             en: 'Departments'
         },
+        Patientstatus: {
+            tr: 'Hasta Durum Türü',
+            en: 'Patient Case Type'
+        },
+        Iscalculateprice: {
+            tr: 'Maliyet Hesaplanacak mı?',
+            en: 'Is Price calculate'
+        },
+        Isroutinework: {
+            tr: 'Rutinler Çalışacak mı?',
+            en: 'Is Routine Work'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'
@@ -131,6 +143,10 @@ const Literals = {
             tr: "Durumn türü Gerekli",
             en: "Case status Required"
         },
+        Patientstatusrequired: {
+            tr: "Hasta durum türü Gerekli",
+            en: "Patient case status Required"
+        },
         Casecolorrequired: {
             tr: "Durum Rengi Gerekli",
             en: "Case color Required"
@@ -139,7 +155,14 @@ const Literals = {
             tr: "Durum Rengi Gerekli",
             en: "Case color Required"
         },
-
+        Yes: {
+            tr: "EVET",
+            en: "YES"
+        },
+        No: {
+            tr: "HAYIR",
+            en: "NO"
+        }
     }
 }
 

@@ -18,7 +18,7 @@ export const logIn = createAsyncThunk(
                 code: 'Elder Camp',
                 description: 'Elder camp giriş yapıldı',
             }));
-            redirectUrl ? window.location = (redirectUrl) : window.location = ('Orders')
+            redirectUrl ? window.location = (redirectUrl) : window.location = ('/')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -76,9 +76,9 @@ export const Resetpassword = createAsyncThunk(
             dispatch(fillnotification({
                 type: 'Success',
                 code: 'Elder Camp',
-                description: 'Password Changed Successfully',
+                description: 'Password Reseted Successfully',
             }));
-            history && history.goBack()
+            history && history.push('/Login')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -93,6 +93,20 @@ export const GetActiveUser = createAsyncThunk(
     async (_, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Userrole, 'Users/GetActiveUsername');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const GetPasswordresetuser = createAsyncThunk(
+    'Profile/GetPasswordresetuser',
+    async (guid, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Auth, `Password/Getrequestbyuser/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -216,7 +230,8 @@ export const ProfileSlice = createSlice({
         tablemeta: [],
         Language: "tr",
         resetpasswordStatus: false,
-        passwordrequestsended: false
+        passwordrequestsended: false,
+        resetrequestuser: {}
     },
     reducers: {
         fillnotification: (state, action) => {
@@ -284,6 +299,19 @@ export const ProfileSlice = createSlice({
                 state.username = action.payload
             })
             .addCase(GetActiveUser.rejected, (state, action) => {
+                state.isLogging = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetPasswordresetuser.pending, (state) => {
+                state.isLogging = true;
+                state.errMsg = null;
+                state.resetrequestuser = {}
+            })
+            .addCase(GetPasswordresetuser.fulfilled, (state, action) => {
+                state.isLogging = false;
+                state.resetrequestuser = action.payload
+            })
+            .addCase(GetPasswordresetuser.rejected, (state, action) => {
                 state.isLogging = false;
                 state.errMsg = action.error.message;
             })

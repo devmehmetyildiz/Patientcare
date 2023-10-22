@@ -33,6 +33,14 @@ const Literals = {
         en: 'Patient Entered Organisation successfully',
         tr: 'Hasta Başarı ile Kuruma Girdi'
     },
+    outdescription: {
+        en: 'Patient left the Organisation successfully',
+        tr: 'Hasta Başarı ile Kurumdan ayrıldı'
+    },
+    indescription: {
+        en: 'Patient Entered Organisation successfully',
+        tr: 'Hasta Başarı ile Kuruma Girdi'
+    },
 }
 
 export const GetPatients = createAsyncThunk(
@@ -125,6 +133,29 @@ export const EditPatients = createAsyncThunk(
         }
     }
 );
+
+export const Editpatientcase = createAsyncThunk(
+    'Patients/EditPatients',
+    async ({ data, history, redirectUrl, redirectID }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientcase", data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const EditPatientstocks = createAsyncThunk(
     'Patients/EditPatientstocks',
     async ({ data, history, url }, { dispatch, getState }) => {
@@ -196,6 +227,47 @@ export const DeletePatients = createAsyncThunk(
     }
 );
 
+export const OutPatients = createAsyncThunk(
+    'Patients/OutPatients',
+    async (data, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Business, `${ROUTES.PATIENT}/OutPatient/${data.Uuid}`);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.outdescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+export const InPatients = createAsyncThunk(
+    'Patients/InPatients',
+    async (data, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Business, `${ROUTES.PATIENT}/InPatient/${data.Uuid}`);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.indescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const PatientsSlice = createSlice({
     name: 'Patients',
     initialState: {
@@ -210,6 +282,8 @@ export const PatientsSlice = createSlice({
         selected_patient: {},
         isDeletemodalopen: false,
         isCompletemodalopen: false,
+        isOutmodalopen: false,
+        isInmodalopen: false,
     },
     reducers: {
         handleSelectedPatient: (state, action) => {
@@ -231,6 +305,12 @@ export const PatientsSlice = createSlice({
         },
         handleCompletemodal: (state, action) => {
             state.isCompletemodalopen = action.payload
+        },
+        handleOutmodal: (state, action) => {
+            state.isOutmodalopen = action.payload
+        },
+        handleInmodal: (state, action) => {
+            state.isInmodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -328,6 +408,28 @@ export const PatientsSlice = createSlice({
             .addCase(DeletePatients.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
+            })
+            .addCase(OutPatients.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(OutPatients.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(OutPatients.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(InPatients.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(InPatients.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.selected_record = action.payload;
+            })
+            .addCase(InPatients.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
             });
     },
 });
@@ -338,7 +440,9 @@ export const {
     removePatientnotification,
     setPatient,
     handleDeletemodal,
-    handleCompletemodal
+    handleCompletemodal,
+    handleInmodal,
+    handleOutmodal
 } = PatientsSlice.actions;
 
 export default PatientsSlice.reducer;

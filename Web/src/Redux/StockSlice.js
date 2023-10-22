@@ -100,7 +100,7 @@ export const AddStocks = createAsyncThunk(
 
 export const TransfertoPatient = createAsyncThunk(
     'Stocks/TransfertoPatient',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -115,7 +115,7 @@ export const TransfertoPatient = createAsyncThunk(
                 code: 'PatientsAddstock',
                 description: '',
             }));
-            history && history.push(redirectUrl ? redirectUrl : '/Patients');
+            history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -127,7 +127,7 @@ export const TransfertoPatient = createAsyncThunk(
 
 export const TransferfromPatient = createAsyncThunk(
     'Stocks/TransferfromPatient',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -142,7 +142,7 @@ export const TransferfromPatient = createAsyncThunk(
                 code: 'PatientsAddmedicine',
                 description: '',
             }));
-            history && history.push(redirectUrl ? redirectUrl : '/Patients');
+            history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

@@ -43,13 +43,18 @@ export default function WarehousesList({ Data, Columns, Stocks, initialConfig, P
         { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
         { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => stockdefineCellhandler(col) },
         { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => departmentCellhandler(col) },
+        { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true },
+        { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
+      ]
+     
+      const medicinecolumns = [
+        { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
+        { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => stockdefineCellhandler(col) },
+        { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => departmentCellhandler(col) },
         { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
         { Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: Literals.Columns.Maxamount[Profile.Language], accessor: 'Maxamount', sortable: true, canGroupBy: true, canFilter: true },
         { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: Literals.Columns.Usageamount[Profile.Language], accessor: 'Usageamount', sortable: true, canGroupBy: true, canFilter: true },
         { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
-        { Header: Literals.Columns.Source[Profile.Language], accessor: 'Source', sortable: true, canGroupBy: true, canFilter: true },
       ]
       return <React.Fragment>
         <div className='w-full p-4'>
@@ -62,7 +67,7 @@ export default function WarehousesList({ Data, Columns, Stocks, initialConfig, P
         <div className='w-full p-4'>
           <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>{Literals.Columns.Medicines[Profile.Language]}</Header>
           <DataTable
-            Columns={stockcolumns}
+            Columns={medicinecolumns}
             Data={decoratedStocks.sort((a, b) => a.Order - b.Order).filter(u => u.Ismedicine)}
           />
         </div>

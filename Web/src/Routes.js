@@ -66,6 +66,7 @@ const PatientsAddstock = lazy(() => import('./Containers/Patients/PatientsAddsto
 const PatientsAddmedicine = lazy(() => import('./Containers/Patients/PatientsAddmedicine'));
 const PatientsRemovestock = lazy(() => import('./Containers/Patients/PatientsRemovestock'));
 const PatientsRemovemedicine = lazy(() => import('./Containers/Patients/PatientsRemovemedicine'));
+const PatientsEditcase = lazy(() => import('./Containers/Patients/PatientsEditcase'));
 
 const Patientstocks = lazy(() => import('./Containers/Patientstocks/Patientstocks'));
 const PatientstocksCreate = lazy(() => import('./Containers/Patientstocks/PatientstocksCreate'));
@@ -155,6 +156,7 @@ const FloorsEdit = lazy(() => import('./Containers/Floors/FloorsEdit'));
 const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
 const PasswordChange = lazy(() => import('./Containers/Auth/PasswordChange'));
 const Passwordforget = lazy(() => import('./Containers/Auth/Passwordforget'));
+const PasswordReset = lazy(() => import('./Containers/Auth/PasswordReset'));
 const Home = lazy(() => import('./Pages/Home'));
 
 
@@ -220,6 +222,7 @@ class Routes extends Component {
       { exact: true, path: "/Patients/:PatientID/Addmedicine", auth: true, component: PatientsAddmedicine },
       { exact: true, path: "/Patients/:PatientID/Removestock", auth: true, component: PatientsRemovestock },
       { exact: true, path: "/Patients/:PatientID/Removemedicine", auth: true, component: PatientsRemovemedicine },
+      { exact: true, path: "/Patients/:PatientID/Editcase", auth: true, component: PatientsEditcase },
       { exact: true, path: "/Warehouses", auth: true, component: Warehouses },
       { exact: true, path: "/Warehouses/Create", auth: true, component: WarehousesCreate },
       { exact: true, path: "/Warehouses/:WarehouseID/Edit", auth: true, component: WarehousesEdit },
@@ -280,6 +283,7 @@ class Routes extends Component {
       { exact: true, path: "/Preregistrations/:PatientID/Complete", auth: true, component: PreregistrationsComplete },
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange },
+      { exact: true, path: "/PasswordReset/:RequestID", auth: false, component: PasswordReset },
       { exact: true, path: "/Forgetpassword", auth: false, component: Passwordforget }
     ]
 

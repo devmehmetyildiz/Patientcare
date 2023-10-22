@@ -5,8 +5,10 @@ const Routes = [
     { method: 'get', path: '/Patients', controller: 'Patient', action: 'GetPatients' },
     { method: 'post', path: '/Patients', controller: 'Patient', action: 'AddPatient' },
     { method: 'put', path: '/Patients/Preregistrations/Editpatientstocks', controller: 'Patient', action: 'Editpatientstocks' },
-    { method: 'put', path: '/Patients/Preregistrations/Complete', controller: 'Patient', action: 'Completeprepatient' },
+    { method: 'put', path: '/Patients/OutPatient/:patientId', controller: 'Patient', action: 'OutPatient' },
+    { method: 'put', path: '/Patients/InPatient/:patientId', controller: 'Patient', action: 'InPatient' },
     { method: 'put', path: '/Patients/Preregistrations/Editstock', controller: 'Patient', action: 'Completeprepatient' },
+    { method: 'put', path: '/Patients/UpdatePatientcase', controller: 'Patient', action: 'UpdatePatientcase' },
     { method: 'put', path: '/Patients', controller: 'Patient', action: 'UpdatePatient' },
     { method: 'delete', path: '/Patients/:patientId', controller: 'Patient', action: 'DeletePatient' },
 

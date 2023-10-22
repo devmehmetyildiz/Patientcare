@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PatientsDetail from '../../Pages/Patients/PatientsDetail'
-import { GetPatient, removePatientnotification, setPatient, handleDeletemodal, handleSelectedPatient } from "../../Redux/PatientSlice"
+import { GetPatient, removePatientnotification, setPatient, handleDeletemodal, handleSelectedPatient,handleInmodal,handleOutmodal } from "../../Redux/PatientSlice"
 import { GetPatientdefines, removePatientdefinenotification } from "../../Redux/PatientdefineSlice"
 import { GetCases, removeCasenotification } from "../../Redux/CaseSlice"
 import { GetCostumertypes, removeCostumertypenotification } from "../../Redux/CostumertypeSlice"
@@ -40,7 +40,7 @@ const mapDispatchToProps = {
     GetFloors, removeFloornotification, GetRooms, removeRoomnotification, GetBeds, removeBednotification,
     GetPatientstocks, removePatientstocknotification, GetStockdefines, removeStockdefinenotification, GetUnits,
     removeUnitnotification, GetPatientmovements, removePatientmovementnotification, GetFiles, removeFilenotification,
-    GetPatientstockmovements, removePatientstockmovementnotification
+    GetPatientstockmovements, removePatientstockmovementnotification,handleInmodal,handleOutmodal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsDetail)

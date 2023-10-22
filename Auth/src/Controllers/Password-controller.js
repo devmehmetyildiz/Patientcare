@@ -56,7 +56,7 @@ async function Createrequest(req, res, next) {
       Emailconfirmed: false,
       Newpassword: null,
       Oldpassword: null,
-      Userfetchedcount: 1,
+      Userfetchedcount: 0,
       Createduser: 'System',
       Createtime: new Date(),
       Isactive: true
@@ -89,6 +89,65 @@ async function Createrequest(req, res, next) {
   }
 }
 
+async function Getrequestbyuser(req, res, next) {
+
+  let validationErrors = []
+  if (req.params.requestId === undefined) {
+    validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+  }
+  if (!validator.isUUID(req.params.requestId)) {
+    validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+  }
+  if (validationErrors.length > 0) {
+    return next(createValidationError(validationErrors, req.language))
+  }
+  try {
+    const request = await db.passwordrefreshrequestModel.findOne({ where: { Uuid: req.params.requestId } })
+    if (!request) {
+      return next(createNotfounderror([messages.ERROR.REQUEST_NOT_FOUND], req.language))
+    }
+    if (!request.Isactive) {
+      return next(createNotfounderror([messages.ERROR.REQUEST_NOT_ACTIVE], req.language))
+    }
+
+    if (request.Userfetchedcount > 1) {
+      return next(createAutherror([messages.ERROR.RESET_REQUEST_REJECTED], req.language))
+    }
+
+    const Datenow = new Date(request.Createtime);
+    Datenow.setDate(Datenow.getDate() + 1);
+
+    if (request.Createtime > Datenow) {
+      return next(createAutherror([messages.ERROR.RESET_REQUEST_ENDED], req.language))
+    }
+
+    await db.passwordrefreshrequestModel.update({
+      ...request,
+      Userfetchedcount: request.Userfetchedcount + 1,
+      Updateduser: 'System',
+      Updatetime: new Date()
+    }, { where: { Uuid: request.Uuid } })
+
+    try {
+      const userresponse = await axios({
+        method: 'GET',
+        url: config.services.Userrole + `Users/${request.UserID}`,
+        headers: {
+          session_key: config.session.secret
+        }
+      })
+      const user = userresponse.data
+      user.PasswordHash && delete user.PasswordHash
+      res.status(200).json(user)
+    } catch (error) {
+      next(requestErrorCatcher(error, 'Userrole'))
+    }
+  } catch (error) {
+    next(sequelizeErrorCatcher(error))
+  }
+}
+
+
 async function Validateresetrequest(req, res, next) {
   let validationErrors = []
   if (!req.params.requestId) {
@@ -107,13 +166,21 @@ async function Validateresetrequest(req, res, next) {
       return next(createNotfounderror([messages.ERROR.REQUEST_NOT_ACTIVE], req.language))
     }
 
-    if (request.Userfetchedcount >= 0 || request.Emailconfirmed >= 0) {
+    if (request.Userfetchedcount > 0 || request.Emailconfirmed > 0) {
       return next(createAutherror([messages.ERROR.RESET_REQUEST_REJECTED], req.language))
+    }
+
+    const Datenow = new Date(request.Createtime);
+    Datenow.setDate(Datenow.getDate() + 1);
+
+    if (request.Createtime > Datenow) {
+      return next(createAutherror([messages.ERROR.RESET_REQUEST_ENDED], req.language))
     }
 
     await db.passwordrefreshrequestModel.update({
       ...request,
       Emailconfirmed: true,
+      Userfetchedcount: request.Userfetchedcount + 1,
       Updateduser: 'System',
       Updatetime: new Date()
     }, { where: { Uuid: request.Uuid } })
@@ -124,7 +191,7 @@ async function Validateresetrequest(req, res, next) {
   }
 }
 
-async function Changepassword(req, res, next) {
+async function Resetpassword(req, res, next) {
 
   const {
     Password,
@@ -171,33 +238,41 @@ async function Changepassword(req, res, next) {
     } catch (error) {
       return next(requestErrorCatcher(error, 'Userrole'))
     }
+    const hash = await bcrypt.hash(Password, usersalt.Salt)
 
-    const hash = bcrypt.hash(Password, usersalt.Salt)
     try {
       await axios({
         method: 'PUT',
-        url: config.services.Userrole + 'Users',
+        url: config.services.Userrole + 'Users/UpdateUsermeta',
         headers: {
           session_key: config.session.secret
         },
         data: {
-          ...userresponse,
+          ...user,
           PasswordHash: hash
         }
       })
+
     } catch (error) {
       return next(requestErrorCatcher(error, 'Userrole'))
     }
+    await db.passwordrefreshrequestModel.update({
+      ...request,
+      Isactive: false,
+      Deleteduser: 'System',
+      Deletetime: new Date()
+    }, { where: { Uuid: request.Uuid } })
 
   } catch (error) {
     return next(sequelizeErrorCatcher(error))
   }
-  res.status(200)
+  res.status(200).json({ message: "success" })
 }
 
 
 module.exports = {
   Createrequest,
   Validateresetrequest,
-  Changepassword
+  Resetpassword,
+  Getrequestbyuser
 }

@@ -85,6 +85,12 @@ const messages = {
         tr: 'Sıfırlama Talebi zaten kullanılmış',
       }
     },
+    RESET_REQUEST_ENDED: {
+      code: 'RESET_REQUEST_ENDED', description: {
+        en: 'Reset request is out of date',
+        tr: 'Sıfırlama Talebinin süresi geçti',
+      }
+    },
   },
   VALIDATION_ERROR: {
     NAME_REQUIRED: {

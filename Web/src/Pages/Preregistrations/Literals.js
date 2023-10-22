@@ -142,9 +142,13 @@ const Literals = {
             tr: 'Yatak',
             en: 'Bed'
         },
+        Case: {
+            tr: 'Durum',
+            en: 'Case'
+        },
         Iswilltransfer: {
-            tr: 'Transfer Edilicek mi?',
-            en: 'Will Transfer?'
+            tr: 'Ürünler Ambara Transfer Edilicek mi?',
+            en: 'Products Will to warehouse Transfer?'
         },
         Warehouserequired: {
             tr: 'Ambar Gerekli',
@@ -161,6 +165,10 @@ const Literals = {
         Roomrequired: {
             tr: 'Oda Gerekli',
             en: 'Room Required'
+        },
+        Caserequired: {
+            tr: 'Durum Gerekli',
+            en: 'Case Required'
         },
     },
     Columns: {

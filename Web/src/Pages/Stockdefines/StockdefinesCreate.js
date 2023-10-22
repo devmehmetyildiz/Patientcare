@@ -88,7 +88,7 @@ export default class StockdefinesCreate extends Component {
     const data = formToObject(e.target)
     data.UnitID = this.context.formstates[`${this.PAGE_NAME}/UnitID`]
     data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.Ismedicine = this.context.formstates[`${this.PAGE_NAME}/Ismedicine`]
+    data.Ismedicine = this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] || false
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })

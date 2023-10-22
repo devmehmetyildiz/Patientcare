@@ -19,6 +19,15 @@ module.exports = sequelize.define('caseModel', {
     CaseStatus: {
         type: Sequelize.INTEGER
     },
+    Patientstatus: {
+        type: Sequelize.INTEGER
+    },
+    Iscalculateprice: {
+        type: Sequelize.BOOLEAN
+    },
+    Isroutinework: {
+        type: Sequelize.BOOLEAN
+    },
     Createduser: {
         type: Sequelize.STRING
     },

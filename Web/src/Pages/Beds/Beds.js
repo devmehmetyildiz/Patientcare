@@ -17,15 +17,17 @@ import BedsDelete from '../../Containers/Beds/BedsDelete'
 export default class Beds extends Component {
 
   componentDidMount() {
-    const { GetBeds, GetRooms } = this.props
+    const { GetBeds, GetRooms, GetFloors } = this.props
     GetBeds()
     GetRooms()
+    GetFloors()
   }
 
   componentDidUpdate() {
-    const { Beds, removeBednotification, Rooms, removeRoomnotification } = this.props
+    const { Beds, removeBednotification, Rooms, removeRoomnotification, Floors, removeFloornotification } = this.props
     Notification(Beds.notifications, removeBednotification)
     Notification(Rooms.notifications, removeRoomnotification)
+    Notification(Floors.notifications, removeFloornotification)
   }
 
   render() {
@@ -105,12 +107,13 @@ export default class Beds extends Component {
   }
 
   roomCellhandler = (col) => {
-    const { Rooms } = this.props
+    const { Rooms, Floors } = this.props
     if (Rooms.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
       const room = (Rooms.list || []).find(u => u.Uuid === col.value)
-      return room?.Name
+      const floor = (Floors.list || []).find(u => u.Uuid === room?.FloorID)
+      return `${room?.Name} (${floor?.Name})`
     }
 
   }

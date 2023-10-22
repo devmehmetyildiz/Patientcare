@@ -14,6 +14,7 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
 export default class CasesEdit extends Component {
 
   PAGE_NAME = 'CasesEdit'
@@ -73,6 +74,24 @@ export default class CasesEdit extends Component {
       }
     ]
 
+    const patientcasesOptions = PATIENTMOVEMENTTYPE.map(u => {
+      return {
+        key: u.value,
+        text: u.Name,
+        value: u.value
+      }
+    })
+
+    const ispatientdepartmentselected = (this.context.formstates[`${this.PAGE_NAME}/Departments`] || []).map(id => {
+      let isHave = false
+      const department = (Departments.list || []).find(u => u.Uuid === id)
+      if (department && department.Ishavepatients) {
+        isHave = true
+      }
+      console.log('isHave: ', isHave);
+      return isHave
+    }).filter(u => u).length > 0
+    
     return (
       Cases.isLoading || Cases.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -99,6 +118,12 @@ export default class CasesEdit extends Component {
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" />
               </Form.Group>
+              {ispatientdepartmentselected &&
+                <Form.Group widths='equal'>
+                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patientstatus[Profile.Language]} name="Patientstatus" options={patientcasesOptions} formtype="dropdown" />
+                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Iscalculateprice[Profile.Language]} name="Iscalculateprice" options={Departmentoptions} formtype="checkbox" />
+                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isroutinework[Profile.Language]} name="Isroutinework" options={Departmentoptions} formtype="checkbox" />
+                </Form.Group>}
               <Footerwrapper>
                 {history && <Link to="/Cases">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -117,7 +142,20 @@ export default class CasesEdit extends Component {
 
     const { EditCases, history, fillCasenotification, Departments, Cases, Profile } = this.props
     const data = formToObject(e.target)
+
+    const ispatientdepartmentselected = (this.context.formstates[`${this.PAGE_NAME}/Departments`] || []).map(id => {
+      let isHave = false
+      const department = (Departments.list || []).find(u => u.Uuid === id)
+      if (department && department.Ishavepatients) {
+        isHave = true
+      }
+      return isHave
+    }).filter(u => u).length > 0
+
     data.CaseStatus = this.context.formstates[`${this.PAGE_NAME}/CaseStatus`]
+    data.Patientstatus = ispatientdepartmentselected ? this.context.formstates[`${this.PAGE_NAME}/Patientstatus`] : 0
+    data.Iscalculateprice = ispatientdepartmentselected ? this.context.formstates[`${this.PAGE_NAME}/Iscalculateprice`] : false
+    data.Isroutinework = ispatientdepartmentselected ? this.context.formstates[`${this.PAGE_NAME}/Isroutinework`] : false
     data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)
     })
@@ -128,6 +166,9 @@ export default class CasesEdit extends Component {
     }
     if (!validator.isNumber(data.CaseStatus)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Casestatusrequired[Profile.Language] })
+    }
+    if (!validator.isNumber(data.Patientstatus)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Patientstatusrequired[Profile.Language] })
     }
     if (!validator.isString(data.Casecolor)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Casecolorrequired[Profile.Language] })
