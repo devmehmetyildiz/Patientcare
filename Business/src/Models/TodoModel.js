@@ -16,6 +16,18 @@ module.exports = sequelize.define('todoModel', {
     Order: {
         type: Sequelize.INTEGER
     },
+    Occuredtime: {
+        type: Sequelize.STRING
+    },
+    Checktime: {
+        type: Sequelize.STRING
+    },
+    Willapprove: {
+        type: Sequelize.BOOLEAN
+    },
+    Isapproved: {
+        type: Sequelize.BOOLEAN
+    },
     IsCompleted: {
         type: Sequelize.BOOLEAN
     },

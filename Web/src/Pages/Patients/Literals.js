@@ -74,6 +74,10 @@ const Literals = {
             tr: 'Aktif Durum',
             en: 'Active Case'
         },
+        Activetodogroupdefine: {
+            tr: 'Aktif Yapılacak Listesi',
+            en: 'Active Routine list'
+        },
         Cardscren: {
             tr: 'Kart Görünümü',
             en: 'Card View'
@@ -105,6 +109,10 @@ const Literals = {
         Case: {
             tr: 'Durum',
             en: 'Case'
+        },
+        Todogroupdefine: {
+            tr: 'Yapılacak Grubu',
+            en: 'Todogroup define'
         },
         Stocks: {
             tr: 'Stoklar',
@@ -224,6 +232,14 @@ const Literals = {
             tr: "Son 5 Eklenen Dosya",
             en: "Last 5 Added File"
         },
+        Approvedtodos: {
+            tr: "Onaylanmış Yapılacaklar",
+            en: "Approved Todos"
+        },
+        Nonapprovedtodos: {
+            tr: "Onaylanmamış Yapılacaklar",
+            en: "Nonapproved Todos"
+        },
         PatientStocks: {
             tr: "Hasta Stokları",
             en: "Patient Stocks"
@@ -231,6 +247,22 @@ const Literals = {
         Patientmedicines: {
             tr: "Hasta İlaçları",
             en: "Patient Medicines"
+        },
+        Tododefine: {
+            tr: "Yapılacak Adı",
+            en: "Todo Name"
+        },
+        Occuredtime: {
+            tr: "Gerçekleşme Saati",
+            en: "Occured Time"
+        },
+        Checktime: {
+            tr: "Kontrol Saati",
+            en: "Check Time"
+        },
+        Isapproved: {
+            tr: "Onaylandı mı?",
+            en: "Is Approved?"
         },
     },
     AddStock: {
@@ -362,6 +394,10 @@ const Literals = {
             tr: "Durum Değiştir",
             en: "Change Case"
         },
+        Pageeditroutineheader: {
+            tr: "Rutin Değiştir",
+            en: "Change Routine"
+        },
         Pagedeleteheader: {
             tr: "Hasta Hareketi Silme",
             en: "Delete Patient Movements"
@@ -465,6 +501,10 @@ const Literals = {
         WarehouseReuired: {
             tr: "Ambar Gerekli ",
             en: "Warehouse Required"
+        },
+        TodogroupdefineReuired: {
+            tr: "Yapılacak grubu Gerekli ",
+            en: "Todogroupdefine Required"
         },
         StockRequired: {
             tr: "Ürün Gerekli ",

@@ -63,7 +63,7 @@ const messages = {
       }
     },
 
-    
+
 
 
   },
@@ -436,7 +436,37 @@ const messages = {
         tr: 'Tanımsız patientid',
       }
     },
-   
+    TODOID_REQUIRED: {
+      code: 'TODOID_REQUIRED', description: {
+        en: 'The todoid required',
+        tr: 'Bu işlem için todoid gerekli',
+      }
+    },
+    UNSUPPORTED_TODOID: {
+      code: 'UNSUPPORTED_TODOID', description: {
+        en: 'The todoid is unsupported',
+        tr: 'Tanımsız todoid',
+      }
+    },
+    MOVEMENTID_REQUIRED: {
+      code: 'MOVEMENTID_REQUIRED', description: {
+        en: 'The movementid required',
+        tr: 'Bu işlem için movementid gerekli',
+      }
+    },
+    TODODEFINEID_REQUIRED: {
+      code: 'TODODEFINEID_REQUIRED', description: {
+        en: 'The tododefineid required',
+        tr: 'Bu işlem için tododefineid gerekli',
+      }
+    },
+    CHECKTIME_REQUIRED: {
+      code: 'CHECKTIME_REQUIRED', description: {
+        en: 'The checktime required',
+        tr: 'Bu işlem için kontrol zamano gerekli',
+      }
+    },
+
   }
 
 }

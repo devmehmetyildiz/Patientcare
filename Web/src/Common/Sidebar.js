@@ -56,6 +56,7 @@ export function Sidebar(props) {
                 { id: 5, subtitle: Literals.Patientstocks.Page.Pageheader[Profile.Language], url: "/Patientstocks" },
                 { id: 5, subtitle: Literals.Patientmedicines.Page.Pageheader[Profile.Language], url: "/Patientmedicines" },
                 { id: 6, subtitle: Literals.Patientstockmovements.Page.Pageheader[Profile.Language], url: "/Patientstockmovements" },
+                { id: 7, subtitle: Literals.Todos.Page.Pageheader[Profile.Language], url: "/Todos" },
             ]
         },
         {

@@ -9,6 +9,7 @@ const Routes = [
     { method: 'put', path: '/Patients/InPatient/:patientId', controller: 'Patient', action: 'InPatient' },
     { method: 'put', path: '/Patients/Preregistrations/Editstock', controller: 'Patient', action: 'Completeprepatient' },
     { method: 'put', path: '/Patients/UpdatePatientcase', controller: 'Patient', action: 'UpdatePatientcase' },
+    { method: 'put', path: '/Patients/UpdatePatienttodogroupdefine', controller: 'Patient', action: 'UpdatePatienttodogroupdefine' },
     { method: 'put', path: '/Patients', controller: 'Patient', action: 'UpdatePatient' },
     { method: 'delete', path: '/Patients/:patientId', controller: 'Patient', action: 'DeletePatient' },
 
@@ -23,6 +24,15 @@ const Routes = [
     { method: 'post', path: '/Patientmovements', controller: 'Patientmovement', action: 'AddPatientmovement' },
     { method: 'put', path: '/Patientmovements', controller: 'Patientmovement', action: 'UpdatePatientmovement' },
     { method: 'delete', path: '/Patientmovements/:patientmovementId', controller: 'Patientmovement', action: 'DeletePatientmovement' },
+
+    { method: 'get', path: '/Todos/GetTodosbyPatientID/:patientId', controller: 'Todo', action: 'GetTodosbyPatientID' },
+    { method: 'get', path: '/Todos/:todoId', controller: 'Todo', action: 'GetTodo' },
+    { method: 'get', path: '/Todos', controller: 'Todo', action: 'GetTodos' },
+    { method: 'post', path: '/Todos/Approve/:todoId', controller: 'Todo', action: 'ApproveTodo' },
+    { method: 'post', path: '/Todos/AddPatienttodolist', controller: 'Todo', action: 'AddPatienttodolist' },
+    { method: 'post', path: '/Todos', controller: 'Todo', action: 'AddTodo' },
+    { method: 'put', path: '/Todos', controller: 'Todo', action: 'UpdateTodo' },
+    { method: 'delete', path: '/Todos/:todoId', controller: 'Todo', action: 'DeleteTodo' },
 ]
 
 module.exports = Routes

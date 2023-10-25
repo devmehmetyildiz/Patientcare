@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PatientsDetail from '../../Pages/Patients/PatientsDetail'
-import { GetPatient, removePatientnotification, setPatient, handleDeletemodal, handleSelectedPatient,handleInmodal,handleOutmodal } from "../../Redux/PatientSlice"
+import { GetPatient, removePatientnotification, setPatient, handleDeletemodal, handleSelectedPatient, handleInmodal, handleOutmodal } from "../../Redux/PatientSlice"
 import { GetPatientdefines, removePatientdefinenotification } from "../../Redux/PatientdefineSlice"
 import { GetCases, removeCasenotification } from "../../Redux/CaseSlice"
 import { GetCostumertypes, removeCostumertypenotification } from "../../Redux/CostumertypeSlice"
@@ -14,6 +14,8 @@ import { GetUnits, removeUnitnotification } from "../../Redux/UnitSlice"
 import { GetPatientmovements, removePatientmovementnotification } from "../../Redux/PatientmovementSlice"
 import { GetFiles, removeFilenotification } from "../../Redux/FileSlice"
 import { GetPatientstockmovements, removePatientstockmovementnotification } from "../../Redux/PatientstockmovementSlice"
+import { GetTodosbyPatient, removeTodonotification } from "../../Redux/TodoSlice"
+import { GetTododefines, removeTododefinenotification } from "../../Redux/TododefineSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -30,7 +32,9 @@ const mapStateToProps = (state) => ({
     Units: state.Units,
     Patientmovements: state.Patientmovements,
     Files: state.Files,
-    Patientstockmovements: state.Patientstockmovements
+    Patientstockmovements: state.Patientstockmovements,
+    Todos: state.Todos,
+    Tododefines: state.Tododefines,
 })
 
 const mapDispatchToProps = {
@@ -40,7 +44,8 @@ const mapDispatchToProps = {
     GetFloors, removeFloornotification, GetRooms, removeRoomnotification, GetBeds, removeBednotification,
     GetPatientstocks, removePatientstocknotification, GetStockdefines, removeStockdefinenotification, GetUnits,
     removeUnitnotification, GetPatientmovements, removePatientmovementnotification, GetFiles, removeFilenotification,
-    GetPatientstockmovements, removePatientstockmovementnotification,handleInmodal,handleOutmodal
+    GetPatientstockmovements, removePatientstockmovementnotification, handleInmodal, handleOutmodal, GetTodosbyPatient, removeTodonotification
+    , GetTododefines, removeTododefinenotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsDetail)

@@ -335,7 +335,7 @@ async function UpdatePatientcase(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const patient =await db.patientModel.findOne({ where: { Uuid: PatientID } })
+        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
         if (!patient) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
@@ -346,6 +346,49 @@ async function UpdatePatientcase(req, res, next) {
         await db.patientModel.update({
             ...patient,
             CaseID: CaseID,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: PatientID } }, { transaction: t })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatients(req, res, next)
+}
+
+async function UpdatePatienttodogroupdefine(req, res, next) {
+
+    let validationErrors = []
+    const {
+        PatientID,
+        TodogroupdefineID,
+    } = req.body
+
+    if (!validator.isUUID(PatientID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+    }
+    if (!validator.isUUID(TodogroupdefineID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
+        if (!patient) {
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
+        }
+        if (patient.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.patientModel.update({
+            ...patient,
+            TodogroupdefineID: TodogroupdefineID,
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: PatientID } }, { transaction: t })
@@ -374,7 +417,7 @@ async function DeletePatient(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const patient =await db.patientModel.findOne({ where: { Uuid: Uuid } })
+        const patient = await db.patientModel.findOne({ where: { Uuid: Uuid } })
         if (!patient) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
@@ -573,6 +616,7 @@ module.exports = {
     AddPatient,
     UpdatePatient,
     UpdatePatientcase,
+    UpdatePatienttodogroupdefine,
     DeletePatient,
     Editpatientstocks,
     OutPatient,

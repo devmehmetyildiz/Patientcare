@@ -121,7 +121,7 @@ export const DeleteStockmovements = createAsyncThunk(
     'Stockmovements/DeleteStockmovements',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.STOCKMOVEMENT}/${data.Uuid}`);
@@ -143,7 +143,7 @@ export const ApproveStockmovements = createAsyncThunk(
     'Stockmovements/ApproveStockmovements',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Warehouse, `${ROUTES.STOCKMOVEMENT}/Approve/${data.Uuid}`);

@@ -67,6 +67,7 @@ const PatientsAddmedicine = lazy(() => import('./Containers/Patients/PatientsAdd
 const PatientsRemovestock = lazy(() => import('./Containers/Patients/PatientsRemovestock'));
 const PatientsRemovemedicine = lazy(() => import('./Containers/Patients/PatientsRemovemedicine'));
 const PatientsEditcase = lazy(() => import('./Containers/Patients/PatientsEditcase'));
+const PatientsEditroutine = lazy(() => import('./Containers/Patients/PatientsEditroutine'));
 
 const Patientstocks = lazy(() => import('./Containers/Patientstocks/Patientstocks'));
 const PatientstocksCreate = lazy(() => import('./Containers/Patientstocks/PatientstocksCreate'));
@@ -223,6 +224,7 @@ class Routes extends Component {
       { exact: true, path: "/Patients/:PatientID/Removestock", auth: true, component: PatientsRemovestock },
       { exact: true, path: "/Patients/:PatientID/Removemedicine", auth: true, component: PatientsRemovemedicine },
       { exact: true, path: "/Patients/:PatientID/Editcase", auth: true, component: PatientsEditcase },
+      { exact: true, path: "/Patients/:PatientID/Editroutine", auth: true, component: PatientsEditroutine },
       { exact: true, path: "/Warehouses", auth: true, component: Warehouses },
       { exact: true, path: "/Warehouses/Create", auth: true, component: WarehousesCreate },
       { exact: true, path: "/Warehouses/:WarehouseID/Edit", auth: true, component: WarehousesEdit },

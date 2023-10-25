@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Dropdown, Form, Grid, GridColumn, Header, Icon, Label, Popup } from 'semantic-ui-react'
+import { Breadcrumb, Button, Divider, Dropdown, Form, Grid, GridColumn, Header, Icon, Label, Loader, Popup } from 'semantic-ui-react'
 import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -36,8 +36,8 @@ export default class PatientsDetail extends Component {
       GetPatient, match, history, PatientID,
       GetPatientdefines, GetCases, GetCostumertypes,
       GetPatienttypes, GetFloors, GetRooms, GetBeds,
-      GetPatientstocks, GetStockdefines, GetUnits,
-      GetPatientmovements, GetFiles, GetPatientstockmovements
+      GetPatientstocks, GetStockdefines, GetUnits, GetTodosbyPatient,
+      GetPatientmovements, GetFiles, GetPatientstockmovements, GetTododefines
     } = this.props
     let Id = PatientID || match?.params?.PatientID
     if (validator.isUUID(Id)) {
@@ -55,6 +55,8 @@ export default class PatientsDetail extends Component {
       GetPatientmovements()
       GetFiles()
       GetPatientstockmovements()
+      GetTodosbyPatient(Id)
+      GetTododefines()
     } else {
       history.length > 1 ? history.goBack() : history.push(Id ? `/Patients/${Id}` : `/Patients`)
     }
@@ -62,13 +64,14 @@ export default class PatientsDetail extends Component {
 
   componentDidUpdate() {
     const {
-      Patients, removePatientnotification,
+      Patients, removePatientnotification, Tododefines, removeTododefinenotification,
       Patientdefines, removePatientdefinenotification, Cases, removeCasenotification, Patientstockmovements,
       Costumertypes, removeCostumertypenotification, Patienttypes, removePatienttypenotification, removePatientstockmovementnotification,
       Floors, removeFloornotification, Rooms, removeRoomnotification, Beds, removeBednotification,
       Patientstocks, removePatientstocknotification, Stockdefines, removeStockdefinenotification, Units,
-      removeUnitnotification, Patientmovements, removePatientmovementnotification, Files, removeFilenotification
+      removeUnitnotification, Patientmovements, removePatientmovementnotification, Files, removeFilenotification, Todos, removeTodonotification
     } = this.props
+
     const { selected_record } = Patients
 
     const isLoadingstatus =
@@ -85,7 +88,9 @@ export default class PatientsDetail extends Component {
       Units.isLoading &&
       Patientmovements.isLoading &&
       Patientstockmovements.isLoading &&
-      Files.isLoading
+      Files.isLoading &&
+      Todos.isLoading &&
+      Tododefines.isLoading
 
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && isLoadingstatus && !this.state.isDatafetched) {
       this.setState({ isDatafetched: true })
@@ -104,6 +109,9 @@ export default class PatientsDetail extends Component {
     Notification(Units.notifications, removeUnitnotification)
     Notification(Patientmovements.notifications, removePatientmovementnotification)
     Notification(Files.notifications, removeFilenotification)
+    Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
+    Notification(Todos.notifications, removeTodonotification)
+    Notification(Tododefines.notifications, removeTododefinenotification)
   }
 
   render() {
@@ -112,7 +120,7 @@ export default class PatientsDetail extends Component {
       Patients, Patientdefines, Cases, Costumertypes, Patienttypes,
       Floors, Rooms, Beds, Patientstocks, Stockdefines, Units, Patientstockmovements,
       Patientmovements, Files, Profile, history, match, PatientID, handleSelectedPatient,
-      handleInmodal, handleOutmodal
+      handleInmodal, handleOutmodal, Todos
     } = this.props
 
 
@@ -139,7 +147,7 @@ export default class PatientsDetail extends Component {
 
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
     const costumertype = (Costumertypes.list || []).find(u => u.Uuid === patientdefine?.CostumertypeID)
-    const patienttype = (Patienttypes.list || []).find(u => u.Uuid === patientdefine?.PatientdefineID)
+    const patienttype = (Patienttypes.list || []).find(u => u.Uuid === patientdefine?.PatienttypeID)
 
     const floor = (Floors.list || []).find(u => u.Uuid === selected_record?.FloorID)
     const room = (Rooms.list || []).find(u => u.Uuid === selected_record?.RoomID)
@@ -149,12 +157,22 @@ export default class PatientsDetail extends Component {
 
     const files = (Files.list || []).find(u => u.Usagetype === 'PP' && u.ParentID === selected_record?.Uuid)
 
+    const approvedTodos = (Todos.list || []).filter(u => u.Isapproved)
+    const waitingTodos = (Todos.list || []).filter(u => !u.Isapproved)
 
     const stocksColumns = [
       { Header: Literals.Details.Stockname[Profile.Language], accessor: 'Stockname', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
       { Header: Literals.Details.Amount[Profile.Language], accessor: 'Amount', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
       { Header: Literals.Details.Unitname[Profile.Language], accessor: 'Unitname', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
       { Header: Literals.Details.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.dateCellhandler(col) }
+    ]
+
+    const todoColumns = [
+      { Header: Literals.Details.Tododefine[Profile.Language], accessor: 'TododefineID', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.tododefineCellhandler(col) },
+      { Header: Literals.Details.Occuredtime[Profile.Language], accessor: 'Occuredtime', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
+      { Header: Literals.Details.Checktime[Profile.Language], accessor: 'Checktime', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
+      { Header: Literals.Details.Isapproved[Profile.Language], accessor: 'Isapproved', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Details.IsComplated[Profile.Language], accessor: 'IsCompleted', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.boolCellhandler(col) }
     ]
 
     const stockandmedicineColumns = [
@@ -319,11 +337,29 @@ export default class PatientsDetail extends Component {
                     <Button primary fluid onClick={() => {
                       handleOutmodal(true)
                     }}>{Literals.Button.Getoff[Profile.Language]}</Button>
-                    <Button primary fluid >{Literals.Button.Changetodos[Profile.Language]}</Button>
+                    <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Changetodos[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>
                   </div>
                 </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid columns={2} divided>
+                  <Grid.Column>
+                    <Label >{Literals.Details.Approvedtodos[Profile.Language]}</Label>
+                    <DataTable
+                      Columns={todoColumns}
+                      Data={approvedTodos}
+                    />
+                  </Grid.Column>
+                  <Grid.Column>
+                    <Label >{Literals.Details.Nonapprovedtodos[Profile.Language]}</Label>
+                    <DataTable
+                      Columns={todoColumns}
+                      Data={waitingTodos}
+                    />
+                  </Grid.Column>
+                </Grid>
               </Grid.Row>
             </Grid>
           </Contentwrapper>
@@ -338,6 +374,15 @@ export default class PatientsDetail extends Component {
       return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
     }
     return null
+  }
+
+  tododefineCellhandler = (col) => {
+    const { Tododefines } = this.props
+    if (Tododefines.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Tododefines.list || []).find(u => u.Uuid === col.value)?.Name
+    }
   }
 
   patientmovementCellhandler = (col) => {

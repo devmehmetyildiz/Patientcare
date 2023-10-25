@@ -135,12 +135,34 @@ export const EditPatients = createAsyncThunk(
 );
 
 export const Editpatientcase = createAsyncThunk(
-    'Patients/EditPatients',
+    'Patients/Editpatientcase',
     async ({ data, history, redirectUrl, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientcase", data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+export const Editpatienttodogroupdefine = createAsyncThunk(
+    'Patients/Editpatienttodogroupdefine',
+    async ({ data, history, redirectUrl, redirectID }, { dispatch, getState }) => {
+        console.log('data: ', data);
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatienttodogroupdefine", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
@@ -208,7 +230,7 @@ export const DeletePatients = createAsyncThunk(
     'Patients/DeletePatients',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENT}/${data.Uuid}`);
@@ -429,7 +451,27 @@ export const PatientsSlice = createSlice({
             .addCase(InPatients.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
-            });
+            })
+            .addCase(Editpatientcase.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(Editpatientcase.fulfilled, (state, action) => {
+                state.isDispatching = false;
+            })
+            .addCase(Editpatientcase.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(Editpatienttodogroupdefine.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(Editpatienttodogroupdefine.fulfilled, (state, action) => {
+                state.isDispatching = false;
+            })
+            .addCase(Editpatienttodogroupdefine.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
     },
 });
 
