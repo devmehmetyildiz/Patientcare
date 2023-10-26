@@ -66,6 +66,10 @@ const Literals = {
             tr: "Oluştur",
             en: "Create"
         },
+        Clear: {
+            tr: "Temizle",
+            en: "Clear"
+        },
         Update: {
             tr: "Güncelle",
             en: "Update"

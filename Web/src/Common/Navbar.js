@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import { Button, Dropdown, Header, Icon, Modal } from 'semantic-ui-react'
 import { ROUTES } from '../Utils/Constants'
 import config from '../Config'
-
 const navbarLiterals = {
   editProfile: {
     en: "Edit Profile",
@@ -61,7 +60,7 @@ export class Navbar extends Component {
 
     return (
       <nav
-        className={`w-[100%] h-[58.61px] bg-[#2b7694] dark:bg-Contentfg mx-auto flex flex-row justify-between items-center fixed top-0 ${Profile.Ismobile ? 'pl-[12px]' : 'pl-[20px]'} z-50`}>
+        className={`w-[100%] h-[58.61px] bg-[#2355a0] dark:bg-Contentfg mx-auto flex flex-row justify-between items-center fixed top-0 ${Profile.Ismobile ? 'pl-[12px]' : 'pl-[20px]'} z-50`}>
         <div className={`${Profile.Ismobile ? '' : 'hidden'}`} onClick={() => { sethideMobile(hideMobile) }}>  <Icon size='large' className='text-white' name={hideMobile ? 'angle double right' : 'angle double left'} /></div>
         <div className={`group flex flex-col cursor-pointer justify-center items-center ${isMobile ? 'hidden' : 'visible'}`} onClick={() => { seticonOnly(!iconOnly) }}>
           <div className='h-[2px] group-hover:bg-[#747474] bg-white dark:bg-[#3d3d3d]  w-[20px]' />
@@ -71,7 +70,6 @@ export class Navbar extends Component {
         < div className='p-2 w-[250px] flex justify-center items-center' >
           <div className='flex flex-row justify-center items-center w-full'>
             <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-white dark:text-TextColor'>ELDER</p>
-            {!Profile.Ismobile && <img className='text-[10px] w-[50px] h-[50px]' src={img.translatoricon} alt="" />}
             <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-[#7eabc5] dark:text-TextColor'>CAMP</p>
           </div>
         </div >

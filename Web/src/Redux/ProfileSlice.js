@@ -320,15 +320,15 @@ export const ProfileSlice = createSlice({
                 state.errMsg = action.error.message;
             })
             .addCase(GetUserRoles.pending, (state) => {
-                state.isLogging = true;
+                state.isFetching = true;
                 state.errMsg = null;
             })
             .addCase(GetUserRoles.fulfilled, (state, action) => {
-                state.isLogging = false;
+                state.isFetching = false;
                 state.roles = action.payload
             })
             .addCase(GetUserRoles.rejected, (state, action) => {
-                state.isLogging = false;
+                state.isFetching = false;
                 state.errMsg = action.error.message;
             })
             .addCase(GetTableMeta.pending, (state) => {

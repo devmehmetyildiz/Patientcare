@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import AppRoutes from '../../Routes'
 import Navbar from '../../Common/Navbar'
 import { Sidebar } from '../../Common/Sidebar'
 import notification from '../../Utils/Notification'
 import Cookies from 'universal-cookie'
 import LoadingPage from '../../Utils/LoadingPage'
+import Routes from '../../Routes'
 
 export default class Layout extends Component {
 
@@ -43,7 +43,7 @@ export default class Layout extends Component {
   render() {
     const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile } = this.props
     return (
-      Profile.isLogging ?
+      Profile.isLogging || Profile.isFetching ?
         <LoadingPage />
         :
         <div className='bg-white dark:bg-Contentbg overflow-hidden' >

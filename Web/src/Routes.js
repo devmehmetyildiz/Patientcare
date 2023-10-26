@@ -159,7 +159,7 @@ const PasswordChange = lazy(() => import('./Containers/Auth/PasswordChange'));
 const Passwordforget = lazy(() => import('./Containers/Auth/Passwordforget'));
 const PasswordReset = lazy(() => import('./Containers/Auth/PasswordReset'));
 const Home = lazy(() => import('./Pages/Home'));
-
+const Notfoundpage = lazy(() => import('./Utils/Notfoundpage'));
 
 class Routes extends Component {
   render() {
@@ -290,7 +290,8 @@ class Routes extends Component {
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit, permission: 'userscreen' },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange, permission: 'userscreen' },
       { exact: true, path: "/PasswordReset/:RequestID", auth: false, component: PasswordReset },
-      { exact: true, path: "/Forgetpassword", auth: false, component: Passwordforget }
+      { exact: true, path: "/Forgetpassword", auth: false, component: Passwordforget },
+      { exact: false, path: "*", auth: false, component: Notfoundpage },
     ]
 
     return (

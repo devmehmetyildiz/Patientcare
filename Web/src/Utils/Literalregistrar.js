@@ -4,6 +4,7 @@ import Costumertypes from "../Pages/Costumertypes/Literals"
 import Departments from "../Pages/Departments/Literals"
 import Files from "../Pages/Files/Literals"
 import Mailsettings from "../Pages/Mailsettings/Literals"
+import Patients from "../Pages/Patients/Literals"
 import Patientdefines from "../Pages/Patientdefines/Literals"
 import Patientmovements from "../Pages/Patientmovements/Literals"
 import Patientstockmovements from "../Pages/Patientstockmovements/Literals"
@@ -39,6 +40,7 @@ const Literals = {
     Costumertypes,
     Departments,
     Files,
+    Patients,
     Mailsettings,
     Patientdefines,
     Patientmovements,
