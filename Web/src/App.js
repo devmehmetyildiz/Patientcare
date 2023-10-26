@@ -19,11 +19,15 @@ class App extends Component {
     this.mediaQuery = window.matchMedia('(max-width: 768px)'); // Change the breakpoint value as per your requirements
     const isFullPageLayout = false
     const iconstate = false
-    this.state = { iconstate, isFullPageLayout, isMobile: false }
+    this.state = { iconstate, isFullPageLayout, isMobile: false, hideMobile: false }
   }
 
   setIconmode = () => {
     this.setState({ iconstate: !this.state.iconstate })
+  }
+
+  sethideMobile = () => {
+    this.setState({ hideMobile: !this.state.hideMobile })
   }
 
   componentDidMount() {
@@ -75,7 +79,12 @@ class App extends Component {
             <Routes />
           </div>
           :
-          <Layout {...this.props} isMobile={this.state.isMobile} iconOnly={this.state.iconstate} seticonOnly={this.setIconmode} />
+          <Layout {...this.props}
+            isMobile={this.state.isMobile}
+            iconOnly={this.state.iconstate}
+            seticonOnly={this.setIconmode}
+            hideMobile={this.state.hideMobile}
+            sethideMobile={this.sethideMobile} />
         }
       </React.Fragment>
     );

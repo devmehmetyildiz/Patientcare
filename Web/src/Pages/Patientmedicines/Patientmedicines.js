@@ -13,6 +13,8 @@ import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import PatientstocksDelete from "../../Containers/Patientstocks/PatientstocksDelete"
 import PatientstocksApprove from "../../Containers/Patientstocks/PatientstocksApprove"
+import MobileTable from '../../Utils/MobileTable'
+import Settings from '../../Common/Settings'
 
 export default class Patientmedicines extends Component {
   constructor(props) {
@@ -51,7 +53,7 @@ export default class Patientmedicines extends Component {
   render() {
 
 
-    const { Patientstocks, Profile, handleDeletemodal, handleSelectedPatientstock, handleApprovemodal } = this.props
+    const { Patientstocks, Profile, handleDeletemodal, handleSelectedPatientstock, handleApprovemodal, AddRecordPatientmedicines } = this.props
     const { isLoading, isDispatching } = Patientstocks
 
     const Columns = [
@@ -110,27 +112,31 @@ export default class Patientmedicines extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Patientmedicines"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Patientmedicines/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Patientmedicines/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  AddRecord={AddRecordPatientmedicines}
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />
+                {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>

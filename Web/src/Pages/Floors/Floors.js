@@ -12,6 +12,8 @@ import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import FloorsDelete from '../../Containers/Floors/FloorsDelete'
+import Settings from '../../Common/Settings'
+import MobileTable from '../../Utils/MobileTable'
 
 export default class Floors extends Component {
 
@@ -26,7 +28,7 @@ export default class Floors extends Component {
   }
 
   render() {
-    const { Floors, Profile, handleDeletemodal, handleSelectedFloor } = this.props
+    const { Floors, Profile, handleDeletemodal, handleSelectedFloor, AddRecordFloors } = this.props
     const { isLoading, isDispatching } = Floors
 
     const Columns = [
@@ -71,27 +73,31 @@ export default class Floors extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Floors"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Floors/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Floors/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  AddRecord={AddRecordFloors}
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />
+                {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>

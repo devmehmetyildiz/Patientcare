@@ -13,6 +13,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import PatientmovementsDelete from "../../Containers/Patientmovements/PatientmovementsDelete"
+import Settings from '../../Common/Settings'
+import MobileTable from '../../Utils/MobileTable'
 export default class Patientmovements extends Component {
 
   componentDidMount() {
@@ -31,7 +33,7 @@ export default class Patientmovements extends Component {
 
   render() {
 
-    const { Patientmovements, Profile, handleSelectedPatientmovement, handleDeletemodal } = this.props
+    const { Patientmovements, Profile, handleSelectedPatientmovement, handleDeletemodal, AddRecordPatientmovements } = this.props
     const { isLoading, isDispatching } = Patientmovements
 
     const Columns = [
@@ -85,27 +87,31 @@ export default class Patientmovements extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Patientmovements"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Patientmovements/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Patientmovements/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  AddRecord={AddRecordPatientmovements}
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />
+                {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>

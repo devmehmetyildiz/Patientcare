@@ -14,6 +14,7 @@ import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import PreregistrationsDelete from '../../Containers/Preregistrations/PreregistrationsDelete'
+import MobileTable from '../../Utils/MobileTable'
 
 export default class Preregistrations extends Component {
 
@@ -159,7 +160,9 @@ export default class Preregistrations extends Component {
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />
+                {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>

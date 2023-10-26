@@ -12,6 +12,8 @@ import Literals from './Literals'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Settings from '../../Common/Settings'
+import MobileTable from '../../Utils/MobileTable'
 export class Files extends Component {
 
   constructor(props) {
@@ -34,7 +36,7 @@ export class Files extends Component {
   render() {
 
 
-    const { Files, Profile, handleSelectedFile, handleDeletemodal } = this.props
+    const { Files, Profile, handleSelectedFile, handleDeletemodal, AddRecordFiles } = this.props
     const { isLoading, isDispatching } = Files
 
     const Columns = [
@@ -93,21 +95,25 @@ export class Files extends Component {
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Files/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Files/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  AddRecord={AddRecordFiles}
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />
-              </div> : <NoDataScreen message= {Literals.Messages.Nodatafind[Profile.Language]} />
+                {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>
           <FilesDelete />

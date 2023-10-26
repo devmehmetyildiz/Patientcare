@@ -13,6 +13,7 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import RulesDelete from '../../Containers/Rules/RulesDelete'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import RulesLog from '../../Containers/Rules/RulesLog'
+import MobileTable from '../../Utils/MobileTable'
 export class Rules extends Component {
 
   componentDidMount() {
@@ -57,7 +58,7 @@ export class Rules extends Component {
       }) : [],
     };
 
-    const list = (Rules.list || []).filter(u=>u.Isactive).map(item => {
+    const list = (Rules.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         Stop: item.Status === 1 ? <Icon link size='large' color='red' name='hand paper' onClick={() => {
@@ -102,7 +103,9 @@ export class Rules extends Component {
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />
+                {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>

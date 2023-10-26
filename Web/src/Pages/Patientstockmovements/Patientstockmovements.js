@@ -14,6 +14,7 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import PatientstockmovementsDelete from '../../Containers/Patientstockmovements/PatientstockmovementsDelete'
 import PatientstockmovementsApprove from '../../Containers/Patientstockmovements/PatientstockmovementsApprove'
+import MobileTable from '../../Utils/MobileTable'
 
 export default class Patientstockmovements extends Component {
 
@@ -118,7 +119,9 @@ export default class Patientstockmovements extends Component {
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />
+                {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>

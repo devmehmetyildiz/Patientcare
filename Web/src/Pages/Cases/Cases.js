@@ -13,6 +13,8 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import CasesDelete from '../../Containers/Cases/CasesDelete'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
+import Settings from '../../Common/Settings'
+import MobileTable from '../../Utils/MobileTable'
 
 export default class Cases extends Component {
 
@@ -39,7 +41,7 @@ export default class Cases extends Component {
   render() {
 
 
-    const { Cases, Profile, Departments, handleSelectedCase, handleDeletemodal } = this.props
+    const { Cases, Profile, Departments, handleSelectedCase, handleDeletemodal, AddRecordCases } = this.props
     const { isLoading, isDispatching } = Cases
     const casestatusOption = [
       {
@@ -120,20 +122,24 @@ export default class Cases extends Component {
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Cases/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Cases/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  AddRecord={AddRecordCases}
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />
+                {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nocasefind[Profile.Language]} />
             }
           </Pagewrapper>

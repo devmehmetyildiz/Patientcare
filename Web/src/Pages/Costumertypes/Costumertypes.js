@@ -12,6 +12,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import CostumertypesDelete from "../../Containers/Costumertypes/CostumertypesDelete"
+import Settings from '../../Common/Settings'
+import MobileTable from '../../Utils/MobileTable'
 export default class Costumertypes extends Component {
 
   constructor(props) {
@@ -35,7 +37,7 @@ export default class Costumertypes extends Component {
 
   render() {
 
-    const { Costumertypes, Departments, Profile, handleSelectedCostumertype, handleDeletemodal } = this.props
+    const { Costumertypes, Departments, Profile, handleSelectedCostumertype, handleDeletemodal, AddRecordCostumertypes } = this.props
     const { isLoading, isDispatching } = Costumertypes
 
     const Columns = [
@@ -93,20 +95,24 @@ export default class Costumertypes extends Component {
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Costumertypes/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Button.Create[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Costumertypes/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  AddRecord={AddRecordCostumertypes}
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />
+                {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>

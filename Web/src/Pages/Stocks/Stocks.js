@@ -13,6 +13,7 @@ import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import StocksDelete from '../../Containers/Stocks/StocksDelete'
 import StocksApprove from '../../Containers/Stocks/StocksApprove'
+import MobileTable from '../../Utils/MobileTable'
 export default class Stocks extends Component {
   constructor(props) {
     super(props)
@@ -121,7 +122,9 @@ export default class Stocks extends Component {
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />
+               {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>

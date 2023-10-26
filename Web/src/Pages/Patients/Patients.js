@@ -18,6 +18,7 @@ import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import DataTable from '../../Utils/DataTable'
 import { Collapse } from 'react-collapse';
+import MobileTable from '../../Utils/MobileTable'
 
 export default class Patients extends Component {
 
@@ -175,7 +176,9 @@ export default class Patients extends Component {
                       content: <React.Fragment>
                         {list.length > 0 ?
                           <div className='w-full mx-auto '>
-                            <DataTable Columns={Columns} Data={list} Config={initialConfig} />
+                            {Profile.Ismobile ?
+                              <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                              <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
                           </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
                         }
                       </React.Fragment>
