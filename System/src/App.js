@@ -48,6 +48,7 @@ require("./Middlewares/Databaseconnector")()
     app.use(crossDomainEnabler)
     app.use(authorizationChecker)
     app.use(reqbodyhelper)
+    router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/permission-checkers/`, controllerFileSuffix: '-permissioncheckers.js', logRoutesList: false })
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/`, controllerFileSuffix: '-controller.js', logRoutesList: false })
 
     errorHandlers.init(app)

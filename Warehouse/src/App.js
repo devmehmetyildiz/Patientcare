@@ -4,7 +4,7 @@ const config = require('./Config');
 
 require("./Middlewares/Databaseconnector")()
   .then(() => {
-    
+
     const cors = require('cors');
     const bodyParser = require('body-parser')
     const session = require('express-session')
@@ -47,6 +47,7 @@ require("./Middlewares/Databaseconnector")()
     app.use(crossDomainEnabler)
     app.use(authorizationChecker)
     app.use(reqbodyhelper)
+    router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/permission-checkers/`, controllerFileSuffix: '-permissioncheckers.js', logRoutesList: false })
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/`, controllerFileSuffix: '-controller.js', logRoutesList: false })
 
     errorHandlers.init(app)
@@ -56,7 +57,7 @@ require("./Middlewares/Databaseconnector")()
       const httpServer = http.createServer(app)
       httpServer.listen(config.port, () => {
         if (config.env === 'development') {
-        console.log(`${config.session.name} service is running at http://localhost:${httpServer.address().port} for public usage`)
+          console.log(`${config.session.name} service is running at http://localhost:${httpServer.address().port} for public usage`)
           db.applog_warehouseModel.create({
             Event: "App opened at: " + new Date()
           }).catch(() => {
