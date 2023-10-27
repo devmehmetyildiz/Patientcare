@@ -104,7 +104,6 @@
 .react-table-inner {
   position: relative;
   overflow-y: auto;
-  max-height: calc(100vh - 18.4rem);
 }
 
 .react-table-box {

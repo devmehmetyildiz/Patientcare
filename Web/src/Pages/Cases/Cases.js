@@ -64,11 +64,11 @@ export default class Cases extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Shortname[Profile.Language], accessor: 'Shortname', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
+      { Header: Literals.Columns.Shortname[Profile.Language], accessor: 'Shortname', sortable: true, canGroupBy: true, canFilter: true, Finalheader: true },
       { Header: Literals.Columns.CaseStatus[Profile.Language], accessor: 'CaseStatus', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.casesstatusCellhandler(col, casestatusOption) },
       { Header: Literals.Columns.Casecolor[Profile.Language], accessor: 'Casecolor', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.casecolorCellhandler(col) },
-      { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, Subheader: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
       { Header: Literals.Columns.Patientstatus[Profile.Language], accessor: 'Patientstatus', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.movementCellhandler(col) },
       { Header: Literals.Columns.Iscalculateprice[Profile.Language], accessor: 'Iscalculateprice', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Isroutinework[Profile.Language], accessor: 'Isroutinework', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
@@ -176,10 +176,10 @@ export default class Cases extends Component {
 
   departmentCellhandler = (col) => {
 
-    const { Departments } = this.props
+    const { Departments, Profile } = this.props
 
-    if (col.value) {
-      if (!col.cell.isGrouped) {
+    if (col.value && !Profile.Ismobile) {
+      if (!col?.cell.isGrouped) {
         const itemId = col.row.original.Id
         const itemDepartments = (col.row.original.Departmentuuids || []).map(u => { return (Departments.list || []).find(department => department.Uuid === u.DepartmentID) })
         return col.value.length - 35 > 20 ?
@@ -191,7 +191,7 @@ export default class Cases extends Component {
       }
       return col.value
     }
-    return null
+    return col.value
   }
 
   boolCellhandler = (col) => {

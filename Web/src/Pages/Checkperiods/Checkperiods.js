@@ -44,9 +44,9 @@ export default class Checkperiods extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Periodstxt[Profile.Language], accessor: 'Periodstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.periodCellhandler(col) },
-      { Header: Literals.Columns.Periodtype[Profile.Language], accessor: 'Periodtype', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
+      { Header: Literals.Columns.Periodstxt[Profile.Language], accessor: 'Periodstxt', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, isOpen: false, Cell: col => this.periodCellhandler(col) },
+      { Header: Literals.Columns.Periodtype[Profile.Language], accessor: 'Periodtype', sortable: true, canGroupBy: true, Finalheader: true, canFilter: true, },
       { Header: Literals.Columns.Occureddays[Profile.Language], accessor: 'Occureddays', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dayCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
@@ -142,10 +142,10 @@ export default class Checkperiods extends Component {
 
   periodCellhandler = (col) => {
 
-    const { Periods } = this.props
+    const { Periods, Profile } = this.props
 
     if (col.value) {
-      if (!col.cell.isGrouped) {
+      if (!col.cell?.isGrouped && !Profile.Ismobile) {
         const itemId = col.row.original.Id
         const itemPeriods = (col.row.original.Perioduuids || []).map(u => { return (Periods.list || []).find(period => period.Uuid === u.PeriodID) })
         return col.value.length - 35 > 20 ?
@@ -157,7 +157,7 @@ export default class Checkperiods extends Component {
       }
       return col.value
     }
-    return null
+    return col.value
   }
 
   dayCellhandler = (col) => {
@@ -175,12 +175,12 @@ export default class Checkperiods extends Component {
     ]
 
     if (col.value) {
-      if (!col.cell.isGrouped) {
+      if (!col.cell?.isGrouped && !Profile.Ismobile) {
         let days = ((col.value || '').split(',') || []).map(daytext => { return Dayoptions.find(u => u.value === parseInt(daytext))?.text }).join(',')
         return days
       }
       return col.value
     }
-    return null
+    return col.value
   }
 }

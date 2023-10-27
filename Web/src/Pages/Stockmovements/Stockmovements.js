@@ -44,10 +44,10 @@ export default class Stockmovements extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockCellhandler(col) },
-      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', sortable: true, canGroupBy: true, Firstheader: true, canFilter: true, Cell: col => this.stockCellhandler(col) },
+      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
       { Header: Literals.Columns.Movementtype[Profile.Language], accessor: 'Movementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
+      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, Finalheader: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Prevvalue[Profile.Language], accessor: 'Prevvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Newvalue[Profile.Language], accessor: 'Newvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
@@ -133,7 +133,7 @@ export default class Stockmovements extends Component {
     if (Stocks.isLoading || Stockdefines.isLoading || Units.isLoading || Stockmovements.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const stockmovement = (Stockmovements.list || []).find(u => u.Id === col.row.original.Id)
+      const stockmovement = (Stockmovements.list || []).find(u => u.Id === col?.row?.original?.Id)
       const stock = (Stocks.list || []).find(u => u.Uuid === stockmovement?.StockID)
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
       const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)

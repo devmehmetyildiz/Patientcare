@@ -27,18 +27,19 @@ export default class PatientstockmovementsEdit extends Component {
   }
 
   componentDidMount() {
-    const { GetPatientstockmovement, GetPatientstocks, match, history, PatientstockmovementID } = this.props
+    const { GetPatientstockmovement, GetPatientstocks, match, history, PatientstockmovementID, GetStockdefines } = this.props
     let Id = PatientstockmovementID || match?.params?.PatientstockmovementID
     if (validator.isUUID(Id)) {
       GetPatientstockmovement(Id)
       GetPatientstocks()
+      GetStockdefines()
     } else {
       history.push("/Patientstockmovement")
     }
   }
 
   componentDidUpdate() {
-    const { Patientstockmovements, Patientstocks, removePatientstocknotification, removePatientstockmovementnotification } = this.props
+    const { Patientstockmovements, Patientstocks, removePatientstocknotification, removePatientstockmovementnotification, Stockdefines, removeStockdefinenotification } = this.props
     const { selected_record, isLoading } = Patientstockmovements
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
       && Patientstocks.list.length > 0 && !Patientstocks.isLoading
@@ -50,13 +51,19 @@ export default class PatientstockmovementsEdit extends Component {
     }
     Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
     Notification(Patientstocks.notifications, removePatientstocknotification)
+    Notification(Stockdefines.notifications, removeStockdefinenotification)
   }
 
   render() {
-    const { Patientstockmovements, Patientstocks, Profile, history } = this.props
+    const { Patientstockmovements, Patientstocks, Profile, history, Stockdefines } = this.props
 
     const Patientstockoptions = (Patientstocks.list || []).filter(u => u.Isactive).map(stock => {
-      return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
+      if (stock.Barcodeno) {
+        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
+      }
+      else {
+        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name}`, value: stock.Uuid }
+      }
     })
 
     const Movementoptions = [
@@ -88,7 +95,7 @@ export default class PatientstockmovementsEdit extends Component {
                 {history && <Link to="/Patientstockmovements">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>
           </Contentwrapper>

@@ -87,15 +87,15 @@ export default class Patients extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'PatientdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.patientdefineCellhandler(col) },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'PatientdefineID', sortable: true, canGroupBy: true, Firstheader: true, canFilter: true, Cell: col => this.patientdefineCellhandler(col) },
       { Header: Literals.Columns.Registerdate[Profile.Language], accessor: 'Registerdate', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
       { Header: Literals.Columns.Approvaldate[Profile.Language], accessor: 'Approvaldate', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Floor[Profile.Language], accessor: 'FloorID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.floorCellhandler(col) },
+      { Header: Literals.Columns.Floor[Profile.Language], accessor: 'FloorID', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, Cell: col => this.floorCellhandler(col) },
       { Header: Literals.Columns.Room[Profile.Language], accessor: 'RoomID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.roomCellhandler(col) },
       { Header: Literals.Columns.Bed[Profile.Language], accessor: 'BedID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.bedCellhandler(col) },
       { Header: Literals.Columns.Case[Profile.Language], accessor: 'CaseID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.caseCellhandler(col) },
       { Header: Literals.Columns.Stocks[Profile.Language], accessor: 'Stockstxt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockCellhandler(col) },
-      { Header: Literals.Columns.Files[Profile.Language], accessor: 'Filestxt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.filesCellhandler(col) },
+      { Header: Literals.Columns.Files[Profile.Language], accessor: 'Filestxt', sortable: true, canGroupBy: true, Finalheader: true, canFilter: true, Cell: col => this.filesCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -345,15 +345,15 @@ export default class Patients extends Component {
 
   stockCellhandler = (col) => {
 
-    const { Patientstocks, Stockdefines } = this.props
+    const { Patientstocks, Stockdefines, Profile } = this.props
 
     const itemId = col?.row?.original?.Uuid
     const itemStocks = (Patientstocks.list || []).filter(u => u.PatientID === itemId)
-    let stockstext = itemStocks.map((stock) => {
+    let stockstext = (itemStocks || []).map((stock) => {
       return (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)?.Name
     }).join(", ")
 
-    if (!col.cell.isGrouped) {
+    if (!col?.cell?.isGrouped && !Profile.Ismobile) {
       return stockstext.length - 35 > 20 ?
         (
           !this.state.stocksStatus.includes(itemId) ?
@@ -366,14 +366,14 @@ export default class Patients extends Component {
 
   filesCellhandler = (col) => {
 
-    const { Files } = this.props
+    const { Files, Profile } = this.props
     const itemId = col?.row?.original?.Uuid
     const itemFiles = (Files.list || []).filter(u => u.ParentID === itemId)
-    let filestext = itemFiles.map((file) => {
+    let filestext = (itemFiles || []).map((file) => {
       return file.Name;
     }).join(", ")
 
-    if (!col.cell.isGrouped) {
+    if (!col?.cell?.isGrouped && !Profile.Ismobile) {
       return filestext.length - 35 > 20 ?
         (
           !this.state.filesStatus.includes(itemId) ?

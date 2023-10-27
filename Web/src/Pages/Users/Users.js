@@ -43,9 +43,9 @@ export default class Users extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
       { Header: Literals.Columns.NormalizedUsername[Profile.Language], accessor: 'NormalizedUsername', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Email[Profile.Language], accessor: 'Email', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Email[Profile.Language], accessor: 'Email', sortable: true, canGroupBy: true, canFilter: true, Subheader: true },
       { Header: Literals.Columns.EmailConfirmed[Profile.Language], accessor: 'EmailConfirmed', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.AccessFailedCount[Profile.Language], accessor: 'AccessFailedCount', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
@@ -57,7 +57,7 @@ export default class Users extends Component {
       { Header: Literals.Columns.Address[Profile.Language], accessor: 'Address', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Language[Profile.Language], accessor: 'Language', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.UserID[Profile.Language], accessor: 'UserID', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Defaultdepartment[Profile.Language], accessor: 'Defaultdepartment', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Defaultdepartment[Profile.Language], accessor: 'Defaultdepartment', sortable: true, canGroupBy: true, canFilter: true, Finalheader: true },
       { Header: Literals.Columns.Stations[Profile.Language], accessor: 'Stationstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
       { Header: Literals.Columns.Departments[Profile.Language], accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
       { Header: Literals.Columns.Roles[Profile.Language], accessor: 'Rolestxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.rolesCellhandler(col) },
@@ -186,8 +186,11 @@ export default class Users extends Component {
   }
 
   rolesCellhandler = (col) => {
+
+    const { Profile } = this.props
+
     if (col.value) {
-      if (!col.cell.isGrouped) {
+      if (!col.cell?.isGrouped && !Profile.Ismobile) {
         const itemId = col.row.original.Id
         const itemRoles = col.row.original.Roles
         return col.value.length - 35 > 20 ?
@@ -199,12 +202,14 @@ export default class Users extends Component {
       }
       return col.value
     }
-    return null
+    return col.value
   }
 
   departmentCellhandler = (col) => {
+    const { Profile } = this.props
+
     if (col.value) {
-      if (!col.cell.isGrouped) {
+      if (!col.cell?.isGrouped && !Profile.Ismobile) {
         const itemId = col.row.original.Id
         const itemDepartments = col.row.original.Departments
         return col.value.length - 35 > 20 ?
@@ -216,12 +221,14 @@ export default class Users extends Component {
       }
       return col.value
     }
-    return null
+    return col.value
   }
 
   stationCellhandler = (col) => {
+    const { Profile } = this.props
+
     if (col.value) {
-      if (!col.cell.isGrouped) {
+      if (!col.cell?.isGrouped && !Profile.Ismobile) {
         const itemId = col.row.original.Id
         const itemStations = col.row.original.Stations
         return col.value.length - 35 > 20 ?
@@ -233,7 +240,7 @@ export default class Users extends Component {
       }
       return col.value
     }
-    return null
+    return col.value
   }
 
 }

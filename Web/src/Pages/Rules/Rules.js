@@ -33,8 +33,8 @@ export class Rules extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Status[Profile.Language], accessor: 'Status', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, newWidht: 30, Cell: col => this.statusCellhandler(col) },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
+      { Header: Literals.Columns.Status[Profile.Language], accessor: 'Status', sortable: false, canGroupBy: false, canFilter: false, Subheader: true, filterDisable: true, newWidht: 30, Cell: col => this.statusCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },

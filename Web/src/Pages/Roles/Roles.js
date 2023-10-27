@@ -36,11 +36,11 @@ export class Roles extends Component {
   render() {
     const { Roles, Profile, handleDeletemodal, handleSelectedRole } = this.props
     const { isLoading, isDispatching } = Roles
-    
+
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
       { Header: Literals.Columns.Privilegestxt[Profile.Language], accessor: 'Privilegestxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.authoryCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
@@ -104,7 +104,7 @@ export class Roles extends Component {
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-             {Profile.Ismobile ?
+                {Profile.Ismobile ?
                   <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
@@ -131,8 +131,11 @@ export class Roles extends Component {
   }
 
   authoryCellhandler = (col) => {
+
+    const { Profile } = this.props
+
     if (col.value) {
-      if (!col.cell.isGrouped) {
+      if (!col.cell?.isGrouped && !Profile.Ismobile) {
         const itemId = col.row.original.Id
         const itemPrivileges = col.row.original.Privileges
         return col.value.length - 35 > 20 ?
@@ -144,7 +147,7 @@ export class Roles extends Component {
       }
       return col.value
     }
-    return null
+    return col.value
   }
 
 }

@@ -59,9 +59,9 @@ export default class Units extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Unittype[Profile.Language], accessor: 'Unittype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.unittypeCellhandler(col, unitstatusOption) },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
+      { Header: Literals.Columns.Unittype[Profile.Language], accessor: 'Unittype', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, Cell: col => this.unittypeCellhandler(col, unitstatusOption) },
+      { Header: Literals.Columns.Department[Profile.Language], accessor: 'Departmentstxt', sortable: true, canGroupBy: true, Finalheader: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -151,9 +151,9 @@ export default class Units extends Component {
   }
 
   departmentCellhandler = (col) => {
-    const { Departments } = this.props
+    const { Departments, Profile } = this.props
     if (col.value) {
-      if (!col.cell.isGrouped) {
+      if (!col.cell?.isGrouped && !Profile.Ismobile) {
         const itemId = col.row.original.Id
         const itemDepartments = (col.row.original.Departmentuuids || []).map(u => { return (Departments.list || []).find(departmen => departmen.Uuid === u.DepartmentID) })
         return col.value.length - 35 > 20 ?
@@ -165,7 +165,7 @@ export default class Units extends Component {
       }
       return col.value
     }
-    return null
+    return col.value
   }
 
   unittypeCellhandler = (col, unitstatusOption) => {

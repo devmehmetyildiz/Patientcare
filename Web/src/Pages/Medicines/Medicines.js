@@ -55,11 +55,11 @@ export default class Medicines extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Warehouse[Profile.Language], accessor: 'WarehouseID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.warehouseCellhandler(col) },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, Firstheader: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
+      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
       { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
       { Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
+      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, Finalheader: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
@@ -172,9 +172,9 @@ export default class Medicines extends Component {
     if (Stockmovements.isLoading || Stocks.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const selectedStock = (Stocks.list || []).find(u => u.Id === col.row.original.Id)
+      const selectedStock = (Stocks.list || []).find(u => u.Id === col?.row?.original?.Id)
       let amount = 0.0;
-      let movements = (Stockmovements.list || []).filter(u => u.StockID === selectedStock.Uuid && u.Isactive && u.Isapproved)
+      let movements = (Stockmovements.list || []).filter(u => u.StockID === selectedStock?.Uuid && u.Isactive && u.Isapproved)
       movements.forEach(movement => {
         amount += (movement.Amount * movement.Movementtype);
       });

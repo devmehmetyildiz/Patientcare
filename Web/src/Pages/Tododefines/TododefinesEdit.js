@@ -104,8 +104,8 @@ export default class TododefinesEdit extends Component {
     data.Checkperiods = this.context.formstates[`${this.PAGE_NAME}/Checkperiods`].map(id => {
       return (Checkperiods.list || []).find(u => u.Uuid === id)
     })
-    data.IsRequired = this.context.formstates[`${this.PAGE_NAME}/IsRequired`]
-    data.IsNeedactivation = this.context.formstates[`${this.PAGE_NAME}/IsNeedactivation`]
+    data.IsRequired = this.context.formstates[`${this.PAGE_NAME}/IsRequired`] || false
+    data.IsNeedactivation = this.context.formstates[`${this.PAGE_NAME}/IsNeedactivation`] || false
 
     let errors = []
     if (!validator.isString(data.Name)) {

@@ -41,11 +41,11 @@ export default class Purchaseorderstockmovements extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockCellhandler(col) },
+      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', Firstheader: true, sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockCellhandler(col) },
       { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', Subheader: true, sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Movementtype[Profile.Language], accessor: 'Movementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
+      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, Finalheader: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Prevvalue[Profile.Language], accessor: 'Prevvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Newvalue[Profile.Language], accessor: 'Newvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
@@ -108,7 +108,7 @@ export default class Purchaseorderstockmovements extends Component {
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-              {Profile.Ismobile ?
+                {Profile.Ismobile ?
                   <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />

@@ -37,9 +37,9 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
     const data = useMemo(() => Data, [Data])
 
     const pageSizes = [
+        { key: '15', value: 15, text: '15' },
         { key: '30', value: 30, text: '30' },
-        { key: '50', value: 50, text: '50' },
-        { key: '100', value: 100, text: '100' },
+        { key: '45', value: 45, text: '45' },
     ]
 
     const defaultColumn = React.useMemo(
@@ -76,7 +76,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
         {
             columns,
             data,
-            initialState: { ...Config, pageSize: 30 },
+            initialState: { ...Config, pageSize: 15 },
             defaultColumn,
         },
         useFilters,
@@ -123,7 +123,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
 
     return (
         <div className='react-table-container'>
-            <div className='react-table-box'>
+            <div className='react-table-box max-h[calc(100vh-13.4rem)]'>
                 {
                     filters.length > 0 ?
                         <div className='react-table-filter'>

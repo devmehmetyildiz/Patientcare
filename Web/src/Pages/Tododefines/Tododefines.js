@@ -43,11 +43,11 @@ export default class Tododefines extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
       { Header: Literals.Columns.IsRequired[Profile.Language], accessor: 'IsRequired', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.IsNeedactivation[Profile.Language], accessor: 'IsNeedactivation', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Checkperiods[Profile.Language], accessor: 'Checkperiodtxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.checkperiodCellhandler(col) },
+      { Header: Literals.Columns.Checkperiods[Profile.Language], accessor: 'Checkperiodtxt', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, isOpen: false, Cell: col => this.checkperiodCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -142,10 +142,10 @@ export default class Tododefines extends Component {
 
   checkperiodCellhandler = (col) => {
 
-    const { Checkperiods } = this.props
+    const { Checkperiods, Profile } = this.props
 
     if (col.value) {
-      if (!col.cell.isGrouped) {
+      if (!col.cell?.isGrouped && !Profile.Ismobile) {
         const itemId = col.row.original.Id
         const itemCheckperiods = (col.row.original.Checkperioduuids || []).map(u => { return (Checkperiods.list || []).find(checkperiod => checkperiod.Uuid === u.CheckperiodID) })
         return col.value.length - 35 > 20 ?
@@ -157,7 +157,7 @@ export default class Tododefines extends Component {
       }
       return col.value
     }
-    return null
+    return col.value
   }
 
   boolCellhandler = (col) => {

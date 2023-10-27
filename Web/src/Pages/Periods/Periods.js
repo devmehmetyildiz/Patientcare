@@ -40,9 +40,9 @@ export default class Periods extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Occuredtime[Profile.Language], accessor: 'Occuredtime', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Checktime[Profile.Language], accessor: 'Checktime', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
+      { Header: Literals.Columns.Occuredtime[Profile.Language], accessor: 'Occuredtime', sortable: true, canGroupBy: true, canFilter: true, Subheader: true },
+      { Header: Literals.Columns.Checktime[Profile.Language], accessor: 'Checktime', sortable: true, canGroupBy: true, canFilter: true, Finalheader: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -101,7 +101,7 @@ export default class Periods extends Component {
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-              {Profile.Ismobile ?
+                {Profile.Ismobile ?
                   <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />

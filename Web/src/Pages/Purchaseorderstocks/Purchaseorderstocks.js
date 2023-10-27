@@ -53,11 +53,11 @@ export default class Purchaseorderstocks extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Purchaseorder[Profile.Language], accessor: 'PurchaseorderID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.purchaseorderCellhandler(col) },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', Firstheader: true, sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
+      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', Subheader: true, sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
       { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
+      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, Finalheader: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Source[Profile.Language], accessor: 'Source', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
@@ -166,9 +166,9 @@ export default class Purchaseorderstocks extends Component {
     if (Purchaseorderstockmovements.isLoading || Purchaseorderstocks.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const selectedStock = (Purchaseorderstocks.list || []).find(u => u.Id === col.row.original.Id)
+      const selectedStock = (Purchaseorderstocks.list || []).find(u => u.Id === col?.row?.original?.Id)
       let amount = 0.0;
-      let movements = (Purchaseorderstockmovements.list || []).filter(u => u.StockID === selectedStock.Uuid && u.Isactive)
+      let movements = (Purchaseorderstockmovements.list || []).filter(u => u.StockID === selectedStock?.Uuid && u.Isactive)
       movements.forEach(movement => {
         amount += (movement.Amount * movement.Movementtype);
       });
