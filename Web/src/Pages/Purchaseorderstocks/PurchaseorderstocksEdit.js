@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form } from 'semantic-ui-react'
+import { Divider, Dropdown, Form, Icon, Modal } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
@@ -15,6 +15,9 @@ import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
+import PurchaseordersCreate from '../../Containers/Purchaseorders/PurchaseordersCreate'
+import StockdefinesCreate from '../../Containers/Stockdefines/StockdefinesCreate'
+import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 export default class PurchaseorderstocksEdit extends Component {
 
   PAGE_NAME = "PurchaseorderstocksEdit"
@@ -22,7 +25,8 @@ export default class PurchaseorderstocksEdit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isDatafetched: false
+      isDatafetched: false,
+      modelOpened: false
     }
   }
 
@@ -73,9 +77,18 @@ export default class PurchaseorderstocksEdit extends Component {
       return { key: order.Uuid, text: order.Purchasenumber, value: order.Uuid }
     })
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
+
 
     return (
-      Stockdefines.isLoading || Stockdefines.isDispatching || Purchaseorderstocks.isLoading || Purchaseorderstocks.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
+      Purchaseorderstocks.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -90,15 +103,15 @@ export default class PurchaseorderstocksEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchaseorder[Profile.Language]} name="PurchaseorderID" options={Purchaseorderoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchaseorder[Profile.Language]} name="PurchaseorderID" options={Purchaseorderoptions} formtype='dropdown' modal={addModal(<PurchaseordersCreate />)} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype='dropdown' modal={addModal(<StockdefinesCreate />)} />
               </Form.Group>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
               </Form.Group>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={addModal(<DepartmentsCreate />)} />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Purchaseorderstocks">

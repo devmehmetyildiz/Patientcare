@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form } from 'semantic-ui-react'
+import { Form, Icon, Modal } from 'semantic-ui-react'
 import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
@@ -15,9 +15,17 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
+import RoomsCreate from '../../Containers/Rooms/RoomsCreate'
 export default class BedsCreate extends Component {
 
   PAGE_NAME = "BedsCreate"
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      modelOpened: false
+    }
+  }
 
   componentDidMount() {
     const { GetRooms, GetFloors } = this.props
@@ -40,9 +48,17 @@ export default class BedsCreate extends Component {
       return { key: room.Uuid, text: `${room.Name} (${(Floors.list || []).find(u => u.Uuid === room.FloorID)?.Name})`, value: room.Uuid }
     })
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
 
     return (
-      Rooms.isLoading || Rooms.isDispatching || Beds.isLoading || Beds.isDispatching ? <LoadingPage /> :
+      Beds.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -57,7 +73,7 @@ export default class BedsCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.RoomID[Profile.Language]} name="RoomID" options={Roomsoptions} formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.RoomID[Profile.Language]} name="RoomID" options={Roomsoptions} formtype='dropdown' modal={addModal(<RoomsCreate />)} />
               <Footerwrapper>
                 <Link to="/Beds">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>

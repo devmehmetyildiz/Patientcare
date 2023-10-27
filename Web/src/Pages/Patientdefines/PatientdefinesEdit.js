@@ -28,6 +28,7 @@ export default class PatientdefinesEdit extends Component {
 
   componentDidMount() {
     const { GetPatientdefine, match, history, GetCostumertypes, GetPatienttypes, PatientdefineID } = this.props
+    console.log('history: ', history);
     let Id = PatientdefineID || match?.params?.PatientdefineID
     if (validator.isUUID(Id)) {
       GetPatientdefine(Id)
@@ -191,7 +192,7 @@ export default class PatientdefinesEdit extends Component {
         fillPatientdefinenotification(error)
       })
     } else {
-      EditPatientdefines({ data: { ...Patientdefines.selected_record, ...data }, history })
+      EditPatientdefines({ data: { ...Patientdefines.selected_record, ...data }, history, redirectUrl: (history?.location?.state?.redirectUrl || 'Patientdefines') })
     }
   }
 }

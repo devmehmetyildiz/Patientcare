@@ -26,7 +26,7 @@ export default class StationsCreate extends Component {
 
   render() {
 
-    const { Stations, Profile } = this.props
+    const { Stations, Profile, history } = this.props
     const { isLoading, isDispatching } = Stations
 
     return (
@@ -46,9 +46,9 @@ export default class StationsCreate extends Component {
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" required />
               <Footerwrapper>
-                <Link to="/Stations">
+                {history && <Link to="/Stations">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
+                </Link>}
                 <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>

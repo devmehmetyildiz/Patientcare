@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Checkbox, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button, Checkbox, Form, Icon, Modal } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
@@ -14,6 +14,7 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
+import CheckperiodsCreate from '../../Containers/Checkperiods/CheckperiodsCreate'
 export default class TododefinesEdit extends Component {
 
   PAGE_NAME = "TododefinesEdit"
@@ -22,6 +23,7 @@ export default class TododefinesEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
+      modelOpened: false
     }
   }
 
@@ -58,6 +60,15 @@ export default class TododefinesEdit extends Component {
       return { key: checkperiod.Uuid, text: checkperiod.Name, value: checkperiod.Uuid }
     })
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
+
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -78,7 +89,7 @@ export default class TododefinesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Checkperiods[Profile.Language]} name="Checkperiods" multiple options={Checkperiodsoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Checkperiods[Profile.Language]} name="Checkperiods" multiple options={Checkperiodsoptions} formtype='dropdown' modal={addModal(<CheckperiodsCreate />)} />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsRequired[Profile.Language]} name="IsRequired" formtype="checkbox" />

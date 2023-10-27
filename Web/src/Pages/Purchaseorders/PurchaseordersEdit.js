@@ -16,6 +16,9 @@ import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import StockdefinesCreate from '../../Containers/Stockdefines/StockdefinesCreate'
 import { FormContext } from '../../Provider/FormProvider'
+import CasesCreate from '../../Containers/Cases/CasesCreate'
+import WarehousesCreate from '../../Containers/Warehouses/WarehousesCreate'
+import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 export default class PurchaseordersEdit extends Component {
 
   constructor(props) {
@@ -23,7 +26,8 @@ export default class PurchaseordersEdit extends Component {
     this.state = {
       selectedStocks: [],
       isDatafetched: false,
-      open: false
+      open: false,
+      modelOpened: false
     }
   }
 
@@ -89,6 +93,15 @@ export default class PurchaseordersEdit extends Component {
       return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
     })
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
+
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -113,7 +126,7 @@ export default class PurchaseordersEdit extends Component {
                       content: <React.Fragment>
                         <div className='h-[calc(62vh-10px)]'>
                           <Form.Group widths={'equal'}>
-                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} name="WarehouseID" options={Warehousesoption} formtype='dropdown' />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} name="WarehouseID" options={Warehousesoption} formtype='dropdown' modal={addModal(<WarehousesCreate />)} />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
                             <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Company[Profile.Language]} name="Company" />
@@ -124,7 +137,7 @@ export default class PurchaseordersEdit extends Component {
                             <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchasenumber[Profile.Language]} name="Purchasenumber" />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
-                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CaseName[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CaseName[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' modal={addModal(<CasesCreate />)} />
                             <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Personelname[Profile.Language]} name="Personelname" />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
@@ -145,16 +158,8 @@ export default class PurchaseordersEdit extends Component {
                             <Table.Header>
                               <Table.Row>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]} <span>
-                                  <Modal
-                                    onClose={() => this.setState({ open: false })}
-                                    onOpen={() => this.setState({ open: true })}
-                                    trigger={<Icon link name='plus' />}
-                                    content={<StockdefinesCreate />}
-                                  >
-                                  </Modal>
-                                </span></Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{addModal(<StockdefinesCreate />)}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{addModal(<DepartmentsCreate />)}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Barcodeno[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Skt[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Amount[Profile.Language]}</Table.HeaderCell>
@@ -222,16 +227,8 @@ export default class PurchaseordersEdit extends Component {
                             <Table.Header>
                               <Table.Row>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]} <span>
-                                  <Modal
-                                    onClose={() => this.setState({ open: false })}
-                                    onOpen={() => this.setState({ open: true })}
-                                    trigger={<Icon link name='plus' />}
-                                    content={<StockdefinesCreate />}
-                                  >
-                                  </Modal>
-                                </span></Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{addModal(<StockdefinesCreate />)}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{addModal(<DepartmentsCreate />)}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Amount[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={6}>{Literals.Columns.Info[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Delete[Profile.Language]}</Table.HeaderCell>

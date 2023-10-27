@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Checkbox, Divider, Dropdown, Form } from 'semantic-ui-react'
+import { Checkbox, Divider, Dropdown, Form, Icon, Modal } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -16,9 +16,18 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
+import CheckperiodsCreate from '../../Containers/Checkperiods/CheckperiodsCreate'
 export default class TododefinesCreate extends Component {
 
   PAGE_NAME = "TododefinesCreate"
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      modelOpened: false
+    }
+  }
+
 
   componentDidMount() {
     const { GetCheckperiods } = this.props
@@ -40,6 +49,15 @@ export default class TododefinesCreate extends Component {
       return { key: checkperiod.Uuid, text: checkperiod.Name, value: checkperiod.Uuid }
     })
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
+
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -60,7 +78,7 @@ export default class TododefinesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Checkperiods[Profile.Language]} name="Checkperiods" multiple options={Checkperiodsoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Checkperiods[Profile.Language]} name="Checkperiods" multiple options={Checkperiodsoptions} formtype='dropdown' modal={addModal(<CheckperiodsCreate />)} />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsRequired[Profile.Language]} name="IsRequired" formtype="checkbox" />
@@ -88,7 +106,7 @@ export default class TododefinesCreate extends Component {
       return (Checkperiods.list || []).find(u => u.Uuid === id)
     })
     data.IsRequired = this.context.formstates[`${this.PAGE_NAME}/IsRequired`] || false
-    data.IsNeedactivation = this.context.formstates[`${this.PAGE_NAME}/IsNeedactivation`] || false 
+    data.IsNeedactivation = this.context.formstates[`${this.PAGE_NAME}/IsNeedactivation`] || false
 
     let errors = []
     if (!validator.isString(data.Name)) {

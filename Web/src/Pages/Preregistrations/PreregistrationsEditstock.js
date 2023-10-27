@@ -14,6 +14,7 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import validator from '../../Utils/Validator'
+import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 export default class PreregistrationsEditstock extends Component {
 
   constructor(props) {
@@ -21,7 +22,8 @@ export default class PreregistrationsEditstock extends Component {
     this.state = {
       isDatafetched: false,
       selectedStocks: [],
-      open: false
+      open: false,
+      modelOpened: false
     }
   }
 
@@ -97,6 +99,15 @@ export default class PreregistrationsEditstock extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
+
     return (
 
       isLoading || isDispatching ? <LoadingPage /> :
@@ -129,8 +140,8 @@ export default class PreregistrationsEditstock extends Component {
                         <Table.Header>
                           <Table.Row>
                             <Table.HeaderCell width={1}>{Literals.Options.TableColumnsOrder[Profile.Language]}</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsStockdefine[Profile.Language]}</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsDepartment[Profile.Language]}</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsStockdefine[Profile.Language]}{addModal(<StockdefinesCreate />)}</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsDepartment[Profile.Language]}{addModal(<DepartmentsCreate />)}</Table.HeaderCell>
                             <Table.HeaderCell width={2}>{Literals.Options.TableColumnsBarcode[Profile.Language]}</Table.HeaderCell>
                             <Table.HeaderCell width={2}>{Literals.Options.TableColumnsSkt[Profile.Language]}</Table.HeaderCell>
                             <Table.HeaderCell width={2}>{Literals.Options.TableColumnsAmount[Profile.Language]}</Table.HeaderCell>
@@ -195,8 +206,8 @@ export default class PreregistrationsEditstock extends Component {
                         <Table.Header>
                           <Table.Row>
                             <Table.HeaderCell width={1}>{Literals.Options.TableColumnsOrder[Profile.Language]}</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsStockdefine[Profile.Language]}</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsDepartment[Profile.Language]}</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsStockdefine[Profile.Language]}{addModal(<StockdefinesCreate />)}</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsDepartment[Profile.Language]}{addModal(<DepartmentsCreate />)}</Table.HeaderCell>
                             <Table.HeaderCell width={2}>{Literals.Options.TableColumnsAmount[Profile.Language]}</Table.HeaderCell>
                             <Table.HeaderCell width={6}>{Literals.Options.TableColumnsInfo[Profile.Language]}</Table.HeaderCell>
                             <Table.HeaderCell width={1}>{Literals.Options.TableColumnsDelete[Profile.Language]}</Table.HeaderCell>

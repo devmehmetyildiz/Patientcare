@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button, Form, Icon, Modal } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Literals from './Literals'
@@ -14,6 +14,7 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
 import Notification from '../../Utils/Notification'
+import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 
 
 export default class UnitsEdit extends Component {
@@ -24,6 +25,7 @@ export default class UnitsEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
+      modelOpened: false
     }
   }
 
@@ -72,6 +74,15 @@ export default class UnitsEdit extends Component {
       }
     ]
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
+
     return (
       Departments.isLoading || Departments.isDispatching || Units.isLoading || Units.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -92,7 +103,7 @@ export default class UnitsEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unittype[Profile.Language]} name="Unittype" options={unitstatusOption} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={addModal(<DepartmentsCreate />)} />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Units">

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Dropdown, Form, Header } from 'semantic-ui-react'
+import { Breadcrumb, Button, Divider, Dropdown, Form, Header, Icon, Modal } from 'semantic-ui-react'
 import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -14,6 +14,9 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
+import StationsCreate from '../../Containers/Stations/StationsCreate'
+import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import RolesCreate from '../../Containers/Roles/RolesCreate'
 export default class UsersEdit extends Component {
 
   PAGE_NAME = "UsersEdit"
@@ -22,6 +25,7 @@ export default class UsersEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
+      modelOpened: false
     }
   }
 
@@ -82,12 +86,17 @@ export default class UsersEdit extends Component {
       { key: 2, text: 'TR', value: 'tr' },
     ]
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
 
     return (
-      Departments.isLoading || Departments.isDispatching ||
-        Roles.isLoading || Roles.isDispatching ||
-        Users.isLoading || Users.isDispatching ||
-        Stations.isLoading || Stations.isDispatching ? <LoadingPage /> :
+      Users.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -116,9 +125,9 @@ export default class UsersEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stations[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departments[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Roles[Profile.Language]} name="Roles" multiple options={Roleoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stations[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype='dropdown' modal={addModal(<StationsCreate />)} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departments[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={addModal(<DepartmentsCreate />)} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Roles[Profile.Language]} name="Roles" multiple options={Roleoptions} formtype='dropdown' modal={addModal(<RolesCreate />)} />
               </Form.Group>
               <FormInput placeholder={Literals.Columns.Language[Profile.Language]} value={this.state.selectedlanguage} options={Languageoptions} onChange={this.handleChangeLanguage} formtype='dropdown' />
               <Footerwrapper>

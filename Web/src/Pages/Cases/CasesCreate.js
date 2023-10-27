@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form, } from 'semantic-ui-react'
+import { Form, Icon, Modal, } from 'semantic-ui-react'
 import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
@@ -16,9 +16,17 @@ import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import { FormContext } from '../../Provider/FormProvider'
 import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
+import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 export default class CasesCreate extends Component {
 
   PAGE_NAME = 'CasesCreate'
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      modelOpened: false
+    }
+  }
 
   componentDidMount() {
     const { GetDepartments } = this.props
@@ -74,7 +82,14 @@ export default class CasesCreate extends Component {
       return isHave
     }).filter(u => u).length > 0
 
-
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
 
     return (
       Cases.isLoading || Cases.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
@@ -100,13 +115,13 @@ export default class CasesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.CaseStatus[Profile.Language]} name="CaseStatus" options={casestatusOption} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={addModal(<DepartmentsCreate />)} />
               </Form.Group>
               {ispatientdepartmentselected &&
                 <Form.Group widths='equal'>
                   <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patientstatus[Profile.Language]} name="Patientstatus" options={patientcasesOptions} formtype="dropdown" />
-                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Iscalculateprice[Profile.Language]} name="Iscalculateprice" options={Departmentoptions} formtype="checkbox" />
-                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isroutinework[Profile.Language]} name="Isroutinework" options={Departmentoptions} formtype="checkbox" />
+                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Iscalculateprice[Profile.Language]} name="Iscalculateprice" formtype="checkbox" />
+                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isroutinework[Profile.Language]} name="Isroutinework" formtype="checkbox" />
                 </Form.Group>}
               <Footerwrapper>
                 {history && <Link to="/Cases">

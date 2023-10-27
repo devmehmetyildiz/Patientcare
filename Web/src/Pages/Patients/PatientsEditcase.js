@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Form, Label } from 'semantic-ui-react'
+import { Breadcrumb, Button, Form, Icon, Label, Modal } from 'semantic-ui-react'
 import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -14,6 +14,7 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import CasesCreate from '../../Containers/Cases/CasesCreate'
 
 export default class PatientsEditcase extends Component {
 
@@ -23,6 +24,7 @@ export default class PatientsEditcase extends Component {
         super(props)
         this.state = {
             isDatafetched: false,
+            modelOpened: false
         }
     }
 
@@ -86,6 +88,15 @@ export default class PatientsEditcase extends Component {
 
         const activecase = (Cases.list || []).find(u => u.Uuid === selected_record?.CaseID)
 
+        const addModal = (content) => {
+            return <Modal
+                onClose={() => { this.setState({ modelOpened: false }) }}
+                onOpen={() => { this.setState({ modelOpened: true }) }}
+                trigger={<Icon link name='plus' />}
+                content={content}
+            />
+        }
+
         return (
             isLoadingstatus ? <LoadingPage /> :
                 <Pagewrapper >
@@ -107,7 +118,7 @@ export default class PatientsEditcase extends Component {
                         <Form onSubmit={this.handleSubmit}>
                             <Label>{`${Literals.Columns.Activecase[Profile.Language]} : ${activecase?.Name}`}</Label>
                             <Form.Group widths='equal'>
-                                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' />
+                                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' modal={addModal(<CasesCreate />)} />
                             </Form.Group>
                             <Footerwrapper>
                                 {history && <Button onClick={(e) => {

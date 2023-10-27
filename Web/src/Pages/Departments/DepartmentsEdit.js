@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Checkbox, Divider, Dropdown, Form, Header } from 'semantic-ui-react'
+import { Breadcrumb, Button, Checkbox, Divider, Dropdown, Form, Header, Icon, Modal } from 'semantic-ui-react'
 import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -14,6 +14,7 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import StationsCreate from '../../Containers/Stations/StationsCreate'
 
 export default class DepartmentsEdit extends Component {
 
@@ -23,6 +24,7 @@ export default class DepartmentsEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
+      modelOpened:false
     }
   }
 
@@ -58,6 +60,15 @@ export default class DepartmentsEdit extends Component {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
+
     return (
       Departments.isLoading || Departments.isDispatching || Stations.isLoading || Stations.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -74,7 +85,7 @@ export default class DepartmentsEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype="dropdown" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype="dropdown" modal={addModal(<StationsCreate />)} />
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Ishavepatients[Profile.Language]} name="Ishavepatients" formtype="checkbox" />
               <Footerwrapper>
                 {history && <Link to="/Departments">

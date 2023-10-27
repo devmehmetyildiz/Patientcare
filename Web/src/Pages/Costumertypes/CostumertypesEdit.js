@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button, Form, Icon, Modal } from 'semantic-ui-react'
 import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -14,6 +14,7 @@ import FormInput from '../../Utils/FormInput'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
+import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 export default class CostumertypesEdit extends Component {
 
   PAGE_NAME = "CostumertypesEdit"
@@ -21,7 +22,8 @@ export default class CostumertypesEdit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isDatafetched: false
+      isDatafetched: false,
+      modelOpened: false
     }
   }
 
@@ -57,8 +59,17 @@ export default class CostumertypesEdit extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
+
     return (
-      Departments.isLoading || Departments.isDispatching || Costumertypes.isLoading || Costumertypes.isDispatching ? <LoadingPage /> :
+      Costumertypes.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -73,7 +84,7 @@ export default class CostumertypesEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={addModal(<DepartmentsCreate />)} />
               <Footerwrapper>
                 {history && <Link to="/Costumertypes">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>

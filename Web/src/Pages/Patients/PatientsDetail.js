@@ -331,15 +331,11 @@ export default class PatientsDetail extends Component {
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => {
-                      handleInmodal(true)
-                    }}>{Literals.Button.Geton[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => {
-                      handleOutmodal(true)
-                    }}>{Literals.Button.Getoff[Profile.Language]}</Button>
+                    <Button primary fluid onClick={() => { handleInmodal(true) }}>{Literals.Button.Geton[Profile.Language]}</Button>
+                    <Button primary fluid onClick={() => { handleOutmodal(true) }}>{Literals.Button.Getoff[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Changetodos[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>
+                    <Button primary fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`, { redirectUrl: "/Patients/" + Id }) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>
                   </div>
                 </Grid.Column>
               </Grid.Row>

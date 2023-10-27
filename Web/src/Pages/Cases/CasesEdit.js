@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Dropdown, Form, Header, Icon, Popup } from 'semantic-ui-react'
+import { Breadcrumb, Button, Divider, Dropdown, Form, Header, Icon, Modal, Popup } from 'semantic-ui-react'
 import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -15,6 +15,7 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
+import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 export default class CasesEdit extends Component {
 
   PAGE_NAME = 'CasesEdit'
@@ -23,6 +24,7 @@ export default class CasesEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
+      modelOpened: false
     }
   }
 
@@ -88,10 +90,18 @@ export default class CasesEdit extends Component {
       if (department && department.Ishavepatients) {
         isHave = true
       }
-      console.log('isHave: ', isHave);
       return isHave
     }).filter(u => u).length > 0
-    
+
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
+
     return (
       Cases.isLoading || Cases.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -116,13 +126,13 @@ export default class CasesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.CaseStatus[Profile.Language]} name="CaseStatus" options={casestatusOption} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={addModal(<DepartmentsCreate />)} />
               </Form.Group>
               {ispatientdepartmentselected &&
                 <Form.Group widths='equal'>
                   <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patientstatus[Profile.Language]} name="Patientstatus" options={patientcasesOptions} formtype="dropdown" />
-                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Iscalculateprice[Profile.Language]} name="Iscalculateprice" options={Departmentoptions} formtype="checkbox" />
-                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isroutinework[Profile.Language]} name="Isroutinework" options={Departmentoptions} formtype="checkbox" />
+                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Iscalculateprice[Profile.Language]} name="Iscalculateprice" formtype="checkbox" />
+                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isroutinework[Profile.Language]} name="Isroutinework" formtype="checkbox" />
                 </Form.Group>}
               <Footerwrapper>
                 {history && <Link to="/Cases">

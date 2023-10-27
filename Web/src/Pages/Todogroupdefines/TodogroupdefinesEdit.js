@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button, Form, Icon, Modal } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from "../../Utils/Notification"
@@ -14,6 +14,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
+import TododefinesCreate from '../../Containers/Tododefines/TododefinesCreate'
+import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 export default class TodogroupdefinesEdit extends Component {
 
   PAGE_NAME = "TodogroupdefinesEdit"
@@ -22,6 +24,7 @@ export default class TodogroupdefinesEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
+      modelOpened: false
     }
   }
 
@@ -63,8 +66,17 @@ export default class TodogroupdefinesEdit extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
+
     return (
-      Todogroupdefines.isLoading || Todogroupdefines.isDispatching || Tododefines.isLoading || Tododefines.isDispatching ? <LoadingPage /> :
+      Todogroupdefines.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -80,8 +92,8 @@ export default class TodogroupdefinesEdit extends Component {
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Tododefines[Profile.Language]} name="Tododefines" multiple options={Tododefineoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Tododefines[Profile.Language]} name="Tododefines" multiple options={Tododefineoptions} formtype='dropdown' modal={addModal(<TododefinesCreate />)} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={addModal(<DepartmentsCreate />)} />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Todogroupdefines">

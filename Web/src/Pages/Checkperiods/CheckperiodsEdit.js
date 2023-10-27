@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form } from 'semantic-ui-react'
+import { Form, Icon, Modal } from 'semantic-ui-react'
 import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -15,6 +15,7 @@ import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
+import PeriodsCreate from '../../Containers/Periods/PeriodsCreate'
 export default class CheckperiodsEdit extends Component {
 
   PAGE_NAME = 'CheckperiodsEdit'
@@ -23,6 +24,7 @@ export default class CheckperiodsEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
+      modelOpened: false
     }
   }
 
@@ -78,6 +80,15 @@ export default class CheckperiodsEdit extends Component {
       { key: 1, text: Literals.Options.Periodtypeoption.value0[Profile.Language], value: 1 },
     ]
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
+
     return (
       Checkperiods.isLoading || Checkperiods.isDispatching || Periods.isLoading || Periods.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -98,7 +109,7 @@ export default class CheckperiodsEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Occureddays[Profile.Language]} name="Occureddays" multiple options={Dayoptions} formtype="dropdown" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodtype[Profile.Language]} name="Periodtype" options={Periodtypeoption} formtype="dropdown" />
               </Form.Group>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodstxt[Profile.Language]} name="Periods" multiple options={Periodoptions} formtype="dropdown" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodstxt[Profile.Language]} name="Periods" multiple options={Periodoptions} formtype="dropdown" modal={addModal(<PeriodsCreate />)} />
               <Footerwrapper>
                 {history && <Link to="/Checkperiods">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>

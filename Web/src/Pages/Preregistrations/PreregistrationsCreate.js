@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form, FormField, Icon, Popup } from 'semantic-ui-react'
+import { Divider, Dropdown, Form, FormField, Icon, Modal, Popup } from 'semantic-ui-react'
 import { Breadcrumb, Button, Header } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -15,6 +15,9 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
+import PatientdefinesCreate from '../../Containers/Patientdefines/PatientdefinesCreate'
+import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import CasesCreate from '../../Containers/Cases/CasesCreate'
 export default class PreregistrationsCreate extends Component {
 
   PAGE_NAME = 'PreregistrationsCreate'
@@ -23,6 +26,8 @@ export default class PreregistrationsCreate extends Component {
     super(props)
     this.state = {
       newRegister: false,
+      Isdatafetched: false,
+      modelOpened: false
     }
   }
 
@@ -32,6 +37,9 @@ export default class PreregistrationsCreate extends Component {
     GetPatientdefines()
     GetDepartments()
     GetCases()
+
+
+
   }
 
   componentDidUpdate() {
@@ -41,6 +49,21 @@ export default class PreregistrationsCreate extends Component {
     Notification(Departments.notifications, removeDepartmentnotification)
     Notification(Cases.notifications, removeCasenotification)
     Notification(Patientdefines.notifications, removePatientdefinenotification)
+
+    const loadingstatus = Patients.isLoading && Departments.isLoading && Cases.isLoading && Patientdefines.isLoading
+    if (!loadingstatus && !this.state.Isdatafetched) {
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+
+      this.context.setFormstates({
+        ...this.context.formstates,
+        [`${this.PAGE_NAME}/Registerdate`]: formattedDate,
+      })
+      this.setState({ Isdatafetched: true })
+    }
   }
 
   render() {
@@ -85,6 +108,15 @@ export default class PreregistrationsCreate extends Component {
       position='top left'
     />
 
+    const addModal = (content) => {
+      return <Modal
+        onClose={() => { this.setState({ modelOpened: false }) }}
+        onOpen={() => { this.setState({ modelOpened: true }) }}
+        trigger={<Icon link name='plus' />}
+        content={content}
+      />
+    }
+
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -101,7 +133,7 @@ export default class PreregistrationsCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               {!this.state.newRegister ?
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Patientdefine[Profile.Language]} name="PatientdefineID" options={Patientdefineoptions} formtype="dropdown" required additionalicon={changeRegistertype} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Patientdefine[Profile.Language]} name="PatientdefineID" options={Patientdefineoptions} formtype="dropdown" required additionalicon={changeRegistertype} modal={addModal(<PatientdefinesCreate />)} />
                 :
                 <React.Fragment>
                   <Form.Group widths={'equal'}>
@@ -111,7 +143,7 @@ export default class PreregistrationsCreate extends Component {
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Mothername[Profile.Language]} name="Mothername" />
                   </Form.Group>
                   <Form.Group widths={'equal'}>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CountryID[Profile.Language]} name="CountryID" required  maxLength={11} validationfunc={this.validateTcNumber} validationmessage={"Geçerli Bir Tc Giriniz!"} />
+                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CountryID[Profile.Language]} name="CountryID" required maxLength={11} validationfunc={this.validateTcNumber} validationmessage={"Geçerli Bir Tc Giriniz!"} />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Dateofbirth[Profile.Language]} name="Dateofbirth" type="date" />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Placeofbirth[Profile.Language]} name="Placeofbirth" />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Gender[Profile.Language]} name="Gender" options={Genderoptions} formtype="dropdown" />
@@ -119,8 +151,8 @@ export default class PreregistrationsCreate extends Component {
                 </React.Fragment>
               }
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Deparment[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" required />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoptions} formtype="dropdown" required />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Deparment[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" required modal={addModal(<DepartmentsCreate />)} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoptions} formtype="dropdown" required modal={addModal(<CasesCreate />)} />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' required />
