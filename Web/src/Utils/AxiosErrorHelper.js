@@ -3,7 +3,6 @@ import config from "../Config";
 
 export default function AxiosErrorHelper(error) {
     if (error) {
-        console.log('error: ', error);
         if (error.code === 'ERR_NETWORK') {
             let domain = (error && error.config && error.config.url) ? error.config.url : 'undefined'
             if (domain !== 'undefined') {

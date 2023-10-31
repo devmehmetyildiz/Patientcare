@@ -50,7 +50,7 @@ export default class PatientstocksCreate extends Component {
     const Departmentoptions = (Departments.list || []).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
-    const Stockdefineoptions = (Stockdefines.list || []).filter(u => !u.Ismedicine).map(define => {
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
 
@@ -94,7 +94,7 @@ export default class PatientstocksCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME}  placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
               </Form.Group>
               <Footerwrapper>
@@ -111,17 +111,17 @@ export default class PatientstocksCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddPatientstocks, history, fillPatientstocknotification, Profile } = this.props
+    const { AddPatientstocks, history, fillPatientstocknotification, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
     data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
     data.PatientID = this.context.formstates[`${this.PAGE_NAME}/PatientID`]
-    data.Status = 0
-    data.Order = 0
-    data.Isonusage = true
-    data.Maxamount = data.amount
-    data.Source = "Single Request"
     data.Amount = parseFloat(data.Amount)
+    data.Order = 0
+    data.Ismedicine = false
+    data.Issupply = false
+    data.Isredprescription = false
+    data.Isapproved = false
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
@@ -141,7 +141,7 @@ export default class PatientstocksCreate extends Component {
         fillPatientstocknotification(error)
       })
     } else {
-      AddPatientstocks({ data, history })
+      AddPatientstocks({ data, history, closeModal })
     }
   }
 

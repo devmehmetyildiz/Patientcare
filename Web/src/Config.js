@@ -1,6 +1,7 @@
 let config = {
   env: process.env.REACT_APP_ENV,
   port: process.env.REACT_APP_PUBLIC_PORT,
+  version: process.env.REACT_APP_VERSION,
   session: {
     name: process.env.REACT_APP_SESSION_NAME,
   }

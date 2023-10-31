@@ -3,6 +3,7 @@ import { Checkbox, Dropdown, Form, Icon, Label, Popup } from 'semantic-ui-react'
 import { FormContext } from '../Provider/FormProvider';
 import store from '..';
 import validator from './Validator';
+import AddModal from './AddModal';
 export default function FormInput(props) {
 
     const { validationfunc, validationmessage, display, additionalicon, page, isFormvisible, disableOnchange } = props
@@ -38,7 +39,7 @@ export default function FormInput(props) {
             <React.Fragment>
                 <Form.Field>
                     <div className='flex flex-row m-2'>
-                        {!props.dontshowlabel && <label className='text-[#000000de]'>{props.placeholder}{props.modal ? props.modal : null}</label>}
+                        {!props.dontshowlabel && <label className='text-[#000000de]'>{props.placeholder}{props.modal ? <AddModal Content={props.modal} /> : null}</label>}
                         {display && <Icon name={display} />}
                         {props.required && <Popup
                             trigger={<Icon className='cursor-pointer' name='attention' />}

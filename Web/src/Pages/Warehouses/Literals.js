@@ -14,6 +14,10 @@ const Literals = {
             tr: 'Ambar Adı',
             en: 'Warehouse Name'
         },
+        Ismedicine: {
+            tr: 'İlaç Ambarı mı?',
+            en: 'Is Medicine Warehouse?'
+        },
         Stockdefine: {
             tr: 'Ürün Tanımı',
             en: 'Stock Define'
@@ -29,6 +33,10 @@ const Literals = {
         Medicines: {
             tr: 'İlaçlar',
             en: 'Medicines'
+        },
+        Supplies: {
+            tr: 'Sarf Malzemeleri',
+            en: 'Supplies'
         },
         Skt: {
             tr: 'Skt',

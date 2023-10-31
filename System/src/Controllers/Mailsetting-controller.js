@@ -67,8 +67,6 @@ async function AddMailsetting(req, res, next) {
         Smtphost,
         Smtpport,
         Mailaddress,
-        Isbodyhtml,
-        Issettingactive,
     } = req.body
 
     if (!validator.isString(Name)) {
@@ -88,12 +86,6 @@ async function AddMailsetting(req, res, next) {
     }
     if (!validator.isString(Mailaddress)) {
         validationErrors.push(messages.VALIDATION_ERROR.MAILADDRESS_REQUIRED)
-    }
-    if (!validator.isBoolean(Isbodyhtml)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISBODYHTML_REQUIRED)
-    }
-    if (!validator.isBoolean(Issettingactive)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISSETTINGACTIVE_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -131,8 +123,6 @@ async function UpdateMailsetting(req, res, next) {
         Smtphost,
         Smtpport,
         Mailaddress,
-        Isbodyhtml,
-        Issettingactive,
         Uuid
     } = req.body
 
@@ -153,12 +143,6 @@ async function UpdateMailsetting(req, res, next) {
     }
     if (!validator.isString(Mailaddress)) {
         validationErrors.push(messages.VALIDATION_ERROR.MAILADDRESS_REQUIRED)
-    }
-    if (!validator.isBoolean(Isbodyhtml)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISBODYHTML_REQUIRED)
-    }
-    if (!validator.isBoolean(Issettingactive)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISSETTINGACTIVE_REQUIRED)
     }
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.MAILSETTINGID_REQUIRED)

@@ -15,10 +15,6 @@ const Literals = {
             tr: 'Yazdırma Taslak Adı',
             en: 'Print Template Name'
         },
-        Valuekey: {
-            tr: 'Değer Anahtarı',
-            en: 'Value Key'
-        },
         Savescreen: {
             tr: 'Kayıt',
             en: 'Save'
@@ -26,10 +22,6 @@ const Literals = {
         Editorscreen: {
             tr: 'Tasarım',
             en: 'Editor'
-        },
-        Department: {
-            tr: 'Departman',
-            en: 'Department'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',

@@ -63,7 +63,7 @@ export const GetFile = createAsyncThunk(
 
 export const AddFiles = createAsyncThunk(
     'Files/AddFiles',
-    async ({ data, history, url }, { dispatch, getState }) => {
+    async ({ data, history, url, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -84,6 +84,7 @@ export const AddFiles = createAsyncThunk(
                 code: 'FilesCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(url ? url : '/Files')
             return response.data;
         } catch (error) {
@@ -133,7 +134,7 @@ export const DeleteFiles = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-          
+
             const response = await instanse.delete(config.services.File, `${ROUTES.FILE}/${data.Uuid}`);
             dispatch(fillFilenotification({
                 type: 'Success',

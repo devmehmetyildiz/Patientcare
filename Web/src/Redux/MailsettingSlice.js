@@ -61,7 +61,7 @@ export const GetMailsetting = createAsyncThunk(
 
 export const AddMailsettings = createAsyncThunk(
     'Mailsettings/AddMailsettings',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,6 +76,7 @@ export const AddMailsettings = createAsyncThunk(
                 code: 'MailsettingsCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Mailsettings');
             return response.data;
         } catch (error) {
@@ -119,7 +120,7 @@ export const DeleteMailsettings = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-          
+
             const response = await instanse.delete(config.services.System, `${ROUTES.MAILSETTING}/${data.Uuid}`);
             dispatch(fillMailsettingnotification({
                 type: 'Success',

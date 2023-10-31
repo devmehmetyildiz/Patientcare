@@ -41,7 +41,9 @@ export default class Stockdefines extends Component {
       { Header: Literals.Columns.Description[Profile.Language], accessor: 'Description', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Unit[Profile.Language], accessor: 'UnitID', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, Cell: col => this.unitCellhandler(col) },
       { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, Finalheader: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Issupply[Profile.Language], accessor: 'Issupply', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Ismedicine[Profile.Language], accessor: 'Ismedicine', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Isredprescription[Profile.Language], accessor: 'Isredprescription', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -80,7 +82,7 @@ export default class Stockdefines extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Stockdefines"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>

@@ -11,18 +11,11 @@ import Literals from './Literals'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
-import PurchaseorderstockmovementsDelete from '../../Containers/Purchaseorderstockmovements/PurchaseorderstockmovementsDelete'
+import PurchaseorderstocksDelete from '../../Containers/Purchaseorderstocks/PurchaseorderstocksDelete'
+import PurchaseorderstocksApprove from '../../Containers/Purchaseorderstocks/PurchaseorderstocksApprove'
 import MobileTable from '../../Utils/MobileTable'
 
 export default class Purchaseorderstocks extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-      openDeactivate: false,
-      selectedrecord: {}
-    }
-  }
 
   componentDidMount() {
     const { GetPurchaseorderstocks, GetStockdefines, GetDepartments, GetPurchaseorderstockmovements, GetPurchaseorders } = this.props
@@ -46,7 +39,7 @@ export default class Purchaseorderstocks extends Component {
 
   render() {
 
-    const { Purchaseorderstocks, Profile, handleDeletemodal, handleSelectedPurchaseorderstocks } = this.props
+    const { Purchaseorderstocks, Profile, handleDeletemodal, handleSelectedPurchaseorderstocks, handleApprovemodal } = this.props
     const { isLoading, isDispatching } = Purchaseorderstocks
 
     const Columns = [
@@ -55,20 +48,19 @@ export default class Purchaseorderstocks extends Component {
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', Firstheader: true, sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
       { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', Subheader: true, sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, Finalheader: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Source[Profile.Language], accessor: 'Source', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.watch[Profile.Language], accessor: 'watch', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
+      { Header: Literals.Columns.change[Profile.Language], accessor: 'change', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
+      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
-    const metaKey = "Purhcaseorderstocks"
+    const metaKey = "Purchaseorderstocks"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
       hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
@@ -82,15 +74,19 @@ export default class Purchaseorderstocks extends Component {
       }) : [],
     };
 
-    const list = (Purchaseorderstocks.list || []).filter(u => u.Isactive).map(item => {
+    const list = (Purchaseorderstocks.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(item => {
       return {
         ...item,
-        watch: <Link to={`/Purchaseorderstockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
+        change: <Link to={`/Pruchaseorderstockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
         edit: <Link to={`/Purchaseorderstocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+          handleSelectedPurchaseorderstocks(item)
+          handleApprovemodal(true)
+        }} />,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedPurchaseorderstocks(item)
           handleDeletemodal(true)
-        }} />
+        }} />,
       }
     })
 
@@ -126,7 +122,8 @@ export default class Purchaseorderstocks extends Component {
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>
-          <PurchaseorderstockmovementsDelete />
+          <PurchaseorderstocksDelete />
+          <PurchaseorderstocksApprove />
         </React.Fragment>
     )
   }
@@ -176,4 +173,9 @@ export default class Purchaseorderstocks extends Component {
     }
   }
 
+
+  boolCellhandler = (col) => {
+    const { Profile } = this.props
+    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+  }
 }

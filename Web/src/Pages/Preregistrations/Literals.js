@@ -260,6 +260,10 @@ const Literals = {
             tr: 'İlaçlar',
             en: 'Medicines'
         },
+        Supplies: {
+            tr: 'Sarf Malzemeleri',
+            en: 'Supplies'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'
@@ -351,6 +355,10 @@ const Literals = {
         AddnewStock: {
             tr: "Ürün Ekle",
             en: "Add Stock"
+        },
+        AddnewSupplies: {
+            tr: "Sarf Malzemesi Ekle",
+            en: "Add Supply"
         },
         Update: {
             tr: "Güncelle",

@@ -42,6 +42,10 @@ const Literals = {
             tr: 'Kaynak',
             en: 'Source'
         },
+        Isredprescription: {
+            tr: 'Kırmızı Reçete mi?',
+            en: 'Is Redprescription?'
+        },
         Isapproved: {
             tr: 'Onaylandı mı?',
             en: 'Is Approved?'

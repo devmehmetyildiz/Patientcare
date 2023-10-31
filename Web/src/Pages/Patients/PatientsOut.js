@@ -7,10 +7,8 @@ export default class PatientsOut extends Component {
     render() {
         const { Profile, Patients, OutPatients, handleOutmodal, Patientdefines } = this.props
         const { isOutmodalopen, selected_record } = Patients
-        console.log('selected_record: ', selected_record);
 
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
-        console.log('patientdefine: ', patientdefine);
         return (
             <Modal
                 onClose={() => handleOutmodal(false)}

@@ -47,7 +47,7 @@ export default class TodogroupdefinesEdit extends Component {
       this.setState({
         isDatafetched: true,
       })
-      this.context.setForm(this.PAGE_NAME, { ...selected_record, Tododefines: selected_record.Tododefineuuids.map(u => { return u.TododefineID }) })
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, Tododefines: selected_record.Tododefineuuids.map(u => { return u.TodoID }) })
     }
     Notification(Todogroupdefines.notifications, removeTodogroupdefinenotification)
     Notification(Tododefines.notifications, removeTododefinenotification)
@@ -66,15 +66,6 @@ export default class TodogroupdefinesEdit extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
-
     return (
       Todogroupdefines.isLoading ? <LoadingPage /> :
         <Pagewrapper>
@@ -92,8 +83,8 @@ export default class TodogroupdefinesEdit extends Component {
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Tododefines[Profile.Language]} name="Tododefines" multiple options={Tododefineoptions} formtype='dropdown' modal={addModal(<TododefinesCreate />)} />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={addModal(<DepartmentsCreate />)} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Tododefines[Profile.Language]} name="Tododefines" multiple options={Tododefineoptions} formtype='dropdown' modal={TododefinesCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Todogroupdefines">

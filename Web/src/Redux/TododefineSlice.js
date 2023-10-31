@@ -61,7 +61,7 @@ export const GetTododefine = createAsyncThunk(
 
 export const AddTododefines = createAsyncThunk(
     'Tododefines/AddTododefines',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,6 +76,7 @@ export const AddTododefines = createAsyncThunk(
                 code: 'TododefinesCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Tododefines');
             return response.data;
         } catch (error) {
@@ -139,7 +140,7 @@ export const DeleteTododefines = createAsyncThunk(
     'Tododefines/DeleteTododefines',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.TODODEFINE}/${data.Uuid}`);

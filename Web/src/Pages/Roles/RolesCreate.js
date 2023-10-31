@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Checkbox, Divider, Form } from 'semantic-ui-react'
+import { Checkbox, Divider, Form, Search } from 'semantic-ui-react'
 import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import Notification from '../../Utils/Notification'
@@ -22,7 +22,8 @@ export default class RolesCreate extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            selectedPrivileges: []
+            selectedPrivileges: [],
+            searchParam: ''
         }
     }
 
@@ -42,6 +43,11 @@ export default class RolesCreate extends Component {
         const { Roles, Profile, history } = this.props
         const { privileges, privilegegroups, isLoading, isDispatching } = Roles
 
+        const decoratedgroups = privilegegroups.map(group => {
+            const foundedPrivileges = privileges.filter(u => u.group.includes(group) && (u.text.toLowerCase()).includes(this.state.searchParam.toLowerCase()))
+            return foundedPrivileges.length > 0 ? { name: group, privileges: foundedPrivileges } : null
+        }).filter(u => u)
+
         return (
             isLoading || isDispatching ? <LoadingPage /> :
                 <Pagewrapper>
@@ -56,22 +62,30 @@ export default class RolesCreate extends Component {
                     </Headerwrapper>
                     <Pagedivider />
                     <Contentwrapper>
+
                         <Form onSubmit={this.handleSubmit}>
                             <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                            <div className='w-full py-2'>
+                                <Search
+                                    placeholder='Search...'
+                                    onSearchChange={(e) => { this.setState({ searchParam: e.target.value }) }}
+                                    showNoResults={false}
+                                />
+                            </div>
                             <div className='mb-4 outline outline-[1px] rounded-md outline-gray-200 p-4 overflow-y-auto max-h-[calc(100vh-30.2rem)]'>
-                                {privilegegroups.map(privilegegroup => {
-                                    return <div key={privilegegroup} className="mb-8">
+                                {(decoratedgroups || []).map(privilegegroup => {
+                                    return <div key={privilegegroup?.name} className="mb-8">
                                         <div className='flex flex-row justify-start items-center'>
-                                            <label className='text-[#000000de] font-bold'>{privilegegroup}</label>
+                                            <label className='text-[#000000de] font-bold'>{privilegegroup?.name}</label>
                                             <Checkbox toggle className='ml-4'
                                                 onClick={(e) => { this.handleAddgroup(e) }}
-                                                id={privilegegroup}
-                                                checked={this.Checkprivilegesgroup(privilegegroup) ? true : false}
+                                                id={privilegegroup?.name}
+                                                checked={this.Checkprivilegesgroup(privilegegroup?.name) ? true : false}
                                             />
                                         </div>
                                         <Divider className='w-full  h-[1px]' />
                                         <div className='grid grid-cols-3 gap-2'>
-                                            {privileges.filter(u => u.group.includes(privilegegroup)).map((privilege, index) => {
+                                            {(privilegegroup?.privileges || []).map((privilege, index) => {
                                                 return <Checkbox toggle className='m-2'
                                                     checked={(this.state.selectedPrivileges.length > 0 ? this.state.selectedPrivileges : []).find(u => u.code === privilege.code) ? true : false}
                                                     onClick={(e) => { this.handleClickprivilege(e) }}
@@ -102,7 +116,7 @@ export default class RolesCreate extends Component {
     handleSubmit = (e) => {
         e.preventDefault()
 
-        const { AddRoles, history, fillRolenotification, Profile } = this.props
+        const { AddRoles, history, fillRolenotification, Profile, closeModal } = this.props
 
         const data = formToObject(e.target)
         data.Privileges = this.state.selectedPrivileges.map(u => { return u.code })
@@ -119,7 +133,7 @@ export default class RolesCreate extends Component {
                 fillRolenotification(error)
             })
         } else {
-            AddRoles({ data, history })
+            AddRoles({ data, history, closeModal })
         }
     }
 

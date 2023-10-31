@@ -27,7 +27,6 @@ export default class PatientmedicinesCreate extends Component {
     }
   }
 
-
   componentDidMount() {
     const { GetDepartments, GetStockdefines, GetPatients, GetPatientdefines } = this.props
     GetDepartments()
@@ -52,7 +51,7 @@ export default class PatientmedicinesCreate extends Component {
     const Departmentoptions = (Departments.list || []).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
-    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Ismedicine).map(define => {
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Ismedicine && !u.Issupply).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
 
@@ -117,18 +116,17 @@ export default class PatientmedicinesCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddPatientstocks, history, fillPatientstocknotification, Profile } = this.props
+    const { AddPatientstocks, history, fillPatientstocknotification, Profile, Stockdefines, closeModal } = this.props
     const data = formToObject(e.target)
     data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
     data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
     data.PatientID = this.context.formstates[`${this.PAGE_NAME}/PatientID`]
-    data.Status = 0
-    data.Order = 0
-    data.Isonusage = true
-    data.Maxamount = data.amount
-    data.Source = "Single Request"
     data.Amount = parseFloat(data.Amount)
+    data.Order = 0
     data.Ismedicine = true
+    data.Issupply = false
+    data.Isredprescription = (Stockdefines.list || []).find(u => u.Uuid === data.StockdefineID)?.Isredprescription || false
+    data.Isapproved = false
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
@@ -148,7 +146,7 @@ export default class PatientmedicinesCreate extends Component {
         fillPatientstocknotification(error)
       })
     } else {
-      AddPatientstocks({ data, history, redirectUrl: '/Patientmedicines' })
+      AddPatientstocks({ data, history, redirectUrl: '/Patientmedicines', closeModal })
     }
   }
 

@@ -73,7 +73,7 @@ export default class Preregistrations extends Component {
 
   render() {
 
-    const { Patients, Profile, handleSelectedPatient, Patientdefines, handleDeletemodal, handleCompletemodal } = this.props
+    const { Patients, Profile, handleSelectedPatient, Patientdefines, handleDeletemodal, handleCompletemodal, history } = this.props
     const { isLoading, isDispatching } = Patients
 
     const Columns = [
@@ -118,19 +118,20 @@ export default class Preregistrations extends Component {
             trigger={<Icon className='cursor-pointer' name='ellipsis vertical' />}
             content={<div className='flex flex-col justify-start items-start w-full gap-2'>
               <Link to={`/Preregistrations/${item.Uuid}/edit`} ><Icon color='black' className='row-edit' name='edit' /> {Literals.Columns.edit[Profile.Language]} </Link>
-              <Link to={`/Patientdefines/${(Patientdefines.list || []).find(u => u.Uuid === item.PatientdefineID)?.Uuid}/edit`} ><Icon color='black' className='row-edit' name='clipboard' />{Literals.Columns.editDefine[Profile.Language]}</Link>
+              <span className='text-[#4183c4] cursor-pointer' onClick={() => { history.push(`/Patientdefines/${(Patientdefines.list || []).find(u => u.Uuid === item.PatientdefineID)?.Uuid}/edit`, { redirectUrl: "/Preregistrations" }) }} ><Icon color='black' className='row-edit' name='clipboard' />{Literals.Columns.editDefine[Profile.Language]}</span>
               <Link to={`/Preregistrations/${item.Uuid}/Editfile`} ><Icon color='black' className='row-edit' name='folder open' /> {Literals.Columns.editFiles[Profile.Language]}</Link>
               <Link to={`/Preregistrations/${item.Uuid}/Editstock`} ><Icon color='black' className='row-edit' name='cart' /> {Literals.Columns.editStocks[Profile.Language]}</Link>
               <span className='text-[#4183c4] cursor-pointer'>  <Icon color='black' name='alternate trash' className='row-edit' onClick={() => {
                 handleSelectedPatient(item)
                 handleDeletemodal(true)
               }} /> {Literals.Columns.delete[Profile.Language]}</span>,
-            </div>}
+            </div>
+            }
             on='click'
             hideOnScroll
             position='left center'
           />
-        </React.Fragment>,
+        </React.Fragment >,
         enter: <Link to={`/Preregistrations/${item.Uuid}/Complete`} ><Icon size='large' color='black' className='row-edit' name='blind' /></Link>
       }
     })

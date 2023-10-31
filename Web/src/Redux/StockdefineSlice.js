@@ -61,7 +61,7 @@ export const GetStockdefine = createAsyncThunk(
 
 export const AddStockdefines = createAsyncThunk(
     'Stockdefines/AddStockdefines',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,6 +76,7 @@ export const AddStockdefines = createAsyncThunk(
                 code: 'StockdefinesCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Stockdefines');
             return response.data;
         } catch (error) {
@@ -117,7 +118,7 @@ export const DeleteStockdefines = createAsyncThunk(
     'Stockdefines/DeleteStockdefines',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.STOCKDEFINE}/${data.Uuid}`);

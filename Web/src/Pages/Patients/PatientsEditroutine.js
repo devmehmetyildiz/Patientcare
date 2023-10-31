@@ -88,16 +88,6 @@ export default class PatientsEditroutine extends Component {
 
         const activetodogroupdefine = (Todogroupdefines.list || []).find(u => u.Uuid === selected_record?.TodogroupdefineID)
 
-        const addModal = (content) => {
-            return <Modal
-                onClose={() => { this.setState({ modelOpened: false }) }}
-                onOpen={() => { this.setState({ modelOpened: true }) }}
-                trigger={<Icon link name='plus' />}
-                content={content}
-            />
-        }
-
-
         return (
             isLoadingstatus ? <LoadingPage /> :
                 <Pagewrapper >
@@ -119,7 +109,7 @@ export default class PatientsEditroutine extends Component {
                         <Form onSubmit={this.handleSubmit}>
                             <Label>{`${Literals.Columns.Activetodogroupdefine[Profile.Language]} : ${activetodogroupdefine?.Name}`}</Label>
                             <Form.Group widths='equal'>
-                                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Todogroupdefine[Profile.Language]} name="TodogroupdefineID" options={Todogroupdefinessoption} formtype='dropdown' modal={addModal(<TodogroupdefinesCreate />)} />
+                                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Todogroupdefine[Profile.Language]} name="TodogroupdefineID" options={Todogroupdefinessoption} formtype='dropdown' modal={TodogroupdefinesCreate} />
                             </Form.Group>
                             <Footerwrapper>
                                 {history && <Button onClick={(e) => {

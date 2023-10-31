@@ -65,7 +65,7 @@ export const GetPatientstockmovement = createAsyncThunk(
 
 export const AddPatientstockmovements = createAsyncThunk(
     'Patientstockmovements/AddPatientstockmovements',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -80,6 +80,7 @@ export const AddPatientstockmovements = createAsyncThunk(
                 code: 'PatientstockmovementsCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patientstockmovements');
             return response.data;
         } catch (error) {
@@ -121,7 +122,7 @@ export const DeletePatientstockmovements = createAsyncThunk(
     'Patientstockmovements/DeletePatientstockmovements',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PATIENTSTOCKMOVEMENT}/${data.Uuid}`);
@@ -143,7 +144,7 @@ export const ApprovePatientstockmovements = createAsyncThunk(
     'Patientstockmovements/ApprovePatientstockmovements',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Warehouse, `${ROUTES.PATIENTSTOCKMOVEMENT}/Approve/${data.Uuid}`);

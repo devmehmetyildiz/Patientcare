@@ -62,7 +62,7 @@ export const GetCostumertype = createAsyncThunk(
 
 export const AddCostumertypes = createAsyncThunk(
     'Costumertypes/AddCostumertypes',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -77,6 +77,7 @@ export const AddCostumertypes = createAsyncThunk(
                 code: 'CostumerypesCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Costumertypes');
             return response.data;
         } catch (error) {
@@ -140,7 +141,7 @@ export const DeleteCostumertypes = createAsyncThunk(
     'Costumertypes/DeleteCostumertypes',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.COSTUMERTYPE}/${data.Uuid}`);

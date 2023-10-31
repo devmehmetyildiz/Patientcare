@@ -59,14 +59,6 @@ export default class CostumertypesEdit extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
 
     return (
       Costumertypes.isLoading ? <LoadingPage /> :
@@ -84,7 +76,7 @@ export default class CostumertypesEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={addModal(<DepartmentsCreate />)} />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
               <Footerwrapper>
                 {history && <Link to="/Costumertypes">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>

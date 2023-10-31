@@ -108,7 +108,7 @@ export default class PatientsAddmedicine extends Component {
 
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
 
-    const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
+    const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive && u.Ismedicine).map(warehouse => {
       return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
     })
 
@@ -119,12 +119,13 @@ export default class PatientsAddmedicine extends Component {
       u.Ismedicine
     ).map(stock => {
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
-      return { key: stock?.Uuid, text: stockdefine?.Name, value: stock?.Uuid }
+      return { key: stock?.Uuid, text: `${stockdefine?.Name} (${stock?.Barcodeno})`, value: stock?.Uuid }
     })
 
     const Columns = [
       { Header: Literals.AddMedicine.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.AddMedicine.Medicinename[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
+      { Header: Literals.AddMedicine.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.AddMedicine.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
     ]
 

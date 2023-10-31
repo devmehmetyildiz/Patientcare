@@ -81,14 +81,14 @@ export default class TododefinesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddTododefines, history, fillTododefinenotification, Checkperiods, Profile } = this.props
+    const { AddTododefines, history, fillTododefinenotification, Checkperiods, Profile, closeModal } = this.props
 
     const data = formToObject(e.target)
     data.Checkperiods = this.context.formstates[`${this.PAGE_NAME}/Checkperiods`].map(id => {
       return (Checkperiods.list || []).find(u => u.Uuid === id)
     })
-    data.IsRequired = this.context.formstates[`${this.PAGE_NAME}/IsRequired`]
-    data.IsNeedactivation = this.context.formstates[`${this.PAGE_NAME}/IsNeedactivation`]
+    data.IsRequired = this.context.formstates[`${this.PAGE_NAME}/IsRequired`] || false
+    data.IsNeedactivation = this.context.formstates[`${this.PAGE_NAME}/IsNeedactivation`] || false
 
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -102,7 +102,7 @@ export default class TododefinesCreate extends Component {
         fillTododefinenotification(error)
       })
     } else {
-      AddTododefines({ data, history })
+      AddTododefines({ data, history, closeModal })
     }
   }
 }

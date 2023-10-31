@@ -61,7 +61,7 @@ export const GetUser = createAsyncThunk(
 
 export const AddUsers = createAsyncThunk(
     'Users/AddUsers',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,6 +76,7 @@ export const AddUsers = createAsyncThunk(
                 code: 'UsersCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Users');
             return response.data;
         } catch (error) {
@@ -122,7 +123,7 @@ export const DeleteUsers = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-          
+
             const response = await instanse.delete(config.services.Userrole, `${ROUTES.USER}/${data.Uuid}`);
             dispatch(fillUsernotification({
                 type: 'Success',

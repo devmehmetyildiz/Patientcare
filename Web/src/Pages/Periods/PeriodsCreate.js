@@ -66,7 +66,7 @@ export default class PeriodsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddPeriods, history, fillPeriodnotification, Profile, } = this.props
+    const { AddPeriods, history, fillPeriodnotification, Profile, closeModal } = this.props
 
     const data = formToObject(e.target)
 
@@ -85,7 +85,7 @@ export default class PeriodsCreate extends Component {
         fillPeriodnotification(error)
       })
     } else {
-      AddPeriods({ data, history })
+      AddPeriods({ data, history, closeModal })
     }
   }
 }

@@ -38,35 +38,29 @@ async function Transferpatientstock(req, res, next) {
             let movements = await db.patientstockmovementModel.findAll({ where: { StockID: patientstock.Uuid } })
             for (const movement of movements) {
                 amount += (movement.Amount * movement.Movementtype);
-                await db.patientstockmovementModel.update({
-                    ...movement,
-                    Status: 1,
-                    Updateduser: "System",
-                    Updatetime: new Date(),
-                }, { where: { Uuid: movement.Uuid } }, { transaction: t })
+                await db.patientstockmovementModel.destroy({ where: { Uuid: movement.Uuid } }, { transaction: t })
             }
+
             let foundedstock = await db.stockModel.findOne({
                 where: {
                     Skt: patientstock.Skt,
                     Barcodeno: patientstock.Barcodeno,
                     StockdefineID: patientstock.StockdefineID,
                     DepartmentID: patientstock.DepartmentID,
-                    WarehouseID: WarehouseID
+                    WarehouseID: WarehouseID,
+                    Issupply: patientstock.Issupply,
+                    Ismedicine: patientstock.Ismedicine
                 }
             })
 
             if (!foundedstock) {
                 let newstockUuid = uuid()
                 await db.stockModel.create({
+                    ...patientstock,
                     Uuid: newstockUuid,
-                    Barcodeno: patientstock.Barcodeno,
-                    DepartmentID: patientstock.DepartmentID,
-                    Info: patientstock.Info,
-                    Skt: patientstock.Skt,
-                    StockdefineID: patientstock.StockdefineID,
-                    WarehouseID: WarehouseID,
                     CreatedUser: 'System',
                     CreateTime: new Date(),
+                    Isapproved: false,
                     IsActive: true,
                 }, { transaction: t })
                 await db.stockmovementModel.create({
@@ -77,6 +71,7 @@ async function Transferpatientstock(req, res, next) {
                     Movementtype: 1,
                     Prevvalue: 0,
                     Newvalue: amount,
+                    Isapproved: true,
                     CreatedUser: 'System',
                     CreateTime: new Date(),
                     IsActive: true
@@ -95,19 +90,14 @@ async function Transferpatientstock(req, res, next) {
                     Movementtype: 1,
                     Prevvalue: previousamount,
                     Newvalue: previousamount + amount,
+                    Isapproved: true,
                     CreatedUser: 'System',
                     CreateTime: new Date(),
                     IsActive: true
                 }, { transaction: t })
             }
 
-            let body = DataCleaner(patientstock)
-            await db.patientstockModel.update({
-                ...body,
-                Status: 1,
-                Updateduser: "System",
-                Updatetime: new Date(),
-            }, { where: { Uuid: patientstock.Uuid } }, { transaction: t })
+            await db.patientstockModel.destroy({ where: { Uuid: patientstock.Uuid } }, { transaction: t })
         }
         t.commit()
     } catch (error) {
@@ -294,10 +284,10 @@ async function UpdatePatientstocklist(req, res, next) {
                 DepartmentID,
                 Skt,
                 Barcodeno,
-                Status,
                 Order,
                 Uuid,
-                Ismedicine
+                Ismedicine,
+                Issupply
             } = stockitem
 
             if (!validator.isUUID(PatientID)) {
@@ -309,14 +299,11 @@ async function UpdatePatientstocklist(req, res, next) {
             if (!validator.isUUID(DepartmentID)) {
                 validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
             }
-            if (Ismedicine && !validator.isISODate(Skt)) {
+            if ((Ismedicine || Issupply) && !validator.isISODate(Skt)) {
                 validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
             }
-            if (Ismedicine && !validator.isString(Barcodeno)) {
+            if ((Ismedicine || Issupply) && !validator.isString(Barcodeno)) {
                 validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
-            }
-            if (!validator.isNumber(Status)) {
-                validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED)
             }
             if (!validator.isNumber(Order)) {
                 validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED)

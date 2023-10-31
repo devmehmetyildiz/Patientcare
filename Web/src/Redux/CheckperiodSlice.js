@@ -61,7 +61,7 @@ export const GetCheckperiod = createAsyncThunk(
 
 export const AddCheckperiods = createAsyncThunk(
     'Checkperiods/AddCheckperiods',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,6 +76,7 @@ export const AddCheckperiods = createAsyncThunk(
                 code: 'CheckperiodsCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Checkperiods');
             return response.data;
         } catch (error) {

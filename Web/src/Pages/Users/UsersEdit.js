@@ -86,15 +86,6 @@ export default class UsersEdit extends Component {
       { key: 2, text: 'TR', value: 'tr' },
     ]
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
-
     return (
       Users.isLoading ? <LoadingPage /> :
         <Pagewrapper>
@@ -125,9 +116,9 @@ export default class UsersEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stations[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype='dropdown' modal={addModal(<StationsCreate />)} />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departments[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={addModal(<DepartmentsCreate />)} />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Roles[Profile.Language]} name="Roles" multiple options={Roleoptions} formtype='dropdown' modal={addModal(<RolesCreate />)} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stations[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype='dropdown' modal={StationsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departments[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Roles[Profile.Language]} name="Roles" multiple options={Roleoptions} formtype='dropdown' modal={RolesCreate} />
               </Form.Group>
               <FormInput placeholder={Literals.Columns.Language[Profile.Language]} value={this.state.selectedlanguage} options={Languageoptions} onChange={this.handleChangeLanguage} formtype='dropdown' />
               <Footerwrapper>

@@ -41,7 +41,7 @@ const Literals = {
         Source: {
             tr: 'Kaynak',
             en: 'Source'
-        },
+        },     
         Isapproved: {
             tr: 'Onaylandı mı?',
             en: 'Is Approved?'

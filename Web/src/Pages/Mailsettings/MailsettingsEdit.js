@@ -102,8 +102,8 @@ export default class MailsettingsEdit extends Component {
     const { EditMailsettings, Mailsettings, history, fillMailsettingnotification, Profile } = this.props
 
     const data = formToObject(e.target)
-    data.Isbodyhtml = this.context.formstates[`${this.PAGE_NAME}/Isbodyhtml`]
-    data.Issettingactive = this.context.formstates[`${this.PAGE_NAME}/Issettingactive`]
+    data.Isbodyhtml = this.context.formstates[`${this.PAGE_NAME}/Isbodyhtml`] || false
+    data.Issettingactive = this.context.formstates[`${this.PAGE_NAME}/Issettingactive`] || false
 
     let errors = []
     if (!validator.isString(data.Name)) {

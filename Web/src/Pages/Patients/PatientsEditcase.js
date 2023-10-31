@@ -118,7 +118,7 @@ export default class PatientsEditcase extends Component {
                         <Form onSubmit={this.handleSubmit}>
                             <Label>{`${Literals.Columns.Activecase[Profile.Language]} : ${activecase?.Name}`}</Label>
                             <Form.Group widths='equal'>
-                                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' modal={addModal(<CasesCreate />)} />
+                                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' modal={CasesCreate} />
                             </Form.Group>
                             <Footerwrapper>
                                 {history && <Button onClick={(e) => {

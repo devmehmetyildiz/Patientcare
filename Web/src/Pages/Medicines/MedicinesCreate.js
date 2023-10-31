@@ -49,25 +49,15 @@ export default class MedicinesCreate extends Component {
   render() {
     const { Stocks, Warehouses, Departments, Stockdefines, Profile } = this.props
 
-    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive && u.Ishavepatients).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
-    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && u.Ismedicine).map(define => {
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && u.Ismedicine && !u.Issupply).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
-    const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
+    const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive && u.Ismedicine).map(warehouse => {
       return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
     })
-
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
-
 
     return (
       Stocks.isLoading ? <LoadingPage /> :
@@ -85,8 +75,8 @@ export default class MedicinesCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' modal={addModal(<WarehousesCreate />)} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' modal={addModal(<StockdefinesCreate />)} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' modal={WarehousesCreate} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' modal={StockdefinesCreate} />
               </Form.Group>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
@@ -94,7 +84,7 @@ export default class MedicinesCreate extends Component {
               </Form.Group>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type="date" defaultValue={'2023-06-20'} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoptions} name="DepartmentID" formtype='dropdown' modal={addModal(<DepartmentsCreate />)} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoptions} name="DepartmentID" formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
@@ -114,17 +104,17 @@ export default class MedicinesCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddStocks, history, fillStocknotification, Profile } = this.props
+    const { AddStocks, history, fillStocknotification, Profile, Stockdefines, closeModal } = this.props
     const data = formToObject(e.target)
     data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
     data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
     data.WarehouseID = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
-    data.Status = 0
-    data.Source = "Single Request"
     data.Amount = parseFloat(data.Amount)
+    data.Order = 0
     data.Ismedicine = true
-    data.Isonusage = false
-    data.Order = 1
+    data.Issupply = false
+    data.Isredprescription = (Stockdefines.list || []).find(u => u.Uuid === data.StockdefineID)?.Isredprescription || false
+    data.Isapproved = false
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
@@ -143,7 +133,7 @@ export default class MedicinesCreate extends Component {
         fillStocknotification(error)
       })
     } else {
-      AddStocks({ data, history, redirectUrl: '/Medicines' })
+      AddStocks({ data, history, redirectUrl: '/Medicines', closeModal })
     }
   }
 

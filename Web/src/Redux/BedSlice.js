@@ -61,7 +61,7 @@ export const GetBed = createAsyncThunk(
 
 export const AddBeds = createAsyncThunk(
     'Beds/AddBeds',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,6 +76,7 @@ export const AddBeds = createAsyncThunk(
                 code: 'BedsCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Beds');
             return response.data;
         } catch (error) {
@@ -139,7 +140,7 @@ export const DeleteBeds = createAsyncThunk(
     'Beds/DeleteBeds',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.BED}/${data.Uuid}`);

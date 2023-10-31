@@ -63,15 +63,6 @@ export default class UsersCreate extends Component {
       { key: 2, text: 'TR', value: 'tr' },
     ]
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
-
     return (
       Users.isLoading ? <LoadingPage /> :
         <Pagewrapper>
@@ -103,9 +94,9 @@ export default class UsersCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stations[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype='dropdown' modal={addModal(<StationsCreate />)} />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departments[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={addModal(<DepartmentsCreate />)} />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Roles[Profile.Language]} name="Roles" multiple options={Roleoptions} formtype='dropdown' modal={addModal(<RolesCreate />)} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stations[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype='dropdown' modal={StationsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departments[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Roles[Profile.Language]} name="Roles" multiple options={Roleoptions} formtype='dropdown' modal={RolesCreate} />
               </Form.Group>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Language[Profile.Language]} name="Language" options={Languageoptions} formtype='dropdown' />
               <Footerwrapper>
@@ -122,7 +113,7 @@ export default class UsersCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddUsers, history, fillUsernotification, Roles, Departments, Stations, Profile } = this.props
+    const { AddUsers, history, fillUsernotification, Roles, Departments, Stations, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.UserID = parseInt(data.UserID, 10)
     data.Stations = this.context.formstates[`${this.PAGE_NAME}/Stations`].map(id => {
@@ -169,7 +160,7 @@ export default class UsersCreate extends Component {
         fillUsernotification(error)
       })
     } else {
-      AddUsers({ data, history })
+      AddUsers({ data, history, closeModal })
     }
   }
 }

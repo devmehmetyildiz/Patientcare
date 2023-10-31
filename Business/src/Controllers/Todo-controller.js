@@ -186,6 +186,7 @@ async function AddPatienttodolist(req, res, next) {
             let todouuid = uuid()
             await db.todoModel.create({
                 ...data,
+                PatientID: body.PatientID,
                 MovementID: movementuuid,
                 Uuid: todouuid,
                 Createduser: "System",

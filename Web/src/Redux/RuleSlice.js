@@ -93,7 +93,7 @@ export const GetRulelogswithoutloading = createAsyncThunk(
 
 export const AddRules = createAsyncThunk(
     'Rules/AddRules',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -108,6 +108,7 @@ export const AddRules = createAsyncThunk(
                 code: 'RulesCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Rules');
             return response.data;
         } catch (error) {
@@ -170,7 +171,7 @@ export const DeleteRules = createAsyncThunk(
     'Rules/DeleteRules',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.System, `${ROUTES.RULE}/${data.Uuid}`);
@@ -225,7 +226,7 @@ export const RulesSlice = createSlice({
         isLogmodalopen: false,
     },
     reducers: {
-        
+
         handleSelectedRule: (state, action) => {
             state.selected_record = action.payload;
         },

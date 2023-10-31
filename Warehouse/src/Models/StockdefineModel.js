@@ -22,6 +22,12 @@ module.exports = sequelize.define('stockdefineModel', {
     Ismedicine: {
         type: Sequelize.BOOLEAN
     },
+    Issupply: {
+        type: Sequelize.BOOLEAN
+    },
+    Isredprescription: {
+        type: Sequelize.BOOLEAN
+    },
     Createduser: {
         type: Sequelize.STRING
     },

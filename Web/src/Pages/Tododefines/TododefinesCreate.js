@@ -49,15 +49,6 @@ export default class TododefinesCreate extends Component {
       return { key: checkperiod.Uuid, text: checkperiod.Name, value: checkperiod.Uuid }
     })
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
-
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -78,7 +69,7 @@ export default class TododefinesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Checkperiods[Profile.Language]} name="Checkperiods" multiple options={Checkperiodsoptions} formtype='dropdown' modal={addModal(<CheckperiodsCreate />)} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Checkperiods[Profile.Language]} name="Checkperiods" multiple options={Checkperiodsoptions} formtype='dropdown' modal={CheckperiodsCreate} />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsRequired[Profile.Language]} name="IsRequired" formtype="checkbox" />
@@ -99,7 +90,7 @@ export default class TododefinesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddTododefines, history, fillTododefinenotification, Checkperiods, Profile } = this.props
+    const { AddTododefines, history, fillTododefinenotification, Checkperiods, Profile, closeModal } = this.props
 
     const data = formToObject(e.target)
     data.Checkperiods = this.context.formstates[`${this.PAGE_NAME}/Checkperiods`].map(id => {
@@ -120,7 +111,7 @@ export default class TododefinesCreate extends Component {
         fillTododefinenotification(error)
       })
     } else {
-      AddTododefines({ data, history })
+      AddTododefines({ data, history, closeModal })
     }
   }
 }

@@ -65,7 +65,7 @@ export const GetStockmovement = createAsyncThunk(
 
 export const AddStockmovements = createAsyncThunk(
     'Stockmovements/AddStockmovements',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -80,6 +80,7 @@ export const AddStockmovements = createAsyncThunk(
                 code: 'StockmovementsCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Stockmovements');
             return response.data;
         } catch (error) {

@@ -72,7 +72,7 @@ async function AddCheckperiod(req, res, next) {
     if (!validator.isNumber(Periodtype)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERIODTYPE_REQUIRED)
     }
-    if (!validator.isString(Occureddays)) {
+    if (!validator.isNumber(Occureddays)) {
         validationErrors.push(messages.VALIDATION_ERROR.OCCUREDDAYS_REQUIRED)
     }
     if (!validator.isArray(Periods)) {
@@ -137,7 +137,7 @@ async function UpdateCheckperiod(req, res, next) {
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CHECKPERIODID)
     }
-    if (!validator.isString(Occureddays)) {
+    if (!validator.isNumber(Occureddays)) {
         validationErrors.push(messages.VALIDATION_ERROR.OCCUREDDAYS_REQUIRED)
     }
     if (!validator.isArray(Periods)) {

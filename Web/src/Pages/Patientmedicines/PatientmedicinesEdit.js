@@ -20,7 +20,6 @@ export default class PatientmedicinesEdit extends Component {
 
   PAGE_NAME = 'PatientmedicinesEdit'
 
-
   constructor(props) {
     super(props)
     this.state = {
@@ -28,7 +27,6 @@ export default class PatientmedicinesEdit extends Component {
       isDatafetched: false
     }
   }
-
 
   componentDidMount() {
     const { GetPatientstock, match, history, GetDepartments, GetStockdefines, PatientstockID, GetPatientdefines, GetPatients } = this.props
@@ -63,7 +61,12 @@ export default class PatientmedicinesEdit extends Component {
         isDatafetched: true,
         isInprepatients: patient?.iswaitingactivation
       })
-      this.context.setForm(this.PAGE_NAME, selected_record)
+      const currentDate = new Date(selected_record?.Skt || '');
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, [`Skt`]: formattedDate })
     }
     Notification(Patientstocks.notifications, removePatientstocknotification)
     Notification(Departments.notifications, removeDepartmentnotification)
@@ -81,7 +84,8 @@ export default class PatientmedicinesEdit extends Component {
     const Departmentoptions = Departments.list.map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
-    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Ismedicine).map(define => {
+
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Ismedicine && !u.Issupply).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
 
@@ -112,9 +116,9 @@ export default class PatientmedicinesEdit extends Component {
             <Label>{`${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`}</Label>
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype="dropdown" />
-              <FormInput page={this.PAGE_NAME}  placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME}  placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
               </Form.Group>
               <Footerwrapper>

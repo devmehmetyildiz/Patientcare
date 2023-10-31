@@ -28,7 +28,15 @@ const Literals = {
         },
         Ismedicine: {
             tr: 'İlaç mı?',
-            en: 'Is Medicine'
+            en: 'Is Medicine?'
+        },
+        Isredprescription: {
+            tr: 'Kırmızı Reçete mi?',
+            en: 'Is Redprescription?'
+        },
+        Issupply: {
+            tr: 'Sarf Malzemesi mi?',
+            en: 'Is Supply?'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',

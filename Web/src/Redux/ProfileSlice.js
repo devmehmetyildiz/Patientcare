@@ -161,7 +161,6 @@ export const GetTableMeta = createAsyncThunk(
 export const ResetTableMeta = createAsyncThunk(
     'Profile/ResetTableMeta',
     async (metaKey, { dispatch }) => {
-        console.log('metaKey: ', metaKey);
         try {
             const response = await instanse.delete(config.services.Userrole, ROUTES.USER + `/Resettablemeta/${metaKey}`);
             return response.data;

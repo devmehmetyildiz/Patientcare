@@ -51,8 +51,7 @@ export default class CheckperiodsEdit extends Component {
       })
       this.context.setForm(this.PAGE_NAME, {
         ...selected_record,
-        Periods: selected_record.Perioduuids.map(u => { return u.PeriodID }),
-        Occureddays: (selected_record.Occureddays || '').split(',').map(u => { return parseInt(u) })
+        Periods: selected_record.Perioduuids.map(u => { return u.PeriodID })
       })
     }
     Notification(Periods.notifications, removePeriodnotification)
@@ -66,28 +65,9 @@ export default class CheckperiodsEdit extends Component {
       return { key: period.Uuid, text: period.Name, value: period.Uuid }
     })
 
-    const Dayoptions = [
-      { key: 0, text: Literals.Options.Dayoptions.value0[Profile.Language], value: 0 },
-      { key: 1, text: Literals.Options.Dayoptions.value1[Profile.Language], value: 1 },
-      { key: 2, text: Literals.Options.Dayoptions.value2[Profile.Language], value: 2 },
-      { key: 3, text: Literals.Options.Dayoptions.value3[Profile.Language], value: 3 },
-      { key: 4, text: Literals.Options.Dayoptions.value4[Profile.Language], value: 4 },
-      { key: 5, text: Literals.Options.Dayoptions.value5[Profile.Language], value: 5 },
-      { key: 6, text: Literals.Options.Dayoptions.value6[Profile.Language], value: 6 },
-    ]
-
     const Periodtypeoption = [
       { key: 1, text: Literals.Options.Periodtypeoption.value0[Profile.Language], value: 1 },
     ]
-
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
 
     return (
       Checkperiods.isLoading || Checkperiods.isDispatching || Periods.isLoading || Periods.isDispatching ? <LoadingPage /> :
@@ -106,10 +86,10 @@ export default class CheckperiodsEdit extends Component {
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Occureddays[Profile.Language]} name="Occureddays" multiple options={Dayoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Occureddays[Profile.Language]} name="Occureddays" type='number' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodtype[Profile.Language]} name="Periodtype" options={Periodtypeoption} formtype="dropdown" />
               </Form.Group>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodstxt[Profile.Language]} name="Periods" multiple options={Periodoptions} formtype="dropdown" modal={addModal(<PeriodsCreate />)} />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodstxt[Profile.Language]} name="Periods" multiple options={Periodoptions} formtype="dropdown" modal={PeriodsCreate} />
               <Footerwrapper>
                 {history && <Link to="/Checkperiods">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -129,10 +109,10 @@ export default class CheckperiodsEdit extends Component {
     const { EditCheckperiods, history, fillCheckperiodnotification, Periods, Checkperiods, Profile } = this.props
     const data = formToObject(e.target)
     data.Periodtype = this.context.formstates[`${this.PAGE_NAME}/Periodtype`]
-    data.Occureddays = this.context.formstates[`${this.PAGE_NAME}/Occureddays`].join(',')
     data.Periods = this.context.formstates[`${this.PAGE_NAME}/Periods`].map(id => {
       return (Periods.list || []).find(u => u.Uuid === id)
     })
+    data.Occureddays && (data.Occureddays = parseInt(data.Occureddays))
 
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -141,10 +121,10 @@ export default class CheckperiodsEdit extends Component {
     if (!validator.isArray(data.Periods)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Periodsrequired[Profile.Language] })
     }
-    if (!validator.isString(data.Occureddays)) {
+    if (!validator.isNumber(data.Occureddays)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Occureddaysrequired[Profile.Language] })
     }
-    if (!validator.isString(data.Occureddays)) {
+    if (!validator.isNumber(data.Periodtype)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PeriodTyperequired[Profile.Language] })
     }
     if (errors.length > 0) {

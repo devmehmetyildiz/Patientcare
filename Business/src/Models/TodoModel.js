@@ -7,6 +7,9 @@ module.exports = sequelize.define('todoModel', {
     Uuid: {
         type: Sequelize.STRING
     },
+    PatientID: {
+        type: Sequelize.STRING
+    },
     MovementID: {
         type: Sequelize.STRING
     },

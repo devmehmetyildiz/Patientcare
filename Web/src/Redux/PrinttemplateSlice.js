@@ -61,7 +61,7 @@ export const GetPrinttemplate = createAsyncThunk(
 
 export const AddPrinttemplates = createAsyncThunk(
     'Printtemplates/AddPrinttemplates',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,6 +76,7 @@ export const AddPrinttemplates = createAsyncThunk(
                 code: 'PrinttemplatesCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Printtemplates');
             return response.data;
         } catch (error) {
@@ -119,7 +120,7 @@ export const DeletePrinttemplates = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-          
+
             const response = await instanse.delete(config.services.System, `${ROUTES.PRINTTEMPLATE}/${data.Uuid}`);
             dispatch(fillPrinttemplatenotification({
                 type: 'Success',

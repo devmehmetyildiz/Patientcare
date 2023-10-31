@@ -64,7 +64,6 @@ export default class PrinttemplatesCreate extends Component {
                       content: <React.Fragment>
                         <Form.Group widths={"equal"}>
                           <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                          <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Valuekey[Profile.Language]} name="Valuekey" />
                         </Form.Group>
                       </React.Fragment>
                     }
@@ -118,7 +117,7 @@ export default class PrinttemplatesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddPrinttemplates, history, fillPrinttemplatenotification, Profile } = this.props
+    const { AddPrinttemplates, history, fillPrinttemplatenotification, Profile, closeModal } = this.props
 
     const data = formToObject(e.target)
     data.Printtemplate = this.state.template
@@ -126,9 +125,6 @@ export default class PrinttemplatesCreate extends Component {
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
-    }
-    if (!validator.isString(data.Valuekey)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Valuekeyrequired[Profile.Language] })
     }
     if (!validator.isString(data.Printtemplate)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Printtemplaterequired[Profile.Language] })
@@ -138,7 +134,7 @@ export default class PrinttemplatesCreate extends Component {
         fillPrinttemplatenotification(error)
       })
     } else {
-      AddPrinttemplates({ data, history })
+      AddPrinttemplates({ data, history, closeModal })
     }
   }
 

@@ -19,6 +19,12 @@ module.exports = sequelize.define('purchaseorderstockModel', {
     Ismedicine: {
         type: Sequelize.BOOLEAN
     },
+    Isredprescription: {
+        type: Sequelize.BOOLEAN
+    },
+    Issupply: {
+        type: Sequelize.BOOLEAN
+    },
     Isapproved: {
         type: Sequelize.BOOLEAN
     },
@@ -30,12 +36,6 @@ module.exports = sequelize.define('purchaseorderstockModel', {
     },
     Info: {
         type: Sequelize.STRING
-    },
-    Willdelete: {
-        type: Sequelize.BOOLEAN
-    },
-    Status: {
-        type: Sequelize.INTEGER
     },
     Order: {
         type: Sequelize.INTEGER

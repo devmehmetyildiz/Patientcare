@@ -77,7 +77,7 @@ export default class PatientstockmovementsCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddPatientstockmovements, history, fillPatientstockmovementnotification, Profile } = this.props
+    const { AddPatientstockmovements, history, fillPatientstockmovementnotification, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
     data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
@@ -102,7 +102,7 @@ export default class PatientstockmovementsCreate extends Component {
         fillPatientstockmovementnotification(error)
       })
     } else {
-      AddPatientstockmovements({ data, history })
+      AddPatientstockmovements({ data, history, closeModal })
     }
   }
 }

@@ -62,7 +62,7 @@ export const GetPatientdefine = createAsyncThunk(
 
 export const AddPatientdefines = createAsyncThunk(
     'Patientdefines/AddPatientdefines',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -77,6 +77,7 @@ export const AddPatientdefines = createAsyncThunk(
                 code: 'PatientdefinesCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patientdefines');
             return response.data;
         } catch (error) {
@@ -140,7 +141,7 @@ export const DeletePatientdefines = createAsyncThunk(
     'Patientdefines/DeletePatientdefines',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENTDEFINE}/${data.Uuid}`);

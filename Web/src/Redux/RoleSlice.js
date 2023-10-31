@@ -90,7 +90,7 @@ export const GetPrivilegegroups = createAsyncThunk(
 
 export const AddRoles = createAsyncThunk(
     'Roles/AddRoles',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -105,6 +105,7 @@ export const AddRoles = createAsyncThunk(
                 code: 'RolesCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Roles');
             return response.data;
         } catch (error) {
@@ -146,7 +147,7 @@ export const DeleteRoles = createAsyncThunk(
     'Roles/DeleteRoles',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Userrole, `${ROUTES.ROLE}/${data.Uuid}`);

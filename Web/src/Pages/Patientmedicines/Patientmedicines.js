@@ -11,18 +11,12 @@ import Literals from './Literals'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import PatientstocksDelete from "../../Containers/Patientstocks/PatientstocksDelete"
-import PatientstocksApprove from "../../Containers/Patientstocks/PatientstocksApprove"
+import PatientmedicinesDelete from "../../Containers/Patientmedicines/PatientmedicinesDelete"
+import PatientmedicinesApprove from "../../Containers/Patientmedicines/PatientmedicinesApprove"
 import MobileTable from '../../Utils/MobileTable'
 import Settings from '../../Common/Settings'
 
 export default class Patientmedicines extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-    }
-  }
 
   componentDidMount() {
     const { GetPatientstocks, GetPatientdefines, GetStockdefines, GetDepartments, Getpreregistrations, GetPatientstockmovements } = this.props
@@ -52,7 +46,6 @@ export default class Patientmedicines extends Component {
 
   render() {
 
-
     const { Patientstocks, Profile, handleDeletemodal, handleSelectedPatientstock, handleApprovemodal, AddRecordPatientmedicines } = this.props
     const { isLoading, isDispatching } = Patientstocks
 
@@ -62,10 +55,11 @@ export default class Patientmedicines extends Component {
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
       { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
       { Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Isredprescription[Profile.Language], accessor: 'Isredprescription', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
@@ -90,7 +84,7 @@ export default class Patientmedicines extends Component {
       }) : [],
     };
 
-    const list = (Patientstocks.list || []).filter(u => u.Ismedicine).map(item => {
+    const list = (Patientstocks.list || []).filter(u => u.Ismedicine && !u.Issupply).map(item => {
       return {
         ...item,
         change: <Link to={`/Patientstockmovements/Create?PatientstockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
@@ -140,8 +134,8 @@ export default class Patientmedicines extends Component {
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>
-          <PatientstocksDelete />
-          <PatientstocksApprove />
+          <PatientmedicinesDelete />
+          <PatientmedicinesApprove />
         </React.Fragment>
     )
   }
@@ -188,6 +182,13 @@ export default class Patientmedicines extends Component {
       });
       return amount
     }
+  }
+
+  dateCellhandler = (col) => {
+    if (col.value) {
+      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+    }
+    return null
   }
 
   boolCellhandler = (col) => {

@@ -99,7 +99,7 @@ export default class StockmovementsCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddStockmovements, history, fillStockmovementnotification, Profile } = this.props
+    const { AddStockmovements, history, fillStockmovementnotification, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.Movementdate = new Date()
     data.Newvalue = 0
@@ -124,7 +124,7 @@ export default class StockmovementsCreate extends Component {
         fillStockmovementnotification(error)
       })
     } else {
-      AddStockmovements({ data, history })
+      AddStockmovements({ data, history, closeModal })
     }
   }
 

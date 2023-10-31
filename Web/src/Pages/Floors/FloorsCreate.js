@@ -58,7 +58,7 @@ export default class FloorsCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddFloors, history, fillFloornotification, Profile } = this.props
+    const { AddFloors, history, fillFloornotification, Profile, closeModal } = this.props
     const data = formToObject(e.target)
 
     let errors = []
@@ -70,7 +70,7 @@ export default class FloorsCreate extends Component {
         fillFloornotification(error)
       })
     } else {
-      AddFloors({ data, history })
+      AddFloors({ data, history , closeModal})
     }
   }
 }

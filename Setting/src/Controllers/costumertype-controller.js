@@ -37,11 +37,11 @@ async function GetCostumertype(req, res, next) {
     }
 
     try {
-        const costumertpe = await db.costumertypeModel.findOne({ where: { Uuid: req.params.costumertypeId } });
-        if (!costumertpe) {
+        const costumertype = await db.costumertypeModel.findOne({ where: { Uuid: req.params.costumertypeId } });
+        if (!costumertype) {
             return createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND])
         }
-        if (!costumertpe.Isactive) {
+        if (!costumertype.Isactive) {
             return createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_ACTIVE])
         }
         costumertype.Departmentuuids = await db.costumertypedepartmentModel.findAll({
@@ -50,7 +50,7 @@ async function GetCostumertype(req, res, next) {
             },
             attributes: ['DepartmentID']
         });
-        res.status(200).json(costumertpe)
+        res.status(200).json(costumertype)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }

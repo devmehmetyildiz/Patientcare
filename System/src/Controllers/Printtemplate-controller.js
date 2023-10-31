@@ -49,8 +49,6 @@ async function AddPrinttemplate(req, res, next) {
     const {
         Name,
         Printtemplate,
-        Valuekey,
-        DepartmentID,
     } = req.body
 
     if (!validator.isString(Name)) {
@@ -58,12 +56,6 @@ async function AddPrinttemplate(req, res, next) {
     }
     if (!validator.isString(Printtemplate)) {
         validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATE_REQUIRED)
-    }
-    if (!validator.isString(Valuekey)) {
-        validationErrors.push(messages.VALIDATION_ERROR.VALUEKEY_REQUIRED)
-    }
-    if (!validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -97,8 +89,6 @@ async function UpdatePrinttemplate(req, res, next) {
     const {
         Name,
         Printtemplate,
-        Valuekey,
-        DepartmentID,
         Uuid
     } = req.body
 
@@ -107,12 +97,6 @@ async function UpdatePrinttemplate(req, res, next) {
     }
     if (!validator.isString(Printtemplate)) {
         validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATE_REQUIRED)
-    }
-    if (!validator.isString(Valuekey)) {
-        validationErrors.push(messages.VALIDATION_ERROR.VALUEKEY_REQUIRED)
-    }
-    if (!validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATEID_REQUIRED)

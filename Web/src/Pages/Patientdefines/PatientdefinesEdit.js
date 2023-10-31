@@ -28,7 +28,6 @@ export default class PatientdefinesEdit extends Component {
 
   componentDidMount() {
     const { GetPatientdefine, match, history, GetCostumertypes, GetPatienttypes, PatientdefineID } = this.props
-    console.log('history: ', history);
     let Id = PatientdefineID || match?.params?.PatientdefineID
     if (validator.isUUID(Id)) {
       GetPatientdefine(Id)
@@ -161,8 +160,8 @@ export default class PatientdefinesEdit extends Component {
     const data = formToObject(e.target)
     data.PatienttypeID = this.context.formstates[`${this.PAGE_NAME}/PatienttypeID`]
     data.CostumertypeID = this.context.formstates[`${this.PAGE_NAME}/CostumertypeID`]
-    data.Ismotheralive = this.context.formstates[`${this.PAGE_NAME}/Ismotheralive`]
-    data.Isfatheralive = this.context.formstates[`${this.PAGE_NAME}/Isfatheralive`]
+    data.Ismotheralive = this.context.formstates[`${this.PAGE_NAME}/Ismotheralive`] || false
+    data.Isfatheralive = this.context.formstates[`${this.PAGE_NAME}/Isfatheralive`] || false
     data.Gender = this.context.formstates[`${this.PAGE_NAME}/Gender`]
     data.Motherbiologicalaffinity = this.context.formstates[`${this.PAGE_NAME}/Motherbiologicalaffinity`]
     data.Fatherbiologicalaffinity = this.context.formstates[`${this.PAGE_NAME}/selectedFatheralaffinity`]

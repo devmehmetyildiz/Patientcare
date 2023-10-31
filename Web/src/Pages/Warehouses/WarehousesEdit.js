@@ -20,6 +20,13 @@ export default class WarehousesEdit extends Component {
 
   PAGE_NAME = "WarehousesEdit"
 
+  constructor(props) {
+    super(props)
+    this.state={
+      isDatafetched:false
+    }
+  }
+
   componentDidMount() {
     const { WarehouseID, GetWarehouse, match, history } = this.props
     let Id = WarehouseID || match?.params?.WarehouseID
@@ -62,8 +69,11 @@ export default class WarehousesEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME}  placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Ismedicine[Profile.Language]} name="Ismedicine" formtype="checkbox" />
+              </Form.Group>
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               <Footerwrapper>
                 <Link to="/Warehouses">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -82,7 +92,7 @@ export default class WarehousesEdit extends Component {
     const { EditWarehouses, history, fillWarehousenotification, Warehouses, Profile } = this.props
 
     const data = formToObject(e.target)
-
+    data.Ismedicine = this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] || false
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })

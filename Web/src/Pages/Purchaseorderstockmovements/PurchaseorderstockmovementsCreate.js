@@ -78,7 +78,7 @@ export default class PurchaseorderstockmovementsCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddPurchaseorderstockmovements, history, fillPurchaseorderstockmovementnotification, Profile } = this.props
+    const { AddPurchaseorderstockmovements, history, fillPurchaseorderstockmovementnotification, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.Movementdate = new Date()
     data.Newvalue = 0
@@ -103,7 +103,7 @@ export default class PurchaseorderstockmovementsCreate extends Component {
         fillPurchaseorderstockmovementnotification(error)
       })
     } else {
-      AddPurchaseorderstockmovements({ data, history })
+      AddPurchaseorderstockmovements({ data, history, closeModal })
     }
   }
 

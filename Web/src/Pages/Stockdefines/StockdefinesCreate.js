@@ -51,14 +51,7 @@ export default class StockdefinesCreate extends Component {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
+    
 
     return (
       Stockdefines.isLoading ? <LoadingPage /> :
@@ -80,11 +73,14 @@ export default class StockdefinesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Description[Profile.Language]} name="Description" />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoption} name="DepartmentID" formtype='dropdown' modal={addModal(<DepartmentsCreate />)} />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unit[Profile.Language]} options={Unitoption} name="UnitID" formtype='dropdown' modal={addModal(<UnitsCreate />)} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoption} name="DepartmentID" formtype='dropdown' modal={DepartmentsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unit[Profile.Language]} options={Unitoption} name="UnitID" formtype='dropdown' modal={UnitsCreate} />
               </Form.Group>
               <Form.Group widths={"equal"}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Ismedicine[Profile.Language]} name="Ismedicine" formtype='checkbox' />
+                {this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] &&
+                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isredprescription[Profile.Language]} name="Isredprescription" formtype='checkbox' />}
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Issupply[Profile.Language]} name="Issupply" formtype='checkbox' />
               </Form.Group>
               <Footerwrapper>
                 {history && <Link to="/Stockdefines">
@@ -102,11 +98,13 @@ export default class StockdefinesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddStockdefines, history, fillStockdefinenotification, Profile } = this.props
+    const { AddStockdefines, history, fillStockdefinenotification, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.UnitID = this.context.formstates[`${this.PAGE_NAME}/UnitID`]
     data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
     data.Ismedicine = this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] || false
+    data.Isredprescription = this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] ? this.context.formstates[`${this.PAGE_NAME}/Isredprescription`] || false : false
+    data.Issupply = this.context.formstates[`${this.PAGE_NAME}/Issupply`] || false
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
@@ -122,7 +120,7 @@ export default class StockdefinesCreate extends Component {
         fillStockdefinenotification(error)
       })
     } else {
-      AddStockdefines({ data, history })
+      AddStockdefines({ data, history, closeModal })
     }
   }
 }

@@ -103,11 +103,11 @@ export default class RulesCreate extends Component {
     handleSubmit = (e) => {
         e.preventDefault()
 
-        const { AddRules, history, fillRulenotification, Profile } = this.props
+        const { AddRules, history, fillRulenotification, Profile, closeModal } = this.props
 
         const data = formToObject(e.target)
         data.Rule = this.state.template
-        data.Status = this.context.formstates[`${this.PAGE_NAME}/Status`]
+        data.Status = this.context.formstates[`${this.PAGE_NAME}/Status`] || false
         let errors = []
         if (!validator.isString(data.Name)) {
             errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
@@ -120,7 +120,7 @@ export default class RulesCreate extends Component {
                 fillRulenotification(error)
             })
         } else {
-            AddRules({ data, history })
+            AddRules({ data, history, closeModal })
         }
     }
 

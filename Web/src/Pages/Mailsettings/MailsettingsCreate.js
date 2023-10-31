@@ -75,11 +75,11 @@ export default class MailsettingsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddMailsettings, history, fillMailsettingnotification, Profile } = this.props
+    const { AddMailsettings, history, fillMailsettingnotification, Profile, closeModal } = this.props
 
     const data = formToObject(e.target)
-    data.Isbodyhtml = this.context.formstates[`${this.PAGE_NAME}/Isbodyhtml`]
-    data.Issettingactive = this.context.formstates[`${this.PAGE_NAME}/Issettingactive`]
+    data.Isbodyhtml = this.context.formstates[`${this.PAGE_NAME}/Isbodyhtml`] || false
+    data.Issettingactive = this.context.formstates[`${this.PAGE_NAME}/Issettingactive`] || false
 
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -105,7 +105,7 @@ export default class MailsettingsCreate extends Component {
         fillMailsettingnotification(error)
       })
     } else {
-      AddMailsettings({ data, history })
+      AddMailsettings({ data, history, closeModal })
     }
   }
 }

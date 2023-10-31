@@ -15,14 +15,6 @@ import StocksDelete from '../../Containers/Stocks/StocksDelete'
 import StocksApprove from '../../Containers/Stocks/StocksApprove'
 import MobileTable from '../../Utils/MobileTable'
 export default class Stocks extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-      openDeactivate: false,
-      selectedrecord: {}
-    }
-  }
 
   componentDidMount() {
     const { GetStocks, GetStockdefines, GetDepartments, GetStockmovements, GetWarehouses } = this.props
@@ -41,7 +33,6 @@ export default class Stocks extends Component {
     Notification(Stockmovements.notifications, removeStockmovementnotification)
     Notification(Warehouses.notifications, removeWarehousenotification)
   }
-
 
   render() {
 
@@ -102,7 +93,7 @@ export default class Stocks extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Stocks"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>

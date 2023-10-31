@@ -282,6 +282,14 @@ const Literals = {
             tr: "Ürün Adı",
             en: "Stock Name"
         },
+        Department: {
+            tr: "Departman",
+            en: "Department"
+        },
+        Barcodeno: {
+            tr: "Barkod",
+            en: "Barcodeno"
+        },
         Warehouse: {
             tr: "Ambar",
             en: "Warehouse"
@@ -343,6 +351,10 @@ const Literals = {
         Amount: {
             tr: "Miktar",
             en: "Amount"
+        },
+        Barcodeno: {
+            tr: "Barkod",
+            en: "Barcodeno"
         },
         Medicinename: {
             tr: "İlaç Adı",

@@ -11,15 +11,13 @@ import Literals from './Literals'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import TododefinesDelete from '../../Containers/Todogroupdefines/TodogroupdefinesDelete'
+import TododefinesDelete from '../../Containers/Tododefines/TododefinesDelete'
 import MobileTable from '../../Utils/MobileTable'
 export default class Tododefines extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      open: false,
-      selectedrecord: [],
       checkperiodStatus: []
     }
   }

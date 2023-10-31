@@ -108,15 +108,6 @@ export default class PreregistrationsCreate extends Component {
       position='top left'
     />
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
-
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -133,7 +124,7 @@ export default class PreregistrationsCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               {!this.state.newRegister ?
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Patientdefine[Profile.Language]} name="PatientdefineID" options={Patientdefineoptions} formtype="dropdown" required additionalicon={changeRegistertype} modal={addModal(<PatientdefinesCreate />)} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Patientdefine[Profile.Language]} name="PatientdefineID" options={Patientdefineoptions} formtype="dropdown" required additionalicon={changeRegistertype} modal={PatientdefinesCreate} />
                 :
                 <React.Fragment>
                   <Form.Group widths={'equal'}>
@@ -151,8 +142,8 @@ export default class PreregistrationsCreate extends Component {
                 </React.Fragment>
               }
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Deparment[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" required modal={addModal(<DepartmentsCreate />)} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoptions} formtype="dropdown" required modal={addModal(<CasesCreate />)} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Deparment[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" required modal={DepartmentsCreate} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoptions} formtype="dropdown" required modal={CasesCreate} />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' required />
@@ -173,7 +164,7 @@ export default class PreregistrationsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { Patientdefines, fillPatientnotification, AddPatients, history, Profile } = this.props
+    const { Patientdefines, fillPatientnotification, AddPatients, history, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     if (!validator.isISODate(data.Registerdate)) {
       data.Registerdate = null
@@ -244,7 +235,7 @@ export default class PreregistrationsCreate extends Component {
         fillPatientnotification(error)
       })
     } else {
-      AddPatients({ data: response, history, url: "/Preregistrations" })
+      AddPatients({ data: response, history, url: "/Preregistrations", closeModal })
     }
   }
 

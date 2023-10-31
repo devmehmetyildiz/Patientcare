@@ -65,7 +65,7 @@ export const GetPurchaseorder = createAsyncThunk(
 
 export const AddPurchaseorders = createAsyncThunk(
     'Purchaseorders/AddPurchaseorders',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -80,6 +80,7 @@ export const AddPurchaseorders = createAsyncThunk(
                 code: 'PurchaseordersCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Purchaseorders');
             return response.data;
         } catch (error) {
@@ -144,7 +145,7 @@ export const DeletePurchaseorders = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-          
+
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PURCHASEORDER}/${data.Uuid}`);
             dispatch(fillPurchaseordernotification({
                 type: 'Success',

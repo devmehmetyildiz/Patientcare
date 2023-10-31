@@ -195,18 +195,26 @@ export default class PatientsDetail extends Component {
     ]
 
     const lastincomestocks = (Patientstockmovements.list || []).filter(u => u.Movementtype === 1).sort((a, b) => { return b.Id - a.Id }).slice(0, 5).map(movement => {
-      const stock = (Patientstocks.list || []).find(u => u.Uuid === movement.StockID)
-      const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
-      const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
-      return { ...movement, Stockname: stockdefine?.Name, Unitname: unit?.Name }
-    })
+      const stock = (Patientstocks.list || []).find(u => u.Uuid === movement.StockID && u.PatientID === selected_record?.Uuid)
+      if (stock) {
+        const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
+        const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
+        return { ...movement, Stockname: stockdefine?.Name, Unitname: unit?.Name }
+      } else {
+        return null
+      }
+    }).filter(u => u)
 
     const lastoutcomestocks = (Patientstockmovements.list || []).filter(u => u.Movementtype === -1).sort((a, b) => { return b.Id - a.Id }).slice(0, 5).map(movement => {
-      const stock = (Patientstocks.list || []).find(u => u.Uuid === movement.StockID)
-      const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
-      const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
-      return { ...movement, Stockname: stockdefine?.Name, Unitname: unit?.Name }
-    })
+      const stock = (Patientstocks.list || []).find(u => u.Uuid === movement.StockID && u.PatientID === selected_record?.Uuid)
+      if (stock) {
+        const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
+        const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
+        return { ...movement, Stockname: stockdefine?.Name, Unitname: unit?.Name }
+      } else {
+        return null
+      }
+    }).filter(u => u)
 
     const lastmovements = (Patientmovements.list || []).filter(u => u.PatientID === selected_record?.Uuid).sort((a, b) => { return b.Id - a.Id }).slice(0, 5)
 

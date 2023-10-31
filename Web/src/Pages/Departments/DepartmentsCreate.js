@@ -16,6 +16,7 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
 import StationsCreate from '../../Containers/Stations/StationsCreate'
+import AddModal from '../../Utils/AddModal'
 export default class DepartmentsCreate extends Component {
 
   PAGE_NAME = "DepartmentsCreate"
@@ -45,14 +46,7 @@ export default class DepartmentsCreate extends Component {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
+
 
     return (
       Departments.isLoading || Departments.isDispatching || Stations.isLoading || Stations.isDispatching ? <LoadingPage /> :
@@ -70,7 +64,7 @@ export default class DepartmentsCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype="dropdown" modal={addModal(<StationsCreate />)} />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype="dropdown" modal={StationsCreate} />
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Ishavepatients[Profile.Language]} name="Ishavepatients" formtype="checkbox" />
               <Footerwrapper>
                 {history && <Link to="/Departments">
@@ -88,7 +82,7 @@ export default class DepartmentsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddDepartments, history, fillDepartmentnotification, Stations, Profile } = this.props
+    const { AddDepartments, history, fillDepartmentnotification, Stations, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.Ishavepatients = this.context.formstates[`${this.PAGE_NAME}/Ishavepatients`] || false
     data.Stations = this.context.formstates[`${this.PAGE_NAME}/Stations`].map(id => {
@@ -107,7 +101,7 @@ export default class DepartmentsCreate extends Component {
         fillDepartmentnotification(error)
       })
     } else {
-      AddDepartments({ data, history })
+      AddDepartments({ data, history, closeModal })
     }
   }
 }

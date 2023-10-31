@@ -52,21 +52,12 @@ export default class PurchaseorderstocksCreate extends Component {
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
-    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive).map(define => {
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && !u.Issupply && !u.Ismedicine).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
     const Purchaseorderoptions = (Purchaseorders.list || []).filter(u => u.Isactive).map(order => {
       return { key: order.Uuid, text: order.Purchasenumber, value: order.Uuid }
     })
-
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
 
     return (
       Purchaseorderstocks.isLoading ? <LoadingPage /> :
@@ -84,16 +75,12 @@ export default class PurchaseorderstocksCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchaseorder[Profile.Language]} name="PurchaseorderID" options={Purchaseorderoptions} formtype='dropdown' modal={addModal(<PurchaseordersCreate />)} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype='dropdown' modal={addModal(<StockdefinesCreate />)} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchaseorder[Profile.Language]} name="PurchaseorderID" options={Purchaseorderoptions} formtype='dropdown' modal={PurchaseordersCreate} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype='dropdown' modal={StockdefinesCreate} />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
-              </Form.Group>
-              <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={addModal(<DepartmentsCreate />)} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Purchaseorderstocks">
@@ -110,18 +97,18 @@ export default class PurchaseorderstocksCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddPurchaseorderstocks, history, fillPurchaseorderstocknotification, Profile } = this.props
+    const { AddPurchaseorderstocks, history, fillPurchaseorderstocknotification, Profile, closeModal } = this.props
     const data = formToObject(e.target)
-    data.Amount = parseFloat(data.Amount)
     data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
     data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
     data.PurchaseorderID = this.context.formstates[`${this.PAGE_NAME}/PurchaseorderID`]
-    data.Status = 0
-    data.IsActive = true
-    data.Maxamount = data.Amount
-    data.Source = "Single Request"
-    data.Isonusage = false
-    data.Order = 1
+    data.Amount = parseFloat(data.Amount)
+    data.Order = 0
+    data.Ismedicine = false
+    data.Issupply = false
+    data.Isredprescription = false
+    data.Isapproved = false
+
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
@@ -140,7 +127,7 @@ export default class PurchaseorderstocksCreate extends Component {
         fillPurchaseorderstocknotification(error)
       })
     } else {
-      AddPurchaseorderstocks({ data, history })
+      AddPurchaseorderstocks({ data, history, closeModal })
     }
   }
 

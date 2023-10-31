@@ -46,15 +46,6 @@ export default class RoomsCreate extends Component {
       return { key: Floor.Uuid, text: Floor.Name, value: Floor.Uuid }
     })
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
-
     return (
       Rooms.isLoading ? <LoadingPage /> :
         <Pagewrapper>
@@ -71,7 +62,7 @@ export default class RoomsCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.FloorID[Profile.Language]} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={addModal(<FloorsCreate />)} />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.FloorID[Profile.Language]} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
               <Footerwrapper>
                 <Link to="/Rooms">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -87,7 +78,7 @@ export default class RoomsCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddRooms, history, fillRoomnotification, Profile } = this.props
+    const { AddRooms, history, fillRoomnotification, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.FloorID = this.context.formstates[`${this.PAGE_NAME}/FloorID`]
 
@@ -103,7 +94,7 @@ export default class RoomsCreate extends Component {
         fillRoomnotification(error)
       })
     } else {
-      AddRooms({ data, history })
+      AddRooms({ data, history, closeModal })
     }
   }
 }

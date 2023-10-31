@@ -63,15 +63,6 @@ export default class RoomsEdit extends Component {
       return { key: Floor.Uuid, text: Floor.Name, value: Floor.Uuid }
     })
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
-
     return (
       Rooms.isLoading ? <LoadingPage /> :
         <Pagewrapper>
@@ -88,7 +79,7 @@ export default class RoomsEdit extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.FloorID[Profile.Language]} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={addModal(<FloorsCreate />)} />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.FloorID[Profile.Language]} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
               <Footerwrapper>
                 <Link to="/Rooms">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>

@@ -45,15 +45,6 @@ export default class CostumertypesCreate extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
-
     return (
       Costumertypes.isLoading ? <LoadingPage /> :
         <Pagewrapper>
@@ -70,7 +61,7 @@ export default class CostumertypesCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={addModal(<DepartmentsCreate />)} />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
               <Footerwrapper>
                 {history && <Link to="/Costumertypes">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -86,7 +77,7 @@ export default class CostumertypesCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddCostumertypes, history, fillCostumertypenotification, Departments, Profile } = this.props
+    const { AddCostumertypes, history, fillCostumertypenotification, Departments, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)
@@ -104,7 +95,7 @@ export default class CostumertypesCreate extends Component {
         fillCostumertypenotification(error)
       })
     } else {
-      AddCostumertypes({ data, history })
+      AddCostumertypes({ data, history, closeModal })
     }
   }
 }

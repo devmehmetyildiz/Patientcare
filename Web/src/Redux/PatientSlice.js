@@ -87,7 +87,7 @@ export const Getpreregistrations = createAsyncThunk(
 
 export const AddPatients = createAsyncThunk(
     'Patients/AddPatients',
-    async ({ data, history, url }, { dispatch, getState }) => {
+    async ({ data, history, url, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -102,6 +102,7 @@ export const AddPatients = createAsyncThunk(
                 code: 'PatientsCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(url ? url : '/Patients')
             return response.data;
         } catch (error) {
@@ -158,7 +159,6 @@ export const Editpatientcase = createAsyncThunk(
 export const Editpatienttodogroupdefine = createAsyncThunk(
     'Patients/Editpatienttodogroupdefine',
     async ({ data, history, redirectUrl, redirectID }, { dispatch, getState }) => {
-        console.log('data: ', data);
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'

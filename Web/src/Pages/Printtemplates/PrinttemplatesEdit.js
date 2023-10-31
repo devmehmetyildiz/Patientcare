@@ -48,7 +48,7 @@ export default class PrinttemplatesEdit extends Component {
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Printtemplates.notifications, removePrinttemplatenotification, this.context.clearForm)
+    Notification(Printtemplates.notifications, removePrinttemplatenotification)
   }
 
 
@@ -82,7 +82,6 @@ export default class PrinttemplatesEdit extends Component {
                       content: <React.Fragment>
                         <Form.Group widths={"equal"}>
                           <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                          <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Valuekey[Profile.Language]} name="Valuekey" />
                         </Form.Group>
                       </React.Fragment>
                     }
@@ -144,9 +143,6 @@ export default class PrinttemplatesEdit extends Component {
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
-    }
-    if (!validator.isString(data.Valuekey)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Valuekeyrequired[Profile.Language] })
     }
     if (!validator.isString(data.Printtemplate)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Printtemplaterequired[Profile.Language] })

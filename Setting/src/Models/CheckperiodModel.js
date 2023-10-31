@@ -14,7 +14,7 @@ module.exports = sequelize.define('checkperiodModel', {
         type: Sequelize.INTEGER
     },
     Occureddays: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
     },
     Createduser: {
         type: Sequelize.STRING

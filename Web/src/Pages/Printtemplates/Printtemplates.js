@@ -23,15 +23,13 @@ export default class Printtemplates extends Component {
   }
 
   componentDidMount() {
-    const { GetPrinttemplates, GetDepartments } = this.props
+    const { GetPrinttemplates } = this.props
     GetPrinttemplates()
-    GetDepartments()
   }
 
   componentDidUpdate() {
-    const { Printtemplates, Departments, removeDepartmentnotification, removePrinttemplatenotification } = this.props
+    const { Printtemplates, removePrinttemplatenotification } = this.props
     Notification(Printtemplates.notifications, removePrinttemplatenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
   }
 
   render() {
@@ -42,8 +40,6 @@ export default class Printtemplates extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
-      { Header: Literals.Columns.Valuekey[Profile.Language], accessor: 'Valuekey', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -111,14 +107,5 @@ export default class Printtemplates extends Component {
           <PrinttemplatesDelete />
         </React.Fragment>
     )
-  }
-
-  departmentCellhandler = (col) => {
-    const { Departments } = this.props
-    if (Departments.isLoading) {
-      return <Loader size='small' active inline='centered' ></Loader>
-    } else {
-      return (Departments.list || []).find(u => u.Uuid === col.value)?.Name
-    }
   }
 }

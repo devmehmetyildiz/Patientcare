@@ -61,7 +61,7 @@ export const GetDepartment = createAsyncThunk(
 
 export const AddDepartments = createAsyncThunk(
     'Departments/AddDepartments',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,6 +76,7 @@ export const AddDepartments = createAsyncThunk(
                 code: 'DepartmentsCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Departments');
             return response.data;
         } catch (error) {
@@ -139,7 +140,7 @@ export const DeleteDepartments = createAsyncThunk(
     'Departments/DeleteDepartments',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.DEPARTMENT}/${data.Uuid}`);

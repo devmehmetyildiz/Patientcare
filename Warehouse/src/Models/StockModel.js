@@ -10,18 +10,6 @@ module.exports = sequelize.define('stockModel', {
     WarehouseID: {
         type: Sequelize.STRING
     },
-    Isonusage: {
-        type: Sequelize.BOOLEAN
-    },
-    Isdeactive: {
-        type: Sequelize.BOOLEAN
-    },
-    Deactivetime: {
-        type: Sequelize.DATE
-    },
-    Source: {
-        type: Sequelize.STRING
-    },
     StockdefineID: {
         type: Sequelize.STRING
     },
@@ -29,6 +17,12 @@ module.exports = sequelize.define('stockModel', {
         type: Sequelize.STRING
     },
     Ismedicine: {
+        type: Sequelize.BOOLEAN
+    },
+    Isredprescription: {
+        type: Sequelize.BOOLEAN
+    },
+    Issupply: {
         type: Sequelize.BOOLEAN
     },
     Isapproved: {
@@ -42,12 +36,6 @@ module.exports = sequelize.define('stockModel', {
     },
     Info: {
         type: Sequelize.STRING
-    },
-    Willdelete: {
-        type: Sequelize.BOOLEAN
-    },
-    Status: {
-        type: Sequelize.INTEGER
     },
     Order: {
         type: Sequelize.INTEGER

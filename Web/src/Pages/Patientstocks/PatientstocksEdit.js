@@ -20,7 +20,6 @@ export default class PatientstocksEdit extends Component {
 
   PAGE_NAME = 'PatientstocksEdit'
 
-
   constructor(props) {
     super(props)
     this.state = {
@@ -80,7 +79,7 @@ export default class PatientstocksEdit extends Component {
     const Departmentoptions = Departments.list.map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
-    const Stockdefineoptions = (Stockdefines.list || []).filter(u => !u.Ismedicine).map(define => {
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
 
@@ -132,6 +131,7 @@ export default class PatientstocksEdit extends Component {
     data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
     data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
     data.PatientID = this.context.formstates[`${this.PAGE_NAME}/PatientID`]
+
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
@@ -142,9 +142,7 @@ export default class PatientstocksEdit extends Component {
     if (!validator.isUUID(data.StockdefineID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StokdefineRequired[Profile.Language] })
     }
-    if (!validator.isNumber(data.Amount)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.AmountRequired[Profile.Language] })
-    }
+
     if (errors.length > 0) {
       errors.forEach(error => {
         fillPatientstocknotification(error)

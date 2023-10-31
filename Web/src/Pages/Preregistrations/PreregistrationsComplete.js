@@ -36,7 +36,9 @@ export default class PreregistrationsComplete extends Component {
   }
 
   componentDidMount() {
-    const { GetStockdefines, GetWarehouses, GetUnits, GetPatients, GetRooms, GetFloors, GetBeds, GetFiles, GetPatientdefines, GetPatientstocks, GetPatientstockmovements, GetCases } = this.props
+    const { GetStockdefines, GetWarehouses, GetUnits, GetPatients, GetRooms,
+      GetFloors, GetBeds, GetFiles, GetPatientdefines, GetPatientstocks,
+      GetPatientstockmovements, GetCases } = this.props
     GetPatients()
     GetStockdefines()
     GetWarehouses()
@@ -269,7 +271,7 @@ export default class PreregistrationsComplete extends Component {
                   })}
                 </div>
                 <Pagedivider />
-                {this.state.neededFilefounded.length > 0 ? <div className='flex flex-row justify-start items-center w-full mb-auto '>
+                {this.state.neededFilefounded.length === 0 ? <div className='flex flex-row justify-start items-center w-full mb-auto '>
                   <Form onSubmit={this.handleSubmit} className='w-full'>
                     <Form.Group widths={'equal'}>
                       <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Iswilltransfer[Profile.Language]} name="Iswilltransfer" formtype="checkbox" />

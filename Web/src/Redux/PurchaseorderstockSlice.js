@@ -61,7 +61,7 @@ export const GetPurchaseorderstock = createAsyncThunk(
 
 export const AddPurchaseorderstocks = createAsyncThunk(
     'Purchaseorderstocks/AddPurchaseorderstocks',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,6 +76,7 @@ export const AddPurchaseorderstocks = createAsyncThunk(
                 code: 'PurchaseorderstocksCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Purchaseorderstocks');
             return response.data;
         } catch (error) {
@@ -117,7 +118,7 @@ export const DeletePurchaseorderstocks = createAsyncThunk(
     'Purchaseorderstocks/DeletePurchaseorderstocks',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCK}/${data.Uuid}`);
@@ -135,6 +136,28 @@ export const DeletePurchaseorderstocks = createAsyncThunk(
     }
 );
 
+export const ApprovePurchaseorderstocks = createAsyncThunk(
+    'Purchaseorderstocks/ApprovePurchaseorderstocks',
+    async (data, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCK}/Approve/${data.Uuid}`);
+            dispatch(fillPurchaseorderstocknotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.approvedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPurchaseorderstocknotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+
 export const PurchaseorderstocksSlice = createSlice({
     name: 'Purchaseorderstocks',
     initialState: {
@@ -144,7 +167,8 @@ export const PurchaseorderstocksSlice = createSlice({
         notifications: [],
         isLoading: false,
         isDispatching: false,
-        isDeletemodalopen: false
+        isDeletemodalopen: false,
+        isApprovemodalopen: false
     },
     reducers: {
         handleSelectedPurchaseorderstock: (state, action) => {
@@ -160,6 +184,9 @@ export const PurchaseorderstocksSlice = createSlice({
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
+        },
+        handleApprovemodal: (state, action) => {
+            state.isApprovemodalopen = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -201,6 +228,17 @@ export const PurchaseorderstocksSlice = createSlice({
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(ApprovePurchaseorderstocks.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(ApprovePurchaseorderstocks.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(ApprovePurchaseorderstocks.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(EditPurchaseorderstocks.pending, (state) => {
                 state.isDispatching = true;
             })
@@ -230,7 +268,8 @@ export const {
     handleSelectedPurchaseorderstock,
     fillPurchaseorderstocknotification,
     removePurchaseorderstocknotification,
-    handleDeletemodal
+    handleDeletemodal,
+    handleApprovemodal
 } = PurchaseorderstocksSlice.actions;
 
 export default PurchaseorderstocksSlice.reducer;

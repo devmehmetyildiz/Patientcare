@@ -47,7 +47,7 @@ export default class Checkperiods extends Component {
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
       { Header: Literals.Columns.Periodstxt[Profile.Language], accessor: 'Periodstxt', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, isOpen: false, Cell: col => this.periodCellhandler(col) },
       { Header: Literals.Columns.Periodtype[Profile.Language], accessor: 'Periodtype', sortable: true, canGroupBy: true, Finalheader: true, canFilter: true, },
-      { Header: Literals.Columns.Occureddays[Profile.Language], accessor: 'Occureddays', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dayCellhandler(col) },
+      { Header: Literals.Columns.Occureddays[Profile.Language], accessor: 'Occureddays', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -162,25 +162,6 @@ export default class Checkperiods extends Component {
 
   dayCellhandler = (col) => {
 
-    const { Profile } = this.props
-
-    const Dayoptions = [
-      { key: 0, text: Literals.Options.Dayoptions.value0[Profile.Language], value: 0 },
-      { key: 1, text: Literals.Options.Dayoptions.value1[Profile.Language], value: 1 },
-      { key: 2, text: Literals.Options.Dayoptions.value2[Profile.Language], value: 2 },
-      { key: 3, text: Literals.Options.Dayoptions.value3[Profile.Language], value: 3 },
-      { key: 4, text: Literals.Options.Dayoptions.value4[Profile.Language], value: 4 },
-      { key: 5, text: Literals.Options.Dayoptions.value5[Profile.Language], value: 5 },
-      { key: 6, text: Literals.Options.Dayoptions.value6[Profile.Language], value: 6 },
-    ]
-
-    if (col.value) {
-      if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        let days = ((col.value || '').split(',') || []).map(daytext => { return Dayoptions.find(u => u.value === parseInt(daytext))?.text }).join(',')
-        return days
-      }
-      return col.value
-    }
     return col.value
   }
 }

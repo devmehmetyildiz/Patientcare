@@ -42,6 +42,10 @@ const Literals = {
             tr: 'Kaynak',
             en: 'Source'
         },
+        Isapproved: {
+            tr: 'Onaylandı mı?',
+            en: 'Is Approved?'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'
@@ -61,6 +65,14 @@ const Literals = {
         edit: {
             tr: 'Güncelle',
             en: 'Edit'
+        },
+        change: {
+            tr: 'Miktar Gir',
+            en: 'Enter Amount'
+        },
+        approve: {
+            tr: 'Onayla',
+            en: 'Approve'
         },
         watch: {
             tr: 'İzle',
@@ -87,7 +99,11 @@ const Literals = {
         Pagedeleteheader: {
             tr: "Satın Alma Stok Silme",
             en: "Delete Purchase Order Stocks"
-        }
+        },
+        Pageapproveheader: {
+            tr: "Satın Alma Stok Onaylama",
+            en: "Approve Purchase Order Stocks"
+        },
     },
     Button: {
         Create: {
@@ -101,6 +117,10 @@ const Literals = {
         Delete: {
             tr: "Sil",
             en: "Delete"
+        },
+        Approve: {
+            tr: "Onayla",
+            en: "Approve"
         },
         Giveup: {
             tr: "Vazgeç",
@@ -124,6 +144,10 @@ const Literals = {
         DepartmentRequired: {
             tr: "Departman Gerekli",
             en: "Department Required"
+        },
+        Approvecheck: {
+            tr: "Satın Alma Stoğunu onaylamak istediğinize emin misiniz?",
+            en: "Purchase order Stocks will approve, are you sure?"
         },
         PurchasenumberRequired: {
             tr: "Satın alma siparişi Gerekli",

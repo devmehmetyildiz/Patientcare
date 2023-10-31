@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Form } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
+import { Form } from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
@@ -61,7 +61,7 @@ export default class PatienttypesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddPatienttypes, history, fillPatienttypenotification, Profile } = this.props
+    const { AddPatienttypes, history, fillPatienttypenotification, Profile, closeModal } = this.props
 
     const data = formToObject(e.target)
     let errors = []
@@ -73,7 +73,7 @@ export default class PatienttypesCreate extends Component {
         fillPatienttypenotification(error)
       })
     } else {
-      AddPatienttypes({ data, history })
+      AddPatienttypes({ data, history, closeModal })
     }
   }
 }

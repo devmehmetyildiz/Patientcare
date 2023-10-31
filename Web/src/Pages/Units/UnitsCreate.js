@@ -58,15 +58,6 @@ export default class UnitsCreate extends Component {
       }
     ]
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
-
     return (
       Units.isLoading || Units.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -87,7 +78,7 @@ export default class UnitsCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unittype[Profile.Language]} name="Unittype" options={unitstatusOption} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={addModal(<DepartmentsCreate />)} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Units">
@@ -103,7 +94,7 @@ export default class UnitsCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddUnits, history, fillUnitnotification, Departments, Profile } = this.props
+    const { AddUnits, history, fillUnitnotification, Departments, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.Unittype = this.context.formstates[`${this.PAGE_NAME}/Unittype`]
     data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
@@ -125,7 +116,7 @@ export default class UnitsCreate extends Component {
         fillUnitnotification(error)
       })
     } else {
-      AddUnits({ data, history })
+      AddUnits({ data, history, closeModal })
     }
   }
 }

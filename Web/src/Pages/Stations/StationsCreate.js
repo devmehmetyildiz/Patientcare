@@ -27,6 +27,7 @@ export default class StationsCreate extends Component {
   render() {
 
     const { Stations, Profile, history } = this.props
+    console.log('this.props: ', this.props);
     const { isLoading, isDispatching } = Stations
 
     return (
@@ -60,7 +61,7 @@ export default class StationsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddStations, history, fillStationnotification, Profile } = this.props
+    const { AddStations, history, fillStationnotification, Profile, closeModal } = this.props
 
     const data = formToObject(e.target)
 
@@ -73,7 +74,7 @@ export default class StationsCreate extends Component {
         fillStationnotification(error)
       })
     } else {
-      AddStations({ data, history })
+      AddStations({ data, history, closeModal })
     }
   }
 }

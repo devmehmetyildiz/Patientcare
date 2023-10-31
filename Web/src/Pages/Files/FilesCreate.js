@@ -95,7 +95,7 @@ export class FilesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddFiles, history, fillFilenotification, Profile } = this.props
+    const { AddFiles, history, fillFilenotification, Profile, closeModal } = this.props
     const files = this.state.selectedFiles
 
     files.forEach(data => {
@@ -123,7 +123,7 @@ export class FilesCreate extends Component {
         fillFilenotification(error)
       })
     } else {
-      AddFiles({ data: formData, history })
+      AddFiles({ data: formData, history, closeModal })
     }
   }
 

@@ -12,4 +12,4 @@ const mapDispatchToProps = {
     DeletePatientstocks, handleDeletemodal, handleSelectedPatientstock
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PatientstocksDelete)
+export default connect(mapStateToProps, mapDispatchToProps)(PatientmedicinesDelete)

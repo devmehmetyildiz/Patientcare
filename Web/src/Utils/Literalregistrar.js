@@ -10,6 +10,7 @@ import Patientmovements from "../Pages/Patientmovements/Literals"
 import Patientstockmovements from "../Pages/Patientstockmovements/Literals"
 import Patientstocks from "../Pages/Patientstocks/Literals"
 import Patientmedicines from "../Pages/Patientmedicines/Literals"
+import Patientsupplies from "../Pages/Patientsupplies/Literals"
 import Patienttypes from "../Pages/Patienttypes/Literals"
 import Periods from "../Pages/Periods/Literals"
 import Preregistrations from "../Pages/Preregistrations/Literals"
@@ -17,12 +18,15 @@ import Printtemplates from "../Pages/Printtemplates/Literals"
 import Purchaseorders from "../Pages/Purchaseorders/Literals"
 import Purchaseorderstockmovements from "../Pages/Purchaseorderstockmovements/Literals"
 import Purchaseorderstocks from "../Pages/Purchaseorderstocks/Literals"
+import Purchaseordermedicines from "../Pages/Purchaseordermedicines/Literals"
+import Purchaseordersupplies from "../Pages/Purchaseordersupplies/Literals"
 import Roles from "../Pages/Roles/Literals"
 import Stations from "../Pages/Stations/Literals"
 import Stockdefines from "../Pages/Stockdefines/Literals"
 import Stockmovements from "../Pages/Stockmovements/Literals"
 import Stocks from "../Pages/Stocks/Literals"
 import Medicines from "../Pages/Medicines/Literals"
+import Supplies from "../Pages/Supplies/Literals"
 import Tododefines from "../Pages/Tododefines/Literals"
 import Todogroupdefines from "../Pages/Todogroupdefines/Literals"
 import Units from "../Pages/Units/Literals"
@@ -69,7 +73,11 @@ const Literals = {
     Rooms,
     Beds,
     Floors,
-    Todos
+    Todos,
+    Patientsupplies,
+    Purchaseordermedicines,
+    Purchaseordersupplies,
+    Supplies
 }
 
 export default Literals

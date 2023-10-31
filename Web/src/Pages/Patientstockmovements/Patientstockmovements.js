@@ -163,7 +163,6 @@ export default class Patientstockmovements extends Component {
 
   boolCellhandler = (col) => {
     const { Profile } = this.props
-    console.log('col.value: ', col.value);
     return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 

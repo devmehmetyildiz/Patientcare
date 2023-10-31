@@ -61,7 +61,7 @@ export const GetFloor = createAsyncThunk(
 
 export const AddFloors = createAsyncThunk(
     'Floors/AddFloors',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl,closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,6 +76,7 @@ export const AddFloors = createAsyncThunk(
                 code: 'FloorsCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Floors');
             return response.data;
         } catch (error) {
@@ -139,7 +140,7 @@ export const DeleteFloors = createAsyncThunk(
     'Floors/DeleteFloors',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.FLOOR}/${data.Uuid}`);

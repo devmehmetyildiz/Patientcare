@@ -48,25 +48,17 @@ async function AddStock(req, res, next) {
     let validationErrors = []
     const {
         WarehouseID,
-        Isonusage,
-        Source,
         StockdefineID,
         DepartmentID,
         Skt,
         Barcodeno,
-        Status,
         Order,
-        Ismedicine
+        Ismedicine,
+        Issupply
     } = req.body
 
     if (!validator.isUUID(WarehouseID)) {
         validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
-    }
-    if (!validator.isBoolean(Isonusage)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISONUSAGE_REQUIRED)
-    }
-    if (!validator.isString(Source)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SOURCE_REQUIRED)
     }
     if (!validator.isUUID(StockdefineID)) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
@@ -74,14 +66,11 @@ async function AddStock(req, res, next) {
     if (!validator.isUUID(DepartmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
-    if (Ismedicine && !validator.isISODate(Skt)) {
+    if ((Ismedicine || Issupply) && !validator.isISODate(Skt)) {
         validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
     }
-    if (Ismedicine && !validator.isString(Barcodeno)) {
+    if ((Ismedicine || Issupply) && !validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
-    }
-    if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED)
     }
     if (!validator.isNumber(Order)) {
         validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED)
@@ -130,27 +119,18 @@ async function UpdateStock(req, res, next) {
     let validationErrors = []
     const {
         WarehouseID,
-        Isonusage,
-        Source,
         StockdefineID,
         DepartmentID,
         Skt,
         Barcodeno,
-        Info,
-        Status,
         Order,
         Uuid,
-        Ismedicine
+        Ismedicine,
+        Issupply
     } = req.body
 
     if (!validator.isUUID(WarehouseID)) {
         validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
-    }
-    if (!validator.isBoolean(Isonusage)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISONUSAGE_REQUIRED)
-    }
-    if (!validator.isNumber(Source)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SOURCE_REQUIRED)
     }
     if (!validator.isUUID(StockdefineID)) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
@@ -158,17 +138,11 @@ async function UpdateStock(req, res, next) {
     if (!validator.isUUID(DepartmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
-    if (Ismedicine && !validator.isISODate(Skt)) {
+    if ((Ismedicine || Issupply) && !validator.isISODate(Skt)) {
         validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
     }
-    if (Ismedicine && !validator.isString(Barcodeno)) {
+    if ((Ismedicine || Issupply) && !validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
-    }
-    if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED)
     }
     if (!validator.isNumber(Order)) {
         validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED)
@@ -350,7 +324,7 @@ async function TransfertoPatient(req, res, next) {
             StockdefineID: stock.StockdefineID,
             DepartmentID: stock.DepartmentID
         }
-        if (stock.Ismedicine) {
+        if (stock.Ismedicine || stock.Issupply) {
             whereClause.Skt = stock.Skt
             whereClause.Barcodeno = stock.Barcodeno
         }
@@ -387,6 +361,8 @@ async function TransfertoPatient(req, res, next) {
                 StockdefineID: stock.StockdefineID,
                 DepartmentID: stock.DepartmentID,
                 Ismedicine: stock.Ismedicine,
+                Issupply: stock.Issupply,
+                Isredprescription: stock.Isredprescription,
                 Skt: stock.Skt,
                 Barcodeno: stock.Barcodeno,
                 Isapproved: true,
@@ -404,7 +380,7 @@ async function TransfertoPatient(req, res, next) {
                 Movementtype: 1,
                 Prevvalue: 0,
                 Isapproved: true,
-                Newvalue: Amount,
+                Newvalue: parseFloat(Amount),
                 Createduser: "System",
                 Createtime: new Date(),
                 Isactive: true
@@ -423,9 +399,9 @@ async function TransfertoPatient(req, res, next) {
                 Amount: Amount,
                 Movementdate: new Date(),
                 Movementtype: 1,
-                Prevvalue: amount,
-                Isapproved: true,
-                Newvalue: amount + Amount,
+                Prevvalue: parseFloat(amount),
+                Isapproved: false,
+                Newvalue: parseFloat(amount) + parseFloat(Amount),
                 Createduser: "System",
                 Createtime: new Date(),
                 Isactive: true
@@ -496,7 +472,7 @@ async function TransferfromPatient(req, res, next) {
             StockdefineID: patientstock.StockdefineID,
             DepartmentID: patientstock.DepartmentID
         }
-        if (patientstock.Ismedicine) {
+        if (patientstock.Ismedicine || patientstock.Issupply) {
             whereClause.Skt = patientstock.Skt
             whereClause.Barcodeno = patientstock.Barcodeno
         }
@@ -512,10 +488,10 @@ async function TransferfromPatient(req, res, next) {
         await db.patientstockmovementModel.create({
             Uuid: uuid(),
             StockID: StockID,
-            Amount: Amount,
+            Amount: parseFloat(Amount),
             Movementdate: new Date(),
             Movementtype: -1,
-            Prevvalue: amount,
+            Prevvalue: parseFloat(amount),
             Isapproved: true,
             Newvalue: parseFloat(amount) - parseFloat(Amount),
             Createduser: "System",
@@ -533,13 +509,15 @@ async function TransferfromPatient(req, res, next) {
                 StockdefineID: patientstock.StockdefineID,
                 DepartmentID: patientstock.DepartmentID,
                 Ismedicine: patientstock.Ismedicine,
+                Issupply: patientstock.Issupply,
+                Isredprescription: patientstock.Isredprescription,
                 Skt: patientstock.Skt,
                 Barcodeno: patientstock.Barcodeno,
                 Isapproved: true,
                 Createduser: "System",
                 Createtime: new Date(),
                 Isactive: true,
-                Isapproved: true
+                Isapproved: false
             }, { transaction: t })
 
             await db.stockmovementModel.create({
@@ -550,7 +528,7 @@ async function TransferfromPatient(req, res, next) {
                 Movementtype: 1,
                 Prevvalue: 0,
                 Isapproved: true,
-                Newvalue: Amount,
+                Newvalue: parseFloat(Amount),
                 Createduser: "System",
                 Createtime: new Date(),
                 Isactive: true
@@ -566,10 +544,10 @@ async function TransferfromPatient(req, res, next) {
             await db.stockmovementModel.create({
                 Uuid: uuid(),
                 StockID: stock.Uuid,
-                Amount: Amount,
+                Amount: parseFloat(Amount),
                 Movementdate: new Date(),
                 Movementtype: 1,
-                Prevvalue: amount,
+                Prevvalue: parseFloat(amount),
                 Isapproved: true,
                 Newvalue: parseFloat(oldamount) + parseFloat(Amount),
                 Createduser: "System",

@@ -59,8 +59,8 @@ const Literals = {
             en: 'Period types'
         },
         Occureddays: {
-            tr: 'Gerçekleşme Günleri',
-            en: 'Occured days'
+            tr: 'Gerçekleşme Periyodu (Günlük)',
+            en: 'Occured Period (Day)'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -146,14 +146,14 @@ const Literals = {
             en: "Periods Required"
         },
         Occureddaysrequired: {
-            tr: "Gerçekleşecek günler gerekli",
-            en: "Occured days Required"
+            tr: "Gerçekleşme Periyodu gerekli",
+            en: "Occured Period Required"
         },
         PeriodTyperequired: {
             tr: "Kontrol türü Gerekli",
             en: "Period type Required"
         },
-      
+
 
     }
 }

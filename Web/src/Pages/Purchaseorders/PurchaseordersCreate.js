@@ -62,11 +62,15 @@ export default class PurchaseordersCreate extends Component {
       Purchaseorders } = this.props
     const { isLoading, isDispatching } = Purchaseorders
 
-    const Stockdefinesoption = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine).map(stockdefine => {
+    const Stockdefinesoption = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(stockdefine => {
       return { key: stockdefine.Uuid, text: stockdefine.Name, value: stockdefine.Uuid }
     })
 
-    const Medicinedefinesoption = (Stockdefines.list || []).filter(u => u.Isactive && u.Ismedicine).map(stockdefine => {
+    const Medicinedefinesoption = (Stockdefines.list || []).filter(u => u.Isactive && u.Ismedicine && !u.Issupply).map(stockdefine => {
+      return { key: stockdefine.Uuid, text: stockdefine.Name, value: stockdefine.Uuid }
+    })
+
+    const Suppliesoption = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && u.Issupply).map(stockdefine => {
       return { key: stockdefine.Uuid, text: stockdefine.Name, value: stockdefine.Uuid }
     })
 
@@ -81,15 +85,6 @@ export default class PurchaseordersCreate extends Component {
     const Warehousesoption = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
       return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
     })
-
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
@@ -113,9 +108,9 @@ export default class PurchaseordersCreate extends Component {
                     pane: {
                       key: 'save',
                       content: <React.Fragment>
-                        <div className='h-[calc(62vh-10px)]'>
+                        <div className='h-[calc(59vh-20px)] '>
                           <Form.Group widths={'equal'}>
-                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} name="WarehouseID" options={Warehousesoption} formtype='dropdown' modal={addModal(<WarehousesCreate />)} />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} name="WarehouseID" options={Warehousesoption} formtype='dropdown' modal={WarehousesCreate} />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
                             <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Company[Profile.Language]} name="Company" />
@@ -126,7 +121,7 @@ export default class PurchaseordersCreate extends Component {
                             <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchasenumber[Profile.Language]} name="Purchasenumber" />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
-                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CaseName[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' modal={addModal(<CasesCreate />)} />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CaseName[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' modal={CasesCreate} />
                             <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Personelname[Profile.Language]} name="Personelname" />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
@@ -142,13 +137,13 @@ export default class PurchaseordersCreate extends Component {
                     pane: {
                       key: 'design',
                       content: <React.Fragment>
-                        <div className='h-[calc(62vh-10px)] overflow-y-auto'>
+                        <div className='h-[calc(59vh-20px)] overflow-y-auto'>
                           <Table celled className='list-table ' key='product-create-type-conversion-table ' >
                             <Table.Header>
                               <Table.Row>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{addModal(<StockdefinesCreate />)}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{addModal(<DepartmentsCreate />)}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{StockdefinesCreate}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{DepartmentsCreate}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Barcodeno[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Skt[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Amount[Profile.Language]}</Table.HeaderCell>
@@ -157,7 +152,7 @@ export default class PurchaseordersCreate extends Component {
                               </Table.Row>
                             </Table.Header>
                             <Table.Body>
-                              {this.state.selectedStocks.filter(u => u.Ismedicine).sort((a, b) => a.Order - b.Order).map((stock, index) => {
+                              {this.state.selectedStocks.filter(u => u.Ismedicine && !u.Issupply).sort((a, b) => a.Order - b.Order).map((stock, index) => {
                                 return <Table.Row key={stock.key}>
                                   <Table.Cell>
                                     <Button.Group basic size='small'>
@@ -197,7 +192,76 @@ export default class PurchaseordersCreate extends Component {
                             <Table.Footer>
                               <Table.Row>
                                 <Table.HeaderCell colSpan='8'>
-                                  <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNewProduct(true) }}>{Literals.Button.Addproduct[Profile.Language]}</Button>
+                                  <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNewProduct(true, false) }}>{Literals.Button.Addproduct[Profile.Language]}</Button>
+                                </Table.HeaderCell>
+                              </Table.Row>
+                            </Table.Footer>
+                          </Table>
+                        </div>
+                      </React.Fragment>
+                    }
+                  },
+                  {
+                    menuItem: Literals.Columns.Supplyscreen[Profile.Language],
+                    pane: {
+                      key: 'design',
+                      content: <React.Fragment>
+                        <div className='h-[calc(59vh-20px)] overflow-y-auto'>
+                          <Table celled className='list-table ' key='product-create-type-conversion-table ' >
+                            <Table.Header>
+                              <Table.Row>
+                                <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{StockdefinesCreate}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{DepartmentsCreate}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Barcodeno[Profile.Language]}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Skt[Profile.Language]}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Amount[Profile.Language]}</Table.HeaderCell>
+                                <Table.HeaderCell width={6}>{Literals.Columns.Info[Profile.Language]}</Table.HeaderCell>
+                                <Table.HeaderCell width={1}>{Literals.Columns.Delete[Profile.Language]}</Table.HeaderCell>
+                              </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                              {this.state.selectedStocks.filter(u => !u.Ismedicine && u.Issupply).sort((a, b) => a.Order - b.Order).map((stock, index) => {
+                                return <Table.Row key={stock.key}>
+                                  <Table.Cell>
+                                    <Button.Group basic size='small'>
+                                      <Button type='button' disabled={index === 0} icon='angle up' onClick={() => { this.selectedProductChangeHandler(stock.key, 'Order', stock.Order - 1) }} />
+                                      <Button type='button' disabled={index + 1 === this.state.selectedStocks.length} icon='angle down' onClick={() => { this.selectedProductChangeHandler(stock.key, 'Order', stock.Order + 1) }} />
+                                    </Button.Group>
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <Form.Field>
+                                      <Dropdown placeholder={Literals.Columns.StockDefine[Profile.Language]} name="StockdefineID" clearable search fluid selection options={Medicinedefinesoption} value={stock.StockdefineID} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'StockdefineID', data.value) }} />
+                                    </Form.Field>
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <Form.Field>
+                                      <Dropdown placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" clearable search fluid selection options={Departmentsoption} value={stock.DepartmentID} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'DepartmentID', data.value) }} />
+                                    </Form.Field>
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <Form.Input placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" fluid value={stock.Barcodeno} onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Barcodeno', e.target.value) }} />
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <Form.Input placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' fluid value={stock.Skt} onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Skt', e.target.value) }} />
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <Form.Input placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type="number" fluid value={stock.Amount} onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Amount', e.target.value) }} />
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <Form.Input placeholder={Literals.Columns.Info[Profile.Language]} name="Info" fluid value={stock.Info} onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Info', e.target.value) }} />
+                                  </Table.Cell>
+                                  <Table.Cell className='table-last-section'>
+                                    <Icon className='type-conversion-remove-icon' link color='red' name='minus circle'
+                                      onClick={() => { this.removeProduct(stock.key, stock.Order) }} />
+                                  </Table.Cell>
+                                </Table.Row>
+                              })}
+                            </Table.Body>
+                            <Table.Footer>
+                              <Table.Row>
+                                <Table.HeaderCell colSpan='8'>
+                                  <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNewProduct(false, true) }}>{Literals.Button.Addproduct[Profile.Language]}</Button>
                                 </Table.HeaderCell>
                               </Table.Row>
                             </Table.Footer>
@@ -211,20 +275,20 @@ export default class PurchaseordersCreate extends Component {
                     pane: {
                       key: 'design',
                       content: <React.Fragment>
-                        <div className='h-[calc(62vh-10px)] overflow-y-auto'>
+                        <div className='h-[calc(59vh-20px)] overflow-y-auto'>
                           <Table celled className='list-table ' key='product-create-type-conversion-table ' >
                             <Table.Header>
                               <Table.Row>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{addModal(<StockdefinesCreate />)}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{addModal(<DepartmentsCreate />)}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{StockdefinesCreate}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{DepartmentsCreate}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Amount[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={6}>{Literals.Columns.Info[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Delete[Profile.Language]}</Table.HeaderCell>
                               </Table.Row>
                             </Table.Header>
                             <Table.Body>
-                              {this.state.selectedStocks.filter(u => !u.Ismedicine).sort((a, b) => a.Order - b.Order).map((stock, index) => {
+                              {this.state.selectedStocks.filter(u => !u.Ismedicine && !u.Issupply).sort((a, b) => a.Order - b.Order).map((stock, index) => {
                                 return <Table.Row key={stock.key}>
                                   <Table.Cell>
                                     <Button.Group basic size='small'>
@@ -258,7 +322,7 @@ export default class PurchaseordersCreate extends Component {
                             <Table.Footer>
                               <Table.Row>
                                 <Table.HeaderCell colSpan='6'>
-                                  <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNewProduct(false) }}>{Literals.Button.Addproduct[Profile.Language]}</Button>
+                                  <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNewProduct(false, false) }}>{Literals.Button.Addproduct[Profile.Language]}</Button>
                                 </Table.HeaderCell>
                               </Table.Row>
                             </Table.Footer>
@@ -285,7 +349,7 @@ export default class PurchaseordersCreate extends Component {
   handleSubmit = async (e) => {
     e.preventDefault()
 
-    const { AddPurchaseorders, history, fillPurchaseordernotification, Profile } = this.props
+    const { AddPurchaseorders, history, fillPurchaseordernotification, Profile, closeModal } = this.props
     const stocks = this.state.selectedStocks
     const formData = formToObject(e.target)
 
@@ -356,11 +420,11 @@ export default class PurchaseordersCreate extends Component {
         fillPurchaseordernotification(error)
       })
     } else {
-      await AddPurchaseorders({ data: responseData, history })
+      await AddPurchaseorders({ data: responseData, history, closeModal })
     }
   }
 
-  AddNewProduct = (Ismedicine) => {
+  AddNewProduct = (Ismedicine, Issupply) => {
     this.setState({
       selectedStocks: [...this.state.selectedStocks,
       {
@@ -374,18 +438,19 @@ export default class PurchaseordersCreate extends Component {
         Skt: null,
         Barcodeno: '',
         Amount: 0,
-        Status: 0,
         Info: '',
         Ismedicine: Ismedicine,
+        Issupply: Issupply,
         Willdelete: false,
         key: Math.random(),
-        Order: this.state.selectedStocks.length,
+        Order: (this.state.selectedStocks || []).filter(u => u.Ismedicine === Ismedicine && u.Issupply === Issupply).length,
       }]
     })
   }
 
   removeProduct = (key, order) => {
-    let stocks = this.state.selectedStocks.filter(productionRoute => productionRoute.key !== key)
+    let stock = this.state.selectedStocks.find(u => u.key === key);
+    let stocks = this.state.selectedStocks.filter(u => u.Ismedicine === stock.Ismedicine && u.Issupply === stock.Issupply).filter(productionRoute => productionRoute.key !== key);
     stocks.filter(stock => stock.Order > order).forEach(stock => stock.Order--)
     this.setState({ selectedStocks: stocks })
   }
@@ -400,7 +465,6 @@ export default class PurchaseordersCreate extends Component {
     productionRoutes[index][property] = value
     this.setState({ selectedStocks: productionRoutes })
   }
-
 }
 PurchaseordersCreate.contextType = FormContext
 

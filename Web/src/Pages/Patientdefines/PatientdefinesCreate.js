@@ -137,12 +137,12 @@ export default class PatientdefinesCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddPatientdefines, history, fillPatientdefinenotification, Profile } = this.props
+    const { AddPatientdefines, history, fillPatientdefinenotification, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.PatienttypeID = this.context.formstates[`${this.PAGE_NAME}/PatienttypeID`]
     data.CostumertypeID = this.context.formstates[`${this.PAGE_NAME}/CostumertypeID`]
-    data.Ismotheralive = this.context.formstates[`${this.PAGE_NAME}/Ismotheralive`]
-    data.Isfatheralive = this.context.formstates[`${this.PAGE_NAME}/Isfatheralive`]
+    data.Ismotheralive = this.context.formstates[`${this.PAGE_NAME}/Ismotheralive`] || false
+    data.Isfatheralive = this.context.formstates[`${this.PAGE_NAME}/Isfatheralive`] || false
     data.Gender = this.context.formstates[`${this.PAGE_NAME}/Gender`]
     data.Motherbiologicalaffinity = this.context.formstates[`${this.PAGE_NAME}/Motherbiologicalaffinity`]
     data.Fatherbiologicalaffinity = this.context.formstates[`${this.PAGE_NAME}/selectedFatheralaffinity`]
@@ -173,7 +173,7 @@ export default class PatientdefinesCreate extends Component {
         fillPatientdefinenotification(error)
       })
     } else {
-      AddPatientdefines({ data, history })
+      AddPatientdefines({ data, history, closeModal })
     }
   }
 }

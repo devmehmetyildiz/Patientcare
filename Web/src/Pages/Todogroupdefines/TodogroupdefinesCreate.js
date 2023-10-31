@@ -53,15 +53,6 @@ export default class TodogroupdefinesCreate extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
-
     return (
       Todogroupdefines.isLoading ? <LoadingPage /> :
         <Pagewrapper>
@@ -79,8 +70,8 @@ export default class TodogroupdefinesCreate extends Component {
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Tododefines[Profile.Language]} name="Tododefines" multiple options={Tododefineoptions} formtype='dropdown' modal={addModal(<TododefinesCreate />)} />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={addModal(<DepartmentsCreate />)} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Tododefines[Profile.Language]} name="Tododefines" multiple options={Tododefineoptions} formtype='dropdown' modal={TododefinesCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
               <Footerwrapper>
                 <Link to="/Todogroupdefines">
@@ -98,7 +89,7 @@ export default class TodogroupdefinesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddTodogroupdefines, history, fillTodogroupdefinenotification, Tododefines, Profile } = this.props
+    const { AddTodogroupdefines, history, fillTodogroupdefinenotification, Tododefines, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.Tododefines = this.context.formstates[`${this.PAGE_NAME}/Tododefines`].map(id => {
       return (Tododefines.list || []).find(u => u.Uuid === id)
@@ -120,7 +111,7 @@ export default class TodogroupdefinesCreate extends Component {
         fillTodogroupdefinenotification(error)
       })
     } else {
-      AddTodogroupdefines({ data, history })
+      AddTodogroupdefines({ data, history, closeModal })
     }
   }
 }

@@ -9,6 +9,8 @@ const Roles = lazy(() => import('./Containers/Roles/Roles'));
 const RolesCreate = lazy(() => import('./Containers/Roles/RolesCreate'));
 const RolesEdit = lazy(() => import('./Containers/Roles/RolesEdit'));
 
+const About = lazy(() => import('./Common/About'));
+
 const Rules = lazy(() => import('./Containers/Rules/Rules'));
 const RulesCreate = lazy(() => import('./Containers/Rules/RulesCreate'));
 const RulesEdit = lazy(() => import('./Containers/Rules/RulesEdit'));
@@ -77,6 +79,10 @@ const Patientmedicines = lazy(() => import('./Containers/Patientmedicines/Patien
 const PatientmedicinesCreate = lazy(() => import('./Containers/Patientmedicines/PatientmedicinesCreate'));
 const PatientmedicinesEdit = lazy(() => import('./Containers/Patientmedicines/PatientmedicinesEdit'));
 
+const Patientsupplies = lazy(() => import('./Containers/Patientsupplies/Patientsupplies'));
+const PatientsuppliesCreate = lazy(() => import('./Containers/Patientsupplies/PatientsuppliesCreate'));
+const PatientsuppliesEdit = lazy(() => import('./Containers/Patientsupplies/PatientsuppliesEdit'));
+
 const Patientstockmovements = lazy(() => import('./Containers/Patientstockmovements/Patientstockmovements'));
 const PatientstockmovementsCreate = lazy(() => import('./Containers/Patientstockmovements/PatientstockmovementsCreate'));
 const PatientstockmovementsEdit = lazy(() => import('./Containers/Patientstockmovements/PatientstockmovementsEdit'));
@@ -84,6 +90,14 @@ const PatientstockmovementsEdit = lazy(() => import('./Containers/Patientstockmo
 const Purchaseorderstocks = lazy(() => import('./Containers/Purchaseorderstocks/Purchaseorderstocks'));
 const PurchaseorderstocksCreate = lazy(() => import('./Containers/Purchaseorderstocks/PurchaseorderstocksCreate'));
 const PurchaseorderstocksEdit = lazy(() => import('./Containers/Purchaseorderstocks/PurchaseorderstocksEdit'));
+
+const Purchaseordersupplies = lazy(() => import('./Containers/Purchaseordersupplies/Purchaseordersupplies'));
+const PurchaseordersuppliesCreate = lazy(() => import('./Containers/Purchaseordersupplies/PurchaseordersuppliesCreate'));
+const PurchaseordersuppliesEdit = lazy(() => import('./Containers/Purchaseordersupplies/PurchaseordersuppliesEdit'));
+
+const Purchaseordermedicines = lazy(() => import('./Containers/Purchaseordermedicines/Purchaseordermedicines'));
+const PurchaseordermedicinesCreate = lazy(() => import('./Containers/Purchaseordermedicines/PurchaseordermedicinesCreate'));
+const PurchaseordermedicinesEdit = lazy(() => import('./Containers/Purchaseordermedicines/PurchaseordermedicinesEdit'));
 
 const Purchaseorderstockmovements = lazy(() => import('./Containers/Purchaseorderstockmovements/Purchaseorderstockmovements'));
 const PurchaseorderstockmovementsCreate = lazy(() => import('./Containers/Purchaseorderstockmovements/PurchaseorderstockmovementsCreate'));
@@ -107,6 +121,10 @@ const StocksEdit = lazy(() => import('./Containers/Stocks/StocksEdit'));
 const Medicines = lazy(() => import('./Containers/Medicines/Medicines'));
 const MedicinesCreate = lazy(() => import('./Containers/Medicines/MedicinesCreate'));
 const MedicinesEdit = lazy(() => import('./Containers/Medicines/MedicinesEdit'));
+
+const Supplies = lazy(() => import('./Containers/Supplies/Supplies'));
+const SuppliesCreate = lazy(() => import('./Containers/Supplies/SuppliesCreate'));
+const SuppliesEdit = lazy(() => import('./Containers/Supplies/SuppliesEdit'));
 
 const Stockmovements = lazy(() => import('./Containers/Stockmovements/Stockmovements'));
 const StockmovementsCreate = lazy(() => import('./Containers/Stockmovements/StockmovementsCreate'));
@@ -197,6 +215,9 @@ class Routes extends Component {
       { exact: true, path: "/Medicines", auth: true, component: Medicines, permission: 'stockscreen' },
       { exact: true, path: "/Medicines/Create", auth: true, component: MedicinesCreate, permission: 'stockscreen' },
       { exact: true, path: "/Medicines/:StockID/Edit", auth: true, component: MedicinesEdit, permission: 'stockscreen' },
+      { exact: true, path: "/Supplies", auth: true, component: Supplies, permission: 'stockscreen' },
+      { exact: true, path: "/Supplies/Create", auth: true, component: SuppliesCreate, permission: 'stockscreen' },
+      { exact: true, path: "/Supplies/:StockID/Edit", auth: true, component: SuppliesEdit, permission: 'stockscreen' },
       { exact: true, path: "/Stockmovements", auth: true, component: Stockmovements, permission: 'stockmovementscreen' },
       { exact: true, path: "/Stockmovements/Create", auth: true, component: StockmovementsCreate, permission: 'stockmovementscreen' },
       { exact: true, path: "/Stockmovements/:StockmovementID/Edit", auth: true, component: StockmovementsEdit, permission: 'stockmovementscreen' },
@@ -244,12 +265,21 @@ class Routes extends Component {
       { exact: true, path: "/Patientmedicines", auth: true, component: Patientmedicines, permission: 'patientstockscreen' },
       { exact: true, path: "/Patientmedicines/Create", auth: true, component: PatientmedicinesCreate, permission: 'patientstockscreen' },
       { exact: true, path: "/Patientmedicines/:PatientstockID/Edit", auth: true, component: PatientmedicinesEdit, permission: 'patientstockscreen' },
+      { exact: true, path: "/Patientsupplies", auth: true, component: Patientsupplies, permission: 'patientstockscreen' },
+      { exact: true, path: "/Patientsupplies/Create", auth: true, component: PatientsuppliesCreate, permission: 'patientstockscreen' },
+      { exact: true, path: "/Patientsupplies/:PatientstockID/Edit", auth: true, component: PatientsuppliesEdit, permission: 'patientstockscreen' },
       { exact: true, path: "/Patientstockmovements", auth: true, component: Patientstockmovements, permission: 'patientstockmovementscreen' },
       { exact: true, path: "/Patientstockmovements/Create", auth: true, component: PatientstockmovementsCreate, permission: 'patientstockmovementscreen' },
       { exact: true, path: "/Patientstockmovements/:PatientstockmovementID/Edit", auth: true, component: PatientstockmovementsEdit, permission: 'patientstockmovementscreen' },
       { exact: true, path: "/Purchaseorderstocks", auth: true, component: Purchaseorderstocks, permission: 'purchaseorderstockscreen' },
       { exact: true, path: "/Purchaseorderstocks/Create", auth: true, component: PurchaseorderstocksCreate, permission: 'purchaseorderstockscreen' },
       { exact: true, path: "/Purchaseorderstocks/:PurchaseorderstockID/Edit", auth: true, component: PurchaseorderstocksEdit, permission: 'purchaseorderstockscreen' },
+      { exact: true, path: "/Purchaseordermedicines", auth: true, component: Purchaseordermedicines, permission: 'purchaseorderstockscreen' },
+      { exact: true, path: "/Purchaseordermedicines/Create", auth: true, component: PurchaseordermedicinesCreate, permission: 'purchaseorderstockscreen' },
+      { exact: true, path: "/Purchaseordermedicines/:PurchaseorderstockID/Edit", auth: true, component: PurchaseordermedicinesEdit, permission: 'purchaseorderstockscreen' },
+      { exact: true, path: "/Purchaseordersupplies", auth: true, component: Purchaseordersupplies, permission: 'purchaseorderstockscreen' },
+      { exact: true, path: "/Purchaseordersupplies/Create", auth: true, component: PurchaseordersuppliesCreate, permission: 'purchaseorderstockscreen' },
+      { exact: true, path: "/Purchaseordersupplies/:PurchaseorderstockID/Edit", auth: true, component: PurchaseordersuppliesEdit, permission: 'purchaseorderstockscreen' },
       { exact: true, path: "/Purchaseorderstockmovements", auth: true, component: Purchaseorderstockmovements, permission: 'purchaseorderstockmovementscreen' },
       { exact: true, path: "/Purchaseorderstockmovements/Create", auth: true, component: PurchaseorderstockmovementsCreate, permission: 'purchaseorderstockmovementscreen' },
       { exact: true, path: "/Purchaseorderstockmovements/:PurchaseorderstockmovementID/Edit", auth: true, component: PurchaseorderstockmovementsEdit, permission: 'purchaseorderstockmovementscreen' },
@@ -289,6 +319,7 @@ class Routes extends Component {
       { exact: true, path: "/Preregistrations/:PatientID/Complete", auth: true, component: PreregistrationsComplete, permission: 'patientscreen' },
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit, permission: 'userscreen' },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange, permission: 'userscreen' },
+      { exact: true, path: "/About", auth: true, component: About },
       { exact: true, path: "/PasswordReset/:RequestID", auth: false, component: PasswordReset },
       { exact: true, path: "/Forgetpassword", auth: false, component: Passwordforget },
       { exact: false, path: "*", auth: false, component: Notfoundpage },

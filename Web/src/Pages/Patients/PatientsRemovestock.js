@@ -34,7 +34,7 @@ export default class PatientsRemovestock extends Component {
         const {
             GetPatient, match, history, PatientID,
             GetPatientdefines, GetPatientstocks, GetPatientstockmovements,
-            GetWarehouses, GetStocks, GetStockmovements, GetStockdefines
+            GetWarehouses, GetStocks, GetStockmovements, GetStockdefines, GetDepartments
         } = this.props
         let Id = PatientID || match?.params?.PatientID
         if (validator.isUUID(Id)) {
@@ -43,6 +43,7 @@ export default class PatientsRemovestock extends Component {
             GetPatientstocks()
             GetPatientstockmovements()
             GetWarehouses()
+            GetDepartments()
             GetStocks()
             GetStockmovements()
             GetStockdefines()
@@ -54,7 +55,7 @@ export default class PatientsRemovestock extends Component {
     componentDidUpdate() {
         const {
             Patients, removePatientnotification, Patientdefines, removePatientdefinenotification, Patientstocks, removePatientstocknotification,
-            Patientstockmovements, removePatientstockmovementnotification, Warehouses, removeWarehousenotification,
+            Patientstockmovements, removePatientstockmovementnotification, Warehouses, removeWarehousenotification, Departments, removeDepartmentnotification,
             Stocks, removeStocknotification, Stockmovements, removeStockmovementnotification, Stockdefines, removeStockdefinenotification
         } = this.props
         const { selected_record } = Patients
@@ -67,7 +68,8 @@ export default class PatientsRemovestock extends Component {
             Warehouses.isLoading &&
             Stocks.isLoading &&
             Stockmovements.isLoading &&
-            Stockdefines.isLoading
+            Stockdefines.isLoading &&
+            Departments.isLoading
 
 
         if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && isLoadingstatus && !this.state.isDatafetched) {
@@ -82,12 +84,13 @@ export default class PatientsRemovestock extends Component {
         Notification(Stocks.notifications, removeStocknotification)
         Notification(Stockmovements.notifications, removeStockmovementnotification)
         Notification(Stockdefines.notifications, removeStockdefinenotification)
+        Notification(Departments.notifications, removeDepartmentnotification)
     }
 
     render() {
 
         const {
-            Patients, Patientdefines, Patientstocks, Patientstockmovements, Warehouses,
+            Patients, Patientdefines, Patientstocks, Patientstockmovements, Warehouses, Departments,
             Stocks, Stockmovements, Stockdefines, Profile, history, match, PatientID
         } = this.props
 
@@ -104,11 +107,12 @@ export default class PatientsRemovestock extends Component {
             Warehouses.isLoading &&
             Stocks.isLoading &&
             Stockmovements.isLoading &&
-            Stockdefines.isLoading
+            Stockdefines.isLoading &&
+            Departments.isLoading
 
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
 
-        const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
+        const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive && !u.Ismedicine).map(warehouse => {
             return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
         })
 
@@ -118,15 +122,18 @@ export default class PatientsRemovestock extends Component {
         const Stockoptions = (Patientstocks.list || []).filter(u =>
             u.Isactive &&
             u.Isapproved &&
-            !u.Ismedicine
+            !u.Ismedicine &&
+            u.PatientID === selected_record?.Uuid
         ).map(stock => {
             const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
-            return { key: stock?.Uuid, text: stockdefine?.Name, value: stock?.Uuid }
+            const department = (Departments.list || []).find(u => u.Uuid === stock?.DepartmentID)
+            return { key: stock?.Uuid, text: `${stockdefine?.Name} (${department?.Name})`, value: stock?.Uuid }
         })
 
         const Columns = [
             { Header: Literals.AddStock.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true },
             { Header: Literals.AddStock.Stockname[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
+            { Header: Literals.AddStock.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
             { Header: Literals.AddStock.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
         ]
 
@@ -217,6 +224,15 @@ export default class PatientsRemovestock extends Component {
             return <Loader size='small' active inline='centered' ></Loader>
         } else {
             return (Stockdefines.list || []).find(u => u.Uuid === col.value)?.Name
+        }
+    }
+
+    departmentCellhandler = (col) => {
+        const { Departments } = this.props
+        if (Departments.isLoading) {
+            return <Loader size='small' active inline='centered' ></Loader>
+        } else {
+            return (Departments.list || []).find(u => u.Uuid === col.value)?.Name
         }
     }
 

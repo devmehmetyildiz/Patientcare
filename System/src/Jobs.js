@@ -106,6 +106,7 @@ async function CheckPatient() {
         let checkperiods = []
         let periods = []
         let patients = []
+        let todos = []
         try {
             const caseresponse = axios({
                 method: 'GET',
@@ -149,6 +150,13 @@ async function CheckPatient() {
                     session_key: config.session.secret
                 }
             })
+            const todosresponse = axios({
+                method: 'GET',
+                url: config.services.Business + `Todos`,
+                headers: {
+                    session_key: config.session.secret
+                }
+            })
 
             const responses = await Promise.all([
                 caseresponse,
@@ -156,7 +164,8 @@ async function CheckPatient() {
                 todogroupdefineresponse,
                 periodresponse,
                 checkperiodresponse,
-                patientresponse
+                patientresponse,
+                todosresponse
             ])
 
             cases = responses[0]?.data
@@ -165,6 +174,7 @@ async function CheckPatient() {
             periods = responses[3]?.data
             checkperiods = responses[4]?.data
             patients = responses[5]?.data
+            todos = responses[6]?.data
 
         } catch (error) {
             console.log(requestErrorCatcher(error, 'Setting-Business'))
@@ -172,7 +182,7 @@ async function CheckPatient() {
 
         console.log("Checkpatientstarted at", Datetime);
         (patients || []).filter(u => u.TodogroupdefineID && u.CaseID && !u.Iswaitingactivation).forEach(patient => {
-            Checkpatientroutine(patient, cases, todogroupdefines, tododefines, checkperiods, periods, Datetime)
+            Checkpatientroutine(patient, cases, todogroupdefines, tododefines, checkperiods, periods, todos, Datetime)
         })
 
     } catch (error) {
@@ -180,7 +190,7 @@ async function CheckPatient() {
     }
 }
 
-async function Checkpatientroutine(patient, cases, todogroupdefines, tododefines, checkperiods, periods, Datetime) {
+async function Checkpatientroutine(patient, cases, todogroupdefines, tododefines, checkperiods, periods, todos, Datetime) {
 
     const now = Datetime;
     const hours = String(now.getHours()).padStart(2, '0');
@@ -203,7 +213,11 @@ async function Checkpatientroutine(patient, cases, todogroupdefines, tododefines
 
                 for (const checkperiod of patientcheckperiods) {
 
-                    const ishaveroutineinthisday = (checkperiod.Occureddays.split(',') || []).map(u => { return parseInt(u) }).find(u => u === dayIndex)
+                    const ishaveroutineinthisday = ((todos || []).sort((a, b) => b.Id - a.Id).find(u =>
+                        u.PatientID === patient?.Uuid &&
+                        u.TododefineID === todo?.Uuid &&
+                        isSameDate(u.createTime, Occureddays)
+                    ))
 
                     if (ishaveroutineinthisday) {
                         const patientperiods = checkperiod.Perioduuids.map(uuid => {
@@ -250,6 +264,18 @@ async function Checkpatientroutine(patient, cases, todogroupdefines, tododefines
             console.log(requestErrorCatcher(error, 'Business'))
         }
     }
+}
+
+function isSameDate(date1, daycount) {
+    const d1 = new Date(date1);
+    const d2 = new Date();
+    d2.setDate(d2.getDate() + daycount);
+
+    return (
+        d1.getFullYear() === d2.getFullYear() &&
+        d1.getMonth() === d2.getMonth() &&
+        d1.getDate() === d2.getDate()
+    );
 }
 
 module.exports = {

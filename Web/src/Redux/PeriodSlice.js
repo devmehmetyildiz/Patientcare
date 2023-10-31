@@ -61,7 +61,7 @@ export const GetPeriod = createAsyncThunk(
 
 export const AddPeriods = createAsyncThunk(
     'Periods/AddPeriods',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,6 +76,7 @@ export const AddPeriods = createAsyncThunk(
                 code: 'PeriodsCreate',
                 description: '',
             }));
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Periods');
             return response.data;
         } catch (error) {
@@ -139,7 +140,7 @@ export const DeletePeriods = createAsyncThunk(
     'Periods/DeletePeriods',
     async (data, { dispatch, getState }) => {
         try {
-          
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Setting, `${ROUTES.PERIOD}/${data.Uuid}`);

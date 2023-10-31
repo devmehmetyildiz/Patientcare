@@ -48,15 +48,6 @@ export default class BedsCreate extends Component {
       return { key: room.Uuid, text: `${room.Name} (${(Floors.list || []).find(u => u.Uuid === room.FloorID)?.Name})`, value: room.Uuid }
     })
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
-
     return (
       Beds.isLoading ? <LoadingPage /> :
         <Pagewrapper>
@@ -73,7 +64,7 @@ export default class BedsCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.RoomID[Profile.Language]} name="RoomID" options={Roomsoptions} formtype='dropdown' modal={addModal(<RoomsCreate />)} />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.RoomID[Profile.Language]} name="RoomID" options={Roomsoptions} formtype='dropdown' modal={RoomsCreate} />
               <Footerwrapper>
                 <Link to="/Beds">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
@@ -89,7 +80,7 @@ export default class BedsCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddBeds, history, fillBednotification, Profile } = this.props
+    const { AddBeds, history, fillBednotification, Profile, closeModal } = this.props
     const data = formToObject(e.target)
     data.RoomID = this.context.formstates[`${this.PAGE_NAME}/RoomID`]
 
@@ -105,7 +96,7 @@ export default class BedsCreate extends Component {
         fillBednotification(error)
       })
     } else {
-      AddBeds({ data, history })
+      AddBeds({ data, history , closeModal})
     }
   }
 }

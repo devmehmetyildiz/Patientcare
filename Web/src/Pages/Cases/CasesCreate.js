@@ -82,14 +82,6 @@ export default class CasesCreate extends Component {
       return isHave
     }).filter(u => u).length > 0
 
-    const addModal = (content) => {
-      return <Modal
-        onClose={() => { this.setState({ modelOpened: false }) }}
-        onOpen={() => { this.setState({ modelOpened: true }) }}
-        trigger={<Icon link name='plus' />}
-        content={content}
-      />
-    }
 
     return (
       Cases.isLoading || Cases.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
@@ -115,7 +107,7 @@ export default class CasesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.CaseStatus[Profile.Language]} name="CaseStatus" options={casestatusOption} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={addModal(<DepartmentsCreate />)} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
               </Form.Group>
               {ispatientdepartmentselected &&
                 <Form.Group widths='equal'>
@@ -138,7 +130,7 @@ export default class CasesCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddCases, history, Departments, fillCasenotification, Profile } = this.props
+    const { AddCases, history, Departments, fillCasenotification, Profile , closeModal} = this.props
     const data = formToObject(e.target)
 
     const ispatientdepartmentselected = (this.context.formstates[`${this.PAGE_NAME}/Departments`] || []).map(id => {
@@ -181,7 +173,7 @@ export default class CasesCreate extends Component {
         fillCasenotification(error)
       })
     } else {
-      AddCases({ data, history })
+      AddCases({ data, history , closeModal})
     }
   }
 }
