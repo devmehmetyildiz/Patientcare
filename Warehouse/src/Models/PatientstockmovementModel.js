@@ -28,9 +28,6 @@ module.exports = sequelize.define('patientstockmovementModel', {
     Movementdate: {
         type: Sequelize.DATE
     },
-    Isapproved: {
-        type: Sequelize.BOOLEAN
-    },
     Status: {
         type: Sequelize.INTEGER
     },
