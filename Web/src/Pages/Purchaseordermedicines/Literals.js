@@ -42,6 +42,10 @@ const Literals = {
             tr: 'Kaynak',
             en: 'Source'
         },
+        Isredprescription: {
+            tr: 'Kırmızı Reçete mi?',
+            en: 'Is Redprescription?'
+        },
         Isapproved: {
             tr: 'Onaylandı mı?',
             en: 'Is Approved?'
@@ -101,8 +105,8 @@ const Literals = {
             en: "Delete Purchase Order Medicines"
         },
         Pageapproveheader: {
-            tr: "Satın Alma Stok Onaylama",
-            en: "Approve Purchase Order Stocks"
+            tr: "Satın Alma İlaç Onaylama",
+            en: "Approve Purchase Order Medicines"
         },
     },
     Button: {
@@ -146,8 +150,8 @@ const Literals = {
             en: "Department Required"
         },
         Approvecheck: {
-            tr: "Satın Alma Stoğunu onaylamak istediğinize emin misiniz?",
-            en: "Purchase order Stocks will approve, are you sure?"
+            tr: "Satın Alma İlacını onaylamak istediğinize emin misiniz?",
+            en: "Purchase order Medicines will approve, are you sure?"
         },
         PurchasenumberRequired: {
             tr: "Satın alma siparişi Gerekli",

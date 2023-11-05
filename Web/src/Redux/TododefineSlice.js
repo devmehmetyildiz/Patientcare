@@ -61,7 +61,7 @@ export const GetTododefine = createAsyncThunk(
 
 export const AddTododefines = createAsyncThunk(
     'Tododefines/AddTododefines',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -71,11 +71,7 @@ export const AddTododefines = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillTododefinenotification({
-                type: 'Clear',
-                code: 'TododefinesCreate',
-                description: '',
-            }));
+            clearForm && clearForm('TododefinesCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Tododefines');
             return response.data;
@@ -89,7 +85,7 @@ export const AddTododefines = createAsyncThunk(
 
 export const AddRecordTododefines = createAsyncThunk(
     'Tododefines/AddRecordTododefines',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,6 +95,8 @@ export const AddRecordTododefines = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('TododefinesCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Tododefines');
             return response.data;
         } catch (error) {
@@ -111,7 +109,7 @@ export const AddRecordTododefines = createAsyncThunk(
 
 export const EditTododefines = createAsyncThunk(
     'Tododefines/EditTododefines',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm  }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -121,11 +119,8 @@ export const EditTododefines = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillTododefinenotification({
-                type: 'Clear',
-                code: 'TododefinesUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('TododefinesUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Tododefines');
             return response.data;
         } catch (error) {

@@ -61,7 +61,7 @@ export const GetBed = createAsyncThunk(
 
 export const AddBeds = createAsyncThunk(
     'Beds/AddBeds',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -71,11 +71,7 @@ export const AddBeds = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillBednotification({
-                type: 'Clear',
-                code: 'BedsCreate',
-                description: '',
-            }));
+            clearForm && clearForm('BedsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Beds');
             return response.data;
@@ -89,7 +85,7 @@ export const AddBeds = createAsyncThunk(
 
 export const AddRecordBeds = createAsyncThunk(
     'Beds/AddRecordBeds',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,6 +95,8 @@ export const AddRecordBeds = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('BedsCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Beds');
             return response.data;
         } catch (error) {
@@ -111,7 +109,7 @@ export const AddRecordBeds = createAsyncThunk(
 
 export const EditBeds = createAsyncThunk(
     'Beds/EditBeds',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -121,11 +119,8 @@ export const EditBeds = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillBednotification({
-                type: 'Clear',
-                code: 'BedsUpdate',
-                description: '',
-            }));
+            closeModal && closeModal()
+            clearForm && clearForm('BedsUpdate')
             history && history.push(redirectUrl ? redirectUrl : '/Beds');
             return response.data;
         } catch (error) {

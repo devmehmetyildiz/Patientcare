@@ -91,7 +91,7 @@ export default class PatientmedicinesCreate extends Component {
           <Contentwrapper>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patient[Profile.Language]} name="PatientID" options={Patientoptions} formtype="dropdown" additionalicon={changeRegistertype} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patient[Profile.Language]} name="PatientID" options={Patientoptions} formtype="dropdown" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths='equal'>

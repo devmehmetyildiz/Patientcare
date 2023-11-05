@@ -61,7 +61,7 @@ export const GetPatienttype = createAsyncThunk(
 
 export const AddPatienttypes = createAsyncThunk(
     'Patienttypes/AddPatienttypes',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -71,11 +71,7 @@ export const AddPatienttypes = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillPatienttypenotification({
-                type: 'Clear',
-                code: 'PatienttypesCreate',
-                description: '',
-            }));
+            clearForm && clearForm('PatienttypesCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patienttypes');
             return response.data;
@@ -89,7 +85,7 @@ export const AddPatienttypes = createAsyncThunk(
 
 export const AddRecordPatienttypes = createAsyncThunk(
     'Patienttypes/AddRecordPatienttypes',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,6 +95,8 @@ export const AddRecordPatienttypes = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('PatienttypesCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patienttypes');
             return response.data;
         } catch (error) {
@@ -111,7 +109,7 @@ export const AddRecordPatienttypes = createAsyncThunk(
 
 export const EditPatienttypes = createAsyncThunk(
     'Patienttypes/EditPatienttypes',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -121,11 +119,8 @@ export const EditPatienttypes = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillPatienttypenotification({
-                type: 'Clear',
-                code: 'PatienttypesUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('PatienttypesUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patienttypes');
             return response.data;
         } catch (error) {

@@ -71,13 +71,13 @@ export default function WarehousesList({ Data, Columns, Stocks, initialConfig, P
             Data={decoratedStocks.sort((a, b) => a.Order - b.Order).filter(u => !u.Ismedicine && !u.Issupply)}
           />
         </div>
-        <div className='w-full p-4'>
+        {warehouse?.Ismedicine && <div className='w-full p-4'>
           <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>{Literals.Columns.Medicines[Profile.Language]}</Header>
           <DataTable
             Columns={medicinecolumns}
             Data={decoratedStocks.sort((a, b) => a.Order - b.Order).filter(u => u.Ismedicine && !u.Issupply)}
           />
-        </div>
+        </div>}
         <div className='w-full p-4'>
           <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>{Literals.Columns.Supplies[Profile.Language]}</Header>
           <DataTable

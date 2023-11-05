@@ -61,7 +61,7 @@ export const GetRoom = createAsyncThunk(
 
 export const AddRooms = createAsyncThunk(
     'Rooms/AddRooms',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -71,11 +71,7 @@ export const AddRooms = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillRoomnotification({
-                type: 'Clear',
-                code: 'RoomsCreate',
-                description: '',
-            }));
+            clearForm && clearForm('RoomsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Rooms');
             return response.data;
@@ -89,7 +85,7 @@ export const AddRooms = createAsyncThunk(
 
 export const AddRecordRooms = createAsyncThunk(
     'Rooms/AddRecordRooms',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,6 +95,8 @@ export const AddRecordRooms = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('RoomsCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Rooms');
             return response.data;
         } catch (error) {
@@ -111,7 +109,7 @@ export const AddRecordRooms = createAsyncThunk(
 
 export const EditRooms = createAsyncThunk(
     'Rooms/EditRooms',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -121,11 +119,8 @@ export const EditRooms = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillRoomnotification({
-                type: 'Clear',
-                code: 'RoomsUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('RoomsUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Rooms');
             return response.data;
         } catch (error) {

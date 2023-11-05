@@ -65,7 +65,7 @@ export const GetStockmovement = createAsyncThunk(
 
 export const AddStockmovements = createAsyncThunk(
     'Stockmovements/AddStockmovements',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -75,11 +75,7 @@ export const AddStockmovements = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillStockmovementnotification({
-                type: 'Clear',
-                code: 'StockmovementsCreate',
-                description: '',
-            }));
+            clearForm && clearForm('StockmovementsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Stockmovements');
             return response.data;
@@ -93,7 +89,7 @@ export const AddStockmovements = createAsyncThunk(
 
 export const EditStockmovements = createAsyncThunk(
     'Stockmovements/EditStockmovements',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -103,11 +99,8 @@ export const EditStockmovements = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillStockmovementnotification({
-                type: 'Clear',
-                code: 'StockmovementsUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('StockmovementsUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Stockmovements');
             return response.data;
         } catch (error) {

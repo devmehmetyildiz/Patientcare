@@ -61,7 +61,7 @@ export const GetCheckperiod = createAsyncThunk(
 
 export const AddCheckperiods = createAsyncThunk(
     'Checkperiods/AddCheckperiods',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -71,11 +71,7 @@ export const AddCheckperiods = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillCheckperiodnotification({
-                type: 'Clear',
-                code: 'CheckperiodsCreate',
-                description: '',
-            }));
+            clearForm && clearForm('CheckperiodsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Checkperiods');
             return response.data;
@@ -89,7 +85,7 @@ export const AddCheckperiods = createAsyncThunk(
 
 export const AddRecordCheckperiods = createAsyncThunk(
     'Checkperiods/AddRecordCheckperiods',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,6 +95,8 @@ export const AddRecordCheckperiods = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('CheckperiodsCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Checkperiods');
             return response.data;
         } catch (error) {
@@ -111,7 +109,7 @@ export const AddRecordCheckperiods = createAsyncThunk(
 
 export const EditCheckperiods = createAsyncThunk(
     'Checkperiods/EditCheckperiods',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -121,11 +119,8 @@ export const EditCheckperiods = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillCheckperiodnotification({
-                type: 'Clear',
-                code: 'CheckperiodsUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('CheckperiodsUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Checkperiods');
             return response.data;
         } catch (error) {

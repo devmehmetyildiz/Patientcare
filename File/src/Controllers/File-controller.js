@@ -6,8 +6,8 @@ const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const fs = require('fs');
-const ftp = require('basic-ftp')
 const stream = require("stream");
+const Reconnectftp = require("../Utilities/Reconnectftp")
 
 async function GetFiles(req, res, next) {
     try {
@@ -116,30 +116,21 @@ async function Downloadfile(req, res, next) {
         const remoteFolderpath = `/${config.ftp.mainfolder}/${file.Filefolder}/`;
         const remoteFilePath = `/${remoteFolderpath}/${file.Filename}`;
 
-        const server = {
-            host: config.ftp.host,
-            user: config.ftp.user,
-            password: config.ftp.password,
-        };
-
         await (async () => {
-            const client = new ftp.Client();
             try {
                 res.setHeader("Content-Disposition", `attachment; filename=${file.Filename}`);
                 res.setHeader("Content-Type", file.Filetype);
-                await client.access(server);
                 await client.downloadTo(fileStream, remoteFilePath, 0);
 
                 fileStream.pipe(res);
 
                 fileStream.on('finish', () => {
-                    client.close();
                     console.log('File downloaded and sent as response successfully');
                 });
 
             } catch (err) {
                 console.log('err: ', err);
-                client.close();
+                await Reconnectftp()
                 return next(createValidationError(messages.ERROR.FILE_DOWNLOAD_ERROR))
             }
         })();
@@ -334,23 +325,14 @@ async function Uploadfiletoftp(fileObject) {
     const remoteFolderpath = `/${config.ftp.mainfolder}/${fileObject.Filefolder}/`;
     const remoteFilePath = `/${remoteFolderpath}/${fileObject.File.name}`;
 
-    const server = {
-        host: config.ftp.host,
-        user: config.ftp.user,
-        password: config.ftp.password
-    };
 
     await (async () => {
-        const client = new ftp.Client();
-
         try {
-            await client.access(server);
             await client.uploadFrom(fileStream, remoteFilePath);
             isuploaded = true
         } catch (err) {
             isuploaded = false
-        } finally {
-            client.close();
+            await Reconnectftp()
         }
     })();
     return isuploaded
@@ -360,17 +342,10 @@ async function Checkdirectoryfromftp(directoryname) {
     let isdirectoryactive = false
 
     const remoteFolderpath = `/${config.ftp.mainfolder}/${directoryname}/`;
-    const server = {
-        host: config.ftp.host,
-        user: config.ftp.user,
-        password: config.ftp.password
-    };
 
     await (async () => {
-        const client = new ftp.Client();
 
         try {
-            await client.access(server);
 
             const dirList = await client.list(`/${config.ftp.mainfolder}/`);
             const directoryExists = dirList.some((item) => item.name === directoryname);
@@ -383,8 +358,7 @@ async function Checkdirectoryfromftp(directoryname) {
             }
         } catch (err) {
             isdirectoryactive = false
-        } finally {
-            client.close();
+            await Reconnectftp()
         }
     })();
     return isdirectoryactive
@@ -398,23 +372,16 @@ async function Removefileandfolderfromftp(fileObject) {
         const remoteFolderpath = `/${config.ftp.mainfolder}/${fileObject.Filefolder}/`;
         const remoteFilePath = `/${remoteFolderpath}/${fileObject.Filename}`;
 
-        const server = {
-            host: config.ftp.host,
-            user: config.ftp.user,
-            password: config.ftp.password
-        };
+
 
         await (async () => {
-            const client = new ftp.Client();
 
             try {
-                await client.access(server);
                 await client.removeDir(remoteFolderpath, remoteFilePath);
                 isremoved = true
             } catch (err) {
                 isremoved = false
-            } finally {
-                client.close();
+                await Reconnectftp()
             }
         })();
     }

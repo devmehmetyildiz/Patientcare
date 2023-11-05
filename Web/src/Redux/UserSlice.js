@@ -61,7 +61,7 @@ export const GetUser = createAsyncThunk(
 
 export const AddUsers = createAsyncThunk(
     'Users/AddUsers',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm  }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -71,11 +71,7 @@ export const AddUsers = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillUsernotification({
-                type: 'Clear',
-                code: 'UsersCreate',
-                description: '',
-            }));
+            clearForm && clearForm('UsersCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Users');
             return response.data;
@@ -89,7 +85,7 @@ export const AddUsers = createAsyncThunk(
 
 export const EditUsers = createAsyncThunk(
     'Users/EditUsers',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm  }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,14 +95,8 @@ export const EditUsers = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillUsernotification({
-                type: 'Clear',
-                code: 'UsersEdit',
-                description: '',
-            }));
-            if (redirectUrl && redirectUrl === 'Goback') {
-                history && history.goBack()
-            }
+            clearForm && clearForm('UsersEdit')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Users');
             return response.data;
         } catch (error) {

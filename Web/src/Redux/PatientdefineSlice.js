@@ -62,7 +62,7 @@ export const GetPatientdefine = createAsyncThunk(
 
 export const AddPatientdefines = createAsyncThunk(
     'Patientdefines/AddPatientdefines',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -72,11 +72,7 @@ export const AddPatientdefines = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillPatientdefinenotification({
-                type: 'Clear',
-                code: 'PatientdefinesCreate',
-                description: '',
-            }));
+            clearForm && clearForm('PatientdefinesCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patientdefines');
             return response.data;
@@ -90,7 +86,7 @@ export const AddPatientdefines = createAsyncThunk(
 
 export const AddRecordPatientdefines = createAsyncThunk(
     'Patientdefines/AddRecordPatientdefines',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({data, history, redirectUrl, closeModal, clearForm}, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -100,6 +96,8 @@ export const AddRecordPatientdefines = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('PatientdefinesCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patientdefines');
             return response.data;
         } catch (error) {
@@ -112,7 +110,7 @@ export const AddRecordPatientdefines = createAsyncThunk(
 
 export const EditPatientdefines = createAsyncThunk(
     'Patientdefines/EditPatientdefines',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm}, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -122,11 +120,8 @@ export const EditPatientdefines = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillPatientdefinenotification({
-                type: 'Clear',
-                code: 'PatientdefinesUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('PatientdefinesUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patientdefines');
             return response.data;
         } catch (error) {
