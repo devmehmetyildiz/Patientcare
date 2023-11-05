@@ -39,7 +39,7 @@ export default class CostumertypesEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Costumertypes, removeCostumertypenotification, removeDepartmentnotification } = this.props
+    const { Departments, Costumertypes, } = this.props
     const { selected_record, isLoading } = Costumertypes
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
@@ -47,8 +47,6 @@ export default class CostumertypesEdit extends Component {
       })
       this.context.setForm(this.PAGE_NAME, { ...selected_record, Departments: selected_record.Departmentuuids.map(u => { return u.DepartmentID }) })
     }
-    Notification(Costumertypes.notifications, removeCostumertypenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
   }
 
   render() {

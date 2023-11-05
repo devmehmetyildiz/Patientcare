@@ -30,11 +30,6 @@ export default class RulesCreate extends Component {
         this.templateEditorRef = React.createRef()
     }
 
-    componentDidUpdate() {
-        const { Rules, removeRulenotification } = this.props
-        Notification(Rules.notifications, removeRulenotification, this.context.clearForm)
-    }
-
     render() {
         const { Rules, Profile, history } = this.props
         const { isLoading, isDispatching } = Rules

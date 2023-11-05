@@ -32,16 +32,14 @@ export default class ProfileEdit extends Component {
     }
 
     componentDidUpdate() {
-        const { Profile, removenotification, Files, removeFilenotification } = this.props
-        const { notifications, meta } = Profile
+        const { Profile, Files } = this.props
+        const { meta } = Profile
         if (meta && meta.Id !== 0 && Object.keys(meta).length > 0 && !this.state.isDatafetched) {
             if (meta.Files && Array.isArray(meta.Files)) {
                 let pp = meta.Files.find(u => u.Usagetype === "PP")
                 this.setState({ file: pp ? pp : {}, isDatafetched: true, fetchedFromapi: true, showImg: pp ? true : false })
             }
         }
-        Notification(notifications, removenotification)
-        Notification(Files.notifications, removeFilenotification)
     }
 
     render() {
@@ -114,24 +112,11 @@ export default class ProfileEdit extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault()
-        const { EditUsers, history, fillnotification, Profile } = this.props
+        const { EditUsers, history, Profile } = this.props
         const data = formToObject(e.target)
         data.Language = this.state.selectedLanguage
-        let errors = []
-        if (!data.Name || data.Name === '') {
-            errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'İsim boş olamaz' })
-        }
-        if (!data.Surname || data.Surname === '') {
-            errors.push({ type: 'Error', code: 'Kullanıcılar', description: 'Soy isim boş olamaz' })
-        }
-        if (errors.length > 0) {
-            errors.forEach(error => {
-                fillnotification(error)
-            })
-        } else {
-            this.handleFile()
-            EditUsers({ data: { ...Profile.meta, ...data }, history, redirectUrl: "Goback" })
-        }
+        this.handleFile()
+        EditUsers({ data: { ...Profile.meta, ...data }, history, redirectUrl: "Goback" })
     }
 
     deleteImage = (e) => {

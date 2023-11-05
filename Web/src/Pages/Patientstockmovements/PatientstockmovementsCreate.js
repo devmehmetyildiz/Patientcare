@@ -24,11 +24,6 @@ export default class PatientstockmovementsCreate extends Component {
     GetPatientstocks()
   }
 
-  componentDidUpdate() {
-    const { Patientstockmovements, Patientstocks, removePatientstocknotification, removePatientstockmovementnotification } = this.props
-    Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
-    Notification(Patientstocks.notifications, removePatientstocknotification)
-  }
 
   render() {
     const { Patientstockmovements, Patientstocks, Profile, history } = this.props

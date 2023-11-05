@@ -27,10 +27,6 @@ export class Roles extends Component {
     GetRoles()
   }
 
-  componentDidUpdate() {
-    const { Roles, removeRolenotification } = this.props
-    Notification(Roles.notifications, removeRolenotification)
-  }
 
   render() {
     const { Roles, Profile, handleDeletemodal, handleSelectedRole } = this.props

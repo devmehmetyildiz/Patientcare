@@ -22,11 +22,6 @@ export default class Floors extends Component {
     GetFloors()
   }
 
-  componentDidUpdate() {
-    const { Floors, removeFloornotification } = this.props
-    Notification(Floors.notifications, removeFloornotification)
-  }
-
   render() {
     const { Floors, Profile, handleDeletemodal, handleSelectedFloor, AddRecordFloors } = this.props
     const { isLoading, isDispatching } = Floors

@@ -39,9 +39,7 @@ export default class PreregistrationsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Cases, Patientdefines, Patients,
-      removeDepartmentnotification, removeCasenotification,
-      removePatientnotification, removePatientdefinenotification } = this.props
+    const { Departments, Cases, Patientdefines, Patients } = this.props
     const { selected_record, isLoading } = Patients
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
       Departments.list.length > 0 && !Departments.isLoading &&
@@ -53,10 +51,6 @@ export default class PreregistrationsEdit extends Component {
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Patients.notifications, removePatientnotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Cases.notifications, removeCasenotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
   }
 
 

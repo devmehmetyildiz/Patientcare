@@ -40,20 +40,16 @@ export default class StockmovementsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Stocks, Stockmovements, Stockdefines, removeStockdefinenotification,
-      removeStockmovementnotification, removeStocknotification } = this.props
+    const { Stocks, Stockmovements, Stockdefines } = this.props
     const { selected_record, isLoading } = Stockmovements
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
-      && Stocks.list.length > 0 && !Stocks.isLoading
+      && !Stockdefines.isLoading && !Stocks.isLoading
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Stocks.notifications, removeStocknotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Stockmovements.notifications, removeStockmovementnotification)
   }
 
   render() {

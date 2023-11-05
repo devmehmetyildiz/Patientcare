@@ -27,11 +27,6 @@ export default class Printtemplates extends Component {
     GetPrinttemplates()
   }
 
-  componentDidUpdate() {
-    const { Printtemplates, removePrinttemplatenotification } = this.props
-    Notification(Printtemplates.notifications, removePrinttemplatenotification)
-  }
-
   render() {
     const { Printtemplates, Profile, handleDeletemodal, handleSelectedPrinttemplate } = this.props
     const { isLoading, isDispatching } = Printtemplates

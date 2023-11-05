@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import PatientsEditcase from '../../Pages/Patients/PatientsEditcase'
-import { GetPatient, removePatientnotification, fillPatientnotification,Editpatientcase } from "../../Redux/PatientSlice"
-import { GetPatientdefines, removePatientdefinenotification } from "../../Redux/PatientdefineSlice"
-import { GetCases, removeCasenotification } from "../../Redux/CaseSlice"
+import { GetPatient,  fillPatientnotification,Editpatientcase } from "../../Redux/PatientSlice"
+import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
+import { GetCases } from "../../Redux/CaseSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -12,8 +12,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetPatient, removePatientnotification, GetPatientdefines,Editpatientcase,
-    removePatientdefinenotification, GetCases, removeCasenotification, fillPatientnotification
+    GetPatient,  GetPatientdefines,Editpatientcase,
+     GetCases,  fillPatientnotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsEditcase)

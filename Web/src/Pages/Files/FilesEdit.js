@@ -22,11 +22,6 @@ export class FilesEdit extends Component {
     }
   }
 
-  componentDidUpdate() {
-    const { Files, removeFilenotification } = this.props
-    Notification(Files.notifications, removeFilenotification)
-  }
-
   render() {
 
     const { Files } = this.props

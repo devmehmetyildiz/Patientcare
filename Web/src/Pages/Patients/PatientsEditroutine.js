@@ -44,10 +44,7 @@ export default class PatientsEditroutine extends Component {
     }
 
     componentDidUpdate() {
-        const {
-            Patients, removePatientnotification, Patientdefines,
-            removePatientdefinenotification, Todogroupdefines, removeTodogroupdefinenotification
-        } = this.props
+        const { Patients, Patientdefines, Todogroupdefines } = this.props
         const { selected_record } = Patients
 
         const isLoadingstatus =
@@ -59,9 +56,6 @@ export default class PatientsEditroutine extends Component {
             this.setState({ isDatafetched: true })
             this.context.setForm(this.PAGE_NAME, selected_record)
         }
-        Notification(Patients.notifications, removePatientnotification)
-        Notification(Patientdefines.notifications, removePatientdefinenotification)
-        Notification(Todogroupdefines.notifications, removeTodogroupdefinenotification)
     }
 
     render() {

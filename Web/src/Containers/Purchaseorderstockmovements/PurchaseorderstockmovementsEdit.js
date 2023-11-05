@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import PurchaseorderstockmovementsEdit from '../../Pages/Purchaseorderstockmovements/PurchaseorderstockmovementsEdit'
-import { EditPurchaseorderstockmovements, GetPurchaseorderstockmovement, handleSelectedPurchaseorderstockmovement, removePurchaseorderstockmovementnotification, fillPurchaseorderstockmovementnotification } from '../../Redux/PurchaseorderstockmovementSlice'
-import { GetPurchaseorderstocks, removePurchaseorderstocknotification } from '../../Redux/PurchaseorderstockSlice'
+import { EditPurchaseorderstockmovements, GetPurchaseorderstockmovement, handleSelectedPurchaseorderstockmovement, fillPurchaseorderstockmovementnotification } from '../../Redux/PurchaseorderstockmovementSlice'
+import { GetPurchaseorderstocks } from '../../Redux/PurchaseorderstockSlice'
 
 
 const mapStateToProps = (state) => ({
@@ -12,7 +12,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     EditPurchaseorderstockmovements, GetPurchaseorderstockmovement, handleSelectedPurchaseorderstockmovement,
-    removePurchaseorderstockmovementnotification, fillPurchaseorderstockmovementnotification,GetPurchaseorderstocks, removePurchaseorderstocknotification 
+    fillPurchaseorderstockmovementnotification, GetPurchaseorderstocks
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PurchaseorderstockmovementsEdit)

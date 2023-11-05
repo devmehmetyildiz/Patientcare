@@ -19,11 +19,6 @@ export default class PeriodsCreate extends Component {
 
   PAGE_NAME = "PeriodsCreate"
 
-  componentDidUpdate() {
-    const { removePeriodnotification, Periods } = this.props
-    Notification(Periods.notifications, removePeriodnotification)
-  }
-
   render() {
 
     const { Periods, Profile, history } = this.props

@@ -24,13 +24,6 @@ export default class Patientmovements extends Component {
     GetPatientdefines()
   }
 
-  componentDidUpdate() {
-    const { Patientmovements, Patientdefines, Patients, removePatientdefinenotification, removePatientnotification, removePatientmovementnotification } = this.props
-    Notification(Patientmovements.notifications, removePatientmovementnotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
-    Notification(Patients.notifications, removePatientnotification)
-  }
-
   render() {
 
     const { Patientmovements, Profile, handleSelectedPatientmovement, handleDeletemodal, AddRecordPatientmovements } = this.props

@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import UsersEdit from '../../Pages/Users/UsersEdit'
-import { EditUsers, GetUser, handleSelectedUser, fillUsernotification, removeUsernotification } from "../../Redux/UserSlice"
-import { GetRoles, removeRolenotification } from "../../Redux/RoleSlice"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
-import { GetStations, removeStationnotification } from "../../Redux/StationSlice"
+import { EditUsers, GetUser, handleSelectedUser, fillUsernotification } from "../../Redux/UserSlice"
+import { GetRoles } from "../../Redux/RoleSlice"
+import { GetDepartments } from "../../Redux/DepartmentSlice"
+import { GetStations } from "../../Redux/StationSlice"
 
 
 const mapStateToProps = (state) => ({
@@ -15,8 +15,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  EditUsers, GetUser, handleSelectedUser, fillUsernotification, removeUsernotification, GetRoles, removeRolenotification,
-  GetDepartments, removeDepartmentnotification, GetStations, removeStationnotification
+  EditUsers, GetUser, handleSelectedUser, fillUsernotification, GetRoles,
+  GetDepartments,  GetStations
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UsersEdit)

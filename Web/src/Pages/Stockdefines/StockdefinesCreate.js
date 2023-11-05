@@ -34,13 +34,6 @@ export default class StockdefinesCreate extends Component {
     GetUnits()
   }
 
-  componentDidUpdate() {
-    const { Stockdefines, Units, removeUnitnotification, removeStockdefinenotification, Departments, removeDepartmentnotification } = this.props
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Units.notifications, removeUnitnotification)
-  }
-
   render() {
     const { Departments, Units, Stockdefines, history, Profile } = this.props
 

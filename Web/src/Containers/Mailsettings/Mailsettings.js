@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Mailsettings from '../../Pages/Mailsettings/Mailsettings'
-import { GetMailsettings, removeMailsettingnotification, DeleteMailsettings, handleDeletemodal, handleSelectedMailsetting } from "../../Redux/MailsettingSlice"
+import { GetMailsettings,  DeleteMailsettings, handleDeletemodal, handleSelectedMailsetting } from "../../Redux/MailsettingSlice"
 
 const mapStateToProps = (state) => ({
     Mailsettings: state.Mailsettings,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetMailsettings, removeMailsettingnotification, DeleteMailsettings, handleDeletemodal, handleSelectedMailsetting
+    GetMailsettings,  DeleteMailsettings, handleDeletemodal, handleSelectedMailsetting
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Mailsettings)

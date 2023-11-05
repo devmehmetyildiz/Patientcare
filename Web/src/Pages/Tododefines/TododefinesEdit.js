@@ -39,16 +39,14 @@ export default class TododefinesEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Tododefines, removeTododefinenotification, Checkperiods, removeCheckperiodnotification } = this.props
-    const { notifications, selected_record, isLoading } = Tododefines
-    if (selected_record && Object.keys(selected_record).length > 0 && !isLoading && selected_record.Id !== 0 && !this.state.isDatafetched) {
+    const { Tododefines, Checkperiods } = this.props
+    const { selected_record, isLoading } = Tododefines
+    if (selected_record && Object.keys(selected_record).length > 0 && !Checkperiods.isLoading && !isLoading && selected_record.Id !== 0 && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true,
       })
       this.context.setForm(this.PAGE_NAME, { ...selected_record, Checkperiods: selected_record.Checkperioduuids.map(u => { return u.CheckperiodID }) })
     }
-    Notification(notifications, removeTododefinenotification)
-    Notification(Checkperiods.notifications, removeCheckperiodnotification)
   }
 
   render() {

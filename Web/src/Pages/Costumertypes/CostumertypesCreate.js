@@ -32,12 +32,6 @@ export default class CostumertypesCreate extends Component {
     GetDepartments()
   }
 
-  componentDidUpdate() {
-    const { Costumertypes, removeCostumertypenotification, Departments, removeDepartmentnotification } = this.props
-    Notification(Costumertypes.notifications, removeCostumertypenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-  }
-
   render() {
     const { Costumertypes, Departments, Profile, history } = this.props
 

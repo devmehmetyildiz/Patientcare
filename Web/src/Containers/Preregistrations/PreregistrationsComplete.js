@@ -1,17 +1,17 @@
 import { connect } from 'react-redux'
 import PreregistrationsComplete from "../../Pages/Preregistrations/PreregistrationsComplete"
-import { GetPatient, GetPatients, fillPatientnotification, removePatientnotification, CompletePrepatients, handleCompletemodal, handleSelectedPatient } from "../../Redux/PatientSlice"
-import { GetWarehouses, removeWarehousenotification } from "../../Redux/WarehouseSlice"
-import { GetRooms, removeRoomnotification } from "../../Redux/RoomSlice"
-import { GetFloors, removeFloornotification } from "../../Redux/FloorSlice"
-import { GetBeds, removeBednotification } from "../../Redux/BedSlice"
-import { GetFiles, removeFilenotification } from "../../Redux/FileSlice"
-import { GetPatientdefines, removePatientdefinenotification } from "../../Redux/PatientdefineSlice"
-import { GetPatientstocks, removePatientstocknotification } from "../../Redux/PatientstockSlice"
-import { GetPatientstockmovements, removePatientstockmovementnotification } from "../../Redux/PatientstockmovementSlice"
-import { GetUnits, removeUnitnotification } from "../../Redux/UnitSlice"
-import { GetStockdefines, removeStockdefinenotification } from "../../Redux/StockdefineSlice"
-import { GetCases, removeCasenotification } from "../../Redux/CaseSlice"
+import { GetPatient, GetPatients, fillPatientnotification, CompletePrepatients, handleCompletemodal, handleSelectedPatient } from "../../Redux/PatientSlice"
+import { GetWarehouses } from "../../Redux/WarehouseSlice"
+import { GetRooms } from "../../Redux/RoomSlice"
+import { GetFloors } from "../../Redux/FloorSlice"
+import { GetBeds } from "../../Redux/BedSlice"
+import { GetFiles } from "../../Redux/FileSlice"
+import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
+import { GetPatientstocks } from "../../Redux/PatientstockSlice"
+import { GetPatientstockmovements } from "../../Redux/PatientstockmovementSlice"
+import { GetUnits } from "../../Redux/UnitSlice"
+import { GetStockdefines } from "../../Redux/StockdefineSlice"
+import { GetCases } from "../../Redux/CaseSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -31,11 +31,11 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     CompletePrepatients, handleCompletemodal, handleSelectedPatient, GetWarehouses,
-    removeWarehousenotification, GetRooms, removeRoomnotification, GetFloors, GetPatient,
-    removeFloornotification, GetBeds, removeBednotification, GetFiles, GetPatientdefines, removePatientdefinenotification,
-    removeFilenotification, GetPatients, removePatientnotification, fillPatientnotification,
-    GetPatientstockmovements, removePatientstockmovementnotification, GetPatientstocks, removePatientstocknotification,
-    GetUnits, removeUnitnotification, GetStockdefines, removeStockdefinenotification, GetCases, removeCasenotification
+    GetRooms, GetFloors, GetPatient,
+    GetBeds, GetFiles, GetPatientdefines,
+    GetPatients, fillPatientnotification,
+    GetPatientstockmovements, GetPatientstocks,
+    GetUnits, GetStockdefines, GetCases
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreregistrationsComplete)

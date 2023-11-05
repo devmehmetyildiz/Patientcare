@@ -29,11 +29,6 @@ export default class Stations extends Component {
     GetStations()
   }
 
-  componentDidUpdate() {
-    const { Stations, removeStationnotification } = this.props
-    Notification(Stations.notifications, removeStationnotification)
-  }
-
   render() {
 
     const { Stations, DeleteStations, Profile, handleDeletemodal, handleSelectedStation } = this.props

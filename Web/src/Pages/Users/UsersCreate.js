@@ -36,15 +36,6 @@ export default class UsersCreate extends Component {
     GetDepartments()
   }
 
-  componentDidUpdate() {
-    const { Departments, Users, Stations, Roles, removeDepartmentnotification,
-      removeStationnotification, removeRolenotification, removeUsernotification } = this.props
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Users.notifications, removeUsernotification)
-    Notification(Stations.notifications, removeStationnotification)
-    Notification(Roles.notifications, removeRolenotification)
-  }
-
   render() {
     const { Departments, Users, Stations, Roles, Profile } = this.props
 

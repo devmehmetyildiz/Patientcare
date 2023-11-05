@@ -36,15 +36,6 @@ export default class StocksCreate extends Component {
     GetWarehouses()
   }
 
-  componentDidUpdate() {
-    const { Stocks, Warehouses, removeWarehousenotification, removeStocknotification,
-      Departments, Stockdefines, removeStockdefinenotification, removeDepartmentnotification } = this.props
-    Notification(Stocks.notifications, removeStocknotification)
-    Notification(Warehouses.notifications, removeWarehousenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-  }
-
   render() {
     const { Stocks, Warehouses, Departments, Stockdefines, Profile } = this.props
 

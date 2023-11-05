@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import UnitsCreate from '../../Pages/Units/UnitsCreate'
-import { AddUnits, removeUnitnotification, fillUnitnotification } from "../../Redux/UnitSlice"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
+import { AddUnits, fillUnitnotification } from "../../Redux/UnitSlice"
+import { GetDepartments } from "../../Redux/DepartmentSlice"
 
 const mapStateToProps = (state) => ({
   Units: state.Units,
@@ -9,6 +9,6 @@ const mapStateToProps = (state) => ({
   Profile: state.Profile
 })
 
-const mapDispatchToProps = { AddUnits, removeUnitnotification, fillUnitnotification, GetDepartments, removeDepartmentnotification }
+const mapDispatchToProps = { AddUnits,  fillUnitnotification, GetDepartments }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UnitsCreate)

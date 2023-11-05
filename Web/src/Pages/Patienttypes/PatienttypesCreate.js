@@ -20,11 +20,6 @@ export default class PatienttypesCreate extends Component {
 
   PAGE_NAME = "PatienttypesCreate"
 
-  componentDidUpdate() {
-    const { Patienttypes, removePatienttypenotification } = this.props
-    Notification(Patienttypes.notifications, removePatienttypenotification)
-  }
-
   render() {
 
     const { Patienttypes, Profile, history } = this.props

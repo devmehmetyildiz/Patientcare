@@ -57,28 +57,6 @@ export default class Patients extends Component {
     GetStockdefines()
   }
 
-  componentDidUpdate() {
-    const {
-      Patients, removePatientnotification,
-      Patientdefines, removePatientdefinenotification,
-      Rooms, removeRoomsnotification,
-      Beds, removeBednotification,
-      Floors, removeFloornotification,
-      Cases, removeCasenotification,
-      Files, removeFilenotification,
-      Patientstocks, removePatientstocknotification,
-      Stockdefines, removeStockdefinenotification,
-    } = this.props
-    Notification(Patients.notifications, removePatientnotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
-    Notification(Rooms.notifications, removeRoomsnotification)
-    Notification(Beds.notifications, removeBednotification)
-    Notification(Floors.notifications, removeFloornotification)
-    Notification(Cases.notifications, removeCasenotification)
-    Notification(Patientstocks.notifications, removePatientstocknotification)
-    Notification(Files.notifications, removeFilenotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-  }
 
   render() {
     const { Patients, Profile, Floors, Rooms, Patientdefines } = this.props

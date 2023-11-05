@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import TodosEdit from '../../Pages/Todos/TodosEdit'
-import { GetTodo, EditTodos, removeTodonotification, fillTodonotification } from '../../Redux/TodoSlice'
-import { GetCheckperiods, removeCheckperiodnotification } from '../../Redux/CheckperiodSlice'
+import { GetTodo, EditTodos,  fillTodonotification } from '../../Redux/TodoSlice'
+import { GetCheckperiods } from '../../Redux/CheckperiodSlice'
 
 
 const mapStateToProps = (state) => ({
@@ -11,8 +11,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetTodo, EditTodos, removeTodonotification, fillTodonotification,
-    GetCheckperiods, removeCheckperiodnotification
+    GetTodo, EditTodos,  fillTodonotification,
+    GetCheckperiods
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodosEdit)

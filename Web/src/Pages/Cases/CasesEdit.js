@@ -40,14 +40,12 @@ export default class CasesEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Cases, removeCasenotification, removeDepartmentnotification } = this.props
+    const { Departments, Cases } = this.props
     const { selected_record, isLoading } = Cases
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({ isDatafetched: true })
       this.context.setForm(this.PAGE_NAME, { ...selected_record, Departments: selected_record.Departmentuuids.map(u => { return u.DepartmentID }) })
     }
-    Notification(Cases.notifications, removeCasenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
   }
 
   render() {

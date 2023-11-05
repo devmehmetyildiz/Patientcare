@@ -34,14 +34,6 @@ export default class TodogroupdefinesCreate extends Component {
     GetDepartments()
   }
 
-  componentDidUpdate() {
-    const { Todogroupdefines, Departments, removeDepartmentnotification, Tododefines,
-      removeTododefinenotification, removeTodogroupdefinenotification } = this.props
-
-    Notification(Todogroupdefines.notifications, removeTodogroupdefinenotification)
-    Notification(Tododefines.notifications, removeTododefinenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-  }
 
   render() {
     const { Todogroupdefines, Departments, Tododefines, Profile } = this.props

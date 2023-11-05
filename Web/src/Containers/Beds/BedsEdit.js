@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import BedsEdit from '../../Pages/Beds/BedsEdit'
-import { EditBeds, GetBed, removeBednotification, fillBednotification } from "../../Redux/BedSlice"
-import { GetRooms, removeRoomnotification } from "../../Redux/RoomSlice"
-import { GetFloors, removeFloornotification } from "../../Redux/FloorSlice"
+import { EditBeds, GetBed,  fillBednotification } from "../../Redux/BedSlice"
+import { GetRooms } from "../../Redux/RoomSlice"
+import { GetFloors } from "../../Redux/FloorSlice"
 
 const mapStateToProps = (state) => ({
     Beds: state.Beds,
@@ -11,6 +11,6 @@ const mapStateToProps = (state) => ({
     Profile: state.Profile
 })
 
-const mapDispatchToProps = { EditBeds, GetBed, GetFloors, removeFloornotification, removeBednotification, fillBednotification, GetRooms, removeRoomnotification }
+const mapDispatchToProps = { EditBeds, GetBed, GetFloors,   fillBednotification, GetRooms }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BedsEdit)

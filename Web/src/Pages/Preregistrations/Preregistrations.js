@@ -46,30 +46,7 @@ export default class Preregistrations extends Component {
     GetStockdefines()
   }
 
-  componentDidUpdate() {
-    const {
-      Patients, removePatientnotification,
-      Warehouses, removeWarehousenotification,
-      Cases, removeCasenotification,
-      Patientdefines, removePatientdefinenotification,
-      Rooms, removeRoomnotification,
-      Floors, removeFloornotification,
-      Files, removeFilenotification,
-      Patientstocks, removePatientstocknotification,
-      Patientstockmovements, removePatientstockmovementnotification,
-      Stockdefines, removeStockdefinenotification
-    } = this.props
-    Notification(Patients.notifications, removePatientnotification)
-    Notification(Warehouses.notifications, removeWarehousenotification)
-    Notification(Cases.notifications, removeCasenotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
-    Notification(Rooms.notifications, removeRoomnotification)
-    Notification(Floors.notifications, removeFloornotification)
-    Notification(Files.notifications, removeFilenotification)
-    Notification(Patientstocks.notifications, removePatientstocknotification)
-    Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-  }
+ 
 
   render() {
 

@@ -42,20 +42,16 @@ export default class BedsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Rooms, Beds, removeFloornotification, Floors,
-      removeRoomnotification, removeBednotification } = this.props
+    const { Rooms, Beds, Floors } = this.props
     const { selected_record, isLoading } = Beds
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
-      && Rooms.list.length > 0 && !Rooms.isLoading
+      && !Rooms.isLoading && Floors.isLoading
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Beds.notifications, removeBednotification)
-    Notification(Rooms.notifications, removeRoomnotification)
-    Notification(Floors.notification, removeFloornotification)
   }
 
   render() {

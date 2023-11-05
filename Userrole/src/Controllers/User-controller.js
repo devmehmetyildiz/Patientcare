@@ -485,13 +485,7 @@ async function UpdateUser(req, res, next) {
     const {
         Uuid,
         Username,
-        Name,
-        Surname,
-        UserID,
         Language,
-        Town,
-        City,
-        Address,
         Email,
         Departments,
         Roles,
@@ -501,26 +495,8 @@ async function UpdateUser(req, res, next) {
     if (!validator.isString(Username)) {
         validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
     }
-    if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
-    }
-    if (!validator.isString(Surname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SURNAME_REQUIRED)
-    }
-    if (!validator.isNumber(UserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
-    }
     if (!validator.isString(Language)) {
         validationErrors.push(messages.VALIDATION_ERROR.LANGUAGE_REQUIRED)
-    }
-    if (!validator.isString(Town)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TOWN_REQUIRED)
-    }
-    if (!validator.isString(City)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CITY_REQUIRED)
-    }
-    if (!validator.isString(Address)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ADDRESS_REQUIRED)
     }
     if (!validator.isString(Email)) {
         validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED)

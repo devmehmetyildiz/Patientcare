@@ -23,7 +23,7 @@ export default class RolesEdit extends Component {
         this.state = {
             selectedPrivileges: [],
             isDatafetched: false,
-            searchParam:''
+            searchParam: ''
         }
     }
 
@@ -40,13 +40,12 @@ export default class RolesEdit extends Component {
     }
 
     componentDidUpdate() {
-        const { Roles, removeRolenotification } = this.props
+        const { Roles } = this.props
         const { privileges, selected_record, privilegegroups, isLoading } = Roles
         if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && privileges.length > 0 && privilegegroups.length > 0 && !isLoading && !this.state.isDatafetched) {
             this.setState({ selectedPrivileges: selected_record.Privileges, isDatafetched: true })
             this.context.setForm(this.PAGE_NAME, selected_record)
         }
-        Notification(Roles.notifications, removeRolenotification, this.context.clearForm)
     }
 
     render() {

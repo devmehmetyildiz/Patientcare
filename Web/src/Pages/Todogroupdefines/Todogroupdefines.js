@@ -29,13 +29,6 @@ export default class Todogroupdefines extends Component {
         GetDepartments()
     }
 
-    componentDidUpdate() {
-        const { Todogroupdefines, Departments, removeDepartmentnotification, Tododefines, removeTododefinenotification, removeTodogroupdefinenotification } = this.props
-        Notification(Todogroupdefines.notifications, removeTodogroupdefinenotification)
-        Notification(Tododefines.notifications, removeTododefinenotification)
-        Notification(Departments.notifications, removeDepartmentnotification)
-    }
-
     render() {
         const { Todogroupdefines, Departments, Tododefines, Profile, handleDeletemodal, handleSelectedTodogroupdefine } = this.props
         const { isLoading, isDispatching } = Todogroupdefines

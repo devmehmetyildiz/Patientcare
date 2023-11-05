@@ -1,14 +1,14 @@
 import { connect } from 'react-redux'
 import Patients from '../../Pages/Patients/Patients'
-import { GetPatients, removePatientnotification, setPatient, handleDeletemodal, handleSelectedPatient } from "../../Redux/PatientSlice"
-import { GetPatientdefines, removePatientdefinenotification } from "../../Redux/PatientdefineSlice"
-import { GetRooms, removeRoomnotification } from "../../Redux/RoomSlice"
-import { GetBeds, removeBednotification } from "../../Redux/BedSlice"
-import { GetFloors, removeFloornotification } from "../../Redux/FloorSlice"
-import { GetCases, removeCasenotification } from "../../Redux/CaseSlice"
-import { GetPatientstocks, removePatientstocknotification } from "../../Redux/PatientstockSlice"
-import { GetFiles, removeFilenotification } from "../../Redux/FileSlice"
-import { GetStockdefines, removeStockdefinenotification } from "../../Redux/StockdefineSlice"
+import { GetPatients, setPatient, handleDeletemodal, handleSelectedPatient } from "../../Redux/PatientSlice"
+import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
+import { GetRooms } from "../../Redux/RoomSlice"
+import { GetBeds } from "../../Redux/BedSlice"
+import { GetFloors } from "../../Redux/FloorSlice"
+import { GetCases } from "../../Redux/CaseSlice"
+import { GetPatientstocks } from "../../Redux/PatientstockSlice"
+import { GetFiles } from "../../Redux/FileSlice"
+import { GetStockdefines } from "../../Redux/StockdefineSlice"
 
 const mapStateToProps = (state) => ({
   Patients: state.Patients,
@@ -24,11 +24,11 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  GetPatients, removePatientnotification, setPatient, handleDeletemodal, handleSelectedPatient,
-  GetPatientdefines, removePatientdefinenotification, GetRooms, removeRoomnotification,
-  GetBeds, removeBednotification, GetFloors, removeFloornotification, GetCases, removeCasenotification,
-  GetPatientstocks, removePatientstocknotification, GetFiles, removeFilenotification,
-  GetStockdefines, removeStockdefinenotification
+  GetPatients, setPatient, handleDeletemodal, handleSelectedPatient,
+  GetPatientdefines, GetRooms,
+  GetBeds, GetFloors,  GetCases,
+  GetPatientstocks, GetFiles, 
+  GetStockdefines,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Patients)

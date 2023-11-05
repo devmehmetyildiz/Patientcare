@@ -39,19 +39,16 @@ export default class PatientstockmovementsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Patientstockmovements, Patientstocks, removePatientstocknotification, removePatientstockmovementnotification, Stockdefines, removeStockdefinenotification } = this.props
+    const { Patientstockmovements, Patientstocks, Stockdefines } = this.props
     const { selected_record, isLoading } = Patientstockmovements
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
-      && Patientstocks.list.length > 0 && !Patientstocks.isLoading
+      && !Stockdefines.isLoading && !Patientstocks.isLoading
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
-    Notification(Patientstocks.notifications, removePatientstocknotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
   }
 
   render() {

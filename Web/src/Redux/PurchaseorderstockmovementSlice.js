@@ -3,6 +3,7 @@ import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
+import notification from '../Utils/Notification';
 
 const Literals = {
     addcode: {
@@ -28,6 +29,10 @@ const Literals = {
     deletedescription: {
         en: 'Purchaseorder stock movement Deleted successfully',
         tr: 'Satın alma sipariş stok hareketi Başarı ile Silindi'
+    },
+    approvedescription: {
+        en: 'Stock movement approved successfully',
+        tr: 'Stok Hareketi Başarı ile Onaylandı'
     },
 }
 
@@ -136,6 +141,29 @@ export const DeletePurchaseorderstockmovements = createAsyncThunk(
     }
 );
 
+export const ApprovePurchaseorderstockmovements = createAsyncThunk(
+    'Purchaseorderstockmovements/ApprovePurchaseorderstockmovements',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCKMOVEMENT}/Approve/${data.Uuid}`);
+            dispatch(fillPurchaseorderstockmovementnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.approvedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPurchaseorderstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+
 export const PurchaseorderstockmovementsSlice = createSlice({
     name: 'Purchaseorderstockmovements',
     initialState: {
@@ -157,7 +185,7 @@ export const PurchaseorderstockmovementsSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removePurchaseorderstockmovementnotification: (state) => {
-            state.notifications.splice(0, 1);
+          state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
@@ -210,6 +238,17 @@ export const PurchaseorderstockmovementsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(EditPurchaseorderstockmovements.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ApprovePurchaseorderstockmovements.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(ApprovePurchaseorderstockmovements.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(ApprovePurchaseorderstockmovements.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

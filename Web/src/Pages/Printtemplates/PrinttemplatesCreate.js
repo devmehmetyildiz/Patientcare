@@ -29,12 +29,6 @@ export default class PrinttemplatesCreate extends Component {
     this.templateEditorRef = React.createRef()
   }
 
-  componentDidUpdate() {
-    const { Printtemplates, removePrinttemplatenotification } = this.props
-    Notification(Printtemplates.notifications, removePrinttemplatenotification, this.context.clearForm)
-  }
-
-
   render() {
 
     const { Printtemplates, Profile, history } = this.props

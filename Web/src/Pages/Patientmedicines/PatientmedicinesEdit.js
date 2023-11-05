@@ -43,8 +43,7 @@ export default class PatientmedicinesEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Stockdefines, Patientstocks, Patients, Patientdefines, removePatientdefinenotification,
-      removePatientnotification, removePatientstocknotification, removeStockdefinenotification, removeDepartmentnotification } = this.props
+    const { Departments, Stockdefines, Patientstocks, Patients, Patientdefines } = this.props
     const { selected_record, isLoading } = Patientstocks
 
     const isLoadingstatus =
@@ -68,11 +67,6 @@ export default class PatientmedicinesEdit extends Component {
       const formattedDate = `${year}-${month}-${day}`;
       this.context.setForm(this.PAGE_NAME, { ...selected_record, [`Skt`]: formattedDate })
     }
-    Notification(Patientstocks.notifications, removePatientstocknotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Patients.notifications, removePatientnotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
   }
 
 

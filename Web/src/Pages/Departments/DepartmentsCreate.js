@@ -33,11 +33,6 @@ export default class DepartmentsCreate extends Component {
     GetStations()
   }
 
-  componentDidUpdate() {
-    const { Departments, Stations, removeDepartmentnotification, removeStationnotification } = this.props
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Stations.notifications, removeStationnotification)
-  }
 
   render() {
     const { Departments, Stations, Profile, history } = this.props

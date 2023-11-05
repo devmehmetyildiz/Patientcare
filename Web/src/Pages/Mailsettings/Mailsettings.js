@@ -28,11 +28,6 @@ export default class Mailsettings extends Component {
     GetMailsettings()
   }
 
-  componentDidUpdate() {
-    const { Mailsettings, removeMailsettingnotification } = this.props
-    Notification(Mailsettings.notifications, removeMailsettingnotification)
-  }
-
   render() {
 
 

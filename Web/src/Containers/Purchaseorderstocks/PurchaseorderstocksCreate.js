@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import PurchaseorderstocksCreate from '../../Pages/Purchaseorderstocks/PurchaseorderstocksCreate'
-import { AddPurchaseorderstocks, removePurchaseorderstocknotification, fillPurchaseorderstocknotification } from '../../Redux/PurchaseorderstockSlice'
-import { GetPurchaseorders, removePurchaseordernotification } from "../../Redux/PurchaseorderSlice"
-import { GetStockdefines, removeStockdefinenotification } from '../../Redux/StockdefineSlice'
-import { GetDepartments, removeDepartmentnotification } from '../../Redux/DepartmentSlice'
+import { AddPurchaseorderstocks,  fillPurchaseorderstocknotification } from '../../Redux/PurchaseorderstockSlice'
+import { GetPurchaseorders } from "../../Redux/PurchaseorderSlice"
+import { GetStockdefines } from '../../Redux/StockdefineSlice'
+import { GetDepartments } from '../../Redux/DepartmentSlice'
 
 const mapStateToProps = (state) => ({
     Purchaseorderstocks: state.Purchaseorderstocks,
@@ -15,8 +15,8 @@ const mapStateToProps = (state) => ({
 
 
 const mapDispatchToProps = {
-    AddPurchaseorderstocks, removePurchaseorderstocknotification, fillPurchaseorderstocknotification,
-    GetPurchaseorders, removePurchaseordernotification, GetStockdefines, removeStockdefinenotification,GetDepartments, removeDepartmentnotification
+    AddPurchaseorderstocks,  fillPurchaseorderstocknotification,
+    GetPurchaseorders,  GetStockdefines, GetDepartments
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PurchaseorderstocksCreate)

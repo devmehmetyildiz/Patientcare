@@ -26,17 +26,6 @@ export default class Purchaseorderstocks extends Component {
     GetPurchaseorderstockmovements()
   }
 
-  componentDidUpdate() {
-    const { Purchaseorderstocks, Stockdefines, Departments, Purchaseorders,
-      Purchaseorderstockmovements, removePurchaseorderstocknotification, removeStockdefinenotification,
-      removeDepartmentnotification, removePurchaseordernotification, removePurchaseorderstockmovementnotification } = this.props
-    Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Purchaseorders.notifications, removePurchaseordernotification)
-    Notification(Purchaseorderstockmovements.notifications, removePurchaseorderstockmovementnotification)
-  }
-
   render() {
 
     const { Purchaseorderstocks, Profile, handleDeletemodal, handleSelectedPurchaseorderstocks, handleApprovemodal } = this.props

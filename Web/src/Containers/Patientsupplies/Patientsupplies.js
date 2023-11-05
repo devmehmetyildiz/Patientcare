@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
 import Patientsupplies from '../../Pages/Patientsupplies/Patientsupplies'
-import { GetPatientstocks, removePatientstocknotification, fillPatientstocknotification, handleApprovemodal, DeletePatientstocks, handleDeletemodal, handleSelectedPatientstock } from '../../Redux/PatientstockSlice'
-import { GetPatientdefines, removePatientdefinenotification } from '../../Redux/PatientdefineSlice'
-import { GetStockdefines, removeStockdefinenotification } from '../../Redux/StockdefineSlice'
-import { GetDepartments, removeDepartmentnotification } from '../../Redux/DepartmentSlice'
-import { Getpreregistrations, removePatientnotification } from '../../Redux/PatientSlice'
-import { GetPatientstockmovements, removePatientstockmovementnotification } from '../../Redux/PatientstockmovementSlice'
+import { GetPatientstocks, fillPatientstocknotification, handleApprovemodal, DeletePatientstocks, handleDeletemodal, handleSelectedPatientstock } from '../../Redux/PatientstockSlice'
+import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
+import { GetStockdefines } from '../../Redux/StockdefineSlice'
+import { GetDepartments } from '../../Redux/DepartmentSlice'
+import { Getpreregistrations } from '../../Redux/PatientSlice'
+import { GetPatientstockmovements } from '../../Redux/PatientstockmovementSlice'
 
 
 const mapStateToProps = (state) => ({
@@ -19,12 +19,11 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetPatientstocks, removePatientstocknotification, fillPatientstocknotification,
+    GetPatientstocks, fillPatientstocknotification,
     DeletePatientstocks, handleDeletemodal, handleSelectedPatientstock,
-    GetPatientdefines, removePatientdefinenotification, GetStockdefines,
-    removeStockdefinenotification, GetDepartments, removeDepartmentnotification,
-    Getpreregistrations, removePatientnotification, handleApprovemodal,
-    GetPatientstockmovements, removePatientstockmovementnotification
+    GetPatientdefines, GetStockdefines,
+    GetDepartments, Getpreregistrations, handleApprovemodal,
+    GetPatientstockmovements
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Patientsupplies)

@@ -53,9 +53,9 @@ export default class PatientsAddmedicine extends Component {
 
   componentDidUpdate() {
     const {
-      Patients, removePatientnotification, Patientdefines, removePatientdefinenotification, Patientstocks, removePatientstocknotification,
-      Patientstockmovements, removePatientstockmovementnotification, Warehouses, removeWarehousenotification,
-      Stocks, removeStocknotification, Stockmovements, removeStockmovementnotification, Stockdefines, removeStockdefinenotification
+      Patients, Patientdefines, Patientstocks,
+      Patientstockmovements, Warehouses,
+      Stocks, Stockmovements, Stockdefines
     } = this.props
     const { selected_record } = Patients
 
@@ -74,14 +74,6 @@ export default class PatientsAddmedicine extends Component {
       this.setState({ isDatafetched: true })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Patients.notifications, removePatientnotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
-    Notification(Patientstocks.notifications, removePatientstocknotification)
-    Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
-    Notification(Warehouses.notifications, removeWarehousenotification)
-    Notification(Stocks.notifications, removeStocknotification)
-    Notification(Stockmovements.notifications, removeStockmovementnotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
   }
 
   render() {

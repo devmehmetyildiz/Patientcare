@@ -24,13 +24,6 @@ export default class PurchaseorderstockmovementsCreate extends Component {
     GetPurchaseorderstocks()
   }
 
-  componentDidUpdate() {
-    const { Purchaseorderstockmovements, removePurchaseorderstockmovementnotification,
-      Purchaseorderstocks, removePurchaseorderstocknotification } = this.props
-    Notification(Purchaseorderstockmovements, removePurchaseorderstockmovementnotification)
-    Notification(Purchaseorderstocks, removePurchaseorderstocknotification)
-  }
-
   render() {
     const { Purchaseorderstockmovements, Purchaseorderstocks, Profile } = this.props
 

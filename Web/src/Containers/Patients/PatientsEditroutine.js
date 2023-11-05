@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import PatientsEditroutine from '../../Pages/Patients/PatientsEditroutine'
-import { GetPatient, removePatientnotification, fillPatientnotification, Editpatienttodogroupdefine } from "../../Redux/PatientSlice"
-import { GetPatientdefines, removePatientdefinenotification } from "../../Redux/PatientdefineSlice"
-import { GetTodogroupdefines, removeTodogroupdefinenotification } from "../../Redux/TodogroupdefineSlice"
+import { GetPatient, fillPatientnotification, Editpatienttodogroupdefine } from "../../Redux/PatientSlice"
+import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
+import { GetTodogroupdefines } from "../../Redux/TodogroupdefineSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -12,8 +12,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetPatient, removePatientnotification, GetPatientdefines, Editpatienttodogroupdefine,
-    removePatientdefinenotification, GetTodogroupdefines, removeTodogroupdefinenotification, fillPatientnotification
+    GetPatient, GetPatientdefines, Editpatienttodogroupdefine,
+    GetTodogroupdefines, fillPatientnotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsEditroutine)

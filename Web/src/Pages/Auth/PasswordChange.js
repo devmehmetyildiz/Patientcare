@@ -11,12 +11,6 @@ import FormInput from '../../Utils/FormInput'
 
 export default class PasswordChange extends Component {
 
-  componentDidUpdate() {
-    const { removenotification, Profile, Users, removeUsernotification } = this.props
-    Notification(Profile.notifications, removenotification)
-    Notification(Users.notifications, removeUsernotification)
-  }
-
   render() {
 
     const { Profile } = this.props

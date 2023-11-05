@@ -19,11 +19,6 @@ export default class MailsettingsCreate extends Component {
 
   PAGE_NAME = "MailsettingsCreate"
 
-  componentDidUpdate() {
-    const { removeMailsettingnotification, Mailsettings } = this.props
-    Notification(Mailsettings.notifications, removeMailsettingnotification)
-  }
-
   render() {
 
     const { Mailsettings, Profile, history } = this.props

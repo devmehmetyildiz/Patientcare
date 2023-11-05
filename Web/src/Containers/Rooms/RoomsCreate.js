@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import RoomsCreate from '../../Pages/Rooms/RoomsCreate'
-import { AddRooms, removeRoomnotification, fillRoomnotification } from "../../Redux/RoomSlice"
-import { GetFloors, removeFloornotification } from "../../Redux/FloorSlice"
+import { AddRooms, fillRoomnotification } from "../../Redux/RoomSlice"
+import { GetFloors } from "../../Redux/FloorSlice"
 
 const mapStateToProps = (state) => ({
     Rooms: state.Rooms,
@@ -9,6 +9,6 @@ const mapStateToProps = (state) => ({
     Profile: state.Profile
 })
 
-const mapDispatchToProps = { AddRooms, removeRoomnotification, fillRoomnotification, GetFloors, removeFloornotification }
+const mapDispatchToProps = { AddRooms,  fillRoomnotification, GetFloors }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomsCreate)

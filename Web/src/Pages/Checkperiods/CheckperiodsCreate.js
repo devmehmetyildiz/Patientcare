@@ -32,12 +32,6 @@ export default class CheckperiodsCreate extends Component {
     GetPeriods()
   }
 
-  componentDidUpdate() {
-    const { Periods, Checkperiods, removeCheckperiodnotification, removePeriodnotification } = this.props
-    Notification(Periods.notifications, removePeriodnotification)
-    Notification(Checkperiods.notifications, removeCheckperiodnotification)
-  }
-
   render() {
     const { Checkperiods, Periods, Profile, history } = this.props
 

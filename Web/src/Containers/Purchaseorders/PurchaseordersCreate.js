@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import PurchaseordersCreate from '../../Pages/Purchaseorders/PurchaseordersCreate'
-import { AddPurchaseorders, fillPurchaseordernotification, removePurchaseordernotification } from "../../Redux/PurchaseorderSlice"
-import { GetStockdefines, removeStockdefinenotification, AddStockdefines, fillStockdefinenotification } from "../../Redux/StockdefineSlice"
-import { GetCases, removeCasenotification } from "../../Redux/CaseSlice"
-import { GetWarehouses, removeWarehousenotification } from "../../Redux/WarehouseSlice"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
+import { AddPurchaseorders, fillPurchaseordernotification } from "../../Redux/PurchaseorderSlice"
+import { GetStockdefines, AddStockdefines, fillStockdefinenotification } from "../../Redux/StockdefineSlice"
+import { GetCases } from "../../Redux/CaseSlice"
+import { GetWarehouses } from "../../Redux/WarehouseSlice"
+import { GetDepartments } from "../../Redux/DepartmentSlice"
 
 const mapStateToProps = (state) => ({
     Purchaseorders: state.Purchaseorders,
@@ -16,9 +16,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    AddPurchaseorders, fillPurchaseordernotification, removePurchaseordernotification,
-    GetStockdefines, removeStockdefinenotification, AddStockdefines, fillStockdefinenotification, GetWarehouses, removeWarehousenotification,
-    GetCases, removeCasenotification, GetDepartments, removeDepartmentnotification
+    AddPurchaseorders, fillPurchaseordernotification,
+    GetStockdefines, AddStockdefines, fillStockdefinenotification, GetWarehouses,
+    GetCases, GetDepartments
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PurchaseordersCreate)

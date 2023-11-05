@@ -43,12 +43,7 @@ export default class PreregistrationsCreate extends Component {
   }
 
   componentDidUpdate() {
-    const { Patientdefines, Patients, Departments, Cases, removePatientnotification, removePatientdefinenotification
-      , removeDepartmentnotification, removeCasenotification } = this.props
-    Notification(Patients.notifications, removePatientnotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Cases.notifications, removeCasenotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
+    const { Patientdefines, Patients, Departments, Cases } = this.props
 
     const loadingstatus = Patients.isLoading && Departments.isLoading && Cases.isLoading && Patientdefines.isLoading
     if (!loadingstatus && !this.state.Isdatafetched) {

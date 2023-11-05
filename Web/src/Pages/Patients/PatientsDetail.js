@@ -64,13 +64,12 @@ export default class PatientsDetail extends Component {
 
   componentDidUpdate() {
     const {
-      Patients, removePatientnotification, Tododefines, removeTododefinenotification,
-      Patientdefines, removePatientdefinenotification, Cases, removeCasenotification, Patientstockmovements,
-      Costumertypes, removeCostumertypenotification, Patienttypes, removePatienttypenotification, removePatientstockmovementnotification,
-      Floors, removeFloornotification, Rooms, removeRoomnotification, Beds, removeBednotification,
-      Patientstocks, removePatientstocknotification, Stockdefines, removeStockdefinenotification, Units,
-      removeUnitnotification, Patientmovements, removePatientmovementnotification, Files, removeFilenotification, Todos, removeTodonotification
-    } = this.props
+      Patients, Tododefines,
+      Patientdefines, Cases, Patientstockmovements,
+      Costumertypes, Patienttypes,
+      Floors, Rooms, Beds,
+      Patientstocks, Stockdefines, Units,
+      Patientmovements, Files, Todos } = this.props
 
     const { selected_record } = Patients
 
@@ -96,22 +95,6 @@ export default class PatientsDetail extends Component {
       this.setState({ isDatafetched: true })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Patients.notifications, removePatientnotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
-    Notification(Cases.notifications, removeCasenotification)
-    Notification(Patienttypes.notifications, removePatienttypenotification)
-    Notification(Costumertypes.notifications, removeCostumertypenotification)
-    Notification(Floors.notifications, removeFloornotification)
-    Notification(Rooms.notifications, removeRoomnotification)
-    Notification(Beds.notifications, removeBednotification)
-    Notification(Patientstocks.notifications, removePatientstocknotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Units.notifications, removeUnitnotification)
-    Notification(Patientmovements.notifications, removePatientmovementnotification)
-    Notification(Files.notifications, removeFilenotification)
-    Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
-    Notification(Todos.notifications, removeTodonotification)
-    Notification(Tododefines.notifications, removeTododefinenotification)
   }
 
   render() {

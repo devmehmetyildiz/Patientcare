@@ -41,17 +41,14 @@ export default class TodogroupdefinesEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Todogroupdefines, Tododefines, Departments, removeDepartmentnotification, removeTodogroupdefinenotification, removeTododefinenotification } = this.props
+    const { Todogroupdefines, Tododefines, Departments } = this.props
     const { selected_record, isLoading } = Todogroupdefines
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Tododefines.list.length > 0 && !Tododefines.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !Departments.isLoading > 0 && !Tododefines.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true,
       })
       this.context.setForm(this.PAGE_NAME, { ...selected_record, Tododefines: selected_record.Tododefineuuids.map(u => { return u.TodoID }) })
     }
-    Notification(Todogroupdefines.notifications, removeTodogroupdefinenotification)
-    Notification(Tododefines.notifications, removeTododefinenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
   }
 
   render() {

@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import Todos from '../../Pages/Todos/Todos'
-import { GetTodos, removeTodonotification, handleApprovemodal, handleSelectedTodo } from '../../Redux/TodoSlice'
-import { GetPatientmovements, removePatientmovementnotification } from '../../Redux/PatientmovementSlice'
-import { GetTododefines, removeTododefinenotification } from '../../Redux/TododefineSlice'
-import { GetPatients, removePatientnotification } from '../../Redux/PatientSlice'
-import { GetPatientdefines, removePatientdefinenotification } from '../../Redux/PatientdefineSlice'
+import { GetTodos, handleApprovemodal, handleSelectedTodo } from '../../Redux/TodoSlice'
+import { GetPatientmovements } from '../../Redux/PatientmovementSlice'
+import { GetTododefines } from '../../Redux/TododefineSlice'
+import { GetPatients } from '../../Redux/PatientSlice'
+import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
 
 const mapStateToProps = (state) => ({
     Todos: state.Todos,
@@ -16,9 +16,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetTodos, removeTodonotification, handleSelectedTodo,
-    GetPatientmovements, removePatientmovementnotification, GetTododefines, removeTododefinenotification,
-    GetPatients, removePatientnotification, GetPatientdefines, removePatientdefinenotification, handleApprovemodal
+    GetTodos, handleSelectedTodo,
+    GetPatientmovements, GetTododefines,
+    GetPatients, GetPatientdefines, handleApprovemodal
 }
 
 

@@ -24,7 +24,7 @@ export default class DepartmentsEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
-      modelOpened:false
+      modelOpened: false
     }
   }
 
@@ -40,7 +40,7 @@ export default class DepartmentsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Stations, removeDepartmentnotification, removeStationnotification } = this.props
+    const { Departments, Stations } = this.props
     const { selected_record, isLoading } = Departments
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Stations.list.length > 0 && !Stations.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
@@ -48,8 +48,6 @@ export default class DepartmentsEdit extends Component {
       })
       this.context.setForm(this.PAGE_NAME, { ...selected_record, Stations: selected_record.Stationuuids.map(u => { return u.StationID }) })
     }
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Stations.notifications, removeStationnotification)
   }
 
   render() {

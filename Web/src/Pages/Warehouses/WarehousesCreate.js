@@ -20,11 +20,6 @@ export default class WarehousesCreate extends Component {
 
   PAGE_NAME = "WarehousesCreate"
 
-  componentDidUpdate() {
-    const { Warehouses, removeWarehousenotification } = this.props
-    Notification(Warehouses.notifications, removeWarehousenotification)
-  }
-
   render() {
 
     const { Warehouses, Profile } = this.props

@@ -27,10 +27,6 @@ export default class Patienttypes extends Component {
     GetPatienttypes()
   }
 
-  componentDidUpdate() {
-    const { Patienttypes, removePatienttypenotification } = this.props
-    Notification(Patienttypes.notifications, removePatienttypenotification)
-  }
 
   render() {
     const { Patienttypes, Profile, handleDeletemodal, handleSelectedPatienttype } = this.props

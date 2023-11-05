@@ -41,7 +41,7 @@ export default class StockdefinesEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Stockdefines, Units, removeUnitnotification, removeStockdefinenotification, Departments, removeDepartmentnotification } = this.props
+    const { Stockdefines, Units, Departments } = this.props
     const { selected_record, isLoading } = Stockdefines
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Units.list.length > 0 && !Units.isLoading && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
@@ -49,9 +49,6 @@ export default class StockdefinesEdit extends Component {
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Units.notifications, removeUnitnotification)
   }
 
   render() {

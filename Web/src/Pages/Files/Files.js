@@ -28,10 +28,6 @@ export class Files extends Component {
     GetFiles()
   }
 
-  componentDidUpdate() {
-    const { Files, removeFilenotification } = this.props
-    Notification(Files.notifications, removeFilenotification)
-  }
 
   render() {
 

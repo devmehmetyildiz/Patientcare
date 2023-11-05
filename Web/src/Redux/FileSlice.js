@@ -5,6 +5,7 @@ import instanse from "./axios";
 import config from "../Config";
 import Cookies from 'universal-cookie';
 import axios from 'axios';
+import notification from '../Utils/Notification';
 
 const Literals = {
     addcode: {
@@ -171,7 +172,7 @@ export const FilesSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeFilenotification: (state) => {
-            state.notifications.splice(0, 1);
+          state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload

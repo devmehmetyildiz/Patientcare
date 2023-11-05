@@ -26,18 +26,6 @@ export default class Patientstockmovements extends Component {
     GetUnits()
   }
 
-
-  componentDidUpdate() {
-    const { Patientstockmovements, removePatientstockmovementnotification,
-      Units, removeUnitnotification,
-      Stockdefines, removeStockdefinenotification,
-      Patientstocks, removePatientstocksnotification } = this.props
-    Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
-    Notification(Units.notifications, removeUnitnotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Patientstocks.notifications, removePatientstocksnotification)
-  }
-
   render() {
 
     const { Patientstockmovements, Profile, handleSelectedPatientstockmovement, handleDeletemodal, handleApprovemodal } = this.props

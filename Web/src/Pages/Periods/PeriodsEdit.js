@@ -38,7 +38,7 @@ export default class PeriodsEdit extends Component {
 
 
   componentDidUpdate() {
-    const { removePeriodnotification, Periods } = this.props
+    const { Periods } = this.props
     const { selected_record, isLoading } = Periods
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
       this.setState({
@@ -46,7 +46,6 @@ export default class PeriodsEdit extends Component {
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Periods.notifications, removePeriodnotification)
   }
 
   render() {

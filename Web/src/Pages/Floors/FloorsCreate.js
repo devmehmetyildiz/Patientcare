@@ -19,11 +19,6 @@ export default class FloorsCreate extends Component {
 
   PAGE_NAME = "FloorsCreate"
 
-  componentDidUpdate() {
-    const { Floors, removeFloornotification } = this.props
-    Notification(Floors.notification, removeFloornotification)
-  }
-
   render() {
     const { Floors, Profile } = this.props
 

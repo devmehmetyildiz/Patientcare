@@ -37,16 +37,6 @@ export default class PurchaseordermedicinesCreate extends Component {
     GetPurchaseorders()
   }
 
-  componentDidUpdate() {
-    const { Purchaseorders, Purchaseorderstocks, removePurchaseordernotification, Departments, Stockdefines,
-      removeStockdefinenotification, removePurchaseorderstocknotification, removeDepartmentnotification } = this.props
-
-    Notification(Purchaseorders.notifications, removePurchaseordernotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
-  }
-
   render() {
     const { Purchaseorders, Purchaseorderstocks, Departments, Stockdefines, Profile } = this.props
 

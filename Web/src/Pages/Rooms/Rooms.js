@@ -23,12 +23,6 @@ export default class Rooms extends Component {
     GetFloors()
   }
 
-  componentDidUpdate() {
-    const { Rooms, removeRoomnotification, Floors, removeFloornotification } = this.props
-    Notification(Rooms.notifications, removeRoomnotification)
-    Notification(Floors.notifications, removeFloornotification)
-  }
-
   render() {
     const { Rooms, Profile, handleDeletemodal, handleSelectedRoom } = this.props
     const { isLoading, isDispatching } = Rooms

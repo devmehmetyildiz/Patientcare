@@ -28,12 +28,6 @@ export default class Tododefines extends Component {
     GetCheckperiods()
   }
 
-  componentDidUpdate() {
-    const { Tododefines, Checkperiods, removeCheckperiodnotification, removeTododefinenotification } = this.props
-    Notification(Tododefines.notifications, removeTododefinenotification)
-    Notification(Checkperiods.notifications, removeCheckperiodnotification)
-  }
-
   render() {
     const { Tododefines, Profile, handleDeletemodal, handleSelectedTododefine, Checkperiods } = this.props
     const { isLoading, isDispatching } = Tododefines
