@@ -66,7 +66,7 @@ export const GetPurchaseorderstockmovement = createAsyncThunk(
 
 export const AddPurchaseorderstockmovements = createAsyncThunk(
     'Purchaseorderstockmovements/AddPurchaseorderstockmovements',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,11 +76,7 @@ export const AddPurchaseorderstockmovements = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillPurchaseorderstockmovementnotification({
-                type: 'Clear',
-                code: 'PurchaseorderstockmovementsCreate',
-                description: '',
-            }));
+            clearForm && clearForm('PurchaseorderstockmovementsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Purchaseorderstockmovements');
             return response.data;
@@ -94,7 +90,7 @@ export const AddPurchaseorderstockmovements = createAsyncThunk(
 
 export const EditPurchaseorderstockmovements = createAsyncThunk(
     'Purchaseorderstockmovements/EditPurchaseorderstockmovements',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({data, history, redirectUrl, closeModal, clearForm}, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -104,11 +100,8 @@ export const EditPurchaseorderstockmovements = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillPurchaseorderstockmovementnotification({
-                type: 'Clear',
-                code: 'PurchaseorderstockmovementsUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('PurchaseorderstockmovementsUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Purchaseorderstockmovements');
             return response.data;
         } catch (error) {

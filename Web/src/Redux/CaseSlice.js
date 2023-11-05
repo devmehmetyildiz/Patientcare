@@ -63,7 +63,7 @@ export const GetCase = createAsyncThunk(
 
 export const AddCases = createAsyncThunk(
     'Cases/AddCases',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -73,11 +73,7 @@ export const AddCases = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillCasenotification({
-                type: 'Clear',
-                code: 'CasesCreate',
-                description: '',
-            }));
+            clearForm && clearForm('CasesCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Cases');
             return response.data;
@@ -91,7 +87,7 @@ export const AddCases = createAsyncThunk(
 
 export const AddRecordCases = createAsyncThunk(
     'Cases/AddRecordCases',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -101,6 +97,8 @@ export const AddRecordCases = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('CasesCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Cases');
             return response.data;
         } catch (error) {
@@ -113,7 +111,7 @@ export const AddRecordCases = createAsyncThunk(
 
 export const EditCases = createAsyncThunk(
     'Cases/EditCases',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -123,11 +121,8 @@ export const EditCases = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillCasenotification({
-                type: 'Clear',
-                code: 'CasesUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('CasesUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Cases');
             return response.data;
         } catch (error) {

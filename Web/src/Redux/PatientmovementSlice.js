@@ -62,7 +62,7 @@ export const GetPatientmovement = createAsyncThunk(
 
 export const AddPatientmovements = createAsyncThunk(
     'Patientmovements/AddPatientmovements',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -72,11 +72,7 @@ export const AddPatientmovements = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillPatientmovementnotification({
-                type: 'Clear',
-                code: 'PatientmovementsCreate',
-                description: '',
-            }));
+            clearForm && clearForm('PatientmovementsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patientmovements');
             return response.data;
@@ -90,7 +86,7 @@ export const AddPatientmovements = createAsyncThunk(
 
 export const EditPatientmovements = createAsyncThunk(
     'Patientmovements/EditPatientmovements',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm}, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -100,11 +96,8 @@ export const EditPatientmovements = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillPatientmovementnotification({
-                type: 'Clear',
-                code: 'PatientmovementsUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('PatientmovementsUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patientmovements');
             return response.data;
         } catch (error) {

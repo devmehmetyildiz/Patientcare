@@ -64,7 +64,7 @@ export const GetFile = createAsyncThunk(
 
 export const AddFiles = createAsyncThunk(
     'Files/AddFiles',
-    async ({ data, history, url, closeModal }, { dispatch, getState }) => {
+    async ({ data, history,url, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -98,7 +98,7 @@ export const AddFiles = createAsyncThunk(
 
 export const EditFiles = createAsyncThunk(
     'Files/EditFiles',
-    async ({ data, history, url }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm,url }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'

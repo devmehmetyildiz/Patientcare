@@ -66,7 +66,7 @@ export const GetPatientstockmovement = createAsyncThunk(
 
 export const AddPatientstockmovements = createAsyncThunk(
     'Patientstockmovements/AddPatientstockmovements',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -81,6 +81,7 @@ export const AddPatientstockmovements = createAsyncThunk(
                 code: 'PatientstockmovementsCreate',
                 description: '',
             }));
+            clearForm && clearForm('PatientstockmovementsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patientstockmovements');
             return response.data;
@@ -94,7 +95,7 @@ export const AddPatientstockmovements = createAsyncThunk(
 
 export const EditPatientstockmovements = createAsyncThunk(
     'Patientstockmovements/EditPatientstockmovements',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -104,11 +105,8 @@ export const EditPatientstockmovements = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillPatientstockmovementnotification({
-                type: 'Clear',
-                code: 'PatientstockmovementsUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('PatientstockmovementsUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patientstockmovements');
             return response.data;
         } catch (error) {

@@ -62,7 +62,7 @@ export const GetFloor = createAsyncThunk(
 
 export const AddFloors = createAsyncThunk(
     'Floors/AddFloors',
-    async ({ data, history, redirectUrl,closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -77,6 +77,7 @@ export const AddFloors = createAsyncThunk(
                 code: 'FloorsCreate',
                 description: '',
             }));
+            clearForm && clearForm('FloorsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Floors');
             return response.data;
@@ -90,7 +91,7 @@ export const AddFloors = createAsyncThunk(
 
 export const AddRecordFloors = createAsyncThunk(
     'Floors/AddRecordFloors',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -100,6 +101,8 @@ export const AddRecordFloors = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('FloorsCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Floors');
             return response.data;
         } catch (error) {
@@ -112,7 +115,7 @@ export const AddRecordFloors = createAsyncThunk(
 
 export const EditFloors = createAsyncThunk(
     'Floors/EditFloors',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -122,11 +125,8 @@ export const EditFloors = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillFloornotification({
-                type: 'Clear',
-                code: 'FloorsUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('FloorsUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Floors');
             return response.data;
         } catch (error) {

@@ -19,6 +19,17 @@ export default function FormInput(props) {
     }
 
     useEffect(() => {
+        if (!Object.keys(context.formstates).find(u => u === name)) {
+            let defaultvalue = null
+            if (props.formtype === 'checkbox') {
+                defaultvalue = false
+            }
+            if (props.formtype === 'dropdown') {
+                defaultvalue = []
+            }
+            context.setFormstates({ ...context.formstates, [name]: defaultvalue })
+        }
+
         setFormdata({ ...context.formstates })
     }, [context.formstates])
     const handleKeyPress = (e) => {

@@ -35,7 +35,7 @@ export class Departments extends Component {
 
   render() {
 
-    const { Departments, Stations, Profile, handleSelectedDepartment, handleDeletemodal, AddRecordDepartments } = this.props
+    const { Departments, Stations, Profile, handleSelectedDepartment, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Departments
 
     const Columns = [
@@ -102,7 +102,8 @@ export class Departments extends Component {
                   list={list}
                   initialConfig={initialConfig}
                   metaKey={metaKey}
-                  AddRecord={AddRecordDepartments}
+                  Showcreatebutton
+                  Showcolumnchooser
                 />
               </Grid>
             </Headerwrapper>

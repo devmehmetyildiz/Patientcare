@@ -19,6 +19,7 @@ import { FormContext } from '../../Provider/FormProvider'
 import CasesCreate from '../../Containers/Cases/CasesCreate'
 import WarehousesCreate from '../../Containers/Warehouses/WarehousesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import AddModal from '../../Utils/AddModal'
 export default class PurchaseordersEdit extends Component {
 
   constructor(props) {
@@ -143,8 +144,8 @@ export default class PurchaseordersEdit extends Component {
                             <Table.Header>
                               <Table.Row>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{StockdefinesCreate}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{DepartmentsCreate}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{<AddModal Content={StockdefinesCreate} />}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{<AddModal Content={DepartmentsCreate} />}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Barcodeno[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Skt[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Amount[Profile.Language]}</Table.HeaderCell>
@@ -212,8 +213,8 @@ export default class PurchaseordersEdit extends Component {
                             <Table.Header>
                               <Table.Row>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{StockdefinesCreate}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{DepartmentsCreate}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{<AddModal Content={StockdefinesCreate} />}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{<AddModal Content={DepartmentsCreate} />}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Amount[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={6}>{Literals.Columns.Info[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Delete[Profile.Language]}</Table.HeaderCell>

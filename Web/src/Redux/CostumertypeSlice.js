@@ -63,7 +63,7 @@ export const GetCostumertype = createAsyncThunk(
 
 export const AddCostumertypes = createAsyncThunk(
     'Costumertypes/AddCostumertypes',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -78,6 +78,7 @@ export const AddCostumertypes = createAsyncThunk(
                 code: 'CostumerypesCreate',
                 description: '',
             }));
+            clearForm && clearForm('CostumerypesCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Costumertypes');
             return response.data;
@@ -91,7 +92,7 @@ export const AddCostumertypes = createAsyncThunk(
 
 export const AddRecordCostumertypes = createAsyncThunk(
     'Costumertypes/AddRecordCostumertypes',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -101,6 +102,8 @@ export const AddRecordCostumertypes = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('CostumerypesCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Costumertypes');
             return response.data;
         } catch (error) {
@@ -113,7 +116,7 @@ export const AddRecordCostumertypes = createAsyncThunk(
 
 export const EditCostumertypes = createAsyncThunk(
     'Costumertypes/EditCostumertypes',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -123,11 +126,8 @@ export const EditCostumertypes = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillCostumertypenotification({
-                type: 'Clear',
-                code: 'CostumertypesUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('CostumertypesUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Costumertypes');
             return response.data;
         } catch (error) {

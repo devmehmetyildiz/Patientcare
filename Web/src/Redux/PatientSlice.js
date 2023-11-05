@@ -88,7 +88,7 @@ export const Getpreregistrations = createAsyncThunk(
 
 export const AddPatients = createAsyncThunk(
     'Patients/AddPatients',
-    async ({ data, history, url, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -98,13 +98,9 @@ export const AddPatients = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillPatientnotification({
-                type: 'Clear',
-                code: 'PatientsCreate',
-                description: '',
-            }));
+            clearForm && clearForm('PatientsCreate')
             closeModal && closeModal()
-            history && history.push(url ? url : '/Patients')
+            history && history.push(redirectUrl ? redirectUrl : '/Patients');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -116,7 +112,7 @@ export const AddPatients = createAsyncThunk(
 
 export const EditPatients = createAsyncThunk(
     'Patients/EditPatients',
-    async ({ data, history, url }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -126,7 +122,9 @@ export const EditPatients = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            history && history.push(url ? url : '/Patients')
+            clearForm && clearForm('PatientsUpdate')
+            closeModal && closeModal()
+            history && history.push(redirectUrl ? redirectUrl : '/Patients');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -138,7 +136,7 @@ export const EditPatients = createAsyncThunk(
 
 export const Editpatientcase = createAsyncThunk(
     'Patients/Editpatientcase',
-    async ({ data, history, redirectUrl, redirectID }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -159,7 +157,7 @@ export const Editpatientcase = createAsyncThunk(
 );
 export const Editpatienttodogroupdefine = createAsyncThunk(
     'Patients/Editpatienttodogroupdefine',
-    async ({ data, history, redirectUrl, redirectID }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -181,7 +179,7 @@ export const Editpatienttodogroupdefine = createAsyncThunk(
 
 export const EditPatientstocks = createAsyncThunk(
     'Patients/EditPatientstocks',
-    async ({ data, history, url }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -196,7 +194,7 @@ export const EditPatientstocks = createAsyncThunk(
                 code: 'PatientsUpdate',
                 description: '',
             }));
-            history && history.push(url ? url : '/Patients')
+            history && history.push(redirectUrl ? redirectUrl : '/Patients')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -207,7 +205,7 @@ export const EditPatientstocks = createAsyncThunk(
 );
 export const CompletePrepatients = createAsyncThunk(
     'Patients/CompletePrepatients',
-    async ({ data, history, url }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -217,7 +215,7 @@ export const CompletePrepatients = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.completedescription[Language],
             }));
-            history && history.push(url ? url : '/Patients')
+            history && history.push(redirectUrl ? redirectUrl : '/Patients')
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

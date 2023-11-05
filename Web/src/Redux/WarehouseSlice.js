@@ -62,7 +62,7 @@ export const GetWarehouse = createAsyncThunk(
 
 export const AddWarehouses = createAsyncThunk(
     'Warehouses/AddWarehouses',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm  }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -72,11 +72,7 @@ export const AddWarehouses = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillWarehousenotification({
-                type: 'Clear',
-                code: 'WarehousesCreate',
-                description: '',
-            }));
+            clearForm && clearForm('WarehousesCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Warehouses');
             return response.data;
@@ -90,7 +86,7 @@ export const AddWarehouses = createAsyncThunk(
 
 export const AddRecordWarehouses = createAsyncThunk(
     'Warehouses/AddRecordWarehouses',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm  }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -100,6 +96,8 @@ export const AddRecordWarehouses = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('WarehousesCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Warehouses');
             return response.data;
         } catch (error) {
@@ -112,7 +110,7 @@ export const AddRecordWarehouses = createAsyncThunk(
 
 export const EditWarehouses = createAsyncThunk(
     'Warehouses/EditWarehouses',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm  }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -122,11 +120,8 @@ export const EditWarehouses = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillWarehousenotification({
-                type: 'Clear',
-                code: 'WarehousesUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('WarehousesUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Warehouses');
             return response.data;
         } catch (error) {

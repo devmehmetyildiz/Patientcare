@@ -62,7 +62,7 @@ export default class BedsCreate extends Component {
                 <Link to="/Beds">
                   <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
                 </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Button loading={Beds.isLoading} floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
               </Footerwrapper>
             </Form>
           </Contentwrapper>

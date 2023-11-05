@@ -19,6 +19,7 @@ import { FormContext } from '../../Provider/FormProvider'
 import CasesCreate from '../../Containers/Cases/CasesCreate'
 import WarehousesCreate from '../../Containers/Warehouses/WarehousesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import AddModal from '../../Utils/AddModal'
 export default class PurchaseordersCreate extends Component {
 
   PAGE_NAME = "PurchaseordersCreate"
@@ -124,15 +125,15 @@ export default class PurchaseordersCreate extends Component {
                   {
                     menuItem: Literals.Columns.Medicinescreen[Profile.Language],
                     pane: {
-                      key: 'design',
+                      key: 'medicines',
                       content: <React.Fragment>
                         <div className='h-[calc(59vh-20px)] overflow-y-auto'>
                           <Table celled className='list-table ' key='product-create-type-conversion-table ' >
                             <Table.Header>
                               <Table.Row>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{StockdefinesCreate}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{DepartmentsCreate}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{<AddModal Content={StockdefinesCreate} />}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{<AddModal Content={DepartmentsCreate} />}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Barcodeno[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Skt[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Amount[Profile.Language]}</Table.HeaderCell>
@@ -193,15 +194,15 @@ export default class PurchaseordersCreate extends Component {
                   {
                     menuItem: Literals.Columns.Supplyscreen[Profile.Language],
                     pane: {
-                      key: 'design',
+                      key: 'supplies',
                       content: <React.Fragment>
                         <div className='h-[calc(59vh-20px)] overflow-y-auto'>
                           <Table celled className='list-table ' key='product-create-type-conversion-table ' >
                             <Table.Header>
                               <Table.Row>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{StockdefinesCreate}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{DepartmentsCreate}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{<AddModal Content={StockdefinesCreate} />}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{<AddModal Content={DepartmentsCreate} />}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Barcodeno[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Skt[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Amount[Profile.Language]}</Table.HeaderCell>
@@ -262,15 +263,15 @@ export default class PurchaseordersCreate extends Component {
                   {
                     menuItem: Literals.Columns.Stocksscreen[Profile.Language],
                     pane: {
-                      key: 'design',
+                      key: 'stocks',
                       content: <React.Fragment>
                         <div className='h-[calc(59vh-20px)] overflow-y-auto'>
                           <Table celled className='list-table ' key='product-create-type-conversion-table ' >
                             <Table.Header>
                               <Table.Row>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{StockdefinesCreate}</Table.HeaderCell>
-                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{DepartmentsCreate}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.StockDefine[Profile.Language]}{<AddModal Content={StockdefinesCreate} />}</Table.HeaderCell>
+                                <Table.HeaderCell width={2}>{Literals.Columns.Department[Profile.Language]}{<AddModal Content={DepartmentsCreate} />}</Table.HeaderCell>
                                 <Table.HeaderCell width={2}>{Literals.Columns.Amount[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={6}>{Literals.Columns.Info[Profile.Language]}</Table.HeaderCell>
                                 <Table.HeaderCell width={1}>{Literals.Columns.Delete[Profile.Language]}</Table.HeaderCell>

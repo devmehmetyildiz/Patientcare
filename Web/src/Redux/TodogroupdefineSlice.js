@@ -62,7 +62,7 @@ export const GetTodogroupdefine = createAsyncThunk(
 
 export const AddTodogroupdefines = createAsyncThunk(
     'Todogroupdefines/AddTodogroupdefines',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -72,11 +72,7 @@ export const AddTodogroupdefines = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillTodogroupdefinenotification({
-                type: 'Clear',
-                code: 'TodogroupdefinesCreate',
-                description: '',
-            }));
+            clearForm && clearForm('TodogroupdefinesCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Todogroupdefines');
             return response.data;
@@ -90,7 +86,7 @@ export const AddTodogroupdefines = createAsyncThunk(
 
 export const AddRecordTodogroupdefines = createAsyncThunk(
     'Todogroupdefines/AddRecordTodogroupdefines',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -100,6 +96,8 @@ export const AddRecordTodogroupdefines = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('TodogroupdefinesCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Todogroupdefines');
             return response.data;
         } catch (error) {
@@ -112,7 +110,7 @@ export const AddRecordTodogroupdefines = createAsyncThunk(
 
 export const EditTodogroupdefines = createAsyncThunk(
     'Todogroupdefines/EditTodogroupdefines',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -122,11 +120,8 @@ export const EditTodogroupdefines = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillTodogroupdefinenotification({
-                type: 'Clear',
-                code: 'TodogroupdefinesUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('TodogroupdefinesUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Todogroupdefines');
             return response.data;
         } catch (error) {

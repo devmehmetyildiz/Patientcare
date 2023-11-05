@@ -62,7 +62,7 @@ export const GetPurchaseorderstock = createAsyncThunk(
 
 export const AddPurchaseorderstocks = createAsyncThunk(
     'Purchaseorderstocks/AddPurchaseorderstocks',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -72,11 +72,7 @@ export const AddPurchaseorderstocks = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillPurchaseorderstocknotification({
-                type: 'Clear',
-                code: 'PurchaseorderstocksCreate',
-                description: '',
-            }));
+            clearForm && clearForm('PurchaseorderstocksCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Purchaseorderstocks');
             return response.data;
@@ -90,7 +86,7 @@ export const AddPurchaseorderstocks = createAsyncThunk(
 
 export const EditPurchaseorderstocks = createAsyncThunk(
     'Purchaseorderstocks/EditPurchaseorderstocks',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -100,11 +96,8 @@ export const EditPurchaseorderstocks = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillPurchaseorderstocknotification({
-                type: 'Clear',
-                code: 'PurchaseorderstocksUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('PurchaseorderstocksUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Purchaseorderstocks');
             return response.data;
         } catch (error) {

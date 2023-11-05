@@ -70,7 +70,7 @@ export default class PreregistrationsCreate extends Component {
       return { key: define.Uuid, text: `${define.Firstname} ${define.Lastname}-${define.CountryID}`, value: define.Uuid }
     })
 
-    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive && u.Ishavepatients).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
@@ -230,7 +230,7 @@ export default class PreregistrationsCreate extends Component {
         fillPatientnotification(error)
       })
     } else {
-      AddPatients({ data: response, history, url: "/Preregistrations", closeModal })
+      AddPatients({ data: response, history, redirectUrl: "/Preregistrations", closeModal })
     }
   }
 

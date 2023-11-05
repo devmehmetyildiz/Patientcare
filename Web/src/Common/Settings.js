@@ -19,10 +19,10 @@ export default function Settings(props) {
         initialConfig,
         metaKey,
         AddRecord,
-        dontShowcolumnchooser,
-        dontShowexcelexport,
-        dontShowexcelimport,
-        dontShowcreatebutton,
+        Showcolumnchooser,
+        Showexcelexport,
+        Showexcelimport,
+        Showcreatebutton,
     } = props
 
     const options = {
@@ -47,7 +47,7 @@ export default function Settings(props) {
                     <div className='m-4 flex flex-col justify-center items-center w-full '>
                         <Grid stackable columns={1}>
                             <GridColumn stretched={Profile.Ismobile} width={8} >
-                                {!dontShowcreatebutton && <>
+                                {Showcreatebutton && <>
                                     <Link className="pr-1" to={Pagecreatelink}>
                                         <Button fluid={Profile.Ismobile} color='blue' floated={`${Profile.Ismobile ? 'left' : 'right'}`} className='list-right-green-button'>
                                             {Pagecreateheader}
@@ -55,18 +55,18 @@ export default function Settings(props) {
                                     </Link>
                                 </>
                                 }
-                                {!dontShowcolumnchooser && <>
+                                {Showcolumnchooser && <>
                                     <Pagedivider />
                                     <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
                                 </>
 
                                 }
-                                {!dontShowexcelimport && <>
+                                {Showexcelimport && <>
                                     <Pagedivider />
                                     <ExcelImport columns={Columns} addData={AddRecord} />
                                 </>
                                 }
-                                {!dontShowexcelexport && <>
+                                {Showexcelexport && <>
                                     <Pagedivider />
                                     <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />
                                 </>
@@ -81,14 +81,14 @@ export default function Settings(props) {
                 </Modal.Content>
             </Modal>
             : <GridColumn stretched={Profile.Ismobile} width={8} >
-                {!dontShowcreatebutton && <Link className="pr-1" to={Pagecreatelink}>
+                {Showcreatebutton && <Link className="pr-1" to={Pagecreatelink}>
                     <Button fluid={Profile.Ismobile} color='blue' floated={`${Profile.Ismobile ? '' : 'right'}`} className='list-right-green-button'>
                         {Pagecreateheader}
                     </Button>
                 </Link>}
-                {!dontShowcolumnchooser && <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />}
-                {!dontShowexcelimport && <ExcelImport columns={Columns} addData={AddRecord} />}
-                {!dontShowexcelexport && <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />}
+                {Showcolumnchooser && <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />}
+                {Showexcelimport && <ExcelImport columns={Columns} addData={AddRecord} />}
+                {Showexcelexport && <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />}
             </GridColumn>
     )
 }

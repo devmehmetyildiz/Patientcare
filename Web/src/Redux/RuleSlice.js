@@ -94,7 +94,7 @@ export const GetRulelogswithoutloading = createAsyncThunk(
 
 export const AddRules = createAsyncThunk(
     'Rules/AddRules',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -104,11 +104,7 @@ export const AddRules = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillRulenotification({
-                type: 'Clear',
-                code: 'RulesCreate',
-                description: '',
-            }));
+            clearForm && clearForm('RulesCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Rules');
             return response.data;
@@ -122,7 +118,7 @@ export const AddRules = createAsyncThunk(
 
 export const EditRules = createAsyncThunk(
     'Rules/EditRules',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -132,11 +128,8 @@ export const EditRules = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillRulenotification({
-                type: 'Clear',
-                code: 'RulesUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('RulesUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Rules');
             return response.data;
         } catch (error) {

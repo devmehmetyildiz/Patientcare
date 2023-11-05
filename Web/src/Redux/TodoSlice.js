@@ -76,7 +76,7 @@ export const GetTodo = createAsyncThunk(
 
 export const AddTodos = createAsyncThunk(
     'Todos/AddTodos',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -86,11 +86,7 @@ export const AddTodos = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillTodonotification({
-                type: 'Clear',
-                code: 'TodosCreate',
-                description: '',
-            }));
+            clearForm && clearForm('TodosCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Todos');
             return response.data;
@@ -105,7 +101,7 @@ export const AddTodos = createAsyncThunk(
 
 export const EditTodos = createAsyncThunk(
     'Todos/EditTodos',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -115,11 +111,8 @@ export const EditTodos = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillTodonotification({
-                type: 'Clear',
-                code: 'TodosUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('TodosUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Todos');
             return response.data;
         } catch (error) {

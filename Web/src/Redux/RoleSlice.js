@@ -91,7 +91,7 @@ export const GetPrivilegegroups = createAsyncThunk(
 
 export const AddRoles = createAsyncThunk(
     'Roles/AddRoles',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -101,11 +101,7 @@ export const AddRoles = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillRolenotification({
-                type: 'Clear',
-                code: 'RolesCreate',
-                description: '',
-            }));
+            clearForm && clearForm('RolesCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Roles');
             return response.data;
@@ -119,7 +115,7 @@ export const AddRoles = createAsyncThunk(
 
 export const EditRoles = createAsyncThunk(
     'Roles/EditRoles',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm}, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -129,11 +125,8 @@ export const EditRoles = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillRolenotification({
-                type: 'Clear',
-                code: 'RolesUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('RolesUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Roles');
             return response.data;
         } catch (error) {

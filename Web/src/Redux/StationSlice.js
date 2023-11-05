@@ -62,7 +62,7 @@ export const GetStation = createAsyncThunk(
 
 export const AddStations = createAsyncThunk(
     'Stations/AddStations',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -72,13 +72,9 @@ export const AddStations = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillStationnotification({
-                type: 'Clear',
-                code: 'StationsCreate',
-                description: '',
-            }));
+            clearForm && clearForm('StationsCreate')
             closeModal && closeModal()
-            history && history.push(redirectUrl ? redirectUrl : '/Stations');
+            history && redirectUrl === 'GoBack' ? history.goBack() : history.push(redirectUrl ? redirectUrl : '/Stations');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -90,7 +86,7 @@ export const AddStations = createAsyncThunk(
 
 export const AddRecordStations = createAsyncThunk(
     'Stations/AddRecordStations',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -112,7 +108,7 @@ export const AddRecordStations = createAsyncThunk(
 
 export const EditStations = createAsyncThunk(
     'Stations/EditStations',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'

@@ -22,7 +22,6 @@ const timerMiddleware = store => next => action => {
                 localcookies.set('patientcare', response.data.accessToken, { path: '/' })
                 localcookies.set('patientcareRefresh', response.data.refreshToken, { path: '/' })
             } catch (error) {
-                console.log("refresh token hatalı")
             }
 
         }, INTERVAL);
