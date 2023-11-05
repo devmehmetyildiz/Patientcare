@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
 import Purchaseorders from '../../Pages/Purchaseorders/Purchaseorders'
-import { GetPurchaseorders, removePurchaseordernotification, DeletePurchaseorders, CompletePurchaseorders, handleDeletemodal, handleCompletemodal, handleSelectedPurchaseorder } from "../../Redux/PurchaseorderSlice"
-import { GetPurchaseorderstocks, removePurchaseorderstocknotification } from "../../Redux/PurchaseorderstockSlice"
-import { GetStockdefines, removeStockdefinenotification } from "../../Redux/StockdefineSlice"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
-import { GetPurchaseorderstockmovements, removePurchaseorderstockmovementnotification } from "../../Redux/PurchaseorderstockmovementSlice"
-import { GetCases, removeCasenotification } from "../../Redux/CaseSlice"
+import { GetPurchaseorders, DeletePurchaseorders, CompletePurchaseorders, handleDeletemodal, handleCompletemodal, handleSelectedPurchaseorder } from "../../Redux/PurchaseorderSlice"
+import { GetPurchaseorderstocks } from "../../Redux/PurchaseorderstockSlice"
+import { GetStockdefines } from "../../Redux/StockdefineSlice"
+import { GetDepartments } from "../../Redux/DepartmentSlice"
+import { GetPurchaseorderstockmovements } from "../../Redux/PurchaseorderstockmovementSlice"
+import { GetCases } from "../../Redux/CaseSlice"
 
 const mapStateToProps = (state) => ({
     Purchaseorders: state.Purchaseorders,
@@ -18,10 +18,10 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetPurchaseorders, removePurchaseordernotification, DeletePurchaseorders, handleDeletemodal, handleSelectedPurchaseorder,
-    GetPurchaseorderstocks, removePurchaseorderstocknotification, CompletePurchaseorders, handleCompletemodal,
-    GetStockdefines, removeStockdefinenotification, GetDepartments, removeDepartmentnotification, GetPurchaseorderstockmovements,
-    removePurchaseorderstockmovementnotification, GetCases, removeCasenotification
+    GetPurchaseorders, DeletePurchaseorders, handleDeletemodal, handleSelectedPurchaseorder,
+    GetPurchaseorderstocks, CompletePurchaseorders, handleCompletemodal,
+    GetStockdefines, GetDepartments, GetPurchaseorderstockmovements,
+    GetCases
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Purchaseorders)

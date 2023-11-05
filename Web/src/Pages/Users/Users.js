@@ -30,12 +30,6 @@ export default class Users extends Component {
     GetUsers()
   }
 
-  componentDidUpdate() {
-    const { Users, removeUsernotification } = this.props
-    Notification(Users.notifications, removeUsernotification)
-  }
-
-
   render() {
     const { Users, Profile, handleDeletemodal, handleSelectedUser } = this.props
     const { isLoading, isDispatching } = Users

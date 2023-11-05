@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import CostumertypesCreate from '../../Pages/Costumertypes/CostumertypesCreate'
-import { AddCostumertypes, removeCostumertypenotification, fillCostumertypenotification } from "../../Redux/CostumertypeSlice"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
+import { AddCostumertypes,  fillCostumertypenotification } from "../../Redux/CostumertypeSlice"
+import { GetDepartments } from "../../Redux/DepartmentSlice"
 
 const mapStateToProps = (state) => ({
   Costumertypes: state.Costumertypes,
@@ -9,6 +9,6 @@ const mapStateToProps = (state) => ({
   Profile: state.Profile
 })
 
-const mapDispatchToProps = { AddCostumertypes, removeCostumertypenotification, fillCostumertypenotification, GetDepartments, removeDepartmentnotification }
+const mapDispatchToProps = { AddCostumertypes,  fillCostumertypenotification, GetDepartments }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CostumertypesCreate)

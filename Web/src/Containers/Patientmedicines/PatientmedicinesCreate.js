@@ -1,10 +1,12 @@
 import { connect } from 'react-redux'
 import PatientmedicinesCreate from '../../Pages/Patientmedicines/PatientmedicinesCreate'
+
 import { AddPatientstocks, removePatientstocknotification, fillPatientstocknotification } from '../../Redux/PatientstockSlice'
 import { GetPatients, Getpreregistrations, removePatientnotification } from "../../Redux/PatientSlice"
 import { GetStockdefines, removeStockdefinenotification } from "../../Redux/StockdefineSlice"
 import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
 import { GetPatientdefines, removePatientdefinenotification } from "../../Redux/PatientdefineSlice"
+
 
 const mapStateToProps = (state) => ({
     Patientstocks: state.Patientstocks,
@@ -16,8 +18,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    AddPatientstocks, removePatientstocknotification, fillPatientstocknotification, GetPatients, Getpreregistrations, removePatientnotification,
-    GetStockdefines, removeStockdefinenotification, GetDepartments, removeDepartmentnotification, GetPatientdefines, removePatientdefinenotification
+    AddPatientstocks,  fillPatientstocknotification, GetPatients, Getpreregistrations, 
+    GetStockdefines,  GetDepartments,  GetPatientdefines
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientmedicinesCreate)

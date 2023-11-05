@@ -7,12 +7,6 @@ import { withRouter } from 'react-router-dom'
 
 export class Register extends Component {
 
-    componentDidUpdate() {
-        const { Profile, removenotification } = this.props
-        Notification(Profile.notifications, removenotification)
-    }
-
-
     render() {
         const { Profile } = this.props
 

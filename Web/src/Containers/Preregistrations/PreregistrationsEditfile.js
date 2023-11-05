@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import PreregistrationsEditfile from '../../Pages/Preregistrations/PreregistrationsEditfile'
-import { GetFiles, EditFiles, fillFilenotification, removeFilenotification, DeleteFiles } from "../../Redux/FileSlice"
-import { GetPatient, removePatientnotification } from "../../Redux/PatientSlice"
-import { GetPatientdefines, removePatientdefinenotification } from "../../Redux/PatientdefineSlice"
+import { GetFiles, EditFiles, fillFilenotification,  DeleteFiles } from "../../Redux/FileSlice"
+import { GetPatient } from "../../Redux/PatientSlice"
+import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
 
 const mapStateToProps = (state) => ({
     Files: state.Files,
@@ -12,8 +12,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    EditFiles, fillFilenotification, removeFilenotification, DeleteFiles,
-    GetPatient, removePatientnotification, GetFiles, GetPatientdefines, removePatientdefinenotification
+    EditFiles, fillFilenotification,  DeleteFiles,
+    GetPatient,  GetFiles, GetPatientdefines
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreregistrationsEditfile)

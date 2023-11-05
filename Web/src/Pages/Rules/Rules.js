@@ -21,11 +21,6 @@ export class Rules extends Component {
     GetRules()
   }
 
-  componentDidUpdate() {
-    const { Rules, removeRulenotification } = this.props
-    Notification(Rules.notifications, removeRulenotification)
-  }
-
   render() {
     const { Rules, Profile, handleDeletemodal, handleSelectedRule, handleLogmodal, GetRulelogs, StopRules } = this.props
     const { isLoading, isDispatching } = Rules

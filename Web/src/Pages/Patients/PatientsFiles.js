@@ -37,9 +37,9 @@ export default class PatientsFiles extends Component {
     }
 
     componentDidUpdate() {
-        const { Files, removeFilenotification, Patients, Patientdefines, removePatientnotification, removePatientdefinenotification } = this.props
+        const { Files, Patients, Patientdefines } = this.props
         const { selected_record, isLoading } = Patients
-        if (selected_record && !Files.isLoading && Object.keys(selected_record).length > 0 &&
+        if (selected_record && !Files.isLoading && !Patientdefines.isLoading && Object.keys(selected_record).length > 0 &&
             selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
             var response = (Files.list || []).filter(u => u.ParentID === selected_record.Uuid).map(element => {
                 return {
@@ -51,11 +51,7 @@ export default class PatientsFiles extends Component {
                 selectedFiles: response, isDatafetched: true
             })
         }
-        Notification(Files.notifications, removeFilenotification)
-        Notification(Patientdefines.notifications, removePatientdefinenotification)
-        Notification(Patients.notifications, removePatientnotification)
     }
-
 
     render() {
 

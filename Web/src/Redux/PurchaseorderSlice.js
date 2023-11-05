@@ -3,6 +3,7 @@ import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
+import notification from '../Utils/Notification';
 
 const Literals = {
     addcode: {
@@ -176,7 +177,7 @@ export const PurchaseordersSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removePurchaseordernotification: (state) => {
-            state.notifications.splice(0, 1);
+          state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload

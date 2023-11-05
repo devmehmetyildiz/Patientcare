@@ -32,11 +32,6 @@ export class Departments extends Component {
     GetStations()
   }
 
-  componentDidUpdate() {
-    const { Departments, Stations, removeStationnotification, removeDepartmentnotification } = this.props
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Stations.notifications, removeStationnotification)
-  }
 
   render() {
 

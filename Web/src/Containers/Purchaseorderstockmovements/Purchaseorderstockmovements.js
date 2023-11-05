@@ -1,12 +1,12 @@
 import { connect } from 'react-redux'
 import Purchaseorderstockmovements from '../../Pages/Purchaseorderstockmovements/Purchaseorderstockmovements'
 import {
-    GetPurchaseorderstockmovements, removePurchaseorderstockmovementnotification,
+    GetPurchaseorderstockmovements,
     fillPurchaseorderstockmovementnotification, DeletePurchaseorderstockmovements, handleDeletemodal, handleSelectedPurchaseorderstockmovement
 } from '../../Redux/PurchaseorderstockmovementSlice'
-import { GetUnits, removeUnitnotification } from '../../Redux/UnitSlice'
-import { GetPurchaseorderstocks, removePurchaseorderstocknotification } from '../../Redux/PurchaseorderstockSlice'
-import { GetStockdefines, removeStockdefinenotification } from '../../Redux/StockdefineSlice'
+import { GetUnits } from '../../Redux/UnitSlice'
+import { GetPurchaseorderstocks } from '../../Redux/PurchaseorderstockSlice'
+import { GetStockdefines } from '../../Redux/StockdefineSlice'
 
 const mapStateToProps = (state) => ({
     Purchaseorderstockmovements: state.Purchaseorderstockmovements,
@@ -17,9 +17,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetPurchaseorderstockmovements, removePurchaseorderstockmovementnotification, GetUnits, removeUnitnotification, GetPurchaseorderstocks, removePurchaseorderstocknotification,
+    GetPurchaseorderstockmovements, GetUnits, GetPurchaseorderstocks,
     handleDeletemodal, handleSelectedPurchaseorderstockmovement, fillPurchaseorderstockmovementnotification, DeletePurchaseorderstockmovements,
-    GetStockdefines, removeStockdefinenotification
+    GetStockdefines
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Purchaseorderstockmovements)

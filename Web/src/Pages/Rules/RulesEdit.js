@@ -40,13 +40,12 @@ export default class RulesEdit extends Component {
     }
 
     componentDidUpdate() {
-        const { Rules, removeRulenotification } = this.props
+        const { Rules } = this.props
         const { selected_record, isLoading } = Rules
         if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
             this.setState({ template: selected_record.Rule, isDatafetched: true })
             this.context.setForm(this.PAGE_NAME, selected_record)
         }
-        Notification(Rules.notifications, removeRulenotification, this.context.clearForm)
     }
 
     render() {

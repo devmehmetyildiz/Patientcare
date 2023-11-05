@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import Stockdefines from "../../Pages/Stockdefines/Stockdefines"
-import { GetStockdefines, removeStockdefinenotification, fillStockdefinenotification, DeleteStockdefines, handleDeletemodal, handleSelectedStockdefine } from "../../Redux/StockdefineSlice"
-import { GetUnits, removeUnitnotification } from "../../Redux/UnitSlice"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
+import { GetStockdefines,  fillStockdefinenotification, DeleteStockdefines, handleDeletemodal, handleSelectedStockdefine } from "../../Redux/StockdefineSlice"
+import { GetUnits } from "../../Redux/UnitSlice"
+import { GetDepartments } from "../../Redux/DepartmentSlice"
 
 const mapStateToProps = (state) => ({
     Stockdefines: state.Stockdefines,
@@ -12,8 +12,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetStockdefines, removeStockdefinenotification, fillStockdefinenotification, DeleteStockdefines,
-    handleDeletemodal, handleSelectedStockdefine, GetUnits, removeUnitnotification, GetDepartments, removeDepartmentnotification
+    GetStockdefines,  fillStockdefinenotification, DeleteStockdefines,
+    handleDeletemodal, handleSelectedStockdefine, GetUnits,  GetDepartments
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stockdefines)

@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import UsersCreate from "../../Pages/Users/UsersCreate"
-import { AddUsers, fillUsernotification, removeUsernotification } from "../../Redux/UserSlice"
-import { GetRoles, removeRolenotification } from "../../Redux/RoleSlice"
-import { GetDepartments, removeDepartmentnotification } from "../../Redux/DepartmentSlice"
-import { GetStations, removeStationnotification } from "../../Redux/StationSlice"
+import { AddUsers, fillUsernotification } from "../../Redux/UserSlice"
+import { GetRoles } from "../../Redux/RoleSlice"
+import { GetDepartments } from "../../Redux/DepartmentSlice"
+import { GetStations } from "../../Redux/StationSlice"
 
 const mapStateToProps = (state) => ({
     Users: state.Users,
@@ -14,8 +14,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    AddUsers, fillUsernotification, removeUsernotification, GetRoles, removeRolenotification, GetDepartments, removeDepartmentnotification,
-    GetStations, removeStationnotification
+    AddUsers, fillUsernotification,  GetRoles,  GetDepartments,
+    GetStations
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UsersCreate)

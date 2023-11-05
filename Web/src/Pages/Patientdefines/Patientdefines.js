@@ -23,13 +23,6 @@ export default class Patientdefines extends Component {
     GetCostumertypes()
   }
 
-  componentDidUpdate() {
-    const { Patientdefines, removePatientdefinenotification, Patienttypes, removePatienttypenotification,
-      Costumertypes, removeCostumertypeNotification } = this.props
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
-    Notification(Patienttypes.notifications, removePatienttypenotification)
-    Notification(Costumertypes.notifications, removeCostumertypeNotification)
-  }
 
   render() {
 

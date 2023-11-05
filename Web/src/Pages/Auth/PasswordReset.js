@@ -24,11 +24,6 @@ export default class PasswordReset extends Component {
         }
     }
 
-    componentDidUpdate() {
-        const { removenotification, Profile } = this.props
-        Notification(Profile.notifications, removenotification)
-    }
-
     render() {
 
         const { Profile } = this.props

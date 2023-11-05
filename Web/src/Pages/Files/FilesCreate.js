@@ -20,12 +20,6 @@ export class FilesCreate extends Component {
       selectedFiles: []
     }
   }
-
-  componentDidUpdate() {
-    const { Files, removeFilenotification } = this.props
-    Notification(Files.notifications, removeFilenotification)
-  }
-
   render() {
 
     const { isLoading, isDispatching, Profile } = this.props

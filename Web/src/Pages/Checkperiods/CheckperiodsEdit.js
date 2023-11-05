@@ -42,7 +42,7 @@ export default class CheckperiodsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Periods, Checkperiods, removeCheckperiodnotification, removePeriodnotification } = this.props
+    const { Periods, Checkperiods } = this.props
     const { selected_record, isLoading } = Checkperiods
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
       Periods.list.length > 0 && !Periods.isLoading && !isLoading && !this.state.isDatafetched) {
@@ -54,8 +54,6 @@ export default class CheckperiodsEdit extends Component {
         Periods: selected_record.Perioduuids.map(u => { return u.PeriodID })
       })
     }
-    Notification(Periods.notifications, removePeriodnotification)
-    Notification(Checkperiods.notifications, removeCheckperiodnotification)
   }
 
   render() {

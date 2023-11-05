@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import Costumertypes from "../../Pages/Costumertypes/Costumertypes"
 import {
-  GetCostumertypes, DeleteCostumertypes, removeCostumertypenotification, fillCostumertypenotification
+  GetCostumertypes, DeleteCostumertypes, fillCostumertypenotification
   , handleDeletemodal, handleSelectedCostumertype
 } from "../../Redux/CostumertypeSlice"
-import { GetDepartments, removeDepartmentnotification } from '../../Redux/DepartmentSlice'
+import { GetDepartments } from '../../Redux/DepartmentSlice'
 
 const mapStateToProps = (state) => ({
   Costumertypes: state.Costumertypes,
@@ -13,9 +13,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  GetCostumertypes, DeleteCostumertypes, removeCostumertypenotification, fillCostumertypenotification,
-  handleDeletemodal, handleSelectedCostumertype,
-  GetDepartments, removeDepartmentnotification
+  GetCostumertypes, DeleteCostumertypes, fillCostumertypenotification,
+  handleDeletemodal, handleSelectedCostumertype, GetDepartments
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Costumertypes)

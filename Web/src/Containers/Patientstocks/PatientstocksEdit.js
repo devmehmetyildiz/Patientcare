@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import PatientstocksEdit from '../../Pages/Patientstocks/PatientstocksEdit'
-import { EditPatientstocks, GetPatientstock, handleSelectedPatientstock, removePatientstocknotification, fillPatientstocknotification } from '../../Redux/PatientstockSlice'
-import { GetStockdefines, removeStockdefinenotification } from '../../Redux/StockdefineSlice'
-import { GetDepartments, removeDepartmentnotification } from '../../Redux/DepartmentSlice'
-import { GetPatients, removePatientnotification } from "../../Redux/PatientSlice"
-import { GetPatientdefines, removePatientdefinenotification } from "../../Redux/PatientdefineSlice"
+import { EditPatientstocks, GetPatientstock, handleSelectedPatientstock,  fillPatientstocknotification } from '../../Redux/PatientstockSlice'
+import { GetStockdefines } from '../../Redux/StockdefineSlice'
+import { GetDepartments } from '../../Redux/DepartmentSlice'
+import { GetPatients } from "../../Redux/PatientSlice"
+import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
 
 const mapStateToProps = (state) => ({
     Patientstocks: state.Patientstocks,
@@ -17,8 +17,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    EditPatientstocks, GetPatientstock, handleSelectedPatientstock, removePatientstocknotification, fillPatientstocknotification, GetPatientdefines, removePatientdefinenotification,
-    GetStockdefines, removeStockdefinenotification, GetDepartments, removeDepartmentnotification, GetPatients, removePatientnotification
+    EditPatientstocks, GetPatientstock, handleSelectedPatientstock,  fillPatientstocknotification, GetPatientdefines,
+    GetStockdefines,  GetDepartments,  GetPatients
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientstocksEdit)

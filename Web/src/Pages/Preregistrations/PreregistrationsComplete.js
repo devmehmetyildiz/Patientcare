@@ -55,34 +55,11 @@ export default class PreregistrationsComplete extends Component {
 
   componentDidUpdate() {
     const {
-      Cases, removeCasenotification,
-      Patients, removePatientnotification,
-      Warehouses, removeWarehousenotification,
-      Rooms, removeRoomnotification,
-      Beds, removeBednotification,
-      Files, removeFilenotification,
-      Floors, removeFloornotification,
-      Patientdefines, removePatientdefinenotification,
-      Patientstocks, removePatientstocknotification,
-      Patientstockmovements, removePatientstockmovementnotification,
-      Units, removeUnitnotification,
-      Stockdefines, removeStockdefinenotification,
-      Profile, fillPatientnotification,
+      Cases, Patients, Warehouses, Rooms, Beds,
+      Files, Floors, Patientdefines, Patientstocks, Patientstockmovements,
+      Units, Stockdefines, Profile, fillPatientnotification,
       match, history
     } = this.props
-
-    Notification(Patients.notifications, removePatientnotification)
-    Notification(Warehouses.notifications, removeWarehousenotification)
-    Notification(Rooms.notifications, removeRoomnotification)
-    Notification(Beds.notifications, removeBednotification)
-    Notification(Files.notifications, removeFilenotification)
-    Notification(Floors.notifications, removeFloornotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
-    Notification(Patientstocks.notifications, removePatientstocknotification)
-    Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
-    Notification(Units.notifications, removeUnitnotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Cases.notifications, removeCasenotification)
 
     const isLoadingstatus = Patients.isLoading || Warehouses.isLoading || Rooms.isLoading
       || Beds.isLoading || Files.isLoading || Floors.isLoading || Patientdefines.isLoading

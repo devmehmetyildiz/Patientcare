@@ -39,7 +39,7 @@ export default class PatientdefinesEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Patientdefines, Costumertypes, removeCostumertypenotification, removePatienttypenotification, Patienttypes, removePatientdefinenotification } = this.props
+    const { Patientdefines, Costumertypes, Patienttypes } = this.props
     const { selected_record, isLoading } = Patientdefines
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Costumertypes.list.length > 0 && !Costumertypes.isLoading && Patienttypes.list.length > 0 && !Patienttypes.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
@@ -47,9 +47,6 @@ export default class PatientdefinesEdit extends Component {
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
-    Notification(Costumertypes.notifications, removeCostumertypenotification)
-    Notification(Patienttypes.notifications, removePatienttypenotification)
   }
 
   render() {

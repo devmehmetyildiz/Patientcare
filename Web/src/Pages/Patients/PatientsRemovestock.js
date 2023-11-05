@@ -54,10 +54,9 @@ export default class PatientsRemovestock extends Component {
 
     componentDidUpdate() {
         const {
-            Patients, removePatientnotification, Patientdefines, removePatientdefinenotification, Patientstocks, removePatientstocknotification,
-            Patientstockmovements, removePatientstockmovementnotification, Warehouses, removeWarehousenotification, Departments, removeDepartmentnotification,
-            Stocks, removeStocknotification, Stockmovements, removeStockmovementnotification, Stockdefines, removeStockdefinenotification
-        } = this.props
+            Patients, Patientdefines, Patientstocks,
+            Patientstockmovements, Warehouses, Departments,
+            Stocks, Stockmovements, Stockdefines, } = this.props
         const { selected_record } = Patients
 
         const isLoadingstatus =
@@ -76,15 +75,6 @@ export default class PatientsRemovestock extends Component {
             this.setState({ isDatafetched: true })
             this.context.setForm(this.PAGE_NAME, selected_record)
         }
-        Notification(Patients.notifications, removePatientnotification)
-        Notification(Patientdefines.notifications, removePatientdefinenotification)
-        Notification(Patientstocks.notifications, removePatientstocknotification)
-        Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
-        Notification(Warehouses.notifications, removeWarehousenotification)
-        Notification(Stocks.notifications, removeStocknotification)
-        Notification(Stockmovements.notifications, removeStockmovementnotification)
-        Notification(Stockdefines.notifications, removeStockdefinenotification)
-        Notification(Departments.notifications, removeDepartmentnotification)
     }
 
     render() {

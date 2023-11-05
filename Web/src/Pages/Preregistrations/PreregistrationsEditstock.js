@@ -50,15 +50,8 @@ export default class PreregistrationsEditstock extends Component {
   }
 
   componentDidUpdate() {
-    const {
-      Patients, removePatientnotification,
-      Departments, removeDepartmentnotification,
-      Stockdefines, removeStockdefinenotification,
-      Files, removeFilenotification,
-      Patientdefines, removePatientdefinenotification,
-      Patientstocks, removePatientstocknotification,
-      Patientstockmovements, removePatientstockmovementnotification
-    } = this.props
+    const { Patients, Departments, Stockdefines,
+      Files, Patientdefines, Patientstocks, Patientstockmovements, } = this.props
     const { selected_record, isLoading } = Patients
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading
       && !Departments.isLoading &&
@@ -74,13 +67,6 @@ export default class PreregistrationsEditstock extends Component {
         selectedStocks: response, isDatafetched: true
       })
     }
-    Notification(Patients.notifications, removePatientnotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Files.notifications, removeFilenotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
-    Notification(Patientstocks.notifications, removePatientstocknotification)
-    Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
   }
 
   render() {

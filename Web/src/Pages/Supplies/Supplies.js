@@ -27,14 +27,6 @@ export default class Supplies extends Component {
     GetWarehouses()
   }
 
-  componentDidUpdate() {
-    const { Stocks, Warehouses, removeWarehousenotification, removeStocknotification, Departments, Stockdefines, Stockmovements, removeStockdefinenotification, removeDepartmentnotification, removeStockmovementnotification } = this.props
-    Notification(Stocks.notifications, removeStocknotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Stockmovements.notifications, removeStockmovementnotification)
-    Notification(Warehouses.notifications, removeWarehousenotification)
-  }
 
   render() {
 

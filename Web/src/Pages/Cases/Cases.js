@@ -32,11 +32,6 @@ export default class Cases extends Component {
     GetDepartments()
   }
 
-  componentDidUpdate() {
-    const { Cases, Departments, removeDepartmentnotification, removeCasenotification } = this.props
-    Notification(Cases.notifications, removeCasenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-  }
 
   render() {
 

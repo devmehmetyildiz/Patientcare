@@ -31,13 +31,6 @@ export default class Units extends Component {
     GetDepartments()
   }
 
-  componentDidUpdate() {
-    const { Units, Departments, removeDepartmentnotification, removeUnitnotification } = this.props
-    Notification(Units.notifications, removeUnitnotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-  }
-
-
   render() {
 
     const unitstatusOption = [

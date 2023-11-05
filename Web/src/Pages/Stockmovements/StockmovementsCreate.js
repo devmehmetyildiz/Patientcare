@@ -23,16 +23,6 @@ export default class StockmovementsCreate extends Component {
     const { GetStocks, GetStockdefines } = this.props
     GetStocks()
     GetStockdefines()
-
-
-  }
-
-  componentDidUpdate() {
-    const { Stockmovements, Stockdefines, removeStockdefinenotification, removeStockmovementnotification,
-      Stocks, removeStocknotification } = this.props
-    Notification(Stockmovements.notifications, removeStockmovementnotification)
-    Notification(Stocks.notifications, removeStocknotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
   }
 
   render() {

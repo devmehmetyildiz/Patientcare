@@ -4,6 +4,7 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 import Cookies from 'universal-cookie';
+import notification from '../Utils/Notification';
 
 export const logIn = createAsyncThunk(
     'Profile/logIn',
@@ -240,7 +241,7 @@ export const ProfileSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removenotification: (state) => {
-            state.notifications.splice(0, 1);
+          state.notifications.splice(0, 1);
         },
         removeauth: (state) => {
             state.auth = false

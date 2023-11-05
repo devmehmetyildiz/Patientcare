@@ -25,17 +25,6 @@ export default class Stockmovements extends Component {
     GetUnits()
   }
 
-  componentDidUpdate() {
-    const { Stockmovements, removeStockmovementnotification,
-      Units, removeUnitnotification,
-      Stockdefines, removeStockdefinenotification,
-      Stocks, removeStocknotification } = this.props
-    Notification(Stockmovements.notifications, removeStockmovementnotification)
-    Notification(Units.notifications, removeUnitnotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Stocks.notifications, removeStocknotification)
-  }
-
   render() {
 
     const { Stockmovements, Profile, handleDeletemodal, handleSelectedStockmovement, handleApprovemodal } = this.props

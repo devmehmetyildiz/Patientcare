@@ -37,15 +37,14 @@ export default class MailsettingsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { removeMailsettingnotification, Mailsettings } = this.props
-    const { notifications, selected_record, isLoading } = Mailsettings
+    const { Mailsettings } = this.props
+    const { selected_record, isLoading } = Mailsettings
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(notifications, removeMailsettingnotification)
   }
 
   render() {

@@ -3,6 +3,7 @@ import Layout from './Containers/Layout/Layout';
 import { withRouter } from 'react-router-dom';
 import { FormContext } from './Provider/FormProvider';
 import Routes from './Routes';
+import NotificationHandler from './Utils/NotificationHandler';
 
 class App extends Component {
 
@@ -74,6 +75,7 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
+        <NotificationHandler />
         {this.state.isFullPageLayout ?
           <div className='w-full' >
             <Routes />

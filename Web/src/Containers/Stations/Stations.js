@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Stations from '../../Pages/Stations/Stations'
-import { GetStations, removeStationnotification, fillStationnotification, DeleteStations, handleDeletemodal, handleSelectedStation } from '../../Redux/StationSlice'
+import { GetStations,  fillStationnotification, DeleteStations, handleDeletemodal, handleSelectedStation } from '../../Redux/StationSlice'
 
 const mapStateToProps = (state) => ({
     Stations: state.Stations,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetStations, removeStationnotification, fillStationnotification, DeleteStations,
+    GetStations,  fillStationnotification, DeleteStations,
     handleDeletemodal, handleSelectedStation
 }
 

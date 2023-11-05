@@ -40,7 +40,7 @@ export default class PrinttemplatesEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Printtemplates, removePrinttemplatenotification } = this.props
+    const { Printtemplates } = this.props
     const { selected_record, isLoading } = Printtemplates
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
       this.setState({
@@ -48,7 +48,6 @@ export default class PrinttemplatesEdit extends Component {
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Printtemplates.notifications, removePrinttemplatenotification)
   }
 
 

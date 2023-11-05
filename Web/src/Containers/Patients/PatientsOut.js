@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PatientsOut from "../../Pages/Patients/PatientsOut"
-import { OutPatients, removePatientnotification, fillPatientnotification, handleOutmodal } from "../../Redux/PatientSlice"
+import { OutPatients,  fillPatientnotification, handleOutmodal } from "../../Redux/PatientSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -8,6 +8,6 @@ const mapStateToProps = (state) => ({
     Profile: state.Profile
 })
 
-const mapDispatchToProps = { OutPatients, removePatientnotification, fillPatientnotification, handleOutmodal }
+const mapDispatchToProps = { OutPatients,  fillPatientnotification, handleOutmodal }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsOut)

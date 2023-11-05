@@ -20,14 +20,11 @@ export default class StationsCreate extends Component {
 
   PAGE_NAME = "StationsCreate"
 
-  componentDidUpdate() {
-    const { removeStationnotification, Stations } = this.props
-    Notification(Stations.notifications, removeStationnotification)
-  }
 
   render() {
 
     const { Stations, Profile, history, closeModal } = this.props
+
     const { isLoading, isDispatching } = Stations
 
     return (

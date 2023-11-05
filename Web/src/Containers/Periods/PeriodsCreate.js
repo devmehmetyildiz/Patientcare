@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PeriodsCreate from '../../Pages/Periods/PeriodsCreate'
-import { AddPeriods, removePeriodnotification, fillPeriodnotification } from '../../Redux/PeriodSlice'
+import { AddPeriods,  fillPeriodnotification } from '../../Redux/PeriodSlice'
 
 
 const mapStateToProps = (state) => ({
@@ -9,7 +9,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    AddPeriods, removePeriodnotification, fillPeriodnotification
+    AddPeriods,  fillPeriodnotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PeriodsCreate)

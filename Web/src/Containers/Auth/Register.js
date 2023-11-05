@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
 import Register from '../../Pages/Auth/Register'
-import { register, removenotification, fillnotification } from "../../Redux/ProfileSlice"
+import { register,  fillnotification } from "../../Redux/ProfileSlice"
 
 const mapStateToProps = (state) => ({
     Profile: state.Profile
 })
 
-const mapDispatchToProps = { register, removenotification, fillnotification }
+const mapDispatchToProps = { register,  fillnotification }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register)

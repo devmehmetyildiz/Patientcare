@@ -31,8 +31,7 @@ export default class PurchaseorderstockmovementsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Purchaseorderstocks, Purchaseorderstockmovements,
-      removePurchaseorderstocknotification, removePurchaseorderstockmovementnotification } = this.props
+    const { Purchaseorderstocks, Purchaseorderstockmovements } = this.props
     const { selected_record, isLoading } = Purchaseorderstockmovements
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
       && Purchaseorderstocks.list.length > 0 && !Purchaseorderstocks.isLoading
@@ -42,8 +41,6 @@ export default class PurchaseorderstockmovementsEdit extends Component {
       })
       this.context.setFormstates(selected_record)
     }
-    Notification(Purchaseorderstockmovements.notifications, removePurchaseorderstockmovementnotification)
-    Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
   }
 
   render() {

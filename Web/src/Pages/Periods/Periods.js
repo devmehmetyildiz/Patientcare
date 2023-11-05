@@ -27,11 +27,6 @@ export default class Periods extends Component {
     GetPeriods()
   }
 
-  componentDidUpdate() {
-    const { Periods, removePeriodnotification } = this.props
-    Notification(Periods.notifications, removePeriodnotification)
-  }
-
   render() {
 
     const { Periods, Profile, handleDeletemodal, handleSelectedPeriod } = this.props

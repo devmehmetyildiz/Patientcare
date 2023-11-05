@@ -32,11 +32,6 @@ export default class UnitsCreate extends Component {
     GetDepartments()
   }
 
-  componentDidUpdate() {
-    const { Units, removeUnitnotification, Departments, removeDepartmentnotification } = this.props
-    Notification(Units.notifications, removeUnitnotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-  }
 
   render() {
     const { Units, Departments, Profile } = this.props

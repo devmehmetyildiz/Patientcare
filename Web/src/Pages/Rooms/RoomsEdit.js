@@ -41,8 +41,7 @@ export default class RoomsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Floors, Rooms,
-      removeFloornotification, removeRoomnotification } = this.props
+    const { Floors, Rooms } = this.props
     const { selected_record, isLoading } = Rooms
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
       && Floors.list.length > 0 && !Floors.isLoading
@@ -52,8 +51,6 @@ export default class RoomsEdit extends Component {
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Rooms.notifications, removeRoomnotification)
-    Notification(Floors.notifications, removeFloornotification)
   }
 
   render() {

@@ -27,19 +27,6 @@ export default class Warehouses extends Component {
     GetStocks()
   }
 
-  componentDidUpdate() {
-    const { Warehouses, removeWarehousenotification, Departments, removeDepartmentnotification, Stocks,
-      Units, removeUnitnotification, Stockdefines, removeStockdefinenotification, removeStocknotification,
-      Stockmovements, removeStockmovementnotification } = this.props
-    Notification(Warehouses.notifications, removeWarehousenotification)
-    Notification(Stocks.notifications, removeStocknotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Units.notifications, removeUnitnotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Stockmovements.notifications, removeStockmovementnotification)
-  }
-
-
   render() {
     const { Warehouses, Departments, Units, Stocks, Stockmovements, Stockdefines, handleDeletemodal, handleSelectedWarehouse, Profile, AddRecordCases } = this.props
     const { isLoading, isDispatching } = Warehouses

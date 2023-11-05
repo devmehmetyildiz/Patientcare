@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
 import Warehouses from '../../Pages/Warehouses/Warehouses'
-import { GetWarehouses, removeWarehousenotification, fillWarehousenotification, DeleteWarehouses, handleDeletemodal, handleSelectedWarehouse } from '../../Redux/WarehouseSlice'
-import { GetDepartments, removeDepartmentnotification } from '../../Redux/DepartmentSlice'
-import { GetUnits, removeUnitnotification } from '../../Redux/UnitSlice'
-import { GetStockdefines, removeStockdefinenotification } from '../../Redux/StockdefineSlice'
-import { GetStockmovements, removeStockmovementnotification } from '../../Redux/StockmovementSlice'
-import { GetStocks, removeStocknotification } from '../../Redux/StockSlice'
+import { GetWarehouses,  fillWarehousenotification, DeleteWarehouses, handleDeletemodal, handleSelectedWarehouse } from '../../Redux/WarehouseSlice'
+import { GetDepartments } from '../../Redux/DepartmentSlice'
+import { GetUnits } from '../../Redux/UnitSlice'
+import { GetStockdefines } from '../../Redux/StockdefineSlice'
+import { GetStockmovements } from '../../Redux/StockmovementSlice'
+import { GetStocks } from '../../Redux/StockSlice'
 
 const mapStateToProps = (state) => ({
     Warehouses: state.Warehouses,
@@ -18,13 +18,10 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetWarehouses, removeWarehousenotification, fillWarehousenotification,
+    GetWarehouses, fillWarehousenotification,
     DeleteWarehouses, handleDeletemodal, handleSelectedWarehouse,
-    GetDepartments, removeDepartmentnotification,
-    GetUnits, removeUnitnotification,
-    GetStockdefines, removeStockdefinenotification,
-    GetStockmovements, removeStockmovementnotification,
-    GetStocks, removeStocknotification
+    GetDepartments, GetUnits, GetStockdefines,
+    GetStockmovements,  GetStocks
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Warehouses)

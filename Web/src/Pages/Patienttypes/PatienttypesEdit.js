@@ -37,7 +37,7 @@ export default class PatienttypesEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Patienttypes, removePatienttypenotification } = this.props
+    const { Patienttypes } = this.props
     const { selected_record, isLoading } = Patienttypes
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
       this.setState({
@@ -45,7 +45,6 @@ export default class PatienttypesEdit extends Component {
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Patienttypes.notifications, removePatienttypenotification)
   }
 
   render() {

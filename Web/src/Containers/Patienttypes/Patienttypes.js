@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Patienttypes from '../../Pages/Patienttypes/Patienttypes'
-import { GetPatienttypes, removePatienttypenotification, fillPatienttypenotification, DeletePatienttypes, handleDeletemodal, handleSelectedPatienttype } from '../../Redux/PatienttypeSlice'
+import { GetPatienttypes,  fillPatienttypenotification, DeletePatienttypes, handleDeletemodal, handleSelectedPatienttype } from '../../Redux/PatienttypeSlice'
 
 
 const mapStateToProps = (state) => ({
@@ -9,7 +9,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  GetPatienttypes, removePatienttypenotification, fillPatienttypenotification, DeletePatienttypes,
+  GetPatienttypes,  fillPatienttypenotification, DeletePatienttypes,
   handleDeletemodal, handleSelectedPatienttype
 }
 

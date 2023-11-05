@@ -24,13 +24,6 @@ export default class Beds extends Component {
     GetFloors()
   }
 
-  componentDidUpdate() {
-    const { Beds, removeBednotification, Rooms, removeRoomnotification, Floors, removeFloornotification } = this.props
-    Notification(Beds.notifications, removeBednotification)
-    Notification(Rooms.notifications, removeRoomnotification)
-    Notification(Floors.notifications, removeFloornotification)
-  }
-
   render() {
     const { Beds, Profile, handleDeletemodal, handleSelectedBed, AddRecordBeds } = this.props
     const { isLoading, isDispatching } = Beds

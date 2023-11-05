@@ -47,9 +47,7 @@ export default class SuppliesEdit extends Component {
 
 
   componentDidUpdate() {
-    const { Departments, Stockdefines, Stocks, Warehouses,
-      removeWarehousenotification, removeStocknotification, removeStockdefinenotification,
-      removeDepartmentnotification } = this.props
+    const { Departments, Stockdefines, Stocks, Warehouses } = this.props
 
     const { selected_record, isLoading } = Stocks
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
@@ -67,10 +65,6 @@ export default class SuppliesEdit extends Component {
       const formattedDate = `${year}-${month}-${day}`;
       this.context.setForm(this.PAGE_NAME, { ...selected_record, [`Skt`]: formattedDate })
     }
-    Notification(Stocks.notifications, removeStocknotification)
-    Notification(Warehouses.notifications, removeWarehousenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
   }
 
   render() {

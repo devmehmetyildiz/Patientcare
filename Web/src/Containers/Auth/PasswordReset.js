@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PasswordReset from '../../Pages/Auth/PasswordReset'
-import { GetPasswordresetuser, Resetpassword, removenotification, fillnotification } from "../../Redux/ProfileSlice"
+import { GetPasswordresetuser, Resetpassword,  fillnotification } from "../../Redux/ProfileSlice"
 
 
 const mapStateToProps = (state) => ({
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    removenotification, fillnotification, Resetpassword, GetPasswordresetuser
+     fillnotification, Resetpassword, GetPasswordresetuser
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PasswordReset)

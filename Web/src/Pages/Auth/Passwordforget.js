@@ -6,12 +6,6 @@ import Notification from '../../Utils/Notification'
 
 export default class Passwordforget extends Component {
 
-  componentDidUpdate() {
-    const { Profile, removenotification } = this.props
-    Notification(Profile.notifications, removenotification)
-  }
-
-
   render() {
     const { Profile } = this.props
 

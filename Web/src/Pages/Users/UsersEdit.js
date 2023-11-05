@@ -43,9 +43,7 @@ export default class UsersEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Roles, Stations, Users,
-      removeDepartmentnotification, removeStationnotification, removeRolenotification,
-      removeUsernotification } = this.props
+    const { Departments, Roles, Stations, Users } = this.props
     const { selected_record, isLoading } = Users
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
       Departments.list.length > 0 && !Departments.isLoading && Roles.list.length > 0 && !Roles.isLoading &&
@@ -61,10 +59,6 @@ export default class UsersEdit extends Component {
           Stations: selected_record.Stationuuids.map(u => { return u.StationID }),
         })
     }
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Users.notifications, removeUsernotification)
-    Notification(Stations.notifications, removeStationnotification)
-    Notification(Roles.notifications, removeRolenotification)
   }
 
 

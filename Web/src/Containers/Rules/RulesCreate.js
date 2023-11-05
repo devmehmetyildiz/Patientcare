@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { AddRules, removeRulenotification, fillRulenotification } from "../../Redux/RuleSlice"
+import { AddRules,  fillRulenotification } from "../../Redux/RuleSlice"
 import RulesCreate from '../../Pages/Rules/RulesCreate'
 
 const mapStateToProps = (state) => ({
@@ -7,7 +7,7 @@ const mapStateToProps = (state) => ({
     Profile: state.Profile
 })
 
-const mapDispatchToProps = { AddRules, removeRulenotification, fillRulenotification }
+const mapDispatchToProps = { AddRules,  fillRulenotification }
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(RulesCreate)

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { AddRoles, GetPrivileges, GetPrivilegegroups, removeRolenotification, fillRolenotification } from "../../Redux/RoleSlice"
+import { AddRoles, GetPrivileges, GetPrivilegegroups,  fillRolenotification } from "../../Redux/RoleSlice"
 import RolesCreate from '../../Pages/Roles/RolesCreate'
 
 const mapStateToProps = (state) => ({
@@ -7,7 +7,7 @@ const mapStateToProps = (state) => ({
     Profile: state.Profile
 })
 
-const mapDispatchToProps = { AddRoles, GetPrivileges, GetPrivilegegroups, removeRolenotification, fillRolenotification }
+const mapDispatchToProps = { AddRoles, GetPrivileges, GetPrivilegegroups,  fillRolenotification }
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(RolesCreate)

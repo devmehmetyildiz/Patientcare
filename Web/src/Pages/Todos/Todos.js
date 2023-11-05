@@ -24,21 +24,6 @@ export default class Todos extends Component {
     GetPatientdefines()
   }
 
-  componentDidUpdate() {
-    const {
-      Todos, removeTodonotification,
-      Patientmovements, removePatientmovementnotification,
-      Tododefines, removeTododefinenotification,
-      Patients, removePatientnotification,
-      Patientdefines, removePatientdefinenotification
-    } = this.props
-    Notification(Todos.notifications, removeTodonotification)
-    Notification(Patientmovements.notifications, removePatientmovementnotification)
-    Notification(Tododefines.notifications, removeTododefinenotification)
-    Notification(Patients.notifications, removePatientnotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
-  }
-
   render() {
     const { Todos, Profile, handleApprovemodal, handleSelectedTodo } = this.props
     const { isLoading, isDispatching, } = Todos

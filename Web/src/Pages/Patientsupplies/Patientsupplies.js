@@ -28,21 +28,6 @@ export default class Patientsupplies extends Component {
     GetPatientstockmovements()
   }
 
-  componentDidUpdate() {
-    const {
-      Patientstocks, removePatientstocknotification,
-      Patientdefines, removePatientdefinenotification,
-      Stockdefines, removeStockdefinenotification,
-      Departments, removeDepartmentnotification,
-      Patients, removePatientnotification,
-      Patientstockmovements, removePatientstockmovementnotification } = this.props
-    Notification(Patientstocks.notifications, removePatientstocknotification)
-    Notification(Patientdefines.notifications, removePatientdefinenotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Patients.notifications, removePatientnotification)
-    Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
-  }
 
   render() {
 

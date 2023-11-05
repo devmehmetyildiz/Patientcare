@@ -46,17 +46,6 @@ export default class PurchaseordersCreate extends Component {
     }
   }
 
-  componentDidUpdate() {
-    const { removePurchaseordernotification, removeDepartmentnotification, Warehouses, removeWarehousenotification,
-      removeCasenotification, removeStockdefinenotification, Cases, Departments, Stockdefines,
-      Purchaseorders } = this.props
-    Notification(Warehouses.notifications, removeWarehousenotification)
-    Notification(Purchaseorders.notifications, removePurchaseordernotification)
-    Notification(Departments.notifications, removeDepartmentnotification)
-    Notification(Cases.notifications, removeCasenotification)
-    Notification(Stockdefines.notifications, removeStockdefinenotification)
-  }
-
   render() {
 
     const { Warehouses, Cases, Departments, Stockdefines, Profile,

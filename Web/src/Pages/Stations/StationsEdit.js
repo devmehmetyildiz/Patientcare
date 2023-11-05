@@ -38,7 +38,7 @@ export default class StationsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Stations, removeStationnotification } = this.props
+    const { Stations } = this.props
     const { selected_record, isLoading } = Stations
     if (validator.isObject(selected_record) && !isLoading && !this.state.isDatafetched) {
       this.setState({
@@ -46,7 +46,6 @@ export default class StationsEdit extends Component {
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
-    Notification(Stations.notifications, removeStationnotification)
   }
 
   render() {

@@ -33,12 +33,6 @@ export default class RolesCreate extends Component {
         GetPrivilegegroups()
     }
 
-    componentDidUpdate() {
-        const { Roles, removeRolenotification } = this.props
-        Notification(Roles.notifications, removeRolenotification, this.context.clearForm)
-    }
-
-
     render() {
         const { Roles, Profile, history } = this.props
         const { privileges, privilegegroups, isLoading, isDispatching } = Roles
