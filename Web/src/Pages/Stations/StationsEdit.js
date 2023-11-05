@@ -14,6 +14,8 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class StationsEdit extends Component {
 
   PAGE_NAME = "StationsEdit"
@@ -49,7 +51,7 @@ export default class StationsEdit extends Component {
 
   render() {
 
-    const { Stations, Profile } = this.props
+    const { Stations, Profile, history } = this.props
     const { isLoading, isDispatching } = Stations
 
 
@@ -67,13 +69,19 @@ export default class StationsEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" required />
               <Footerwrapper>
-                <Link to="/Stations">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Stations"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={isLoading}
+                  buttonText={Literals.Button.Update[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>
@@ -85,7 +93,9 @@ export default class StationsEdit extends Component {
     e.preventDefault()
 
     const { EditStations, history, fillStationnotification, Stations, Profile } = this.props
-    const data = formToObject(e.target)
+
+    const data = this.context.getForm(this.PAGE_NAME)
+
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })

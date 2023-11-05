@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link, } from 'react-router-dom'
 import { Form } from 'semantic-ui-react'
 import { Breadcrumb, Button } from 'semantic-ui-react'
-import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import Notification from '../../Utils/Notification'
 import FormInput from '../../Utils/FormInput'
@@ -15,6 +14,8 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class StationsCreate extends Component {
 
   PAGE_NAME = "StationsCreate"
@@ -26,8 +27,7 @@ export default class StationsCreate extends Component {
 
   render() {
 
-    const { Stations, Profile, history } = this.props
-    console.log('this.props: ', this.props);
+    const { Stations, Profile, history, closeModal } = this.props
     const { isLoading, isDispatching } = Stations
 
     return (
@@ -41,16 +41,23 @@ export default class StationsCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" required />
               <Footerwrapper>
-                {history && <Link to="/Stations">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Stations"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>
@@ -63,7 +70,7 @@ export default class StationsCreate extends Component {
 
     const { AddStations, history, fillStationnotification, Profile, closeModal } = this.props
 
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -74,7 +81,7 @@ export default class StationsCreate extends Component {
         fillStationnotification(error)
       })
     } else {
-      AddStations({ data, history, closeModal })
+      AddStations({ data, history, closeModal, clearForm: this.context.clearForm, redirectUrl: 'GoBack' })
     }
   }
 }

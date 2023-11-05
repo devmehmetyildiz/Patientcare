@@ -61,7 +61,7 @@ export const GetDepartment = createAsyncThunk(
 
 export const AddDepartments = createAsyncThunk(
     'Departments/AddDepartments',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -76,6 +76,7 @@ export const AddDepartments = createAsyncThunk(
                 code: 'DepartmentsCreate',
                 description: '',
             }));
+            clearForm && clearForm('DepartmentsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Departments');
             return response.data;
@@ -89,7 +90,7 @@ export const AddDepartments = createAsyncThunk(
 
 export const AddRecordDepartments = createAsyncThunk(
     'Departments/AddRecordDepartments',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,6 +100,8 @@ export const AddRecordDepartments = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('DepartmentsCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Departments');
             return response.data;
         } catch (error) {
@@ -111,7 +114,7 @@ export const AddRecordDepartments = createAsyncThunk(
 
 export const EditDepartments = createAsyncThunk(
     'Departments/EditDepartments',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -121,11 +124,8 @@ export const EditDepartments = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillDepartmentnotification({
-                type: 'Clear',
-                code: 'DepartmentsUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('DepartmentsUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Departments');
             return response.data;
         } catch (error) {

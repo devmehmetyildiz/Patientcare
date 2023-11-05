@@ -61,7 +61,7 @@ export const GetMailsetting = createAsyncThunk(
 
 export const AddMailsettings = createAsyncThunk(
     'Mailsettings/AddMailsettings',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -71,11 +71,7 @@ export const AddMailsettings = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillMailsettingnotification({
-                type: 'Clear',
-                code: 'MailsettingsCreate',
-                description: '',
-            }));
+            clearForm && clearForm('MailsettingsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Mailsettings');
             return response.data;
@@ -89,7 +85,7 @@ export const AddMailsettings = createAsyncThunk(
 
 export const EditMailsettings = createAsyncThunk(
     'Mailsettings/EditMailsettings',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,11 +95,8 @@ export const EditMailsettings = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillMailsettingnotification({
-                type: 'Clear',
-                code: 'MailsettingsEdit',
-                description: '',
-            }));
+            clearForm && clearForm('MailsettingsEdit')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Mailsettings');
             return response.data;
         } catch (error) {

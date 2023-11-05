@@ -65,7 +65,7 @@ export const GetPatientstock = createAsyncThunk(
 
 export const AddPatientstocks = createAsyncThunk(
     'Patientstocks/AddPatientstocks',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -80,6 +80,7 @@ export const AddPatientstocks = createAsyncThunk(
                 code: 'PatientstocksCreate',
                 description: '',
             }));
+            clearForm && clearForm('PatientstocksCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patientstocks');
             return response.data;
@@ -93,7 +94,7 @@ export const AddPatientstocks = createAsyncThunk(
 
 export const EditPatientstocks = createAsyncThunk(
     'Patientstocks/EditPatientstocks',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -103,11 +104,8 @@ export const EditPatientstocks = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillPatientstocknotification({
-                type: 'Clear',
-                code: 'PatientstocksUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('PatientstocksUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patientstocks');
             return response.data;
         } catch (error) {

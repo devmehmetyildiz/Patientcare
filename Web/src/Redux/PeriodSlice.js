@@ -61,7 +61,7 @@ export const GetPeriod = createAsyncThunk(
 
 export const AddPeriods = createAsyncThunk(
     'Periods/AddPeriods',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -71,11 +71,7 @@ export const AddPeriods = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillPeriodnotification({
-                type: 'Clear',
-                code: 'PeriodsCreate',
-                description: '',
-            }));
+            clearForm && clearForm('PeriodsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Periods');
             return response.data;
@@ -89,7 +85,7 @@ export const AddPeriods = createAsyncThunk(
 
 export const AddRecordPeriods = createAsyncThunk(
     'Periods/AddRecordPeriods',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,6 +95,8 @@ export const AddRecordPeriods = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
+            clearForm && clearForm('PeriodsCreate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Periods');
             return response.data;
         } catch (error) {
@@ -111,7 +109,7 @@ export const AddRecordPeriods = createAsyncThunk(
 
 export const EditPeriods = createAsyncThunk(
     'Periods/EditPeriods',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -121,11 +119,8 @@ export const EditPeriods = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillPeriodnotification({
-                type: 'Clear',
-                code: 'PeriodsUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('PeriodsUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Periods');
             return response.data;
         } catch (error) {

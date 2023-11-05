@@ -365,7 +365,7 @@ export default class PreregistrationsEditstock extends Component {
         fillPatientnotification(error)
       })
     } else {
-      EditPatientstocks({ data: stocks, history, url: "/Preregistrations" })
+      EditPatientstocks({ data: stocks, history, redirectUrl: "/Preregistrations" })
     }
   }
 

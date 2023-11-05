@@ -61,7 +61,7 @@ export const GetStockdefine = createAsyncThunk(
 
 export const AddStockdefines = createAsyncThunk(
     'Stockdefines/AddStockdefines',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -71,11 +71,7 @@ export const AddStockdefines = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillStockdefinenotification({
-                type: 'Clear',
-                code: 'StockdefinesCreate',
-                description: '',
-            }));
+            clearForm && clearForm('StockdefinesCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Stockdefines');
             return response.data;
@@ -89,7 +85,7 @@ export const AddStockdefines = createAsyncThunk(
 
 export const EditStockdefines = createAsyncThunk(
     'Stockdefines/EditStockdefines',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,11 +95,8 @@ export const EditStockdefines = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillStockdefinenotification({
-                type: 'Clear',
-                code: 'StockdefinesUpdate',
-                description: '',
-            }));
+            clearForm && clearForm('StockdefinesUpdate')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Stockdefines');
             return response.data;
         } catch (error) {

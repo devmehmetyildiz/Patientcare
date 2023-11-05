@@ -61,7 +61,7 @@ export const GetPrinttemplate = createAsyncThunk(
 
 export const AddPrinttemplates = createAsyncThunk(
     'Printtemplates/AddPrinttemplates',
-    async ({ data, history, redirectUrl, closeModal }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -71,11 +71,7 @@ export const AddPrinttemplates = createAsyncThunk(
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language],
             }));
-            dispatch(fillPrinttemplatenotification({
-                type: 'Clear',
-                code: 'PrinttemplatesCreate',
-                description: '',
-            }));
+            clearForm && clearForm('PrinttemplatesCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Printtemplates');
             return response.data;
@@ -89,7 +85,7 @@ export const AddPrinttemplates = createAsyncThunk(
 
 export const EditPrinttemplates = createAsyncThunk(
     'Printtemplates/EditPrinttemplates',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,11 +95,8 @@ export const EditPrinttemplates = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            dispatch(fillPrinttemplatenotification({
-                type: 'Clear',
-                code: 'PrinttemplatesEdit',
-                description: '',
-            }));
+            clearForm && clearForm('PrinttemplatesEdit')
+            closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Printtemplates');
             return response.data;
         } catch (error) {
