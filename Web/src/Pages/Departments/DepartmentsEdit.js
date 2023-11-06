@@ -15,6 +15,8 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import StationsCreate from '../../Containers/Stations/StationsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class DepartmentsEdit extends Component {
 
@@ -59,7 +61,7 @@ export default class DepartmentsEdit extends Component {
     })
 
     return (
-      Departments.isLoading || Departments.isDispatching || Stations.isLoading || Stations.isDispatching ? <LoadingPage /> :
+      Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -72,15 +74,21 @@ export default class DepartmentsEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype="dropdown" modal={StationsCreate} />
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Ishavepatients[Profile.Language]} name="Ishavepatients" formtype="checkbox" />
               <Footerwrapper>
-                {history && <Link to="/Departments">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Departments"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Departments.isLoading}
+                  buttonText={Literals.Button.Update[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>
@@ -93,11 +101,10 @@ export default class DepartmentsEdit extends Component {
     e.preventDefault()
 
     const { EditDepartments, history, fillDepartmentnotification, Stations, Departments, Profile } = this.props
-    const data = formToObject(e.target)
-    data.Ishavepatients = this.context.formstates[`${this.PAGE_NAME}/Ishavepatients`]
-    data.Stations = this.context.formstates[`${this.PAGE_NAME}/Stations`].map(id => {
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Stations = (data.Stations || []).map(id => {
       return (Stations.list || []).find(u => u.Uuid === id)
-    })
+    }) || []
 
     let errors = []
     if (!validator.isString(data.Name)) {

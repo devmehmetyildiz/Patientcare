@@ -6,7 +6,14 @@ export const FormContext = React.createContext()
 const FormProvider = ({ children }) => {
 
     const [formstates, setFormstates] = useState({})
-    console.log('formstates: ', formstates);
+    const [buffer, setBuffer] = useState([])
+
+    useEffect(() => {
+        if (buffer.length > 0) {
+            setFormstates({ ...formstates, [buffer[0]?.key]: buffer[0]?.value })
+            setBuffer(buffer.slice(1))
+        }
+    }, [buffer])
 
     const setForm = (pageName, form) => {
         let newform = {}
@@ -38,7 +45,7 @@ const FormProvider = ({ children }) => {
     }
 
     return (
-        <FormContext.Provider value={{ formstates, setFormstates, setForm, clearForm, getForm }}>
+        <FormContext.Provider value={{ formstates, setFormstates, setForm, clearForm, getForm, setBuffer }}>
             {children}
         </FormContext.Provider>
     )

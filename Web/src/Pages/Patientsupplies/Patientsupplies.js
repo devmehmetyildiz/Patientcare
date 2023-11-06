@@ -106,7 +106,9 @@ export default class Patientsupplies extends Component {
                   list={list}
                   initialConfig={initialConfig}
                   metaKey={metaKey}
-                  AddRecord={AddRecordPatientmedicines}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
                 />
               </Grid>
             </Headerwrapper>

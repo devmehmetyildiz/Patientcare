@@ -35,15 +35,12 @@ export default class DepartmentsCreate extends Component {
     GetStations()
   }
 
-
   render() {
     const { Departments, Stations, Profile, history, closeModal } = this.props
 
     const Stationoptions = (Stations.list || []).filter(u => u.Isactive).map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
-
-
 
     return (
       Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
@@ -90,21 +87,21 @@ export default class DepartmentsCreate extends Component {
     const data = this.context.getForm(this.PAGE_NAME)
     data.Stations = (data.Stations || []).map(id => {
       return (Stations.list || []).find(u => u.Uuid === id)
-    })
+    }) || []
 
     let errors = []
-    if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
-    }
     if (!validator.isArray(data.Stations)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Stationsrequired[Profile.Language] })
+    }
+    if (!validator.isString(data.Name)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
         fillDepartmentnotification(error)
       })
     } else {
-      //  AddDepartments({ data, history, closeModal })
+      AddDepartments({ data, history, closeModal })
     }
   }
 }

@@ -36,7 +36,7 @@ export default class Cases extends Component {
   render() {
 
 
-    const { Cases, Profile, Departments, handleSelectedCase, handleDeletemodal, AddRecordCases } = this.props
+    const { Cases, Profile, Departments, handleSelectedCase, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Cases
     const casestatusOption = [
       {
@@ -125,7 +125,9 @@ export default class Cases extends Component {
                   list={list}
                   initialConfig={initialConfig}
                   metaKey={metaKey}
-                  AddRecord={AddRecordCases}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
                 />
               </Grid>
             </Headerwrapper>

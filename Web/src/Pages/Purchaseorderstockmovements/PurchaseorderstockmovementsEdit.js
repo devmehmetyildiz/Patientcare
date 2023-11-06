@@ -15,6 +15,8 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class PurchaseorderstockmovementsEdit extends Component {
 
   PAGE_NAME = "PurchaseorderstockmovementsEdit"
@@ -44,7 +46,7 @@ export default class PurchaseorderstockmovementsEdit extends Component {
   }
 
   render() {
-    const { Purchaseorderstockmovements, Purchaseorderstocks, Profile } = this.props
+    const { Purchaseorderstockmovements, Purchaseorderstocks, Profile, history } = this.props
 
     const Purchaseorderstockoptions = (Purchaseorderstocks.list || []).filter(u => u.Isactive).map(stock => {
       return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
@@ -69,17 +71,23 @@ export default class PurchaseorderstockmovementsEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockID" options={Purchaseorderstockoptions} formtype='dropdown' />
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} fromtype='dropdown' />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Purchaseorderstockmovements">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Purchaseorderstockmovements"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Purchaseorderstockmovements.isLoading}
+                  buttonText={Literals.Button.Update[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

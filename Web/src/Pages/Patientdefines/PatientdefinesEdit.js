@@ -15,6 +15,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class PatientdefinesEdit extends Component {
 
   PAGE_NAME = "PatientdefinesEdit"
@@ -74,8 +76,7 @@ export default class PatientdefinesEdit extends Component {
     ]
 
     return (
-      Patientdefines.isLoading || Patientdefines.isDispatching || Patienttypes.isLoading
-        || Patienttypes.isDispatching || Costumertypes.isLoading || Costumertypes.isDispatching ? <LoadingPage /> :
+      Patientdefines.isLoading || Patientdefines.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -88,7 +89,7 @@ export default class PatientdefinesEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Firstname[Profile.Language]} name="Firstname" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Lastname[Profile.Language]} name="Lastname" />
@@ -138,11 +139,16 @@ export default class PatientdefinesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.PatienttypeName[Profile.Language]} name="PatienttypeID" options={Patienttypeoptions} formtype="dropdown" />
               </Form.Group>
               <Footerwrapper>
-                {history && <Button onClick={(e) => {
-                  e.preventDefault()
-                  history.length > 1 ? history.goBack() : history.push('/Patientdefines')
-                }} floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Patientdefinesnes"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Patientdefines.isLoading}
+                  buttonText={Literals.Button.Update[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

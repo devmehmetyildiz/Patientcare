@@ -12,6 +12,7 @@ import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import UsersDelete from '../../Containers/Users/UsersDelete'
 import MobileTable from '../../Utils/MobileTable'
+import Settings from '../../Common/Settings'
 export default class Users extends Component {
 
   constructor(props) {
@@ -105,21 +106,25 @@ export default class Users extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Users"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Users/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Users/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />

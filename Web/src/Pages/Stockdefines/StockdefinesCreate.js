@@ -17,6 +17,8 @@ import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import UnitsCreate from '../../Containers/Units/UnitsCreate'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class StockdefinesCreate extends Component {
 
   PAGE_NAME = "StockdefinesCreate"
@@ -44,7 +46,7 @@ export default class StockdefinesCreate extends Component {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
 
-    
+
 
     return (
       Stockdefines.isLoading ? <LoadingPage /> :
@@ -60,7 +62,7 @@ export default class StockdefinesCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+          <Form>
               <Form.Group widths={"equal"}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Description[Profile.Language]} name="Description" />
@@ -76,10 +78,16 @@ export default class StockdefinesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Issupply[Profile.Language]} name="Issupply" formtype='checkbox' />
               </Form.Group>
               <Footerwrapper>
-                {history && <Link to="/Stockdefines">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Stockdefines"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Stockdefines.isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

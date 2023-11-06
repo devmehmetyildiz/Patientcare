@@ -17,6 +17,8 @@ import { FormContext } from '../../Provider/FormProvider'
 import StationsCreate from '../../Containers/Stations/StationsCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import RolesCreate from '../../Containers/Roles/RolesCreate'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class UsersEdit extends Component {
 
   PAGE_NAME = "UsersEdit"
@@ -64,7 +66,7 @@ export default class UsersEdit extends Component {
 
   render() {
 
-    const { Departments, Users, Stations, Roles, Profile } = this.props
+    const { Departments, Users, Stations, Roles, Profile,history } = this.props
 
     const Stationoptions = (Stations.list || []).filter(u => u.Isactive).map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
@@ -94,7 +96,7 @@ export default class UsersEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Surname[Profile.Language]} name="Surname" />
@@ -116,10 +118,16 @@ export default class UsersEdit extends Component {
               </Form.Group>
               <FormInput placeholder={Literals.Columns.Language[Profile.Language]} value={this.state.selectedlanguage} options={Languageoptions} onChange={this.handleChangeLanguage} formtype='dropdown' />
               <Footerwrapper>
-                <Link to="/Users">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Users"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Users.isLoading}
+                  buttonText={Literals.Button.Update[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

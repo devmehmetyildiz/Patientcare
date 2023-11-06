@@ -15,6 +15,8 @@ import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import Pagedivider from '../../Common/Styled/Pagedivider'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class PreregistrationsEdit extends Component {
 
   PAGE_NAME = 'PreregistrationsEdit'
@@ -86,7 +88,7 @@ export default class PreregistrationsEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+          <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patientdefine[Profile.Language]} name="PatientdefineID" options={Patientdefineoptions} formtype="dropdown" />
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Deparment[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
@@ -97,10 +99,16 @@ export default class PreregistrationsEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Approvaldate[Profile.Language]} name="Approvaldate" type='date' />
               </Form.Group>
               <Footerwrapper>
-                {history && <Link to="/Preregistrations">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Preregistrations"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={isLoading}
+                  buttonText={Literals.Button.Update[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

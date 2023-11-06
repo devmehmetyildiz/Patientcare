@@ -17,6 +17,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class PrinttemplatesEdit extends Component {
 
   PAGE_NAME = 'PrinttemplatesEdit'
@@ -71,7 +73,7 @@ export default class PrinttemplatesEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form className='' onSubmit={this.handleSubmit}>
+          <Form>
               <Tab className='station-tab'
                 panes={[
                   {
@@ -118,12 +120,18 @@ export default class PrinttemplatesEdit extends Component {
                 renderActiveOnly={false} />
               <Footerwrapper>
                 <Form.Group widths={'equal'}>
-                  {history && <Link to="/Printtemplates">
-                    <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                  </Link>}
-                  <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.setForm(this.PAGE_NAME, Printtemplates.selected_record) }}>{Literals.Button.Clear[Profile.Language]}</Button>
+                  <Gobackbutton
+                    history={history}
+                    redirectUrl={"/Printtemplates"}
+                    buttonText={Literals.Button.Goback[Profile.Language]}
+                  />
+                  <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.clearForm(this.PAGE_NAME) }}>{Literals.Button.Clear[Profile.Language]}</Button>
                 </Form.Group>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                <Submitbutton
+                  isLoading={isLoading}
+                  buttonText={Literals.Button.Update[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

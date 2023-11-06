@@ -20,6 +20,8 @@ import CasesCreate from '../../Containers/Cases/CasesCreate'
 import WarehousesCreate from '../../Containers/Warehouses/WarehousesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import AddModal from '../../Utils/AddModal'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class PurchaseordersCreate extends Component {
 
   PAGE_NAME = "PurchaseordersCreate"
@@ -49,7 +51,7 @@ export default class PurchaseordersCreate extends Component {
   render() {
 
     const { Warehouses, Cases, Departments, Stockdefines, Profile,
-      Purchaseorders } = this.props
+      Purchaseorders, history } = this.props
     const { isLoading, isDispatching } = Purchaseorders
 
     const Stockdefinesoption = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(stockdefine => {
@@ -90,7 +92,7 @@ export default class PurchaseordersCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Tab className='station-tab'
                 panes={[
                   {
@@ -325,10 +327,16 @@ export default class PurchaseordersCreate extends Component {
                 renderActiveOnly={false} />
               <Pagedivider />
               <Footerwrapper>
-                <Link to="/Purchaseorders">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Purchaseorders"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

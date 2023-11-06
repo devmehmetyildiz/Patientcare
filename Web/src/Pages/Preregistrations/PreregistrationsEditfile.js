@@ -12,6 +12,8 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Literals from './Literals'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class PreregistrationsEditfile extends Component {
 
     constructor(props) {
@@ -89,7 +91,7 @@ export default class PreregistrationsEditfile extends Component {
                             <Header.Content>{`${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.Firstname} 
                             ${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.Lastname} - ${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.CountryID}`}</Header.Content>
                         </Header>
-                        <Form onSubmit={this.handleSubmit}>
+                        <Form>
                             <Table celled className='list-table' key='product-create-type-conversion-table' >
                                 <Table.Header>
                                     <Table.Row>
@@ -140,10 +142,16 @@ export default class PreregistrationsEditfile extends Component {
                                 </Table.Footer>
                             </Table>
                             <Footerwrapper>
-                                {history && <Link to="/Preregistrations">
-                                    <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                                </Link>}
-                                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                                <Gobackbutton
+                                    history={history}
+                                    redirectUrl={"/Preregistrations"}
+                                    buttonText={Literals.Button.Goback[Profile.Language]}
+                                />
+                                <Submitbutton
+                                    isLoading={isLoading}
+                                    buttonText={Literals.Button.Update[Profile.Language]}
+                                    submitFunction={this.handleSubmit}
+                                />
                             </Footerwrapper>
                         </Form>
                     </Contentwrapper>

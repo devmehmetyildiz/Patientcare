@@ -119,7 +119,9 @@ export default class Patientdefines extends Component {
                   list={list}
                   initialConfig={initialConfig}
                   metaKey={metaKey}
-                  AddRecord={AddRecordPatientdefines}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
                 />
               </Grid>
             </Headerwrapper>

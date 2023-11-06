@@ -18,6 +18,8 @@ import { FormContext } from '../../Provider/FormProvider'
 import PatientdefinesCreate from '../../Containers/Patientdefines/PatientdefinesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import CasesCreate from '../../Containers/Cases/CasesCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class PreregistrationsCreate extends Component {
 
   PAGE_NAME = 'PreregistrationsCreate'
@@ -117,7 +119,7 @@ export default class PreregistrationsCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+          <Form>
               {!this.state.newRegister ?
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Patientdefine[Profile.Language]} name="PatientdefineID" options={Patientdefineoptions} formtype="dropdown" required additionalicon={changeRegistertype} modal={PatientdefinesCreate} />
                 :
@@ -145,10 +147,16 @@ export default class PreregistrationsCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Approvaldate[Profile.Language]} name="Approvaldate" type='date' required />
               </Form.Group>
               <Footerwrapper>
-                {history && <Link to="/Preregistrations">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Preregistrations"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

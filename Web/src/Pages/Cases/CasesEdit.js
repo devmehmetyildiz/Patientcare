@@ -16,6 +16,8 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class CasesEdit extends Component {
 
   PAGE_NAME = 'CasesEdit'
@@ -92,7 +94,7 @@ export default class CasesEdit extends Component {
     }).filter(u => u).length > 0
 
     return (
-      Cases.isLoading || Cases.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
+      Cases.isLoading || Cases.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -105,7 +107,7 @@ export default class CasesEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
@@ -124,10 +126,16 @@ export default class CasesEdit extends Component {
                   <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isroutinework[Profile.Language]} name="Isroutinework" formtype="checkbox" />
                 </Form.Group>}
               <Footerwrapper>
-                {history && <Link to="/Cases">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Cases"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Cases.isLoading}
+                  buttonText={Literals.Button.Update[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

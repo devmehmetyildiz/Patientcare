@@ -13,6 +13,7 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import PurchaseordersDelete from '../../Containers/Purchaseorders/PurchaseordersDelete'
 import PurchaseordersComplete from '../../Containers/Purchaseorders/PurcaseordersComplete'
+import Settings from '../../Common/Settings'
 
 export default class Purchaseorders extends Component {
 
@@ -109,14 +110,18 @@ export default class Purchaseorders extends Component {
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Purchaseorders/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Purchaseorders/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />

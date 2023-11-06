@@ -18,6 +18,8 @@ import { FormContext } from '../../Provider/FormProvider'
 import WarehousesCreate from '../../Containers/Warehouses/WarehousesCreate'
 import StockdefinesCreate from '../../Containers/Stockdefines/StockdefinesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class MedicinesEdit extends Component {
 
   PAGe_NAME = "MedicinesEdit"
@@ -66,7 +68,7 @@ export default class MedicinesEdit extends Component {
   }
 
   render() {
-    const { Stocks, Warehouses, Departments, Stockdefines, Profile } = this.props
+    const { Stocks, Warehouses, Departments, Stockdefines, Profile, history } = this.props
 
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive && u.Ishavepatients).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -92,7 +94,7 @@ export default class MedicinesEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' modal={WarehousesCreate} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' modal={StockdefinesCreate} />
@@ -108,10 +110,16 @@ export default class MedicinesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Medicines">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Medicines"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Stocks.isLoading}
+                  buttonText={Literals.Button.Update[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

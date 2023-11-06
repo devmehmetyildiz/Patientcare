@@ -15,6 +15,8 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
 import CheckperiodsCreate from '../../Containers/Checkperiods/CheckperiodsCreate'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class TododefinesEdit extends Component {
 
   PAGE_NAME = "TododefinesEdit"
@@ -51,7 +53,7 @@ export default class TododefinesEdit extends Component {
 
   render() {
 
-    const { Tododefines, Checkperiods, Profile } = this.props
+    const { Tododefines, Checkperiods, Profile, history } = this.props
     const { isLoading, isDispatching } = Tododefines
 
     const Checkperiodsoptions = (Checkperiods.list || []).filter(u => u.Isactive).map(checkperiod => {
@@ -72,7 +74,7 @@ export default class TododefinesEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
@@ -85,10 +87,16 @@ export default class TododefinesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsNeedactivation[Profile.Language]} name="IsNeedactivation" formtype="checkbox" />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Tododefines">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Tododefines"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Tododefines.isLoading}
+                  buttonText={Literals.Button.Update[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

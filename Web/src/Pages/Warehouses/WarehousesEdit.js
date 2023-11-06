@@ -22,8 +22,8 @@ export default class WarehousesEdit extends Component {
 
   constructor(props) {
     super(props)
-    this.state={
-      isDatafetched:false
+    this.state = {
+      isDatafetched: false
     }
   }
 
@@ -50,7 +50,7 @@ export default class WarehousesEdit extends Component {
 
   render() {
 
-    const { Warehouses, Profile } = this.props
+    const { Warehouses, Profile,history } = this.props
     const { isLoading, isDispatching } = Warehouses
 
     return (
@@ -67,7 +67,7 @@ export default class WarehousesEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Ismedicine[Profile.Language]} name="Ismedicine" formtype="checkbox" />

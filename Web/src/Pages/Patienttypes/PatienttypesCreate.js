@@ -15,6 +15,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import { FormContext } from '../../Provider/FormProvider'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 
 export default class PatienttypesCreate extends Component {
 
@@ -39,13 +41,19 @@ export default class PatienttypesCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Footerwrapper>
-                {history && <Link to="/Patienttypes">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Patienttypes"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Patienttypes.isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

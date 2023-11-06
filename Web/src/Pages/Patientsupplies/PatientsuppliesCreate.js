@@ -15,6 +15,8 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 
 export default class PatientsuppliesCreate extends Component {
 
@@ -38,7 +40,7 @@ export default class PatientsuppliesCreate extends Component {
 
 
   render() {
-    const { Patients, Patientstocks, Patientdefines, Departments, Stockdefines, Profile } = this.props
+    const { Patients, Patientstocks, Patientdefines, Departments, Stockdefines, Profile,history } = this.props
 
     const Departmentoptions = (Departments.list || []).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -81,7 +83,7 @@ export default class PatientsuppliesCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+          <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patient[Profile.Language]} name="PatientID" options={Patientoptions} formtype="dropdown" additionalicon={changeRegistertype} />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype="dropdown" />
@@ -95,10 +97,16 @@ export default class PatientsuppliesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Patientsupplies">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Patientsupplies"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Patientstocks.isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

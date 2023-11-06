@@ -14,6 +14,7 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import PurchaseordersuppliesDelete from '../../Containers/Purchaseordersupplies/PurchaseordersuppliesDelete'
 import PurchaseordersuppliesApprove from '../../Containers/Purchaseordersupplies/PurchaseordersuppliesApprove'
 import MobileTable from '../../Utils/MobileTable'
+import Settings from '../../Common/Settings'
 
 export default class Purchaseordersupplies extends Component {
 
@@ -87,21 +88,25 @@ export default class Purchaseordersupplies extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Purchaseordersupplies"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Purchaseordersupplies/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Purchaseordersupplies/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />

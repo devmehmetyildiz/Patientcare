@@ -17,6 +17,8 @@ import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
 import TododefinesCreate from '../../Containers/Tododefines/TododefinesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class TodogroupdefinesCreate extends Component {
 
   PAGE_NAME = "TodogroupdefinesCreate"
@@ -36,7 +38,7 @@ export default class TodogroupdefinesCreate extends Component {
 
 
   render() {
-    const { Todogroupdefines, Departments, Tododefines, Profile } = this.props
+    const { Todogroupdefines, Departments, Tododefines, Profile,history } = this.props
 
     const Tododefineoptions = (Tododefines.list || []).filter(u => u.Isactive).map(tododefine => {
       return { key: tododefine.Uuid, text: tododefine.Name, value: tododefine.Uuid }
@@ -59,17 +61,23 @@ export default class TodogroupdefinesCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Tododefines[Profile.Language]} name="Tododefines" multiple options={Tododefineoptions} formtype='dropdown' modal={TododefinesCreate} />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Todogroupdefines">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Todogroupdefines"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Todogroupdefines.isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

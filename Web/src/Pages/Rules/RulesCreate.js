@@ -16,6 +16,8 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import Editor from '@monaco-editor/react'
 import { FormContext } from '../../Provider/FormProvider'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class RulesCreate extends Component {
 
@@ -48,7 +50,7 @@ export default class RulesCreate extends Component {
                     </Headerwrapper>
                     <Pagedivider />
                     <Contentwrapper>
-                        <Form onSubmit={this.handleSubmit}>
+                        <Form>
                             <Tab className='station-tab'
                                 panes={[
                                     {
@@ -81,12 +83,18 @@ export default class RulesCreate extends Component {
                                 renderActiveOnly={false} />
                             <Footerwrapper>
                                 <Form.Group widths={'equal'}>
-                                    {history && <Link to="/Rules">
-                                        <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                                    </Link>}
+                                    <Gobackbutton
+                                        history={history}
+                                        redirectUrl={"/Rules"}
+                                        buttonText={Literals.Button.Goback[Profile.Language]}
+                                    />
                                     <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.clearForm(this.PAGE_NAME) }}>{Literals.Button.Clear[Profile.Language]}</Button>
                                 </Form.Group>
-                                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                                <Submitbutton
+                                    isLoading={isLoading}
+                                    buttonText={Literals.Button.Create[Profile.Language]}
+                                    submitFunction={this.handleSubmit}
+                                />
                             </Footerwrapper>
                         </Form>
                     </Contentwrapper>

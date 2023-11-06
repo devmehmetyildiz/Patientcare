@@ -17,6 +17,8 @@ import { FormContext } from '../../Provider/FormProvider'
 import StationsCreate from '../../Containers/Stations/StationsCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import RolesCreate from '../../Containers/Roles/RolesCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class UsersCreate extends Component {
 
@@ -37,7 +39,7 @@ export default class UsersCreate extends Component {
   }
 
   render() {
-    const { Departments, Users, Stations, Roles, Profile } = this.props
+    const { Departments, Users, Stations, Roles, Profile ,history} = this.props
 
     const Stationoptions = (Stations.list || []).filter(u => u.Isactive).map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
@@ -68,7 +70,7 @@ export default class UsersCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+          <Form>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Surname[Profile.Language]} name="Surname" />
@@ -91,10 +93,16 @@ export default class UsersCreate extends Component {
               </Form.Group>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Language[Profile.Language]} name="Language" options={Languageoptions} formtype='dropdown' />
               <Footerwrapper>
-                <Link to="/Users">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Users"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Users.isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

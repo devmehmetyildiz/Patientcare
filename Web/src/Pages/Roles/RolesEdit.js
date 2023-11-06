@@ -14,6 +14,8 @@ import FormInput from '../../Utils/FormInput'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class RolesEdit extends Component {
 
     PAGE_NAME = 'RolesEdit'
@@ -72,7 +74,7 @@ export default class RolesEdit extends Component {
                     </Headerwrapper>
                     <Pagedivider />
                     <Contentwrapper>
-                        <Form onSubmit={this.handleSubmit}>
+                        <Form>
                             <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                             <div className='w-full py-2'>
                                 <Search
@@ -81,7 +83,7 @@ export default class RolesEdit extends Component {
                                     showNoResults={false}
                                 />
                             </div>
-                            <div className='mb-4 outline outline-[1px] rounded-md outline-gray-200 p-4 overflow-y-auto max-h-[calc(100vh-26.2rem)]'>
+                            <div className={`mb-4 outline outline-[1px] rounded-md outline-gray-200 p-4 overflow-y-auto max-h-[calc(100vh-${Profile.Ismobile ? '27' : '30'}.2rem)]`}>
                                 {(decoratedgroups || []).map(privilegegroup => {
                                     return <div key={privilegegroup?.name} className="mb-8">
                                         <div className='flex flex-row justify-start items-center'>
@@ -93,7 +95,7 @@ export default class RolesEdit extends Component {
                                             />
                                         </div>
                                         <Divider className='w-full  h-[1px]' />
-                                        <div className='grid grid-cols-3 gap-2'>
+                                        <div className={`grid ${Profile.Ismobile ? 'grid-cols-1' : ' lg:grid-cols-3 md:grid-cols-2'} gap-2`}>
                                             {(privilegegroup?.privileges || []).map((privilege, index) => {
                                                 return <Checkbox toggle className='m-2'
                                                     checked={(this.state.selectedPrivileges.length > 0 ? this.state.selectedPrivileges : []).find(u => u.code === privilege.code) ? true : false}
@@ -108,12 +110,18 @@ export default class RolesEdit extends Component {
                             </div>
                             <Footerwrapper>
                                 <Form.Group widths={'equal'}>
-                                    {history && <Link to="/Roles">
-                                        <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                                    </Link>}
-                                    <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.setForm(this.PAGE_NAME, Roles.selected_record) }}>{Literals.Button.Clear[Profile.Language]}</Button>
+                                    <Gobackbutton
+                                        history={history}
+                                        redirectUrl={"/Roles"}
+                                        buttonText={Literals.Button.Goback[Profile.Language]}
+                                    />
+                                    <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.clearForm(this.PAGE_NAME) }}>{Literals.Button.Clear[Profile.Language]}</Button>
                                 </Form.Group>
-                                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                                <Submitbutton
+                                    isLoading={isLoading}
+                                    buttonText={Literals.Button.Update[Profile.Language]}
+                                    submitFunction={this.handleSubmit}
+                                />
                             </Footerwrapper>
                         </Form>
                     </Contentwrapper>
@@ -136,7 +144,7 @@ export default class RolesEdit extends Component {
         e.preventDefault()
 
         const { EditRoles, history, fillRolenotification, Roles, Profile } = this.props
-        const data = formToObject(e.target)
+        const data = this.context.getForm(this.PAGE_NAME)
         data.Privileges = this.state.selectedPrivileges.map(u => { return u.code })
         let errors = []
         if (!validator.isString(data.Name)) {

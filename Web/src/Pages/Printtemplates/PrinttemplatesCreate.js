@@ -17,6 +17,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class PrinttemplatesCreate extends Component {
 
   PAGE_NAME = 'PrinttemplatesCreate'
@@ -48,7 +50,7 @@ export default class PrinttemplatesCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form className='' onSubmit={this.handleSubmit}>
+          <Form>
               <Tab className='station-tab'
                 panes={[
                   {
@@ -95,12 +97,18 @@ export default class PrinttemplatesCreate extends Component {
                 renderActiveOnly={false} />
               <Footerwrapper>
                 <Form.Group widths={'equal'}>
-                  {history && <Link to="/Printtemplates">
-                    <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                  </Link>}
+                  <Gobackbutton
+                    history={history}
+                    redirectUrl={"/Printtemplates"}
+                    buttonText={Literals.Button.Goback[Profile.Language]}
+                  />
                   <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.clearForm(this.PAGE_NAME) }}>{Literals.Button.Clear[Profile.Language]}</Button>
                 </Form.Group>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Submitbutton
+                  isLoading={isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

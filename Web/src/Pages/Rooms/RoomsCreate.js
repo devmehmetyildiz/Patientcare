@@ -16,6 +16,8 @@ import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import FloorsCreate from '../../Containers/Floors/FloorsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class RoomsCreate extends Component {
 
   PAGE_NAME = "RoomsCreate"
@@ -33,7 +35,7 @@ export default class RoomsCreate extends Component {
   }
 
   render() {
-    const { Rooms, Floors, Profile } = this.props
+    const { Rooms, Floors, Profile ,history} = this.props
 
     const Floorsoptions = (Floors.list || []).filter(u => u.Isactive).map(Floor => {
       return { key: Floor.Uuid, text: Floor.Name, value: Floor.Uuid }
@@ -53,14 +55,20 @@ export default class RoomsCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+          <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.FloorID[Profile.Language]} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
               <Footerwrapper>
-                <Link to="/Rooms">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Rooms"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Rooms.isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

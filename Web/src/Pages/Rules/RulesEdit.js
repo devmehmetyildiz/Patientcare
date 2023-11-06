@@ -15,6 +15,8 @@ import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import Editor from '@monaco-editor/react'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 
 export default class RulesEdit extends Component {
 
@@ -67,7 +69,7 @@ export default class RulesEdit extends Component {
                     </Headerwrapper>
                     <Pagedivider />
                     <Contentwrapper>
-                        <Form onSubmit={this.handleSubmit}>
+                    <Form>
                             <Tab className='station-tab'
                                 panes={[
                                     {
@@ -100,12 +102,18 @@ export default class RulesEdit extends Component {
                                 renderActiveOnly={false} />
                             <Footerwrapper>
                                 <Form.Group widths={'equal'}>
-                                    {history && <Link to="/Rules">
-                                        <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                                    </Link>}
-                                    <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.setForm(this.PAGE_NAME, Rules.selected_record) }}>{Literals.Button.Clear[Profile.Language]}</Button>
+                                    <Gobackbutton
+                                        history={history}
+                                        redirectUrl={"/Rules"}
+                                        buttonText={Literals.Button.Goback[Profile.Language]}
+                                    />
+                                    <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.clearForm(this.PAGE_NAME) }}>{Literals.Button.Clear[Profile.Language]}</Button>
                                 </Form.Group>
-                                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                                <Submitbutton
+                                    isLoading={isLoading}
+                                    buttonText={Literals.Button.Update[Profile.Language]}
+                                    submitFunction={this.handleSubmit}
+                                />
                             </Footerwrapper>
                         </Form>
                     </Contentwrapper>

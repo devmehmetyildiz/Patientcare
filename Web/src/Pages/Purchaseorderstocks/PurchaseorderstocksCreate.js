@@ -18,6 +18,8 @@ import { FormContext } from '../../Provider/FormProvider'
 import PurchaseordersCreate from '../../Containers/Purchaseorders/PurchaseordersCreate'
 import StockdefinesCreate from '../../Containers/Stockdefines/StockdefinesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class PurchaseorderstocksCreate extends Component {
 
   PAGE_NAME = "PurchaseorderstocksCreate"
@@ -37,7 +39,7 @@ export default class PurchaseorderstocksCreate extends Component {
   }
 
   render() {
-    const { Purchaseorders, Purchaseorderstocks, Departments, Stockdefines, Profile } = this.props
+    const { Purchaseorders, Purchaseorderstocks, Departments, Stockdefines, Profile, history } = this.props
 
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -63,7 +65,7 @@ export default class PurchaseorderstocksCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchaseorder[Profile.Language]} name="PurchaseorderID" options={Purchaseorderoptions} formtype='dropdown' modal={PurchaseordersCreate} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype='dropdown' modal={StockdefinesCreate} />
@@ -73,10 +75,16 @@ export default class PurchaseorderstocksCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Purchaseorderstocks">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Purchaseorderstocks"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Purchaseorderstocks.isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

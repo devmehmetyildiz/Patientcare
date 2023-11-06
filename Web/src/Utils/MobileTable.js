@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Grid, Icon, Modal } from 'semantic-ui-react'
+import Pagedivider from '../Common/Styled/Pagedivider'
 
 export default function MobileTable(props) {
 
@@ -56,14 +57,17 @@ export default function MobileTable(props) {
                         <div className='m-4 overflow-y-auto overflow-x-hidden max-h-[80vh]'>
                             <Grid columns={2} className='p-4' divided>
                                 {(columns || []).map(u => {
-                                    return <Grid.Row key={Math.random()} divided>
-                                        <Grid.Column>
-                                            {u.Header}
-                                        </Grid.Column>
-                                        <Grid.Column>
-                                            {(u.Cell && !u.dontuseCell) ? u.Cell({ value: rowData[u.accessor] }) : rowData[u.accessor]}
-                                        </Grid.Column>
-                                    </Grid.Row>
+                                    return <React.Fragment>
+                                        <Grid.Row key={Math.random()} divided>
+                                            <Grid.Column>
+                                                <strong>{u.Header}</strong>
+                                            </Grid.Column>
+                                            <Grid.Column>
+                                                {(u.Cell && !u.dontuseCell) ? u.Cell({ value: rowData[u.accessor] }) : rowData[u.accessor]}
+                                            </Grid.Column>
+                                        </Grid.Row>
+                                        <Pagedivider />
+                                    </React.Fragment>
                                 })}
                                 <Grid.Row divided className='w-full'>
                                     <Grid.Column></Grid.Column>

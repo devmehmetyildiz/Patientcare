@@ -19,6 +19,7 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import DataTable from '../../Utils/DataTable'
 import { Collapse } from 'react-collapse';
 import MobileTable from '../../Utils/MobileTable'
+import Settings from '../../Common/Settings'
 
 export default class Patients extends Component {
 
@@ -131,16 +132,22 @@ export default class Patients extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Patients"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  Showcolumnchooser
+                  Showexcelexport
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />

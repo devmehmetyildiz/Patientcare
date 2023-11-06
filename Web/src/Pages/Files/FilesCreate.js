@@ -12,6 +12,8 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export class FilesCreate extends Component {
 
   constructor(props) {
@@ -22,7 +24,8 @@ export class FilesCreate extends Component {
   }
   render() {
 
-    const { isLoading, isDispatching, Profile } = this.props
+    const { Files, Profile,history } = this.props
+    const { isLoading, isDispatching } = Files
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
@@ -38,7 +41,7 @@ export class FilesCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Table celled className='list-table' key='product-create-type-conversion-table' >
                 <Table.Header>
                   <Table.Row>
@@ -75,10 +78,16 @@ export class FilesCreate extends Component {
                 </Table.Footer>
               </Table>
               <Footerwrapper>
-                <Link to="/Files">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Files"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Files.isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

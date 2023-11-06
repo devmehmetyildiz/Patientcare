@@ -1,24 +1,31 @@
 import cogoToast from "@successtar/cogo-toast";
+import { toast } from 'react-toastify';
+
+
+const CustomToast = ({ title, message }) => (
+    <div>
+        <strong>{title}</strong>
+        <div>{message}</div>
+    </div>
+);
 
 function Notification(notifications, removeNotification) {
     if (notifications && notifications.length > 0) {
-        const { type, code, description } = notifications[0]
-        const toastoptions = {
-            hideAfter: 5,
-            position: 'top-right',
-            heading: code
-        }
-        switch (type) {
-            case "Success":
-                cogoToast.success(description, toastoptions)
-                break;
-            case "Error":
-                cogoToast.error(description, toastoptions)
-                break;
-            default:
-                break;
-        }
-        removeNotification()
+        notifications.forEach((notification, index) => {
+            const { type, code, description } = notification
+            switch (type) {
+                case "Success":
+                    toast.success(<CustomToast title={code} message={description} />);
+                    break;
+                case "Error":
+                    toast.error(<CustomToast title={code} message={description} />);
+
+                    break;
+                default:
+                    break;
+            }
+            removeNotification()
+        });
     }
 }
 

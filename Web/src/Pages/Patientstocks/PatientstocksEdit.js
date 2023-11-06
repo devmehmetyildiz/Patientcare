@@ -16,6 +16,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Patientdefines from '../../Containers/Patientdefines/Patientdefines'
 import { FormContext } from '../../Provider/FormProvider'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class PatientstocksEdit extends Component {
 
   PAGE_NAME = 'PatientstocksEdit'
@@ -66,7 +68,7 @@ export default class PatientstocksEdit extends Component {
   }
 
   render() {
-    const { Patientstocks, Patients, Departments, Stockdefines, Profile, Patientdefines } = this.props
+    const { Patientstocks, Patients, Departments, Stockdefines, Profile, Patientdefines, history } = this.props
 
     const { selected_record } = Patientstocks
 
@@ -102,14 +104,20 @@ export default class PatientstocksEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Label>{`${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`}</Label>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype="dropdown" />
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
               <Footerwrapper>
-                <Link to="/Patientstocks">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Patientstocks"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Patientstocks.isLoading}
+                  buttonText={Literals.Button.Update[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>

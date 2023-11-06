@@ -17,6 +17,8 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import { FormContext } from '../../Provider/FormProvider'
 import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class CasesCreate extends Component {
 
   PAGE_NAME = 'CasesCreate'
@@ -78,7 +80,7 @@ export default class CasesCreate extends Component {
 
 
     return (
-      Cases.isLoading || Cases.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
+      Cases.isLoading || Cases.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -91,7 +93,7 @@ export default class CasesCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
@@ -110,10 +112,16 @@ export default class CasesCreate extends Component {
                   <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isroutinework[Profile.Language]} name="Isroutinework" formtype="checkbox" />
                 </Form.Group>}
               <Footerwrapper>
-                {history && <Link to="/Cases">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Cases"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={Cases.isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>
@@ -124,8 +132,8 @@ export default class CasesCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddCases, history, Departments, fillCasenotification, Profile , closeModal} = this.props
-    const data = formToObject(e.target)
+    const { AddCases, history, Departments, fillCasenotification, Profile, closeModal } = this.props
+    const data = this.context.getForm(this.PAGE_NAME)
 
     const ispatientdepartmentselected = (this.context.formstates[`${this.PAGE_NAME}/Departments`] || []).map(id => {
       let isHave = false
@@ -167,7 +175,7 @@ export default class CasesCreate extends Component {
         fillCasenotification(error)
       })
     } else {
-      AddCases({ data, history , closeModal})
+      AddCases({ data, history, closeModal })
     }
   }
 }

@@ -14,6 +14,7 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import WarehousesDelete from '../../Containers/Warehouses/WarehousesDelete'
 import ExcelImport from '../../Containers/Utils/ExcelImport'
 import ExcelExport from '../../Containers/Utils/ExcelExport'
+import Settings from '../../Common/Settings'
 
 export default class Warehouses extends Component {
 
@@ -84,23 +85,25 @@ export default class Warehouses extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Warehouses"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Warehouses/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                  <ExcelImport columns={Columns} addData={AddRecordCases} />
-                  <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Warehouses/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />

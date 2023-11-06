@@ -59,6 +59,17 @@ class ColumnChooser extends Component {
     }
   }
 
+  Cellwrapper = (children, columnname) => {
+    const { Profile } = this.props
+
+    return Profile.Ismobile ?
+      <div className='w-full flex justify-between items-center'>
+        <Label>{columnname}</Label>
+        {children}
+      </div> :
+      children
+  }
+
   render() {
 
     const { Profile } = this.props
@@ -73,31 +84,32 @@ class ColumnChooser extends Component {
         <Modal.Header><Icon name='columns' />{Literals.Page.Pageheader[Profile.Language]}</Modal.Header>
         <Modal.Content scrolling>
           <Table celled className='list-table ' key='product-create-type-conversion-table ' >
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
-                <Table.HeaderCell width={2}>{Literals.Columns.Visible[Profile.Language]}</Table.HeaderCell>
-                <Table.HeaderCell width={1}>{Literals.Columns.Group[Profile.Language]}</Table.HeaderCell>
-                <Table.HeaderCell width={1}>{Literals.Columns.Columnname[Profile.Language]}</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
+            {!Profile.Ismobile &&
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell width={1}>{Literals.Columns.Columnname[Profile.Language]}</Table.HeaderCell>
+                  <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
+                  <Table.HeaderCell width={2}>{Literals.Columns.Visible[Profile.Language]}</Table.HeaderCell>
+                  <Table.HeaderCell width={1}>{Literals.Columns.Group[Profile.Language]}</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>}
             <Table.Body>
               {(decoratedColumns.length > 0 ? decoratedColumns.sort((a, b) => a.order - b.order) : []).filter(u => validator.isString(u.name)).map((column, index) => {
                 return <Table.Row key={Math.random()}>
+                  <Table.Cell className='table-last-section'>
+                    {this.Cellwrapper(<Label>{`${column.name}`}</Label>, Literals.Columns.Columnname[Profile.Language])}
+                  </Table.Cell>
                   <Table.Cell>
-                    <Button.Group basic size='small'>
+                    {this.Cellwrapper(<Button.Group basic size='small'>
                       <Button type='button' disabled={index === 0} icon='angle up' onClick={() => { this.orderChanged(column.key, column.order - 1) }} />
                       <Button type='button' disabled={index + 1 === decoratedColumns.length} icon='angle down' onClick={() => { this.orderChanged(column.key, column.order + 1) }} />
-                    </Button.Group>
+                    </Button.Group>, Literals.Columns.Order[Profile.Language])}
                   </Table.Cell>
                   <Table.Cell>
-                    <Checkbox toggle className='m-2' checked={column.isVisible} onClick={(e) => { this.visibleChanged(column.key) }} />
+                    {this.Cellwrapper(<Checkbox toggle className='m-2' checked={column.isVisible} onClick={(e) => { this.visibleChanged(column.key) }} />, Literals.Columns.Visible[Profile.Language])}
                   </Table.Cell>
                   <Table.Cell>
-                    <Checkbox disabled={!column.isVisible} readOnly={!column.isVisible} toggle className='m-2' checked={column.isGroup} onClick={(e) => { column.isVisible && this.groupChanged(column.key) }} />
-                  </Table.Cell>
-                  <Table.Cell className='table-last-section'>
-                    <Label>{`${column.name}`}</Label>
+                    {this.Cellwrapper(<Checkbox disabled={!column.isVisible} readOnly={!column.isVisible} toggle className='m-2' checked={column.isGroup} onClick={(e) => { column.isVisible && this.groupChanged(column.key) }} />, Literals.Columns.Group[Profile.Language])}
                   </Table.Cell>
                 </Table.Row>
               })}
@@ -112,7 +124,7 @@ class ColumnChooser extends Component {
           </Form.Group>
         </Modal.Actions>
       </Modal>
-    </React.Fragment>
+    </React.Fragment >
   }
 
   saveChanges = () => {
