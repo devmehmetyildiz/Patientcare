@@ -90,20 +90,20 @@ export default class CheckperiodsEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodtype[Profile.Language]} name="Periodtype" options={Periodtypeoption} formtype="dropdown" />
               </Form.Group>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodstxt[Profile.Language]} name="Periods" multiple options={Periodoptions} formtype="dropdown" modal={PeriodsCreate} />
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Checkperiods"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Checkperiods.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Checkperiods"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Checkperiods.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -113,9 +113,8 @@ export default class CheckperiodsEdit extends Component {
     e.preventDefault()
 
     const { EditCheckperiods, history, fillCheckperiodnotification, Periods, Checkperiods, Profile } = this.props
-    const data = formToObject(e.target)
-    data.Periodtype = this.context.formstates[`${this.PAGE_NAME}/Periodtype`]
-    data.Periods = this.context.formstates[`${this.PAGE_NAME}/Periods`].map(id => {
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Periods = data.Periods.map(id => {
       return (Periods.list || []).find(u => u.Uuid === id)
     })
     data.Occureddays && (data.Occureddays = parseInt(data.Occureddays))

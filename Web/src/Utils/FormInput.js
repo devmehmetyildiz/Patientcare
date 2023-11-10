@@ -25,7 +25,7 @@ export default function FormInput(props) {
             if (props.formtype === 'checkbox') {
                 defaultvalue = false
             }
-            if (props.formtype === 'dropdown') {
+            if (props.formtype === 'dropdown' && props.multiple) {
                 defaultvalue = []
             }
             context.setBuffer((prevArray) => [...prevArray, { key: name, value: defaultvalue }])
@@ -86,7 +86,7 @@ export default function FormInput(props) {
                                 const res = validationfunc(e.target.value)
                                 setIsvalidate(res)
                             }
-                            context.setFormstates({ ...formdata, [name]: e.target.value })
+                            context.setFormstates({ ...formdata, [name]: props.type === 'number' ? parseFloat(e.target.value) : e.target.value })
                         }} onKeyPress={(e) => { handleKeyPress(e) }} onKeyUp={onKeyUpinput} fluid >
                         </Form.Input>
                         :

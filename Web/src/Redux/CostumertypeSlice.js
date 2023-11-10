@@ -63,7 +63,7 @@ export const GetCostumertype = createAsyncThunk(
 
 export const AddCostumertypes = createAsyncThunk(
     'Costumertypes/AddCostumertypes',
-    async ({data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -71,7 +71,7 @@ export const AddCostumertypes = createAsyncThunk(
             dispatch(fillCostumertypenotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             dispatch(fillCostumertypenotification({
                 type: 'Clear',
@@ -100,7 +100,7 @@ export const AddRecordCostumertypes = createAsyncThunk(
             dispatch(fillCostumertypenotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('CostumerypesCreate')
             closeModal && closeModal()
@@ -124,7 +124,7 @@ export const EditCostumertypes = createAsyncThunk(
             dispatch(fillCostumertypenotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('CostumertypesUpdate')
             closeModal && closeModal()
@@ -149,7 +149,7 @@ export const DeleteCostumertypes = createAsyncThunk(
             dispatch(fillCostumertypenotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
             }));
             return response.data;
         } catch (error) {
@@ -181,7 +181,7 @@ export const CostumertypesSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeCostumertypenotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload

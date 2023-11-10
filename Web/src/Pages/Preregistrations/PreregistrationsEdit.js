@@ -61,15 +61,15 @@ export default class PreregistrationsEdit extends Component {
     const { Patientdefines, Patients, Departments, Cases, history, Profile } = this.props
     const { isLoading, isDispatching } = Patients
 
-    const Patientdefineoptions = Patientdefines.list.map(define => {
+    const Patientdefineoptions = (Patientdefines.list || []).map(define => {
       return { key: define.Uuid, text: `${define.Firstname} ${define.Lastname}-${define.CountryID}`, value: define.Uuid }
     })
 
-    const Departmentoptions = Departments.list.map(department => {
+    const Departmentoptions = (Departments.list || []).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const Casesoptions = Cases.list.filter(u => u.Casestatus !== 1).map(cases => {
+    const Casesoptions = (Cases.list || []).filter(u => u.Casestatus !== 1).map(cases => {
       return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
     })
 
@@ -88,7 +88,7 @@ export default class PreregistrationsEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-          <Form>
+            <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patientdefine[Profile.Language]} name="PatientdefineID" options={Patientdefineoptions} formtype="dropdown" />
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Deparment[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
@@ -120,16 +120,13 @@ export default class PreregistrationsEdit extends Component {
     e.preventDefault()
 
     const { fillPatientnotification, Patients, EditPatients, history, Profile } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
     if (!validator.isISODate(data.Registerdate)) {
       data.Registerdate = null
     }
     if (!validator.isISODate(data.Approvaldate)) {
       data.Approvaldate = null
     }
-    data.CaseID = this.context.formstates[`${this.PAGE_NAME}/CaseID`]
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.PatientdefineID = this.context.formstates[`${this.PAGE_NAME}/PatientdefineID`]
 
     let errors = []
     if (!validator.isUUID(data.PatientdefineID)) {

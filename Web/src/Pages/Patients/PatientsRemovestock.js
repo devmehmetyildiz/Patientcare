@@ -18,6 +18,8 @@ import config from '../../Config'
 import { PATIENTMOVEMENTTYPE, ROUTES } from '../../Utils/Constants'
 import DataTable from '../../Utils/DataTable'
 import NoDataScreen from '../../Utils/NoDataScreen'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class PatientsRemovestock extends Component {
 
@@ -146,7 +148,7 @@ export default class PatientsRemovestock extends Component {
                     </Headerwrapper>
                     <Pagedivider />
                     <Contentwrapper>
-                        <Form onSubmit={this.handleSubmit}>
+                        <Form>
                             <Label>{Literals.RemoveStock.Availablestocks[Profile.Language]}</Label>
                             <Pagedivider />
                             {Patientstocklist.length > 0 ?
@@ -160,11 +162,16 @@ export default class PatientsRemovestock extends Component {
                                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.RemoveStock.Amount[Profile.Language]} name="Amount" type="number" />
                             </Form.Group>
                             <Footerwrapper>
-                                {history && <Button onClick={(e) => {
-                                    e.preventDefault()
-                                    history.length > 1 ? history.goBack() : history.push(Id ? `/Patients/${Id}` : `/Patients`)
-                                }} floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>}
-                                <Button floated="right" type='submit' color='blue'>{Literals.Button.Remove[Profile.Language]}</Button>
+                                <Gobackbutton
+                                    history={history}
+                                    redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
+                                    buttonText={Literals.Button.Goback[Profile.Language]}
+                                />
+                                <Submitbutton
+                                    isLoading={isLoadingstatus}
+                                    buttonText={Literals.Button.Remove[Profile.Language]}
+                                    submitFunction={this.handleSubmit}
+                                />
                             </Footerwrapper>
                         </Form>
                     </Contentwrapper>
@@ -176,10 +183,7 @@ export default class PatientsRemovestock extends Component {
         e.preventDefault()
         const { history, Profile, Patientstockmovements, fillStocknotification, TransferfromPatient, match, PatientID } = this.props
         let Id = PatientID || match?.params?.PatientID
-        const data = formToObject(e.target)
-        data.Amount = parseFloat(data.Amount)
-        data.WarehouseID = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
-        data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
+        const data = this.context.getForm(this.PAGE_NAME)
         data.PatientID = Id
         let errors = []
         if (!validator.isUUID(data.WarehouseID)) {

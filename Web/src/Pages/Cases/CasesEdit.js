@@ -125,20 +125,20 @@ export default class CasesEdit extends Component {
                   <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Iscalculateprice[Profile.Language]} name="Iscalculateprice" formtype="checkbox" />
                   <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isroutinework[Profile.Language]} name="Isroutinework" formtype="checkbox" />
                 </Form.Group>}
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Cases"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Cases.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Cases"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Cases.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -148,9 +148,9 @@ export default class CasesEdit extends Component {
     e.preventDefault()
 
     const { EditCases, history, fillCasenotification, Departments, Cases, Profile } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
 
-    const ispatientdepartmentselected = (this.context.formstates[`${this.PAGE_NAME}/Departments`] || []).map(id => {
+    const ispatientdepartmentselected = data.Departments.map(id => {
       let isHave = false
       const department = (Departments.list || []).find(u => u.Uuid === id)
       if (department && department.Ishavepatients) {
@@ -159,11 +159,10 @@ export default class CasesEdit extends Component {
       return isHave
     }).filter(u => u).length > 0
 
-    data.CaseStatus = this.context.formstates[`${this.PAGE_NAME}/CaseStatus`]
-    data.Patientstatus = ispatientdepartmentselected ? this.context.formstates[`${this.PAGE_NAME}/Patientstatus`] : 0
-    data.Iscalculateprice = ispatientdepartmentselected ? this.context.formstates[`${this.PAGE_NAME}/Iscalculateprice`] : false
-    data.Isroutinework = ispatientdepartmentselected ? this.context.formstates[`${this.PAGE_NAME}/Isroutinework`] : false
-    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+    data.Patientstatus = ispatientdepartmentselected ? data.Patientstatus : 0
+    data.Iscalculateprice = ispatientdepartmentselected ? data.Iscalculateprice || false : false
+    data.Isroutinework = ispatientdepartmentselected ? data.Isroutinework || false : false
+    data.Departments = data.Departments.map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)
     })
 

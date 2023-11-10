@@ -69,7 +69,7 @@ export default class RulesEdit extends Component {
                     </Headerwrapper>
                     <Pagedivider />
                     <Contentwrapper>
-                    <Form>
+                        <Form>
                             <Tab className='station-tab'
                                 panes={[
                                     {
@@ -100,23 +100,25 @@ export default class RulesEdit extends Component {
                                     }
                                 ]}
                                 renderActiveOnly={false} />
-                            <Footerwrapper>
-                                <Form.Group widths={'equal'}>
-                                    <Gobackbutton
-                                        history={history}
-                                        redirectUrl={"/Rules"}
-                                        buttonText={Literals.Button.Goback[Profile.Language]}
-                                    />
-                                    <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.clearForm(this.PAGE_NAME) }}>{Literals.Button.Clear[Profile.Language]}</Button>
-                                </Form.Group>
-                                <Submitbutton
-                                    isLoading={isLoading}
-                                    buttonText={Literals.Button.Update[Profile.Language]}
-                                    submitFunction={this.handleSubmit}
-                                />
-                            </Footerwrapper>
                         </Form>
                     </Contentwrapper>
+                    <Footerwrapper>
+                        <Form.Group widths={'equal'}>
+                            <Gobackbutton
+                                history={history}
+                                redirectUrl={"/Rules"}
+                                buttonText={Literals.Button.Goback[Profile.Language]}
+                            />
+                            <Button floated="right" type="button" color='grey' onClick={(e) => {
+                                this.setState({ template: '' })
+                            }}>{Literals.Button.Clear[Profile.Language]}</Button>
+                        </Form.Group>
+                        <Submitbutton
+                            isLoading={isLoading}
+                            buttonText={Literals.Button.Update[Profile.Language]}
+                            submitFunction={this.handleSubmit}
+                        />
+                    </Footerwrapper>
                 </Pagewrapper >
         )
     }
@@ -125,9 +127,8 @@ export default class RulesEdit extends Component {
         e.preventDefault()
 
         const { EditRules, history, fillRulenotification, Rules, Profile } = this.props
-        const data = formToObject(e.target)
+        const data = this.context.getForm(this.PAGE_NAME)
         data.Rule = this.state.template
-        data.Status = this.context.formstates[`${this.PAGE_NAME}/Status`] || false
         let errors = []
         if (!validator.isString(data.Name)) {
             errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })

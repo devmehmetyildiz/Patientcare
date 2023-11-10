@@ -96,7 +96,7 @@ export default class Stockmovements extends Component {
                 <Settings
                   Profile={Profile}
                   Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
-                  Pagecreatelink={"/Stockdefines/Create"}
+                  Pagecreatelink={"/Stockmovements/Create"}
                   Columns={Columns}
                   list={list}
                   initialConfig={initialConfig}

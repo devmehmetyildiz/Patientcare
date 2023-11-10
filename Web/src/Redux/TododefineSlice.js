@@ -70,7 +70,7 @@ export const AddTododefines = createAsyncThunk(
             dispatch(fillTododefinenotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('TododefinesCreate')
             closeModal && closeModal()
@@ -94,7 +94,7 @@ export const AddRecordTododefines = createAsyncThunk(
             dispatch(fillTododefinenotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('TododefinesCreate')
             closeModal && closeModal()
@@ -110,7 +110,7 @@ export const AddRecordTododefines = createAsyncThunk(
 
 export const EditTododefines = createAsyncThunk(
     'Tododefines/EditTododefines',
-    async ({ data, history, redirectUrl, closeModal, clearForm  }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -118,7 +118,7 @@ export const EditTododefines = createAsyncThunk(
             dispatch(fillTododefinenotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('TododefinesUpdate')
             closeModal && closeModal()
@@ -143,7 +143,7 @@ export const DeleteTododefines = createAsyncThunk(
             dispatch(fillTododefinenotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
             }));
             return response.data;
         } catch (error) {
@@ -175,7 +175,7 @@ export const TododefinesSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeTododefinenotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload

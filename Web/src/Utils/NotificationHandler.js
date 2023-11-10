@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { removeBednotification } from "../Redux/BedSlice"
 import { removeCasenotification } from "../Redux/CaseSlice"
 import { removeCheckperiodnotification } from "../Redux/CheckperiodSlice"
+import { removePeriodnotification } from "../Redux/PeriodSlice"
 import { removeCostumertypenotification } from "../Redux/CostumertypeSlice"
 import { removeDepartmentnotification } from "../Redux/DepartmentSlice"
 import { removeFilenotification } from "../Redux/FileSlice"
@@ -21,6 +22,7 @@ import { removePurchaseorderstockmovementnotification } from "../Redux/Purchaseo
 import { removeRolenotification } from "../Redux/RoleSlice"
 import { removeRoomnotification } from "../Redux/RoomSlice"
 import { removeRulenotification } from "../Redux/RuleSlice"
+import { removePrinttemplatenotification } from "../Redux/PrinttemplateSlice"
 import { removeStationnotification } from "../Redux/StationSlice"
 import { removeStockdefinenotification } from "../Redux/StockdefineSlice"
 import { removeStockmovementnotification } from "../Redux/StockmovementSlice"
@@ -40,24 +42,24 @@ export function NotificationHandler(props) {
             removeWarehousenotification, removeUsernotification, removeUnitnotification, removeTodonotification,
             removeTodogroupdefinenotification, removeTododefinenotification, removeStocknotification,
             removeStockmovementnotification, removeStockdefinenotification, removeStationnotification,
-            removeRulenotification, removeRoomnotification, removeRolenotification,
+            removeRulenotification, removePrinttemplatenotification, removeRoomnotification, removeRolenotification,
             removePurchaseorderstockmovementnotification, removePurchaseorderstocknotification,
             removePurchaseordernotification, removenotification, removePatienttypenotification,
             removePatientstocknotification, removePatientstockmovementnotification, removePatientnotification,
             removePatientmovementnotification, removePatientdefinenotification, removeMailsettingnotification,
             removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
-            removeCheckperiodnotification, removeCasenotification, removeBednotification
+            removeCheckperiodnotification, removePeriodnotification, removeCasenotification, removeBednotification
         } = props
 
         const {
             Warehouses, Users, Units, Todos,
             Todogroupdefines, Tododefines, Stocks, Stockmovements,
-            Stockdefines, Stations, Rules, Rooms,
+            Stockdefines, Stations, Rules, Printtemplates, Rooms,
             Roles, Purchaseorderstockmovements, Purchaseorderstocks, Purchaseorders,
             Profile, Patienttypes, Patientstocks, Patientstockmovements,
             Patients, Patientmovements, Patientdefines, Mailsettings,
             Floors, Files, Departments, Costumertypes,
-            Checkperiods, Cases, Beds
+            Checkperiods, Periods, Cases, Beds
         } = props.states
 
         Notification(Warehouses.notifications, removeWarehousenotification)
@@ -71,6 +73,7 @@ export function NotificationHandler(props) {
         Notification(Stockdefines.notifications, removeStockdefinenotification)
         Notification(Stations.notifications, removeStationnotification)
         Notification(Rules.notifications, removeRulenotification)
+        Notification(Printtemplates.notifications, removePrinttemplatenotification)
         Notification(Rooms.notifications, removeRoomnotification)
         Notification(Roles.notifications, removeRolenotification)
         Notification(Purchaseorderstockmovements.notifications, removePurchaseorderstockmovementnotification)
@@ -90,6 +93,7 @@ export function NotificationHandler(props) {
         Notification(Departments.notifications, removeDepartmentnotification)
         Notification(Costumertypes.notifications, removeCostumertypenotification)
         Notification(Checkperiods.notifications, removeCheckperiodnotification)
+        Notification(Periods.notifications, removePeriodnotification)
         Notification(Cases.notifications, removeCasenotification)
         Notification(Beds.notifications, removeBednotification)
     })
@@ -105,13 +109,13 @@ const mapDispatchToProps = {
     removeWarehousenotification, removeUsernotification, removeUnitnotification, removeTodonotification,
     removeTodogroupdefinenotification, removeTododefinenotification, removeStocknotification,
     removeStockmovementnotification, removeStockdefinenotification, removeStationnotification,
-    removeRulenotification, removeRoomnotification, removeRolenotification,
+    removeRulenotification, removePrinttemplatenotification, removeRoomnotification, removeRolenotification,
     removePurchaseorderstockmovementnotification, removePurchaseorderstocknotification,
     removePurchaseordernotification, removenotification, removePatienttypenotification,
     removePatientstocknotification, removePatientstockmovementnotification, removePatientnotification,
     removePatientmovementnotification, removePatientdefinenotification, removeMailsettingnotification,
     removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
-    removeCheckperiodnotification, removeCasenotification, removeBednotification
+    removeCheckperiodnotification, removePeriodnotification, removeCasenotification, removeBednotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationHandler)

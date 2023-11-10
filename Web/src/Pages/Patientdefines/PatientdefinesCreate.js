@@ -28,7 +28,7 @@ export default class PatientdefinesCreate extends Component {
   }
 
   render() {
-    const { Costumertypes, Patienttypes, Patientdefines, Profile, history } = this.props
+    const { Costumertypes, Patienttypes, Patientdefines, Profile, history, closeModal } = this.props
 
     const Costumertypeoptions = (Costumertypes.list || []).filter(u => u.Isactive).map(costumertype => {
       return { key: costumertype.Uuid, text: costumertype.Name, value: costumertype.Uuid }
@@ -62,6 +62,7 @@ export default class PatientdefinesCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
@@ -136,14 +137,7 @@ export default class PatientdefinesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddPatientdefines, history, fillPatientdefinenotification, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
-    data.PatienttypeID = this.context.formstates[`${this.PAGE_NAME}/PatienttypeID`]
-    data.CostumertypeID = this.context.formstates[`${this.PAGE_NAME}/CostumertypeID`]
-    data.Ismotheralive = this.context.formstates[`${this.PAGE_NAME}/Ismotheralive`] || false
-    data.Isfatheralive = this.context.formstates[`${this.PAGE_NAME}/Isfatheralive`] || false
-    data.Gender = this.context.formstates[`${this.PAGE_NAME}/Gender`]
-    data.Motherbiologicalaffinity = this.context.formstates[`${this.PAGE_NAME}/Motherbiologicalaffinity`]
-    data.Fatherbiologicalaffinity = this.context.formstates[`${this.PAGE_NAME}/selectedFatheralaffinity`]
+    const data = this.context.getForm(this.PAGE_NAME)
 
     if (!data.Dateofbirth || data.Dateofbirth === '') {
       data.Dateofbirth = null

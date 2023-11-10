@@ -37,7 +37,7 @@ export default class CasesCreate extends Component {
 
 
   render() {
-    const { Cases, Departments, Profile, history } = this.props
+    const { Cases, Departments, Profile, history, closeModal } = this.props
 
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -90,6 +90,7 @@ export default class CasesCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
@@ -111,20 +112,20 @@ export default class CasesCreate extends Component {
                   <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Iscalculateprice[Profile.Language]} name="Iscalculateprice" formtype="checkbox" />
                   <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isroutinework[Profile.Language]} name="Isroutinework" formtype="checkbox" />
                 </Form.Group>}
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Cases"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Cases.isLoading}
-                  buttonText={Literals.Button.Create[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Cases"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Cases.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -135,7 +136,7 @@ export default class CasesCreate extends Component {
     const { AddCases, history, Departments, fillCasenotification, Profile, closeModal } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
 
-    const ispatientdepartmentselected = (this.context.formstates[`${this.PAGE_NAME}/Departments`] || []).map(id => {
+    const ispatientdepartmentselected = data.Departments.map(id => {
       let isHave = false
       const department = (Departments.list || []).find(u => u.Uuid === id)
       if (department && department.Ishavepatients) {
@@ -144,11 +145,10 @@ export default class CasesCreate extends Component {
       return isHave
     }).filter(u => u).length > 0
 
-    data.CaseStatus = this.context.formstates[`${this.PAGE_NAME}/CaseStatus`]
-    data.Patientstatus = ispatientdepartmentselected ? this.context.formstates[`${this.PAGE_NAME}/Patientstatus`] : 0
-    data.Iscalculateprice = ispatientdepartmentselected ? this.context.formstates[`${this.PAGE_NAME}/Iscalculateprice`] || false : false
-    data.Isroutinework = ispatientdepartmentselected ? this.context.formstates[`${this.PAGE_NAME}/Isroutinework`] || false : false
-    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+    data.Patientstatus = ispatientdepartmentselected ? data.Patientstatus : 0
+    data.Iscalculateprice = ispatientdepartmentselected ? data.Iscalculateprice || false : false
+    data.Isroutinework = ispatientdepartmentselected ? data.Isroutinework || false : false
+    data.Departments = data.Departments.map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)
     })
     let errors = []

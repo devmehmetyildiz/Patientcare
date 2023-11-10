@@ -28,7 +28,7 @@ export default class StockmovementsCreate extends Component {
   }
 
   render() {
-    const { Stockmovements, Stocks, Stockdefines, Profile, location, history } = this.props
+    const { Stockmovements, Stocks, Stockdefines, Profile, location, history, closeModal } = this.props
 
     const Stockoptions = (Stocks.list || []).filter(u => u.Isactive).map(stock => {
       if (stock.Barcodeno) {
@@ -67,6 +67,7 @@ export default class StockmovementsCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
@@ -76,20 +77,20 @@ export default class StockmovementsCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Stockmovements"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Stockmovements.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Stockmovements"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Stockmovements.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -98,14 +99,11 @@ export default class StockmovementsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddStockmovements, history, fillStockmovementnotification, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
     data.Movementdate = new Date()
     data.Newvalue = 0
     data.Prevvalue = 0
     data.Status = 0
-    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
-    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
-    data.Amount = parseFloat(data.Amount)
 
     let errors = []
     if (!validator.isNumber(data.Movementtype)) {

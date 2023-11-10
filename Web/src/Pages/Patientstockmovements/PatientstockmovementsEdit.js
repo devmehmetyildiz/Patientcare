@@ -112,9 +112,7 @@ export default class PatientstockmovementsEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditPatientstockmovements, history, fillPatientstockmovementnotification, Patientstockmovements, Profile } = this.props
-    const data = formToObject(e.target)
-    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
-    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
+    const data = this.context.getForm(this.PAGE_NAME)
     data.Movementdate = new Date()
     data.Movementtype && (data.Movementdate = parseInt(data.Movementtype))
     data.Amount && (data.Amount = parseFloat(data.Amount))

@@ -9,8 +9,18 @@ import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import FormInput from '../../Utils/FormInput'
 import Navbar from '../../Common/Navbar'
+import Pagedivider from '../../Common/Styled/Pagedivider'
+import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import { Footerwrapper } from '../../Common/Wrappers/Footerwrapper'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
+import { Pagewrapper } from '../../Common/Wrappers/Pagewrapper'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class PasswordReset extends Component {
+
+    PAGE_NAME = "PasswordReset"
 
     componentDidMount() {
         const { match, history, GetPasswordresetuser, RequestID, fillnotification, Profile } = this.props
@@ -27,7 +37,7 @@ export default class PasswordReset extends Component {
     render() {
 
         const { Profile } = this.props
-        const { isLoading, isDispatching } = Profile
+        const { isLoading, isDispatching, history } = Profile
 
         return (
             isLoading || isDispatching ? <LoadingPage /> :
@@ -35,44 +45,41 @@ export default class PasswordReset extends Component {
                     <Navbar Profile={Profile} withoutControl={true} />
                     <div className='flex flex-row justify-start items-start '>
                         <div className={`mt-[58.61px] p-4 w-full min-w-[0px] contentWrapper`}>
-                            <div className='w-full '>
-                                <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
-                                    <div className='w-full mx-auto align-middle'>
-                                        <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >
-                                            <Breadcrumb size='big'>
-                                                <Link to={"/Login"}>
-                                                    <Breadcrumb.Section>{Literals.Page.Pageheaderreset[Profile.Language]}</Breadcrumb.Section>
-                                                </Link>
-                                                <Breadcrumb.Divider icon='right chevron' />
-                                                <Breadcrumb.Section>{Profile?.resetrequestuser?.Username}</Breadcrumb.Section>
-                                                <Breadcrumb.Divider icon='right chevron' />
-                                            </Breadcrumb>
-                                        </Header>
-                                    </div>
-                                    <Divider className='w-full  h-[1px]' />
-                                    <div className='w-full bg-white p-4 rounded-lg shadow-md outline outline-[1px] outline-gray-200 '>
-                                        <Form onSubmit={this.handleSubmit}>
-                                            <Form.Group widths={"equal"}>
-                                                <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Newpassword[Profile.Language]} name="Newpassword" />
-                                                <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Newpasswordre[Profile.Language]} name="Newpasswordre" />
-                                            </Form.Group>
-                                            <div className='flex flex-row w-full justify-between py-4  items-center'>
-                                                <div onClick={(e) => {
-                                                    e.preventDefault()
-                                                    this.props.history.goBack()
-                                                }}>
-                                                    <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                                                </div>
-                                                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-                                            </div>
-                                        </Form>
-                                    </div>
-
-                                </div>
-                            </div>
+                            <Pagewrapper>
+                                <Headerwrapper>
+                                    <Headerbredcrump >
+                                        <Link to={"/Login"}>
+                                            <Breadcrumb.Section>{Literals.Page.Pageheaderreset[Profile.Language]}</Breadcrumb.Section>
+                                        </Link>
+                                        <Breadcrumb.Divider icon='right chevron' />
+                                        <Breadcrumb.Section>{Profile?.resetrequestuser?.Username}</Breadcrumb.Section>
+                                    </Headerbredcrump >
+                                </Headerwrapper>
+                                <Pagedivider />
+                                <Contentwrapper>
+                                    <Form onSubmit={this.handleSubmit}>
+                                        <Form.Group widths={"equal"}>
+                                            <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Newpassword[Profile.Language]} name="Newpassword" />
+                                            <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Newpasswordre[Profile.Language]} name="Newpasswordre" />
+                                        </Form.Group>
+                                        <Footerwrapper>
+                                            <Gobackbutton
+                                                history={history}
+                                                redirectUrl={"/Cases"}
+                                                buttonText={Literals.Button.Goback[Profile.Language]}
+                                            />
+                                            <Submitbutton
+                                                isLoading={isLoading}
+                                                buttonText={Literals.Button.Create[Profile.Language]}
+                                                submitFunction={this.handleSubmit}
+                                            />
+                                        </Footerwrapper>
+                                    </Form>
+                                </Contentwrapper>
+                            </Pagewrapper>
                         </div>
                     </div>
-                </div>
+                </div >
 
 
         )
@@ -83,7 +90,8 @@ export default class PasswordReset extends Component {
 
         const { history, fillnotification, Profile, Resetpassword, match, RequestID } = this.props
         let Id = RequestID || match?.params?.RequestID
-        const data = formToObject(e.target)
+
+        const data = this.context.getForm(this.PAGE_NAME)
 
         let errors = []
         if (!validator.isString(data.Newpassword)) {

@@ -72,7 +72,7 @@ const Literals = {
             en: 'Delete'
         },
         Purchasenumber: {
-            tr: 'Satın Alma Numaraıs',
+            tr: 'Satın Alma Numarası',
             en: 'Purchase Number'
         },
         Personelname: {

@@ -23,6 +23,10 @@ const Literals = {
             tr: 'Hasta Tutuyor mu?',
             en: 'Is have patients?'
         },
+        Isdefaultpatientdepartment: {
+            tr: 'Varsayılan Hasta Departmanımı',
+            en: 'Is default Patient Department?'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'

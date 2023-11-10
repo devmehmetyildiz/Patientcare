@@ -23,7 +23,7 @@ export default class MailsettingsCreate extends Component {
 
   render() {
 
-    const { Mailsettings, Profile, history } = this.props
+    const { Mailsettings, Profile, history, closeModal } = this.props
     const { isLoading, isDispatching } = Mailsettings
 
     return (
@@ -37,10 +37,11 @@ export default class MailsettingsCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-          <Form>
+            <Form>
               <Form.Group widths={"equal"}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.User[Profile.Language]} name="User" />
@@ -57,20 +58,20 @@ export default class MailsettingsCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Isbodyhtml[Profile.Language]} name="Isbodyhtml" formtype="checkbox" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Issettingactive[Profile.Language]} name="Issettingactive" formtype="checkbox" />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Mailsettings"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={isLoading}
-                  buttonText={Literals.Button.Create[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Mailsettings"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -80,9 +81,7 @@ export default class MailsettingsCreate extends Component {
 
     const { AddMailsettings, history, fillMailsettingnotification, Profile, closeModal } = this.props
 
-    const data = formToObject(e.target)
-    data.Isbodyhtml = this.context.formstates[`${this.PAGE_NAME}/Isbodyhtml`] || false
-    data.Issettingactive = this.context.formstates[`${this.PAGE_NAME}/Issettingactive`] || false
+    const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isString(data.Name)) {

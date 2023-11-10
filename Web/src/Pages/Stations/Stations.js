@@ -32,7 +32,7 @@ export default class Stations extends Component {
 
   render() {
 
-    const { Stations, DeleteStations, Profile, handleDeletemodal, handleSelectedStation } = this.props
+    const { Stations, Profile, handleDeletemodal, handleSelectedStation } = this.props
     const { isLoading, isDispatching } = Stations
 
     const Columns = [

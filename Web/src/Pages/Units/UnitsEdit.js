@@ -75,7 +75,7 @@ export default class UnitsEdit extends Component {
     ]
 
     return (
-      Departments.isLoading || Departments.isDispatching || Units.isLoading || Units.isDispatching ? <LoadingPage /> :
+      Units.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -96,20 +96,20 @@ export default class UnitsEdit extends Component {
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Units"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Units.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Units"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Units.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -119,9 +119,8 @@ export default class UnitsEdit extends Component {
     e.preventDefault()
 
     const { EditUnits, history, fillUnitnotification, Departments, Units, Profile } = this.props
-    const data = formToObject(e.target)
-    data.Unittype = this.context.formstates[`${this.PAGE_NAME}/Unittype`]
-    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Departments = data.Departments.map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)
     })
 

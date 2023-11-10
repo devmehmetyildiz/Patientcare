@@ -77,20 +77,20 @@ export default class CostumertypesEdit extends Component {
             <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Costumertypes"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Costumertypes.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Costumertypes"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Costumertypes.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -100,8 +100,8 @@ export default class CostumertypesEdit extends Component {
     e.preventDefault()
 
     const { EditCostumertypes, history, fillCostumertypenotification, Departments, Costumertypes, Profile } = this.props
-    const data = formToObject(e.target)
-    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Departments = data.Departments.map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)
     })
 

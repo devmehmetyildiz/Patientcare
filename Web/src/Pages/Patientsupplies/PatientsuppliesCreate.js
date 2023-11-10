@@ -40,7 +40,7 @@ export default class PatientsuppliesCreate extends Component {
 
 
   render() {
-    const { Patients, Patientstocks, Patientdefines, Departments, Stockdefines, Profile,history } = this.props
+    const { Patients, Patientstocks, Patientdefines, Departments, Stockdefines, Profile,history , closeModal} = this.props
 
     const Departmentoptions = (Departments.list || []).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -54,13 +54,6 @@ export default class PatientsuppliesCreate extends Component {
       return { key: patient.Uuid, text: `${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`, value: patient.Uuid }
     })
 
-    const isLoadingstatus =
-      Stockdefines.isLoading ||
-      Patientstocks.isLoading ||
-      Departments.isLoading ||
-      Patients.isLoading ||
-      Patientdefines.isLoading
-
     const changeRegistertype = <Popup
       trigger={<div onClick={() => {
         this.setState({ isInprepatients: !this.state.isInprepatients })
@@ -70,7 +63,7 @@ export default class PatientsuppliesCreate extends Component {
     />
 
     return (
-      isLoadingstatus ? <LoadingPage /> :
+      Patientstocks.isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -80,6 +73,7 @@ export default class PatientsuppliesCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
@@ -117,11 +111,8 @@ export default class PatientsuppliesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddPatientstocks, history, fillPatientstocknotification, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
-    data.PatientID = this.context.formstates[`${this.PAGE_NAME}/PatientID`]
-    data.Amount = parseFloat(data.Amount)
+    const data = this.context.getForm(this.PAGE_NAME)
+    
     data.Order = 0
     data.Ismedicine = false
     data.Issupply = true

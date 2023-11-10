@@ -49,7 +49,6 @@ async function AddPurchaseorder(req, res, next) {
     let validationErrors = []
     const {
         Stocks,
-        Info,
         Company,
         Username,
         Purchaseprice,
@@ -63,9 +62,6 @@ async function AddPurchaseorder(req, res, next) {
 
     if (!validator.isArray(Stocks)) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
     }
     if (!validator.isString(Company)) {
         validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
@@ -149,7 +145,6 @@ async function UpdatePurchaseorder(req, res, next) {
     let validationErrors = []
     const {
         Stocks,
-        Info,
         Company,
         Username,
         Purchaseprice,
@@ -164,9 +159,6 @@ async function UpdatePurchaseorder(req, res, next) {
 
     if (!validator.isArray(Stocks)) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
     }
     if (!validator.isString(Company)) {
         validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)

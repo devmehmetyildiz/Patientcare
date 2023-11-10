@@ -79,20 +79,20 @@ export default class RoomsEdit extends Component {
             <Form>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.FloorID[Profile.Language]} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Rooms"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Rooms.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Rooms"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Rooms.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -101,8 +101,7 @@ export default class RoomsEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditRooms, history, fillRoomnotification, Profile, Rooms } = this.props
-    const data = formToObject(e.target)
-    data.FloorID = this.context.formstates[`${this.PAGE_NAME}/FloorID`]
+    const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
     if (!validator.isUUID(data.FloorID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.FloorIDrequired[Profile.Language] })

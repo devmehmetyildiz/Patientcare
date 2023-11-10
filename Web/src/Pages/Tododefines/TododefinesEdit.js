@@ -86,20 +86,20 @@ export default class TododefinesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsRequired[Profile.Language]} name="IsRequired" formtype="checkbox" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsNeedactivation[Profile.Language]} name="IsNeedactivation" formtype="checkbox" />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Tododefines"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Tododefines.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Tododefines"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Tododefines.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -108,12 +108,10 @@ export default class TododefinesEdit extends Component {
     e.preventDefault()
 
     const { EditTododefines, history, removeTododefinenotification, Tododefines, Checkperiods, Profile } = this.props
-    const data = formToObject(e.target)
-    data.Checkperiods = this.context.formstates[`${this.PAGE_NAME}/Checkperiods`].map(id => {
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Checkperiods = data.Checkperiods.map(id => {
       return (Checkperiods.list || []).find(u => u.Uuid === id)
     })
-    data.IsRequired = this.context.formstates[`${this.PAGE_NAME}/IsRequired`] || false
-    data.IsNeedactivation = this.context.formstates[`${this.PAGE_NAME}/IsNeedactivation`] || false
 
     let errors = []
     if (!validator.isString(data.Name)) {

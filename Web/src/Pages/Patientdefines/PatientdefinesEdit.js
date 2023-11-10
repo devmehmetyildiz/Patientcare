@@ -160,14 +160,7 @@ export default class PatientdefinesEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditPatientdefines, history, fillPatientdefinenotification, Patientdefines, Profile } = this.props
-    const data = formToObject(e.target)
-    data.PatienttypeID = this.context.formstates[`${this.PAGE_NAME}/PatienttypeID`]
-    data.CostumertypeID = this.context.formstates[`${this.PAGE_NAME}/CostumertypeID`]
-    data.Ismotheralive = this.context.formstates[`${this.PAGE_NAME}/Ismotheralive`] || false
-    data.Isfatheralive = this.context.formstates[`${this.PAGE_NAME}/Isfatheralive`] || false
-    data.Gender = this.context.formstates[`${this.PAGE_NAME}/Gender`]
-    data.Motherbiologicalaffinity = this.context.formstates[`${this.PAGE_NAME}/Motherbiologicalaffinity`]
-    data.Fatherbiologicalaffinity = this.context.formstates[`${this.PAGE_NAME}/selectedFatheralaffinity`]
+    const data = this.context.getForm(this.PAGE_NAME)
 
     if (!data.Dateofbirth || data.Dateofbirth === '') {
       data.Dateofbirth = null

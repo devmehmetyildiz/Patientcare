@@ -12,6 +12,42 @@ const messages = {
         tr: 'hasta bulunamadı',
       }
     },
+    FLOOR_NOT_FOUND: {
+      code: 'FLOOR_NOT_FOUND', description: {
+        en: 'floor not found',
+        tr: 'Kat bulunamadı',
+      }
+    },
+    FLOOR_NOT_ACTIVE: {
+      code: 'FLOOR_NOT_ACTIVE', description: {
+        en: 'floor not active',
+        tr: 'kat bulunamadı',
+      }
+    },
+    ROOM_NOT_FOUND: {
+      code: 'ROOM_NOT_FOUND', description: {
+        en: 'room not found',
+        tr: 'Oda bulunamadı',
+      }
+    },
+    ROOM_NOT_ACTIVE: {
+      code: 'ROOM_NOT_ACTIVE', description: {
+        en: 'room not active',
+        tr: 'oda bulunamadı',
+      }
+    },
+    BED_NOT_FOUND: {
+      code: 'BED_NOT_FOUND', description: {
+        en: 'bed not found',
+        tr: 'yatak bulunamadı',
+      }
+    },
+    BED_NOT_ACTIVE: {
+      code: 'BED_NOT_ACTIVE', description: {
+        en: 'bed not active',
+        tr: 'yatak bulunamadı',
+      }
+    },
     OUTCASE_NOT_ACTIVE: {
       code: 'OUTCASE_NOT_ACTIVE', description: {
         en: 'Out Case Not Found',

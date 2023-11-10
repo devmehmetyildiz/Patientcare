@@ -82,15 +82,8 @@ export default class PatientstocksEdit extends Component {
     const patient = (Patients.list || []).find(u => u.Uuid === selected_record?.PatientID)
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
 
-    const isLoadingstatus =
-      Stockdefines.isLoading ||
-      Patientstocks.isLoading ||
-      Departments.isLoading ||
-      Patients.isLoading ||
-      Patientdefines.isLoading
-
     return (
-      isLoadingstatus ? <LoadingPage /> :
+      Patientstocks.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -129,10 +122,7 @@ export default class PatientstocksEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditPatientstocks, history, fillPatientstocknotification, Patientstocks, Profile } = this.props
-    const data = formToObject(e.target)
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
-    data.PatientID = this.context.formstates[`${this.PAGE_NAME}/PatientID`]
+    const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {

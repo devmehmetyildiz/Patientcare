@@ -73,7 +73,7 @@ export default class PrinttemplatesEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-          <Form>
+            <Form>
               <Tab className='station-tab'
                 panes={[
                   {
@@ -118,23 +118,25 @@ export default class PrinttemplatesEdit extends Component {
                   }
                 ]}
                 renderActiveOnly={false} />
-              <Footerwrapper>
-                <Form.Group widths={'equal'}>
-                  <Gobackbutton
-                    history={history}
-                    redirectUrl={"/Printtemplates"}
-                    buttonText={Literals.Button.Goback[Profile.Language]}
-                  />
-                  <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.clearForm(this.PAGE_NAME) }}>{Literals.Button.Clear[Profile.Language]}</Button>
-                </Form.Group>
-                <Submitbutton
-                  isLoading={isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Form.Group widths={'equal'}>
+              <Gobackbutton
+                history={history}
+                redirectUrl={"/Printtemplates"}
+                buttonText={Literals.Button.Goback[Profile.Language]}
+              />
+              <Button floated="right" type="button" color='grey' onClick={(e) => {
+                this.setState({ template: '' })
+              }}>{Literals.Button.Clear[Profile.Language]}</Button>
+            </Form.Group>
+            <Submitbutton
+              isLoading={isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -144,7 +146,7 @@ export default class PrinttemplatesEdit extends Component {
 
     const { EditPrinttemplates, history, fillPrinttemplatenotification, Printtemplates, Profile } = this.props
 
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
     data.Printtemplate = this.state.template
 
     let errors = []

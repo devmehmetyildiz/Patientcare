@@ -62,7 +62,7 @@ export const GetPeriod = createAsyncThunk(
 
 export const AddPeriods = createAsyncThunk(
     'Periods/AddPeriods',
-    async ({data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -70,7 +70,7 @@ export const AddPeriods = createAsyncThunk(
             dispatch(fillPeriodnotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('PeriodsCreate')
             closeModal && closeModal()
@@ -94,7 +94,7 @@ export const AddRecordPeriods = createAsyncThunk(
             dispatch(fillPeriodnotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('PeriodsCreate')
             closeModal && closeModal()
@@ -118,7 +118,7 @@ export const EditPeriods = createAsyncThunk(
             dispatch(fillPeriodnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('PeriodsUpdate')
             closeModal && closeModal()
@@ -143,7 +143,7 @@ export const DeletePeriods = createAsyncThunk(
             dispatch(fillPeriodnotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
             }));
             return response.data;
         } catch (error) {
@@ -175,7 +175,7 @@ export const PeriodsSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removePeriodnotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload

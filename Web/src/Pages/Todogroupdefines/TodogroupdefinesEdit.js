@@ -55,7 +55,7 @@ export default class TodogroupdefinesEdit extends Component {
 
   render() {
 
-    const { Todogroupdefines, Tododefines, Departments, Profile,history } = this.props
+    const { Todogroupdefines, Tododefines, Departments, Profile, history } = this.props
 
     const Tododefineoptions = (Tododefines.list || []).filter(u => u.Isactive).map(tododefine => {
       return { key: tododefine.Uuid, text: tododefine.Name, value: tododefine.Uuid }
@@ -85,20 +85,20 @@ export default class TodogroupdefinesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Tododefines[Profile.Language]} name="Tododefines" multiple options={Tododefineoptions} formtype='dropdown' modal={TododefinesCreate} />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Todogroupdefines"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Todogroupdefines.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Todogroupdefines"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Todogroupdefines.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -108,11 +108,10 @@ export default class TodogroupdefinesEdit extends Component {
     e.preventDefault()
 
     const { EditTodogroupdefines, history, fillTodogroupdefinenotification, Todogroupdefines, Profile, Tododefines } = this.props
-    const data = formToObject(e.target)
-    data.Tododefines = this.context.formstates[`${this.PAGE_NAME}/Tododefines`].map(id => {
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Tododefines = data.Tododefines.map(id => {
       return (Tododefines.list || []).find(u => u.Uuid === id)
     })
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
 
 
     let errors = []

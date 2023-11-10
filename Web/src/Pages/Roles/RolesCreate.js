@@ -39,8 +39,8 @@ export default class RolesCreate extends Component {
         const { Roles, Profile, history, closeModal } = this.props
         const { privileges, privilegegroups, isLoading, isDispatching } = Roles
 
-        const decoratedgroups = privilegegroups.map(group => {
-            const foundedPrivileges = privileges.filter(u => u.group.includes(group) && (u.text.toLowerCase()).includes(this.state.searchParam.toLowerCase()))
+        const decoratedgroups = (privilegegroups || []).map(group => {
+            const foundedPrivileges = (privileges || []).filter(u => u.group.includes(group) && (u.text.toLowerCase()).includes(this.state.searchParam.toLowerCase()))
             return foundedPrivileges.length > 0 ? { name: group, privileges: foundedPrivileges } : null
         }).filter(u => u)
 
@@ -54,8 +54,8 @@ export default class RolesCreate extends Component {
                             </Link>
                             <Breadcrumb.Divider icon='right chevron' />
                             <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
-                            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
                         </Headerbredcrump>
+                        {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
                     </Headerwrapper>
                     <Pagedivider />
                     <Contentwrapper>
@@ -93,23 +93,25 @@ export default class RolesCreate extends Component {
                                     </div>
                                 })}
                             </div>
-                            <Footerwrapper>
-                                <Form.Group widths={'equal'}>
-                                    <Gobackbutton
-                                        history={history}
-                                        redirectUrl={"/Roles"}
-                                        buttonText={Literals.Button.Goback[Profile.Language]}
-                                    />
-                                    <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.clearForm(this.PAGE_NAME) }}>{Literals.Button.Clear[Profile.Language]}</Button>
-                                </Form.Group>
-                                <Submitbutton
-                                    isLoading={isLoading}
-                                    buttonText={Literals.Button.Create[Profile.Language]}
-                                    submitFunction={this.handleSubmit}
-                                />
-                            </Footerwrapper>
                         </Form>
                     </Contentwrapper>
+                    <Footerwrapper>
+                        <Form.Group widths={'equal'}>
+                            <Gobackbutton
+                                history={history}
+                                redirectUrl={"/Roles"}
+                                buttonText={Literals.Button.Goback[Profile.Language]}
+                            />
+                            <Button floated="right" type="button" color='grey' onClick={(e) => {
+                                this.setState({ selectedPrivileges: [] })
+                            }}>{Literals.Button.Clear[Profile.Language]}</Button>
+                        </Form.Group>
+                        <Submitbutton
+                            isLoading={isLoading}
+                            buttonText={Literals.Button.Create[Profile.Language]}
+                            submitFunction={this.handleSubmit}
+                        />
+                    </Footerwrapper>
                 </Pagewrapper >
         )
     }

@@ -22,7 +22,7 @@ export default class FloorsCreate extends Component {
   PAGE_NAME = "FloorsCreate"
 
   render() {
-    const { Floors, Profile,history } = this.props
+    const { Floors, Profile, history, closeModal } = this.props
 
     return (
       Floors.isLoading || Floors.isDispatching ? <LoadingPage /> :
@@ -35,25 +35,26 @@ export default class FloorsCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Floors"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Floors.isLoading}
-                  buttonText={Literals.Button.Create[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Floors"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Floors.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -62,7 +63,7 @@ export default class FloorsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddFloors, history, fillFloornotification, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isString(data.Name)) {

@@ -11,10 +11,4 @@ Userrole--
 Warehouse--
 
 Web--
-
-    1.Çoklu Dil desteği
-    --Cases
-    --Stations
-    2.Data Hatırlama desteği
-    --Cases
-    --Stations
+purchaseorderstockmovement düzenleme lazım

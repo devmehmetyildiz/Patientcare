@@ -122,10 +122,7 @@ export default class PurchaseorderstocksEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditPurchaseorderstocks, history, fillPurchaseorderstocknotification, Purchaseorderstocks, Profile } = this.props
-    const data = formToObject(e.target)
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
-    data.PurchaseorderID = this.context.formstates[`${this.PAGE_NAME}/PurchaseorderID`]
+    const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {

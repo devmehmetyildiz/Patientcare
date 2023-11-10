@@ -23,7 +23,7 @@ export default class PeriodsCreate extends Component {
 
   render() {
 
-    const { Periods, Profile, history } = this.props
+    const { Periods, Profile, history, closeModal } = this.props
     const { isLoading, isDispatching } = Periods
 
     return (
@@ -37,10 +37,11 @@ export default class PeriodsCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-          <Form>
+            <Form>
               <Form.Field>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               </Form.Field>
@@ -48,20 +49,20 @@ export default class PeriodsCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required type='time' placeholder={Literals.Columns.Occuredtime[Profile.Language]} name="Occuredtime" />
                 <FormInput page={this.PAGE_NAME} required type='time' placeholder={Literals.Columns.Checktime[Profile.Language]} name="Checktime" />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Periods"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Periods.isLoading}
-                  buttonText={Literals.Button.Create[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Periods"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Periods.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -71,7 +72,7 @@ export default class PeriodsCreate extends Component {
 
     const { AddPeriods, history, fillPeriodnotification, Profile, closeModal } = this.props
 
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isString(data.Name)) {

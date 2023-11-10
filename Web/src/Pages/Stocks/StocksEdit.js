@@ -22,7 +22,7 @@ import Gobackbutton from '../../Common/Gobackbutton'
 import Submitbutton from '../../Common/Submitbutton'
 export default class StocksEdit extends Component {
 
-  PAGe_NAME = "StocksEdit"
+  PAGE_NAME = "StocksEdit"
 
   constructor(props) {
     super(props)
@@ -98,20 +98,20 @@ export default class StocksEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoptions} name="DepartmentID" formtype='dropdown' modal={DepartmentsCreate} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Stocks"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Stocks.isLoading}
-                  buttonText={Literals.Button.Create[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Stocks"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Stocks.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -120,10 +120,7 @@ export default class StocksEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditStocks, history, fillStocknotification, Stocks, Profile } = this.props
-    const data = formToObject(e.target)
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
-    data.WarehouseID = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
+    const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {

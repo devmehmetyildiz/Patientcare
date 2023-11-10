@@ -78,20 +78,22 @@ export default class DepartmentsEdit extends Component {
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype="dropdown" modal={StationsCreate} />
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Ishavepatients[Profile.Language]} name="Ishavepatients" formtype="checkbox" />
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Departments"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Departments.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
+              {this.context.formstates[`${this.PAGE_NAME}/Ishavepatients`] ?
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Isdefaultpatientdepartment[Profile.Language]} name="Isdefaultpatientdepartment" formtype="checkbox" /> : null}
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Departments"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Departments.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -102,6 +104,7 @@ export default class DepartmentsEdit extends Component {
 
     const { EditDepartments, history, fillDepartmentnotification, Stations, Departments, Profile } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
+    data.Isdefaultpatientdepartment = data.Ishavepatients ? true : false
     data.Stations = (data.Stations || []).map(id => {
       return (Stations.list || []).find(u => u.Uuid === id)
     }) || []

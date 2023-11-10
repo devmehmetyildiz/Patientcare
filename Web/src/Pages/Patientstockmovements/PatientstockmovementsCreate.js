@@ -28,7 +28,7 @@ export default class PatientstockmovementsCreate extends Component {
 
 
   render() {
-    const { Patientstockmovements, Patientstocks, Profile, history } = this.props
+    const { Patientstockmovements, Patientstocks, Profile, history, closeModal } = this.props
 
     const Patientstockoptions = (Patientstocks.list || []).filter(u => u.Isactive).map(stock => {
       return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
@@ -50,6 +50,7 @@ export default class PatientstockmovementsCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
@@ -81,9 +82,7 @@ export default class PatientstockmovementsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddPatientstockmovements, history, fillPatientstockmovementnotification, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
-    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
-    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
+    const data = this.context.getForm(this.PAGE_NAME)
     data.Movementdate = new Date()
     data.Newvalue = 0
     data.Prevvalue = 0

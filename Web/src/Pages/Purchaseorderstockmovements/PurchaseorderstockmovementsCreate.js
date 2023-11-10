@@ -27,7 +27,7 @@ export default class PurchaseorderstockmovementsCreate extends Component {
   }
 
   render() {
-    const { Purchaseorderstockmovements, Purchaseorderstocks, Profile, history } = this.props
+    const { Purchaseorderstockmovements, Purchaseorderstocks, Profile, history, closeModal } = this.props
 
     const Purchaseorderstockoptions = (Purchaseorderstocks.list || []).filter(u => u.Isactive).map(stock => {
       return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
@@ -50,6 +50,7 @@ export default class PurchaseorderstockmovementsCreate extends Component {
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
+          {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           <Pagedivider />
           <Contentwrapper>
             <Form>
@@ -80,14 +81,11 @@ export default class PurchaseorderstockmovementsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddPurchaseorderstockmovements, history, fillPurchaseorderstockmovementnotification, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
     data.Movementdate = new Date()
     data.Newvalue = 0
     data.Prevvalue = 0
-    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
-    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
     data.Status = 0
-    data.Amount = parseFloat(data.Amount)
 
     let errors = []
     if (!validator.isNumber(data.Movementtype)) {

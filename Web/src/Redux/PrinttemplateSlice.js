@@ -70,7 +70,7 @@ export const AddPrinttemplates = createAsyncThunk(
             dispatch(fillPrinttemplatenotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('PrinttemplatesCreate')
             closeModal && closeModal()
@@ -94,7 +94,7 @@ export const EditPrinttemplates = createAsyncThunk(
             dispatch(fillPrinttemplatenotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('PrinttemplatesEdit')
             closeModal && closeModal()
@@ -119,7 +119,7 @@ export const DeletePrinttemplates = createAsyncThunk(
             dispatch(fillPrinttemplatenotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
             }));
             return response.data;
         } catch (error) {
@@ -151,7 +151,7 @@ export const PrinttemplatesSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removePrinttemplatenotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload

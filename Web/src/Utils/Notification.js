@@ -11,14 +11,14 @@ const CustomToast = ({ title, message }) => (
 
 function Notification(notifications, removeNotification) {
     if (notifications && notifications.length > 0) {
-        notifications.forEach((notification, index) => {
+        notifications.forEach((notification) => {
             const { type, code, description } = notification
             switch (type) {
                 case "Success":
-                    toast.success(<CustomToast title={code} message={description} />);
+                    toast.success(<CustomToast title={code} message={description} />, { autoClose: 3000 });
                     break;
                 case "Error":
-                    toast.error(<CustomToast title={code} message={description} />);
+                    toast.error(<CustomToast title={code} message={description} />, { autoClose: 3000 });
 
                     break;
                 default:

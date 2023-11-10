@@ -65,7 +65,7 @@ export default class PreregistrationsCreate extends Component {
 
   render() {
 
-    const { Patientdefines, Patients, Departments, Cases, Profile, history } = this.props
+    const { Patientdefines, Patients, Departments, Cases, Profile, history, closeModal } = this.props
     const { isLoading, isDispatching } = Patients
 
     const Patientdefineoptions = (Patientdefines.list || []).filter(u => u.Isactive).map(define => {
@@ -116,10 +116,11 @@ export default class PreregistrationsCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-          <Form>
+            <Form>
               {!this.state.newRegister ?
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Patientdefine[Profile.Language]} name="PatientdefineID" options={Patientdefineoptions} formtype="dropdown" required additionalicon={changeRegistertype} modal={PatientdefinesCreate} />
                 :
@@ -168,7 +169,7 @@ export default class PreregistrationsCreate extends Component {
     e.preventDefault()
 
     const { Patientdefines, fillPatientnotification, AddPatients, history, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
     if (!validator.isISODate(data.Registerdate)) {
       data.Registerdate = null
     }

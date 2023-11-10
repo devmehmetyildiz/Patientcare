@@ -99,10 +99,7 @@ export default class PurchaseorderstockmovementsEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditPurchaseorderstockmovements, history, fillPurchaseorderstockmovementnotification, Profile, Purchaseorderstockmovements } = this.props
-    const data = formToObject(e.target)
-    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
-    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
-    data.Amount = parseFloat(data.Amount)
+    const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
     if (!validator.isNumber(data.Movementtype)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Movementrequired[Profile.Language] })

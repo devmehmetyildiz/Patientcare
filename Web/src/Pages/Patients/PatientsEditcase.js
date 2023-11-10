@@ -15,6 +15,8 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import CasesCreate from '../../Containers/Cases/CasesCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class PatientsEditcase extends Component {
 
@@ -82,15 +84,6 @@ export default class PatientsEditcase extends Component {
 
         const activecase = (Cases.list || []).find(u => u.Uuid === selected_record?.CaseID)
 
-        const addModal = (content) => {
-            return <Modal
-                onClose={() => { this.setState({ modelOpened: false }) }}
-                onOpen={() => { this.setState({ modelOpened: true }) }}
-                trigger={<Icon link name='plus' />}
-                content={content}
-            />
-        }
-
         return (
             isLoadingstatus ? <LoadingPage /> :
                 <Pagewrapper >
@@ -115,11 +108,16 @@ export default class PatientsEditcase extends Component {
                                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' modal={CasesCreate} />
                             </Form.Group>
                             <Footerwrapper>
-                                {history && <Button onClick={(e) => {
-                                    e.preventDefault()
-                                    history.length > 1 ? history.goBack() : history.push(Id ? `/Patients/${Id}` : `/Patients`)
-                                }} floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>}
-                                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
+                                <Gobackbutton
+                                    history={history}
+                                    redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
+                                    buttonText={Literals.Button.Goback[Profile.Language]}
+                                />
+                                <Submitbutton
+                                    isLoading={isLoadingstatus}
+                                    buttonText={Literals.Button.Update[Profile.Language]}
+                                    submitFunction={this.handleSubmit}
+                                />
                             </Footerwrapper>
                         </Form>
                     </Contentwrapper>
@@ -131,8 +129,7 @@ export default class PatientsEditcase extends Component {
         e.preventDefault()
         const { history, Profile, fillPatientnotification, Editpatientcase, match, PatientID } = this.props
         let Id = PatientID || match?.params?.PatientID
-        const data = formToObject(e.target)
-        data.CaseID = this.context.formstates[`${this.PAGE_NAME}/CaseID`]
+        const data = this.context.getForm(this.PAGE_NAME)
         let errors = []
         if (!validator.isUUID(data.CaseID)) {
             errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.WarehouseReuired[Profile.Language] })

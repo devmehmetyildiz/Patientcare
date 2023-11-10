@@ -24,7 +24,7 @@ export class FilesCreate extends Component {
   }
   render() {
 
-    const { Files, Profile,history } = this.props
+    const { Files, Profile,history, closeModal } = this.props
     const { isLoading, isDispatching } = Files
 
     return (
@@ -38,6 +38,7 @@ export class FilesCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>

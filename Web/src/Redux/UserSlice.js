@@ -62,7 +62,7 @@ export const GetUser = createAsyncThunk(
 
 export const AddUsers = createAsyncThunk(
     'Users/AddUsers',
-    async ({ data, history, redirectUrl, closeModal, clearForm  }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -70,7 +70,7 @@ export const AddUsers = createAsyncThunk(
             dispatch(fillUsernotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Username}`,
             }));
             clearForm && clearForm('UsersCreate')
             closeModal && closeModal()
@@ -86,7 +86,7 @@ export const AddUsers = createAsyncThunk(
 
 export const EditUsers = createAsyncThunk(
     'Users/EditUsers',
-    async ({ data, history, redirectUrl, closeModal, clearForm  }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -94,7 +94,7 @@ export const EditUsers = createAsyncThunk(
             dispatch(fillUsernotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                description: Literals.updatedescription[Language] + ` : ${data?.Username}`,
             }));
             clearForm && clearForm('UsersEdit')
             closeModal && closeModal()
@@ -119,7 +119,7 @@ export const DeleteUsers = createAsyncThunk(
             dispatch(fillUsernotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                description: Literals.deletedescription[Language] + ` : ${data?.Username}`,
             }));
             return response.data;
         } catch (error) {
@@ -151,7 +151,7 @@ export const UsersSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeUsernotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
