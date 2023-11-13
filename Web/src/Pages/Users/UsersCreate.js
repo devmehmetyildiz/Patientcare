@@ -17,6 +17,8 @@ import { FormContext } from '../../Provider/FormProvider'
 import StationsCreate from '../../Containers/Stations/StationsCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import RolesCreate from '../../Containers/Roles/RolesCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class UsersCreate extends Component {
 
@@ -37,7 +39,7 @@ export default class UsersCreate extends Component {
   }
 
   render() {
-    const { Departments, Users, Stations, Roles, Profile } = this.props
+    const { Departments, Users, Stations, Roles, Profile, history, closeModal } = this.props
 
     const Stationoptions = (Stations.list || []).filter(u => u.Isactive).map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
@@ -65,10 +67,11 @@ export default class UsersCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Surname[Profile.Language]} name="Surname" />
@@ -80,9 +83,9 @@ export default class UsersCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.UserID[Profile.Language]} name="UserID" type='Number' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.City[Profile.Language]} name="City" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Town[Profile.Language]} name="Town" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.City[Profile.Language]} name="City" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Town[Profile.Language]} name="Town" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stations[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype='dropdown' modal={StationsCreate} />
@@ -90,14 +93,20 @@ export default class UsersCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Roles[Profile.Language]} name="Roles" multiple options={Roleoptions} formtype='dropdown' modal={RolesCreate} />
               </Form.Group>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Language[Profile.Language]} name="Language" options={Languageoptions} formtype='dropdown' />
-              <Footerwrapper>
-                <Link to="/Users">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Users"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Users.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -105,18 +114,17 @@ export default class UsersCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddUsers, history, fillUsernotification, Roles, Departments, Stations, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
     data.UserID = parseInt(data.UserID, 10)
-    data.Stations = this.context.formstates[`${this.PAGE_NAME}/Stations`].map(id => {
+    data.Stations = data.Stations.map(id => {
       return (Stations.list || []).find(u => u.Uuid === id)
     })
-    data.Roles = this.context.formstates[`${this.PAGE_NAME}/Roles`].map(id => {
+    data.Roles = data.Roles.map(id => {
       return (Roles.list || []).find(u => u.Uuid === id)
     })
-    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+    data.Departments = data.Departments.map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)
     })
-    data.Language = this.context.formstates[`${this.PAGE_NAME}/Language`]
 
     let errors = []
     if (!validator.isString(data.Name)) {

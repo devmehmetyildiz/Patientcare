@@ -83,7 +83,9 @@ export default class Floors extends Component {
                   list={list}
                   initialConfig={initialConfig}
                   metaKey={metaKey}
-                  AddRecord={AddRecordFloors}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
                 />
               </Grid>
             </Headerwrapper>

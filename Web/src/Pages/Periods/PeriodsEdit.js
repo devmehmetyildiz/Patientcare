@@ -14,6 +14,8 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class PeriodsEdit extends Component {
 
   PAGE_NAME = "PeriodsEdit"
@@ -67,7 +69,7 @@ export default class PeriodsEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Field>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               </Form.Field>
@@ -75,14 +77,20 @@ export default class PeriodsEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required type='time' placeholder={Literals.Columns.Occuredtime[Profile.Language]} name="Occuredtime" />
                 <FormInput page={this.PAGE_NAME} required type='time' placeholder={Literals.Columns.Checktime[Profile.Language]} name="Checktime" />
               </Form.Group>
-              <Footerwrapper>
-                {history && <Link to="/Periods">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Periods"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Periods.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -91,7 +99,7 @@ export default class PeriodsEdit extends Component {
     e.preventDefault()
 
     const { EditPeriods, history, fillPeriodnotification, Periods, Profile } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })

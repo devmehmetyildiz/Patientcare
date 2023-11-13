@@ -18,6 +18,8 @@ import { FormContext } from '../../Provider/FormProvider'
 import PurchaseordersCreate from '../../Containers/Purchaseorders/PurchaseordersCreate'
 import StockdefinesCreate from '../../Containers/Stockdefines/StockdefinesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class PurchaseordermedicinesEdit extends Component {
 
@@ -27,7 +29,6 @@ export default class PurchaseordermedicinesEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
-      modelOpened: false
     }
   }
 
@@ -49,21 +50,26 @@ export default class PurchaseordermedicinesEdit extends Component {
     const { Departments, Stockdefines, Purchaseorderstocks, Purchaseorders } = this.props
     const { selected_record, isLoading } = Purchaseorderstocks
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0
-      && Departments.list.length > 0 && !Departments.isLoading
-      && Purchaseorders.list.length > 0 && !Purchaseorders.isLoading
-      && Purchaseorderstocks.list.length > 0 && !Purchaseorderstocks.isLoading
-      && Stockdefines.list.length > 0 && !Stockdefines.isLoading && !isLoading && !this.state.isDatafetched) {
+      && !Departments.isLoading
+      && !Purchaseorders.isLoading
+      && !Purchaseorderstocks.isLoading
+      && !Stockdefines.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      const currentDate = new Date(selected_record?.Skt || '');
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, [`Skt`]: formattedDate })
     }
   }
 
   render() {
-    const { Purchaseorderstocks, Purchaseorders, Departments, Stockdefines, Profile } = this.props
+    const { Purchaseorderstocks, Purchaseorders, Departments, Stockdefines, Profile, history } = this.props
 
-    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive && u.Ishavepatients).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
     const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && u.Ismedicine && !u.Issupply).map(define => {
@@ -87,7 +93,7 @@ export default class PurchaseordermedicinesEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchaseorder[Profile.Language]} name="PurchaseorderID" options={Purchaseorderoptions} formtype='dropdown' modal={PurchaseordersCreate} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype='dropdown' modal={StockdefinesCreate} />
@@ -96,17 +102,23 @@ export default class PurchaseordermedicinesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
-              <Footerwrapper>
-                <Link to="/Purchaseordermedicines">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Purchaseordermedicines"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Purchaseorderstocks.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -115,10 +127,7 @@ export default class PurchaseordermedicinesEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditPurchaseorderstocks, history, fillPurchaseorderstocknotification, Purchaseorderstocks, Profile } = this.props
-    const data = formToObject(e.target)
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
-    data.PurchaseorderID = this.context.formstates[`${this.PAGE_NAME}/PurchaseorderID`]
+    const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
@@ -130,22 +139,12 @@ export default class PurchaseordermedicinesEdit extends Component {
     if (!validator.isUUID(data.StockdefineID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StokdefineRequired[Profile.Language] })
     }
-    if (!validator.isNumber(data.Amount)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.AmountRequired[Profile.Language] })
-    }
     if (errors.length > 0) {
       errors.forEach(error => {
         fillPurchaseorderstocknotification(error)
       })
     } else {
-      EditPurchaseorderstocks({ data: { ...Purchaseorderstocks.selected_record, ...data }, history })
-    }
-  }
-
-  getLocalDate = (inputdate) => {
-    if (inputdate) {
-      let res = inputdate.split('T')
-      return res[0]
+      EditPurchaseorderstocks({ data: { ...Purchaseorderstocks.selected_record, ...data }, history, redirectUrl: '/Purchaseordermedicines' })
     }
   }
 }

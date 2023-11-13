@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Divider, Dropdown, Form, Header, Icon, Modal, Tab, Table } from 'semantic-ui-react'
 import { ROUTES } from '../../Utils/Constants'
 import LoadingPage from '../../Utils/LoadingPage'
-import Notification from '../../Utils/Notification'
 import StockdefinesCreate from "../../Containers/Stockdefines/StockdefinesCreate"
 import config from '../../Config'
 import Literals from './Literals'
@@ -15,6 +14,9 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import validator from '../../Utils/Validator'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
+import AddModal from '../../Utils/AddModal'
 export default class PreregistrationsEditstock extends Component {
 
   constructor(props) {
@@ -61,8 +63,7 @@ export default class PreregistrationsEditstock extends Component {
       !Patientstockmovements.isLoading &&
       !Files.isLoading &&
       !this.state.isDatafetched) {
-      var response = (Patientstocks.list || []).
-        filter(u => u.PatientID === selected_record.Uuid).map(u => { return { ...u, key: Math.random() } })
+      var response = (Patientstocks.list || []).filter(u => u.PatientID === selected_record?.Uuid && u.Isactive).map(u => { return { ...u, key: Math.random() } })
       this.setState({
         selectedStocks: response, isDatafetched: true
       })
@@ -89,8 +90,10 @@ export default class PreregistrationsEditstock extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    return (
+    const patientDefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
+    const patientPP = (Files.list || []).find(u => u.ParentID === selected_record?.Uuid && u.Usagetype === 'PP' && u.Isactive)
 
+    return (
       isLoading || isDispatching ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
@@ -105,12 +108,12 @@ export default class PreregistrationsEditstock extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Header as='h2' icon textAlign='center'>
-              {(Files.list || []).filter(u => u.Usagetype === 'PP' && u.ParentID === selected_record.Uuid).length > 0 ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${(Files.list || []).filter(u => u.ParentID === selected_record.Uuid).find(u => u.Usagetype === 'PP')?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
+              {patientPP
+                ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPP?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
                 : <Icon name='users' circular />}
-              <Header.Content>{`${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.Firstname} 
-                            ${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.Lastname} - ${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.CountryID}`}</Header.Content>
+              <Header.Content>{`${patientDefine?.Firstname} ${patientDefine?.Lastname} - ${patientDefine?.CountryID}`}</Header.Content>
             </Header>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Tab
                 panes={[
                   {
@@ -121,8 +124,8 @@ export default class PreregistrationsEditstock extends Component {
                         <Table.Header>
                           <Table.Row>
                             <Table.HeaderCell width={1}>{Literals.Options.TableColumnsOrder[Profile.Language]}</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsStockdefine[Profile.Language]}{StockdefinesCreate}</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsDepartment[Profile.Language]}{DepartmentsCreate}</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsStockdefine[Profile.Language]}{<AddModal Content={StockdefinesCreate} />}</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsDepartment[Profile.Language]}{<AddModal Content={DepartmentsCreate} />}</Table.HeaderCell>
                             <Table.HeaderCell width={2}>{Literals.Options.TableColumnsBarcode[Profile.Language]}</Table.HeaderCell>
                             <Table.HeaderCell width={2}>{Literals.Options.TableColumnsSkt[Profile.Language]}</Table.HeaderCell>
                             <Table.HeaderCell width={2}>{Literals.Options.TableColumnsAmount[Profile.Language]}</Table.HeaderCell>
@@ -187,8 +190,8 @@ export default class PreregistrationsEditstock extends Component {
                         <Table.Header>
                           <Table.Row>
                             <Table.HeaderCell width={1}>{Literals.Options.TableColumnsOrder[Profile.Language]}</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsStockdefine[Profile.Language]}{StockdefinesCreate}</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsDepartment[Profile.Language]}{DepartmentsCreate}</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsStockdefine[Profile.Language]}{<AddModal Content={StockdefinesCreate} />}</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsDepartment[Profile.Language]}{<AddModal Content={DepartmentsCreate} />}</Table.HeaderCell>
                             <Table.HeaderCell width={2}>{Literals.Options.TableColumnsBarcode[Profile.Language]}</Table.HeaderCell>
                             <Table.HeaderCell width={2}>{Literals.Options.TableColumnsSkt[Profile.Language]}</Table.HeaderCell>
                             <Table.HeaderCell width={2}>{Literals.Options.TableColumnsAmount[Profile.Language]}</Table.HeaderCell>
@@ -237,9 +240,9 @@ export default class PreregistrationsEditstock extends Component {
                         </Table.Body>
                         <Table.Footer>
                           <Table.Row>
-                            <Table.HeaderCell colSpan='8'>
+                            <Table.Cell colSpan='8'>
                               <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNewProduct(false, true) }}>{Literals.Button.AddnewSupplies[Profile.Language]}</Button>
-                            </Table.HeaderCell>
+                            </Table.Cell>
                           </Table.Row>
                         </Table.Footer>
                       </Table>
@@ -253,8 +256,8 @@ export default class PreregistrationsEditstock extends Component {
                         <Table.Header>
                           <Table.Row>
                             <Table.HeaderCell width={1}>{Literals.Options.TableColumnsOrder[Profile.Language]}</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsStockdefine[Profile.Language]}{StockdefinesCreate}</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsDepartment[Profile.Language]}{DepartmentsCreate}</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsStockdefine[Profile.Language]}{<AddModal Content={StockdefinesCreate} />}</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>{Literals.Options.TableColumnsDepartment[Profile.Language]}{<AddModal Content={DepartmentsCreate} />}</Table.HeaderCell>
                             <Table.HeaderCell width={2}>{Literals.Options.TableColumnsAmount[Profile.Language]}</Table.HeaderCell>
                             <Table.HeaderCell width={6}>{Literals.Options.TableColumnsInfo[Profile.Language]}</Table.HeaderCell>
                             <Table.HeaderCell width={1}>{Literals.Options.TableColumnsDelete[Profile.Language]}</Table.HeaderCell>
@@ -294,9 +297,9 @@ export default class PreregistrationsEditstock extends Component {
                         </Table.Body>
                         <Table.Footer>
                           <Table.Row>
-                            <Table.HeaderCell colSpan='6'>
+                            <Table.Cell colSpan='6'>
                               <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNewProduct(false, false) }}>{Literals.Button.AddnewStock[Profile.Language]}</Button>
-                            </Table.HeaderCell>
+                            </Table.Cell>
                           </Table.Row>
                         </Table.Footer>
                       </Table>
@@ -304,14 +307,20 @@ export default class PreregistrationsEditstock extends Component {
                   }
                 ]}
                 renderActiveOnly={false} />
-              <Footerwrapper>
-                {history && <Link to="/Preregistrations">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Preregistrations"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }

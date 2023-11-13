@@ -90,7 +90,7 @@ export const AddPurchaseorderstockmovements = createAsyncThunk(
 
 export const EditPurchaseorderstockmovements = createAsyncThunk(
     'Purchaseorderstockmovements/EditPurchaseorderstockmovements',
-    async ({data, history, redirectUrl, closeModal, clearForm}, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -166,7 +166,8 @@ export const PurchaseorderstockmovementsSlice = createSlice({
         notifications: [],
         isLoading: false,
         isDispatching: false,
-        isDeletemodalopen: false
+        isDeletemodalopen: false,
+        isApprovemodalopen: false
     },
     reducers: {
         handleSelectedPurchaseorderstockmovement: (state, action) => {
@@ -178,11 +179,14 @@ export const PurchaseorderstockmovementsSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removePurchaseorderstockmovementnotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
-        }
+        },
+        handleApprovemodal: (state, action) => {
+            state.isApprovemodalopen = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -263,7 +267,8 @@ export const {
     handleSelectedPurchaseorderstockmovement,
     fillPurchaseorderstockmovementnotification,
     removePurchaseorderstockmovementnotification,
-    handleDeletemodal
+    handleDeletemodal,
+    handleApprovemodal
 } = PurchaseorderstockmovementsSlice.actions;
 
 export default PurchaseorderstockmovementsSlice.reducer;

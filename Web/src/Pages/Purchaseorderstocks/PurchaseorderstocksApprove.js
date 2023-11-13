@@ -4,11 +4,11 @@ import Literals from './Literals'
 
 export default class PurchaseorderstocksApprove extends Component {
   render() {
-    const { Profile, Purchaseorderstocks, ApprovePurchaseorderstocks, handleApprovemodal, handleSelectedPurchaseorderstocks, Stockdefines } = this.props
+    const { Profile, Purchaseorderstocks, ApprovePurchaseorderstocks, handleApprovemodal, handleSelectedPurchaseorderstock, Stockdefines } = this.props
     const { isApprovemodalopen, selected_record } = Purchaseorderstocks
 
 
-    const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === selected_record.StockdefineID)
+    const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === selected_record?.StockdefineID)
     return (
       <Modal
         onClose={() => handleApprovemodal(false)}
@@ -27,7 +27,7 @@ export default class PurchaseorderstocksApprove extends Component {
         <Modal.Actions>
           <Button color='black' onClick={() => {
             handleApprovemodal(false)
-            handleSelectedPurchaseorderstocks({})
+            handleSelectedPurchaseorderstock({})
           }}>
             {Literals.Button.Giveup[Profile.Language]}
           </Button>
@@ -38,7 +38,7 @@ export default class PurchaseorderstocksApprove extends Component {
             onClick={() => {
               ApprovePurchaseorderstocks(selected_record)
               handleApprovemodal(false)
-              handleSelectedPurchaseorderstocks({})
+              handleSelectedPurchaseorderstock({})
             }}
             positive
           />

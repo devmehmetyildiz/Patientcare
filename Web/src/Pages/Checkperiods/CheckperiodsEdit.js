@@ -16,6 +16,8 @@ import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
 import PeriodsCreate from '../../Containers/Periods/PeriodsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class CheckperiodsEdit extends Component {
 
   PAGE_NAME = 'CheckperiodsEdit'
@@ -68,7 +70,7 @@ export default class CheckperiodsEdit extends Component {
     ]
 
     return (
-      Checkperiods.isLoading || Checkperiods.isDispatching || Periods.isLoading || Periods.isDispatching ? <LoadingPage /> :
+      Checkperiods.isLoading || Checkperiods.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -81,21 +83,27 @@ export default class CheckperiodsEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Form.Group widths={"equal"}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Occureddays[Profile.Language]} name="Occureddays" type='number' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodtype[Profile.Language]} name="Periodtype" options={Periodtypeoption} formtype="dropdown" />
               </Form.Group>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periodstxt[Profile.Language]} name="Periods" multiple options={Periodoptions} formtype="dropdown" modal={PeriodsCreate} />
-              <Footerwrapper>
-                {history && <Link to="/Checkperiods">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Checkperiods"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Checkperiods.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -105,9 +113,8 @@ export default class CheckperiodsEdit extends Component {
     e.preventDefault()
 
     const { EditCheckperiods, history, fillCheckperiodnotification, Periods, Checkperiods, Profile } = this.props
-    const data = formToObject(e.target)
-    data.Periodtype = this.context.formstates[`${this.PAGE_NAME}/Periodtype`]
-    data.Periods = this.context.formstates[`${this.PAGE_NAME}/Periods`].map(id => {
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Periods = data.Periods.map(id => {
       return (Periods.list || []).find(u => u.Uuid === id)
     })
     data.Occureddays && (data.Occureddays = parseInt(data.Occureddays))

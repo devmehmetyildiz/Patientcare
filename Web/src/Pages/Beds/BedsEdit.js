@@ -16,6 +16,8 @@ import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import RoomsCreate from '../../Containers/Rooms/RoomsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class BedsEdit extends Component {
 
@@ -55,7 +57,7 @@ export default class BedsEdit extends Component {
   }
 
   render() {
-    const { Beds, Rooms, Floors, Profile } = this.props
+    const { Beds, Rooms, Floors, Profile, history } = this.props
 
     const Roomsoptions = (Rooms.list || []).filter(u => u.Isactive).map(room => {
       return { key: room.Uuid, text: `${room.Name} (${(Floors.list || []).find(u => u.Uuid === room.FloorID)?.Name})`, value: room.Uuid }
@@ -75,17 +77,23 @@ export default class BedsEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.RoomID[Profile.Language]} name="RoomID" options={Roomsoptions} formtype='dropdown' modal={RoomsCreate} />
-              <Footerwrapper>
-                <Link to="/Beds">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Beds"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Beds.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -94,8 +102,7 @@ export default class BedsEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditBeds, history, fillBednotification, Profile, Beds } = this.props
-    const data = formToObject(e.target)
-    data.RoomID = this.context.formstates[`${this.PAGE_NAME}/RoomID`]
+    const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
     if (!validator.isUUID(data.RoomID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.RoomIDrequired[Profile.Language] })

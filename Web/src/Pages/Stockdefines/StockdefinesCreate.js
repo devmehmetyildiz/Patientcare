@@ -17,6 +17,8 @@ import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import UnitsCreate from '../../Containers/Units/UnitsCreate'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class StockdefinesCreate extends Component {
 
   PAGE_NAME = "StockdefinesCreate"
@@ -35,7 +37,7 @@ export default class StockdefinesCreate extends Component {
   }
 
   render() {
-    const { Departments, Units, Stockdefines, history, Profile } = this.props
+    const { Departments, Units, Stockdefines, history, Profile, closeModal } = this.props
 
     const Departmentoption = (Departments.list || []).filter(u => u.Isactive).map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
@@ -44,7 +46,7 @@ export default class StockdefinesCreate extends Component {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
 
-    
+
 
     return (
       Stockdefines.isLoading ? <LoadingPage /> :
@@ -57,10 +59,11 @@ export default class StockdefinesCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths={"equal"}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Description[Profile.Language]} name="Description" />
@@ -71,18 +74,24 @@ export default class StockdefinesCreate extends Component {
               </Form.Group>
               <Form.Group widths={"equal"}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Ismedicine[Profile.Language]} name="Ismedicine" formtype='checkbox' />
-                {this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] &&
-                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isredprescription[Profile.Language]} name="Isredprescription" formtype='checkbox' />}
+                {this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] ?
+                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isredprescription[Profile.Language]} name="Isredprescription" formtype='checkbox' /> : null}
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Issupply[Profile.Language]} name="Issupply" formtype='checkbox' />
               </Form.Group>
-              <Footerwrapper>
-                {history && <Link to="/Stockdefines">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Stockdefines"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Stockdefines.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -92,12 +101,8 @@ export default class StockdefinesCreate extends Component {
     e.preventDefault()
 
     const { AddStockdefines, history, fillStockdefinenotification, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
-    data.UnitID = this.context.formstates[`${this.PAGE_NAME}/UnitID`]
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.Ismedicine = this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] || false
-    data.Isredprescription = this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] ? this.context.formstates[`${this.PAGE_NAME}/Isredprescription`] || false : false
-    data.Issupply = this.context.formstates[`${this.PAGE_NAME}/Issupply`] || false
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Isredprescription = data.Isredprescription ? data.Isredprescription || false : false
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })

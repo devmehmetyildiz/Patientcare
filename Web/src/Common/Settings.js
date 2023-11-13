@@ -42,7 +42,7 @@ export default function Settings(props) {
                 onOpen={() => { setmodalOpen(true) }}
                 basic
                 size='tiny'
-                trigger={<div className='flex justify-center items-center'><Button className='h-fit' color='violet' floated='right'>{options[Profile.Language]}</Button></div>} >
+                trigger={<Button className='h-fit !m-auto' color='violet' floated='right'>{options[Profile.Language]}</Button>} >
                 <Modal.Content>
                     <div className='m-4 flex flex-col justify-center items-center w-full '>
                         <Grid stackable columns={1}>

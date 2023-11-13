@@ -46,7 +46,7 @@ class ExcelExport extends Component {
       .map(key => {
         if (!(((Config.hiddenColumns).concat(['edit', 'delete', 'Isactive', 'Deleteduser', 'Deletetime']) || []).includes(key))) { return key; } return '';
       })
-      .filter(key => key !== '');
+      .filter(key => key !== '').map(u => { return columns.find(column => column.accessor === u)?.Header || "Tanımsız" })
     const exceldata = new Array(headers).concat(decoratedData.map(value => {
       let filteredValue = Object.keys(value).map(key => {
         if (headers.includes(key)) {

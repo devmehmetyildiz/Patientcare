@@ -5,9 +5,11 @@ import { GetStockdefines, AddStockdefines, fillStockdefinenotification } from ".
 import { GetCases } from "../../Redux/CaseSlice"
 import { GetWarehouses } from "../../Redux/WarehouseSlice"
 import { GetDepartments } from "../../Redux/DepartmentSlice"
+import { GetPurchaseorderstocks } from "../../Redux/PurchaseorderstockSlice"
 
 const mapStateToProps = (state) => ({
     Purchaseorders: state.Purchaseorders,
+    Purchaseorderstocks: state.Purchaseorderstocks,
     Stockdefines: state.Stockdefines,
     Cases: state.Cases,
     Departments: state.Departments,
@@ -18,7 +20,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     EditPurchaseorders, GetPurchaseorder, fillPurchaseordernotification,
     GetStockdefines, AddStockdefines, fillStockdefinenotification, GetWarehouses,
-    GetCases, GetDepartments
+    GetCases, GetDepartments, GetPurchaseorderstocks
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PurchaseordersEdit)

@@ -12,6 +12,7 @@ import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import UsersDelete from '../../Containers/Users/UsersDelete'
 import MobileTable from '../../Utils/MobileTable'
+import Settings from '../../Common/Settings'
 export default class Users extends Component {
 
   constructor(props) {
@@ -26,12 +27,15 @@ export default class Users extends Component {
   }
 
   componentDidMount() {
-    const { GetUsers } = this.props
+    const { GetUsers, GetRoles, GetStations, GetDepartments } = this.props
     GetUsers()
+    GetRoles()
+    GetStations()
+    GetDepartments()
   }
 
   render() {
-    const { Users, Profile, handleDeletemodal, handleSelectedUser } = this.props
+    const { Users, Profile, handleDeletemodal, handleSelectedUser, Departments, Stations, Roles } = this.props
     const { isLoading, isDispatching } = Users
 
     const Columns = [
@@ -77,14 +81,14 @@ export default class Users extends Component {
     };
 
     const list = (Users.list || []).map(item => {
-      var stationtext = (item.Stations || []).map((station) => {
-        return station.Name;
+      var rolestext = (item.Roleuuids || []).map(u => {
+        return (Roles.list || []).find(role => role.Uuid === u.RoleID)?.Name
       }).join(", ")
-      var rolestext = (item.Roles || []).map((role) => {
-        return role.Name;
+      var stationtext = (item.Stationuuids || []).map(u => {
+        return (Stations.list || []).find(station => station.Uuid === u.StationID)?.Name
       }).join(", ")
-      var departmentext = (item.Departments || []).map((department) => {
-        return department.Name;
+      var departmentext = (item.Departmentuuids || []).map(u => {
+        return (Departments.list || []).find(department => department.Uuid === u.DepartmentID)?.Name
       }).join(", ")
       return {
         ...item,
@@ -105,21 +109,25 @@ export default class Users extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Users"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Users/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Users/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />
@@ -181,12 +189,12 @@ export default class Users extends Component {
 
   rolesCellhandler = (col) => {
 
-    const { Profile } = this.props
+    const { Profile, Roles } = this.props
 
     if (col.value) {
       if (!col.cell?.isGrouped && !Profile.Ismobile) {
         const itemId = col.row.original.Id
-        const itemRoles = col.row.original.Roles
+        const itemRoles = (col.row.original.Roleuuids || []).map(u => { return (Roles.list || []).find(role => role.Uuid === u.RoleID) })
         return col.value.length - 35 > 20 ?
           (
             !this.state.rolesStatus.includes(itemId) ?
@@ -200,12 +208,12 @@ export default class Users extends Component {
   }
 
   departmentCellhandler = (col) => {
-    const { Profile } = this.props
+    const { Profile, Departments } = this.props
 
     if (col.value) {
       if (!col.cell?.isGrouped && !Profile.Ismobile) {
         const itemId = col.row.original.Id
-        const itemDepartments = col.row.original.Departments
+        const itemDepartments = (col.row.original.Departmentuuids || []).map(u => { return (Departments.list || []).find(department => department.Uuid === u.DepartmentID) })
         return col.value.length - 35 > 20 ?
           (
             !this.state.departmentsStatus.includes(itemId) ?
@@ -219,12 +227,12 @@ export default class Users extends Component {
   }
 
   stationCellhandler = (col) => {
-    const { Profile } = this.props
+    const { Profile, Stations } = this.props
 
     if (col.value) {
       if (!col.cell?.isGrouped && !Profile.Ismobile) {
         const itemId = col.row.original.Id
-        const itemStations = col.row.original.Stations
+        const itemStations = (col.row.original.Stationuuids || []).map(u => { return (Stations.list || []).find(station => station.Uuid === u.DepartmentID) })
         return col.value.length - 35 > 20 ?
           (
             !this.state.stationsStatus.includes(itemId) ?

@@ -61,4 +61,5 @@ export const PATIENTMOVEMENTTYPE = [
     { Name: "Ölüm", value: 4 },
     { Name: "Kontrol", value: 5 },
     { Name: "Ayrılmış", value: 6 },
+    { Name: "Yer değişikliği", value: 7 },
 ]

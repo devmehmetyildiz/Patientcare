@@ -16,6 +16,8 @@ import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import FloorsCreate from '../../Containers/Floors/FloorsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class RoomsCreate extends Component {
 
   PAGE_NAME = "RoomsCreate"
@@ -33,7 +35,7 @@ export default class RoomsCreate extends Component {
   }
 
   render() {
-    const { Rooms, Floors, Profile } = this.props
+    const { Rooms, Floors, Profile, history, closeModal } = this.props
 
     const Floorsoptions = (Floors.list || []).filter(u => u.Isactive).map(Floor => {
       return { key: Floor.Uuid, text: Floor.Name, value: Floor.Uuid }
@@ -50,20 +52,27 @@ export default class RoomsCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.FloorID[Profile.Language]} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
-              <Footerwrapper>
-                <Link to="/Rooms">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Rooms"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Rooms.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -72,8 +81,7 @@ export default class RoomsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddRooms, history, fillRoomnotification, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
-    data.FloorID = this.context.formstates[`${this.PAGE_NAME}/FloorID`]
+    const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isUUID(data.FloorID)) {

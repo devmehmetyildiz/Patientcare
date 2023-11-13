@@ -15,6 +15,8 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 
 export default class FloorsEdit extends Component {
 
@@ -49,7 +51,7 @@ export default class FloorsEdit extends Component {
   }
 
   render() {
-    const { Floors, Profile } = this.props
+    const { Floors, Profile, history } = this.props
 
     return (
       Floors.isLoading || Floors.isDispatching ? <LoadingPage /> :
@@ -65,16 +67,22 @@ export default class FloorsEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <Footerwrapper>
-                <Link to="/Floors">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Floors"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Floors.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -83,7 +91,8 @@ export default class FloorsEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditFloors, history, fillFloornotification, Profile, Floors } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
+
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })

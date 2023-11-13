@@ -13,6 +13,9 @@ module.exports = sequelize.define('departmentModel', {
     Ishavepatients: {
         type: Sequelize.BOOLEAN
     },
+    Isdefaultpatientdepartment: {
+        type: Sequelize.BOOLEAN
+    },
     Createduser: {
         type: Sequelize.STRING
     },

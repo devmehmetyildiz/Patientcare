@@ -102,7 +102,7 @@ export const AddRules = createAsyncThunk(
             dispatch(fillRulenotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('RulesCreate')
             closeModal && closeModal()
@@ -126,7 +126,7 @@ export const EditRules = createAsyncThunk(
             dispatch(fillRulenotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('RulesUpdate')
             closeModal && closeModal()
@@ -172,7 +172,7 @@ export const DeleteRules = createAsyncThunk(
             dispatch(fillRulenotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
             }));
             return response.data;
         } catch (error) {
@@ -193,7 +193,7 @@ export const ClearRulelogs = createAsyncThunk(
             dispatch(fillRulenotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.cleardescription[Language],
+                description: Literals.cleardescription[Language] + ` : ${data?.Name}`,
             }));
             return response.data;
         } catch (error) {
@@ -230,7 +230,7 @@ export const RulesSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeRulenotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload

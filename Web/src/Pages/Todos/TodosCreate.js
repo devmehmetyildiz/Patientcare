@@ -16,6 +16,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class TododefinesCreate extends Component {
 
   PAGE_NAME = "TododefinesCreate"
@@ -27,7 +29,7 @@ export default class TododefinesCreate extends Component {
 
   render() {
 
-    const { Tododefines, Checkperiods, Profile } = this.props
+    const { Tododefines, Checkperiods, Profile, history, closeModal } = this.props
     const { isLoading, isDispatching } = Tododefines
 
     const Checkperiodsoptions = (Checkperiods.list || []).filter(u => u.Isactive).map(checkperiod => {
@@ -45,10 +47,11 @@ export default class TododefinesCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
@@ -61,10 +64,16 @@ export default class TododefinesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsNeedactivation[Profile.Language]} name="IsNeedactivation" formtype="checkbox" />
               </Form.Group>
               <Footerwrapper>
-                <Link to="/Tododefines">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
+                <Gobackbutton
+                  history={history}
+                  redirectUrl={"/Todos"}
+                  buttonText={Literals.Button.Goback[Profile.Language]}
+                />
+                <Submitbutton
+                  isLoading={isLoading}
+                  buttonText={Literals.Button.Create[Profile.Language]}
+                  submitFunction={this.handleSubmit}
+                />
               </Footerwrapper>
             </Form>
           </Contentwrapper>
@@ -77,12 +86,10 @@ export default class TododefinesCreate extends Component {
 
     const { AddTododefines, history, fillTododefinenotification, Checkperiods, Profile, closeModal } = this.props
 
-    const data = formToObject(e.target)
-    data.Checkperiods = this.context.formstates[`${this.PAGE_NAME}/Checkperiods`].map(id => {
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Checkperiods = data.Checkperiods.map(id => {
       return (Checkperiods.list || []).find(u => u.Uuid === id)
     })
-    data.IsRequired = this.context.formstates[`${this.PAGE_NAME}/IsRequired`] || false
-    data.IsNeedactivation = this.context.formstates[`${this.PAGE_NAME}/IsNeedactivation`] || false
 
     let errors = []
     if (!validator.isString(data.Name)) {

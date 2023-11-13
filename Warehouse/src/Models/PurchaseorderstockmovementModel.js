@@ -13,6 +13,9 @@ module.exports = sequelize.define('purchaseorderstockmovementModel', {
     Isapproved: {
         type: Sequelize.BOOLEAN
     },
+    Iscompleted: {
+        type: Sequelize.BOOLEAN
+    },
     Movementtype: {
         type: Sequelize.INTEGER
     },

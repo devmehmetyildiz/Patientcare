@@ -15,6 +15,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class PatientdefinesCreate extends Component {
 
   PAGE_NAME = "PatientdefinesCreate"
@@ -26,7 +28,7 @@ export default class PatientdefinesCreate extends Component {
   }
 
   render() {
-    const { Costumertypes, Patienttypes, Patientdefines, Profile, history } = this.props
+    const { Costumertypes, Patienttypes, Patientdefines, Profile, history, closeModal } = this.props
 
     const Costumertypeoptions = (Costumertypes.list || []).filter(u => u.Isactive).map(costumertype => {
       return { key: costumertype.Uuid, text: costumertype.Name, value: costumertype.Uuid }
@@ -50,8 +52,7 @@ export default class PatientdefinesCreate extends Component {
     ]
 
     return (
-      Patientdefines.isLoading || Patientdefines.isDispatching || Patienttypes.isLoading
-        || Patienttypes.isDispatching || Costumertypes.isLoading || Costumertypes.isDispatching ? <LoadingPage /> :
+      Patientdefines.isLoading || Patientdefines.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -61,10 +62,11 @@ export default class PatientdefinesCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Firstname[Profile.Language]} name="Firstname" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Lastname[Profile.Language]} name="Lastname" />
@@ -113,15 +115,20 @@ export default class PatientdefinesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CostumertypeName[Profile.Language]} name="CostumertypeID" options={Costumertypeoptions} formtype="dropdown" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.PatienttypeName[Profile.Language]} name="PatienttypeID" options={Patienttypeoptions} formtype="dropdown" />
               </Form.Group>
-              <Footerwrapper>
-                {history && <Button onClick={(e) => {
-                  e.preventDefault()
-                  history.length > 1 ? history.goBack() : history.push('/Patientdefines')
-                }} floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Patientdefines"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Patientdefines.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -130,14 +137,7 @@ export default class PatientdefinesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddPatientdefines, history, fillPatientdefinenotification, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
-    data.PatienttypeID = this.context.formstates[`${this.PAGE_NAME}/PatienttypeID`]
-    data.CostumertypeID = this.context.formstates[`${this.PAGE_NAME}/CostumertypeID`]
-    data.Ismotheralive = this.context.formstates[`${this.PAGE_NAME}/Ismotheralive`] || false
-    data.Isfatheralive = this.context.formstates[`${this.PAGE_NAME}/Isfatheralive`] || false
-    data.Gender = this.context.formstates[`${this.PAGE_NAME}/Gender`]
-    data.Motherbiologicalaffinity = this.context.formstates[`${this.PAGE_NAME}/Motherbiologicalaffinity`]
-    data.Fatherbiologicalaffinity = this.context.formstates[`${this.PAGE_NAME}/selectedFatheralaffinity`]
+    const data = this.context.getForm(this.PAGE_NAME)
 
     if (!data.Dateofbirth || data.Dateofbirth === '') {
       data.Dateofbirth = null

@@ -16,6 +16,8 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class UnitsCreate extends Component {
 
   PAGE_NAME = "UnitsCreate"
@@ -34,7 +36,7 @@ export default class UnitsCreate extends Component {
 
 
   render() {
-    const { Units, Departments, Profile } = this.props
+    const { Units, Departments, Profile, history, closeModal } = this.props
 
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -54,7 +56,7 @@ export default class UnitsCreate extends Component {
     ]
 
     return (
-      Units.isLoading || Units.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
+      Units.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -64,10 +66,11 @@ export default class UnitsCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unittype[Profile.Language]} name="Unittype" options={unitstatusOption} formtype='dropdown' />
@@ -75,14 +78,20 @@ export default class UnitsCreate extends Component {
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
-              <Footerwrapper>
-                <Link to="/Units">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Units"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Units.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -90,9 +99,8 @@ export default class UnitsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddUnits, history, fillUnitnotification, Departments, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
-    data.Unittype = this.context.formstates[`${this.PAGE_NAME}/Unittype`]
-    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Departments = data.Departments.map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)
     })
 

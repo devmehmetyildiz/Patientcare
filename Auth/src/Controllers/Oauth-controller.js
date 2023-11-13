@@ -30,6 +30,24 @@ function Login(req, res, next) {
     }
 }
 
+async function Register(req, res, next) {
+    let userroleresponse = null
+    try {
+        const response = await axios({
+            method: 'POST',
+            url: config.services.Userrole + `Users/Register`,
+            headers: {
+                session_key: config.session.secret
+            },
+            data: req.body
+        })
+        userroleresponse = response.data
+    } catch (error) {
+        return next(requestErrorCatcher(error, 'Userrole'))
+    }
+    res.status(200).json(userroleresponse?.data)
+}
+
 async function ValidateToken(req, res, next) {
     let validationErrors = []
     let accessToken = {}
@@ -223,4 +241,5 @@ module.exports = {
     Login,
     ValidateToken,
     Testserver,
+    Register
 }

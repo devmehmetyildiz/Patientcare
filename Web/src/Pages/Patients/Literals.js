@@ -488,6 +488,10 @@ const Literals = {
             tr: "Rutin Düzenle",
             en: "Edit Rutines"
         },
+        Editplace: {
+            tr: "Yatak Değiştir",
+            en: "Change Bed"
+        },
         Editfiles: {
             tr: "Dosyaları Düzenle",
             en: "Edit Files"

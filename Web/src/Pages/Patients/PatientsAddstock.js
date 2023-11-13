@@ -18,6 +18,8 @@ import config from '../../Config'
 import { PATIENTMOVEMENTTYPE, ROUTES } from '../../Utils/Constants'
 import DataTable from '../../Utils/DataTable'
 import NoDataScreen from '../../Utils/NoDataScreen'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class PatientsAddstock extends Component {
 
@@ -85,7 +87,7 @@ export default class PatientsAddstock extends Component {
     } = this.props
 
 
-    const Id = match.params.PatientID || PatientID
+    const Id = match?.params?.PatientID || PatientID
 
     const { selected_record } = Patients
 
@@ -103,8 +105,14 @@ export default class PatientsAddstock extends Component {
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
 
     const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive && !u.Ismedicine).map(warehouse => {
-      return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
-    })
+      const stocks = (Stocks.list || []).filter(u =>
+        u.Isactive &&
+        u.WarehouseID === warehouse?.Uuid &&
+        u.Isapproved &&
+        !u.Ismedicine
+      )
+      return (stocks || []).length > 0 ? { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid } : null
+    }).filter(u => u !== null)
 
     const Stockoptions = (Stocks.list || []).filter(u =>
       u.Isactive &&
@@ -143,24 +151,28 @@ export default class PatientsAddstock extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Label>{Literals.AddStock.Availablestocks[Profile.Language]}</Label>
               <Pagedivider />
               <Tab className='station-tab'
                 panes={
                   Warehouseoptions.map(warehouse => {
                     const stocks = (Stocks.list || []).filter(u => u.WarehouseID === warehouse.value && !u.Ismedicine && u.Isapproved)
-                    return {
-                      menuItem: warehouse.text,
-                      pane: {
-                        key: warehouse.key,
-                        content: stocks.length > 0 ?
-                          <div className='w-full mx-auto '>
-                            <DataTable Columns={Columns} Data={stocks} />
-                          </div> : <NoDataScreen message={Literals.Messages.Nostockfind[Profile.Language]} style={{ height: 'auto' }} />
+                    if ((stocks || []).length > 0) {
+                      return {
+                        menuItem: warehouse.text,
+                        pane: {
+                          key: warehouse.key,
+                          content: (stocks || []).length > 0 ?
+                            <div className='w-full mx-auto '>
+                              <DataTable Columns={Columns} Data={stocks} />
+                            </div> : <NoDataScreen message={Literals.Messages.Nostockfind[Profile.Language]} style={{ height: 'auto' }} />
+                        }
                       }
+                    } else {
+                      return null
                     }
-                  })}
+                  }).filter(u => u)}
                 renderActiveOnly={false} />
               <Pagedivider />
               <Form.Group widths='equal'>
@@ -168,15 +180,20 @@ export default class PatientsAddstock extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.AddStock.Stockname[Profile.Language]} name="StockID" options={Stockoptions} formtype='dropdown' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.AddStock.Amount[Profile.Language]} name="Amount" type="number" />
               </Form.Group>
-              <Footerwrapper>
-                {history && <Button onClick={(e) => {
-                  e.preventDefault()
-                  history.length > 1 ? history.goBack() : history.push(Id ? `/Patients/${Id}` : `/Patients`)
-                }} floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Add[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={isLoadingstatus}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -185,10 +202,7 @@ export default class PatientsAddstock extends Component {
     e.preventDefault()
     const { history, Profile, Stockmovements, fillStocknotification, TransfertoPatient, match, PatientID } = this.props
     let Id = PatientID || match?.params?.PatientID
-    const data = formToObject(e.target)
-    data.Amount = parseFloat(data.Amount)
-    data.WarehouseID = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
-    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
+    const data = this.context.getForm(this.PAGE_NAME)
     data.PatientID = Id
     let errors = []
     if (!validator.isUUID(data.WarehouseID)) {

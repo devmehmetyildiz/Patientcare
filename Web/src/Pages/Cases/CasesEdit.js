@@ -16,6 +16,8 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class CasesEdit extends Component {
 
   PAGE_NAME = 'CasesEdit'
@@ -92,7 +94,7 @@ export default class CasesEdit extends Component {
     }).filter(u => u).length > 0
 
     return (
-      Cases.isLoading || Cases.isDispatching || Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
+      Cases.isLoading || Cases.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -105,7 +107,7 @@ export default class CasesEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
@@ -123,14 +125,20 @@ export default class CasesEdit extends Component {
                   <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Iscalculateprice[Profile.Language]} name="Iscalculateprice" formtype="checkbox" />
                   <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isroutinework[Profile.Language]} name="Isroutinework" formtype="checkbox" />
                 </Form.Group>}
-              <Footerwrapper>
-                {history && <Link to="/Cases">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Cases"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Cases.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -140,9 +148,9 @@ export default class CasesEdit extends Component {
     e.preventDefault()
 
     const { EditCases, history, fillCasenotification, Departments, Cases, Profile } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
 
-    const ispatientdepartmentselected = (this.context.formstates[`${this.PAGE_NAME}/Departments`] || []).map(id => {
+    const ispatientdepartmentselected = data.Departments.map(id => {
       let isHave = false
       const department = (Departments.list || []).find(u => u.Uuid === id)
       if (department && department.Ishavepatients) {
@@ -151,11 +159,10 @@ export default class CasesEdit extends Component {
       return isHave
     }).filter(u => u).length > 0
 
-    data.CaseStatus = this.context.formstates[`${this.PAGE_NAME}/CaseStatus`]
-    data.Patientstatus = ispatientdepartmentselected ? this.context.formstates[`${this.PAGE_NAME}/Patientstatus`] : 0
-    data.Iscalculateprice = ispatientdepartmentselected ? this.context.formstates[`${this.PAGE_NAME}/Iscalculateprice`] : false
-    data.Isroutinework = ispatientdepartmentselected ? this.context.formstates[`${this.PAGE_NAME}/Isroutinework`] : false
-    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+    data.Patientstatus = ispatientdepartmentselected ? data.Patientstatus : 0
+    data.Iscalculateprice = ispatientdepartmentselected ? data.Iscalculateprice || false : false
+    data.Isroutinework = ispatientdepartmentselected ? data.Isroutinework || false : false
+    data.Departments = data.Departments.map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)
     })
 

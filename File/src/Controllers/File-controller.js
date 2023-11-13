@@ -129,7 +129,6 @@ async function Downloadfile(req, res, next) {
                 });
 
             } catch (err) {
-                console.log('err: ', err);
                 await Reconnectftp()
                 return next(createValidationError(messages.ERROR.FILE_DOWNLOAD_ERROR))
             }

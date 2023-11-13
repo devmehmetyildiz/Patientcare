@@ -42,8 +42,9 @@ export class Departments extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
-      { Header: Literals.Columns.stationstxt[Profile.Language], accessor: 'Stationstxt', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
+      { Header: Literals.Columns.stationstxt[Profile.Language], accessor: 'Stations', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
       { Header: Literals.Columns.Ishavepatients[Profile.Language], accessor: 'Ishavepatients', sortable: true, canGroupBy: true, Finalheader: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Isdefaultpatientdepartment[Profile.Language], accessor: 'Isdefaultpatientdepartment', sortable: true, canGroupBy: true, Finalheader: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -71,7 +72,7 @@ export class Departments extends Component {
       }).join(", ")
       return {
         ...item,
-        Stationstxt: text,
+        Stations: text,
         edit: <Link to={`/Departments/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedDepartment(item)
@@ -87,7 +88,7 @@ export class Departments extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Departments"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
@@ -104,6 +105,7 @@ export class Departments extends Component {
                   metaKey={metaKey}
                   Showcreatebutton
                   Showcolumnchooser
+                  Showexcelexport
                 />
               </Grid>
             </Headerwrapper>

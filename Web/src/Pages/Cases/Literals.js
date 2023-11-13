@@ -2,12 +2,12 @@ const Literals = {
     Options: {
         caseStatusoption: {
             value0: {
-                tr: 'Pasif',
-                en: "Passive"
-            },
-            value1: {
                 tr: 'İptal Etme',
                 en: "Deactivate"
+            },
+            value1: {
+                tr: 'Pasif',
+                en: "Passive"
             },
             value2: {
                 tr: 'Tamamlama',

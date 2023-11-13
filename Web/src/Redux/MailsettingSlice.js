@@ -70,7 +70,7 @@ export const AddMailsettings = createAsyncThunk(
             dispatch(fillMailsettingnotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('MailsettingsCreate')
             closeModal && closeModal()
@@ -94,7 +94,7 @@ export const EditMailsettings = createAsyncThunk(
             dispatch(fillMailsettingnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('MailsettingsEdit')
             closeModal && closeModal()
@@ -119,7 +119,7 @@ export const DeleteMailsettings = createAsyncThunk(
             dispatch(fillMailsettingnotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
             }));
             return response.data;
         } catch (error) {
@@ -151,7 +151,7 @@ export const MailsettingsSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeMailsettingnotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload

@@ -14,6 +14,7 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import PatientstocksDelete from "../../Containers/Patientstocks/PatientstocksDelete"
 import PatientstocksApprove from "../../Containers/Patientstocks/PatientstocksApprove"
 import MobileTable from '../../Utils/MobileTable'
+import Settings from '../../Common/Settings'
 export default class Patientstocks extends Component {
   constructor(props) {
     super(props)
@@ -71,10 +72,10 @@ export default class Patientstocks extends Component {
       }) : [],
     };
 
-    const list = (Patientstocks.list || []).filter(u => !u.Ismedicine).map(item => {
+    const list = (Patientstocks.list || []).filter(u => !u.Ismedicine && !u.Issupply && u.Isactive).map(item => {
       return {
         ...item,
-        change: <Link to={`/Patientstockmovements/Create?PatientstockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
+        change: <Link to={`/Patientstockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
         edit: <Link to={`/Patientstocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
           handleSelectedPatientstock(item)
@@ -93,21 +94,25 @@ export default class Patientstocks extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Patientstocks"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Patientstocks/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Patientstocks/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />

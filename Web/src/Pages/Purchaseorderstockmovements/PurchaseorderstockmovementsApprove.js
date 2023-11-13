@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import { Button, Modal } from 'semantic-ui-react'
 import Literals from './Literals'
+import { Button, Modal } from 'semantic-ui-react'
 
-export default class PurchaseordermedicinesApprove extends Component {
+export default class PurchaseorderstockmovementsApprove extends Component {
   render() {
-    const { Profile, Purchaseorderstocks, ApprovePurchaseorderstocks, handleApprovemodal, handleSelectedPurchaseorderstock, Stockdefines } = this.props
-    const { isApprovemodalopen, selected_record } = Purchaseorderstocks
+    const { Profile, Purchaseorderstockmovements, ApprovePurchaseorderstockmovements, handleApprovemodal, handleSelectedPurchaseorderstockmovement, Stockdefines, Purchaseorderstocks } = this.props
+    const { isApprovemodalopen, selected_record } = Purchaseorderstockmovements
 
-    const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === selected_record?.StockdefineID)
+    const stock = (Purchaseorderstocks.list || []).find(u => u.Uuid === selected_record.StockID)
+    const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
+
     return (
       <Modal
         onClose={() => handleApprovemodal(false)}
@@ -26,7 +28,7 @@ export default class PurchaseordermedicinesApprove extends Component {
         <Modal.Actions>
           <Button color='black' onClick={() => {
             handleApprovemodal(false)
-            handleSelectedPurchaseorderstock({})
+            handleSelectedPurchaseorderstockmovement({})
           }}>
             {Literals.Button.Giveup[Profile.Language]}
           </Button>
@@ -35,9 +37,9 @@ export default class PurchaseordermedicinesApprove extends Component {
             labelPosition='right'
             icon='checkmark'
             onClick={() => {
-              ApprovePurchaseorderstocks(selected_record)
+              ApprovePurchaseorderstockmovements(selected_record)
               handleApprovemodal(false)
-              handleSelectedPurchaseorderstock({})
+              handleSelectedPurchaseorderstockmovement({})
             }}
             positive
           />

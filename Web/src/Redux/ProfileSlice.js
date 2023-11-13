@@ -33,7 +33,7 @@ export const register = createAsyncThunk(
     'Profile/register',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Userrole, 'Users/Register', data);
+            const response = await instanse.post(config.services.Auth, 'Oauth/Register', data);
             dispatch(fillnotification({
                 type: 'Success',
                 code: 'Elder Camp',
@@ -241,7 +241,7 @@ export const ProfileSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removenotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         removeauth: (state) => {
             state.auth = false
