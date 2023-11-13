@@ -177,9 +177,9 @@ export default class PatientsDetail extends Component {
       { Header: Literals.Details.Usagetype[Profile.Language], accessor: 'Usagetype', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
     ]
 
-    const lastincomestocks = (Patientstockmovements.list || []).filter(u => u.Movementtype === 1).sort((a, b) => { return b.Id - a.Id }).slice(0, 5).map(movement => {
+    const lastincomestocks = (Patientstockmovements.list || []).filter(u => u.Movementtype === 1 && u.Isapproved).sort((a, b) => { return b.Id - a.Id }).slice(0, 5).map(movement => {
       const stock = (Patientstocks.list || []).find(u => u.Uuid === movement.StockID && u.PatientID === selected_record?.Uuid)
-      if (stock) {
+      if (stock && stock?.Isapproved) {
         const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
         const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
         return { ...movement, Stockname: stockdefine?.Name, Unitname: unit?.Name }
@@ -188,9 +188,9 @@ export default class PatientsDetail extends Component {
       }
     }).filter(u => u)
 
-    const lastoutcomestocks = (Patientstockmovements.list || []).filter(u => u.Movementtype === -1).sort((a, b) => { return b.Id - a.Id }).slice(0, 5).map(movement => {
+    const lastoutcomestocks = (Patientstockmovements.list || []).filter(u => u.Movementtype === -1 && u.Isapproved).sort((a, b) => { return b.Id - a.Id }).slice(0, 5).map(movement => {
       const stock = (Patientstocks.list || []).find(u => u.Uuid === movement.StockID && u.PatientID === selected_record?.Uuid)
-      if (stock) {
+      if (stock && stock?.Isapproved) {
         const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
         const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
         return { ...movement, Stockname: stockdefine?.Name, Unitname: unit?.Name }
@@ -203,7 +203,7 @@ export default class PatientsDetail extends Component {
 
     const lastfiles = (Files.list || []).filter(u => u.ParentID === selected_record?.Uuid).sort((a, b) => { return b.Id - a.Id }).slice(0, 5)
 
-    const patientstocks = (Patientstocks.list || []).filter(u => u.PatientID === selected_record?.Uuid && !u.Ismedicine).map(stock => {
+    const patientstocks = (Patientstocks.list || []).filter(u => u.PatientID === selected_record?.Uuid && !u.Ismedicine && u.Isapproved).map(stock => {
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
       const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
       let amount = 0.0;
@@ -214,7 +214,7 @@ export default class PatientsDetail extends Component {
       return { ...stock, Amount: amount, Stockname: stockdefine?.Name, Unitname: unit?.Name }
     })
 
-    const patientmedicines = (Patientstocks.list || []).filter(u => u.PatientID === selected_record?.Uuid && u.Ismedicine).map(stock => {
+    const patientmedicines = (Patientstocks.list || []).filter(u => u.PatientID === selected_record?.Uuid && u.Ismedicine && u.Isapproved).map(stock => {
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
       const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
       let amount = 0.0;
@@ -242,12 +242,15 @@ export default class PatientsDetail extends Component {
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
-          <Contentwrapper>
+          <Contentwrapper additionalStyle="max-h-[calc(89vh-59px-2rem)]">
             <Grid divided className='w-full flex justify-center items-center'>
               <Grid.Row>
                 <GridColumn width={14} >
-                  <Grid.Row className='flex justify-center items-center'>
-                    <Header>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`}</Header>
+                  <Grid.Row className='flex justify-between items-center'>
+                    <Label size='huge' style={{ backgroundColor: casedata?.Casecolor }} horizontal>{casedata?.Name}</Label>
+                    <div className='flex justify-start items-center'>
+                      <Header as='h1'>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`}</Header>
+                    </div>
                   </Grid.Row>
                   <Grid.Row className='mt-8 flex flex-row justify-center items-center w-full'>
                     <Label as={'a'}>{`${Literals.Details.Costumertype[Profile.Language]} : ${costumertype?.Name}`}</Label>
@@ -255,11 +258,6 @@ export default class PatientsDetail extends Component {
                     <Label as={'a'}>{`${Literals.Details.Floor[Profile.Language]} : ${floor?.Name}`}</Label>
                     <Label as={'a'}>{`${Literals.Details.Room[Profile.Language]} : ${room?.Name}`}</Label>
                     <Label as={'a'}>{`${Literals.Details.Bed[Profile.Language]} : ${bed?.Name}`}</Label>
-                  </Grid.Row>
-                  <Grid.Row className='mt-8 flex flex-row justify-center items-center w-full'>
-                    <div className='flex w-full justify-center items-center'>
-                      <Label color='red' size='large' horizontal>{casedata?.Name}</Label>
-                    </div>
                   </Grid.Row>
                 </GridColumn>
                 <Grid.Column width={2}>
@@ -322,8 +320,8 @@ export default class PatientsDetail extends Component {
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { handleInmodal(true) }}>{Literals.Button.Geton[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { handleOutmodal(true) }}>{Literals.Button.Getoff[Profile.Language]}</Button>
+                {/*     <Button primary fluid onClick={() => { handleInmodal(true) }}>{Literals.Button.Geton[Profile.Language]}</Button>
+                    <Button primary fluid onClick={() => { handleOutmodal(true) }}>{Literals.Button.Getoff[Profile.Language]}</Button> */}
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Changetodos[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`, { redirectUrl: "/Patients/" + Id }) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>

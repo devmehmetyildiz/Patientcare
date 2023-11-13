@@ -18,9 +18,11 @@ import { FormContext } from '../../Provider/FormProvider'
 import WarehousesCreate from '../../Containers/Warehouses/WarehousesCreate'
 import StockdefinesCreate from '../../Containers/Stockdefines/StockdefinesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class StocksEdit extends Component {
 
-  PAGe_NAME = "StocksEdit"
+  PAGE_NAME = "StocksEdit"
 
   constructor(props) {
     super(props)
@@ -61,7 +63,7 @@ export default class StocksEdit extends Component {
   }
 
   render() {
-    const { Stocks, Warehouses, Departments, Stockdefines, Profile } = this.props
+    const { Stocks, Warehouses, Departments, Stockdefines, Profile, history } = this.props
 
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -87,7 +89,7 @@ export default class StocksEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' modal={WarehousesCreate} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' modal={StockdefinesCreate} />
@@ -96,14 +98,20 @@ export default class StocksEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoptions} name="DepartmentID" formtype='dropdown' modal={DepartmentsCreate} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
-              <Footerwrapper>
-                <Link to="/Stocks">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Stocks"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Stocks.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -112,10 +120,7 @@ export default class StocksEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditStocks, history, fillStocknotification, Stocks, Profile } = this.props
-    const data = formToObject(e.target)
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
-    data.WarehouseID = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
+    const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {

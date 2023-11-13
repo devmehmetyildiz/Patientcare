@@ -72,9 +72,7 @@ async function AddDepartment(req, res, next) {
     if (!validator.isBoolean(Ishavepatients)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISHAVEPATIENTS_REQUIRED)
     }
-    if (!validator.isArray(Stations)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATIONS_REQUIRED)
-    }
+
 
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -93,7 +91,7 @@ async function AddDepartment(req, res, next) {
             Isactive: true
         }, { transaction: t })
 
-        for (const station of Stations) {
+        for (const station of (Stations || [])) {
             if (!station.Uuid || !validator.isUUID(station.Uuid)) {
                 return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_STATIONID, req.language))
             }
@@ -133,9 +131,6 @@ async function UpdateDepartment(req, res, next) {
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID)
     }
-    if (!validator.isArray(Stations)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATIONS_REQUIRED)
-    }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
@@ -157,7 +152,7 @@ async function UpdateDepartment(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await db.departmentstationModel.destroy({ where: { DepartmentID: Uuid }, transaction: t });
-        for (const station of Stations) {
+        for (const station of (Stations || [])) {
             if (!station.Uuid || !validator.isUUID(station.Uuid)) {
                 return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_STATIONID, req.language))
             }

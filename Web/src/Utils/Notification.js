@@ -1,24 +1,39 @@
 import cogoToast from "@successtar/cogo-toast";
+import { toast } from 'react-toastify';
+import validator from "./Validator";
 
-function Notification(notifications, removeNotification) {
+const CustomToast = ({ title, message }) => (
+    <div>
+        <strong>{title}</strong>
+        <div>{message}</div>
+    </div>
+);
+
+function Notification(notifications, removeNotification, Profile) {
+
+    let meta = Profile?.meta?.Config
+    let config = {}
+    config = (meta && validator.isString(meta)) ? JSON.parse(meta) : {}
+
+    config?.autoClose && (config.autoClose = parseFloat(config.autoClose))
+    config?.position && (config.position = `top-${config.position}`)
+
     if (notifications && notifications.length > 0) {
-        const { type, code, description } = notifications[0]
-        const toastoptions = {
-            hideAfter: 5,
-            position: 'top-right',
-            heading: code
-        }
-        switch (type) {
-            case "Success":
-                cogoToast.success(description, toastoptions)
-                break;
-            case "Error":
-                cogoToast.error(description, toastoptions)
-                break;
-            default:
-                break;
-        }
-        removeNotification()
+        notifications.forEach((notification) => {
+            const { type, code, description } = notification
+            switch (type) {
+                case "Success":
+                    toast.success(<CustomToast title={code} message={description} />, config);
+                    break;
+                case "Error":
+                    toast.error(<CustomToast title={code} message={description} />, config);
+
+                    break;
+                default:
+                    break;
+            }
+            removeNotification()
+        });
     }
 }
 

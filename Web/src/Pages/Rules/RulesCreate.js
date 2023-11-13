@@ -16,6 +16,8 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import Editor from '@monaco-editor/react'
 import { FormContext } from '../../Provider/FormProvider'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class RulesCreate extends Component {
 
@@ -31,7 +33,7 @@ export default class RulesCreate extends Component {
     }
 
     render() {
-        const { Rules, Profile, history } = this.props
+        const { Rules, Profile, history, closeModal } = this.props
         const { isLoading, isDispatching } = Rules
 
         return (
@@ -45,10 +47,11 @@ export default class RulesCreate extends Component {
                             <Breadcrumb.Divider icon='right chevron' />
                             <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
                         </Headerbredcrump>
+                        {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
                     </Headerwrapper>
                     <Pagedivider />
                     <Contentwrapper>
-                        <Form onSubmit={this.handleSubmit}>
+                        <Form>
                             <Tab className='station-tab'
                                 panes={[
                                     {
@@ -79,17 +82,25 @@ export default class RulesCreate extends Component {
                                     }
                                 ]}
                                 renderActiveOnly={false} />
-                            <Footerwrapper>
-                                <Form.Group widths={'equal'}>
-                                    {history && <Link to="/Rules">
-                                        <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                                    </Link>}
-                                    <Button floated="right" type="button" color='grey' onClick={(e) => { this.context.clearForm(this.PAGE_NAME) }}>{Literals.Button.Clear[Profile.Language]}</Button>
-                                </Form.Group>
-                                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
-                            </Footerwrapper>
                         </Form>
                     </Contentwrapper>
+                    <Footerwrapper>
+                        <Form.Group widths={'equal'}>
+                            <Gobackbutton
+                                history={history}
+                                redirectUrl={"/Rules"}
+                                buttonText={Literals.Button.Goback[Profile.Language]}
+                            />
+                            <Button floated="right" type="button" color='grey' onClick={(e) => {
+                                this.setState({ template: '' })
+                            }}>{Literals.Button.Clear[Profile.Language]}</Button>
+                        </Form.Group>
+                        <Submitbutton
+                            isLoading={isLoading}
+                            buttonText={Literals.Button.Create[Profile.Language]}
+                            submitFunction={this.handleSubmit}
+                        />
+                    </Footerwrapper>
                 </Pagewrapper >
         )
     }
@@ -100,9 +111,8 @@ export default class RulesCreate extends Component {
 
         const { AddRules, history, fillRulenotification, Profile, closeModal } = this.props
 
-        const data = formToObject(e.target)
+        const data = this.context.getForm(this.PAGE_NAME)
         data.Rule = this.state.template
-        data.Status = this.context.formstates[`${this.PAGE_NAME}/Status`] || false
         let errors = []
         if (!validator.isString(data.Name)) {
             errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })

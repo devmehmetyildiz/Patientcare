@@ -20,6 +20,8 @@ import CasesCreate from '../../Containers/Cases/CasesCreate'
 import WarehousesCreate from '../../Containers/Warehouses/WarehousesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import AddModal from '../../Utils/AddModal'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class PurchaseordersCreate extends Component {
 
   PAGE_NAME = "PurchaseordersCreate"
@@ -49,7 +51,7 @@ export default class PurchaseordersCreate extends Component {
   render() {
 
     const { Warehouses, Cases, Departments, Stockdefines, Profile,
-      Purchaseorders } = this.props
+      Purchaseorders, history, closeModal } = this.props
     const { isLoading, isDispatching } = Purchaseorders
 
     const Stockdefinesoption = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(stockdefine => {
@@ -60,7 +62,7 @@ export default class PurchaseordersCreate extends Component {
       return { key: stockdefine.Uuid, text: stockdefine.Name, value: stockdefine.Uuid }
     })
 
-    const Suppliesoption = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && u.Issupply).map(stockdefine => {
+    const Supplydefineoption = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && u.Issupply).map(stockdefine => {
       return { key: stockdefine.Uuid, text: stockdefine.Name, value: stockdefine.Uuid }
     })
 
@@ -68,9 +70,34 @@ export default class PurchaseordersCreate extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const Casesoption = (Cases.list || []).filter(u => u.Isactive).filter(u => u.caseStatus !== 1).map(cases => {
-      return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
+    const Medicinedepartmentsoption = (Departments.list || []).filter(u => u.Isactive && u.Ishavepatients).map(department => {
+      return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
+
+    const Casesoption = (Cases.list || []).filter(u => u.Isactive).filter(u => u.CaseStatus === 0).map(cases => {
+      let departments = (cases.Departmentuuids || [])
+        .map(u => {
+          const department = (Departments.list || []).find(department => department.Uuid === u.DepartmentID)
+          if (department) {
+            return department
+          } else {
+            return null
+          }
+        })
+        .filter(u => u !== null);
+      let ishavepatients = false;
+      (departments || []).forEach(department => {
+        if (department?.Ishavepatients) {
+          ishavepatients = true
+        }
+      });
+
+      if (ishavepatients) {
+        return null
+      } else {
+        return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
+      }
+    }).filter(u => u !== null);
 
     const Warehousesoption = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
       return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
@@ -87,10 +114,11 @@ export default class PurchaseordersCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Tab className='station-tab'
                 panes={[
                   {
@@ -157,7 +185,7 @@ export default class PurchaseordersCreate extends Component {
                                   </Table.Cell>
                                   <Table.Cell>
                                     <Form.Field>
-                                      <Dropdown placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" clearable search fluid selection options={Departmentsoption} value={stock.DepartmentID} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'DepartmentID', data.value) }} />
+                                      <Dropdown placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" clearable search fluid selection options={Medicinedepartmentsoption} value={stock.DepartmentID} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'DepartmentID', data.value) }} />
                                     </Form.Field>
                                   </Table.Cell>
                                   <Table.Cell>
@@ -221,7 +249,7 @@ export default class PurchaseordersCreate extends Component {
                                   </Table.Cell>
                                   <Table.Cell>
                                     <Form.Field>
-                                      <Dropdown placeholder={Literals.Columns.StockDefine[Profile.Language]} name="StockdefineID" clearable search fluid selection options={Medicinedefinesoption} value={stock.StockdefineID} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'StockdefineID', data.value) }} />
+                                      <Dropdown placeholder={Literals.Columns.StockDefine[Profile.Language]} name="StockdefineID" clearable search fluid selection options={Supplydefineoption} value={stock.StockdefineID} onChange={(e, data) => { this.selectedProductChangeHandler(stock.key, 'StockdefineID', data.value) }} />
                                     </Form.Field>
                                   </Table.Cell>
                                   <Table.Cell>
@@ -324,14 +352,20 @@ export default class PurchaseordersCreate extends Component {
                 ]}
                 renderActiveOnly={false} />
               <Pagedivider />
-              <Footerwrapper>
-                <Link to="/Purchaseorders">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Purchaseorders"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -341,7 +375,7 @@ export default class PurchaseordersCreate extends Component {
 
     const { AddPurchaseorders, history, fillPurchaseordernotification, Profile, closeModal } = this.props
     const stocks = this.state.selectedStocks
-    const formData = formToObject(e.target)
+    const formData = this.context.getForm(this.PAGE_NAME)
 
     stocks.forEach(data => {
       data.Amount = parseFloat(data.Amount)
@@ -370,10 +404,10 @@ export default class PurchaseordersCreate extends Component {
       if (!validator.isUUID(data.DepartmentID)) {
         errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Departmentrequired[Profile.Language] })
       }
-      if (!validator.isISODate(data.Skt)) {
+      if ((data.Issupply || data.Ismedicine) && !validator.isISODate(data.Skt)) {
         errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Sktrequired[Profile.Language] })
       }
-      if (!validator.isString(data.Barcodeno)) {
+      if ((data.Issupply || data.Ismedicine) && !validator.isString(data.Barcodeno)) {
         errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Barcodenorequired[Profile.Language] })
       }
       if (!validator.isNumber(data.Amount)) {
@@ -410,11 +444,12 @@ export default class PurchaseordersCreate extends Component {
         fillPurchaseordernotification(error)
       })
     } else {
-      await AddPurchaseorders({ data: responseData, history, closeModal })
+      AddPurchaseorders({ data: responseData, history, closeModal })
     }
   }
 
   AddNewProduct = (Ismedicine, Issupply) => {
+
     this.setState({
       selectedStocks: [...this.state.selectedStocks,
       {
@@ -431,6 +466,7 @@ export default class PurchaseordersCreate extends Component {
         Info: '',
         Ismedicine: Ismedicine,
         Issupply: Issupply,
+        Isredprescription: false,
         Willdelete: false,
         key: Math.random(),
         Order: (this.state.selectedStocks || []).filter(u => u.Ismedicine === Ismedicine && u.Issupply === Issupply).length,
@@ -439,20 +475,35 @@ export default class PurchaseordersCreate extends Component {
   }
 
   removeProduct = (key, order) => {
-    let stock = this.state.selectedStocks.find(u => u.key === key);
-    let stocks = this.state.selectedStocks.filter(u => u.Ismedicine === stock.Ismedicine && u.Issupply === stock.Issupply).filter(productionRoute => productionRoute.key !== key);
+    let stocks = this.state.selectedStocks.filter(productionRoute => productionRoute.key !== key)
     stocks.filter(stock => stock.Order > order).forEach(stock => stock.Order--)
     this.setState({ selectedStocks: stocks })
   }
 
   selectedProductChangeHandler = (key, property, value) => {
+
     let productionRoutes = this.state.selectedStocks
     const index = productionRoutes.findIndex(productionRoute => productionRoute.key === key)
     if (property === 'order') {
-      productionRoutes.filter(productionRoute => productionRoute.Order === value)
+      let selectedroute = this.state.selectedStocks.find(u => u.key === key);
+      productionRoutes.filter(u => u.Issupply === selectedroute?.Issupply && u.Ismedicine === selectedroute?.Ismedicine)
+        .filter(productionRoute => productionRoute.Order === value)
         .forEach((productionRoute) => productionRoute.Order = productionRoutes[index].Order > value ? productionRoute.Order + 1 : productionRoute.Order - 1)
     }
+    if (property === 'StockdefineID') {
+      const { Stockdefines } = this.props
+
+      productionRoutes[index].Isredprescription = (Stockdefines.list || []).find(u => u.Uuid === value)?.Isredprescription || false
+    }
     productionRoutes[index][property] = value
+    if (property === 'Skt') {
+      const currentDate = new Date(value || '');
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      productionRoutes[index][property] = formattedDate
+    }
     this.setState({ selectedStocks: productionRoutes })
   }
 }

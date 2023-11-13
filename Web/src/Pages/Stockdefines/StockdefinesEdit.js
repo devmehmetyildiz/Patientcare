@@ -16,6 +16,8 @@ import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import UnitsCreate from '../../Containers/Units/UnitsCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class StockdefinesEdit extends Component {
 
   PAGE_NAME = "StockdefinesEdit"
@@ -76,7 +78,7 @@ export default class StockdefinesEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths={"equal"}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Description[Profile.Language]} name="Description" />
@@ -87,18 +89,24 @@ export default class StockdefinesEdit extends Component {
               </Form.Group>
               <Form.Group widths={"equal"}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Ismedicine[Profile.Language]} name="Ismedicine" formtype='checkbox' />
-                {this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] &&
-                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isredprescription[Profile.Language]} name="Isredprescription" formtype='checkbox' />}
+                {this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] ?
+                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isredprescription[Profile.Language]} name="Isredprescription" formtype='checkbox' /> : null}
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Issupply[Profile.Language]} name="Issupply" formtype='checkbox' />
               </Form.Group>
-              <Footerwrapper>
-                {history && <Link to="/Stockdefines">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Stockdefines"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Stockdefines.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -108,12 +116,8 @@ export default class StockdefinesEdit extends Component {
     e.preventDefault()
 
     const { EditStockdefines, history, fillStockdefinenotification, Stockdefines, Profile } = this.props
-    const data = formToObject(e.target)
-    data.UnitID = this.context.formstates[`${this.PAGE_NAME}/UnitID`]
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.Ismedicine = this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] || false
-    data.Isredprescription = this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] ? this.context.formstates[`${this.PAGE_NAME}/Isredprescription`] || false : false
-    data.Issupply = this.context.formstates[`${this.PAGE_NAME}/Issupply`] || false
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Isredprescription = data.Isredprescription ? data.Isredprescription || false : false
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })

@@ -18,17 +18,12 @@ import { FormContext } from '../../Provider/FormProvider'
 import PurchaseordersCreate from '../../Containers/Purchaseorders/PurchaseordersCreate'
 import StockdefinesCreate from '../../Containers/Stockdefines/StockdefinesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 
 export default class PurchaseordersuppliesCreate extends Component {
 
   PAGE_NAME = "PurchaseordersuppliesCreate"
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      modelOpened: false
-    }
-  }
 
   componentDidMount() {
     const { GetDepartments, GetStockdefines, GetPurchaseorders } = this.props
@@ -38,7 +33,7 @@ export default class PurchaseordersuppliesCreate extends Component {
   }
 
   render() {
-    const { Purchaseorders, Purchaseorderstocks, Departments, Stockdefines, Profile } = this.props
+    const { Purchaseorders, Purchaseorderstocks, Departments, Stockdefines, Profile, history, closeModal } = this.props
 
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -61,10 +56,11 @@ export default class PurchaseordersuppliesCreate extends Component {
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchaseorder[Profile.Language]} name="PurchaseorderID" options={Purchaseorderoptions} formtype='dropdown' modal={PurchaseordersCreate} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype='dropdown' modal={StockdefinesCreate} />
@@ -74,17 +70,23 @@ export default class PurchaseordersuppliesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
-              <Footerwrapper>
-                <Link to="/Purchaseordersupplies">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Purchaseordersupplies"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Purchaseorderstocks.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -93,11 +95,7 @@ export default class PurchaseordersuppliesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddPurchaseorderstocks, history, fillPurchaseorderstocknotification, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
-    data.PurchaseorderID = this.context.formstates[`${this.PAGE_NAME}/PurchaseorderID`]
-    data.Amount = parseFloat(data.Amount)
+    const data = this.context.getForm(this.PAGE_NAME)
     data.Order = 0
     data.Ismedicine = false
     data.Issupply = true
@@ -121,15 +119,8 @@ export default class PurchaseordersuppliesCreate extends Component {
         fillPurchaseorderstocknotification(error)
       })
     } else {
-      AddPurchaseorderstocks({ data, history, closeModal })
+      AddPurchaseorderstocks({ data, history, closeModal, redirectUrl: '/Purchaseordersupplies' })
     }
-  }
-
-  getLocalDate = () => {
-    var curr = new Date();
-    curr.setDate(curr.getDate() + 3);
-    var date = curr.toISOString().substring(0, 10);
-    return date
   }
 }
 PurchaseordersuppliesCreate.contextType = FormContext

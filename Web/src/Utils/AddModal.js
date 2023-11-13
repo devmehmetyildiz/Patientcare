@@ -11,9 +11,11 @@ export default function AddModal({ Content }) {
         onOpen={() => { setOpen(true) }}
         trigger={<Icon link name='plus' />}
     >
-        <Content
-            closeModal={() => { setOpen(false) }}
-        />
+        <div className='w-full p-4'>
+            <Content
+                closeModal={() => { setOpen(false) }}
+            />
+        </div>
     </Modal>
     )
 }

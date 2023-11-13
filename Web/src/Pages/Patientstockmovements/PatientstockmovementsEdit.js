@@ -15,6 +15,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
 import FormInput from '../../Utils/FormInput'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class PatientstockmovementsEdit extends Component {
 
   PAGE_NAME = "PatientstockmovementsEdit"
@@ -69,7 +71,7 @@ export default class PatientstockmovementsEdit extends Component {
     ]
 
     return (
-      Patientstocks.isLoading || Patientstocks.isDispatching || Patientstockmovements.isLoading || Patientstockmovements.isDispatching ? <LoadingPage /> :
+      Patientstockmovements.isLoading || Patientstockmovements.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -77,25 +79,31 @@ export default class PatientstockmovementsEdit extends Component {
                 <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockID" options={Patientstockoptions} formtype="dropdown" />
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype="dropdown" />
               </Form.Group>
-              <Footerwrapper>
-                {history && <Link to="/Patientstockmovements">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Patientstockmovements"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Patientstockmovements.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -104,9 +112,7 @@ export default class PatientstockmovementsEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditPatientstockmovements, history, fillPatientstockmovementnotification, Patientstockmovements, Profile } = this.props
-    const data = formToObject(e.target)
-    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
-    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
+    const data = this.context.getForm(this.PAGE_NAME)
     data.Movementdate = new Date()
     data.Movementtype && (data.Movementdate = parseInt(data.Movementtype))
     data.Amount && (data.Amount = parseFloat(data.Amount))

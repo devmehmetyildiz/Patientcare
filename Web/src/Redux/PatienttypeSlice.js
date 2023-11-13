@@ -62,7 +62,7 @@ export const GetPatienttype = createAsyncThunk(
 
 export const AddPatienttypes = createAsyncThunk(
     'Patienttypes/AddPatienttypes',
-    async ({data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -70,7 +70,7 @@ export const AddPatienttypes = createAsyncThunk(
             dispatch(fillPatienttypenotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('PatienttypesCreate')
             closeModal && closeModal()
@@ -86,7 +86,7 @@ export const AddPatienttypes = createAsyncThunk(
 
 export const AddRecordPatienttypes = createAsyncThunk(
     'Patienttypes/AddRecordPatienttypes',
-    async ({data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -94,7 +94,7 @@ export const AddRecordPatienttypes = createAsyncThunk(
             dispatch(fillPatienttypenotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('PatienttypesCreate')
             closeModal && closeModal()
@@ -118,7 +118,7 @@ export const EditPatienttypes = createAsyncThunk(
             dispatch(fillPatienttypenotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('PatienttypesUpdate')
             closeModal && closeModal()
@@ -143,7 +143,7 @@ export const DeletePatienttypes = createAsyncThunk(
             dispatch(fillPatienttypenotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
             }));
             return response.data;
         } catch (error) {
@@ -175,7 +175,7 @@ export const PatienttypesSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removePatienttypenotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload

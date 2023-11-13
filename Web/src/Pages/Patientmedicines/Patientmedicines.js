@@ -69,10 +69,10 @@ export default class Patientmedicines extends Component {
       }) : [],
     };
 
-    const list = (Patientstocks.list || []).filter(u => u.Ismedicine && !u.Issupply).map(item => {
+    const list = (Patientstocks.list || []).filter(u => u.Ismedicine && !u.Issupply && u.Isactive).map(item => {
       return {
         ...item,
-        change: <Link to={`/Patientstockmovements/Create?PatientstockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
+        change: <Link to={`/Patientstockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
         edit: <Link to={`/Patientmedicines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
           handleSelectedPatientstock(item)
@@ -106,7 +106,9 @@ export default class Patientmedicines extends Component {
                   list={list}
                   initialConfig={initialConfig}
                   metaKey={metaKey}
-                  AddRecord={AddRecordPatientmedicines}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
                 />
               </Grid>
             </Headerwrapper>
@@ -161,7 +163,7 @@ export default class Patientmedicines extends Component {
     } else {
       const selectedStock = (Patientstocks.list || []).find(u => u.Id === col.row.original.Id)
       let amount = 0.0;
-      let movements = (Patientstockmovements.list || []).filter(u => u.StockID === selectedStock.Uuid && u.Isactive && u.Isapproved)
+      let movements = (Patientstockmovements.list || []).filter(u => u.StockID === selectedStock?.Uuid && u.Isactive && u.Isapproved)
       movements.forEach(movement => {
         amount += (movement.Amount * movement.Movementtype);
       });

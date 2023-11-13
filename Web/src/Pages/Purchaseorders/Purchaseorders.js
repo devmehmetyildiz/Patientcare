@@ -13,6 +13,8 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import PurchaseordersDelete from '../../Containers/Purchaseorders/PurchaseordersDelete'
 import PurchaseordersComplete from '../../Containers/Purchaseorders/PurcaseordersComplete'
+import Settings from '../../Common/Settings'
+import MobileTable from '../../Utils/MobileTable'
 
 export default class Purchaseorders extends Component {
 
@@ -24,7 +26,9 @@ export default class Purchaseorders extends Component {
   }
 
   componentDidMount() {
-    const { GetPurchaseorders, GetPurchaseorderstocks, GetStockdefines, GetDepartments, GetPurchaseorderstockmovements, GetCases } = this.props
+    const { GetWarehouses, GetPurchaseorders, GetPurchaseorderstocks, GetStockdefines, GetDepartments, GetPurchaseorderstockmovements, GetCases
+    } = this.props
+    GetWarehouses()
     GetPurchaseorders()
     GetPurchaseorderstocks()
     GetStockdefines()
@@ -44,7 +48,7 @@ export default class Purchaseorders extends Component {
         Header: () => null,
         id: 'expander', accessor: 'expander', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true,
         Cell: ({ row }) => (
-          <span {...row.getToggleRowExpandedProps()}>
+          !Profile.Ismobile && <span {...row.getToggleRowExpandedProps()}>
             {row.isExpanded ? <Icon name='triangle down' /> : <Icon name='triangle right' />}
           </span>
         ),
@@ -52,12 +56,13 @@ export default class Purchaseorders extends Component {
       },
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Company[Profile.Language], accessor: 'Company', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Purchasenumber[Profile.Language], accessor: 'Purchasenumber', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Warehouse[Profile.Language], accessor: 'WarehouseID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.warehouseCellhandler(col) },
+      { Header: Literals.Columns.Company[Profile.Language], accessor: 'Company', sortable: true, canGroupBy: true, canFilter: true, Subheader: true },
+      { Header: Literals.Columns.Purchasenumber[Profile.Language], accessor: 'Purchasenumber', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
       { Header: Literals.Columns.Personelname[Profile.Language], accessor: 'Personelname', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Companypersonelname[Profile.Language], accessor: 'Companypersonelname', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Purchasedate[Profile.Language], accessor: 'Purchasedate', sortable: true, canGroupBy: true, canFilter: true, },
+      { Header: Literals.Columns.Purchasedate[Profile.Language], accessor: 'Purchasedate', sortable: true, canGroupBy: true, canFilter: true, Finalheader: true, Cell: col => this.dateCellhandler(col) },
       { Header: Literals.Columns.CaseName[Profile.Language], accessor: 'CaseID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.caseCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
@@ -84,12 +89,12 @@ export default class Purchaseorders extends Component {
     const list = (Purchaseorders.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
-        complete: <Icon link size='large' color='red' name='check square' onClick={() => {
+        complete: item.Iscompleted ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='check square' onClick={() => {
           handleSelectedPurchaseorder(item)
           handleCompletemodal(true)
         }} />,
-        edit: <Link to={`/Purchaseorders/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+        edit: item.Iscompleted ? <Icon size='large' color='black' name='minus' /> : <Link to={`/Purchaseorders/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: item.Iscompleted ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedPurchaseorder(item)
           handleDeletemodal(true)
         }} />
@@ -109,29 +114,36 @@ export default class Purchaseorders extends Component {
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Purchaseorders/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Purchaseorders/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-                <PurchaseordersList
-                  Data={list}
-                  Columns={Columns}
-                  initialConfig={initialConfig}
-                  Profile={Profile}
-                  Departments={Departments}
-                  Stockdefines={Stockdefines}
-                  Purchaseorderstocks={Purchaseorderstocks}
-                  Purchaseorderstockmovements={Purchaseorderstockmovements}
-                />
+                {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <PurchaseordersList
+                    Data={list}
+                    Columns={Columns}
+                    initialConfig={initialConfig}
+                    Profile={Profile}
+                    Departments={Departments}
+                    Stockdefines={Stockdefines}
+                    Purchaseorderstocks={Purchaseorderstocks}
+                    Purchaseorderstockmovements={Purchaseorderstockmovements}
+                  />
+                }
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>
@@ -156,5 +168,21 @@ export default class Purchaseorders extends Component {
     } else {
       return (Cases.list || []).find(u => u.Uuid === col.value)?.Name
     }
+  }
+
+  warehouseCellhandler = (col) => {
+    const { Warehouses } = this.props
+    if (Warehouses.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Warehouses.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
+
+  dateCellhandler = (col) => {
+    if (col.value) {
+      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+    }
+    return null
   }
 }

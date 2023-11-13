@@ -16,6 +16,8 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Patientdefines from '../../Containers/Patientdefines/Patientdefines'
 import { FormContext } from '../../Provider/FormProvider'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class PatientstocksEdit extends Component {
 
   PAGE_NAME = 'PatientstocksEdit'
@@ -23,7 +25,6 @@ export default class PatientstocksEdit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isInprepatients: false,
       isDatafetched: false
     }
   }
@@ -56,39 +57,30 @@ export default class PatientstocksEdit extends Component {
 
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
       !isLoadingstatus && !isLoading && !this.state.isDatafetched) {
-      const patient = (Patients.list || []).find(u => u.Uuid === selected_record?.PatientID)
       this.setState({
         isDatafetched: true,
-        isInprepatients: patient?.iswaitingactivation
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
   }
 
   render() {
-    const { Patientstocks, Patients, Departments, Stockdefines, Profile, Patientdefines } = this.props
+    const { Patientstocks, Patients, Departments, Stockdefines, Profile, Patientdefines, history } = this.props
 
     const { selected_record } = Patientstocks
 
-    const Departmentoptions = Departments.list.map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
     const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
 
-    const patient = (Patients.list || []).find(u => u.Uuid === selected_record?.PatientID)
+    const patient = (Patients.list || []).filter(u => u.Isactive).find(u => u.Uuid === selected_record?.PatientID)
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
 
-    const isLoadingstatus =
-      Stockdefines.isLoading ||
-      Patientstocks.isLoading ||
-      Departments.isLoading ||
-      Patients.isLoading ||
-      Patientdefines.isLoading
-
     return (
-      isLoadingstatus ? <LoadingPage /> :
+      Patientstocks.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -102,17 +94,23 @@ export default class PatientstocksEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Label>{`${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`}</Label>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype="dropdown" />
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
-              <Footerwrapper>
-                <Link to="/Patientstocks">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Patientstocks"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Patientstocks.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -121,10 +119,7 @@ export default class PatientstocksEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditPatientstocks, history, fillPatientstocknotification, Patientstocks, Profile } = this.props
-    const data = formToObject(e.target)
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.StockdefineID = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
-    data.PatientID = this.context.formstates[`${this.PAGE_NAME}/PatientID`]
+    const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
@@ -142,7 +137,7 @@ export default class PatientstocksEdit extends Component {
         fillPatientstocknotification(error)
       })
     } else {
-      EditPatientstocks({ data: { ...Patientstocks.selected_record, ...data }, history, redirectUrl: '/Patientmedicines' })
+      EditPatientstocks({ data: { ...Patientstocks.selected_record, ...data }, history, redirectUrl: '/Patientstocks' })
     }
   }
 

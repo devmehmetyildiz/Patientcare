@@ -15,6 +15,8 @@ import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
 import Notification from '../../Utils/Notification'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 
 
 export default class UnitsEdit extends Component {
@@ -53,7 +55,7 @@ export default class UnitsEdit extends Component {
 
   render() {
 
-    const { Units, Departments, Profile } = this.props
+    const { Units, Departments, Profile, history } = this.props
 
     const Departmentoptions = (Departments.list || []).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -73,7 +75,7 @@ export default class UnitsEdit extends Component {
     ]
 
     return (
-      Departments.isLoading || Departments.isDispatching || Units.isLoading || Units.isDispatching ? <LoadingPage /> :
+      Units.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -86,7 +88,7 @@ export default class UnitsEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unittype[Profile.Language]} name="Unittype" options={unitstatusOption} formtype='dropdown' />
@@ -94,14 +96,20 @@ export default class UnitsEdit extends Component {
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
-              <Footerwrapper>
-                <Link to="/Units">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Units"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Units.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -111,9 +119,8 @@ export default class UnitsEdit extends Component {
     e.preventDefault()
 
     const { EditUnits, history, fillUnitnotification, Departments, Units, Profile } = this.props
-    const data = formToObject(e.target)
-    data.Unittype = this.context.formstates[`${this.PAGE_NAME}/Unittype`]
-    data.Departments = this.context.formstates[`${this.PAGE_NAME}/Departments`].map(id => {
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Departments = data.Departments.map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)
     })
 

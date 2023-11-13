@@ -12,6 +12,8 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Literals from './Literals'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class PatientsFiles extends Component {
 
@@ -26,7 +28,7 @@ export default class PatientsFiles extends Component {
 
     componentDidMount() {
         const { GetPatient, match, history, GetFiles, GetPatientdefines, PatientID } = this.props
-        const Id = match.params.PatientID || PatientID
+        const Id = match?.params?.PatientID || PatientID
         if (Id) {
             GetPatient(Id)
             GetFiles()
@@ -41,7 +43,7 @@ export default class PatientsFiles extends Component {
         const { selected_record, isLoading } = Patients
         if (selected_record && !Files.isLoading && !Patientdefines.isLoading && Object.keys(selected_record).length > 0 &&
             selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
-            var response = (Files.list || []).filter(u => u.ParentID === selected_record.Uuid).map(element => {
+            var response = (Files.list || []).filter(u => u.ParentID === selected_record?.Uuid).map(element => {
                 return {
                     ...element,
                     key: Math.random()
@@ -58,8 +60,10 @@ export default class PatientsFiles extends Component {
         const { Files, Patients, Profile, history, Patientdefines, PatientID, match } = this.props
         const { selected_record, isLoading, isDispatching } = Patients
 
-        const Id = match.params.PatientID || PatientID
-        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
+        const Id = match?.params?.PatientID || PatientID
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID);
+
+        const patientPp = (Files.list || []).find(u => u.ParentID === selected_record?.Uuid && u.Usagetype === 'PP' && u.Isactive)
 
         const usagetypes = [
             { key: Literals.Options.usageType0[Profile.Language], text: Literals.Options.usageType0[Profile.Language], value: Literals.Options.usageType0[Profile.Language] },
@@ -91,12 +95,12 @@ export default class PatientsFiles extends Component {
                     <Pagedivider />
                     <Contentwrapper>
                         <Header as='h2' icon textAlign='center'>
-                            {(Files.list || []).filter(u => u.Usagetype === 'PP' && u.ParentID === selected_record.Uuid).length > 0 ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${(Files.list || []).filter(u => u.ParentID === selected_record.Uuid).find(u => u.Usagetype === 'PP')?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
+                            {patientPp
+                                ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPp?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
                                 : <Icon name='users' circular />}
-                            <Header.Content>{`${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.Firstname} 
-                            ${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.Lastname} - ${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.CountryID}`}</Header.Content>
+                            <Header.Content>{`${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`}</Header.Content>
                         </Header>
-                        <Form onSubmit={this.handleSubmit}>
+                        <Form>
                             <Table celled className='list-table' key='product-create-type-conversion-table' >
                                 <Table.Header>
                                     <Table.Row>
@@ -146,15 +150,20 @@ export default class PatientsFiles extends Component {
                                     </Table.Row>
                                 </Table.Footer>
                             </Table>
-                            <Footerwrapper>
-                                {history && <Button onClick={(e) => {
-                                    e.preventDefault()
-                                    history.length > 1 ? history.goBack() : history.push(Id ? `/Patients/${Id}` : `/Patients`)
-                                }} floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>}
-                                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-                            </Footerwrapper>
                         </Form>
                     </Contentwrapper>
+                    <Footerwrapper>
+                        <Gobackbutton
+                            history={history}
+                            redirectUrl={"/Preregistrations"}
+                            buttonText={Literals.Button.Goback[Profile.Language]}
+                        />
+                        <Submitbutton
+                            isLoading={isLoading}
+                            buttonText={Literals.Button.Update[Profile.Language]}
+                            submitFunction={this.handleSubmit}
+                        />
+                    </Footerwrapper>
                 </Pagewrapper >
         )
     }

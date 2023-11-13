@@ -14,6 +14,7 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import PurchaseordersuppliesDelete from '../../Containers/Purchaseordersupplies/PurchaseordersuppliesDelete'
 import PurchaseordersuppliesApprove from '../../Containers/Purchaseordersupplies/PurchaseordersuppliesApprove'
 import MobileTable from '../../Utils/MobileTable'
+import Settings from '../../Common/Settings'
 
 export default class Purchaseordersupplies extends Component {
 
@@ -28,7 +29,7 @@ export default class Purchaseordersupplies extends Component {
 
   render() {
 
-    const { Purchaseorderstocks, Profile, handleDeletemodal, handleSelectedPurchaseorderstocks, handleApprovemodal } = this.props
+    const { Purchaseorderstocks, Profile, handleDeletemodal, handleSelectedPurchaseorderstock, handleApprovemodal } = this.props
     const { isLoading, isDispatching } = Purchaseorderstocks
 
     const Columns = [
@@ -37,7 +38,7 @@ export default class Purchaseordersupplies extends Component {
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', Firstheader: true, sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
       { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', Subheader: true, sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
       { Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, Finalheader: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
@@ -68,14 +69,14 @@ export default class Purchaseordersupplies extends Component {
     const list = (Purchaseorderstocks.list || []).filter(u => u.Isactive && !u.Ismedicine && u.Issupply).map(item => {
       return {
         ...item,
-        change: <Link to={`/Pruchaseorderstockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
-        edit: <Link to={`/Purchaseordersupplies/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-        approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
-          handleSelectedPurchaseorderstocks(item)
+        change: item.Iscompleted ? <Icon size='large' color='black' name='minus' /> : <Link to={`/Purchaseorderstockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
+        edit: item.Iscompleted ? <Icon size='large' color='black' name='minus' /> : <Link to={`/Purchaseordersupplies/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        approve: item.Iscompleted ? <Icon size='large' color='black' name='minus' /> : (item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+          handleSelectedPurchaseorderstock(item)
           handleApprovemodal(true)
-        }} />,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
-          handleSelectedPurchaseorderstocks(item)
+        }} />),
+        delete: item.Iscompleted ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+          handleSelectedPurchaseorderstock(item)
           handleDeletemodal(true)
         }} />,
       }
@@ -87,21 +88,25 @@ export default class Purchaseordersupplies extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Purchaseordersupplies"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Purchaseordersupplies/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Purchaseordersupplies/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />
@@ -156,12 +161,20 @@ export default class Purchaseordersupplies extends Component {
     } else {
       const selectedStock = (Purchaseorderstocks.list || []).find(u => u.Id === col?.row?.original?.Id)
       let amount = 0.0;
-      let movements = (Purchaseorderstockmovements.list || []).filter(u => u.StockID === selectedStock?.Uuid && u.Isactive)
+      let movements = (Purchaseorderstockmovements.list || []).filter(u => u.StockID === selectedStock?.Uuid && u.Isactive && u.Isapproved)
       movements.forEach(movement => {
         amount += (movement.Amount * movement.Movementtype);
       });
       return amount
     }
+  }
+
+
+  dateCellhandler = (col) => {
+    if (col.value) {
+      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+    }
+    return null
   }
 
   boolCellhandler = (col) => {

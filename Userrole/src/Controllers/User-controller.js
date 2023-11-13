@@ -350,15 +350,11 @@ async function AddUser(req, res, next) {
         Name,
         Surname,
         Language,
-        Town,
-        City,
-        Address,
         Email,
         Password,
         Departments,
         Roles,
         Stations,
-        UserID
     } = req.body
 
     if (!validator.isString(Username)) {
@@ -373,23 +369,11 @@ async function AddUser(req, res, next) {
     if (!validator.isString(Language)) {
         validationErrors.push(messages.VALIDATION_ERROR.LANGUAGE_REQUIRED)
     }
-    if (!validator.isString(Town)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TOWN_REQUIRED)
-    }
-    if (!validator.isString(City)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CITY_REQUIRED)
-    }
-    if (!validator.isString(Address)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ADDRESS_REQUIRED)
-    }
     if (!validator.isString(Password)) {
         validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
     }
     if (!validator.isString(Email)) {
         validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED)
-    }
-    if (!validator.isNumber(UserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
     }
     if (!validator.isArray(Departments)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
@@ -418,7 +402,7 @@ async function AddUser(req, res, next) {
     }
 
     const salt = await bcrypt.genSalt(16)
-    const hash = bcrypt.hash(Password, salt)
+    const hash = await bcrypt.hash(Password, salt)
     let useruuid = uuid()
 
     const t = await db.sequelize.transaction();

@@ -53,6 +53,9 @@ module.exports = sequelize.define('userModel', {
     UserID: {
         type: Sequelize.INTEGER
     },
+    Config: {
+        type: Sequelize.TEXT
+    },
     Defaultdepartment: {
         type: Sequelize.STRING
     },

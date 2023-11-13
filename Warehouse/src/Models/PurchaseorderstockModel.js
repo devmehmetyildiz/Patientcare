@@ -28,6 +28,9 @@ module.exports = sequelize.define('purchaseorderstockModel', {
     Isapproved: {
         type: Sequelize.BOOLEAN
     },
+    Iscompleted: {
+        type: Sequelize.BOOLEAN
+    },
     Skt: {
         type: Sequelize.DATE
     },

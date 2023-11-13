@@ -15,6 +15,8 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import TodogroupdefinesCreate from '../../Containers/Todogroupdefines/TodogroupdefinesCreate'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 
 export default class PatientsEditroutine extends Component {
 
@@ -65,7 +67,7 @@ export default class PatientsEditroutine extends Component {
         } = this.props
 
 
-        const Id = match.params.PatientID || PatientID
+        const Id = match?.params?.PatientID || PatientID
 
         const { selected_record } = Patients
 
@@ -100,20 +102,25 @@ export default class PatientsEditroutine extends Component {
                     </Headerwrapper>
                     <Pagedivider />
                     <Contentwrapper>
-                        <Form onSubmit={this.handleSubmit}>
-                            <Label>{`${Literals.Columns.Activetodogroupdefine[Profile.Language]} : ${activetodogroupdefine?.Name}`}</Label>
+                        <Form>
+                            <Label>{`${Literals.Columns.Activetodogroupdefine[Profile.Language]} : ${activetodogroupdefine?.Name || ''}`}</Label>
                             <Form.Group widths='equal'>
                                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Todogroupdefine[Profile.Language]} name="TodogroupdefineID" options={Todogroupdefinessoption} formtype='dropdown' modal={TodogroupdefinesCreate} />
                             </Form.Group>
-                            <Footerwrapper>
-                                {history && <Button onClick={(e) => {
-                                    e.preventDefault()
-                                    history.length > 1 ? history.goBack() : history.push(Id ? `/Patients/${Id}` : `/Patients`)
-                                }} floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>}
-                                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-                            </Footerwrapper>
                         </Form>
                     </Contentwrapper>
+                    <Footerwrapper>
+                        <Gobackbutton
+                            history={history}
+                            redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
+                            buttonText={Literals.Button.Goback[Profile.Language]}
+                        />
+                        <Submitbutton
+                            isLoading={isLoadingstatus}
+                            buttonText={Literals.Button.Update[Profile.Language]}
+                            submitFunction={this.handleSubmit}
+                        />
+                    </Footerwrapper>
                 </Pagewrapper >
         )
     }
@@ -122,8 +129,7 @@ export default class PatientsEditroutine extends Component {
         e.preventDefault()
         const { history, Profile, fillPatientnotification, Editpatienttodogroupdefine, match, PatientID } = this.props
         let Id = PatientID || match?.params?.PatientID
-        const data = formToObject(e.target)
-        data.TodogroupdefineID = this.context.formstates[`${this.PAGE_NAME}/TodogroupdefineID`]
+        const data = this.context.getForm(this.PAGE_NAME)
         let errors = []
         if (!validator.isUUID(data.TodogroupdefineID)) {
             errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.TodogroupdefineReuired[Profile.Language] })

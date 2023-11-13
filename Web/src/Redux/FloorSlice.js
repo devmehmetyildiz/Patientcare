@@ -70,7 +70,7 @@ export const AddFloors = createAsyncThunk(
             dispatch(fillFloornotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             dispatch(fillFloornotification({
                 type: 'Clear',
@@ -99,7 +99,7 @@ export const AddRecordFloors = createAsyncThunk(
             dispatch(fillFloornotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('FloorsCreate')
             closeModal && closeModal()
@@ -123,7 +123,7 @@ export const EditFloors = createAsyncThunk(
             dispatch(fillFloornotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('FloorsUpdate')
             closeModal && closeModal()
@@ -148,7 +148,7 @@ export const DeleteFloors = createAsyncThunk(
             dispatch(fillFloornotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
             }));
             return response.data;
         } catch (error) {
@@ -180,7 +180,7 @@ export const FloorsSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeFloornotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload

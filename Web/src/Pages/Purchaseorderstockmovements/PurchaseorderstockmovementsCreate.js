@@ -15,20 +15,28 @@ import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class PurchaseorderstockmovementsCreate extends Component {
 
   PAGE_NAME = "PurchaseorderstockmovementsCreate"
 
   componentDidMount() {
-    const { GetPurchaseorderstocks } = this.props
+    const { GetPurchaseorderstocks, GetStockdefines } = this.props
     GetPurchaseorderstocks()
+    GetStockdefines()
   }
 
   render() {
-    const { Purchaseorderstockmovements, Purchaseorderstocks, Profile } = this.props
+    const { Purchaseorderstockmovements, Purchaseorderstocks, Profile, history, closeModal, Stockdefines,location } = this.props
 
     const Purchaseorderstockoptions = (Purchaseorderstocks.list || []).filter(u => u.Isactive).map(stock => {
-      return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
+      if (stock.Barcodeno) {
+        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
+      }
+      else {
+        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name}`, value: stock.Uuid }
+      }
     })
 
     const Movementoptions = [
@@ -36,8 +44,19 @@ export default class PurchaseorderstockmovementsCreate extends Component {
       { key: 1, text: Literals.Options.Movementoptions.value1[Profile.Language], value: 1 },
     ]
 
+    if (!validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/StockID`])) {
+      const search = new URLSearchParams(location.search)
+      const StockID = search.get('StockID') ? search.get('StockID') : ''
+      if (validator.isUUID(StockID) && (Purchaseorderstocks.list || []).find(u => u.Uuid === StockID)) {
+        this.context.setFormstates({
+          ...this.context.formstates,
+          [`${this.PAGE_NAME}/StockID`]: StockID ? StockID : '',
+        })
+      }
+    }
+
     return (
-      Purchaseorderstocks.isLoading || Purchaseorderstocks.isDispatching || Purchaseorderstockmovements.isLoading || Purchaseorderstockmovements.isDispatching ? <LoadingPage /> :
+      Purchaseorderstockmovements.isLoading || Purchaseorderstockmovements.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -48,22 +67,29 @@ export default class PurchaseorderstockmovementsCreate extends Component {
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
+          {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockID" options={Purchaseorderstockoptions} formtype='dropdown' />
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} fromtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
               </Form.Group>
-              <Footerwrapper>
-                <Link to="/Purchaseorderstockmovements">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Purchaseorderstockmovements"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Purchaseorderstockmovements.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -72,14 +98,11 @@ export default class PurchaseorderstockmovementsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddPurchaseorderstockmovements, history, fillPurchaseorderstockmovementnotification, Profile, closeModal } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
     data.Movementdate = new Date()
     data.Newvalue = 0
     data.Prevvalue = 0
-    data.Movementtype = this.context.formstates[`${this.PAGE_NAME}/Movementtype`]
-    data.StockID = this.context.formstates[`${this.PAGE_NAME}/StockID`]
     data.Status = 0
-    data.Amount = parseFloat(data.Amount)
 
     let errors = []
     if (!validator.isNumber(data.Movementtype)) {

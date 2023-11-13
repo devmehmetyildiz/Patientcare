@@ -49,7 +49,6 @@ async function AddPurchaseorder(req, res, next) {
     let validationErrors = []
     const {
         Stocks,
-        Info,
         Company,
         Username,
         Purchaseprice,
@@ -63,9 +62,6 @@ async function AddPurchaseorder(req, res, next) {
 
     if (!validator.isArray(Stocks)) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
     }
     if (!validator.isString(Company)) {
         validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
@@ -131,6 +127,7 @@ async function AddPurchaseorder(req, res, next) {
                 Prevvalue: 0,
                 Newvalue: stock.Amount,
                 Uuid: uuid(),
+                Isapproved: true,
                 Createduser: "System",
                 Createtime: new Date(),
                 Isactive: true
@@ -149,7 +146,6 @@ async function UpdatePurchaseorder(req, res, next) {
     let validationErrors = []
     const {
         Stocks,
-        Info,
         Company,
         Username,
         Purchaseprice,
@@ -164,9 +160,6 @@ async function UpdatePurchaseorder(req, res, next) {
 
     if (!validator.isArray(Stocks)) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
     }
     if (!validator.isString(Company)) {
         validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
@@ -264,60 +257,18 @@ async function UpdatePurchaseorder(req, res, next) {
 async function CompletePurchaseorder(req, res, next) {
 
     let validationErrors = []
-    const {
-        Stocks,
-        Info,
-        Company,
-        Username,
-        Purchaseprice,
-        Purchasenumber,
-        Companypersonelname,
-        Personelname,
-        Purchasedate,
-        WarehouseID,
-        CaseID,
-        Uuid
-    } = req.body
+    const Uuid = req.params.purchaseorderId
 
-    if (!validator.isArray(Stocks)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
-    }
-    if (!validator.isString(Company)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
-    }
-    if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
-    }
-    if (!validator.isNumber(Purchaseprice)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURHCASEPRICE_REQUIRED)
-    }
-    if (!validator.isString(Purchasenumber)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURHCASENUMBER_REQUIRED)
-    }
-    if (!validator.isString(Companypersonelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED)
-    }
-    if (!validator.isString(Personelname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED)
-    }
-    if (!validator.isISODate(Purchasedate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEDATE_REQUIRED)
-    }
-    if (!validator.isString(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
-    }
-    if (!validator.isString(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
-    }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
     }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
@@ -331,6 +282,8 @@ async function CompletePurchaseorder(req, res, next) {
         if (!purchaseorder.Isactive) {
             return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
         }
+        const Stocks = await db.purchaseorderstockModel.findAll({ where: { PurchaseorderID: purchaseorder.Uuid } })
+        let completecase = null;
         try {
             const caseresponse = await axios({
                 method: 'GET',
@@ -339,8 +292,7 @@ async function CompletePurchaseorder(req, res, next) {
                     session_key: config.session.secret
                 }
             })
-            let completeCase = caseresponse.data
-            req.body.CaseID = completeCase.Uuid
+            completecase = caseresponse.data
         } catch (error) {
             return next(requestErrorCatcher(error, 'Setting'))
         }
@@ -348,7 +300,8 @@ async function CompletePurchaseorder(req, res, next) {
 
         await db.purchaseorderModel.update({
             ...req.body,
-            Isapproved: true,
+            CaseID: completecase?.Uuid,
+            Iscompleted: true,
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
@@ -356,18 +309,25 @@ async function CompletePurchaseorder(req, res, next) {
         for (const purchaseorderstock of Stocks) {
 
             let amount = 0;
-            let movements = await db.purchaseorderstockmovementModel.findAll({ where: { StockID: purchaseorderstock.Uuid, Isapproved: true } })
+            let movements = await db.purchaseorderstockmovementModel.findAll({ where: { StockID: purchaseorderstock.Uuid } })
             for (const movement of movements) {
                 amount += (movement.Amount * movement.Movementtype);
             }
+
+            let whereClause = {
+                StockdefineID: purchaseorderstock.StockdefineID,
+                DepartmentID: purchaseorderstock.DepartmentID,
+                WarehouseID: purchaseorder.WarehouseID,
+                Ismedicine: purchaseorderstock.Ismedicine,
+                Issupply: purchaseorderstock.Issupply,
+            }
+            if (purchaseorderstock.Issupply || purchaseorderstock.Ismedicine) {
+                whereClause.Skt = purchaseorderstock.Skt;
+                whereClause.Barcodeno = purchaseorderstock.Barcodeno;
+            }
+
             let foundedstock = await db.stockModel.findOne({
-                where: {
-                    Skt: purchaseorderstock.Skt,
-                    Barcodeno: purchaseorderstock.Barcodeno,
-                    StockdefineID: purchaseorderstock.StockdefineID,
-                    DepartmentID: purchaseorderstock.DepartmentID,
-                    WarehouseID: WarehouseID
-                }
+                where: whereClause
             })
 
             if (!foundedstock) {
@@ -375,12 +335,15 @@ async function CompletePurchaseorder(req, res, next) {
                 await db.stockModel.create({
                     Uuid: newstockUuid,
                     Isapproved: true,
+                    Issupply: purchaseorderstock.Issupply,
+                    Ismedicine: purchaseorderstock.Ismedicine,
+                    Isredprescription: purchaseorderstock.Isredprescription,
                     Barcodeno: purchaseorderstock.Barcodeno,
                     DepartmentID: purchaseorderstock.DepartmentID,
                     Info: purchaseorderstock.Info,
                     Skt: purchaseorderstock.Skt,
                     StockdefineID: purchaseorderstock.StockdefineID,
-                    WarehouseID: WarehouseID,
+                    WarehouseID: purchaseorder.WarehouseID,
                     CreatedUser: 'System',
                     CreateTime: new Date(),
                     Isactive: true,
@@ -421,14 +384,13 @@ async function CompletePurchaseorder(req, res, next) {
 
             let body = DataCleaner(purchaseorderstock)
             await db.purchaseorderstockmovementModel.update({
-                Isapproved: true,
+                Iscompleted: true,
                 Updateduser: "System",
                 Updatetime: new Date(),
             }, { where: { StockID: purchaseorderstock.Uuid } }, { transaction: t })
             await db.purchaseorderstockModel.update({
                 ...body,
-                Status: 1,
-                Isapproved: true,
+                Iscompleted: true,
                 Updateduser: "System",
                 Updatetime: new Date(),
             }, { where: { Uuid: purchaseorderstock.Uuid } }, { transaction: t })

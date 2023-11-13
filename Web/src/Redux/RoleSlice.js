@@ -91,7 +91,7 @@ export const GetPrivilegegroups = createAsyncThunk(
 
 export const AddRoles = createAsyncThunk(
     'Roles/AddRoles',
-    async ({data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -99,7 +99,7 @@ export const AddRoles = createAsyncThunk(
             dispatch(fillRolenotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('RolesCreate')
             closeModal && closeModal()
@@ -115,7 +115,7 @@ export const AddRoles = createAsyncThunk(
 
 export const EditRoles = createAsyncThunk(
     'Roles/EditRoles',
-    async ({ data, history, redirectUrl, closeModal, clearForm}, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -123,7 +123,7 @@ export const EditRoles = createAsyncThunk(
             dispatch(fillRolenotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('RolesUpdate')
             closeModal && closeModal()
@@ -148,7 +148,7 @@ export const DeleteRoles = createAsyncThunk(
             dispatch(fillRolenotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
             }));
             return response.data;
         } catch (error) {
@@ -182,7 +182,7 @@ export const RolesSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeRolenotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload

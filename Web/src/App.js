@@ -4,7 +4,8 @@ import { withRouter } from 'react-router-dom';
 import { FormContext } from './Provider/FormProvider';
 import Routes from './Routes';
 import NotificationHandler from './Utils/NotificationHandler';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 class App extends Component {
 
   constructor(props) {
@@ -75,6 +76,7 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
+        <ToastContainer />
         <NotificationHandler />
         {this.state.isFullPageLayout ?
           <div className='w-full' >

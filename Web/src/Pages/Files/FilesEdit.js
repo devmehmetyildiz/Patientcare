@@ -24,7 +24,7 @@ export class FilesEdit extends Component {
 
   render() {
 
-    const { Files } = this.props
+    const { Files, history } = this.props
     const { selected_record, isLoading, isDispatching } = Files
 
     return (

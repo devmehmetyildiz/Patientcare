@@ -15,6 +15,8 @@ import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import Pagedivider from '../../Common/Styled/Pagedivider'
+import Submitbutton from '../../Common/Submitbutton'
+import Gobackbutton from '../../Common/Gobackbutton'
 export default class PreregistrationsEdit extends Component {
 
   PAGE_NAME = 'PreregistrationsEdit'
@@ -41,15 +43,19 @@ export default class PreregistrationsEdit extends Component {
   componentDidUpdate() {
     const { Departments, Cases, Patientdefines, Patients } = this.props
     const { selected_record, isLoading } = Patients
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
-      Departments.list.length > 0 && !Departments.isLoading &&
-      Cases.list.length > 0 && !Cases.isLoading &&
-      Patientdefines.list.length > 0 && !Patientdefines.isLoading &&
-      !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
+      && !Departments.isLoading
+      && !Cases.isLoading
+      && !Patientdefines.isLoading
+      && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true,
       })
-      this.context.setForm(this.PAGE_NAME, selected_record)
+      const registerDate = new Date(selected_record?.Registerdate || '');
+      const approvaldate = new Date(selected_record?.Approvaldate || '');
+      const formattedregisterDate = `${registerDate.getFullYear()}-${String(registerDate.getMonth() + 1).padStart(2, '0')}-${String(registerDate.getDate()).padStart(2, '0')}`;
+      const formattedapprovaldate = `${approvaldate.getFullYear()}-${String(approvaldate.getMonth() + 1).padStart(2, '0')}-${String(approvaldate.getDate()).padStart(2, '0')}`;
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, [`Registerdate`]: formattedregisterDate, ['Approvaldate']: formattedapprovaldate })
     }
   }
 
@@ -59,15 +65,15 @@ export default class PreregistrationsEdit extends Component {
     const { Patientdefines, Patients, Departments, Cases, history, Profile } = this.props
     const { isLoading, isDispatching } = Patients
 
-    const Patientdefineoptions = Patientdefines.list.map(define => {
+    const Patientdefineoptions = (Patientdefines.list || []).filter(u => u.Isactive).map(define => {
       return { key: define.Uuid, text: `${define.Firstname} ${define.Lastname}-${define.CountryID}`, value: define.Uuid }
     })
 
-    const Departmentoptions = Departments.list.map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const Casesoptions = Cases.list.filter(u => u.Casestatus !== 1).map(cases => {
+    const Casesoptions = (Cases.list || []).filter(u => u.Isactive).filter(u => u.Casestatus !== 1).map(cases => {
       return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
     })
 
@@ -86,7 +92,7 @@ export default class PreregistrationsEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patientdefine[Profile.Language]} name="PatientdefineID" options={Patientdefineoptions} formtype="dropdown" />
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Deparment[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
@@ -96,14 +102,20 @@ export default class PreregistrationsEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Approvaldate[Profile.Language]} name="Approvaldate" type='date' />
               </Form.Group>
-              <Footerwrapper>
-                {history && <Link to="/Preregistrations">
-                  <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                </Link>}
-                <Button floated="right" type='submit' color='blue'>{Literals.Button.Update[Profile.Language]}</Button>
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Preregistrations"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -112,16 +124,13 @@ export default class PreregistrationsEdit extends Component {
     e.preventDefault()
 
     const { fillPatientnotification, Patients, EditPatients, history, Profile } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
     if (!validator.isISODate(data.Registerdate)) {
       data.Registerdate = null
     }
     if (!validator.isISODate(data.Approvaldate)) {
       data.Approvaldate = null
     }
-    data.CaseID = this.context.formstates[`${this.PAGE_NAME}/CaseID`]
-    data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
-    data.PatientdefineID = this.context.formstates[`${this.PAGE_NAME}/PatientdefineID`]
 
     let errors = []
     if (!validator.isUUID(data.PatientdefineID)) {

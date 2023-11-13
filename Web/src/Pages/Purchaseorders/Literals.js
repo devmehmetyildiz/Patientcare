@@ -72,7 +72,7 @@ const Literals = {
             en: 'Delete'
         },
         Purchasenumber: {
-            tr: 'Satın Alma Numaraıs',
+            tr: 'Satın Alma Numarası',
             en: 'Purchase Number'
         },
         Personelname: {
@@ -98,6 +98,14 @@ const Literals = {
         Stocks: {
             tr: 'Stoklar',
             en: 'Stocks'
+        },
+        Medicines: {
+            tr: 'İlaçlar',
+            en: 'Medicines'
+        },
+        Supplies: {
+            tr: 'Sarf Malzemeleri',
+            en: 'Supplies'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',

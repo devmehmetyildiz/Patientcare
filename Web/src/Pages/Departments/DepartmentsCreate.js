@@ -35,15 +35,12 @@ export default class DepartmentsCreate extends Component {
     GetStations()
   }
 
-
   render() {
     const { Departments, Stations, Profile, history, closeModal } = this.props
 
     const Stationoptions = (Stations.list || []).filter(u => u.Isactive).map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
-
-
 
     return (
       Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
@@ -62,22 +59,24 @@ export default class DepartmentsCreate extends Component {
           <Contentwrapper>
             <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype="dropdown" modal={StationsCreate} />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype="dropdown" modal={StationsCreate} />
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Ishavepatients[Profile.Language]} name="Ishavepatients" formtype="checkbox" />
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Departments"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Departments.isLoading}
-                  buttonText={Literals.Button.Create[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
+              {this.context.formstates[`${this.PAGE_NAME}/Ishavepatients`] ?
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Isdefaultpatientdepartment[Profile.Language]} name="Isdefaultpatientdepartment" formtype="checkbox" /> : null}
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Departments"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Departments.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -88,23 +87,21 @@ export default class DepartmentsCreate extends Component {
 
     const { AddDepartments, history, fillDepartmentnotification, Stations, Profile, closeModal } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
+    data.Isdefaultpatientdepartment = data.Ishavepatients ? true : false
     data.Stations = (data.Stations || []).map(id => {
       return (Stations.list || []).find(u => u.Uuid === id)
-    })
+    }) || []
 
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
-    }
-    if (!validator.isArray(data.Stations)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Stationsrequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
         fillDepartmentnotification(error)
       })
     } else {
-      //  AddDepartments({ data, history, closeModal })
+      AddDepartments({ data, history, closeModal })
     }
   }
 }

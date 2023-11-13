@@ -15,6 +15,7 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import PreregistrationsDelete from '../../Containers/Preregistrations/PreregistrationsDelete'
 import MobileTable from '../../Utils/MobileTable'
+import Settings from '../../Common/Settings'
 
 export default class Preregistrations extends Component {
 
@@ -46,7 +47,7 @@ export default class Preregistrations extends Component {
     GetStockdefines()
   }
 
- 
+
 
   render() {
 
@@ -85,7 +86,7 @@ export default class Preregistrations extends Component {
       }) : [],
     };
 
-    const list = (Patients.list || []).filter(u => u.Iswaitingactivation).map(item => {
+    const list = (Patients.list || []).filter(u => u.Isactive).filter(u => u.Iswaitingactivation).map(item => {
       return {
         ...item,
         Filestxt: "",
@@ -118,21 +119,25 @@ export default class Preregistrations extends Component {
           <Pagewrapper>
             <Headerwrapper>
               <Grid columns='2' >
-                <GridColumn width={8} className="">
+                <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Preregistrations"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
-                <GridColumn width={8} >
-                  <Link to={"/Preregistrations/Create"}>
-                    <Button color='blue' floated='right' className='list-right-green-button'>
-                      {Literals.Page.Pagecreateheader[Profile.Language]}
-                    </Button>
-                  </Link>
-                  <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
-                </GridColumn>
+                <Settings
+                  Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Preregistrations/Create"}
+                  Columns={Columns}
+                  list={list}
+                  initialConfig={initialConfig}
+                  metaKey={metaKey}
+                  Showcreatebutton
+                  Showcolumnchooser
+                  Showexcelexport
+                />
               </Grid>
             </Headerwrapper>
             <Pagedivider />
@@ -183,7 +188,7 @@ export default class Preregistrations extends Component {
     const patient = col.row.original
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
     let file = (Files.list || []).filter(u => u.ParentID === patient?.Uuid).find(u => u.Usagetype === 'PP')
-    return <div className='flex justify-center items-center flex-row flex-nowrap whitespace-nowrap'>{file ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file.Uuid}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
+    return <div className='flex justify-center items-center flex-row flex-nowrap whitespace-nowrap'>{file ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file?.Uuid}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
       : null}{patientdefine?.Firstname ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}` : `${patientdefine?.CountryID}`}</div>
   }
 
@@ -200,7 +205,7 @@ export default class Preregistrations extends Component {
 
     const itemId = col?.row?.original?.Uuid
     const itemStocks = (Patientstocks.list || []).filter(u => u.PatientID === itemId)
-    let stockstext = itemStocks.map((stock) => {
+    let stockstext = (itemStocks || []).map((stock) => {
       return (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)?.Name
     }).join(", ")
 
@@ -220,7 +225,7 @@ export default class Preregistrations extends Component {
     const { Files } = this.props
     const itemId = col?.row?.original?.Uuid
     const itemFiles = (Files.list || []).filter(u => u.ParentID === itemId)
-    let filestext = itemFiles.map((file) => {
+    let filestext = (itemFiles || []).map((file) => {
       return file.Name;
     }).join(", ")
 

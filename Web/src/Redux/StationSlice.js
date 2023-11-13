@@ -70,11 +70,11 @@ export const AddStations = createAsyncThunk(
             dispatch(fillStationnotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             clearForm && clearForm('StationsCreate')
             closeModal && closeModal()
-            history && redirectUrl === 'GoBack' ? history.goBack() : history.push(redirectUrl ? redirectUrl : '/Stations');
+            history && (redirectUrl === 'GoBack' ? history.goBack() : history.push(redirectUrl ? redirectUrl : '/Stations'));
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -94,7 +94,7 @@ export const AddRecordStations = createAsyncThunk(
             dispatch(fillStationnotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
             history && history.push(redirectUrl ? redirectUrl : '/Stations');
             return response.data;
@@ -116,7 +116,7 @@ export const EditStations = createAsyncThunk(
             dispatch(fillStationnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
             dispatch(fillStationnotification({
                 type: 'Clear',
@@ -144,7 +144,7 @@ export const DeleteStations = createAsyncThunk(
             dispatch(fillStationnotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
             }));
             return response.data;
         } catch (error) {
