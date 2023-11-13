@@ -86,7 +86,7 @@ export default class Preregistrations extends Component {
       }) : [],
     };
 
-    const list = (Patients.list || []).filter(u => u.Iswaitingactivation).map(item => {
+    const list = (Patients.list || []).filter(u => u.Isactive).filter(u => u.Iswaitingactivation).map(item => {
       return {
         ...item,
         Filestxt: "",
@@ -188,7 +188,7 @@ export default class Preregistrations extends Component {
     const patient = col.row.original
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
     let file = (Files.list || []).filter(u => u.ParentID === patient?.Uuid).find(u => u.Usagetype === 'PP')
-    return <div className='flex justify-center items-center flex-row flex-nowrap whitespace-nowrap'>{file ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file.Uuid}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
+    return <div className='flex justify-center items-center flex-row flex-nowrap whitespace-nowrap'>{file ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file?.Uuid}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
       : null}{patientdefine?.Firstname ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}` : `${patientdefine?.CountryID}`}</div>
   }
 
@@ -205,7 +205,7 @@ export default class Preregistrations extends Component {
 
     const itemId = col?.row?.original?.Uuid
     const itemStocks = (Patientstocks.list || []).filter(u => u.PatientID === itemId)
-    let stockstext = itemStocks.map((stock) => {
+    let stockstext = (itemStocks || []).map((stock) => {
       return (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)?.Name
     }).join(", ")
 
@@ -225,7 +225,7 @@ export default class Preregistrations extends Component {
     const { Files } = this.props
     const itemId = col?.row?.original?.Uuid
     const itemFiles = (Files.list || []).filter(u => u.ParentID === itemId)
-    let filestext = itemFiles.map((file) => {
+    let filestext = (itemFiles || []).map((file) => {
       return file.Name;
     }).join(", ")
 

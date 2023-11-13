@@ -27,8 +27,24 @@ export default class StockmovementsCreate extends Component {
     GetStockdefines()
   }
 
+  componentDidUpdate() {
+
+    const { Stocks, location } = this.props
+
+    if (!validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/StockID`])) {
+      const search = new URLSearchParams(location.search)
+      const StockID = search.get('StockID') ? search.get('StockID') : ''
+      if (validator.isUUID(StockID) && (Stocks.list || []).find(u => u.Uuid === StockID)) {
+        this.context.setFormstates({
+          ...this.context.formstates,
+          [`${this.PAGE_NAME}/StockID`]: StockID ? StockID : '',
+        })
+      }
+    }
+  }
+
   render() {
-    const { Stockmovements, Stocks, Stockdefines, Profile, location, history, closeModal } = this.props
+    const { Stockmovements, Stocks, Stockdefines, Profile, history, closeModal } = this.props
 
     const Stockoptions = (Stocks.list || []).filter(u => u.Isactive).map(stock => {
       if (stock.Barcodeno) {
@@ -43,18 +59,6 @@ export default class StockmovementsCreate extends Component {
       { key: -1, text: Literals.Options.Movementoptions.value0[Profile.Language], value: -1 },
       { key: 1, text: Literals.Options.Movementoptions.value1[Profile.Language], value: 1 },
     ]
-
-    if (!validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/StockID`])) {
-      const search = new URLSearchParams(location.search)
-      const StockID = search.get('StockID') ? search.get('StockID') : ''
-      if (validator.isUUID(StockID) && (Stocks.list || []).find(u => u.Uuid === StockID)) {
-        this.context.setFormstates({
-          ...this.context.formstates,
-          [`${this.PAGE_NAME}/StockID`]: StockID ? StockID : '',
-        })
-      }
-    }
-
 
     return (
       Stocks.isLoading || Stocks.isDispatching || Stockmovements.isLoading || Stockmovements.isDispatching ? <LoadingPage /> :

@@ -343,6 +343,21 @@ async function UpdatePatientcase(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
+        let casedata = null
+        try {
+            const caseresponse = await axios({
+                method: 'GET',
+                url: config.services.Setting + "Cases/" + CaseID,
+                headers: {
+                    session_key: config.session.secret
+                }
+            })
+            casedata = caseresponse?.data
+        } catch (error) {
+            return next(requestErrorCatcher(error, 'Setting'))
+        }
+
+
         await db.patientModel.update({
             ...patient,
             CaseID: CaseID,
@@ -363,8 +378,8 @@ async function UpdatePatientcase(req, res, next) {
             ...req.body,
             Uuid: patientmovementuuid,
             OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
-            Patientmovementtype: Patientstatus,
-            NewPatientmovementtype: Patientstatus,
+            Patientmovementtype: casedata.Patientstatus,
+            NewPatientmovementtype: casedata.Patientstatus,
             Createduser: "System",
             Createtime: new Date(),
             PatientID: patient.Uuid,

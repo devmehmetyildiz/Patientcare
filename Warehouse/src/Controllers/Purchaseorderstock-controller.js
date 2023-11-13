@@ -49,25 +49,17 @@ async function AddPurchaseorderstock(req, res, next) {
     let validationErrors = []
     const {
         PurchaseorderID,
-        Isonusage,
-        Source,
         StockdefineID,
         DepartmentID,
         Skt,
         Barcodeno,
-        Info,
-        Status,
         Order,
+        Ismedicine,
+        Issupply
     } = req.body
 
     if (!validator.isUUID(PurchaseorderID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
-    }
-    if (!validator.isBoolean(Isonusage)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISONUSAGE_REQUIRED)
-    }
-    if (!validator.isNumber(Source)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SOURCE_REQUIRED)
     }
     if (!validator.isUUID(StockdefineID)) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
@@ -75,17 +67,11 @@ async function AddPurchaseorderstock(req, res, next) {
     if (!validator.isUUID(DepartmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
-    if (!validator.isISODate(Skt)) {
+    if ((Ismedicine || Issupply) && !validator.isISODate(Skt)) {
         validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
     }
-    if (!validator.isString(Barcodeno)) {
+    if ((Ismedicine || Issupply) && !validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
-    }
-    if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED)
     }
     if (!validator.isNumber(Order)) {
         validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED)
@@ -114,6 +100,7 @@ async function AddPurchaseorderstock(req, res, next) {
             Movementdate: new Date(),
             Movementtype: 1,
             Prevvalue: 0,
+            Isapproved: true,
             Newvalue: req.body.Amount,
             Createduser: "System",
             Createtime: new Date(),
@@ -132,26 +119,18 @@ async function UpdatePurchaseorderstock(req, res, next) {
     let validationErrors = []
     const {
         PurchaseorderID,
-        Isonusage,
-        Source,
         StockdefineID,
         DepartmentID,
         Skt,
         Barcodeno,
-        Info,
-        Status,
         Order,
-        Uuid
+        Uuid,
+        Ismedicine,
+        Issupply
     } = req.body
 
     if (!validator.isUUID(PurchaseorderID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
-    }
-    if (!validator.isBoolean(Isonusage)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISONUSAGE_REQUIRED)
-    }
-    if (!validator.isNumber(Source)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SOURCE_REQUIRED)
     }
     if (!validator.isUUID(StockdefineID)) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
@@ -159,17 +138,11 @@ async function UpdatePurchaseorderstock(req, res, next) {
     if (!validator.isUUID(DepartmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
-    if (!validator.isISODate(Skt)) {
+    if ((Ismedicine || Issupply) && !validator.isISODate(Skt)) {
         validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
     }
-    if (!validator.isString(Barcodeno)) {
+    if ((Ismedicine || Issupply) && !validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
-    }
-    if (!validator.isString(Info)) {
-        validationErrors.push(messages.VALIDATION_ERROR.INFO_REQUIRED)
-    }
-    if (!validator.isNumber(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STATUS_REQUIRED)
     }
     if (!validator.isNumber(Order)) {
         validationErrors.push(messages.VALIDATION_ERROR.ORDER_REQUIRED)
@@ -207,10 +180,53 @@ async function UpdatePurchaseorderstock(req, res, next) {
     GetPurchaseorderstocks(req, res, next)
 }
 
+async function ApprovePurchaseorderstock(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.stockId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    const t = await db.sequelize.transaction();
+    try {
+        const purchaseorderstock = await db.purchaseorderstockModel.findOne({ where: { Uuid: Uuid } })
+        if (!purchaseorderstock) {
+            return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
+        }
+        if (purchaseorderstock.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+        }
+
+        await db.purchaseorderstockModel.update({
+            ...purchaseorderstock,
+            Isapproved: true,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPurchaseorderstocks(req, res, next)
+}
+
 async function DeletePurchaseorderstock(req, res, next) {
 
     let validationErrors = []
-    const Uuid = req.params.purchaseorderstockId
+    const Uuid = req.params.stockId
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
@@ -248,4 +264,5 @@ module.exports = {
     AddPurchaseorderstock,
     UpdatePurchaseorderstock,
     DeletePurchaseorderstock,
+    ApprovePurchaseorderstock,
 }

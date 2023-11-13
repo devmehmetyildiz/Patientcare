@@ -25,12 +25,6 @@ export default class PurchaseordermedicinesCreate extends Component {
 
   PAGE_NAME = "PurchaseordermedicinesCreate"
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      modelOpened: false
-    }
-  }
 
   componentDidMount() {
     const { GetDepartments, GetStockdefines, GetPurchaseorders } = this.props
@@ -42,7 +36,7 @@ export default class PurchaseordermedicinesCreate extends Component {
   render() {
     const { Purchaseorders, Purchaseorderstocks, Departments, Stockdefines, Profile, history, closeModal } = this.props
 
-    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive && u.Ishavepatients).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
     const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && u.Ismedicine && !u.Issupply).map(define => {
@@ -77,23 +71,23 @@ export default class PurchaseordermedicinesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Purchaseordermedicines"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Purchaseorderstocks.isLoading}
-                  buttonText={Literals.Button.Create[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Purchaseordermedicines"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Purchaseorderstocks.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -126,15 +120,9 @@ export default class PurchaseordermedicinesCreate extends Component {
         fillPurchaseorderstocknotification(error)
       })
     } else {
-      AddPurchaseorderstocks({ data, history, closeModal })
+      AddPurchaseorderstocks({ data, history, closeModal, redirectUrl: 'Purchaseordermedicines' })
     }
   }
 
-  getLocalDate = () => {
-    var curr = new Date();
-    curr.setDate(curr.getDate() + 3);
-    var date = curr.toISOString().substring(0, 10);
-    return date
-  }
 }
 PurchaseordermedicinesCreate.contextType = FormContext

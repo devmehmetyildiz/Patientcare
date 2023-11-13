@@ -33,9 +33,13 @@ import { removeTodonotification } from "../Redux/TodoSlice"
 import { removeUnitnotification } from "../Redux/UnitSlice"
 import { removeUsernotification } from "../Redux/UserSlice"
 import { removeWarehousenotification } from "../Redux/WarehouseSlice"
-import Notification from './Notification'
+import Notificationwrapper from './Notification'
 
 export function NotificationHandler(props) {
+
+    const Notification = (notifications, removeFunction) => {
+        Notificationwrapper(notifications, removeFunction, props.states.Profile)
+    }
 
     useEffect(() => {
         const {
@@ -87,7 +91,6 @@ export function NotificationHandler(props) {
         Notification(Patientmovements.notifications, removePatientmovementnotification)
         Notification(Patientdefines.notifications, removePatientdefinenotification)
         Notification(Mailsettings.notifications, removeMailsettingnotification)
-        Notification(Patientstocks.notifications, removePatientstocknotification)
         Notification(Floors.notifications, removeFloornotification)
         Notification(Files.notifications, removeFilenotification)
         Notification(Departments.notifications, removeDepartmentnotification)

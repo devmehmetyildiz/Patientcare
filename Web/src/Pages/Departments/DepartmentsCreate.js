@@ -59,9 +59,9 @@ export default class DepartmentsCreate extends Component {
           <Contentwrapper>
             <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype="dropdown" modal={StationsCreate} />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype="dropdown" modal={StationsCreate} />
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Ishavepatients[Profile.Language]} name="Ishavepatients" formtype="checkbox" />
-              {this.context.formstates[`${this.PAGE_NAME}/Isdefaultpatientdepartment`] ?
+              {this.context.formstates[`${this.PAGE_NAME}/Ishavepatients`] ?
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Isdefaultpatientdepartment[Profile.Language]} name="Isdefaultpatientdepartment" formtype="checkbox" /> : null}
             </Form>
           </Contentwrapper>
@@ -93,9 +93,6 @@ export default class DepartmentsCreate extends Component {
     }) || []
 
     let errors = []
-    if (!validator.isArray(data.Stations)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Stationsrequired[Profile.Language] })
-    }
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
     }

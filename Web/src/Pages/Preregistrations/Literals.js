@@ -364,6 +364,10 @@ const Literals = {
             tr: "Güncelle",
             en: "Update"
         },
+        Enter: {
+            tr: "Kuruma Al",
+            en: "Enter"
+        },
         Delete: {
             tr: "Sil",
             en: "Delete"

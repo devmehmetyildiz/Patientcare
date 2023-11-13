@@ -36,7 +36,7 @@ export default class Patientstockmovements extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockCellhandler(col) },
-      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
       { Header: Literals.Columns.Movementtype[Profile.Language], accessor: 'Movementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
       { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
       { Header: Literals.Columns.Prevvalue[Profile.Language], accessor: 'Prevvalue', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
@@ -148,6 +148,13 @@ export default class Patientstockmovements extends Component {
       return stockdefine?.Name
     }
 
+  }
+
+  dateCellhandler = (col) => {
+    if (col.value) {
+      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+    }
+    return null
   }
 
   movementCellhandler = (col) => {

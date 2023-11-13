@@ -2,11 +2,9 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Divider, Icon, Loader, Modal } from 'semantic-ui-react'
 import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Notification from '../../Utils/Notification'
 import Literals from './Literals'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
@@ -29,7 +27,7 @@ export default class Purchaseorderstocks extends Component {
 
   render() {
 
-    const { Purchaseorderstocks, Profile, handleDeletemodal, handleSelectedPurchaseorderstocks, handleApprovemodal } = this.props
+    const { Purchaseorderstocks, Profile, handleDeletemodal, handleSelectedPurchaseorderstock, handleApprovemodal } = this.props
     const { isLoading, isDispatching } = Purchaseorderstocks
 
     const Columns = [
@@ -67,14 +65,14 @@ export default class Purchaseorderstocks extends Component {
     const list = (Purchaseorderstocks.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(item => {
       return {
         ...item,
-        change: <Link to={`/Pruchaseorderstockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
-        edit: <Link to={`/Purchaseorderstocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-        approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
-          handleSelectedPurchaseorderstocks(item)
+        change: item.Iscompleted ? <Icon size='large' color='black' name='minus' /> : <Link to={`/Purchaseorderstockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
+        edit: item.Iscompleted ? <Icon size='large' color='black' name='minus' /> : <Link to={`/Purchaseorderstocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        approve: item.Iscompleted ? <Icon size='large' color='black' name='minus' /> : (item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+          handleSelectedPurchaseorderstock(item)
           handleApprovemodal(true)
-        }} />,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
-          handleSelectedPurchaseorderstocks(item)
+        }} />),
+        delete: item.Iscompleted ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+          handleSelectedPurchaseorderstock(item)
           handleDeletemodal(true)
         }} />,
       }
@@ -159,7 +157,7 @@ export default class Purchaseorderstocks extends Component {
     } else {
       const selectedStock = (Purchaseorderstocks.list || []).find(u => u.Id === col?.row?.original?.Id)
       let amount = 0.0;
-      let movements = (Purchaseorderstockmovements.list || []).filter(u => u.StockID === selectedStock?.Uuid && u.Isactive)
+      let movements = (Purchaseorderstockmovements.list || []).filter(u => u.StockID === selectedStock?.Uuid && u.Isactive && u.Isapproved)
       movements.forEach(movement => {
         amount += (movement.Amount * movement.Movementtype);
       });

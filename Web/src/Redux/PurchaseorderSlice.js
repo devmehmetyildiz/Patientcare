@@ -118,7 +118,7 @@ export const CompletePurchaseorders = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Warehouse, ROUTES.PURCHASEORDER + `/Complete`, data);
+            const response = await instanse.post(config.services.Warehouse, `${ROUTES.PURCHASEORDER}/Complete/${data.Uuid}`);
             dispatch(fillPurchaseordernotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],

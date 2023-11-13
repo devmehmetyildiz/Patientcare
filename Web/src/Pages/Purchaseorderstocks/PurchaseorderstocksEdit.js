@@ -28,7 +28,6 @@ export default class PurchaseorderstocksEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
-      modelOpened: false
     }
   }
 
@@ -50,14 +49,14 @@ export default class PurchaseorderstocksEdit extends Component {
     const { Departments, Stockdefines, Purchaseorderstocks, Purchaseorders } = this.props
     const { selected_record, isLoading } = Purchaseorderstocks
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.id !== 0
-      && Departments.list.length > 0 && !Departments.isLoading
-      && Purchaseorders.list.length > 0 && !Purchaseorders.isLoading
-      && Purchaseorderstocks.list.length > 0 && !Purchaseorderstocks.isLoading
-      && Stockdefines.list.length > 0 && !Stockdefines.isLoading && !isLoading && !this.state.isDatafetched) {
+      && !Departments.isLoading
+      && !Purchaseorders.isLoading
+      && !Purchaseorderstocks.isLoading
+      && !Stockdefines.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
   }
 
@@ -94,26 +93,22 @@ export default class PurchaseorderstocksEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype='dropdown' modal={StockdefinesCreate} />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" />
-              </Form.Group>
-              <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' defaultValue={this.getLocalDate()} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Purchaseorderstocks"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Purchaseorderstocks.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Purchaseorderstocks"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Purchaseorderstocks.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -133,9 +128,6 @@ export default class PurchaseorderstocksEdit extends Component {
     }
     if (!validator.isUUID(data.StockdefineID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StokdefineRequired[Profile.Language] })
-    }
-    if (!validator.isNumber(data.Amount)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.AmountRequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

@@ -41,7 +41,7 @@ export default function MobileTable(props) {
                         onClose={() => { setmodalOpen({ ...modalOpen, [index]: false }) }}
                         onOpen={() => { setmodalOpen({ ...modalOpen, [index]: true }) }}
                         open={modalOpen[index]}
-                        key={index}
+                        key={Math.random}
                         size='large'
                         trigger={
                             <div key={index} className='hover:shadow-gray-700 transition-all ease-in-out duration-200 cursor-pointer flex flex-row justify-center items-center rounded-xl  m-2 px-4 py-2 shadow-xl shadow-gray-500 w-full bg-white'>
@@ -57,7 +57,7 @@ export default function MobileTable(props) {
                         <div className='m-4 overflow-y-auto overflow-x-hidden max-h-[80vh]'>
                             <Grid columns={2} className='p-4' divided>
                                 {(columns || []).map(u => {
-                                    return <React.Fragment>
+                                    return <React.Fragment key={Math.random()}>
                                         <Grid.Row key={Math.random()} divided>
                                             <Grid.Column>
                                                 <strong>{u.Header}</strong>

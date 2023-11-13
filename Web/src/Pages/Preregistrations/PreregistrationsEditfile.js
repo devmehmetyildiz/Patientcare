@@ -26,9 +26,10 @@ export default class PreregistrationsEditfile extends Component {
     }
 
     componentDidMount() {
-        const { GetPatient, match, history, GetFiles, GetPatientdefines } = this.props
-        if (match.params.PatientID) {
-            GetPatient(match.params.PatientID)
+        const { GetPatient, match, history, GetFiles, GetPatientdefines, PatientID } = this.props
+        const Id = match?.params?.PatientID || PatientID
+        if (Id) {
+            GetPatient(Id)
             GetFiles()
             GetPatientdefines()
         } else {
@@ -48,7 +49,7 @@ export default class PreregistrationsEditfile extends Component {
                 }
             });
             this.setState({
-                selectedFiles: response, isDatafetched: true
+                selectedFiles: response || [], isDatafetched: true
             })
         }
     }
@@ -56,10 +57,12 @@ export default class PreregistrationsEditfile extends Component {
 
     render() {
 
-        const { Files, Patients, Profile, history, Patientdefines } = this.props
+        const { Files, Patients, Profile, history, Patientdefines, PatientID, match } = this.props
         const { selected_record, isLoading, isDispatching } = Patients
 
-
+        const patientDefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
+        const patientPp = (Files.list || []).find(u => u.ParentID === selected_record?.Uuid && u.Usagetype === 'PP' && u.Isactive)
+        const Id = match?.params?.PatientID || PatientID
         const usagetypes = [
             { key: Literals.Options.usageType0[Profile.Language], text: Literals.Options.usageType0[Profile.Language], value: Literals.Options.usageType0[Profile.Language] },
             { key: Literals.Options.usageType1[Profile.Language], text: Literals.Options.usageType1[Profile.Language], value: Literals.Options.usageType1[Profile.Language] },
@@ -86,13 +89,13 @@ export default class PreregistrationsEditfile extends Component {
                     <Pagedivider />
                     <Contentwrapper>
                         <Header as='h2' icon textAlign='center'>
-                            {(Files.list || []).filter(u => u.Usagetype === 'PP' && u.ParentID === selected_record.Uuid).length > 0 ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${(Files.list || []).filter(u => u.ParentID === selected_record.Uuid).find(u => u.Usagetype === 'PP')?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
+                            {patientPp
+                                ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPp?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
                                 : <Icon name='users' circular />}
-                            <Header.Content>{`${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.Firstname} 
-                            ${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.Lastname} - ${(Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)?.CountryID}`}</Header.Content>
+                            <Header.Content>{`${patientDefine?.Firstname} ${patientDefine?.Lastname} - ${patientDefine?.CountryID}`}</Header.Content>
                         </Header>
                         <Form>
-                            <Table celled className='list-table' key='product-create-type-conversion-table' >
+                            <Table celled  >
                                 <Table.Header>
                                     <Table.Row>
                                         <Table.HeaderCell width={1}>{Literals.Options.TableColumnsOrder[Profile.Language]}</Table.HeaderCell>
@@ -141,20 +144,20 @@ export default class PreregistrationsEditfile extends Component {
                                     </Table.Row>
                                 </Table.Footer>
                             </Table>
-                            <Footerwrapper>
-                                <Gobackbutton
-                                    history={history}
-                                    redirectUrl={"/Preregistrations"}
-                                    buttonText={Literals.Button.Goback[Profile.Language]}
-                                />
-                                <Submitbutton
-                                    isLoading={isLoading}
-                                    buttonText={Literals.Button.Update[Profile.Language]}
-                                    submitFunction={this.handleSubmit}
-                                />
-                            </Footerwrapper>
                         </Form>
                     </Contentwrapper>
+                    <Footerwrapper>
+                        <Gobackbutton
+                            history={history}
+                            redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
+                            buttonText={Literals.Button.Goback[Profile.Language]}
+                        />
+                        <Submitbutton
+                            isLoading={isLoading}
+                            buttonText={Literals.Button.Update[Profile.Language]}
+                            submitFunction={this.handleSubmit}
+                        />
+                    </Footerwrapper>
                 </Pagewrapper >
         )
     }

@@ -40,7 +40,7 @@ export default class Patientdefines extends Component {
       { Header: Literals.Columns.Ismotheralive[Profile.Language], accessor: 'Ismotheralive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Fatherbiologicalaffinity[Profile.Language], accessor: 'Fatherbiologicalaffinity', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Isfatheralive[Profile.Language], accessor: 'Isfatheralive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.CountryID[Profile.Language], accessor: 'CountryID', sortable: true, canGroupBy: true, canFilter: true ,Finalheader:true},
+      { Header: Literals.Columns.CountryID[Profile.Language], accessor: 'CountryID', sortable: true, canGroupBy: true, canFilter: true, Finalheader: true },
       { Header: Literals.Columns.Dateofbirth[Profile.Language], accessor: 'Dateofbirth', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Placeofbirth[Profile.Language], accessor: 'Placeofbirth', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Dateofdeath[Profile.Language], accessor: 'Dateofdeath', sortable: true, canGroupBy: true, canFilter: true },
@@ -87,7 +87,7 @@ export default class Patientdefines extends Component {
     };
 
 
-    const list = (Patientdefines.list || []).map(item => {
+    const list = (Patientdefines.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Patientdefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

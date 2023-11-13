@@ -58,7 +58,7 @@ export default class WarehousesCreate extends Component {
             />
             <Submitbutton
               isLoading={isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={Literals.Button.Create[Profile.Language]}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>

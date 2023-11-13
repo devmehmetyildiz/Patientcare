@@ -24,6 +24,8 @@ import Submitbutton from '../../Common/Submitbutton'
 import Gobackbutton from '../../Common/Gobackbutton'
 export default class PurchaseordersEdit extends Component {
 
+  PAGE_NAME = "PurchaseordersEdit"
+
   constructor(props) {
     super(props)
     this.state = {
@@ -35,13 +37,14 @@ export default class PurchaseordersEdit extends Component {
   }
 
   componentDidMount() {
-    const { PurchaseorderID, GetPurchaseorder, match, history, GetStockdefines, GetCases, GetDepartments, GetWarehouses } = this.props
+    const { PurchaseorderID, GetPurchaseorder, match, history, GetStockdefines, GetCases, GetDepartments, GetWarehouses, GetPurchaseorderstocks } = this.props
     let Id = PurchaseorderID || match?.params?.PurchaseorderID
     if (validator.isUUID(Id)) {
       GetPurchaseorder(Id)
       GetStockdefines()
       GetCases()
       GetDepartments()
+      GetPurchaseorderstocks()
       GetWarehouses()
     } else {
       history.push("/Purchaseorders")
@@ -50,18 +53,38 @@ export default class PurchaseordersEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Stockdefines, Purchaseorders, Cases, Departments, Warehouses } = this.props
+    const { Stockdefines, Purchaseorders, Cases, Departments, Warehouses, Purchaseorderstocks } = this.props
     const { selected_record, isLoading } = Purchaseorders
     if (selected_record && Object.keys(selected_record).length > 0 &&
       selected_record.Id !== 0 && Stockdefines.list.length > 0 && !Stockdefines.isLoading
       && !Cases.isLoading
       && !Warehouses.isLoading
       && !Departments.isLoading
+      && !Purchaseorderstocks.isLoading
       && !isLoading && !this.state.isDatafetched) {
+
+      const stocks = (Purchaseorderstocks.list || []).filter(u => u.PurchaseorderID === selected_record?.Uuid)
+
       this.setState({
-        selectedStocks: selected_record.Stocks, isDatafetched: true
+        selectedStocks: (stocks || []).map(u => {
+          if (validator.isISODate(u.Skt)) {
+            const currentDate = new Date(u?.Skt || '');
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            return { ...u, Skt: formattedDate }
+          } else {
+            return { ...u }
+          }
+        }), isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      const currentDate = new Date(selected_record?.Purchasedate || '');
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, [`Purchasedate`]: formattedDate })
     }
   }
 
@@ -90,9 +113,30 @@ export default class PurchaseordersEdit extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const Casesoption = (Cases.list || []).filter(u => u.Isactive).map(cases => {
-      return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
-    })
+    const Casesoption = (Cases.list || []).filter(u => u.Isactive).filter(u => u.CaseStatus === 0).map(cases => {
+      let departments = (cases.Departmentuuids || [])
+        .map(u => {
+          const department = (Departments.list || []).find(department => department.Uuid === u.DepartmentID);
+          if (department) {
+            return department
+          } else {
+            return null
+          }
+        })
+        .filter(u => u !== null);
+      let ishavepatients = false;
+      (departments || []).forEach(department => {
+        if (department?.Ishavepatients) {
+          ishavepatients = true
+        }
+      });
+
+      if (ishavepatients) {
+        return null
+      } else {
+        return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
+      }
+    }).filter(u => u !== null);
 
     const Warehousesoption = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
       return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
@@ -163,8 +207,8 @@ export default class PurchaseordersEdit extends Component {
                               </Table.Row>
                             </Table.Header>
                             <Table.Body>
-                              {this.state.selectedStocks.filter(u => u.Ismedicine && !u.Issupply).sort((a, b) => a.Order - b.Order).map((stock, index) => {
-                                return <Table.Row key={stock.key}>
+                              {(this.state.selectedStocks || []).filter(u => u.Ismedicine && !u.Issupply).sort((a, b) => a.Order - b.Order).map((stock, index) => {
+                                return <Table.Row key={Math.random()}>
                                   <Table.Cell>
                                     <Button.Group basic size='small'>
                                       <Button type='button' disabled={index === 0} icon='angle up' onClick={() => { this.selectedProductChangeHandler(stock.key, 'Order', stock.Order - 1) }} />
@@ -228,8 +272,8 @@ export default class PurchaseordersEdit extends Component {
                               </Table.Row>
                             </Table.Header>
                             <Table.Body>
-                              {this.state.selectedStocks.filter(u => !u.Ismedicine && u.Issupply).sort((a, b) => a.Order - b.Order).map((stock, index) => {
-                                return <Table.Row key={stock.key}>
+                              {(this.state.selectedStocks || []).filter(u => !u.Ismedicine && u.Issupply).sort((a, b) => a.Order - b.Order).map((stock, index) => {
+                                return <Table.Row key={Math.random()}>
                                   <Table.Cell>
                                     <Button.Group basic size='small'>
                                       <Button type='button' disabled={index === 0} icon='angle up' onClick={() => { this.selectedProductChangeHandler(stock.key, 'Order', stock.Order - 1) }} />
@@ -292,7 +336,7 @@ export default class PurchaseordersEdit extends Component {
                             </Table.Header>
                             <Table.Body>
                               {this.state.selectedStocks.filter(u => !u.Ismedicine && !u.Issupply).sort((a, b) => a.Order - b.Order).map((stock, index) => {
-                                return <Table.Row key={stock.key}>
+                                return <Table.Row key={Math.random()}>
                                   <Table.Cell>
                                     <Button.Group basic size='small'>
                                       <Button type='button' disabled={index === 0} icon='angle up' onClick={() => { this.selectedProductChangeHandler(stock.key, 'Order', stock.Order - 1) }} />
@@ -334,20 +378,20 @@ export default class PurchaseordersEdit extends Component {
                 ]}
                 renderActiveOnly={false} />
               <Pagedivider />
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Purchaseorders"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={isLoading}
-                  buttonText={Literals.Button.Create[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Purchaseorders"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -438,6 +482,7 @@ export default class PurchaseordersEdit extends Component {
         Info: '',
         Ismedicine: Ismedicine,
         Issupply: Issupply,
+        Isredprescription: false,
         Willdelete: false,
         key: Math.random(),
         Order: (this.state.selectedStocks || []).filter(u => u.Ismedicine === Ismedicine && u.Issupply === Issupply).length,
@@ -459,7 +504,20 @@ export default class PurchaseordersEdit extends Component {
       productionRoutes.filter(productionRoute => productionRoute.Order === value)
         .forEach((productionRoute) => productionRoute.Order = productionRoutes[index].Order > value ? productionRoute.Order + 1 : productionRoute.Order - 1)
     }
+    if (property === 'StockdefineID') {
+      const { Stockdefines } = this.props
+
+      productionRoutes[index].Isredprescription = (Stockdefines.list || []).find(u => u.Uuid === value)?.Isredprescription || false
+    }
     productionRoutes[index][property] = value
+    if (property === 'Skt') {
+      const currentDate = new Date(value || '');
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      productionRoutes[index][property] = formattedDate
+    }
     this.setState({ selectedStocks: productionRoutes })
   }
 

@@ -105,7 +105,7 @@ export default class TododefinesEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { EditTododefines, history, removeTododefinenotification, Tododefines, Checkperiods, Profile } = this.props
+    const { EditTododefines, history, fillTododefinenotification, Tododefines, Checkperiods, Profile } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
     data.Checkperiods = data.Checkperiods.map(id => {
       return (Checkperiods.list || []).find(u => u.Uuid === id)
@@ -120,7 +120,7 @@ export default class TododefinesEdit extends Component {
     }
     if (errors.length > 0) {
       errors.forEach(error => {
-        removeTododefinenotification(error)
+        fillTododefinenotification(error)
       })
     } else {
       EditTododefines({ data: { ...Tododefines.selected_record, ...data }, history })

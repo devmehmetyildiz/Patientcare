@@ -21,12 +21,20 @@ export default class PurchaseorderstockmovementsEdit extends Component {
 
   PAGE_NAME = "PurchaseorderstockmovementsEdit"
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      isDatafetched: false
+    }
+  }
+
   componentDidMount() {
-    const { PurchaseorderstockmovementID, GetPurchaseorderstockmovement, GetPurchaseorderstocks, match, history } = this.props
+    const { PurchaseorderstockmovementID, GetPurchaseorderstockmovement, GetPurchaseorderstocks, match, history, GetStockdefines } = this.props
     let Id = PurchaseorderstockmovementID || match?.params?.PurchaseorderstockmovementID
     if (validator.isUUID(Id)) {
       GetPurchaseorderstockmovement(Id)
       GetPurchaseorderstocks()
+      GetStockdefines()
     } else {
       history.push("/Purchaseorderstockmovement")
     }
@@ -41,15 +49,20 @@ export default class PurchaseorderstockmovementsEdit extends Component {
       this.setState({
         isDatafetched: true
       })
-      this.context.setFormstates(selected_record)
+      this.context.setForm(this.PAGE_NAME, selected_record)
     }
   }
 
   render() {
-    const { Purchaseorderstockmovements, Purchaseorderstocks, Profile, history } = this.props
+    const { Purchaseorderstockmovements, Purchaseorderstocks, Profile, history, Stockdefines } = this.props
 
     const Purchaseorderstockoptions = (Purchaseorderstocks.list || []).filter(u => u.Isactive).map(stock => {
-      return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
+      if (stock.Barcodeno) {
+        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
+      }
+      else {
+        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name}`, value: stock.Uuid }
+      }
     })
 
     const Movementoptions = [
@@ -75,22 +88,22 @@ export default class PurchaseorderstockmovementsEdit extends Component {
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockID" options={Purchaseorderstockoptions} formtype='dropdown' />
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} fromtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Purchaseorderstockmovements"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Purchaseorderstockmovements.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Purchaseorderstockmovements"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Purchaseorderstockmovements.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }

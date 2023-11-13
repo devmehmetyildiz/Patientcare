@@ -76,9 +76,30 @@ export default class PreregistrationsCreate extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const Casesoptions = (Cases.list || []).filter(u => u.Isactive).filter(u => u.Casestatus !== 1).map(cases => {
-      return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
-    })
+    const Casesoptions = (Cases.list || []).filter(u => u.Isactive).filter(u => u.CaseStatus === 0).map(cases => {
+      let departments = (cases.Departmentuuids || [])
+        .map(u => {
+          const department = (Departments.list || []).find(department => department.Uuid === u.DepartmentID)
+          if (department) {
+            return department
+          } else {
+            return null
+          }
+        })
+        .filter(u => u !== null);
+      let ishavepatients = false;
+      (departments || []).forEach(department => {
+        if (department?.Ishavepatients) {
+          ishavepatients = true
+        }
+      });
+
+      if (ishavepatients) {
+        return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
+      } else {
+        return null
+      }
+    }).filter(u => u !== null);
 
     const Genderoptions = [
       { key: 0, text: 'ERKEK', value: "ERKEK" },
@@ -104,6 +125,8 @@ export default class PreregistrationsCreate extends Component {
       content={`${!this.state.newRegister ? Literals.Columns.Newregister[Profile.Language] : Literals.Columns.Registered[Profile.Language]} Hasta Girişi İçin Tıklanıyız`}
       position='top left'
     />
+
+    const defaultDepartment = (Departments.list || []).filter(u => u.Isactive).find(u => u.Isdefaultpatientdepartment)
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
@@ -140,27 +163,27 @@ export default class PreregistrationsCreate extends Component {
                 </React.Fragment>
               }
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Deparment[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" required modal={DepartmentsCreate} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoptions} formtype="dropdown" required modal={CasesCreate} />
-              </Form.Group>
-              <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' required />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Approvaldate[Profile.Language]} name="Approvaldate" type='date' required />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Preregistrations"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={isLoading}
-                  buttonText={Literals.Button.Create[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
+              <Form.Group widths={'equal'}>
+                {!defaultDepartment ? <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Deparment[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" required modal={DepartmentsCreate} /> : null}
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoptions} formtype="dropdown" required modal={CasesCreate} />
+              </Form.Group>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Preregistrations"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -168,7 +191,10 @@ export default class PreregistrationsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { Patientdefines, fillPatientnotification, AddPatients, history, Profile, closeModal } = this.props
+    const { Patientdefines, fillPatientnotification, AddPatients, history, Profile, closeModal, Departments } = this.props
+
+    const defaultDepartment = (Departments.list || []).filter(u => u.Isactive).find(u => u.Isdefaultpatientdepartment)
+
     const data = this.context.getForm(this.PAGE_NAME)
     if (!validator.isISODate(data.Registerdate)) {
       data.Registerdate = null
@@ -179,6 +205,7 @@ export default class PreregistrationsCreate extends Component {
     if (!validator.isISODate(data.Dateofbirth)) {
       data.Dateofbirth = null
     }
+    defaultDepartment ? (data.DepartmentID = defaultDepartment?.Uuid) : data.DepartmentID = this.context.formstates[`${this.PAGE_NAME}/DepartmentID`]
 
     const response = {
       Stocks: [],
@@ -194,7 +221,7 @@ export default class PreregistrationsCreate extends Component {
       Patientdefine: {},
       Approvaldate: data.Approvaldate,
       Registerdate: data.Registerdate,
-      DepartmentID: this.context.formstates[`${this.PAGE_NAME}/DepartmentID`],
+      DepartmentID: data.DepartmentID,
       CheckperiodID: "",
       TodogroupdefineID: "",
       CaseID: this.context.formstates[`${this.PAGE_NAME}/CaseID`]

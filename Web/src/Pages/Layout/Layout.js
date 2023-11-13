@@ -28,11 +28,7 @@ export default class Layout extends Component {
   }
 
   componentDidUpdate() {
-    const { Profile, removenotification, Files, removeFilenotification,
-      Users, removeUsernotification, isMobile, handlemobile } = this.props
-    notification(Profile.notifications, removenotification)
-    notification(Users.notifications, removeUsernotification)
-    notification(Files.notifications, removeFilenotification)
+    const { Profile, isMobile, handlemobile } = this.props
     this.handleLanguage()
 
     if (isMobile !== Profile.Ismobile) {

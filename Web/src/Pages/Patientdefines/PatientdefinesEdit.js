@@ -138,20 +138,20 @@ export default class PatientdefinesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CostumertypeName[Profile.Language]} name="CostumertypeID" options={Costumertypeoptions} formtype="dropdown" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.PatienttypeName[Profile.Language]} name="PatienttypeID" options={Patienttypeoptions} formtype="dropdown" />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Patientdefinesnes"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Patientdefines.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Patientdefinesnes"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Patientdefines.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }

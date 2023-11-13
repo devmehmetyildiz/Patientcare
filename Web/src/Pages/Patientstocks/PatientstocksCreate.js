@@ -21,13 +21,6 @@ export default class PatientstocksCreate extends Component {
 
   PAGE_NAME = 'PatientstocksCreate'
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      isInprepatients: false
-    }
-  }
-
   componentDidMount() {
     const { GetDepartments, GetStockdefines, GetPatients, GetPatientdefines } = this.props
     GetDepartments()
@@ -40,25 +33,18 @@ export default class PatientstocksCreate extends Component {
   render() {
     const { Patients, Patientstocks, Patientdefines, Departments, Stockdefines, Profile, history, closeModal } = this.props
 
-    const Departmentoptions = (Departments.list || []).map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
     const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
 
-    const Patientoptions = (Patients.list || []).filter(u => u.Iswaitingactivation === (this.state.isInprepatients ? 1 : 0)).map(patient => {
+    const Patientoptions = (Patients.list || []).filter(u => u.Isactive).map(patient => {
       const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient.PatientdefineID)
       return { key: patient.Uuid, text: `${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`, value: patient.Uuid }
     })
 
-    const changeRegistertype = <Popup
-      trigger={<div onClick={() => {
-        this.setState({ isInprepatients: !this.state.isInprepatients })
-      }} className='cursor-pointer ml-2'  ><Icon name="redo" /></div>}
-      content={`${!this.state.isInprepatients ? Literals.Columns.NotInTheDepartment[Profile.Language] : Literals.Columns.InTheDepartment[Profile.Language]} Hasta Girişi İçin Tıklanıyız`}
-      position='top left'
-    />
 
     return (
       Patientstocks.isLoading ? <LoadingPage /> :
@@ -77,27 +63,27 @@ export default class PatientstocksCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patient[Profile.Language]} name="PatientID" options={Patientoptions} formtype="dropdown" additionalicon={changeRegistertype} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patient[Profile.Language]} name="PatientID" options={Patientoptions} formtype="dropdown" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Patientstocks"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Patientstocks.isLoading}
-                  buttonText={Literals.Button.Create[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Patientstocks"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Patientstocks.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }

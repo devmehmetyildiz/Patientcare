@@ -99,6 +99,14 @@ const Literals = {
             tr: 'Stoklar',
             en: 'Stocks'
         },
+        Medicines: {
+            tr: 'İlaçlar',
+            en: 'Medicines'
+        },
+        Supplies: {
+            tr: 'Sarf Malzemeleri',
+            en: 'Supplies'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header, Loader } from 'semantic-ui-react'
+import { Header, Label, Loader } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import Literals from './Literals'
 
@@ -32,7 +32,7 @@ export default function WarehousesList({ Data, Columns, Stocks, initialConfig, P
   const renderRowSubComponent = React.useCallback(
     ({ row }) => {
       const warehouse = Data.find(u => u.Id === row.original.Id)
-      let stocks = (Stocks.list || []).filter(u => u.WarehouseID === warehouse.Uuid && u.Isapproved)
+      let stocks = (Stocks.list || []).filter(u => u.WarehouseID === warehouse.Uuid && u.Isapproved && u.Isactive)
 
       const decoratedStocks = (stocks || []).map(stock => {
         let amount = 0.0;
@@ -65,21 +65,21 @@ export default function WarehousesList({ Data, Columns, Stocks, initialConfig, P
       ]
       return <React.Fragment>
         {!warehouse?.Ismedicine ? <div className='w-full p-4'>
-          <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>{Literals.Columns.Stocks[Profile.Language]}</Header>
+          <Label className='!ml-4' basic color='blue' ribbon>{Literals.Columns.Stocks[Profile.Language]}</Label>
           <DataTable
             Columns={stockcolumns}
             Data={decoratedStocks.sort((a, b) => a.Order - b.Order).filter(u => !u.Ismedicine && !u.Issupply)}
           />
         </div> : null}
         {warehouse?.Ismedicine ? <div className='w-full p-4'>
-          <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>{Literals.Columns.Medicines[Profile.Language]}</Header>
+          <Label className='!ml-4' basic color='blue' ribbon>{Literals.Columns.Medicines[Profile.Language]}</Label>
           <DataTable
             Columns={medicinecolumns}
             Data={decoratedStocks.sort((a, b) => a.Order - b.Order).filter(u => u.Ismedicine && !u.Issupply)}
           />
         </div> : null}
         {!warehouse?.Ismedicine ? <div className='w-full p-4'>
-          <Header as='h4' attached='top' className='w-full text-center flex justify-center items-center'>{Literals.Columns.Supplies[Profile.Language]}</Header>
+          <Label className='!ml-4' basic color='blue' ribbon>{Literals.Columns.Supplies[Profile.Language]}</Label>
           <DataTable
             Columns={medicinecolumns}
             Data={decoratedStocks.sort((a, b) => a.Order - b.Order).filter(u => !u.Ismedicine && u.Issupply)}

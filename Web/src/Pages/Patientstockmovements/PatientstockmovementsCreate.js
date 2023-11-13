@@ -22,16 +22,38 @@ export default class PatientstockmovementsCreate extends Component {
   PAGE_NAME = "PatientstockmovementsCreate"
 
   componentDidMount() {
-    const { GetPatientstocks } = this.props
+    const { GetPatientstocks, GetStockdefines } = this.props
     GetPatientstocks()
+    GetStockdefines()
   }
 
 
+  componentDidUpdate() {
+
+    const { location, Patientstocks } = this.props
+
+    if (!validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/StockID`])) {
+      const search = new URLSearchParams(location.search)
+      const StockID = search.get('StockID') ? search.get('StockID') : ''
+      if (validator.isUUID(StockID) && (Patientstocks.list || []).find(u => u.Uuid === StockID)) {
+        this.context.setFormstates({
+          ...this.context.formstates,
+          [`${this.PAGE_NAME}/StockID`]: StockID ? StockID : '',
+        })
+      }
+    }
+  }
+
   render() {
-    const { Patientstockmovements, Patientstocks, Profile, history, closeModal } = this.props
+    const { Patientstockmovements, Patientstocks, Profile, history, closeModal, Stockdefines } = this.props
 
     const Patientstockoptions = (Patientstocks.list || []).filter(u => u.Isactive).map(stock => {
-      return { key: stock.Uuid, text: `${stock.Stockdefine.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
+      if (stock.Barcodeno) {
+        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
+      }
+      else {
+        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name}`, value: stock.Uuid }
+      }
     })
 
     const Movementoptions = [
@@ -48,7 +70,7 @@ export default class PatientstockmovementsCreate extends Component {
                 <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
@@ -60,20 +82,20 @@ export default class PatientstockmovementsCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype="dropdown" />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Patientstockmovements"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Patientstockmovements.isLoading}
-                  buttonText={Literals.Button.Create[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Patientstockmovements"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Patientstockmovements.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }

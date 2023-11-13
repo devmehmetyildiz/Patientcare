@@ -26,7 +26,6 @@ export default class PatientsuppliesEdit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isInprepatients: false,
       isDatafetched: false
     }
   }
@@ -59,10 +58,8 @@ export default class PatientsuppliesEdit extends Component {
 
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
       !isLoadingstatus && !isLoading && !this.state.isDatafetched) {
-      const patient = (Patients.list || []).find(u => u.Uuid === selected_record?.PatientID)
       this.setState({
         isDatafetched: true,
-        isInprepatients: patient?.iswaitingactivation
       })
       const currentDate = new Date(selected_record?.Skt || '');
       const year = currentDate.getFullYear();
@@ -79,7 +76,7 @@ export default class PatientsuppliesEdit extends Component {
 
     const { selected_record } = Patientstocks
 
-    const Departmentoptions = Departments.list.map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
     const Stockdefineoptions = (Stockdefines.list || []).filter(u => !u.Ismedicine && u.Issupply).map(define => {
@@ -111,20 +108,20 @@ export default class PatientsuppliesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Patientsupplies"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Patientstocks.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Patientsupplies"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Patientstocks.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -149,7 +146,7 @@ export default class PatientsuppliesEdit extends Component {
         fillPatientstocknotification(error)
       })
     } else {
-      EditPatientstocks({ data: { ...Patientstocks.selected_record, ...data }, history })
+      EditPatientstocks({ data: { ...Patientstocks.selected_record, ...data }, history, redirectUrl: '/Patientsupplies' })
     }
   }
 

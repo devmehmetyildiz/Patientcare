@@ -41,13 +41,12 @@ export default class Patientmovements extends Component {
       { Header: Literals.Columns.IsTodocompleted[Profile.Language], accessor: 'IsTodocompleted', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.IsComplated[Profile.Language], accessor: 'IsComplated', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Iswaitingactivation[Profile.Language], accessor: 'Iswaitingactivation', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: true, Subheader: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: true, Subheader: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+    ]
 
     const metaKey = "Patientmovements"
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
@@ -95,7 +94,6 @@ export default class Patientmovements extends Component {
                   list={list}
                   initialConfig={initialConfig}
                   metaKey={metaKey}
-                  Showcreatebutton
                   Showcolumnchooser
                   Showexcelexport
                 />
@@ -133,6 +131,13 @@ export default class Patientmovements extends Component {
       const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
       return `${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`
     }
+  }
+
+  dateCellhandler = (col) => {
+    if (col.value) {
+      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+    }
+    return null
   }
 
 }

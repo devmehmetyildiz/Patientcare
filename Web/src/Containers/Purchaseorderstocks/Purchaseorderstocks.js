@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import Purchaseorderstocks from '../../Pages/Purchaseorderstocks/Purchaseorderstocks'
 import {
     GetPurchaseorderstocks, fillPurchaseorderstocknotification, DeletePurchaseorderstocks
-    , handleDeletemodal, handleSelectedPurchaseorderstock
+    , handleDeletemodal, handleSelectedPurchaseorderstock, handleApprovemodal
 } from '../../Redux/PurchaseorderstockSlice'
 import { GetDepartments } from '../../Redux/DepartmentSlice'
 import { GetStockdefines } from '../../Redux/StockdefineSlice'
@@ -22,7 +22,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     GetPurchaseorderstocks, fillPurchaseorderstocknotification, DeletePurchaseorderstocks,
     handleDeletemodal, handleSelectedPurchaseorderstock, GetDepartments,
-    GetStockdefines, GetPurchaseorderstockmovements, GetPurchaseorders
+    GetStockdefines, GetPurchaseorderstockmovements, GetPurchaseorders, handleApprovemodal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Purchaseorderstocks)

@@ -25,7 +25,6 @@ export default class PatientstocksEdit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isInprepatients: false,
       isDatafetched: false
     }
   }
@@ -58,10 +57,8 @@ export default class PatientstocksEdit extends Component {
 
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
       !isLoadingstatus && !isLoading && !this.state.isDatafetched) {
-      const patient = (Patients.list || []).find(u => u.Uuid === selected_record?.PatientID)
       this.setState({
         isDatafetched: true,
-        isInprepatients: patient?.iswaitingactivation
       })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
@@ -72,14 +69,14 @@ export default class PatientstocksEdit extends Component {
 
     const { selected_record } = Patientstocks
 
-    const Departmentoptions = Departments.list.map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
     const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(define => {
       return { key: define.Uuid, text: define.Name, value: define.Uuid }
     })
 
-    const patient = (Patients.list || []).find(u => u.Uuid === selected_record?.PatientID)
+    const patient = (Patients.list || []).filter(u => u.Isactive).find(u => u.Uuid === selected_record?.PatientID)
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
 
     return (
@@ -100,20 +97,20 @@ export default class PatientstocksEdit extends Component {
             <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} name="StockdefineID" options={Stockdefineoptions} formtype="dropdown" />
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Patientstocks"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Patientstocks.isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Patientstocks"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Patientstocks.isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -140,7 +137,7 @@ export default class PatientstocksEdit extends Component {
         fillPatientstocknotification(error)
       })
     } else {
-      EditPatientstocks({ data: { ...Patientstocks.selected_record, ...data }, history, redirectUrl: '/Patientmedicines' })
+      EditPatientstocks({ data: { ...Patientstocks.selected_record, ...data }, history, redirectUrl: '/Patientstocks' })
     }
   }
 

@@ -15,6 +15,7 @@ import WarehousesDelete from '../../Containers/Warehouses/WarehousesDelete'
 import ExcelImport from '../../Containers/Utils/ExcelImport'
 import ExcelExport from '../../Containers/Utils/ExcelExport'
 import Settings from '../../Common/Settings'
+import MobileTable from '../../Utils/MobileTable'
 
 export default class Warehouses extends Component {
 
@@ -37,14 +38,14 @@ export default class Warehouses extends Component {
         Header: () => null,
         id: 'expander', accessor: 'expander', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, newWidht: '10px',
         Cell: ({ row }) => (
-          <span {...row.getToggleRowExpandedProps()}>
+          !Profile.Ismobile && <span {...row.getToggleRowExpandedProps()}>
             {row.isExpanded ? <Icon name='triangle down' /> : <Icon name='triangle right' />}
           </span>
         ),
       },
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Ismedicine[Profile.Language], accessor: 'Ismedicine', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
@@ -109,17 +110,20 @@ export default class Warehouses extends Component {
             <Pagedivider />
             {list.length > 0 ?
               <div className='w-full mx-auto '>
-                <WarehousesList
-                  Data={list}
-                  Columns={Columns}
-                  initialConfig={initialConfig}
-                  Profile={Profile}
-                  Departments={Departments}
-                  Units={Units}
-                  Stockmovements={Stockmovements}
-                  Stockdefines={Stockdefines}
-                  Stocks={Stocks}
-                />
+                {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <WarehousesList
+                    Data={list}
+                    Columns={Columns}
+                    initialConfig={initialConfig}
+                    Profile={Profile}
+                    Departments={Departments}
+                    Units={Units}
+                    Stockmovements={Stockmovements}
+                    Stockdefines={Stockdefines}
+                    Stocks={Stocks}
+                  />
+                }
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>

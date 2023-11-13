@@ -75,8 +75,29 @@ export default class PurchaseordersCreate extends Component {
     })
 
     const Casesoption = (Cases.list || []).filter(u => u.Isactive).filter(u => u.CaseStatus === 0).map(cases => {
-      return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
-    })
+      let departments = (cases.Departmentuuids || [])
+        .map(u => {
+          const department = (Departments.list || []).find(department => department.Uuid === u.DepartmentID)
+          if (department) {
+            return department
+          } else {
+            return null
+          }
+        })
+        .filter(u => u !== null);
+      let ishavepatients = false;
+      (departments || []).forEach(department => {
+        if (department?.Ishavepatients) {
+          ishavepatients = true
+        }
+      });
+
+      if (ishavepatients) {
+        return null
+      } else {
+        return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
+      }
+    }).filter(u => u !== null);
 
     const Warehousesoption = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
       return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
@@ -383,10 +404,10 @@ export default class PurchaseordersCreate extends Component {
       if (!validator.isUUID(data.DepartmentID)) {
         errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Departmentrequired[Profile.Language] })
       }
-      if (!validator.isISODate(data.Skt)) {
+      if ((data.Issupply || data.Ismedicine) && !validator.isISODate(data.Skt)) {
         errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Sktrequired[Profile.Language] })
       }
-      if (!validator.isString(data.Barcodeno)) {
+      if ((data.Issupply || data.Ismedicine) && !validator.isString(data.Barcodeno)) {
         errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Barcodenorequired[Profile.Language] })
       }
       if (!validator.isNumber(data.Amount)) {
@@ -423,11 +444,12 @@ export default class PurchaseordersCreate extends Component {
         fillPurchaseordernotification(error)
       })
     } else {
-      await AddPurchaseorders({ data: responseData, history, closeModal })
+      AddPurchaseorders({ data: responseData, history, closeModal })
     }
   }
 
   AddNewProduct = (Ismedicine, Issupply) => {
+
     this.setState({
       selectedStocks: [...this.state.selectedStocks,
       {
@@ -444,6 +466,7 @@ export default class PurchaseordersCreate extends Component {
         Info: '',
         Ismedicine: Ismedicine,
         Issupply: Issupply,
+        Isredprescription: false,
         Willdelete: false,
         key: Math.random(),
         Order: (this.state.selectedStocks || []).filter(u => u.Ismedicine === Ismedicine && u.Issupply === Issupply).length,
@@ -452,20 +475,35 @@ export default class PurchaseordersCreate extends Component {
   }
 
   removeProduct = (key, order) => {
-    let stock = this.state.selectedStocks.find(u => u.key === key);
-    let stocks = this.state.selectedStocks.filter(u => u.Ismedicine === stock.Ismedicine && u.Issupply === stock.Issupply).filter(productionRoute => productionRoute.key !== key);
+    let stocks = this.state.selectedStocks.filter(productionRoute => productionRoute.key !== key)
     stocks.filter(stock => stock.Order > order).forEach(stock => stock.Order--)
     this.setState({ selectedStocks: stocks })
   }
 
   selectedProductChangeHandler = (key, property, value) => {
+
     let productionRoutes = this.state.selectedStocks
     const index = productionRoutes.findIndex(productionRoute => productionRoute.key === key)
     if (property === 'order') {
-      productionRoutes.filter(productionRoute => productionRoute.Order === value)
+      let selectedroute = this.state.selectedStocks.find(u => u.key === key);
+      productionRoutes.filter(u => u.Issupply === selectedroute?.Issupply && u.Ismedicine === selectedroute?.Ismedicine)
+        .filter(productionRoute => productionRoute.Order === value)
         .forEach((productionRoute) => productionRoute.Order = productionRoutes[index].Order > value ? productionRoute.Order + 1 : productionRoute.Order - 1)
     }
+    if (property === 'StockdefineID') {
+      const { Stockdefines } = this.props
+
+      productionRoutes[index].Isredprescription = (Stockdefines.list || []).find(u => u.Uuid === value)?.Isredprescription || false
+    }
     productionRoutes[index][property] = value
+    if (property === 'Skt') {
+      const currentDate = new Date(value || '');
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      productionRoutes[index][property] = formattedDate
+    }
     this.setState({ selectedStocks: productionRoutes })
   }
 }

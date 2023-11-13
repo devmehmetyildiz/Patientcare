@@ -87,7 +87,7 @@ export default class PatientsAddstock extends Component {
     } = this.props
 
 
-    const Id = match.params.PatientID || PatientID
+    const Id = match?.params?.PatientID || PatientID
 
     const { selected_record } = Patients
 
@@ -105,8 +105,14 @@ export default class PatientsAddstock extends Component {
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
 
     const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive && !u.Ismedicine).map(warehouse => {
-      return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
-    })
+      const stocks = (Stocks.list || []).filter(u =>
+        u.Isactive &&
+        u.WarehouseID === warehouse?.Uuid &&
+        u.Isapproved &&
+        !u.Ismedicine
+      )
+      return (stocks || []).length > 0 ? { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid } : null
+    }).filter(u => u !== null)
 
     const Stockoptions = (Stocks.list || []).filter(u =>
       u.Isactive &&
@@ -152,17 +158,21 @@ export default class PatientsAddstock extends Component {
                 panes={
                   Warehouseoptions.map(warehouse => {
                     const stocks = (Stocks.list || []).filter(u => u.WarehouseID === warehouse.value && !u.Ismedicine && u.Isapproved)
-                    return {
-                      menuItem: warehouse.text,
-                      pane: {
-                        key: warehouse.key,
-                        content: stocks.length > 0 ?
-                          <div className='w-full mx-auto '>
-                            <DataTable Columns={Columns} Data={stocks} />
-                          </div> : <NoDataScreen message={Literals.Messages.Nostockfind[Profile.Language]} style={{ height: 'auto' }} />
+                    if ((stocks || []).length > 0) {
+                      return {
+                        menuItem: warehouse.text,
+                        pane: {
+                          key: warehouse.key,
+                          content: (stocks || []).length > 0 ?
+                            <div className='w-full mx-auto '>
+                              <DataTable Columns={Columns} Data={stocks} />
+                            </div> : <NoDataScreen message={Literals.Messages.Nostockfind[Profile.Language]} style={{ height: 'auto' }} />
+                        }
                       }
+                    } else {
+                      return null
                     }
-                  })}
+                  }).filter(u => u)}
                 renderActiveOnly={false} />
               <Pagedivider />
               <Form.Group widths='equal'>
@@ -170,20 +180,20 @@ export default class PatientsAddstock extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.AddStock.Stockname[Profile.Language]} name="StockID" options={Stockoptions} formtype='dropdown' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.AddStock.Amount[Profile.Language]} name="Amount" type="number" />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={isLoadingstatus}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={isLoadingstatus}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }

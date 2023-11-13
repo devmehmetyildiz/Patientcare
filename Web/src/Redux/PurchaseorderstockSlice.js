@@ -30,6 +30,10 @@ const Literals = {
         en: 'Purchaseorder stock Deleted successfully',
         tr: 'Satın alma stoğu Başarı ile Silindi'
     },
+    approvedescription: {
+        en: 'Purchaseorder stock Approved successfully',
+        tr: 'Satın alma stoğu Başarı ile Onaylandı'
+    },
 }
 
 export const GetPurchaseorderstocks = createAsyncThunk(

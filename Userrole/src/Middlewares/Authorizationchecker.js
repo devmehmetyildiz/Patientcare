@@ -16,7 +16,6 @@ const INVALID_ACCESS_TOKEN = createErrorList('FORBIDDEN', 'INVALID_ACCESS_TOKEN'
 
 
 const PUBLIC_URLS = [
-    { method: 'post', url: '/Users/Register' }
 ]
 
 async function authorizationChecker(req, res, next) {

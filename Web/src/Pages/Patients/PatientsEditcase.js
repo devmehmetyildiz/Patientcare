@@ -33,13 +33,14 @@ export default class PatientsEditcase extends Component {
     componentDidMount() {
         const {
             GetPatient, match, history, PatientID,
-            GetPatientdefines, GetCases
+            GetPatientdefines, GetCases, GetDepartments
         } = this.props
         let Id = PatientID || match?.params?.PatientID
         if (validator.isUUID(Id)) {
             GetPatient(Id)
             GetPatientdefines()
             GetCases()
+            GetDepartments()
         } else {
             history.length > 1 ? history.goBack() : history.push(Id ? `/Patients/${Id}` : `/Patients`)
         }
@@ -63,24 +64,46 @@ export default class PatientsEditcase extends Component {
     render() {
 
         const {
-            Patients, Patientdefines, Cases, Profile, history, match, PatientID
+            Patients, Patientdefines, Cases, Profile, history, match, PatientID, Departments
         } = this.props
 
 
-        const Id = match.params.PatientID || PatientID
+        const Id = match?.params?.PatientID || PatientID
 
         const { selected_record } = Patients
 
         const isLoadingstatus =
             Patients.isLoading &&
             Patientdefines.isLoading &&
-            Cases.isLoading
+            Cases.isLoading &&
+            Departments.isLoading
 
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
 
-        const Casesoption = (Cases.list || []).filter(u => u.Isactive).map(casedata => {
-            return { key: casedata.Uuid, text: casedata.Name, value: casedata.Uuid }
-        })
+        const Casesoptions = (Cases.list || []).filter(u => u.Isactive).map(cases => {
+            let departments = (cases.Departmentuuids || [])
+                .map(u => {
+                    const department = (Departments.list || []).find(department => department.Uuid === u.DepartmentID)
+                    if (department) {
+                        return department
+                    } else {
+                        return null
+                    }
+                })
+                .filter(u => u !== null);
+            let ishavepatients = false;
+            (departments || []).forEach(department => {
+                if (department?.Ishavepatients) {
+                    ishavepatients = true
+                }
+            });
+
+            if (ishavepatients) {
+                return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
+            } else {
+                return null
+            }
+        }).filter(u => u !== null);
 
         const activecase = (Cases.list || []).find(u => u.Uuid === selected_record?.CaseID)
 
@@ -102,25 +125,25 @@ export default class PatientsEditcase extends Component {
                     </Headerwrapper>
                     <Pagedivider />
                     <Contentwrapper>
-                        <Form onSubmit={this.handleSubmit}>
+                        <Form>
                             <Label>{`${Literals.Columns.Activecase[Profile.Language]} : ${activecase?.Name}`}</Label>
                             <Form.Group widths='equal'>
-                                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' modal={CasesCreate} />
+                                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoptions} formtype='dropdown' modal={CasesCreate} />
                             </Form.Group>
-                            <Footerwrapper>
-                                <Gobackbutton
-                                    history={history}
-                                    redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
-                                    buttonText={Literals.Button.Goback[Profile.Language]}
-                                />
-                                <Submitbutton
-                                    isLoading={isLoadingstatus}
-                                    buttonText={Literals.Button.Update[Profile.Language]}
-                                    submitFunction={this.handleSubmit}
-                                />
-                            </Footerwrapper>
                         </Form>
                     </Contentwrapper>
+                    <Footerwrapper>
+                        <Gobackbutton
+                            history={history}
+                            redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
+                            buttonText={Literals.Button.Goback[Profile.Language]}
+                        />
+                        <Submitbutton
+                            isLoading={isLoadingstatus}
+                            buttonText={Literals.Button.Update[Profile.Language]}
+                            submitFunction={this.handleSubmit}
+                        />
+                    </Footerwrapper>
                 </Pagewrapper >
         )
     }

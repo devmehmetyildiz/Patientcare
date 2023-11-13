@@ -171,6 +171,44 @@ async function UpdatePurchaseorderstockmovement(req, res, next) {
     GetPurchaseorderstockmovements(req, res, next)
 }
 
+async function ApprovePurchaseorderstockmovement(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.stockmovementId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const purchaseorderstockmovement = await db.purchaseorderstockmovementModel.findOne({ where: { Uuid: Uuid } })
+        if (!purchaseorderstockmovement) {
+            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
+        }
+        if (purchaseorderstockmovement.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.purchaseorderstockmovementModel.update({
+            ...purchaseorderstockmovement,
+            Isapproved: true,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPurchaseorderstockmovements(req, res, next)
+}
+
 async function DeletePurchaseorderstockmovement(req, res, next) {
 
     let validationErrors = []
@@ -211,4 +249,5 @@ module.exports = {
     AddPurchaseorderstockmovement,
     UpdatePurchaseorderstockmovement,
     DeletePurchaseorderstockmovement,
+    ApprovePurchaseorderstockmovement
 }

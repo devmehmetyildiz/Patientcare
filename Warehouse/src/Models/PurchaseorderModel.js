@@ -40,6 +40,9 @@ module.exports = sequelize.define('purchaseorderModel', {
     Isapproved: {
         type: Sequelize.BOOLEAN
     },
+    Iscompleted: {
+        type: Sequelize.BOOLEAN
+    },
     Createduser: {
         type: Sequelize.STRING
     },

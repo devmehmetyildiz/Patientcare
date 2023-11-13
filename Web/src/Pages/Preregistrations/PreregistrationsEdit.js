@@ -43,15 +43,19 @@ export default class PreregistrationsEdit extends Component {
   componentDidUpdate() {
     const { Departments, Cases, Patientdefines, Patients } = this.props
     const { selected_record, isLoading } = Patients
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
-      Departments.list.length > 0 && !Departments.isLoading &&
-      Cases.list.length > 0 && !Cases.isLoading &&
-      Patientdefines.list.length > 0 && !Patientdefines.isLoading &&
-      !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
+      && !Departments.isLoading
+      && !Cases.isLoading
+      && !Patientdefines.isLoading
+      && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true,
       })
-      this.context.setForm(this.PAGE_NAME, selected_record)
+      const registerDate = new Date(selected_record?.Registerdate || '');
+      const approvaldate = new Date(selected_record?.Approvaldate || '');
+      const formattedregisterDate = `${registerDate.getFullYear()}-${String(registerDate.getMonth() + 1).padStart(2, '0')}-${String(registerDate.getDate()).padStart(2, '0')}`;
+      const formattedapprovaldate = `${approvaldate.getFullYear()}-${String(approvaldate.getMonth() + 1).padStart(2, '0')}-${String(approvaldate.getDate()).padStart(2, '0')}`;
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, [`Registerdate`]: formattedregisterDate, ['Approvaldate']: formattedapprovaldate })
     }
   }
 
@@ -61,15 +65,15 @@ export default class PreregistrationsEdit extends Component {
     const { Patientdefines, Patients, Departments, Cases, history, Profile } = this.props
     const { isLoading, isDispatching } = Patients
 
-    const Patientdefineoptions = (Patientdefines.list || []).map(define => {
+    const Patientdefineoptions = (Patientdefines.list || []).filter(u => u.Isactive).map(define => {
       return { key: define.Uuid, text: `${define.Firstname} ${define.Lastname}-${define.CountryID}`, value: define.Uuid }
     })
 
-    const Departmentoptions = (Departments.list || []).map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const Casesoptions = (Cases.list || []).filter(u => u.Casestatus !== 1).map(cases => {
+    const Casesoptions = (Cases.list || []).filter(u => u.Isactive).filter(u => u.Casestatus !== 1).map(cases => {
       return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
     })
 
@@ -98,20 +102,20 @@ export default class PreregistrationsEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Approvaldate[Profile.Language]} name="Approvaldate" type='date' />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Preregistrations"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Preregistrations"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }

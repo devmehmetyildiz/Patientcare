@@ -75,20 +75,20 @@ export default class PurchaseorderstocksCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/Purchaseorderstocks"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={Purchaseorderstocks.isLoading}
-                  buttonText={Literals.Button.Create[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Purchaseorderstocks"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={Purchaseorderstocks.isLoading}
+              buttonText={Literals.Button.Create[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
@@ -124,13 +124,6 @@ export default class PurchaseorderstocksCreate extends Component {
     } else {
       AddPurchaseorderstocks({ data, history, closeModal })
     }
-  }
-
-  getLocalDate = () => {
-    var curr = new Date();
-    curr.setDate(curr.getDate() + 3);
-    var date = curr.toISOString().substring(0, 10);
-    return date
   }
 }
 PurchaseorderstocksCreate.contextType = FormContext

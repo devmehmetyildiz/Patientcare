@@ -72,10 +72,10 @@ export default class Patientstocks extends Component {
       }) : [],
     };
 
-    const list = (Patientstocks.list || []).filter(u => !u.Ismedicine).map(item => {
+    const list = (Patientstocks.list || []).filter(u => !u.Ismedicine && !u.Issupply && u.Isactive).map(item => {
       return {
         ...item,
-        change: <Link to={`/Patientstockmovements/Create?PatientstockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
+        change: <Link to={`/Patientstockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
         edit: <Link to={`/Patientstocks/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
           handleSelectedPatientstock(item)

@@ -7,6 +7,7 @@ import LoadingPage from '../../Utils/LoadingPage'
 import img from '../../Assets/img'
 import { ROUTES } from '../../Utils/Constants'
 import config from '../../Config'
+import validator from '../../Utils/Validator'
 
 export default class ProfileEdit extends Component {
 
@@ -19,7 +20,8 @@ export default class ProfileEdit extends Component {
             isDatafetched: false,
             imgChanged: false,
             fetchedFromapi: false,
-            selectedLanguage: ''
+            selectedLanguage: '',
+            userConfig: null
         }
     }
 
@@ -32,14 +34,17 @@ export default class ProfileEdit extends Component {
     }
 
     componentDidUpdate() {
-        const { Profile, Files } = this.props
+        const { Profile } = this.props
         const { meta } = Profile
         if (meta && meta.Id !== 0 && Object.keys(meta).length > 0 && !this.state.isDatafetched) {
             if (meta.Files && Array.isArray(meta.Files)) {
                 let pp = meta.Files.find(u => u.Usagetype === "PP")
-                this.setState({ file: pp ? pp : {}, isDatafetched: true, fetchedFromapi: true, showImg: pp ? true : false })
+                const userconfig = validator.isString(meta?.Config) ? JSON.parse(meta?.Config) : null
+                this.setState({ file: pp ? pp : {}, isDatafetched: true, fetchedFromapi: true, showImg: pp ? true : false, userConfig: userconfig })
             }
         }
+
+        console.log('this.state: ', this.state);
     }
 
     render() {
@@ -51,6 +56,14 @@ export default class ProfileEdit extends Component {
             { key: 1, text: 'EN', value: 'en' },
             { key: 2, text: 'TR', value: 'tr' },
         ]
+
+        const Notificaitonoptions = [
+            { key: 1, text: 'Sol', value: 'left' },
+            { key: 2, text: 'Orta', value: 'center' },
+            { key: 3, text: 'Sağ', value: 'right' },
+        ]
+
+        const userConfig = this.state.userConfig || {}
 
         return (
             isLogging || isDispatching ? < LoadingPage /> :
@@ -91,8 +104,34 @@ export default class ProfileEdit extends Component {
                                     <Form.Group widths={'equal'}>
                                         <Form.Input label="Adres" placeholder="Adres" name="Address" fluid defaultValue={meta.Address} />
                                     </Form.Group>
-                                    <label className='text-[#000000de]'>Dil</label>
-                                    <Dropdown value={this.state.selectedLanguage} clearable selection fluid options={Languageoptions} onChange={(e, { value }) => { this.setState({ selectedLanguage: value }) }} />
+                                    <Form.Group widths={'equal'}>
+                                        <Form.Field>
+                                            <label className='text-[#000000de]'>Dil</label>
+                                            <Dropdown value={this.state.selectedLanguage} clearable selection fluid options={Languageoptions} onChange={(e, { value }) => { this.setState({ selectedLanguage: value }) }} />
+                                        </Form.Field>
+                                    </Form.Group>
+                                    <Form.Group widths={'equal'}>
+                                        <Form.Field>
+                                            <Form.Input
+                                                defaultValue={userConfig['autoClose']}
+                                                label="Bildirim Görünür Kalma Süresi (ms)"
+                                                placeholder="Görünür Kalma Süresi"
+                                                fluid
+                                                onChange={(e) => { this.setState({ userConfig: { ...userConfig, ['autoClose']: e.target.value } }) }}
+                                            />
+                                        </Form.Field>
+                                        <Form.Field>
+                                            <label className='text-[#000000de]'>Bildirim Pozisyonu</label>
+                                            <Dropdown
+                                                value={userConfig['position']}
+                                                clearable
+                                                selection
+                                                fluid
+                                                onChange={(e, { value }) => { this.setState({ userConfig: { ...userConfig, ['position']: value } }) }}
+                                                options={Notificaitonoptions}
+                                            />
+                                        </Form.Field>
+                                    </Form.Group>
                                 </Form.Field>
                             </Form.Group>
                             <div className='flex flex-row w-full justify-between py-4  items-center'>
@@ -115,8 +154,9 @@ export default class ProfileEdit extends Component {
         const { EditUsers, history, Profile } = this.props
         const data = formToObject(e.target)
         data.Language = this.state.selectedLanguage
+        data.Config = this.state.userConfig ? JSON.stringify(this.state.userConfig) : ''
         this.handleFile()
-        EditUsers({ data: { ...Profile.meta, ...data }, history, redirectUrl: "Goback" })
+        EditUsers({ data: { ...Profile.meta, ...data }, history, redirectUrl: "/" })
     }
 
     deleteImage = (e) => {

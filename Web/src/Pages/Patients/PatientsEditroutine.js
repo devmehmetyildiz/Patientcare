@@ -67,7 +67,7 @@ export default class PatientsEditroutine extends Component {
         } = this.props
 
 
-        const Id = match.params.PatientID || PatientID
+        const Id = match?.params?.PatientID || PatientID
 
         const { selected_record } = Patients
 
@@ -103,24 +103,24 @@ export default class PatientsEditroutine extends Component {
                     <Pagedivider />
                     <Contentwrapper>
                         <Form>
-                            <Label>{`${Literals.Columns.Activetodogroupdefine[Profile.Language]} : ${activetodogroupdefine?.Name}`}</Label>
+                            <Label>{`${Literals.Columns.Activetodogroupdefine[Profile.Language]} : ${activetodogroupdefine?.Name || ''}`}</Label>
                             <Form.Group widths='equal'>
                                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Todogroupdefine[Profile.Language]} name="TodogroupdefineID" options={Todogroupdefinessoption} formtype='dropdown' modal={TodogroupdefinesCreate} />
                             </Form.Group>
-                            <Footerwrapper>
-                                <Gobackbutton
-                                    history={history}
-                                    redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
-                                    buttonText={Literals.Button.Goback[Profile.Language]}
-                                />
-                                <Submitbutton
-                                    isLoading={isLoadingstatus}
-                                    buttonText={Literals.Button.Update[Profile.Language]}
-                                    submitFunction={this.handleSubmit}
-                                />
-                            </Footerwrapper>
                         </Form>
                     </Contentwrapper>
+                    <Footerwrapper>
+                        <Gobackbutton
+                            history={history}
+                            redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
+                            buttonText={Literals.Button.Goback[Profile.Language]}
+                        />
+                        <Submitbutton
+                            isLoading={isLoadingstatus}
+                            buttonText={Literals.Button.Update[Profile.Language]}
+                            submitFunction={this.handleSubmit}
+                        />
+                    </Footerwrapper>
                 </Pagewrapper >
         )
     }

@@ -49,7 +49,6 @@ export class Files extends Component {
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const metaKey = "Files"
@@ -99,7 +98,6 @@ export class Files extends Component {
                   list={list}
                   initialConfig={initialConfig}
                   metaKey={metaKey}
-                  Showcreatebutton
                   Showcolumnchooser
                   Showexcelexport
                 />

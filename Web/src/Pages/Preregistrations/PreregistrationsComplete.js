@@ -16,6 +16,8 @@ import FormInput from '../../Utils/FormInput'
 import formToObject from 'form-to-object'
 import { FormContext } from '../../Provider/FormProvider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import Gobackbutton from '../../Common/Gobackbutton'
+import Submitbutton from '../../Common/Submitbutton'
 export default class PreregistrationsComplete extends Component {
 
   PAGE_NAME = 'PreregistrationsComplete'
@@ -38,7 +40,7 @@ export default class PreregistrationsComplete extends Component {
   componentDidMount() {
     const { GetStockdefines, GetWarehouses, GetUnits, GetPatients, GetRooms,
       GetFloors, GetBeds, GetFiles, GetPatientdefines, GetPatientstocks,
-      GetPatientstockmovements, GetCases } = this.props
+      GetPatientstockmovements, GetCases, GetDepartments } = this.props
     GetPatients()
     GetStockdefines()
     GetWarehouses()
@@ -51,6 +53,7 @@ export default class PreregistrationsComplete extends Component {
     GetPatientstockmovements()
     GetUnits()
     GetCases()
+    GetDepartments()
   }
 
   componentDidUpdate() {
@@ -58,13 +61,13 @@ export default class PreregistrationsComplete extends Component {
       Cases, Patients, Warehouses, Rooms, Beds,
       Files, Floors, Patientdefines, Patientstocks, Patientstockmovements,
       Units, Stockdefines, Profile, fillPatientnotification,
-      match, history
+      match, history, Departments
     } = this.props
 
     const isLoadingstatus = Patients.isLoading || Warehouses.isLoading || Rooms.isLoading
       || Beds.isLoading || Files.isLoading || Floors.isLoading || Patientdefines.isLoading
       || Patientstocks.isLoading || Patientstockmovements.isLoading || Stockdefines.isLoading
-      || Units.isLoading || Cases.isLoading
+      || Units.isLoading || Cases.isLoading || Departments.isLoading
     if (!isLoadingstatus && !this.state.isDatafetched) {
 
       let Id = match?.params?.PatientID
@@ -121,13 +124,14 @@ export default class PreregistrationsComplete extends Component {
       Patientstockmovements,
       Stockdefines,
       Units,
+      Departments,
       Profile, match, history } = this.props
 
 
     const isLoadingstatus = Patients.isLoading || Warehouses.isLoading || Rooms.isLoading
       || Beds.isLoading || Files.isLoading || Floors.isLoading || Patientdefines.isLoading
       || Patientstocks.isLoading || Patientstockmovements.isLoading || Stockdefines.isLoading
-      || Units.isLoading || Cases.isLoading
+      || Units.isLoading || Cases.isLoading || Departments.isLoading
     let Id = match?.params?.PatientID
     const selected_record = (Patients.list || []).find(u => u.Uuid === Id)
 
@@ -158,9 +162,30 @@ export default class PreregistrationsComplete extends Component {
       return { key: room.Uuid, text: room.Name, value: room.Uuid }
     })
 
-    const Caseoptions = (Cases.list || []).filter(u => u.Isactive).map(casedata => {
-      return { key: casedata.Uuid, text: casedata.Name, value: casedata.Uuid }
-    })
+    const Casesoptions = (Cases.list || []).filter(u => u.Isactive).filter(u => u.CaseStatus === 0).map(cases => {
+      let departments = (cases.Departmentuuids || [])
+        .map(u => {
+          const department = (Departments.list || []).find(department => department.Uuid === u.DepartmentID)
+          if (department) {
+            return department
+          } else {
+            return null
+          }
+        })
+        .filter(u => u !== null);
+      let ishavepatients = false;
+      (departments || []).forEach(department => {
+        if (department?.Ishavepatients) {
+          ishavepatients = true
+        }
+      });
+
+      if (ishavepatients) {
+        return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
+      } else {
+        return null
+      }
+    }).filter(u => u !== null);
 
     const Bedoptions = (
       validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/FloorID`]) &&
@@ -169,8 +194,8 @@ export default class PreregistrationsComplete extends Component {
         return { key: bed.Uuid, text: bed.Name, value: bed.Uuid }
       }) : []
 
-    const patientfiles = (Files.list || []).filter(u => u.ParentID === selected_record.Uuid)
-    const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record.PatientdefineID)
+    const patientfiles = (Files.list || []).filter(u => u.ParentID === selected_record?.Uuid)
+    const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
     return (
       isLoadingstatus ? <LoadingPage /> :
         <Pagewrapper>
@@ -193,8 +218,9 @@ export default class PreregistrationsComplete extends Component {
             </Header>
             <Pagedivider />
             <div className='flex flex-col justify-center items-center w-full'>
-              <div className='flex flex-row justify-center items-center flex-wrap gap-2'>
+              <div className='w-full flex flex-row justify-center items-start flex-wrap gap-2'>
                 <Card
+                  className='!m-0'
                   link
                   header={Literals.Complete.Define[Profile.Language]}
                   meta={`${Literals.Complete.Firstname[Profile.Language]}-${patientdefine?.Firstname} ${Literals.Complete.Lastname[Profile.Language]}-${patientdefine?.Lastname}`}
@@ -205,31 +231,34 @@ export default class PreregistrationsComplete extends Component {
                   ].join('')}
                 />
                 <Card
+                  className='!m-0'
                   link
                   header={Literals.Complete.Medicines[Profile.Language]}
                   meta={`${Literals.Complete.Totalcount[Profile.Language]} ${patientstocks.filter(u => u.Ismedicine).map(u => { return u.Amount }).reduce((a, b) => a + b, 0)}`}
                   description={patientstocks.filter(u => u.Ismedicine).map(stock => {
                     var stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
                     var unit = (Units.list || []).find(u => u.Uuid === stockdefine.UnitID)
-                    return `${stock.Amount} ${unit?.Name} ${stockdefine?.Name},`
+                    return `${stock.Amount} ${unit?.Name} ${stockdefine?.Name} `
                   }).join('')}
                 />
                 <Card
+                  className='!m-0'
                   link
                   header={Literals.Complete.Stocks[Profile.Language]}
                   meta={`${Literals.Complete.Totalcount[Profile.Language]} ${patientstocks.filter(u => !u.Ismedicine).map(u => { return u.Amount }).reduce((a, b) => a + b, 0)}`}
                   description={patientstocks.filter(u => !u.Ismedicine).map(stock => {
                     var stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
                     var unit = (Units.list || []).find(u => u.Uuid === stockdefine.UnitID)
-                    return `${stock.Amount} ${unit?.Name} ${stockdefine?.Name},`
+                    return `${stock.Amount} ${unit?.Name} ${stockdefine?.Name} `
                   }).join('')}
                 />
                 <Card
+                  className='!m-0'
                   link
                   header={Literals.Complete.Files[Profile.Language]}
                   meta={`${Literals.Complete.Totalcount[Profile.Language]} ${patientfiles.length}`}
                   description={patientfiles.map(file => {
-                    return `${file.Name},`
+                    return `${file.Name} `
                   }).join('')}
                 />
               </div>
@@ -241,53 +270,55 @@ export default class PreregistrationsComplete extends Component {
                 <div className='flex flex-row justify-center items-center w-full'>
                   {filesthatwillcheck.map(filename => {
                     if (this.state.neededFilefounded.includes(filename)) {
-                      return <Label color='red'>{filename}</Label>
+                      return <Label key={Math.random()} color='red'>{filename}</Label>
                     } else {
-                      return <Label color='green'>{filename}</Label>
+                      return <Label key={Math.random()} color='green'>{filename}</Label>
                     }
                   })}
                 </div>
                 <Pagedivider />
-                {this.state.neededFilefounded.length === 0 ? <div className='flex flex-row justify-start items-center w-full mb-auto '>
-                  <Form onSubmit={this.handleSubmit} className='w-full'>
-                    <Form.Group widths={'equal'}>
-                      <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Iswilltransfer[Profile.Language]} name="Iswilltransfer" formtype="checkbox" />
-                      {this.context.formstates[`${this.PAGE_NAME}/Iswilltransfer`] &&
-                        <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Warehouse[Profile.Language]} name="WarehouseID" options={Warehouseoptions} formtype="dropdown" />
-                      }
-                    </Form.Group>
-                    <Form.Group widths={'equal'}>
-                      <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Case[Profile.Language]} name="CaseID" options={Caseoptions} formtype="dropdown" />
-                    </Form.Group>
-                    <Form.Group widths={'equal'}>
-                      <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Floor[Profile.Language]} name="FloorID" options={Flooroptions} formtype="dropdown" />
-                      {validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/FloorID`]) && <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Room[Profile.Language]} name="RoomID" options={Roomoptions} formtype="dropdown" />}
-                      {validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/FloorID`]) && validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/RoomID`]) && <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Bed[Profile.Language]} name="BedID" options={Bedoptions} formtype="dropdown" />}
-                    </Form.Group>
-                    <Footerwrapper>
-                      {history && <Link to="/Preregistrations">
-                        <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                      </Link>}
-                      <Button floated="right" type='submit' color='blue'>{Literals.Button.Create[Profile.Language]}</Button>
-                    </Footerwrapper>
-                  </Form>
-                </div> :
-                  <Footerwrapper>
-                    {history && <Link to="/Preregistrations">
-                      <Button floated="left" color='grey'>{Literals.Button.Goback[Profile.Language]}</Button>
-                    </Link>}
-                  </Footerwrapper>
-                }
+                {this.state.neededFilefounded.length === 0 ?
+                  <div className='flex flex-row justify-start items-center w-full mb-auto '>
+                    <Form className='w-full'>
+                      <Form.Group widths={'equal'}>
+                        <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Iswilltransfer[Profile.Language]} name="Iswilltransfer" formtype="checkbox" />
+                        {this.context.formstates[`${this.PAGE_NAME}/Iswilltransfer`] &&
+                          <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Warehouse[Profile.Language]} name="WarehouseID" options={Warehouseoptions} formtype="dropdown" />
+                        }
+                      </Form.Group>
+                      <Form.Group widths={'equal'}>
+                        <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Case[Profile.Language]} name="CaseID" options={Casesoptions} formtype="dropdown" />
+                      </Form.Group>
+                      <Form.Group widths={'equal'}>
+                        <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Floor[Profile.Language]} name="FloorID" options={Flooroptions} formtype="dropdown" />
+                        {validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/FloorID`]) && <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Room[Profile.Language]} name="RoomID" options={Roomoptions} formtype="dropdown" />}
+                        {validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/FloorID`]) && validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/RoomID`]) && <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Bed[Profile.Language]} name="BedID" options={Bedoptions} formtype="dropdown" />}
+                      </Form.Group>
+                    </Form>
+                  </div> : null}
               </div>
             </div>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Preregistrations"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            {this.state.neededFilefounded.length === 0 ?
+              <Submitbutton
+                isLoading={Patients.isLoading}
+                buttonText={Literals.Button.Enter[Profile.Language]}
+                submitFunction={this.handleSubmit}
+              /> : null}
+          </Footerwrapper>
         </Pagewrapper >
     )
   }
   handleSubmit = (e) => {
     e.preventDefault()
     const { CompletePrepatients, history, fillPatientnotification, Profile } = this.props
-    const data = formToObject(e.target)
+    const data = this.context.getForm(this.PAGE_NAME)
     data.Iswilltransfer = this.context.formstates[`${this.PAGE_NAME}/Iswilltransfer`] || false
     data.WarehouseID = data.Iswilltransfer && this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
     data.FloorID = this.context.formstates[`${this.PAGE_NAME}/FloorID`]

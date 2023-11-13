@@ -86,7 +86,7 @@ export default class PatientsAddmedicine extends Component {
     } = this.props
 
 
-    const Id = match.params.PatientID || PatientID
+    const Id = match?.params?.PatientID || PatientID
 
     const { selected_record } = Patients
 
@@ -167,20 +167,20 @@ export default class PatientsAddmedicine extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.AddMedicine.Medicinename[Profile.Language]} name="StockID" options={Stockoptions} formtype='dropdown' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.AddMedicine.Amount[Profile.Language]} name="Amount" type="number" />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={isLoadingstatus}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={isLoadingstatus}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper >
     )
   }

@@ -102,6 +102,7 @@ export default class Patients extends Component {
         Filestxt: '',
         Stockstxt: '',
         actions: <Popup
+          key={Math.random()}
           trigger={<Icon className='cursor-pointer' name='ellipsis vertical' />}
           content={<div className='flex flex-col justify-start items-start w-full gap-2'>
             <Link to={`/Patients/${item.Uuid}`} ><Icon color='black' className='row-edit' name='magnify' /> {Literals.Columns.detail[Profile.Language]} </Link>
@@ -151,8 +152,14 @@ export default class Patients extends Component {
               </Grid>
             </Headerwrapper>
             <Pagedivider />
-            <Contentwrapper>
-              <Tab className='station-tab'
+            {list.length > 0 ?
+              <div className='w-full mx-auto '>
+                {Profile.Ismobile ?
+                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+            }
+            {/*             <Tab className='station-tab'
                 panes={[
                   {
                     menuItem: Literals.Columns.Gridscreen[Profile.Language],
@@ -245,8 +252,7 @@ export default class Patients extends Component {
                     }
                   }
                 ]}
-                renderActiveOnly={false} />
-            </Contentwrapper>
+                renderActiveOnly={false} /> */}
           </Pagewrapper>
         </React.Fragment >
     )
