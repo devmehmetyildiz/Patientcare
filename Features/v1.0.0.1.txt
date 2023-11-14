@@ -1,0 +1,27 @@
+Departman Güncellemede Veriler yüklenmiyor
+
+Content wrapper da botulandırma dropdown açılınca bozuluyor
+
+patinet movements kurumda yanlıs yazılmıs
+
+stok hareketleri için onay isteme eklenecek
+
+satın almada teslim alan kurum görevlisi olacak 
+
+edit list şeklindeki gridlerde tarihler bozuluyor
+
+ppurchaseorders sayfalarında redirect url yanlıs / eksik 
+
+preregiste kuruma giriş tarihi complete ekranına çekilecek ve otomatik o anın tarihi gelecek
+
+tanım düzenlemede müşteri türleri sağlık departmanına ait gelsin 
+
+complete ekranında cardların popupı olacak veriler orda gözülecek
+
+patient detailde movement aktivasyon bilgisini sil 
+
+detail ekranınlarında ürünlerin yanında barkod yerine skt cıkart 
+
+parola değiştir ekrnaı hata veriyor
+parula resetleme ekranındada hata var
+patients de eylemlerin adı değişecek ve senecekler olacak detaya tıkla olaxak
