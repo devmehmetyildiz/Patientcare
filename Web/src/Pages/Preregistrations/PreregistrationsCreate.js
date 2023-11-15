@@ -39,9 +39,6 @@ export default class PreregistrationsCreate extends Component {
     GetPatientdefines()
     GetDepartments()
     GetCases()
-
-
-
   }
 
   componentDidUpdate() {
@@ -49,17 +46,14 @@ export default class PreregistrationsCreate extends Component {
 
     const loadingstatus = Patients.isLoading && Departments.isLoading && Cases.isLoading && Patientdefines.isLoading
     if (!loadingstatus && !this.state.Isdatafetched) {
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-      const day = String(currentDate.getDate()).padStart(2, '0');
-      const formattedDate = `${year}-${month}-${day}`;
-
-      this.context.setFormstates({
-        ...this.context.formstates,
-        [`${this.PAGE_NAME}/Registerdate`]: formattedDate,
-      })
-      this.setState({ Isdatafetched: true })
+      setTimeout(() => {
+        const currentDate = new Date();
+        const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+        this.context.setForm(this.PAGE_NAME, {
+          [`Registerdate`]: formattedDate
+        })
+        this.setState({ Isdatafetched: true })
+      }, 500);
     }
   }
 
@@ -164,7 +158,6 @@ export default class PreregistrationsCreate extends Component {
               }
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' required />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Approvaldate[Profile.Language]} name="Approvaldate" type='date' required />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 {!defaultDepartment ? <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Deparment[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" required modal={DepartmentsCreate} /> : null}
@@ -254,9 +247,6 @@ export default class PreregistrationsCreate extends Component {
     }
     if (!validator.isISODate(response.Registerdate)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Registerdaterequired[Profile.Language] })
-    }
-    if (!validator.isISODate(response.Approvaldate)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Approvaldaterequired[Profile.Language] })
     }
     if (this.state.newRegister ? !validator.isString(response.Patientdefine?.CountryID) : !validator.isUUID(response.PatientdefineID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Patientdefinerequired[Profile.Language] })

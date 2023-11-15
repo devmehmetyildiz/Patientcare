@@ -75,7 +75,7 @@ const Literals = {
             tr: 'Satın Alma Numarası',
             en: 'Purchase Number'
         },
-        Personelname: {
+        RecievedUserID: {
             tr: 'Teslim Alan',
             en: 'Reciever Personel'
         },

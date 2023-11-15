@@ -37,11 +37,12 @@ export default class PurchaseordersEdit extends Component {
   }
 
   componentDidMount() {
-    const { PurchaseorderID, GetPurchaseorder, match, history, GetStockdefines, GetCases, GetDepartments, GetWarehouses, GetPurchaseorderstocks } = this.props
+    const { PurchaseorderID, GetPurchaseorder, match, history, GetStockdefines, GetCases, GetDepartments, GetWarehouses, GetPurchaseorderstocks, GetUsers } = this.props
     let Id = PurchaseorderID || match?.params?.PurchaseorderID
     if (validator.isUUID(Id)) {
       GetPurchaseorder(Id)
       GetStockdefines()
+      GetUsers()
       GetCases()
       GetDepartments()
       GetPurchaseorderstocks()
@@ -54,12 +55,13 @@ export default class PurchaseordersEdit extends Component {
 
   componentDidUpdate() {
     const { Stockdefines, Purchaseorders, Cases, Departments, Warehouses, Purchaseorderstocks } = this.props
-    const { selected_record, isLoading } = Purchaseorders
+    const { selected_record, isLoading, Users } = Purchaseorders
     if (selected_record && Object.keys(selected_record).length > 0 &&
       selected_record.Id !== 0 && Stockdefines.list.length > 0 && !Stockdefines.isLoading
       && !Cases.isLoading
       && !Warehouses.isLoading
       && !Departments.isLoading
+      && !Users.isLoading
       && !Purchaseorderstocks.isLoading
       && !isLoading && !this.state.isDatafetched) {
 
@@ -90,7 +92,7 @@ export default class PurchaseordersEdit extends Component {
 
   render() {
 
-    const { Cases, Departments, Stockdefines, Warehouses, Purchaseorders, Profile, history } = this.props
+    const { Cases, Departments, Stockdefines, Warehouses, Purchaseorders, Profile, history, Users } = this.props
     const { isLoading, isDispatching } = Purchaseorders
 
     const Stockdefinesoption = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(stockdefine => {
@@ -111,6 +113,11 @@ export default class PurchaseordersEdit extends Component {
 
     const Medicinedepartmentsoption = (Departments.list || []).filter(u => u.Isactive && u.Ishavepatients).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
+    })
+
+    const Usersoption = (Users.list || []).filter(u => u.Isactive).map(user => {
+      const userdata = (Users.list || []).find(u => u.Uuid === user.Uuid)
+      return { key: user.Uuid, text: `${userdata?.Name} ${userdata?.Surname} (${userdata?.Username})`, value: user.Uuid }
     })
 
     const Casesoption = (Cases.list || []).filter(u => u.Isactive).filter(u => u.CaseStatus === 0).map(cases => {
@@ -178,7 +185,7 @@ export default class PurchaseordersEdit extends Component {
                           </Form.Group>
                           <Form.Group widths={'equal'}>
                             <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CaseName[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' modal={CasesCreate} />
-                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Personelname[Profile.Language]} name="Personelname" />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.RecievedUserID[Profile.Language]} name="RecievedUserID" options={Usersoption} formtype='dropdown' />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
                             <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchasedate[Profile.Language]} name="Purchasedate" type='date' />
@@ -409,7 +416,7 @@ export default class PurchaseordersEdit extends Component {
       Purchaseprice: parseFloat(formData.Purchaseprice),
       Purchasenumber: formData.Purchasenumber,
       Companypersonelname: formData.Companypersonelname,
-      Personelname: formData.Personelname,
+      RecievedUserID: formData.RecievedUserID,
       Purchasedate: formData.Purchasedate,
       CaseID: this.context.formstates[`${this.PAGE_NAME}/CaseID`],
       WarehouseID: this.context.formstates[`${this.PAGE_NAME}/WarehouseID`],
@@ -444,7 +451,7 @@ export default class PurchaseordersEdit extends Component {
     if (!validator.isString(responseData.Purchasenumber)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Purchasenumberrequired[Profile.Language] })
     }
-    if (!validator.isString(responseData.Personelname)) {
+    if (!validator.isUUID(responseData.RecievedUserID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Personelnamerequired[Profile.Language] })
     }
     if (!validator.isUUID(responseData.CaseID)) {

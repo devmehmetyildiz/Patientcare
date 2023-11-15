@@ -101,16 +101,7 @@ export default class Patients extends Component {
         ...item,
         Filestxt: '',
         Stockstxt: '',
-        actions: <Popup
-          key={Math.random()}
-          trigger={<Icon className='cursor-pointer' name='ellipsis vertical' />}
-          content={<div className='flex flex-col justify-start items-start w-full gap-2'>
-            <Link to={`/Patients/${item.Uuid}`} ><Icon color='black' className='row-edit' name='magnify' /> {Literals.Columns.detail[Profile.Language]} </Link>
-          </div>}
-          on='click'
-          hideOnScroll
-          position='left center'
-        />
+        actions: <Link to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
       }
     })
 

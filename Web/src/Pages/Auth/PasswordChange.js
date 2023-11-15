@@ -16,6 +16,7 @@ import { Pagewrapper } from '../../Common/Wrappers/Pagewrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
+import { FormContext } from '../../Provider/FormProvider'
 
 export default class PasswordChange extends Component {
 
@@ -28,7 +29,7 @@ export default class PasswordChange extends Component {
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :
-        <Pagewrapper>
+        <Pagewrapper Profile={Profile}>
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/"}>
@@ -47,20 +48,20 @@ export default class PasswordChange extends Component {
                 <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Newpassword[Profile.Language]} name="Newpassword" />
                 <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Newpasswordre[Profile.Language]} name="Newpasswordre" />
               </Form.Group>
-              <Footerwrapper>
-                <Gobackbutton
-                  history={history}
-                  redirectUrl={"/"}
-                  buttonText={Literals.Button.Goback[Profile.Language]}
-                />
-                <Submitbutton
-                  isLoading={isLoading}
-                  buttonText={Literals.Button.Update[Profile.Language]}
-                  submitFunction={this.handleSubmit}
-                />
-              </Footerwrapper>
             </Form>
           </Contentwrapper>
+          <Footerwrapper Profile={Profile}>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/"}
+              buttonText={Literals.Button.Goback[Profile.Language]}
+            />
+            <Submitbutton
+              isLoading={isLoading}
+              buttonText={Literals.Button.Update[Profile.Language]}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
         </Pagewrapper>
     )
   }
@@ -96,3 +97,4 @@ export default class PasswordChange extends Component {
     }
   }
 }
+PasswordChange.contextType = FormContext

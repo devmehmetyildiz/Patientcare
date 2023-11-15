@@ -123,8 +123,8 @@ const Literals = {
             en: 'Files'
         },
         actions: {
-            tr: 'Eylemler',
-            en: 'Actions'
+            tr: 'Detay',
+            en: 'Detail'
         },
         detail: {
             tr: 'Detay',

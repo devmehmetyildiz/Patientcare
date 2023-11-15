@@ -17,6 +17,7 @@ import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import { Pagewrapper } from '../../Common/Wrappers/Pagewrapper'
 import Submitbutton from '../../Common/Submitbutton'
+import { FormContext } from '../../Provider/FormProvider'
 
 export default class PasswordReset extends Component {
 
@@ -62,20 +63,20 @@ export default class PasswordReset extends Component {
                                             <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Newpassword[Profile.Language]} name="Newpassword" />
                                             <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Newpasswordre[Profile.Language]} name="Newpasswordre" />
                                         </Form.Group>
-                                        <Footerwrapper>
-                                            <Gobackbutton
-                                                history={history}
-                                                redirectUrl={"/Cases"}
-                                                buttonText={Literals.Button.Goback[Profile.Language]}
-                                            />
-                                            <Submitbutton
-                                                isLoading={isLoading}
-                                                buttonText={Literals.Button.Create[Profile.Language]}
-                                                submitFunction={this.handleSubmit}
-                                            />
-                                        </Footerwrapper>
                                     </Form>
                                 </Contentwrapper>
+                                <Footerwrapper>
+                                    <Gobackbutton
+                                        history={history}
+                                        redirectUrl={"/Cases"}
+                                        buttonText={Literals.Button.Goback[Profile.Language]}
+                                    />
+                                    <Submitbutton
+                                        isLoading={isLoading}
+                                        buttonText={Literals.Button.Create[Profile.Language]}
+                                        submitFunction={this.handleSubmit}
+                                    />
+                                </Footerwrapper>
                             </Pagewrapper>
                         </div>
                     </div>
@@ -119,3 +120,4 @@ export default class PasswordReset extends Component {
         }
     }
 }
+PasswordReset.contextType = FormContext

@@ -658,7 +658,7 @@ async function Changepassword(req, res, next) {
     }
     const t = await db.sequelize.transaction();
     try {
-        const hash = bcrypt.hash(Newpassword, salt)
+        const hash = await bcrypt.hash(Newpassword, newSalt)
         await db.userModel.update({
             ...req.identity?.user,
             PasswordHash: hash,
