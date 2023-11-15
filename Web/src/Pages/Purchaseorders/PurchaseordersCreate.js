@@ -36,11 +36,12 @@ export default class PurchaseordersCreate extends Component {
   }
 
   componentDidMount() {
-    const { GetStockdefines, GetCases, GetDepartments, GetWarehouses } = this.props
+    const { GetUsers, GetStockdefines, GetCases, GetDepartments, GetWarehouses } = this.props
     GetStockdefines()
     GetCases()
     GetDepartments()
     GetWarehouses()
+    GetUsers()
     if (this.context.formstates[`${this.PAGE_NAME}/Stocks`]) {
       this.setState({
         selectedStocks: this.context.formstates[`${this.PAGE_NAME}/Stocks`]
@@ -50,7 +51,7 @@ export default class PurchaseordersCreate extends Component {
 
   render() {
 
-    const { Warehouses, Cases, Departments, Stockdefines, Profile,
+    const { Warehouses, Cases, Departments, Stockdefines, Profile, Users,
       Purchaseorders, history, closeModal } = this.props
     const { isLoading, isDispatching } = Purchaseorders
 
@@ -72,6 +73,11 @@ export default class PurchaseordersCreate extends Component {
 
     const Medicinedepartmentsoption = (Departments.list || []).filter(u => u.Isactive && u.Ishavepatients).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
+    })
+
+    const Usersoption = (Users.list || []).filter(u => u.Isactive).map(user => {
+      const userdata = (Users.list || []).find(u => u.Uuid === user.Uuid)
+      return { key: user.Uuid, text: `${userdata?.Name} ${userdata?.Surname} (${userdata?.Username})`, value: user.Uuid }
     })
 
     const Casesoption = (Cases.list || []).filter(u => u.Isactive).filter(u => u.CaseStatus === 0).map(cases => {
@@ -140,7 +146,7 @@ export default class PurchaseordersCreate extends Component {
                           </Form.Group>
                           <Form.Group widths={'equal'}>
                             <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CaseName[Profile.Language]} name="CaseID" options={Casesoption} formtype='dropdown' modal={CasesCreate} />
-                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Personelname[Profile.Language]} name="Personelname" />
+                            <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.RecievedUserID[Profile.Language]} name="RecievedUserID" options={Usersoption} formtype='dropdown' />
                           </Form.Group>
                           <Form.Group widths={'equal'}>
                             <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Purchasedate[Profile.Language]} name="Purchasedate" type='date' />
@@ -192,7 +198,7 @@ export default class PurchaseordersCreate extends Component {
                                     <Form.Input placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" fluid value={stock.Barcodeno} onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Barcodeno', e.target.value) }} />
                                   </Table.Cell>
                                   <Table.Cell>
-                                    <Form.Input placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' fluid value={stock.Skt} onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Skt', e.target.value) }} />
+                                    <Form.Input placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Skt', e.target.value) }} />
                                   </Table.Cell>
                                   <Table.Cell>
                                     <Form.Input placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type="number" fluid value={stock.Amount} onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Amount', e.target.value) }} />
@@ -261,7 +267,7 @@ export default class PurchaseordersCreate extends Component {
                                     <Form.Input placeholder={Literals.Columns.Barcodeno[Profile.Language]} name="Barcodeno" fluid value={stock.Barcodeno} onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Barcodeno', e.target.value) }} />
                                   </Table.Cell>
                                   <Table.Cell>
-                                    <Form.Input placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' fluid value={stock.Skt} onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Skt', e.target.value) }} />
+                                    <Form.Input placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' fluid onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Skt', e.target.value) }} />
                                   </Table.Cell>
                                   <Table.Cell>
                                     <Form.Input placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type="number" fluid value={stock.Amount} onChange={(e) => { this.selectedProductChangeHandler(stock.key, 'Amount', e.target.value) }} />
@@ -389,7 +395,7 @@ export default class PurchaseordersCreate extends Component {
       Purchaseprice: parseFloat(formData.Purchaseprice),
       Purchasenumber: formData.Purchasenumber,
       Companypersonelname: formData.Companypersonelname,
-      Personelname: formData.Personelname,
+      RecievedUserID: formData.RecievedUserID,
       Purchasedate: formData.Purchasedate,
       CaseID: this.context.formstates[`${this.PAGE_NAME}/CaseID`],
       WarehouseID: this.context.formstates[`${this.PAGE_NAME}/WarehouseID`],
@@ -427,7 +433,7 @@ export default class PurchaseordersCreate extends Component {
     if (!validator.isString(responseData.Purchasenumber)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Purchasenumberrequired[Profile.Language] })
     }
-    if (!validator.isString(responseData.Personelname)) {
+    if (!validator.isUUID(responseData.RecievedUserID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Personelnamerequired[Profile.Language] })
     }
     if (!validator.isUUID(responseData.CaseID)) {

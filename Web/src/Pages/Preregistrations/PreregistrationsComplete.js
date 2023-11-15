@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Breadcrumb, Button, Card, Form, Grid, GridColumn, Header, Icon, Label, Modal } from 'semantic-ui-react'
+import { Breadcrumb, Button, Card, Form, Grid, GridColumn, Header, Icon, Label, Modal, Popup } from 'semantic-ui-react'
 import Literals from './Literals'
 import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
@@ -103,6 +103,11 @@ export default class PreregistrationsComplete extends Component {
               fillPatientnotification(error)
             })
           }
+          const currentDate = new Date();
+          const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+          this.context.setForm(this.PAGE_NAME, {
+            [`Approvaldate`]: formattedDate
+          })
           this.setState({ selected_record, isDatafetched: true, neededFilefounded: neededfiles })
         }
       }
@@ -219,47 +224,67 @@ export default class PreregistrationsComplete extends Component {
             <Pagedivider />
             <div className='flex flex-col justify-center items-center w-full'>
               <div className='w-full flex flex-row justify-center items-start flex-wrap gap-2'>
-                <Card
-                  className='!m-0'
-                  link
-                  header={Literals.Complete.Define[Profile.Language]}
-                  meta={`${Literals.Complete.Firstname[Profile.Language]}-${patientdefine?.Firstname} ${Literals.Complete.Lastname[Profile.Language]}-${patientdefine?.Lastname}`}
-                  description={[
-                    `${Literals.Complete.CountryID[Profile.Language]}-${patientdefine?.CountryID}  `,
-                    `${Literals.Complete.Fathername[Profile.Language]}-${patientdefine?.Fathername}  `,
-                    `${Literals.Complete.Mothername[Profile.Language]}-${patientdefine?.Mothername}  `,
-                  ].join('')}
+                <Popup
+                  trigger={<Card
+                    className='!m-0'
+                    link
+                    header={Literals.Complete.Define[Profile.Language]}
+                  />}
+                  content={<Card
+                    meta={`${Literals.Complete.Firstname[Profile.Language]}-${patientdefine?.Firstname} ${Literals.Complete.Lastname[Profile.Language]}-${patientdefine?.Lastname}`}
+                    description={[
+                      `${Literals.Complete.CountryID[Profile.Language]}-${patientdefine?.CountryID}  `,
+                      `${Literals.Complete.Fathername[Profile.Language]}-${patientdefine?.Fathername}  `,
+                      `${Literals.Complete.Mothername[Profile.Language]}-${patientdefine?.Mothername}  `,
+                    ].join('')}
+                  />}
+                  position='bottom left'
                 />
-                <Card
-                  className='!m-0'
-                  link
-                  header={Literals.Complete.Medicines[Profile.Language]}
-                  meta={`${Literals.Complete.Totalcount[Profile.Language]} ${patientstocks.filter(u => u.Ismedicine).map(u => { return u.Amount }).reduce((a, b) => a + b, 0)}`}
-                  description={patientstocks.filter(u => u.Ismedicine).map(stock => {
-                    var stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
-                    var unit = (Units.list || []).find(u => u.Uuid === stockdefine.UnitID)
-                    return `${stock.Amount} ${unit?.Name} ${stockdefine?.Name} `
-                  }).join('')}
+                <Popup
+                  trigger={<Card
+                    className='!m-0'
+                    link
+                    header={Literals.Complete.Medicines[Profile.Language]}
+                  />}
+                  content={<Card
+                    meta={`${Literals.Complete.Totalcount[Profile.Language]} ${patientstocks.filter(u => u.Ismedicine).map(u => { return u.Amount }).reduce((a, b) => a + b, 0)}`}
+                    description={patientstocks.filter(u => u.Ismedicine).map(stock => {
+                      var stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
+                      var unit = (Units.list || []).find(u => u.Uuid === stockdefine.UnitID)
+                      return `${stock.Amount} ${unit?.Name} ${stockdefine?.Name} `
+                    }).join('')}
+                  />}
+                  position='bottom left'
                 />
-                <Card
-                  className='!m-0'
-                  link
-                  header={Literals.Complete.Stocks[Profile.Language]}
-                  meta={`${Literals.Complete.Totalcount[Profile.Language]} ${patientstocks.filter(u => !u.Ismedicine).map(u => { return u.Amount }).reduce((a, b) => a + b, 0)}`}
-                  description={patientstocks.filter(u => !u.Ismedicine).map(stock => {
-                    var stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
-                    var unit = (Units.list || []).find(u => u.Uuid === stockdefine.UnitID)
-                    return `${stock.Amount} ${unit?.Name} ${stockdefine?.Name} `
-                  }).join('')}
+                <Popup
+                  trigger={<Card
+                    className='!m-0'
+                    link
+                    header={Literals.Complete.Stocks[Profile.Language]}
+                  />}
+                  content={<Card
+                    meta={`${Literals.Complete.Totalcount[Profile.Language]} ${patientstocks.filter(u => !u.Ismedicine).map(u => { return u.Amount }).reduce((a, b) => a + b, 0)}`}
+                    description={patientstocks.filter(u => !u.Ismedicine).map(stock => {
+                      var stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
+                      var unit = (Units.list || []).find(u => u.Uuid === stockdefine.UnitID)
+                      return `${stock.Amount} ${unit?.Name} ${stockdefine?.Name} `
+                    }).join('')}
+                  />}
+                  position='bottom left'
                 />
-                <Card
-                  className='!m-0'
-                  link
-                  header={Literals.Complete.Files[Profile.Language]}
-                  meta={`${Literals.Complete.Totalcount[Profile.Language]} ${patientfiles.length}`}
-                  description={patientfiles.map(file => {
-                    return `${file.Name} `
-                  }).join('')}
+                <Popup
+                  trigger={<Card
+                    className='!m-0'
+                    link
+                    header={Literals.Complete.Files[Profile.Language]}
+                  />}
+                  content={<Card
+                    meta={`${Literals.Complete.Totalcount[Profile.Language]} ${patientfiles.length}`}
+                    description={patientfiles.map(file => {
+                      return `${file.Name} `
+                    }).join('')}
+                  />}
+                  position='bottom left'
                 />
               </div>
               <Pagedivider />
@@ -287,6 +312,7 @@ export default class PreregistrationsComplete extends Component {
                         }
                       </Form.Group>
                       <Form.Group widths={'equal'}>
+                        <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Approvaldate[Profile.Language]} name="Approvaldate" type='date' required />
                         <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Case[Profile.Language]} name="CaseID" options={Casesoptions} formtype="dropdown" />
                       </Form.Group>
                       <Form.Group widths={'equal'}>
@@ -319,12 +345,11 @@ export default class PreregistrationsComplete extends Component {
     e.preventDefault()
     const { CompletePrepatients, history, fillPatientnotification, Profile } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
+    if (!validator.isISODate(data.Approvaldate)) {
+      data.Approvaldate = null
+    }
     data.Iswilltransfer = this.context.formstates[`${this.PAGE_NAME}/Iswilltransfer`] || false
     data.WarehouseID = data.Iswilltransfer && this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
-    data.FloorID = this.context.formstates[`${this.PAGE_NAME}/FloorID`]
-    data.RoomID = this.context.formstates[`${this.PAGE_NAME}/RoomID`]
-    data.BedID = this.context.formstates[`${this.PAGE_NAME}/BedID`]
-    data.CaseID = this.context.formstates[`${this.PAGE_NAME}/CaseID`]
     let errors = []
     if (data.Iswilltransfer === true && !validator.isUUID(data.WarehouseID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Complete.Warehouserequired[Profile.Language] })
@@ -337,6 +362,9 @@ export default class PreregistrationsComplete extends Component {
     }
     if (!validator.isUUID(data.BedID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Complete.Bedrequired[Profile.Language] })
+    }
+    if (!validator.isISODate(data.Approvaldate)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Approvaldaterequired[Profile.Language] })
     }
     if (!validator.isUUID(data.CaseID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Complete.Caserequired[Profile.Language] })

@@ -155,7 +155,7 @@ export default class PatientsFiles extends Component {
                     <Footerwrapper>
                         <Gobackbutton
                             history={history}
-                            redirectUrl={"/Preregistrations"}
+                            redirectUrl={"/Patients"}
                             buttonText={Literals.Button.Goback[Profile.Language]}
                         />
                         <Submitbutton

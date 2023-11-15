@@ -115,7 +115,7 @@ export default class PatientsRemovemedicine extends Component {
             u.PatientID === selected_record?.Uuid
         ).map(stock => {
             const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
-            return { key: stock?.Uuid, text: `${stockdefine?.Name} (${stock?.Barcodeno})`, value: stock?.Uuid }
+            return { key: stock?.Uuid, text: `${stockdefine?.Name} (${stock?.Skt})`, value: stock?.Uuid }
         })
 
         const Columns = [

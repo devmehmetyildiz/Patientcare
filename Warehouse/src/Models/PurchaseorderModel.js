@@ -25,7 +25,7 @@ module.exports = sequelize.define('purchaseorderModel', {
     Companypersonelname: {
         type: Sequelize.STRING
     },
-    Personelname: {
+    RecievedUserID: {
         type: Sequelize.STRING
     },
     Purchasedate: {

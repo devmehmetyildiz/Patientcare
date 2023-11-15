@@ -22,17 +22,39 @@ export default class PatientdefinesCreate extends Component {
   PAGE_NAME = "PatientdefinesCreate"
 
   componentDidMount() {
-    const { GetCostumertypes, GetPatienttypes } = this.props
+    const { GetCostumertypes, GetPatienttypes, GetDepartments } = this.props
     GetCostumertypes()
     GetPatienttypes()
+    GetDepartments()
   }
 
   render() {
-    const { Costumertypes, Patienttypes, Patientdefines, Profile, history, closeModal } = this.props
+    const { Costumertypes, Departments, Patienttypes, Patientdefines, Profile, history, closeModal } = this.props
 
     const Costumertypeoptions = (Costumertypes.list || []).filter(u => u.Isactive).map(costumertype => {
-      return { key: costumertype.Uuid, text: costumertype.Name, value: costumertype.Uuid }
-    })
+      let departments = (costumertype.Departmentuuids || [])
+        .map(u => {
+          const department = (Departments.list || []).find(department => department.Uuid === u.DepartmentID)
+          if (department) {
+            return department
+          } else {
+            return null
+          }
+        })
+        .filter(u => u !== null);
+      let ishavepatients = false;
+      (departments || []).forEach(department => {
+        if (department?.Ishavepatients) {
+          ishavepatients = true
+        }
+      });
+
+      if (ishavepatients) {
+        return { key: costumertype.Uuid, text: costumertype.Name, value: costumertype.Uuid }
+      } else {
+        return null
+      }
+    }).filter(u => u !== null);
 
     const Patienttypeoptions = (Patienttypes.list || []).filter(u => u.Isactive).map(patienttype => {
       return { key: patienttype.Uuid, text: patienttype.Name, value: patienttype.Uuid }

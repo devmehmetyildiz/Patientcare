@@ -44,7 +44,7 @@ export default class DepartmentsEdit extends Component {
   componentDidUpdate() {
     const { Departments, Stations } = this.props
     const { selected_record, isLoading } = Departments
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Stations.list.length > 0 && !Stations.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !Stations.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
       })
