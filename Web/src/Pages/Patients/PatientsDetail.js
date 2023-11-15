@@ -167,7 +167,6 @@ export default class PatientsDetail extends Component {
     const movementColumns = [
       { Header: Literals.Details.Patientmovementype[Profile.Language], accessor: 'Patientmovementtype', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.patientmovementCellhandler(col) },
       { Header: Literals.Details.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Details.Iswaitingactivation[Profile.Language], accessor: 'Iswaitingactivation', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Details.IsComplated[Profile.Language], accessor: 'IsComplated', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.boolCellhandler(col) }
     ]
 
@@ -320,7 +319,7 @@ export default class PatientsDetail extends Component {
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
-                {/*     <Button primary fluid onClick={() => { handleInmodal(true) }}>{Literals.Button.Geton[Profile.Language]}</Button>
+                    {/*     <Button primary fluid onClick={() => { handleInmodal(true) }}>{Literals.Button.Geton[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { handleOutmodal(true) }}>{Literals.Button.Getoff[Profile.Language]}</Button> */}
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Changetodos[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>

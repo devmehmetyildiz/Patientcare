@@ -29,21 +29,26 @@ export default class PatientdefinesEdit extends Component {
   }
 
   componentDidMount() {
-    const { GetPatientdefine, match, history, GetCostumertypes, GetPatienttypes, PatientdefineID } = this.props
+    const { GetPatientdefine, GetDepartments, match, history, GetCostumertypes, GetPatienttypes, PatientdefineID } = this.props
     let Id = PatientdefineID || match?.params?.PatientdefineID
     if (validator.isUUID(Id)) {
       GetPatientdefine(Id)
       GetCostumertypes()
       GetPatienttypes()
+      GetDepartments()
     } else {
       history.push("/Patientdefines")
     }
   }
 
   componentDidUpdate() {
-    const { Patientdefines, Costumertypes, Patienttypes } = this.props
+    const { Patientdefines, Costumertypes, Departments, Patienttypes } = this.props
     const { selected_record, isLoading } = Patientdefines
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Costumertypes.list.length > 0 && !Costumertypes.isLoading && Patienttypes.list.length > 0 && !Patienttypes.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
+      !Costumertypes.isLoading &&
+      !Patienttypes.isLoading &&
+      !Departments.isLoading &&
+      !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
       })
@@ -52,11 +57,32 @@ export default class PatientdefinesEdit extends Component {
   }
 
   render() {
-    const { Costumertypes, Patienttypes, Patientdefines, Profile, history } = this.props
+    const { Costumertypes, Departments, Patienttypes, Patientdefines, Profile, history } = this.props
 
     const Costumertypeoptions = (Costumertypes.list || []).filter(u => u.Isactive).map(costumertype => {
-      return { key: costumertype.Uuid, text: costumertype.Name, value: costumertype.Uuid }
-    })
+      let departments = (costumertype.Departmentuuids || [])
+        .map(u => {
+          const department = (Departments.list || []).find(department => department.Uuid === u.DepartmentID)
+          if (department) {
+            return department
+          } else {
+            return null
+          }
+        })
+        .filter(u => u !== null);
+      let ishavepatients = false;
+      (departments || []).forEach(department => {
+        if (department?.Ishavepatients) {
+          ishavepatients = true
+        }
+      });
+
+      if (ishavepatients) {
+        return { key: costumertype.Uuid, text: costumertype.Name, value: costumertype.Uuid }
+      } else {
+        return null
+      }
+    }).filter(u => u !== null);
 
     const Patienttypeoptions = (Patienttypes.list || []).filter(u => u.Isactive).map(patienttype => {
       return { key: patienttype.Uuid, text: patienttype.Name, value: patienttype.Uuid }

@@ -26,7 +26,7 @@ export default class Purchaseorders extends Component {
   }
 
   componentDidMount() {
-    const { GetWarehouses, GetPurchaseorders, GetPurchaseorderstocks, GetStockdefines, GetDepartments, GetPurchaseorderstockmovements, GetCases
+    const { GetUsers, GetWarehouses, GetPurchaseorders, GetPurchaseorderstocks, GetStockdefines, GetDepartments, GetPurchaseorderstockmovements, GetCases
     } = this.props
     GetWarehouses()
     GetPurchaseorders()
@@ -35,6 +35,7 @@ export default class Purchaseorders extends Component {
     GetDepartments()
     GetPurchaseorderstockmovements()
     GetCases()
+    GetUsers()
   }
 
   render() {
@@ -59,7 +60,7 @@ export default class Purchaseorders extends Component {
       { Header: Literals.Columns.Warehouse[Profile.Language], accessor: 'WarehouseID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.warehouseCellhandler(col) },
       { Header: Literals.Columns.Company[Profile.Language], accessor: 'Company', sortable: true, canGroupBy: true, canFilter: true, Subheader: true },
       { Header: Literals.Columns.Purchasenumber[Profile.Language], accessor: 'Purchasenumber', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
-      { Header: Literals.Columns.Personelname[Profile.Language], accessor: 'Personelname', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.Columns.RecievedUserID[Profile.Language], accessor: 'RecievedUserID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.userCellhandler(col) },
       { Header: Literals.Columns.Companypersonelname[Profile.Language], accessor: 'Companypersonelname', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Purchasedate[Profile.Language], accessor: 'Purchasedate', sortable: true, canGroupBy: true, canFilter: true, Finalheader: true, Cell: col => this.dateCellhandler(col) },
@@ -167,6 +168,16 @@ export default class Purchaseorders extends Component {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
       return (Cases.list || []).find(u => u.Uuid === col.value)?.Name
+    }
+  }
+
+  userCellhandler = (col) => {
+    const { Users } = this.props
+    if (Users.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const user = (Users.list || []).find(u => u.Uuid === col.value)
+      return `${user?.Name} ${user?.Surname} (${user?.Username})`
     }
   }
 

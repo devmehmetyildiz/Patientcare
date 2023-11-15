@@ -6,7 +6,7 @@ import { Accordion, Breadcrumb, Button, Container, Grid, GridColumn, Header, Ico
 import { Link } from 'react-router-dom'
 import Headerbredcrump from './Wrappers/Headerbredcrump'
 import './about.css'
-import { version1000 } from './Changelogs'
+import { version1_0_0_0, version1_0_0_1 } from './Changelogs'
 
 export default class About extends Component {
 
@@ -20,7 +20,8 @@ export default class About extends Component {
 
     render() {
         const Changelogs = [
-            version1000
+            version1_0_0_1,
+            version1_0_0_0
         ]
 
         return (

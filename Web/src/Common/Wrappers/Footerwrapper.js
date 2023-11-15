@@ -15,7 +15,7 @@ export function Footerwrapper({ Profile, children }) {
         <React.Fragment>
             <Pagedivider />
             {
-                Profile.Ismobile ?
+                Profile?.Ismobile ?
                     <Modal open={modalOpen}
                         onClose={() => { setmodalOpen(false) }}
                         onOpen={() => { setmodalOpen(true) }}

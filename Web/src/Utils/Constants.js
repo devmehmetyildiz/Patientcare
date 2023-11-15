@@ -55,7 +55,7 @@ export const MOVEMENTTYPES = [
 
 export const PATIENTMOVEMENTTYPE = [
     { Name: "İşlem Yok", value: 0 },
-    { Name: "Kurumada", value: 1 },
+    { Name: "Kurumda", value: 1 },
     { Name: "İlk Kayıtta", value: 2 },
     { Name: "Hastanede", value: 3 },
     { Name: "Ölüm", value: 4 },
