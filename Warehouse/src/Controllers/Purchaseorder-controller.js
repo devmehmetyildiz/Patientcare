@@ -54,7 +54,7 @@ async function AddPurchaseorder(req, res, next) {
         Purchaseprice,
         Purchasenumber,
         Companypersonelname,
-        Personelname,
+        RecievedUserID,
         Purchasedate,
         WarehouseID,
         CaseID,
@@ -78,7 +78,7 @@ async function AddPurchaseorder(req, res, next) {
     if (!validator.isString(Companypersonelname)) {
         validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED)
     }
-    if (!validator.isString(Personelname)) {
+    if (!validator.isUUID(RecievedUserID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED)
     }
     if (!validator.isISODate(Purchasedate)) {
@@ -151,7 +151,7 @@ async function UpdatePurchaseorder(req, res, next) {
         Purchaseprice,
         Purchasenumber,
         Companypersonelname,
-        Personelname,
+        RecievedUserID,
         Purchasedate,
         WarehouseID,
         CaseID,
@@ -176,7 +176,7 @@ async function UpdatePurchaseorder(req, res, next) {
     if (!validator.isString(Companypersonelname)) {
         validationErrors.push(messages.VALIDATION_ERROR.COMPANYPERSONELNAME_REQUIRED)
     }
-    if (!validator.isString(Personelname)) {
+    if (!validator.isUUID(RecievedUserID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERSONELNAME_REQUIRED)
     }
     if (!validator.isISODate(Purchasedate)) {
