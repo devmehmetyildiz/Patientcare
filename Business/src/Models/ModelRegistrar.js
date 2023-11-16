@@ -3,6 +3,7 @@ const patientModel = require('./PatientModel')
 const patientdefineModel = require('./PatientdefineModel')
 const patientmovementModel = require('./PatientmovementModel')
 const todoModel = require('./TodoModel')
+const patienttododefineModel = require('./PatienttododefineModel')
 
 
 module.exports = {
@@ -10,5 +11,6 @@ module.exports = {
     patientModel,
     patientdefineModel,
     patientmovementModel,
-    todoModel
+    todoModel,
+    patienttododefineModel
 }

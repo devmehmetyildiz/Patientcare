@@ -43,12 +43,6 @@ module.exports = sequelize.define('patientModel', {
     ImageID: {
         type: Sequelize.STRING
     },
-    CheckperiodID: {
-        type: Sequelize.STRING
-    },
-    TodogroupdefineID: {
-        type: Sequelize.STRING
-    },
     CaseID: {
         type: Sequelize.STRING
     },
