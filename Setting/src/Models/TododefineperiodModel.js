@@ -1,4 +1,4 @@
-module.exports = sequelize.define('tododefinecheckperiodModel', {
+module.exports = sequelize.define('tododefineperiodModel', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -7,10 +7,10 @@ module.exports = sequelize.define('tododefinecheckperiodModel', {
     TododefineID: {
         type: Sequelize.STRING
     },
-    CheckperiodID: {
+    PeriodID: {
         type: Sequelize.STRING
     }
 }, {
-    tableName: 'tododefinecheckperiods', // replace with the name of your existing table
+    tableName: 'tododefineperiods', // replace with the name of your existing table
     timestamps: false
 });

@@ -73,6 +73,114 @@ async function AddFloor(req, res, next) {
     GetFloors(req, res, next)
 }
 
+async function FastcreateFloor(req, res, next) {
+    let validationErrors = []
+    const {
+        Formatfloorstringstart,
+        Formatfloorstringend,
+        Formatroomstringstart,
+        Formatroomstringend,
+        Formatbedstringstart,
+        Formatbedstringend,
+        Floorstartnumber,
+        Floorendnumber,
+        Roomstartnumber,
+        Roomendnumber,
+        Bedstartnumber,
+        Bedendnumber,
+    } = req.body
+
+
+    if (!validator.isNumber(parseInt(Floorstartnumber))) {
+        validationErrors.push(messages.VALIDATION_ERROR.FLOORSTARTNUMBER_REQUIRED)
+    }
+    if (!validator.isNumber(parseInt(Floorendnumber))) {
+        validationErrors.push(messages.VALIDATION_ERROR.FLOORENDNUMBER_REQUIRED)
+    }
+    if (!validator.isNumber(parseInt(Roomstartnumber))) {
+        validationErrors.push(messages.VALIDATION_ERROR.ROOMSTARTNUMBER_REQUIRED)
+    }
+    if (!validator.isNumber(parseInt(Roomendnumber))) {
+        validationErrors.push(messages.VALIDATION_ERROR.ROOMENDNUMBER_REQUIRED)
+    }
+    if (!validator.isNumber(parseInt(Bedstartnumber))) {
+        validationErrors.push(messages.VALIDATION_ERROR.BEDSTARTNUMBER_REQUIRED)
+    }
+    if (!validator.isNumber(parseInt(Bedendnumber))) {
+        validationErrors.push(messages.VALIDATION_ERROR.BEDENDNUMBER_REQUIRED)
+    }
+    const floorstartnumber = parseInt(Floorstartnumber)
+    const floorendnumber = parseInt(Floorendnumber)
+    const roomstartnumber = parseInt(Roomstartnumber)
+    const roomendnumber = parseInt(Roomendnumber)
+    const bedstartnumber = parseInt(Bedstartnumber)
+    const bedendnumber = parseInt(Bedendnumber)
+
+    if (floorstartnumber > floorendnumber) {
+        validationErrors.push(messages.VALIDATION_ERROR.STARTNUMBER_CANTSMALL)
+    }
+    if (roomstartnumber > roomendnumber) {
+        validationErrors.push(messages.VALIDATION_ERROR.STARTNUMBER_CANTSMALL)
+    }
+    if (bedstartnumber > bedendnumber) {
+        validationErrors.push(messages.VALIDATION_ERROR.STARTNUMBER_CANTSMALL)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+
+        let currentfloorstart = floorstartnumber
+        while (currentfloorstart <= Floorendnumber) {
+            let flooruuid = uuid()
+            await db.floorModel.create({
+                Name: `${Formatfloorstringstart || ''}${currentfloorstart}${Formatfloorstringend || ''}`,
+                Uuid: flooruuid,
+                Createduser: "System",
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+
+            let currentroomstart = roomstartnumber
+            while (currentroomstart <= roomendnumber) {
+                let roomuuid = uuid()
+                await db.roomModel.create({
+                    Name: `${Formatroomstringstart || ''}${currentroomstart}${Formatroomstringend || ''}`,
+                    Uuid: roomuuid,
+                    FloorID: flooruuid,
+                    Createduser: "System",
+                    Createtime: new Date(),
+                    Isactive: true
+                }, { transaction: t })
+
+                let currentbedstart = bedstartnumber
+                while (currentbedstart <= bedendnumber) {
+                    let beduuid = uuid()
+                    await db.bedModel.create({
+                        Name: `${Formatbedstringstart || ''}${currentbedstart}${Formatbedstringend || ''}`,
+                        Uuid: beduuid,
+                        RoomID: roomuuid,
+                        Createduser: "System",
+                        Createtime: new Date(),
+                        Isactive: true
+                    }, { transaction: t })
+                    currentbedstart++;
+                }
+                currentroomstart++;
+            }
+            currentfloorstart++;
+        }
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetFloors(req, res, next)
+}
+
+
 async function UpdateFloor(req, res, next) {
 
     let validationErrors = []
@@ -157,4 +265,5 @@ module.exports = {
     AddFloor,
     UpdateFloor,
     DeleteFloor,
+    FastcreateFloor
 }

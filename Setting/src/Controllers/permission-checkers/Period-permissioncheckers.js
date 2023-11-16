@@ -25,6 +25,14 @@ async function AddPeriod(req, res, next) {
     }
 }
 
+async function FastcreatePeriod(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('periodadd')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Periods Add', req.language, { en: 'Periods Add', tr: 'Periods Add' }))
+    }
+}
+
 async function UpdatePeriod(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('periodupdate')) || permissionchecker(req)) {
         next()
@@ -47,4 +55,5 @@ module.exports = {
     AddPeriod,
     UpdatePeriod,
     DeletePeriod,
+    FastcreatePeriod
 }

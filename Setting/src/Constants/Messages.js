@@ -183,6 +183,12 @@ const messages = {
         tr: 'Bu işlem için isim gerekli',
       }
     },
+    DAYPERIOD_REQUIRED: {
+      code: 'DAYPERIOD_REQUIRED', description: {
+        en: 'The day period required',
+        tr: 'Bu işlem için gerçekleşme periyodu gerekli',
+      }
+    },
     SHORTNAME_REQUIRED: {
       code: 'SHORTNAME_REQUIRED', description: {
         en: 'The shortname required',
@@ -421,6 +427,66 @@ const messages = {
       code: 'FLOORID_REQUIRED', description: {
         en: 'The floor id required',
         tr: 'Bu işlem için kat numarası gerekli',
+      }
+    },
+    STARTTIME_REQUIRED: {
+      code: 'STARTTIME_REQUIRED', description: {
+        en: 'The start time required',
+        tr: 'Bu işlem başlangıç saati gerekli',
+      }
+    },
+    ENDTIME_REQUIRED: {
+      code: 'ENDTIME_REQUIRED', description: {
+        en: 'The end time required',
+        tr: 'Bu işlem bitiş saati gerekli',
+      }
+    },
+    PERIOD_REQUIRED: {
+      code: 'PERIOD_REQUIRED', description: {
+        en: 'The period required',
+        tr: 'Bu işlem aralık gerekli',
+      }
+    },
+    FLOORSTARTNUMBER_REQUIRED: {
+      code: 'FLOORSTARTNUMBER_REQUIRED', description: {
+        en: 'The floor start number required',
+        tr: 'Bu için Kat Başlangıç Numarası Gerekli',
+      }
+    },
+    FLOORENDNUMBER_REQUIRED: {
+      code: 'FLOORENDNUMBER_REQUIRED', description: {
+        en: 'The floor end number required',
+        tr: 'Bu için Kat Bitiş Numarası Gerekli',
+      }
+    },
+    ROOMSTARTNUMBER_REQUIRED: {
+      code: 'ROOMSTARTNUMBER_REQUIRED', description: {
+        en: 'The Room start number required',
+        tr: 'Bu için Oda Başlangıç Numarası Gerekli',
+      }
+    },
+    ROOMENDNUMBER_REQUIRED: {
+      code: 'ROOMENDNUMBER_REQUIRED', description: {
+        en: 'The Room End number required',
+        tr: 'Bu için Oda Bitiş Numarası Gerekli',
+      }
+    },
+    BEDSTARTNUMBER_REQUIRED: {
+      code: 'BEDSTARTNUMBER_REQUIRED', description: {
+        en: 'The Bed Start number required',
+        tr: 'Bu için Yatak Başlangıç Numarası Gerekli',
+      }
+    },
+    BEDENDNUMBER_REQUIRED: {
+      code: 'BEDENDNUMBER_REQUIRED', description: {
+        en: 'The Bed End number required',
+        tr: 'Bu için Yatak Bitiş Numarası Gerekli',
+      }
+    },
+    STARTNUMBER_CANTSMALL: {
+      code: 'STARTNUMBER_CANTSMALL', description: {
+        en: 'The Start number cant small',
+        tr: 'Başlangıç Numarası küçük olamaz',
       }
     },
     UNSUPPORTED_BEDID: {
