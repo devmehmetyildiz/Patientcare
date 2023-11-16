@@ -111,8 +111,7 @@ export default class TodogroupdefinesEdit extends Component {
     const data = this.context.getForm(this.PAGE_NAME)
     data.Tododefines = data.Tododefines.map(id => {
       return (Tododefines.list || []).find(u => u.Uuid === id)
-    })
-
+    }).filter(u => u)
 
     let errors = []
     if (!validator.isString(data.Name)) {

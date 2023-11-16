@@ -130,7 +130,6 @@ export function Sidebar(props) {
                 { id: 12, subtitle: Literals.Patienttypes.Page.Pageheader[Profile.Language], url: "/Patienttypes", permission: checkAuth('patienttypescreen') },
                 { id: 13, subtitle: Literals.Costumertypes.Page.Pageheader[Profile.Language], url: "/Costumertypes", permission: checkAuth('costumertypescreen') },
                 { id: 14, subtitle: Literals.Periods.Page.Pageheader[Profile.Language], url: "/Periods", permission: checkAuth('periodscreen') },
-                { id: 15, subtitle: Literals.Checkperiods.Page.Pageheader[Profile.Language], url: "/Checkperiods", permission: checkAuth('checkperiodscreen') },
                 { id: 16, subtitle: Literals.Tododefines.Page.Pageheader[Profile.Language], url: "/Tododefines", permission: checkAuth('tododefinescreen') },
                 { id: 17, subtitle: Literals.Todogroupdefines.Page.Pageheader[Profile.Language], url: "/Todogroupdefines", permission: checkAuth('todogroupdefinescreen') },
             ]

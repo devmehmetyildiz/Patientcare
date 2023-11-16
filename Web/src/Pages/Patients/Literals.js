@@ -74,7 +74,7 @@ const Literals = {
             tr: 'Aktif Durum',
             en: 'Active Case'
         },
-        Activetodogroupdefine: {
+        Activetododefine: {
             tr: 'Aktif Yapılacak Listesi',
             en: 'Active Routine list'
         },
@@ -110,9 +110,9 @@ const Literals = {
             tr: 'Durum',
             en: 'Case'
         },
-        Todogroupdefine: {
-            tr: 'Yapılacak Grubu',
-            en: 'Todogroup define'
+        Tododefines: {
+            tr: 'Rutinler',
+            en: 'Routines'
         },
         Stocks: {
             tr: 'Stoklar',
@@ -153,6 +153,10 @@ const Literals = {
         delete: {
             tr: 'Sil',
             en: 'Delete'
+        },
+        Activeplace: {
+            tr: "Aktif Konum",
+            en: "Active Place"
         },
     },
     Details: {
@@ -232,13 +236,13 @@ const Literals = {
             tr: "Son 5 Eklenen Dosya",
             en: "Last 5 Added File"
         },
-        Approvedtodos: {
-            tr: "Onaylanmış Yapılacaklar",
-            en: "Approved Todos"
+        Completedtodos: {
+            tr: "Tamamlanmış Rutinler",
+            en: "Completed Todos"
         },
-        Nonapprovedtodos: {
-            tr: "Onaylanmamış Yapılacaklar",
-            en: "Nonapproved Todos"
+        Noncompletedtodos: {
+            tr: "Tamamlanmamış Rutinler",
+            en: "Non completed Todos"
         },
         PatientStocks: {
             tr: "Hasta Stokları",
@@ -264,6 +268,7 @@ const Literals = {
             tr: "Onaylandı mı?",
             en: "Is Approved?"
         },
+
     },
     AddStock: {
         Availablestocks: {
@@ -286,9 +291,9 @@ const Literals = {
             tr: "Departman",
             en: "Department"
         },
-        Barcodeno: {
-            tr: "Barkod",
-            en: "Barcodeno"
+        Skt: {
+            tr: "Skt",
+            en: "Skt"
         },
         Warehouse: {
             tr: "Ambar",
@@ -352,9 +357,9 @@ const Literals = {
             tr: "Miktar",
             en: "Amount"
         },
-        Barcodeno: {
-            tr: "Barkod",
-            en: "Barcodeno"
+        Skt: {
+            tr: "Skt",
+            en: "Skt"
         },
         Medicinename: {
             tr: "İlaç Adı",
@@ -410,6 +415,10 @@ const Literals = {
             tr: "Rutin Değiştir",
             en: "Change Routine"
         },
+        Pageeditplaceheader: {
+            tr: "Konum Değiştir",
+            en: "Change Place"
+        },
         Pagedeleteheader: {
             tr: "Hasta Hareketi Silme",
             en: "Delete Patient Movements"
@@ -451,6 +460,14 @@ const Literals = {
         Goback: {
             tr: "Geri Dön",
             en: "Go Back"
+        },
+        Close: {
+            tr: "Kapat",
+            en: "Close"
+        },
+        Changeplace: {
+            tr: "Konum Değiştir",
+            en: "Change Place"
         },
         Givemedicine: {
             tr: "İlaç Ver",
@@ -500,6 +517,14 @@ const Literals = {
             tr: "Tanım Düzenle",
             en: "Edit Define"
         },
+        Saveroutine: {
+            tr: "Rutini Kaydet",
+            en: "Save Routine"
+        },
+        Selectroutine: {
+            tr: "Hazır Rutin Listesi Seç",
+            en: "Select Routine List"
+        },
     },
     Messages: {
         Nodatafind: {
@@ -518,9 +543,9 @@ const Literals = {
             tr: "Ambar Gerekli ",
             en: "Warehouse Required"
         },
-        TodogroupdefineReuired: {
-            tr: "Yapılacak grubu Gerekli ",
-            en: "Todogroupdefine Required"
+        TododefineReuired: {
+            tr: "Rutinler Gerekli ",
+            en: "Routines Required"
         },
         StockRequired: {
             tr: "Ürün Gerekli ",
@@ -546,6 +571,30 @@ const Literals = {
             tr: "hastayı kuruma girdirmek istediğinize eminmisiniz?",
             en: "patient will go in to organization, are you sure?"
         },
+        NameRequired: {
+            tr: "Rutin Şablon Adı Gerekli",
+            en: "Routine Template Name Required"
+        },
+        TododefininesRequired: {
+            tr: "Rutin Tanımları Gerekli",
+            en: "Routine Defines Required"
+        },
+        DepartmentRequired: {
+            tr: "Departman Gerekli",
+            en: "Department Required"
+        },
+        FloorRequired: {
+            tr: "Kat Gerekli",
+            en: "Floor Required"
+        },
+        RoomRequired: {
+            tr: "Oda Gerekli",
+            en: "Room Required"
+        },
+        BedRequired: {
+            tr: "Yatak Gerekli",
+            en: "Bed Required"
+        },
         Yes: {
             tr: "EVET",
             en: "YES"
@@ -554,6 +603,52 @@ const Literals = {
             tr: "HAYIR",
             en: "NO"
         }
+    },
+    Editroutinecolumns: {
+        Name: {
+            tr: 'Rutin Adı',
+            en: 'Routine Name'
+        },
+        Department: {
+            tr: 'Departman',
+            en: 'Department'
+        },
+        Routinelistname: {
+            tr: 'Rutin Liste Adı',
+            en: 'Routine List Name'
+        },
+        IsRequired: {
+            tr: 'Zorunlu mu?',
+            en: 'Is Required'
+        },
+        IsNeedactivation: {
+            tr: 'Onay Gerekli mi?',
+            en: 'Is Need Activation'
+        },
+        Dayperiod: {
+            tr: 'Gerçekleşme Periyodu',
+            en: 'Occured Periyod'
+        },
+        Info: {
+            tr: 'Açıklama',
+            en: 'Info'
+        },
+        Periods: {
+            tr: 'Periyotlar',
+            en: 'Periods'
+        },
+        Remove: {
+            tr: 'Kaldır',
+            en: 'Remove'
+        },
+        ReadyRoutineLists: {
+            tr: 'Hazır Rutin Listeleri',
+            en: 'Ready Routine Lists'
+        },
+        SaveRoutineList: {
+            tr: 'Rutin Listesi Kaydet',
+            en: 'Save Routine List'
+        },
     }
 }
 

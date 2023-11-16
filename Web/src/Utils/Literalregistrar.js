@@ -1,5 +1,4 @@
 import Cases from "../Pages/Cases/Literals"
-import Checkperiods from "../Pages/Checkperiods/Literals"
 import Costumertypes from "../Pages/Costumertypes/Literals"
 import Departments from "../Pages/Departments/Literals"
 import Files from "../Pages/Files/Literals"
@@ -40,7 +39,6 @@ import Todos from "../Pages/Todos/Literals"
 
 const Literals = {
     Cases,
-    Checkperiods,
     Costumertypes,
     Departments,
     Files,

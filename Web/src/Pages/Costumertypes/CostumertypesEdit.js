@@ -102,8 +102,8 @@ export default class CostumertypesEdit extends Component {
     const { EditCostumertypes, history, fillCostumertypenotification, Departments, Costumertypes, Profile } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
     data.Departments = data.Departments.map(id => {
-      return (Departments.list || []).find(u => u.Uuid === id)
-    })
+      return (Departments.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
+    }).filter(u => u)
 
     let errors = []
     if (!validator.isString(data.Name)) {

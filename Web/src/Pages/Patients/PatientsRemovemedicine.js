@@ -105,7 +105,6 @@ export default class PatientsRemovemedicine extends Component {
             return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
         })
 
-
         const Patientstocklist = (Patientstocks.list || []).filter(u => u.PatientID === Id && u.Isapproved && u.Ismedicine && u.Isactive)
 
         const Stockoptions = (Patientstocks.list || []).filter(u =>
@@ -115,16 +114,15 @@ export default class PatientsRemovemedicine extends Component {
             u.PatientID === selected_record?.Uuid
         ).map(stock => {
             const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
-            return { key: stock?.Uuid, text: `${stockdefine?.Name} (${stock?.Skt})`, value: stock?.Uuid }
+            return { key: stock?.Uuid, text: `${stockdefine?.Name} (${this.dateCellhandler(stock?.Skt)})`, value: stock?.Uuid }
         })
 
         const Columns = [
             { Header: Literals.AddStock.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true },
             { Header: Literals.AddStock.Stockname[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
-            { Header: Literals.AddStock.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
+            { Header: Literals.AddStock.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.columndateCellhandler(col) },
             { Header: Literals.AddStock.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
         ]
-
 
         return (
             isLoadingstatus ? <LoadingPage /> :
@@ -231,6 +229,20 @@ export default class PatientsRemovemedicine extends Component {
             });
             return amount
         }
+    }
+
+    dateCellhandler = (value) => {
+        if (value) {
+            return value.split('T').length > 0 ? value.split('T')[0] : value
+        }
+        return null
+    }
+
+    columndateCellhandler = (col) => {
+        if (col.value) {
+            return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+        }
+        return null
     }
 }
 PatientsRemovemedicine.contextType = FormContext

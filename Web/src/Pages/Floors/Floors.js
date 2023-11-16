@@ -12,6 +12,7 @@ import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import FloorsDelete from '../../Containers/Floors/FloorsDelete'
+import FloorsFastcreate from '../../Containers/Floors/FloorsFastcreate'
 import Settings from '../../Common/Settings'
 import MobileTable from '../../Utils/MobileTable'
 
@@ -23,7 +24,7 @@ export default class Floors extends Component {
   }
 
   render() {
-    const { Floors, Profile, handleDeletemodal, handleSelectedFloor, AddRecordFloors } = this.props
+    const { Floors, Profile, handleDeletemodal, handleSelectedFloor, handleFastcreatemodal } = this.props
     const { isLoading, isDispatching } = Floors
 
     const Columns = [
@@ -86,6 +87,8 @@ export default class Floors extends Component {
                   Showcreatebutton
                   Showcolumnchooser
                   Showexcelexport
+                  Additionalfunction={() => { handleFastcreatemodal(true) }}
+                  Additionalfunctiontxt={Literals.Button.Fastcreate[Profile.Language]}
                 />
               </Grid>
             </Headerwrapper>
@@ -99,6 +102,7 @@ export default class Floors extends Component {
             }
           </Pagewrapper>
           <FloorsDelete />
+          <FloorsFastcreate />
         </React.Fragment>
     )
   }

@@ -19,18 +19,18 @@ export default class Tododefines extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      checkperiodStatus: []
+      periodStatus: []
     }
   }
 
   componentDidMount() {
-    const { GetTododefines, GetCheckperiods } = this.props
+    const { GetTododefines, GetPeriods } = this.props
     GetTododefines()
-    GetCheckperiods()
+    GetPeriods()
   }
 
   render() {
-    const { Tododefines, Profile, handleDeletemodal, handleSelectedTododefine, Checkperiods } = this.props
+    const { Tododefines, Profile, handleDeletemodal, handleSelectedTododefine, Periods } = this.props
     const { isLoading, isDispatching } = Tododefines
 
     const Columns = [
@@ -39,8 +39,9 @@ export default class Tododefines extends Component {
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
       { Header: Literals.Columns.IsRequired[Profile.Language], accessor: 'IsRequired', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.IsNeedactivation[Profile.Language], accessor: 'IsNeedactivation', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Dayperiod[Profile.Language], accessor: 'Dayperiod', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Checkperiods[Profile.Language], accessor: 'Checkperiodtxt', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, isOpen: false, Cell: col => this.checkperiodCellhandler(col) },
+      { Header: Literals.Columns.Periods[Profile.Language], accessor: 'Periodtxt', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, isOpen: false, Cell: col => this.PeriodCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -63,12 +64,12 @@ export default class Tododefines extends Component {
     };
 
     const list = (Tododefines.list || []).map(item => {
-      var text = (item.Checkperioduuids || []).map(u => {
-        return (Checkperiods.list || []).find(checkperiod => checkperiod.Uuid === u.CheckperiodID)?.Name
+      var text = (item.Perioduuids || []).map(u => {
+        return (Periods.list || []).find(period => period.Uuid === u.PeriodID)?.Name
       }).join(", ")
       return {
         ...item,
-        Checkperiodtxt: text,
+        Periodtxt: text,
         edit: <Link to={`/Tododefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedTododefine(item)
@@ -122,34 +123,34 @@ export default class Tododefines extends Component {
     this.setState({ modal: value })
   }
 
-  expandCheckperiods = (rowid) => {
-    const prevData = this.state.checkperiodStatus
+  expandPeriods = (rowid) => {
+    const prevData = this.state.periodStatus
     prevData.push(rowid)
-    this.setState({ checkperiodStatus: [...prevData] })
+    this.setState({ periodStatus: [...prevData] })
   }
 
-  shrinkCheckperiods = (rowid) => {
+  shrinkPeriods = (rowid) => {
     const index = this.state.periodStatus.indexOf(rowid)
-    const prevData = this.state.checkperiodStatus
+    const prevData = this.state.periodStatus
     if (index > -1) {
       prevData.splice(index, 1)
-      this.setState({ checkperiodStatus: [...prevData] })
+      this.setState({ periodStatus: [...prevData] })
     }
   }
 
-  checkperiodCellhandler = (col) => {
+  PeriodCellhandler = (col) => {
 
-    const { Checkperiods, Profile } = this.props
+    const { Periods, Profile } = this.props
 
     if (col.value) {
       if (!col.cell?.isGrouped && !Profile.Ismobile) {
         const itemId = col.row.original.Id
-        const itemCheckperiods = (col.row.original.Checkperioduuids || []).map(u => { return (Checkperiods.list || []).find(checkperiod => checkperiod.Uuid === u.CheckperiodID) })
+        const itemPeriods = (col.row.original.Perioduuids || []).map(u => { return (Periods.list || []).find(period => period.Uuid === u.PeriodID) })
         return col.value.length - 35 > 20 ?
           (
-            !this.state.checkperiodStatus.includes(itemId) ?
-              [col.value.slice(0, 35) + ' ...(' + itemCheckperiods.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandCheckperiods(itemId)}> ...Daha Fazla Göster</Link>] :
-              [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkCheckperiods(itemId)}> ...Daha Az Göster</Link>]
+            !this.state.periodStatus.includes(itemId) ?
+              [col.value.slice(0, 35) + ' ...(' + itemPeriods.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandPeriods(itemId)}> ...Daha Fazla Göster</Link>] :
+              [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkPeriods(itemId)}> ...Daha Az Göster</Link>]
           ) : col.value
       }
       return col.value

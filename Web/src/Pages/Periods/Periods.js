@@ -12,6 +12,7 @@ import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import PeriodsDelete from '../../Containers/Periods/PeriodsDelete'
+import PeriodsFastcreate from '../../Containers/Periods/PeriodsFastcreate'
 import MobileTable from '../../Utils/MobileTable'
 import Settings from '../../Common/Settings'
 export default class Periods extends Component {
@@ -30,7 +31,7 @@ export default class Periods extends Component {
 
   render() {
 
-    const { Periods, Profile, handleDeletemodal, handleSelectedPeriod } = this.props
+    const { Periods, Profile, handleDeletemodal, handleSelectedPeriod, handleFastcreatemodal } = this.props
     const { isLoading, isDispatching } = Periods
 
     const Columns = [
@@ -95,6 +96,9 @@ export default class Periods extends Component {
                   Showcreatebutton
                   Showcolumnchooser
                   Showexcelexport
+                  Additionalfunction={() => { handleFastcreatemodal(true) }}
+                  Additionalfunctiontxt={Literals.Button.Fastcreate[Profile.Language]}
+
                 />
               </Grid>
             </Headerwrapper>
@@ -108,6 +112,7 @@ export default class Periods extends Component {
             }
           </Pagewrapper>
           <PeriodsDelete />
+          <PeriodsFastcreate />
         </React.Fragment>
     )
   }
