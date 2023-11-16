@@ -163,8 +163,8 @@ export default class CasesEdit extends Component {
     data.Iscalculateprice = ispatientdepartmentselected ? data.Iscalculateprice || false : false
     data.Isroutinework = ispatientdepartmentselected ? data.Isroutinework || false : false
     data.Departments = data.Departments.map(id => {
-      return (Departments.list || []).find(u => u.Uuid === id)
-    })
+      return (Departments.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
+    }).filter(u => u)
 
     let errors = []
     if (!validator.isString(data.Name)) {

@@ -10,6 +10,14 @@ const axios = require('axios')
 async function GetPatients(req, res, next) {
     try {
         const patients = await db.patientModel.findAll({ where: { Isactive: true } })
+        for (const patient of patients) {
+            patient.Tododefineuuids = await db.patienttododefineModel.findAll({
+                where: {
+                    PatientID: patient.Uuid,
+                },
+                attributes: ['TododefineID']
+            });
+        }
         res.status(200).json(patients)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -49,6 +57,12 @@ async function GetPatient(req, res, next) {
 
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: req.params.patientId } });
+        patient.Tododefineuuids = await db.patienttododefineModel.findAll({
+            where: {
+                PatientID: patient.Uuid,
+            },
+            attributes: ['TododefineID']
+        });
         res.status(200).json(patient)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -436,21 +450,6 @@ async function UpdatePatientplace(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
-        const floor = db.floorModel.findOne({ where: { Uuid: FloorID, Isactive: true } })
-        if (!floor) {
-            return next(createNotfounderror([messages.ERROR.FLOOR_NOT_FOUND], req.language))
-        }
-
-        const room = db.roomModel.findOne({ where: { Uuid: RoomID, FloorID: FloorID, Isactive: true } })
-        if (!room) {
-            return next(createNotfounderror([messages.ERROR.ROOM_NOT_FOUND], req.language))
-        }
-
-        const bed = db.bedModel.findOne({ where: { Uuid: BedID, RoomID: RoomID, Isactive: true } })
-        if (!bed) {
-            return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
-        }
-
         await db.patientModel.update({
             ...patient,
             FloorID: FloorID,
@@ -491,22 +490,23 @@ async function UpdatePatientplace(req, res, next) {
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
-    GetPatients(req, res, next)
+    req.params.patientId = PatientID
+    GetPatient(req, res, next)
 }
 
-async function UpdatePatienttodogroupdefine(req, res, next) {
+async function UpdatePatienttododefines(req, res, next) {
 
     let validationErrors = []
     const {
         PatientID,
-        TodogroupdefineID,
+        Tododefines,
     } = req.body
 
     if (!validator.isUUID(PatientID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
     }
-    if (!validator.isUUID(TodogroupdefineID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED)
+    if (!validator.isArray(Tododefines)) {
+        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINEID_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -523,12 +523,16 @@ async function UpdatePatienttodogroupdefine(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
-        await db.patientModel.update({
-            ...patient,
-            TodogroupdefineID: TodogroupdefineID,
-            Updateduser: "System",
-            Updatetime: new Date(),
-        }, { where: { Uuid: PatientID } }, { transaction: t })
+        await db.patienttododefineModel.destroy({ where: { PatientID: PatientID }, transaction: t });
+        for (const tododefine of Tododefines) {
+            if (!tododefine.Uuid || !validator.isUUID(tododefine.Uuid)) {
+                return next(createValidationError(messages.VALIDATION_ERROR.TODODEFINEID_REQUIRED, req.language))
+            }
+            await db.patienttododefineModel.create({
+                PatientID: PatientID,
+                TododefineID: tododefine.Uuid
+            }, { transaction: t });
+        }
 
         await t.commit()
     } catch (error) {
@@ -753,7 +757,7 @@ module.exports = {
     AddPatient,
     UpdatePatient,
     UpdatePatientcase,
-    UpdatePatienttodogroupdefine,
+    UpdatePatienttododefines,
     DeletePatient,
     Editpatientstocks,
     UpdatePatientplace,

@@ -105,9 +105,9 @@ export default class DepartmentsEdit extends Component {
     const { EditDepartments, history, fillDepartmentnotification, Stations, Departments, Profile } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
     data.Isdefaultpatientdepartment = data.Ishavepatients ? true : false
-    data.Stations = (data.Stations || []).map(id => {
-      return (Stations.list || []).find(u => u.Uuid === id)
-    }) || []
+    data.Stations = data.Stations.map(id => {
+      return (Stations.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
+    }).filter(u => u)
 
     let errors = []
     if (!validator.isString(data.Name)) {

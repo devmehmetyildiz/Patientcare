@@ -2,7 +2,6 @@ import { connect } from 'react-redux'
 import { useEffect } from 'react'
 import { removeBednotification } from "../Redux/BedSlice"
 import { removeCasenotification } from "../Redux/CaseSlice"
-import { removeCheckperiodnotification } from "../Redux/CheckperiodSlice"
 import { removePeriodnotification } from "../Redux/PeriodSlice"
 import { removeCostumertypenotification } from "../Redux/CostumertypeSlice"
 import { removeDepartmentnotification } from "../Redux/DepartmentSlice"
@@ -52,7 +51,7 @@ export function NotificationHandler(props) {
             removePatientstocknotification, removePatientstockmovementnotification, removePatientnotification,
             removePatientmovementnotification, removePatientdefinenotification, removeMailsettingnotification,
             removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
-            removeCheckperiodnotification, removePeriodnotification, removeCasenotification, removeBednotification
+            removePeriodnotification, removeCasenotification, removeBednotification
         } = props
 
         const {
@@ -63,7 +62,7 @@ export function NotificationHandler(props) {
             Profile, Patienttypes, Patientstocks, Patientstockmovements,
             Patients, Patientmovements, Patientdefines, Mailsettings,
             Floors, Files, Departments, Costumertypes,
-            Checkperiods, Periods, Cases, Beds
+            Periods, Cases, Beds
         } = props.states
 
         Notification(Warehouses.notifications, removeWarehousenotification)
@@ -95,7 +94,6 @@ export function NotificationHandler(props) {
         Notification(Files.notifications, removeFilenotification)
         Notification(Departments.notifications, removeDepartmentnotification)
         Notification(Costumertypes.notifications, removeCostumertypenotification)
-        Notification(Checkperiods.notifications, removeCheckperiodnotification)
         Notification(Periods.notifications, removePeriodnotification)
         Notification(Cases.notifications, removeCasenotification)
         Notification(Beds.notifications, removeBednotification)
@@ -118,7 +116,7 @@ const mapDispatchToProps = {
     removePatientstocknotification, removePatientstockmovementnotification, removePatientnotification,
     removePatientmovementnotification, removePatientdefinenotification, removeMailsettingnotification,
     removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
-    removeCheckperiodnotification, removePeriodnotification, removeCasenotification, removeBednotification
+    removePeriodnotification, removeCasenotification, removeBednotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationHandler)

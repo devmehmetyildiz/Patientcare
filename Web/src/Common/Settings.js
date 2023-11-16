@@ -23,6 +23,8 @@ export default function Settings(props) {
         Showexcelexport,
         Showexcelimport,
         Showcreatebutton,
+        Additionalfunctiontxt,
+        Additionalfunction
     } = props
 
     const options = {
@@ -87,6 +89,7 @@ export default function Settings(props) {
                     </Button>
                 </Link>}
                 {Showcolumnchooser && <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />}
+                {Additionalfunction && <Button color='violet' floated='right' onClick={Additionalfunction} >{Additionalfunctiontxt}</Button>}
                 {Showexcelimport && <ExcelImport columns={Columns} addData={AddRecord} />}
                 {Showexcelexport && <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />}
             </GridColumn>

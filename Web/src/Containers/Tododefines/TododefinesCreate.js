@@ -1,18 +1,18 @@
 import { connect } from 'react-redux'
 import TododefinesCreate from '../../Pages/Tododefines/TododefinesCreate'
 import { AddTododefines, fillTododefinenotification } from '../../Redux/TododefineSlice'
-import { GetCheckperiods } from '../../Redux/CheckperiodSlice'
+import { GetPeriods } from '../../Redux/PeriodSlice'
 
 
 const mapStateToProps = (state) => ({
     Tododefines: state.Tododefines,
-    Checkperiods: state.Checkperiods,
+    Periods: state.Periods,
     Profile: state.Profile
 })
 
 const mapDispatchToProps = {
     AddTododefines, fillTododefinenotification,
-    GetCheckperiods
+    GetPeriods
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TododefinesCreate)

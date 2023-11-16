@@ -43,6 +43,55 @@ const Literals = {
             tr: 'Sil',
             en: 'Delete'
         },
+        Formatfloorstringstart: {
+            tr: 'Kat Başlangıç Yazısı',
+            en: 'Floor Start String'
+        },
+        Formatfloorstringend: {
+            tr: 'Kat Bitiş Yazısı',
+            en: 'Floor End String'
+        },
+        Formatroomstringstart: {
+            tr: 'Oda Bitiş Yazısı',
+            en: 'Room End String'
+        },
+        Formatroomstringend: {
+            tr: 'Oda Bitiş Yazısı',
+            en: 'Room End String'
+        },
+        Formatbedstringstart: {
+            tr: 'Yatak Bitiş Yazısı',
+            en: 'Bed End String'
+        },
+        Formatbedstringend: {
+            tr: 'Yatak Bitiş Yazısı',
+            en: 'Bed End String'
+        },
+        Floorstartnumber: {
+            tr: 'Kat Başlangıç Sayısı',
+            en: 'Floor Start Number'
+        },
+        Floorendnumber: {
+            tr: 'Kat Bitiş Sayısı',
+            en: 'Floor End Number'
+        },
+        Roomstartnumber: {
+            tr: 'Oda Başlangıç Sayısı',
+            en: 'Room Start Number'
+        },
+        Roomendnumber: {
+            tr: 'Oda Bitiş Sayısı',
+            en: 'Room End Number'
+        },
+        Bedstartnumber: {
+            tr: 'Yatak Başlangıç Sayısı',
+            en: 'Bed Start Number'
+        },
+        Bedendnumber: {
+            tr: 'Yatak Bitiş Sayısı',
+            en: 'Bed End Number'
+        },
+
     },
     Page: {
         Pageheader: {
@@ -57,6 +106,10 @@ const Literals = {
             tr: "Güncelle",
             en: "Update"
         },
+        Pagefastcreateheader: {
+            tr: "Hızlı Kat Oluşturma",
+            en: "Fast Create Floor"
+        },
         Pagedeleteheader: {
             tr: "Kat Silme",
             en: "Delete Floor"
@@ -66,6 +119,10 @@ const Literals = {
         Create: {
             tr: "Oluştur",
             en: "Create"
+        },
+        Fastcreate: {
+            tr: "Hızlı Kat Oluştur",
+            en: "Fast Create Floor"
         },
         Update: {
             tr: "Güncelle",

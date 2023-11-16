@@ -7,12 +7,6 @@ const Routes = [
   { method: 'put', path: '/Cases', controller: 'Case', action: 'UpdateCase' },
   { method: 'delete', path: '/Cases/:caseId', controller: 'Case', action: 'DeleteCase' },
 
-  { method: 'get', path: '/Checkperiods/:checkperiodId', controller: 'Checkperiod', action: 'GetCheckperiod' },
-  { method: 'get', path: '/Checkperiods', controller: 'Checkperiod', action: 'GetCheckperiods' },
-  { method: 'post', path: '/Checkperiods', controller: 'Checkperiod', action: 'AddCheckperiod' },
-  { method: 'put', path: '/Checkperiods', controller: 'Checkperiod', action: 'UpdateCheckperiod' },
-  { method: 'delete', path: '/Checkperiods/:checkperiodId', controller: 'Checkperiod', action: 'DeleteCheckperiod' },
-
   { method: 'get', path: '/Costumertypes/:costumertypeId', controller: 'Costumertype', action: 'GetCostumertype' },
   { method: 'get', path: '/Costumertypes', controller: 'Costumertype', action: 'GetCostumertypes' },
   { method: 'post', path: '/Costumertypes', controller: 'Costumertype', action: 'AddCostumertype' },
@@ -33,6 +27,7 @@ const Routes = [
 
   { method: 'get', path: '/Periods/:periodId', controller: 'Period', action: 'GetPeriod' },
   { method: 'get', path: '/Periods', controller: 'Period', action: 'GetPeriods' },
+  { method: 'post', path: '/Periods/FastcreatePeriod', controller: 'Period', action: 'FastcreatePeriod' },
   { method: 'post', path: '/Periods', controller: 'Period', action: 'AddPeriod' },
   { method: 'put', path: '/Periods', controller: 'Period', action: 'UpdatePeriod' },
   { method: 'delete', path: '/Periods/:periodId', controller: 'Period', action: 'DeletePeriod' },
@@ -63,6 +58,7 @@ const Routes = [
 
   { method: 'get', path: '/Floors/:floorId', controller: 'Floor', action: 'GetFloor' },
   { method: 'get', path: '/Floors', controller: 'Floor', action: 'GetFloors' },
+  { method: 'post', path: '/Floors/FastcreateFloor', controller: 'Floor', action: 'FastcreateFloor' },
   { method: 'post', path: '/Floors', controller: 'Floor', action: 'AddFloor' },
   { method: 'put', path: '/Floors', controller: 'Floor', action: 'UpdateFloor' },
   { method: 'delete', path: '/Floors/:floorId', controller: 'Floor', action: 'DeleteFloor' },

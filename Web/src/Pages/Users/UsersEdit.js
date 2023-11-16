@@ -140,14 +140,14 @@ export default class UsersEdit extends Component {
     const data = this.context.getForm(this.PAGE_NAME)
     data.UserID = parseInt(data.UserID, 10)
     data.Stations = data.Stations.map(id => {
-      return (Stations.list || []).find(u => u.Uuid === id)
-    })
+      return (Stations.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
+    }).filter(u => u)
     data.Roles = data.Roles.map(id => {
-      return (Roles.list || []).find(u => u.Uuid === id)
-    })
+      return (Roles.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
+    }).filter(u => u)
     data.Departments = data.Departments.map(id => {
-      return (Departments.list || []).find(u => u.Uuid === id)
-    })
+      return (Departments.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
+    }).filter(u => u)
 
     let errors = []
     if (!validator.isString(data.Name)) {

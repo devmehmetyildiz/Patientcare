@@ -89,6 +89,35 @@ export const AddFloors = createAsyncThunk(
     }
 );
 
+export const FastcreateFloors = createAsyncThunk(
+    'Floors/FastcreateFloors',
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Setting, ROUTES.FLOOR + '/FastcreateFloor', data);
+            dispatch(fillFloornotification({
+                type: 'Success',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
+            }));
+            dispatch(fillFloornotification({
+                type: 'Clear',
+                code: 'FloorsCreate',
+                description: '',
+            }));
+            clearForm && clearForm('FloorsCreate')
+            closeModal && closeModal()
+            history && history.push(redirectUrl ? redirectUrl : '/Floors');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillFloornotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const AddRecordFloors = createAsyncThunk(
     'Floors/AddRecordFloors',
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
@@ -168,7 +197,8 @@ export const FloorsSlice = createSlice({
         notifications: [],
         isLoading: false,
         isDispatching: false,
-        isDeletemodalopen: false
+        isDeletemodalopen: false,
+        isFastcreatemodalopen: false
     },
     reducers: {
         handleSelectedFloor: (state, action) => {
@@ -184,7 +214,10 @@ export const FloorsSlice = createSlice({
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
-        }
+        },
+        handleFastcreatemodal: (state, action) => {
+            state.isFastcreatemodalopen = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -222,6 +255,17 @@ export const FloorsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(AddFloors.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(FastcreateFloors.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(FastcreateFloors.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(FastcreateFloors.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
@@ -265,7 +309,8 @@ export const {
     handleSelectedFloor,
     fillFloornotification,
     removeFloornotification,
-    handleDeletemodal
+    handleDeletemodal,
+    handleFastcreatemodal
 } = FloorsSlice.actions;
 
 export default FloorsSlice.reducer;

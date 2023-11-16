@@ -46,8 +46,58 @@ const version1_0_0_1 = {
     ],
 }
 
+const version1_0_0_2 = {
+    version: "1.0.0.2",
+    features: [
+        {
+            title: "Ayarlar", commits: [
+                "Periyotlara hızlı oluşturma seçeneği eklendi",
+                "Katlara hızlı kat oluşturma seçeneği eklendi",
+            ]
+        },
+        {
+            title: "Hastalar", commits: [
+                "Hasta Detay Ekranında Kat değiştirme seçeneği eklendi",
+                "Hasta Detay Rutin düzenle ekranında şablon oluşturma şablon ekleme seçenekleri eklendi"
+            ]
+        },
+    ],
+    changes: [
+        {
+            title: "Ayarlar", commits: [
+                "Kontrol Periyotları kaldırıldı, periyotlar yapılacaklara bağlandı",
+                "Hastalar artık yapılacak grup tanımlarına değil direkt yapılacaklara bağlı",
+            ],
+        },
+        {
+            title: "System", commits: [
+                "Rutin Kontrol cron jobı güncellendi",
+            ],
+        },
+        {
+            title: "Hastalar", commits: [
+                "Hasta detay ekranında görsel düzenleme",
+                "Detay ekranındaki yapılacak tabloları onaydan tamamlandıya çekildi"
+            ],
+        },
+    ],
+    bugs: [
+        {
+            title: "Hastalar", commits: [
+                "Movement tablolarında sktler sadece tarihli gözüküyor",
+                "ilac ekleme ilaç silme tablolarında sktler sadece tarihli gözüküyor",
+            ],
+        },
+        {
+            title: "Genel", commits: [
+                "multiple dropdown kullanan crud sayfalarda silinmiş ürünlerin yol açtığı hata giderildi",
+            ],
+        },
+    ],
+}
 
-export { version1_0_0_0, version1_0_0_1 }
+
+export { version1_0_0_0, version1_0_0_1, version1_0_0_2 }
 
 /* const version1000 = {
     version: "1.0.0.0",

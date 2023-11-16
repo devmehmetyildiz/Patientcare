@@ -24,7 +24,6 @@ import TododefineSlice from "./TododefineSlice";
 import TodogroupdefineSlice from "./TodogroupdefineSlice";
 import PatientmovementSlice from "./PatientmovementSlice";
 import PeriodSlice from "./PeriodSlice";
-import CheckperiodSlice from "./CheckperiodSlice";
 import MailsettingSlice from "./MailsettingSlice";
 import PrinttemplateSlice from "./PrinttemplateSlice";
 import TodoSlice from "./TodoSlice";
@@ -62,7 +61,6 @@ const Slices = combineReducers({
     Todogroupdefines: TodogroupdefineSlice,
     Patientmovements: PatientmovementSlice,
     Periods: PeriodSlice,
-    Checkperiods: CheckperiodSlice,
     Mailsettings: MailsettingSlice,
     Printtemplates: PrinttemplateSlice,
     Todos: TodoSlice,

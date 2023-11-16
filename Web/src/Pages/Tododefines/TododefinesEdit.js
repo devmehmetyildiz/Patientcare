@@ -14,7 +14,7 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import FormInput from '../../Utils/FormInput'
 import { FormContext } from '../../Provider/FormProvider'
-import CheckperiodsCreate from '../../Containers/Checkperiods/CheckperiodsCreate'
+import PeriodsCreate from '../../Containers/Periods/PeriodsCreate'
 import Submitbutton from '../../Common/Submitbutton'
 import Gobackbutton from '../../Common/Gobackbutton'
 export default class TododefinesEdit extends Component {
@@ -30,34 +30,34 @@ export default class TododefinesEdit extends Component {
   }
 
   componentDidMount() {
-    const { TododefineID, GetTododefine, match, history, GetCheckperiods } = this.props
+    const { TododefineID, GetTododefine, match, history, GetPeriods } = this.props
     let Id = TododefineID || match?.params?.TododefineID
     if (validator.isUUID(Id)) {
       GetTododefine(Id)
-      GetCheckperiods()
+      GetPeriods()
     } else {
       history.push("/Tododefines")
     }
   }
 
   componentDidUpdate() {
-    const { Tododefines, Checkperiods } = this.props
+    const { Tododefines, Periods } = this.props
     const { selected_record, isLoading } = Tododefines
-    if (selected_record && Object.keys(selected_record).length > 0 && !Checkperiods.isLoading && !isLoading && selected_record.Id !== 0 && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && !Periods.isLoading && !isLoading && selected_record.Id !== 0 && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true,
       })
-      this.context.setForm(this.PAGE_NAME, { ...selected_record, Checkperiods: selected_record.Checkperioduuids.map(u => { return u.CheckperiodID }) })
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, Periods: selected_record.Perioduuids.map(u => { return u.PeriodID }) })
     }
   }
 
   render() {
 
-    const { Tododefines, Checkperiods, Profile, history } = this.props
+    const { Tododefines, Periods, Profile, history } = this.props
     const { isLoading, isDispatching } = Tododefines
 
-    const Checkperiodsoptions = (Checkperiods.list || []).filter(u => u.Isactive).map(checkperiod => {
-      return { key: checkperiod.Uuid, text: checkperiod.Name, value: checkperiod.Uuid }
+    const Periodsoptions = (Periods.list || []).filter(u => u.Isactive).map(period => {
+      return { key: period.Uuid, text: period.Name, value: period.Uuid }
     })
 
     return (
@@ -77,10 +77,11 @@ export default class TododefinesEdit extends Component {
             <Form>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Dayperiod[Profile.Language]} name="Dayperiod" type="number" />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Checkperiods[Profile.Language]} name="Checkperiods" multiple options={Checkperiodsoptions} formtype='dropdown' modal={CheckperiodsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periods[Profile.Language]} name="Periods" multiple options={Periodsoptions} formtype='dropdown' modal={PeriodsCreate} />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsRequired[Profile.Language]} name="IsRequired" formtype="checkbox" />
@@ -107,18 +108,21 @@ export default class TododefinesEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { EditTododefines, history, fillTododefinenotification, Tododefines, Checkperiods, Profile } = this.props
+    const { EditTododefines, history, fillTododefinenotification, Tododefines, Periods, Profile } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
-    data.Checkperiods = data.Checkperiods.map(id => {
-      return (Checkperiods.list || []).find(u => u.Uuid === id)
-    })
+    data.Periods = data.Periods.map(id => {
+      return (Periods.list || []).find(u => u.Uuid === id)
+    }).filter(u => u)
 
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
     }
-    if (!validator.isArray(data.Checkperiods)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CheckperiodsRequired[Profile.Language] })
+    if (!validator.isNumber(data.Dayperiod)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DayperiodRequired[Profile.Language] })
+    }
+    if (!validator.isArray(data.Periods)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PeriodsRequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
