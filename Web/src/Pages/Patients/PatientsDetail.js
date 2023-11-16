@@ -19,6 +19,7 @@ import { PATIENTMOVEMENTTYPE, ROUTES } from '../../Utils/Constants'
 import DataTable from '../../Utils/DataTable'
 import PatientsOut from '../../Containers/Patients/PatientsOut'
 import PatientsIn from '../../Containers/Patients/PatientsIn'
+import PatientsEditplace from '../../Containers/Patients/PatientsEditplace'
 
 export default class PatientsDetail extends Component {
 
@@ -103,7 +104,7 @@ export default class PatientsDetail extends Component {
       Patients, Patientdefines, Cases, Costumertypes, Patienttypes,
       Floors, Rooms, Beds, Patientstocks, Stockdefines, Units, Patientstockmovements,
       Patientmovements, Files, Profile, history, match, PatientID, handleSelectedPatient,
-      handleInmodal, handleOutmodal, Todos
+      handleInmodal, handleOutmodal, Todos, handlePlacemodal
     } = this.props
 
 
@@ -140,8 +141,8 @@ export default class PatientsDetail extends Component {
 
     const files = (Files.list || []).find(u => u.Usagetype === 'PP' && u.ParentID === selected_record?.Uuid)
 
-    const approvedTodos = (Todos.list || []).filter(u => u.Isapproved)
-    const waitingTodos = (Todos.list || []).filter(u => !u.Isapproved)
+    const completedTodos = (Todos.list || []).filter(u => u.IsCompleted)
+    const waitingTodos = (Todos.list || []).filter(u => !u.IsCompleted)
 
     const stocksColumns = [
       { Header: Literals.Details.Stockname[Profile.Language], accessor: 'Stockname', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
@@ -251,12 +252,27 @@ export default class PatientsDetail extends Component {
                       <Header as='h1'>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`}</Header>
                     </div>
                   </Grid.Row>
-                  <Grid.Row className='mt-8 flex flex-row justify-center items-center w-full'>
-                    <Label as={'a'}>{`${Literals.Details.Costumertype[Profile.Language]} : ${costumertype?.Name}`}</Label>
-                    <Label as={'a'}>{`${Literals.Details.Patienttype[Profile.Language]} : ${patienttype?.Name}`}</Label>
-                    <Label as={'a'}>{`${Literals.Details.Floor[Profile.Language]} : ${floor?.Name}`}</Label>
-                    <Label as={'a'}>{`${Literals.Details.Room[Profile.Language]} : ${room?.Name}`}</Label>
-                    <Label as={'a'}>{`${Literals.Details.Bed[Profile.Language]} : ${bed?.Name}`}</Label>
+                  <Grid.Row className='mt-8 flex flex-row justify-center items-center w-full gap-4'>
+                    <Label size='large' as='a' color='blue' image>
+                      {Literals.Details.Costumertype[Profile.Language]}
+                      <Label.Detail>{costumertype?.Name}</Label.Detail>
+                    </Label>
+                    <Label size='large' as='a' color='blue' image>
+                      {Literals.Details.Patienttype[Profile.Language]}
+                      <Label.Detail>{patienttype?.Name}</Label.Detail>
+                    </Label>
+                    <Label size='large' as='a' color='blue' image>
+                      {Literals.Details.Floor[Profile.Language]}
+                      <Label.Detail>{floor?.Name}</Label.Detail>
+                    </Label>
+                    <Label size='large' as='a' color='blue' image>
+                      {Literals.Details.Room[Profile.Language]}
+                      <Label.Detail>{room?.Name}</Label.Detail>
+                    </Label>
+                    <Label size='large' as='a' color='blue' image>
+                      {Literals.Details.Bed[Profile.Language]}
+                      <Label.Detail>{bed?.Name}</Label.Detail>
+                    </Label>
                   </Grid.Row>
                 </GridColumn>
                 <Grid.Column width={2}>
@@ -272,38 +288,38 @@ export default class PatientsDetail extends Component {
                   <div className=' w-full'>
                     <Grid columns={2} divided>
                       <Grid.Column>
-                        <Label >{Literals.Details.Last5incomemovement[Profile.Language]}</Label>
+                        <Label color='blue' basic>{Literals.Details.Last5incomemovement[Profile.Language]}</Label>
                         <DataTable
                           Columns={stocksColumns}
                           Data={lastincomestocks}
                         />
                         <Pagedivider />
-                        <Label >{Literals.Details.Last5outcomemovement[Profile.Language]}</Label>
+                        <Label color='blue' basic>{Literals.Details.Last5outcomemovement[Profile.Language]}</Label>
                         <DataTable
                           Columns={stocksColumns}
                           Data={lastoutcomestocks}
                         />
                       </Grid.Column>
                       <Grid.Column>
-                        <Label >{Literals.Details.Last5movement[Profile.Language]}</Label>
+                        <Label color='blue' basic>{Literals.Details.Last5movement[Profile.Language]}</Label>
                         <DataTable
                           Columns={movementColumns}
                           Data={lastmovements}
                         />
                         <Pagedivider />
-                        <Label >{Literals.Details.Last5File[Profile.Language]}</Label>
+                        <Label color='blue' basic>{Literals.Details.Last5File[Profile.Language]}</Label>
                         <DataTable
                           Columns={fileColumns}
                           Data={lastfiles}
                         />
                         <Pagedivider />
-                        <Label >{Literals.Details.PatientStocks[Profile.Language]}</Label>
+                        <Label color='blue' basic>{Literals.Details.PatientStocks[Profile.Language]}</Label>
                         <DataTable
                           Columns={stockandmedicineColumns}
                           Data={patientstocks}
                         />
                         <Pagedivider />
-                        <Label >{Literals.Details.Patientmedicines[Profile.Language]}</Label>
+                        <Label color='blue' basic>{Literals.Details.Patientmedicines[Profile.Language]}</Label>
                         <DataTable
                           Columns={stockandmedicineColumns}
                           Data={patientmedicines}
@@ -319,8 +335,7 @@ export default class PatientsDetail extends Component {
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
-                    {/*     <Button primary fluid onClick={() => { handleInmodal(true) }}>{Literals.Button.Geton[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { handleOutmodal(true) }}>{Literals.Button.Getoff[Profile.Language]}</Button> */}
+                    <Button primary fluid onClick={() => { handlePlacemodal(true) }}>{Literals.Button.Changeplace[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Changetodos[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`, { redirectUrl: "/Patients/" + Id }) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>
@@ -330,14 +345,14 @@ export default class PatientsDetail extends Component {
               <Grid.Row>
                 <Grid columns={2} divided>
                   <Grid.Column>
-                    <Label >{Literals.Details.Approvedtodos[Profile.Language]}</Label>
+                    <Label color='blue' basic>{Literals.Details.Completedtodos[Profile.Language]}</Label>
                     <DataTable
                       Columns={todoColumns}
-                      Data={approvedTodos}
+                      Data={completedTodos}
                     />
                   </Grid.Column>
                   <Grid.Column>
-                    <Label >{Literals.Details.Nonapprovedtodos[Profile.Language]}</Label>
+                    <Label color='blue' basic>{Literals.Details.Noncompletedtodos[Profile.Language]}</Label>
                     <DataTable
                       Columns={todoColumns}
                       Data={waitingTodos}
@@ -349,6 +364,7 @@ export default class PatientsDetail extends Component {
           </Contentwrapper>
           <PatientsIn />
           <PatientsOut />
+          <PatientsEditplace />
         </Pagewrapper >
     )
   }

@@ -84,6 +84,30 @@ export const AddPeriods = createAsyncThunk(
     }
 );
 
+export const FastcreatePeriod = createAsyncThunk(
+    'Periods/FastcreatePeriod',
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Setting, ROUTES.PERIOD + '/FastcreatePeriod', data);
+            dispatch(fillPeriodnotification({
+                type: 'Success',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
+            }));
+            clearForm && clearForm('PeriodsCreate')
+            closeModal && closeModal()
+            history && history.push(redirectUrl ? redirectUrl : '/Periods');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPeriodnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const AddRecordPeriods = createAsyncThunk(
     'Periods/AddRecordPeriods',
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
@@ -163,7 +187,8 @@ export const PeriodsSlice = createSlice({
         notifications: [],
         isLoading: false,
         isDispatching: false,
-        isDeletemodalopen: false
+        isDeletemodalopen: false,
+        isFastcreatemodalopen: false
     },
     reducers: {
         handleSelectedPeriod: (state, action) => {
@@ -179,7 +204,10 @@ export const PeriodsSlice = createSlice({
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
-        }
+        },
+        handleFastcreatemodal: (state, action) => {
+            state.isFastcreatemodalopen = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -217,6 +245,17 @@ export const PeriodsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(AddPeriods.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(FastcreatePeriod.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(FastcreatePeriod.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(FastcreatePeriod.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
@@ -260,7 +299,8 @@ export const {
     handleSelectedPeriod,
     fillPeriodnotification,
     removePeriodnotification,
-    handleDeletemodal
+    handleDeletemodal,
+    handleFastcreatemodal
 } = PeriodsSlice.actions;
 
 export default PeriodsSlice.reducer;

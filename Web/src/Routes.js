@@ -142,10 +142,6 @@ const Periods = lazy(() => import('./Containers/Periods/Periods'));
 const PeriodsCreate = lazy(() => import('./Containers/Periods/PeriodsCreate'));
 const PeriodsEdit = lazy(() => import('./Containers/Periods/PeriodsEdit'));
 
-const Checkperiods = lazy(() => import('./Containers/Checkperiods/Checkperiods'));
-const CheckperiodsCreate = lazy(() => import('./Containers/Checkperiods/CheckperiodsCreate'));
-const CheckperiodsEdit = lazy(() => import('./Containers/Checkperiods/CheckperiodsEdit'));
-
 const Patientmovements = lazy(() => import('./Containers/Patientmovements/Patientmovements'));
 const PatientmovementsCreate = lazy(() => import('./Containers/Patientmovements/PatientmovementsCreate'));
 const PatientmovementsEdit = lazy(() => import('./Containers/Patientmovements/PatientmovementsEdit'));
@@ -290,9 +286,6 @@ class Routes extends Component {
       { exact: true, path: "/Mailsettings/Create", auth: true, component: MailsettingsCreate, permission: 'mailsettingscreen' },
       { exact: true, path: "/Mailsettings/:MailsettingID/Edit", auth: true, component: MailsettingsEdit, permission: 'mailsettingscreen' },
       { exact: true, path: "/Todos", auth: true, component: Todos, permission: 'todoscreen' },
-      { exact: true, path: "/Checkperiods", auth: true, component: Checkperiods, permission: 'checkperiodscreen' },
-      { exact: true, path: "/Checkperiods/Create", auth: true, component: CheckperiodsCreate, permission: 'checkperiodscreen' },
-      { exact: true, path: "/Checkperiods/:CheckperiodID/Edit", auth: true, component: CheckperiodsEdit, permission: 'checkperiodscreen' },
       { exact: true, path: "/Printtemplates", auth: true, component: Printtemplates, permission: 'printtemplatescreen' },
       { exact: true, path: "/Printtemplates/Create", auth: true, component: PrinttemplatesCreate, permission: 'printtemplatescreen' },
       { exact: true, path: "/Printtemplates/:PrinttemplateID/Edit", auth: true, component: PrinttemplatesEdit, permission: 'printtemplatescreen' },

@@ -155,13 +155,35 @@ export const Editpatientcase = createAsyncThunk(
         }
     }
 );
-export const Editpatienttodogroupdefine = createAsyncThunk(
-    'Patients/Editpatienttodogroupdefine',
+
+export const Editpatientplace = createAsyncThunk(
+    'Patients/Editpatientplace',
     async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatienttodogroupdefine", data);
+            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientplace", data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+export const UpdatePatienttododefines = createAsyncThunk(
+    'Patients/UpdatePatienttododefines',
+    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatienttododefines", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
@@ -304,6 +326,7 @@ export const PatientsSlice = createSlice({
         isCompletemodalopen: false,
         isOutmodalopen: false,
         isInmodalopen: false,
+        isPlacemodalopen: false,
     },
     reducers: {
         handleSelectedPatient: (state, action) => {
@@ -318,7 +341,7 @@ export const PatientsSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removePatientnotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
@@ -331,6 +354,9 @@ export const PatientsSlice = createSlice({
         },
         handleInmodal: (state, action) => {
             state.isInmodalopen = action.payload
+        },
+        handlePlacemodal: (state, action) => {
+            state.isPlacemodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -461,13 +487,24 @@ export const PatientsSlice = createSlice({
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(Editpatienttodogroupdefine.pending, (state) => {
+            .addCase(Editpatientplace.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(Editpatienttodogroupdefine.fulfilled, (state, action) => {
+            .addCase(Editpatientplace.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.selected_record = action.payload
+            })
+            .addCase(Editpatientplace.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(UpdatePatienttododefines.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(UpdatePatienttododefines.fulfilled, (state, action) => {
                 state.isDispatching = false;
             })
-            .addCase(Editpatienttodogroupdefine.rejected, (state, action) => {
+            .addCase(UpdatePatienttododefines.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
@@ -482,7 +519,8 @@ export const {
     handleDeletemodal,
     handleCompletemodal,
     handleInmodal,
-    handleOutmodal
+    handleOutmodal,
+    handlePlacemodal
 } = PatientsSlice.actions;
 
 export default PatientsSlice.reducer;

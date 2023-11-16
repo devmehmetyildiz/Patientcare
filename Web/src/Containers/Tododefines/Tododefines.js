@@ -1,17 +1,17 @@
 import { connect } from 'react-redux'
 import Tododefines from '../../Pages/Tododefines/Tododefines'
 import { GetTododefines,  DeleteTododefines, handleDeletemodal, handleSelectedTododefine } from '../../Redux/TododefineSlice'
-import { GetCheckperiods } from '../../Redux/CheckperiodSlice'
+import { GetPeriods } from '../../Redux/PeriodSlice'
 
 const mapStateToProps = (state) => ({
     Tododefines: state.Tododefines,
-    Checkperiods: state.Checkperiods,
+    Periods: state.Periods,
     Profile: state.Profile
 })
 
 const mapDispatchToProps = {
     GetTododefines,  DeleteTododefines, handleDeletemodal, handleSelectedTododefine,
-    GetCheckperiods
+    GetPeriods
 }
 
 

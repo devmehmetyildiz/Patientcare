@@ -101,9 +101,7 @@ async function CheckPatient() {
 
     try {
         let cases = []
-        let todogroupdefines = []
         let tododefines = []
-        let checkperiods = []
         let periods = []
         let patients = []
         let todos = []
@@ -122,23 +120,9 @@ async function CheckPatient() {
                     session_key: config.session.secret
                 }
             })
-            const todogroupdefineresponse = axios({
-                method: 'GET',
-                url: config.services.Setting + `Todogroupdefines`,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
             const periodresponse = axios({
                 method: 'GET',
                 url: config.services.Setting + `Periods`,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            const checkperiodresponse = axios({
-                method: 'GET',
-                url: config.services.Setting + `Checkperiods`,
                 headers: {
                     session_key: config.session.secret
                 }
@@ -161,28 +145,24 @@ async function CheckPatient() {
             const responses = await Promise.all([
                 caseresponse,
                 tododefineresponse,
-                todogroupdefineresponse,
                 periodresponse,
-                checkperiodresponse,
                 patientresponse,
                 todosresponse
             ])
 
             cases = responses[0]?.data
             tododefines = responses[1]?.data
-            todogroupdefines = responses[2]?.data
-            periods = responses[3]?.data
-            checkperiods = responses[4]?.data
-            patients = responses[5]?.data
-            todos = responses[6]?.data
+            periods = responses[2]?.data
+            patients = responses[3]?.data
+            todos = responses[4]?.data
 
         } catch (error) {
             console.log(requestErrorCatcher(error, 'Setting-Business'))
         }
 
         console.log("Checkpatientstarted at", Datetime);
-        (patients || []).filter(u => u.TodogroupdefineID && u.CaseID && !u.Iswaitingactivation).forEach(patient => {
-            Checkpatientroutine(patient, cases, todogroupdefines, tododefines, checkperiods, periods, todos, Datetime)
+        (patients || []).filter(u => u.CaseID && !u.Iswaitingactivation).forEach(patient => {
+            Checkpatientroutine(patient, cases, tododefines, periods, todos, Datetime)
         })
 
     } catch (error) {
@@ -190,53 +170,57 @@ async function CheckPatient() {
     }
 }
 
-async function Checkpatientroutine(patient, cases, todogroupdefines, tododefines, checkperiods, periods, todos, Datetime) {
+async function Checkpatientroutine(patient, cases, tododefines, periods, todos, Datetime) {
 
     const now = Datetime;
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const currentTime = `${hours}:${minutes}`;
-    const dayIndex = now.getDay();
     let todosthatwillcreate = []
     console.log("patient check started -> ", patient.Uuid)
     const patientcase = (cases || []).find(u => u.Uuid === patient.CaseID)
+
     if (patientcase && patientcase.Isroutinework) {
-        const patienttodogroupdefine = (todogroupdefines || []).find(u => u.Uuid === patient.TodogroupdefineID)
-        if (patienttodogroupdefine) {
-            const patienttodos = patienttodogroupdefine.Tododefineuuids.map(uuid => {
-                return (tododefines || []).find(u => u.Uuid === uuid.TodoID)
-            })
-            for (const todo of patienttodos) {
-                const patientcheckperiods = todo.Checkperioduuids.map(uuid => {
-                    return (checkperiods || []).find(u => u.Uuid === uuid.CheckperiodID)
-                })
+        const patienttodos = patient.Tododefineuuids.map(uuid => {
+            return (tododefines || []).filter(u => u.Isactive).find(u => u.Uuid === uuid.TododefineID)
+        }).filter(u => u);
 
-                for (const checkperiod of patientcheckperiods) {
+        for (const todo of patienttodos) {
 
-                    const ishaveroutineinthisday = ((todos || []).sort((a, b) => b.Id - a.Id).find(u =>
-                        u.PatientID === patient?.Uuid &&
-                        u.TododefineID === todo?.Uuid &&
-                        isSameDate(u.createTime, Occureddays)
-                    ))
+            const todoperiods = todo.Perioduuids.map(uuid => {
+                return (periods || []).filter(u => u.Isactive).find(u => u.Uuid === uuid.PeriodID)
+            }).filter(u => u)
 
-                    if (ishaveroutineinthisday) {
-                        const patientperiods = checkperiod.Perioduuids.map(uuid => {
-                            return (periods || []).find(u => u.Uuid === uuid.PeriodID)
-                        })
+            if ((todoperiods || []).find(u => u.Occuredtime === currentTime)) {
 
-                        const foundedperiod = patientperiods.find(u => u.Occuredtime === currentTime)
-                        if (foundedperiod) {
-                            todosthatwillcreate.push({
-                                TododefineID: todo.Uuid,
-                                Checktime: foundedperiod.Checktime,
-                                Willapprove: todo.IsNeedactivation || false,
-                                Isapproved: false,
-                                IsCompleted: !todo.IsRequired || true,
-                                Occuredtime: currentTime
-                            })
-                        }
+                let willcreateroutine = false;
+                const foundedlasttodo = ((todos || []).sort((a, b) => b.Id - a.Id).find(u =>
+                    u.PatientID === patient?.Uuid &&
+                    u.TododefineID === todo?.Uuid
+                ))
+
+                if (!foundedlasttodo) {
+                    willcreateroutine = true
+                } else {
+                    if (isAllowedDate(foundedlasttodo.Createtime, todo?.Dayperiod)) {
+                        willcreateroutine = true
                     }
+                }
 
+                if (willcreateroutine) {
+
+
+                    const foundedperiod = todoperiods.find(u => u.Occuredtime === currentTime)
+                    if (foundedperiod) {
+                        todosthatwillcreate.push({
+                            TododefineID: todo.Uuid,
+                            Checktime: foundedperiod.Checktime,
+                            Willapprove: todo.IsNeedactivation || false,
+                            Isapproved: false,
+                            IsCompleted: !todo.IsRequired || true,
+                            Occuredtime: currentTime
+                        })
+                    }
                 }
             }
         }
@@ -266,16 +250,16 @@ async function Checkpatientroutine(patient, cases, todogroupdefines, tododefines
     }
 }
 
-function isSameDate(date1, daycount) {
+function isAllowedDate(date1, daycount) {
     const d1 = new Date(date1);
     const d2 = new Date();
     d2.setDate(d2.getDate() + daycount);
-
-    return (
-        d1.getFullYear() === d2.getFullYear() &&
-        d1.getMonth() === d2.getMonth() &&
-        d1.getDate() === d2.getDate()
-    );
+    return d2 < d1;
+    /*   return (
+          d1.getFullYear() === d2.getFullYear() &&
+          d1.getMonth() === d2.getMonth() &&
+          d1.getDate() === d2.getDate()
+      ); */
 }
 
 module.exports = {

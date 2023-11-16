@@ -19,6 +19,9 @@ module.exports = sequelize.define('tododefineModel', {
     IsNeedactivation: {
         type: Sequelize.BOOLEAN
     },
+    Dayperiod: {
+        type: Sequelize.INTEGER
+    },
     Createduser: {
         type: Sequelize.STRING
     },

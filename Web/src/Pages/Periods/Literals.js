@@ -19,6 +19,26 @@ const Literals = {
             tr: 'Gerçekleşme Tarihi',
             en: 'Occured Time'
         },
+        Starttime: {
+            tr: 'Başlangıç Saati',
+            en: 'Start Time'
+        },
+        Endtime: {
+            tr: 'Bitiş Saati',
+            en: 'End Time'
+        },
+        Period: {
+            tr: 'Aralık (dk)',
+            en: 'Interval (min)'
+        },
+        Formatstringstart: {
+            tr: 'Başlangıç Yazısı',
+            en: 'Start String'
+        },
+        Formatstringend: {
+            tr: 'Bitiş Yazısı',
+            en: 'End String'
+        },
         Checktime: {
             tr: 'Kontrol Süresi',
             en: 'Check Time'
@@ -61,6 +81,10 @@ const Literals = {
             tr: "Güncelle",
             en: "Update"
         },
+        Pagefastcreateheader: {
+            tr: "Hızlı Periyod Oluşturma",
+            en: "Fast Create Period"
+        },
         Pagedeleteheader: {
             tr: "Periyot Silme",
             en: "Delete Period"
@@ -70,6 +94,10 @@ const Literals = {
         Create: {
             tr: "Oluştur",
             en: "Create"
+        },
+        Fastcreate: {
+            tr: "Hızlı Oluştur",
+            en: "Fast Create"
         },
         Update: {
             tr: "Güncelle",

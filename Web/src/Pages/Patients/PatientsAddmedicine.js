@@ -113,13 +113,13 @@ export default class PatientsAddmedicine extends Component {
       u.Ismedicine
     ).map(stock => {
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
-      return { key: stock?.Uuid, text: `${stockdefine?.Name} (${stock?.Skt})`, value: stock?.Uuid }
+      return { key: stock?.Uuid, text: `${stockdefine?.Name} (${this.dateCellhandler(stock?.Skt)})`, value: stock?.Uuid }
     })
 
     const Columns = [
       { Header: Literals.AddMedicine.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.AddMedicine.Medicinename[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
-      { Header: Literals.AddMedicine.Barcodeno[Profile.Language], accessor: 'Barcodeno', sortable: true, canGroupBy: true, canFilter: true },
+      { Header: Literals.AddMedicine.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.columndateCellhandler(col) },
       { Header: Literals.AddMedicine.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
     ]
 
@@ -240,6 +240,20 @@ export default class PatientsAddmedicine extends Component {
       });
       return amount
     }
+  }
+
+  dateCellhandler = (value) => {
+    if (value) {
+      return value.split('T').length > 0 ? value.split('T')[0] : value
+    }
+    return null
+  }
+
+  columndateCellhandler = (col) => {
+    if (col.value) {
+      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+    }
+    return null
   }
 }
 PatientsAddmedicine.contextType = FormContext

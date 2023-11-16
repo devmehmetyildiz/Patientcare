@@ -80,6 +80,79 @@ async function AddPeriod(req, res, next) {
     GetPeriods(req, res, next)
 }
 
+async function FastcreatePeriod(req, res, next) {
+    let validationErrors = []
+    const {
+        Formatstringstart,
+        Formatstringend,
+        Starttime,
+        Endtime,
+        Period,
+        Checktime
+    } = req.body
+
+    const timePattern = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+
+
+    if (!timePattern.test(Starttime)) {
+        validationErrors.push(messages.VALIDATION_ERROR.STARTTIME_REQUIRED)
+    }
+    if (!timePattern.test(Endtime)) {
+        validationErrors.push(messages.VALIDATION_ERROR.ENDTIME_REQUIRED)
+    }
+    if (!timePattern.test(Checktime)) {
+        validationErrors.push(messages.VALIDATION_ERROR.CHECKTIME_REQUIRED)
+    }
+    if (!validator.isNumber(parseInt(Period)) || parseInt(Period) >= 61 || parseInt(Period) < 1) {
+        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDTIME_REQUIRED)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const parseTime = (timeStr) => {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            const currentDate = new Date();
+            currentDate.setHours(hours);
+            currentDate.setMinutes(minutes);
+            currentDate.setSeconds(0);
+            currentDate.setMilliseconds(0);
+            return currentDate;
+        };
+
+        const startTime = parseTime(Starttime);
+        const endTime = parseTime(Endtime);
+        const period = parseInt(Period);
+
+        let currentTime = startTime;
+
+        while (currentTime < endTime) {
+            let perioduuid = uuid()
+            const formattedTime = `${String(currentTime.getHours()).padStart(2, '0')}:${String(currentTime.getMinutes()).padStart(2, '0')}`;
+            await db.periodModel.create({
+                Name: `${Formatstringstart || ''} ${formattedTime} ${Formatstringend || ''}`,
+                Occuredtime: formattedTime,
+                Checktime: Checktime,
+                Uuid: perioduuid,
+                Createduser: "System",
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+            const nextTime = new Date(currentTime.getTime() + period * 60000);
+            currentTime = nextTime <= endTime ? nextTime : endTime;
+        }
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+
+    GetPeriods(req, res, next)
+}
+
 async function UpdatePeriod(req, res, next) {
 
     let validationErrors = []
@@ -172,4 +245,5 @@ module.exports = {
     AddPeriod,
     UpdatePeriod,
     DeletePeriod,
+    FastcreatePeriod
 }

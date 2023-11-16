@@ -10,11 +10,11 @@ async function GetTododefines(req, res, next) {
     try {
         const tododefines = await db.tododefineModel.findAll({ where: { Isactive: true } })
         for (const tododefine of tododefines) {
-            tododefine.Checkperioduuids = await db.tododefinecheckperiodModel.findAll({
+            tododefine.Perioduuids = await db.tododefineperiodModel.findAll({
                 where: {
                     TododefineID: tododefine.Uuid,
                 },
-                attributes: ['CheckperiodID']
+                attributes: ['PeriodID']
             });
         }
         res.status(200).json(tododefines)
@@ -38,11 +38,11 @@ async function GetTododefine(req, res, next) {
 
     try {
         const tododefine = await db.tododefineModel.findOne({ where: { Uuid: req.params.tododefineId } });
-        tododefine.Checkperioduuids = await db.tododefinecheckperiodModel.findAll({
+        tododefine.Perioduuids = await db.tododefineperiodModel.findAll({
             where: {
                 TododefineID: tododefine.Uuid,
             },
-            attributes: ['CheckperiodID']
+            attributes: ['PeriodID']
         });
         res.status(200).json(tododefine)
     } catch (error) {
@@ -57,7 +57,8 @@ async function AddTododefine(req, res, next) {
         Name,
         IsRequired,
         IsNeedactivation,
-        Checkperiods
+        Dayperiod,
+        Periods
     } = req.body
 
     if (!validator.isString(Name)) {
@@ -66,10 +67,13 @@ async function AddTododefine(req, res, next) {
     if (!validator.isBoolean(IsRequired)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISREQUIRED_REQUIRED)
     }
+    if (!validator.isNumber(Dayperiod)) {
+        validationErrors.push(messages.VALIDATION_ERROR.DAYPERIOD_REQUIRED)
+    }
     if (!validator.isBoolean(IsNeedactivation)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISNEEDACTIVATION_REQUIRED)
     }
-    if (!validator.isArray(Checkperiods)) {
+    if (!validator.isArray(Periods)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED)
     }
 
@@ -90,13 +94,13 @@ async function AddTododefine(req, res, next) {
             Isactive: true
         }, { transaction: t })
 
-        for (const checkperiod of Checkperiods) {
-            if (!checkperiod.Uuid || !validator.isUUID(checkperiod.Uuid)) {
+        for (const period of Periods) {
+            if (!period.Uuid || !validator.isUUID(period.Uuid)) {
                 return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID, req.language))
             }
-            await db.tododefinecheckperiodModel.create({
+            await db.tododefineperiodModel.create({
                 TododefineID: tododefineuuid,
-                CheckperiodID: checkperiod.Uuid
+                PeriodID: period.Uuid
             }, { transaction: t });
         }
 
@@ -115,12 +119,16 @@ async function UpdateTododefine(req, res, next) {
         Name,
         Uuid,
         IsRequired,
+        Dayperiod,
         IsNeedactivation,
-        Checkperiods
+        Periods
     } = req.body
 
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+    }
+    if (!validator.isNumber(Dayperiod)) {
+        validationErrors.push(messages.VALIDATION_ERROR.DAYPERIOD_REQUIRED)
     }
     if (!validator.isBoolean(IsRequired)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISREQUIRED_REQUIRED)
@@ -134,7 +142,7 @@ async function UpdateTododefine(req, res, next) {
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID)
     }
-    if (!validator.isArray(Checkperiods)) {
+    if (!validator.isArray(Periods)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED)
     }
     if (validationErrors.length > 0) {
@@ -157,14 +165,14 @@ async function UpdateTododefine(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
-        await db.tododefinecheckperiodModel.destroy({ where: { TododefineID: Uuid }, transaction: t });
-        for (const checkperiod of Checkperiods) {
-            if (!checkperiod.Uuid || !validator.isUUID(checkperiod.Uuid)) {
+        await db.tododefineperiodModel.destroy({ where: { TododefineID: Uuid }, transaction: t });
+        for (const period of Periods) {
+            if (!period.Uuid || !validator.isUUID(period.Uuid)) {
                 return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID, req.language))
             }
-            await db.tododefinecheckperiodModel.create({
+            await db.tododefineperiodModel.create({
                 TododefineID: Uuid,
-                CheckperiodID: checkperiod.Uuid
+                PeriodID: period.Uuid
             }, { transaction: t });
         }
         await t.commit()
@@ -200,7 +208,7 @@ async function DeleteTododefine(req, res, next) {
         }
 
         await db.tododefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
-        await db.tododefinecheckperiodModel.destroy({ where: { TododefineID: Uuid }, transaction: t });
+        await db.tododefineperiodModel.destroy({ where: { TododefineID: Uuid }, transaction: t });
         await t.commit();
     } catch (error) {
         await t.rollback();

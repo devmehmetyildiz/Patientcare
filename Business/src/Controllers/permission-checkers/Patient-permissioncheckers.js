@@ -73,7 +73,15 @@ async function UpdatePatientcase(req, res, next) {
     }
 }
 
-async function UpdatePatienttodogroupdefine(req, res, next) {
+async function UpdatePatientplace(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
+    }
+}
+
+async function UpdatePatienttododefines(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
         next()
     } else {
@@ -115,9 +123,10 @@ module.exports = {
     AddPatient,
     UpdatePatient,
     UpdatePatientcase,
-    UpdatePatienttodogroupdefine,
+    UpdatePatienttododefines,
     DeletePatient,
     Editpatientstocks,
     OutPatient,
-    InPatient
+    InPatient,
+    UpdatePatientplace
 }

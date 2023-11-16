@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Floors from "../../Pages/Floors/Floors"
-import { GetFloors, DeleteFloors,  fillFloornotification, handleDeletemodal, handleSelectedFloor } from "../../Redux/FloorSlice"
+import { GetFloors, DeleteFloors, fillFloornotification, handleDeletemodal, handleSelectedFloor, handleFastcreatemodal } from "../../Redux/FloorSlice"
 
 const mapStateToProps = (state) => ({
   Floors: state.Floors,
@@ -8,8 +8,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  GetFloors, DeleteFloors,  fillFloornotification,
-  handleDeletemodal, handleSelectedFloor
+  GetFloors, DeleteFloors, fillFloornotification,
+  handleDeletemodal, handleSelectedFloor, handleFastcreatemodal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Floors)

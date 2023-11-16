@@ -26,6 +26,14 @@ async function AddFloor(req, res, next) {
     }
 }
 
+async function FastcreateFloor(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('flooradd')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Floors Add', req.language, { en: 'Floors Add', tr: 'Floors Add' }))
+    }
+}
+
 async function UpdateFloor(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('floorupdate')) || permissionchecker(req)) {
         next()
@@ -48,4 +56,5 @@ module.exports = {
     AddFloor,
     UpdateFloor,
     DeleteFloor,
+    FastcreateFloor
 }
