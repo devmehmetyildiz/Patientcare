@@ -102,6 +102,8 @@ async function Downloadfile(req, res, next) {
         if (file.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.FILE_NOT_ACTIVE], req.language))
         }
+        res.setHeader("Content-Disposition", `attachment; filename=${file.Filename}`);
+        res.setHeader("Content-Type", file.Filetype);
         const fileStream = new stream.Writable({
             write(chunk, encoding, callback) {
                 if (res.writableEnded) {
@@ -118,8 +120,7 @@ async function Downloadfile(req, res, next) {
 
         await (async () => {
             try {
-                res.setHeader("Content-Disposition", `attachment; filename=${file.Filename}`);
-                res.setHeader("Content-Type", file.Filetype);
+
                 await client.downloadTo(fileStream, remoteFilePath, 0);
 
                 fileStream.pipe(res);
