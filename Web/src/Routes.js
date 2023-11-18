@@ -160,6 +160,10 @@ const Rooms = lazy(() => import('./Containers/Rooms/Rooms'));
 const RoomsCreate = lazy(() => import('./Containers/Rooms/RoomsCreate'));
 const RoomsEdit = lazy(() => import('./Containers/Rooms/RoomsEdit'));
 
+const Shifts = lazy(() => import('./Containers/Shifts/Shifts'));
+const ShiftsCreate = lazy(() => import('./Containers/Shifts/ShiftsCreate'));
+const ShiftsEdit = lazy(() => import('./Containers/Shifts/ShiftsEdit'));
+
 const Beds = lazy(() => import('./Containers/Beds/Beds'));
 const BedsCreate = lazy(() => import('./Containers/Beds/BedsCreate'));
 const BedsEdit = lazy(() => import('./Containers/Beds/BedsEdit'));
@@ -306,6 +310,9 @@ class Routes extends Component {
       { exact: true, path: "/Rooms", auth: true, component: Rooms, permission: 'roomscreen' },
       { exact: true, path: "/Rooms/Create", auth: true, component: RoomsCreate, permission: 'roomscreen' },
       { exact: true, path: "/Rooms/:RoomID/Edit", auth: true, component: RoomsEdit, permission: 'roomscreen' },
+      { exact: true, path: "/Shifts", auth: true, component: Shifts, permission: 'shiftscreen' },
+      { exact: true, path: "/Shifts/Create", auth: true, component: ShiftsCreate, permission: 'shiftscreen' },
+      { exact: true, path: "/Shifts/:ShiftID/Edit", auth: true, component: ShiftsEdit, permission: 'shiftscreen' },
       { exact: true, path: "/UnapprovedMovements", auth: true, component: UnapprovedMovements, permission: 'stockmovementscreen' },
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'patientscreen' },

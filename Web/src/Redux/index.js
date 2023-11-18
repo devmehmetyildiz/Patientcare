@@ -31,6 +31,7 @@ import RuleSlice from "./RuleSlice";
 import RoomSlice from "./RoomSlice";
 import BedSlice from "./BedSlice";
 import FloorSlice from "./FloorSlice";
+import ShiftSlice from "./ShiftSlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -64,6 +65,7 @@ const Slices = combineReducers({
     Mailsettings: MailsettingSlice,
     Printtemplates: PrinttemplateSlice,
     Todos: TodoSlice,
+    Shifts: ShiftSlice,
     Rules: RuleSlice
 });
 

@@ -37,6 +37,7 @@ import Rooms from "../Pages/Rooms/Literals"
 import Floors from "../Pages/Floors/Literals"
 import Todos from "../Pages/Todos/Literals"
 import Unapproveds from "../Pages/Unapproveds/Literals"
+import Shifts from "../Pages/Shifts/Literals"
 
 const Literals = {
     Cases,
@@ -77,7 +78,8 @@ const Literals = {
     Purchaseordermedicines,
     Purchaseordersupplies,
     Supplies,
-    Unapproveds
+    Unapproveds,
+    Shifts
 }
 
 export default Literals

@@ -23,6 +23,7 @@ export const ROUTES = {
     ROOM: 'Rooms',
     BED: 'Beds',
     FLOOR: 'Floors',
+    SHIFT: 'Shifts',
 
     PURCHASEORDER: 'Purchaseorders',
     PURCHASEORDERSTOCK: 'Purchaseorderstocks',
