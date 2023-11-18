@@ -174,6 +174,24 @@ const messages = {
         tr: 'Yapılacak grup tanımı aktif değil',
       }
     },
+    SHIFT_NOT_FOUND: {
+      code: 'SHIFT_NOT_FOUND', description: {
+        en: 'Shift not found',
+        tr: 'Vardiya bulunamadı',
+      }
+    },
+    TODOGROUPDEFINE_NOT_ACTIVE: {
+      code: 'TODOGROUPDEFINE_NOT_ACTIVE', description: {
+        en: 'Todogroup define not active',
+        tr: 'Yapılacak grup tanımı aktif değil',
+      }
+    },
+    SHIFT_NOT_ACTIVE: {
+      code: 'SHIFT_NOT_ACTIVE', description: {
+        en: 'Shift not active',
+        tr: 'Vardiya aktif değil',
+      }
+    },
 
   },
   VALIDATION_ERROR: {
@@ -423,6 +441,12 @@ const messages = {
         tr: 'Bu işlem için oda numarası gerekli',
       }
     },
+    SHIFTID_REQUIRED: {
+      code: 'SHIFTID_REQUIRED', description: {
+        en: 'The shift id required',
+        tr: 'Bu işlem için vardiya no gerekli',
+      }
+    },
     FLOORID_REQUIRED: {
       code: 'FLOORID_REQUIRED', description: {
         en: 'The floor id required',
@@ -505,6 +529,12 @@ const messages = {
       code: 'UNSUPPORTED_FLOORID', description: {
         en: 'floor id is unsupported',
         tr: 'Kat numarası geçersiz',
+      }
+    },
+    UNSUPPORTED_SHIFTID: {
+      code: 'UNSUPPORTED_SHIFTID', description: {
+        en: 'shift id is unsupported',
+        tr: 'Vardiya numarası geçersiz',
       }
     },
   }

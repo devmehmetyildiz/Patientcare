@@ -17,10 +17,12 @@ const tododefineperiodModel = require('./TododefineperiodModel')
 const floorModel = require('./FloorModel')
 const bedModel = require('./BedModel')
 const roomModel = require('./RoomModel')
+const shiftModel = require('./ShiftModel')
 
 
 module.exports = {
     floorModel,
+    shiftModel,
     caseModel,
     bedModel,
     roomModel,

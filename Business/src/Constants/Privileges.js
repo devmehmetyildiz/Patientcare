@@ -74,6 +74,14 @@ const Priveleges = [
     { code: 'roommanageview', text: 'Rooms Manage View', group: ['Rooms'], required: [] },
     { code: 'roomgetreport', text: 'Rooms Get Report', group: ['Rooms'], required: [] },
 
+    { code: 'shiftscreen', text: 'Shifts Screen', group: ['Shifts'], required: [] },
+    { code: 'shiftview', text: 'Shifts View', group: ['Shifts'], required: [] },
+    { code: 'shiftadd', text: 'Shifts Add', group: ['Shifts'], required: [] },
+    { code: 'shiftupdate', text: 'Shifts Update', group: ['Shifts'], required: [] },
+    { code: 'shiftdelete', text: 'Shifts Delete', group: ['Shifts'], required: [] },
+    { code: 'shiftmanageview', text: 'Shifts Manage View', group: ['Shifts'], required: [] },
+    { code: 'shiftgetreport', text: 'Shifts Get Report', group: ['Shifts'], required: [] },
+
     { code: 'stationscreen', text: 'Stations Screen', group: ['Stations'], required: [] },
     { code: 'stationview', text: 'Stations View', group: ['Stations'], required: [] },
     { code: 'stationadd', text: 'Stations Add', group: ['Stations'], required: [] },
