@@ -1,23 +1,38 @@
 import { connect } from 'react-redux'
 import UnapprovedStocks from '../../Pages/Unapproveds/UnapprovedStocks'
-import { GetPatientstocks, removePatientstocknotification, ApprovePatientstocks } from '../../Redux/PatientstockSlice'
-import { GetStockmovements, removeStockmovementnotification } from '../../Redux/StockmovementSlice'
-import { GetStocks, removeStocknotification, ApproveStocks } from '../../Redux/StockSlice'
-import { GetPurchaseorderstocks, removePurchaseorderstocknotification, ApprovePurchaseorderstocks } from '../../Redux/PurchaseorderstockSlice'
-import { GetStockdefines, removeStockdefinenotification } from '../../Redux/StockdefineSlice'
+import { GetPatientstocks, fillPatientstocknotification, ApprovePatientstocks } from '../../Redux/PatientstockSlice'
+import { GetStocks, fillStocknotification, ApproveStocks } from '../../Redux/StockSlice'
+import { GetPurchaseorderstocks, fillPurchaseorderstocknotification, ApprovePurchaseorderstocks } from '../../Redux/PurchaseorderstockSlice'
+import { GetPatients } from '../../Redux/PatientSlice'
+import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
+import { GetPatientstockmovements } from '../../Redux/PatientstockmovementSlice'
+import { GetPurchaseorders } from '../../Redux/PurchaseorderSlice'
+import { GetPurchaseorderstockmovements } from '../../Redux/PurchaseorderstockmovementSlice'
+import { GetStockmovements } from '../../Redux/StockmovementSlice'
+import { GetDepartments } from '../../Redux/DepartmentSlice'
+import { GetStockdefines } from '../../Redux/StockdefineSlice'
+import { GetUnits } from '../../Redux/UnitSlice'
 
 const mapStateToProps = (state) => ({
-    Profile: state.Profile,
+    Patients: state.Patients,
     Patientstocks: state.Patientstocks,
-    Stocks: state.Stocks,
+    Patientstockmovements: state.Patientstockmovements,
+    Patientdefines: state.Patientdefines,
+    Purchaseorders: state.Purchaseorders,
     Purchaseorderstocks: state.Purchaseorderstocks,
+    Purchaseorderstockmovements: state.Purchaseorderstockmovements,
+    Stocks: state.Stocks,
+    Stockmovements: state.Stockmovements,
+    Departments: state.Departments,
     Stockdefines: state.Stockdefines,
+    Units: state.Units,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {
-    GetPatientstocks, removePatientstocknotification, ApprovePatientstocks, GetStockmovements, removeStockmovementnotification,
-    GetStocks, removeStocknotification, ApproveStocks, GetPurchaseorderstocks, removePurchaseorderstocknotification, ApprovePurchaseorderstocks,
-    GetStockdefines, removeStockdefinenotification
+    GetPatients, GetPatientstocks, fillPatientstocknotification, ApprovePatientstocks, GetPatientstockmovements, GetPatientdefines,
+    GetPurchaseorders, GetPurchaseorderstocks, fillPurchaseorderstocknotification, ApprovePurchaseorderstocks, GetPurchaseorderstockmovements,
+    GetStocks, fillStocknotification, ApproveStocks, GetStockmovements, GetDepartments, GetStockdefines, GetUnits
 }
 
 

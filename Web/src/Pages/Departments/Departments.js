@@ -144,7 +144,7 @@ export class Departments extends Component {
 
     if (col.value) {
       if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        const itemId = col.row.original.Id
+        const itemId = col?.row?.original?.Id
         const itemStations = (col.row.original.Stationuuids || []).map(u => { return (Stations.list || []).find(station => station.Uuid === u.StationID) })
         return col.value.length - 35 > 20 ?
           (

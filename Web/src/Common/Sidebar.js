@@ -53,8 +53,11 @@ export function Sidebar(props) {
         {
             id: 1,
             title: Sidebarliterals.Organisation[Profile.Language],
-            url: "/Dashboard",
-            icon: <TbGauge className=' text-blue-700' />
+            isOpened: false,
+            icon: <TbGauge className=' text-blue-700' />,
+            items: [
+                { id: 1, subtitle: Literals.Unapproveds.Page.Movement.Pageheader[Profile.Language], url: "/UnapprovedMovements", permission: checkAuth('stockmovementscreen') },
+            ]
         },
         {
             id: 2,

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import UnapprovedTodos from '../../Pages/Unapproveds/UnapprovedTodos'
-import { GetTodos, removeTodonotification, ApproveTodos } from '../../Redux/TodoSlice'
-import { GetTododefines, removeTododefinenotification } from '../../Redux/TododefineSlice'
+import { GetTodos, ApproveTodos } from '../../Redux/TodoSlice'
+import { GetTododefines } from '../../Redux/TododefineSlice'
 
 const mapStateToProps = (state) => ({
     Profile: state.Profile,
@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetTodos, removeTodonotification, ApproveTodos, GetTododefines, removeTododefinenotificationaaaaaaaaaaaaaaaaa<zzz
+    GetTodos, ApproveTodos, GetTododefines
 }
 
 

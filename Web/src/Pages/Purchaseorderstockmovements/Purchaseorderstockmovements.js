@@ -131,11 +131,11 @@ export default class Purchaseorderstockmovements extends Component {
     if (Purchaseorderstocks.isLoading || Stockdefines.isLoading || Units.isLoading || Purchaseorderstockmovements.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const stockmovement = (Purchaseorderstockmovements.list || []).find(u => u.Id === col.row.original.Id)
+      const stockmovement = (Purchaseorderstockmovements.list || []).find(u => u.Id === col?.row?.original?.Id)
       const stock = (Purchaseorderstocks.list || []).find(u => u.Uuid === stockmovement?.StockID)
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
       const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
-      return <p>{`${col.value}  ${unit?.Name}`}</p>
+      return <p>{`${col.value || ''}  ${unit?.Name || ''}`}</p>
     }
 
   }

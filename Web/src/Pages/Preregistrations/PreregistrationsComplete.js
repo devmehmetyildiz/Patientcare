@@ -251,7 +251,7 @@ export default class PreregistrationsComplete extends Component {
                     description={patientstocks.filter(u => u.Ismedicine).map(stock => {
                       var stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
                       var unit = (Units.list || []).find(u => u.Uuid === stockdefine.UnitID)
-                      return `${stock.Amount} ${unit?.Name} ${stockdefine?.Name} `
+                      return `${stock.Amount} ${unit?.Name || ''} ${stockdefine?.Name} `
                     }).join('')}
                   />}
                   position='bottom left'
@@ -267,7 +267,7 @@ export default class PreregistrationsComplete extends Component {
                     description={patientstocks.filter(u => !u.Ismedicine).map(stock => {
                       var stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
                       var unit = (Units.list || []).find(u => u.Uuid === stockdefine.UnitID)
-                      return `${stock.Amount} ${unit?.Name} ${stockdefine?.Name} `
+                      return `${stock.Amount} ${unit?.Name || ''} ${stockdefine?.Name} `
                     }).join('')}
                   />}
                   position='bottom left'

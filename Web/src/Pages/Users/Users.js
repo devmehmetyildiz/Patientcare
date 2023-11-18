@@ -193,7 +193,7 @@ export default class Users extends Component {
 
     if (col.value) {
       if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        const itemId = col.row.original.Id
+        const itemId = col?.row?.original?.Id
         const itemRoles = (col.row.original.Roleuuids || []).map(u => { return (Roles.list || []).find(role => role.Uuid === u.RoleID) })
         return col.value.length - 35 > 20 ?
           (
@@ -212,7 +212,7 @@ export default class Users extends Component {
 
     if (col.value) {
       if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        const itemId = col.row.original.Id
+        const itemId = col?.row?.original?.Id
         const itemDepartments = (col.row.original.Departmentuuids || []).map(u => { return (Departments.list || []).find(department => department.Uuid === u.DepartmentID) })
         return col.value.length - 35 > 20 ?
           (
@@ -231,7 +231,7 @@ export default class Users extends Component {
 
     if (col.value) {
       if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        const itemId = col.row.original.Id
+        const itemId = col?.row?.original?.Id
         const itemStations = (col.row.original.Stationuuids || []).map(u => { return (Stations.list || []).find(station => station.Uuid === u.DepartmentID) })
         return col.value.length - 35 > 20 ?
           (

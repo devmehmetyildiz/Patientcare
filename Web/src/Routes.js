@@ -168,6 +168,8 @@ const Floors = lazy(() => import('./Containers/Floors/Floors'));
 const FloorsCreate = lazy(() => import('./Containers/Floors/FloorsCreate'));
 const FloorsEdit = lazy(() => import('./Containers/Floors/FloorsEdit'));
 
+const UnapprovedMovements = lazy(() => import('./Containers/Unapproveds/UnapprovedMovements'));
+
 const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
 const PasswordChange = lazy(() => import('./Containers/Auth/PasswordChange'));
 const Passwordforget = lazy(() => import('./Containers/Auth/Passwordforget'));
@@ -304,6 +306,7 @@ class Routes extends Component {
       { exact: true, path: "/Rooms", auth: true, component: Rooms, permission: 'roomscreen' },
       { exact: true, path: "/Rooms/Create", auth: true, component: RoomsCreate, permission: 'roomscreen' },
       { exact: true, path: "/Rooms/:RoomID/Edit", auth: true, component: RoomsEdit, permission: 'roomscreen' },
+      { exact: true, path: "/UnapprovedMovements", auth: true, component: UnapprovedMovements, permission: 'stockmovementscreen' },
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/:PatientID/Edit", auth: true, component: PreregistrationsEdit, permission: 'patientscreen' },

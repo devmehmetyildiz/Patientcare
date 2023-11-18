@@ -165,10 +165,11 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                             {headerGroups.map(headerGroup => (
                                 <tr {...headerGroup.getHeaderGroupProps()}>
                                     {headerGroup.headers.map(column => {
-                                        return <th {...column.getHeaderProps()} style={column.newWidht && { width:column.newWidht }}>
+                                        const foundedColumn = columns.find(u => u.accessor === column.id);
+                                        return <th {...column.getHeaderProps()} style={column.newWidht && { width: column.newWidht }}>
                                             <div className='react-table-header-column'>
                                                 {
-                                                    column.sortable ?
+                                                    foundedColumn?.sortable ?
                                                         <div className='react-table-header-sort' {...column.getSortByToggleProps()} title={column.isSorted ? column.isSortedDesc ? "Azalan" : "Artan" : "Sırala"}>
                                                             {column.render('Header')}
                                                             {column.isSorted
@@ -179,12 +180,12 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                                                         </div>
                                                         : column.render('Header')
                                                 }
-                                                {column.canGroupBy ? <div className='react-table-header-group-by'>
+                                                {foundedColumn?.canGroupBy ? <div className='react-table-header-group-by'>
                                                     <span {...column.getGroupByToggleProps()}>
                                                         {column.isGrouped ? <Icon name='thumbtack' className='active' /> : <Icon name='thumbtack' />}
                                                     </span>
                                                 </div> : null}
-                                                {!column.filterDisable ? (column.canFilter) ? <div className='react-table-header-filter'>{column.render('Filter')}</div> : null : null}
+                                                {!column.filterDisable ? (foundedColumn?.canFilter) ? <div className='react-table-header-filter'>{column.render('Filter')}</div> : null : null}
                                             </div>
                                         </th>
                                     }
