@@ -88,7 +88,7 @@ export default class ProfileEdit extends Component {
                                 <Form.Field className='flex flex-col justify-between items-center h-[100%]  relative'>
                                     {this.state.showImg && <Button onClick={(e) => { this.deleteImage(e) }} color='red' className='cursor-pointer absolute right-5 z-50 top-5 rounded-full' size='large' icon='close' />}
                                     <Image className='mb-4' src={this.state.showImg ?
-                                        this.state.fetchedFromapi ? `${config.services.File}${ROUTES.FILE}/Downloadfile/${this.state.file.Uuid}` : URL.createObjectURL(this.state.selectedimage)
+                                        this.state.fetchedFromapi ? `${config.services.File}${ROUTES.FILE}/Downloadfile/${this.state.file?.Uuid}` : URL.createObjectURL(this.state.selectedimage)
                                         : img.avatar} circular size='medium' />
                                     {!this.state.showImg && <Form.Input type='file' onChange={this.imageChange} ></Form.Input>}
                                 </Form.Field>
@@ -212,7 +212,7 @@ export default class ProfileEdit extends Component {
                 let files = [{
                     Id: 0,
                     Name: 'PP',
-                    ParentID: Profile.meta.Uuid,
+                    ParentID: Profile.meta?.Uuid,
                     Filename: 'PP',
                     Filefolder: '',
                     Filepath: '',
