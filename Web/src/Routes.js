@@ -323,7 +323,7 @@ class Routes extends Component {
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit, permission: 'userscreen' },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange, permission: 'userscreen' },
       { exact: true, path: "/About", auth: true, component: About },
-      { exact: true, path: "/PasswordReset/:RequestID", auth: false, component: PasswordReset },
+      { exact: true, path: "/Passwordreset/:RequestID", auth: false, component: PasswordReset },
       { exact: true, path: "/Forgetpassword", auth: false, component: Passwordforget },
       { exact: false, path: "*", auth: false, component: Notfoundpage },
     ]
@@ -332,7 +332,7 @@ class Routes extends Component {
       <Suspense fallback={<Spinner />}>
         <Switch>
           {routes.map((route, index) => {
-            return route.auth ? (((roles || []).includes('admin') || (roles || []).includes(route.permission)) ? <ProtectedRoute key={index} exact={route.exact} path={route.path} component={route.component} /> : null) :
+            return route.auth === true ? (((roles || []).includes('admin') || (roles || []).includes(route.permission)) ? <ProtectedRoute key={index} exact={route.exact} path={route.path} component={route.component} /> : null) :
               <Route key={index} exact={route.exact} path={route.path} component={route.component} />
           })}
         </Switch>
