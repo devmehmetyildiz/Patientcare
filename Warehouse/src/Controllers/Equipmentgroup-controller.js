@@ -93,7 +93,7 @@ async function AddEquipmentgroup(req, res, next) {
         await t.rollback()
         next(sequelizeErrorCatcher(err))
     }
-    GeEquipmentgroups(req, res, next)
+    GetEquipmentgroups(req, res, next)
 }
 
 async function UpdateEquipmentgroup(req, res, next) {
@@ -142,7 +142,7 @@ async function UpdateEquipmentgroup(req, res, next) {
         await t.rollback()
         return next(sequelizeErrorCatcher(error))
     }
-    GeEquipmentgroups(req, res, next)
+    GetEquipmentgroups(req, res, next)
 }
 
 async function DeleteEquipmentgroup(req, res, next) {
@@ -176,7 +176,7 @@ async function DeleteEquipmentgroup(req, res, next) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
-    GeEquipmentgroups(req, res, next)
+    GetEquipmentgroups(req, res, next)
 }
 
 module.exports = {
