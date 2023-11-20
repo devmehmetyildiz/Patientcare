@@ -65,6 +65,18 @@ const Routes = [
   { method: 'put', path: '/Stockdefines', controller: 'Stockdefine', action: 'UpdateStockdefine' },
   { method: 'delete', path: '/Stockdefines/:stockdefineId', controller: 'Stockdefine', action: 'DeleteStockdefine' },
 
+  { method: 'get', path: '/Equipmentgroups/:equipmentgroupId', controller: 'Equipmentgroup', action: 'GetEquipmentgroup' },
+  { method: 'get', path: '/Equipmentgroups', controller: 'Equipmentgroup', action: 'GetEquipmentgroups' },
+  { method: 'post', path: '/Equipmentgroups', controller: 'Equipmentgroup', action: 'AddEquipmentgroup' },
+  { method: 'put', path: '/Equipmentgroups', controller: 'Equipmentgroup', action: 'UpdateEquipmentgroup' },
+  { method: 'delete', path: '/Equipmentgroups/:equipmentgroupId', controller: 'Equipmentgroup', action: 'DeleteEquipmentgroup' },
+
+  { method: 'get', path: '/Equipments/:equipmentId', controller: 'Equipment', action: 'GetEquipment' },
+  { method: 'get', path: '/Equipments', controller: 'Equipment', action: 'GetEquipments' },
+  { method: 'post', path: '/Equipments', controller: 'Equipment', action: 'AddEquipment' },
+  { method: 'put', path: '/Equipments', controller: 'Equipment', action: 'UpdateEquipment' },
+  { method: 'delete', path: '/Equipments/:equipmentId', controller: 'Equipment', action: 'DeleteEquipment' },
+
 
 
 ]
