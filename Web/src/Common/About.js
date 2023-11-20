@@ -20,6 +20,7 @@ export default class About extends Component {
 
     render() {
         const Changelogs = [
+            version1_0_0_4,
             version1_0_0_3,
             version1_0_0_2,
             version1_0_0_1,
