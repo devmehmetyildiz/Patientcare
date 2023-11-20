@@ -100,7 +100,6 @@ export default class PreregistrationsEdit extends Component {
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Approvaldate[Profile.Language]} name="Approvaldate" type='date' />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -144,9 +143,6 @@ export default class PreregistrationsEdit extends Component {
     }
     if (!validator.isISODate(data.Registerdate)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Registerdaterequired[Profile.Language] })
-    }
-    if (!validator.isISODate(data.Approvaldate)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Approvaldaterequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

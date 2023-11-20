@@ -150,8 +150,34 @@ const version1_0_0_3 = {
     ],
 }
 
+const version1_0_0_4 = {
+    version: "1.0.0.4",
+    features: [
+        {
+            title: "Ayarlar", commits: [
+                "Durumlara Yeni casestatus eklendi : Başlangıç",
+            ]
+        },
+    ],
+    changes: [
+        {
+            title: "Hastalar", commits: [
+                "Ön Kayıtlarda kayıt esnasında sadece",
+                "Genel mikroservis error handler düzenlemesi",
+            ],
+        },
 
-export { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3 }
+    ],
+    bugs: [
+        {
+            title: "Servis", commits: [
+                "App.js düzenlemesi",
+            ],
+        },
+    ],
+}
+
+export { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3, version1_0_0_4 }
 
 /* const version1000 = {
     version: "1.0.0.0",
