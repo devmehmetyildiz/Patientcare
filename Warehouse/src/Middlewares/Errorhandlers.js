@@ -6,7 +6,7 @@ module.exports.init = function (app) {
     res.json({
       type: 'NOT_FOUND',
       code: 'ERR_NOT_FOUND',
-      description: 'Resource not found in '+ config.session.name,
+      description: 'Resource not found in ' + config.session.name,
     })
   })
 
@@ -90,8 +90,6 @@ module.exports.init = function (app) {
               description: 'Unexpected internal server error happened.',
               callstack: (config.env === 'development' ? err.stack : '')
             })
-            console.error(err)
-            process.exit(1)
           }
       }
     }
@@ -102,7 +100,6 @@ module.exports.init = function (app) {
         code: 'SERVER_ERROR',
         description: err.message
       })
-      console.log('err: ', err);
     }
   })
 }

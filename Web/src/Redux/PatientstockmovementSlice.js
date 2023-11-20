@@ -161,6 +161,28 @@ export const ApprovePatientstockmovements = createAsyncThunk(
     }
 );
 
+export const ApprovemultiplePatientstockmovements = createAsyncThunk(
+    'Patientstockmovements/ApprovemultiplePatientstockmovements',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, `${ROUTES.PATIENTSTOCKMOVEMENT}/Approve`, data);
+            dispatch(fillPatientstockmovementnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.approvedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const PatientstockmovementsSlice = createSlice({
     name: 'Patientstockmovements',
     initialState: {
@@ -183,7 +205,7 @@ export const PatientstockmovementsSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removePatientstockmovementnotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
@@ -250,6 +272,17 @@ export const PatientstockmovementsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(ApprovePatientstockmovements.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ApprovemultiplePatientstockmovements.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(ApprovemultiplePatientstockmovements.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(ApprovemultiplePatientstockmovements.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

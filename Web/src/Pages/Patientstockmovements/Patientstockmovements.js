@@ -129,11 +129,11 @@ export default class Patientstockmovements extends Component {
     if (Patientstocks.isLoading || Stockdefines.isLoading || Units.isLoading || Patientstockmovements.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const stockmovement = (Patientstockmovements.list || []).find(u => u.Id === col.row.original.Id)
+      const stockmovement = (Patientstockmovements.list || []).find(u => u.Id === col?.row?.original?.Id)
       const stock = (Patientstocks.list || []).find(u => u.Uuid === stockmovement?.StockID)
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
       const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
-      return <p>{`${col.value}  ${unit?.Name}`}</p>
+      return <p>{`${col.value || ''}  ${unit?.Name || ''}`}</p>
     }
 
   }

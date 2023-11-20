@@ -74,6 +74,14 @@ const Priveleges = [
     { code: 'roommanageview', text: 'Rooms Manage View', group: ['Rooms'], required: [] },
     { code: 'roomgetreport', text: 'Rooms Get Report', group: ['Rooms'], required: [] },
 
+    { code: 'shiftscreen', text: 'Shifts Screen', group: ['Shifts'], required: [] },
+    { code: 'shiftview', text: 'Shifts View', group: ['Shifts'], required: [] },
+    { code: 'shiftadd', text: 'Shifts Add', group: ['Shifts'], required: [] },
+    { code: 'shiftupdate', text: 'Shifts Update', group: ['Shifts'], required: [] },
+    { code: 'shiftdelete', text: 'Shifts Delete', group: ['Shifts'], required: [] },
+    { code: 'shiftmanageview', text: 'Shifts Manage View', group: ['Shifts'], required: [] },
+    { code: 'shiftgetreport', text: 'Shifts Get Report', group: ['Shifts'], required: [] },
+
     { code: 'stationscreen', text: 'Stations Screen', group: ['Stations'], required: [] },
     { code: 'stationview', text: 'Stations View', group: ['Stations'], required: [] },
     { code: 'stationadd', text: 'Stations Add', group: ['Stations'], required: [] },
@@ -201,6 +209,22 @@ const Priveleges = [
     { code: 'warehousedelete', text: 'Warehouses Delete', group: ['Warehouses'], required: [] },
     { code: 'warehousemanageview', text: 'Warehouses Manage View', group: ['Warehouses'], required: [] },
     { code: 'warehousegetreport', text: 'Warehouses Get Report', group: ['Warehouses'], required: [] },
+
+    { code: 'equipmentgroupscreen', text: 'Equipmentgroups Screen', group: ['Equipmentgroups'], required: [] },
+    { code: 'equipmentgroupview', text: 'Equipmentgroups View', group: ['Equipmentgroups'], required: [] },
+    { code: 'equipmentgroupadd', text: 'Equipmentgroups Add', group: ['Equipmentgroups'], required: [] },
+    { code: 'equipmentgroupupdate', text: 'Equipmentgroups Update', group: ['Equipmentgroups'], required: [] },
+    { code: 'equipmentgroupdelete', text: 'Equipmentgroups Delete', group: ['Equipmentgroups'], required: [] },
+    { code: 'equipmentgroupmanageview', text: 'Equipmentgroups Manage View', group: ['Equipmentgroups'], required: [] },
+    { code: 'equipmentgroupgetreport', text: 'Equipmentgroups Get Report', group: ['Equipmentgroups'], required: [] },
+
+    { code: 'equipmentscreen', text: 'Equipments Screen', group: ['Equipments'], required: [] },
+    { code: 'equipmentview', text: 'Equipments View', group: ['Equipments'], required: [] },
+    { code: 'equipmentadd', text: 'Equipments Add', group: ['Equipments'], required: [] },
+    { code: 'equipmentupdate', text: 'Equipments Update', group: ['Equipments'], required: [] },
+    { code: 'equipmentdelete', text: 'Equipments Delete', group: ['Equipments'], required: [] },
+    { code: 'equipmentmanageview', text: 'Equipments Manage View', group: ['Equipments'], required: [] },
+    { code: 'equipmentgetreport', text: 'Equipments Get Report', group: ['Equipments'], required: [] },
 
     { code: 'rolescreen', text: 'Roles Screen', group: ['Roles'], required: [] },
     { code: 'roleview', text: 'Roles View', group: ['Roles'], required: [] },

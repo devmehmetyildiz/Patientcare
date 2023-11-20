@@ -152,7 +152,7 @@ export default class Units extends Component {
     const { Departments, Profile } = this.props
     if (col.value) {
       if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        const itemId = col.row.original.Id
+        const itemId = col?.row?.original?.Id
         const itemDepartments = (col.row.original.Departmentuuids || []).map(u => { return (Departments.list || []).find(departmen => departmen.Uuid === u.DepartmentID) })
         return col.value.length - 35 > 20 ?
           (

@@ -136,7 +136,7 @@ export class Roles extends Component {
 
     if (col.value) {
       if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        const itemId = col.row.original.Id
+        const itemId = col?.row?.original?.Id
         const itemPrivileges = col.row.original.Privileges
         return col.value.length - 35 > 20 ?
           (

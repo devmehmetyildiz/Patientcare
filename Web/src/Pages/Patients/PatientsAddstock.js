@@ -254,7 +254,7 @@ export default class PatientsAddstock extends Component {
     if (Stockmovements.isLoading || Stocks.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const selectedStock = (Stocks.list || []).find(u => u.Id === col.row.original.Id)
+      const selectedStock = (Stocks.list || []).find(u => u.Id === col?.row?.original?.Id)
       let amount = 0.0;
       let movements = (Stockmovements.list || []).filter(u => u.StockID === selectedStock.Uuid && u.Isactive && u.Isapproved)
       movements.forEach(movement => {

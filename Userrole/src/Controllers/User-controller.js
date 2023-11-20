@@ -193,7 +193,7 @@ async function GetUser(req, res, next) {
             })
             user.Files = fileresponse.data
         } catch (error) {
-            next(requestErrorCatcher(error, 'Setting'))
+            next(requestErrorCatcher(error, 'File'))
         }
         user.Roleuuids = await db.userroleModel.findAll({
             where: {

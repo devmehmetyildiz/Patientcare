@@ -131,7 +131,7 @@ export default class Stockmovements extends Component {
       const stock = (Stocks.list || []).find(u => u.Uuid === stockmovement?.StockID)
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
       const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
-      return <p>{`${col.value}  ${unit?.Name}`}</p>
+      return <p>{`${col.value || ''}  ${unit?.Name || ''}`}</p>
     }
 
   }

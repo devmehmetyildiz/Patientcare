@@ -177,7 +177,7 @@ export default class Cases extends Component {
 
     if (col.value && !Profile.Ismobile) {
       if (!col?.cell.isGrouped) {
-        const itemId = col.row.original.Id
+        const itemId = col?.row?.original?.Id
         const itemDepartments = (col.row.original.Departmentuuids || []).map(u => { return (Departments.list || []).find(department => department.Uuid === u.DepartmentID) })
         return col.value.length - 35 > 20 ?
           (

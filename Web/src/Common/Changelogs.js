@@ -96,8 +96,62 @@ const version1_0_0_2 = {
     ],
 }
 
+const version1_0_0_3 = {
+    version: "1.0.0.3",
+    features: [
+        {
+            title: "Ayarlar", commits: [
+                "Vardiyalar Eklendi",
+            ]
+        },
+        {
+            title: "Ambar Yönetimi", commits: [
+                "Ekipmanlar Eklendi",
+                "Ekipman Grupları Eklendi",
+            ]
+        },
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Genel Hareket Onaylama Ekranı Eklendi",
+            ]
+        },
+        {
+            title: "Hastalar", commits: [
+                "Hasta Detay Ekranında Kat değiştirme seçeneği eklendi",
+                "Hasta Detay Rutin düzenle ekranında şablon oluşturma şablon ekleme seçenekleri eklendi"
+            ]
+        },
+    ],
+    changes: [
+        {
+            title: "Servisler", commits: [
+                "Warehouse Req boyd helper kaldırıldı",
+                "Genel mikroservis error handler düzenlemesi",
+            ],
+        },
 
-export { version1_0_0_0, version1_0_0_1, version1_0_0_2 }
+    ],
+    bugs: [
+        {
+            title: "File", commits: [
+                "File mikroserivisnde hata giderimi",
+            ],
+        },
+        {
+            title: "Parola Sıfırlama", commits: [
+                "Logine yönlendirme problemi giderildi",
+            ],
+        },
+        {
+            title: "Hastalar", commits: [
+                "Ön Kayıtlar onaylama ekranı, hataya düşme problemi giderildi",
+            ],
+        },
+    ],
+}
+
+
+export { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3 }
 
 /* const version1000 = {
     version: "1.0.0.0",

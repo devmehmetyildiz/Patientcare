@@ -23,6 +23,7 @@ export const ROUTES = {
     ROOM: 'Rooms',
     BED: 'Beds',
     FLOOR: 'Floors',
+    SHIFT: 'Shifts',
 
     PURCHASEORDER: 'Purchaseorders',
     PURCHASEORDERSTOCK: 'Purchaseorderstocks',
@@ -33,6 +34,8 @@ export const ROUTES = {
     WAREHOUSE: 'Warehouses',
     PATIENTSTOCK: 'Patientstocks',
     PATIENTSTOCKMOVEMENT: 'Patientstockmovements',
+    EQUIPMENTGROUP: 'Equipmentgroups',
+    EQUIPMENT: 'Equipments',
 
     TODODEFINE: 'Tododefines',
     TODOGROUPDEFINE: 'Todogroupdefines',
@@ -63,3 +66,19 @@ export const PATIENTMOVEMENTTYPE = [
     { Name: "Ayrılmış", value: 6 },
     { Name: "Yer değişikliği", value: 7 },
 ]
+
+export const getInitialconfig = (Profile, metaKey) => {
+    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
+    const initialConfig = {
+        hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
+            return item.key
+        }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
+        columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
+            return item.key
+        }) : [],
+        groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
+            return item.key
+        }) : [],
+    };
+    return initialConfig
+}

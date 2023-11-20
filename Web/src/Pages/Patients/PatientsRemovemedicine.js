@@ -221,7 +221,7 @@ export default class PatientsRemovemedicine extends Component {
         if (Patientstockmovements.isLoading || Patientstocks.isLoading) {
             return <Loader size='small' active inline='centered' ></Loader>
         } else {
-            const selectedStock = (Patientstocks.list || []).find(u => u.Id === col.row.original.Id)
+            const selectedStock = (Patientstocks.list || []).find(u => u.Id === col?.row?.original?.Id)
             let amount = 0.0;
             let movements = (Patientstockmovements.list || []).filter(u => u.StockID === selectedStock.Uuid && u.Isactive && u.Isapproved)
             movements.forEach(movement => {

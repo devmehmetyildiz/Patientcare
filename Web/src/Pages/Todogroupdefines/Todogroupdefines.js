@@ -137,7 +137,7 @@ export default class Todogroupdefines extends Component {
         const { Tododefines, Profile } = this.props
         if (col.value) {
             if (!col.cell?.isGrouped && !Profile.Ismobile) {
-                const itemId = col.row.original.Id
+                const itemId = col?.row?.original?.Id
                 const itemTodos = (col.row.original.Tododefineuuids || []).map(u => { return (Tododefines.list || []).find(tododefine => tododefine.Uuid === u.TodoID) })
                 return col.value.length - 35 > 20 ?
                     (

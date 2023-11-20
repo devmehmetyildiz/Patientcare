@@ -17,6 +17,7 @@ const Routes = [
   { method: 'get', path: '/Stockmovements/:stockmovementId', controller: 'Stockmovement', action: 'GetStockmovement' },
   { method: 'get', path: '/Stockmovements', controller: 'Stockmovement', action: 'GetStockmovements' },
   { method: 'post', path: '/Stockmovements/Approve/:stockmovementId', controller: 'Stockmovement', action: 'ApproveStockmovement' },
+  { method: 'post', path: '/Stockmovements/Approve', controller: 'Stockmovement', action: 'ApproveStockmovements' },
   { method: 'post', path: '/Stockmovements', controller: 'Stockmovement', action: 'AddStockmovement' },
   { method: 'put', path: '/Stockmovements', controller: 'Stockmovement', action: 'UpdateStockmovement' },
   { method: 'delete', path: '/Stockmovements/:stockmovementId', controller: 'Stockmovement', action: 'DeleteStockmovement' },
@@ -39,6 +40,7 @@ const Routes = [
   { method: 'get', path: '/Purchaseorderstockmovements/:stockmovementId', controller: 'Purchaseorderstockmovement', action: 'GetPurchaseorderstockmovement' },
   { method: 'get', path: '/Purchaseorderstockmovements', controller: 'Purchaseorderstockmovement', action: 'GetPurchaseorderstockmovements' },
   { method: 'post', path: '/Purchaseorderstockmovements/Approve/:stockmovementId', controller: 'Purchaseorderstockmovement', action: 'ApprovePurchaseorderstockmovement' },
+  { method: 'post', path: '/Purchaseorderstockmovements/Approve', controller: 'Purchaseorderstockmovement', action: 'ApprovePurchaseorderstockmovements' },
   { method: 'post', path: '/Purchaseorderstockmovements', controller: 'Purchaseorderstockmovement', action: 'AddPurchaseorderstockmovement' },
   { method: 'put', path: '/Purchaseorderstockmovements', controller: 'Purchaseorderstockmovement', action: 'UpdatePurchaseorderstockmovement' },
   { method: 'delete', path: '/Purchaseorderstockmovements/:stockmovementId', controller: 'Purchaseorderstockmovement', action: 'DeletePurchaseorderstockmovement' },
@@ -55,6 +57,7 @@ const Routes = [
   { method: 'get', path: '/Patientstockmovements/:stockmovementId', controller: 'Patientstockmovement', action: 'GetPatientstockmovement' },
   { method: 'get', path: '/Patientstockmovements', controller: 'Patientstockmovement', action: 'GetPatientstockmovements' },
   { method: 'post', path: '/Patientstockmovements/Approve/:stockmovementId', controller: 'Patientstockmovement', action: 'ApprovePatientstockmovement' },
+  { method: 'post', path: '/Patientstockmovements/Approve', controller: 'Patientstockmovement', action: 'ApprovePatientstockmovements' },
   { method: 'post', path: '/Patientstockmovements', controller: 'Patientstockmovement', action: 'AddPatientstockmovement' },
   { method: 'put', path: '/Patientstockmovements', controller: 'Patientstockmovement', action: 'UpdatePatientstockmovement' },
   { method: 'delete', path: '/Patientstockmovements/:stockmovementId', controller: 'Patientstockmovement', action: 'DeletePatientstockmovement' },
@@ -64,6 +67,18 @@ const Routes = [
   { method: 'post', path: '/Stockdefines', controller: 'Stockdefine', action: 'AddStockdefine' },
   { method: 'put', path: '/Stockdefines', controller: 'Stockdefine', action: 'UpdateStockdefine' },
   { method: 'delete', path: '/Stockdefines/:stockdefineId', controller: 'Stockdefine', action: 'DeleteStockdefine' },
+
+  { method: 'get', path: '/Equipmentgroups/:equipmentgroupId', controller: 'Equipmentgroup', action: 'GetEquipmentgroup' },
+  { method: 'get', path: '/Equipmentgroups', controller: 'Equipmentgroup', action: 'GetEquipmentgroups' },
+  { method: 'post', path: '/Equipmentgroups', controller: 'Equipmentgroup', action: 'AddEquipmentgroup' },
+  { method: 'put', path: '/Equipmentgroups', controller: 'Equipmentgroup', action: 'UpdateEquipmentgroup' },
+  { method: 'delete', path: '/Equipmentgroups/:equipmentgroupId', controller: 'Equipmentgroup', action: 'DeleteEquipmentgroup' },
+
+  { method: 'get', path: '/Equipments/:equipmentId', controller: 'Equipment', action: 'GetEquipment' },
+  { method: 'get', path: '/Equipments', controller: 'Equipment', action: 'GetEquipments' },
+  { method: 'post', path: '/Equipments', controller: 'Equipment', action: 'AddEquipment' },
+  { method: 'put', path: '/Equipments', controller: 'Equipment', action: 'UpdateEquipment' },
+  { method: 'delete', path: '/Equipments/:equipmentId', controller: 'Equipment', action: 'DeleteEquipment' },
 
 
 

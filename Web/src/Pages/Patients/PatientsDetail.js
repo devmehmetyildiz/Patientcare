@@ -104,7 +104,7 @@ export default class PatientsDetail extends Component {
       Patients, Patientdefines, Cases, Costumertypes, Patienttypes,
       Floors, Rooms, Beds, Patientstocks, Stockdefines, Units, Patientstockmovements,
       Patientmovements, Files, Profile, history, match, PatientID, handleSelectedPatient,
-      handleInmodal, handleOutmodal, Todos, handlePlacemodal
+      Todos, handlePlacemodal
     } = this.props
 
 
@@ -182,7 +182,7 @@ export default class PatientsDetail extends Component {
       if (stock && stock?.Isapproved) {
         const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
         const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
-        return { ...movement, Stockname: stockdefine?.Name, Unitname: unit?.Name }
+        return { ...movement, Stockname: stockdefine?.Name, Unitname: unit?.Name || '' }
       } else {
         return null
       }
@@ -193,7 +193,7 @@ export default class PatientsDetail extends Component {
       if (stock && stock?.Isapproved) {
         const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
         const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
-        return { ...movement, Stockname: stockdefine?.Name, Unitname: unit?.Name }
+        return { ...movement, Stockname: stockdefine?.Name, Unitname: unit?.Name || '' }
       } else {
         return null
       }
@@ -211,7 +211,7 @@ export default class PatientsDetail extends Component {
       movements.forEach(movement => {
         amount += (movement.Amount * movement.Movementtype);
       });
-      return { ...stock, Amount: amount, Stockname: stockdefine?.Name, Unitname: unit?.Name }
+      return { ...stock, Amount: amount, Stockname: stockdefine?.Name, Unitname: unit?.Name || '' }
     })
 
     const patientmedicines = (Patientstocks.list || []).filter(u => u.PatientID === selected_record?.Uuid && u.Ismedicine && u.Isapproved).map(stock => {
@@ -222,7 +222,7 @@ export default class PatientsDetail extends Component {
       movements.forEach(movement => {
         amount += (movement.Amount * movement.Movementtype);
       });
-      return { ...stock, Amount: amount, Stockname: stockdefine?.Name, Unitname: unit?.Name }
+      return { ...stock, Amount: amount, Stockname: stockdefine?.Name, Unitname: unit?.Name || '' }
     })
 
     return (
