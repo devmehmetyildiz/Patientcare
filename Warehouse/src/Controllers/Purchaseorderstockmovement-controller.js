@@ -209,6 +209,46 @@ async function ApprovePurchaseorderstockmovement(req, res, next) {
     GetPurchaseorderstockmovements(req, res, next)
 }
 
+async function ApprovePurchaseorderstockmovements(req, res, next) {
+
+    let validationErrors = []
+    const body = req.body
+
+    const t = await db.sequelize.transaction();
+    try {
+        for (const data of (body || [])) {
+            if (!data) {
+                validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
+            }
+            if (!validator.isUUID(data)) {
+                validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
+            }
+            if (validationErrors.length > 0) {
+                return next(createValidationError(validationErrors, req.language))
+            }
+            const purchaseorderstockmovement = await db.purchaseorderstockmovementModel.findOne({ where: { Uuid: data } })
+            if (!purchaseorderstockmovement) {
+                return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
+            }
+            if (purchaseorderstockmovement.Isactive === false) {
+                return next(createAccessDenied([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+            }
+
+            await db.purchaseorderstockmovementModel.update({
+                ...purchaseorderstockmovement,
+                Isapproved: true,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { Uuid: data } }, { transaction: t })
+        }
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPurchaseorderstockmovements(req, res, next)
+}
+
 async function DeletePurchaseorderstockmovement(req, res, next) {
 
     let validationErrors = []
@@ -249,5 +289,6 @@ module.exports = {
     AddPurchaseorderstockmovement,
     UpdatePurchaseorderstockmovement,
     DeletePurchaseorderstockmovement,
-    ApprovePurchaseorderstockmovement
+    ApprovePurchaseorderstockmovement,
+    ApprovePurchaseorderstockmovements
 }

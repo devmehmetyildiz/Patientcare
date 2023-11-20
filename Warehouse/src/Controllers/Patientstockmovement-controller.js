@@ -210,6 +210,46 @@ async function ApprovePatientstockmovement(req, res, next) {
     GetPatientstockmovements(req, res, next)
 }
 
+async function ApprovePatientstockmovements(req, res, next) {
+
+    let validationErrors = []
+    const body = req.body
+
+    const t = await db.sequelize.transaction();
+    try {
+        for (const data of (body || [])) {
+            if (!data) {
+                validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
+            }
+            if (!validator.isUUID(data)) {
+                validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
+            }
+            if (validationErrors.length > 0) {
+                return next(createValidationError(validationErrors, req.language))
+            }
+            const patientstockmovement = await db.patientstockmovementModel.findOne({ where: { Uuid: data } })
+            if (!patientstockmovement) {
+                return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
+            }
+            if (patientstockmovement.Isactive === false) {
+                return next(createAccessDenied([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+            }
+
+            await db.patientstockmovementModel.update({
+                ...patientstockmovement,
+                Isapproved: true,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { Uuid: data } }, { transaction: t })
+        }
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatientstockmovements(req, res, next)
+}
+
 async function DeletePatientstockmovement(req, res, next) {
 
     let validationErrors = []
@@ -250,5 +290,6 @@ module.exports = {
     AddPatientstockmovement,
     UpdatePatientstockmovement,
     DeletePatientstockmovement,
-    ApprovePatientstockmovement
+    ApprovePatientstockmovement,
+    ApprovePatientstockmovements
 }
