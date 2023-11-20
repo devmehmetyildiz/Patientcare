@@ -89,6 +89,12 @@ async function authorizationChecker(req, res, next) {
                                         session_key: config.session.secret
                                     }
                                 })
+                                departments = departmentsresponse.data
+                                stations = stationsresponse.data
+                            } catch (error) {
+                                return next(requestErrorCatcher(error, 'Setting'))
+                            }
+                            try {
                                 const fileresponse = await axios({
                                     method: 'GET',
                                     url: config.services.File + `Files/GetbyparentID/${user.Uuid}`,
@@ -97,10 +103,8 @@ async function authorizationChecker(req, res, next) {
                                     }
                                 })
                                 user.Files = fileresponse.data
-                                departments = departmentsresponse.data
-                                stations = stationsresponse.data
                             } catch (error) {
-                                return next(requestErrorCatcher(error,'Service'))
+                                return next(requestErrorCatcher(error, 'File'))
                             }
                             let departmentuuids = await db.userdepartmentModel.findAll({
                                 where: {
@@ -134,7 +138,7 @@ async function authorizationChecker(req, res, next) {
                                     return data
                                 }
                             })
-                          
+
                             user.PasswordHash && delete user.PasswordHash
                             req.identity.user = user
                             const userroles = await db.userroleModel.findAll({ where: { UserID: user.Uuid } })
