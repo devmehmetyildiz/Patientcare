@@ -1,15 +1,15 @@
 const messages = {
   ERROR: {
-    STOCKDEFINE_NOT_FOUND: {
-      code: 'STOCKDEFINE_NOT_FOUND', description: {
-        en: 'Stockdefine not found',
-        tr: 'Stok tanımı bulunamadı',
-      }
-    },
     AMOUNT_NOT_FOUND: {
       code: 'AMOUNT_NOT_FOUND', description: {
         en: 'Amount not found',
         tr: 'Miktar bulunamadı',
+      }
+    },
+    STOCKDEFINE_NOT_FOUND: {
+      code: 'STOCKDEFINE_NOT_FOUND', description: {
+        en: 'Stockdefine not found',
+        tr: 'Stok tanımı bulunamadı',
       }
     },
     STOCKDEFINE_NOT_ACTIVE: {
@@ -18,7 +18,30 @@ const messages = {
         tr: 'Stok tanımı bulunamadı',
       }
     },
-
+    EQUIPMENTGROUP_NOT_FOUND: {
+      code: 'EQUIPMENTGROUP_NOT_FOUND', description: {
+        en: 'Equipment Group not found',
+        tr: 'Envarter Grubu bulunamadı',
+      }
+    },
+    EQUIPMENT_NOT_FOUND: {
+      code: 'EQUIPMENT_NOT_FOUND', description: {
+        en: 'Equipment not found',
+        tr: 'Envarter bulunamadı',
+      }
+    },
+    EQUIPMENTGROUP_NOT_ACTIVE: {
+      code: 'EQUIPMENTGROUP_NOT_ACTIVE', description: {
+        en: 'Equipment Group not active',
+        tr: 'Envarter Grubu bulunamadı',
+      }
+    },
+    EQUIPMENT_NOT_ACTIVE: {
+      code: 'EQUIPMENT_NOT_ACTIVE', description: {
+        en: 'Equipment not active',
+        tr: 'Envarter bulunamadı',
+      }
+    },
     STOCKMOVEMENT_NOT_FOUND: {
       code: 'STOCKMOVEMENT_NOT_FOUND', description: {
         en: 'Stockmovement not found',
@@ -121,10 +144,28 @@ const messages = {
         tr: 'Bu işlem için stockdefineid gerekli',
       }
     },
+    EQUIPMENTGROUPID_REQUIRED: {
+      code: 'EQUIPMENTGROUPID_REQUIRED', description: {
+        en: 'The equipment group id required',
+        tr: 'Bu işlem için equipment group id gerekli',
+      }
+    },
+    EQUIPMENTID_REQUIRED: {
+      code: 'EQUIPMENTID_REQUIRED', description: {
+        en: 'The equipment id required',
+        tr: 'Bu işlem için equipment id gerekli',
+      }
+    },
     STOCKID_REQUIRED: {
       code: 'STOCKID_REQUIRED', description: {
         en: 'The stockid required',
         tr: 'Bu işlem için stockid gerekli',
+      }
+    },
+    USERID_REQUIRED: {
+      code: 'USERID_REQUIRED', description: {
+        en: 'The userid required',
+        tr: 'Bu işlem için userid gerekli',
       }
     },
     ISONUSAGE_REQUIRED: {
@@ -253,12 +294,22 @@ const messages = {
         tr: 'Bu işlem için patientId gerekli',
       }
     },
-
-
     UNSUPPORTED_STOCKDEFINEID: {
       code: 'UNSUPPORTED_STOCKDEFINEID', description: {
         en: 'The stockdefineid is unsupported',
         tr: 'Geçersiz stockdefineid',
+      }
+    },
+    UNSUPPORTED_EQUIPMENTGROUPID: {
+      code: 'UNSUPPORTED_EQUIPMENTGROUPID', description: {
+        en: 'The equipment group id is unsupported',
+        tr: 'Geçersiz equipment group id',
+      }
+    },
+    UNSUPPORTED_EQUIPMENTID: {
+      code: 'UNSUPPORTED_EQUIPMENTID', description: {
+        en: 'The equipment id is unsupported',
+        tr: 'Geçersiz equipment id',
       }
     },
     UNSUPPORTED_STOCKMOVEMENTID: {

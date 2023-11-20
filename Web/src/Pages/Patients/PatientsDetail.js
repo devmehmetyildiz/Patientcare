@@ -104,7 +104,7 @@ export default class PatientsDetail extends Component {
       Patients, Patientdefines, Cases, Costumertypes, Patienttypes,
       Floors, Rooms, Beds, Patientstocks, Stockdefines, Units, Patientstockmovements,
       Patientmovements, Files, Profile, history, match, PatientID, handleSelectedPatient,
-      handleInmodal, handleOutmodal, Todos, handlePlacemodal
+      Todos, handlePlacemodal
     } = this.props
 
 

@@ -210,6 +210,22 @@ const Priveleges = [
     { code: 'warehousemanageview', text: 'Warehouses Manage View', group: ['Warehouses'], required: [] },
     { code: 'warehousegetreport', text: 'Warehouses Get Report', group: ['Warehouses'], required: [] },
 
+    { code: 'equipmentgroupscreen', text: 'Equipmentgroups Screen', group: ['Equipmentgroups'], required: [] },
+    { code: 'equipmentgroupview', text: 'Equipmentgroups View', group: ['Equipmentgroups'], required: [] },
+    { code: 'equipmentgroupadd', text: 'Equipmentgroups Add', group: ['Equipmentgroups'], required: [] },
+    { code: 'equipmentgroupupdate', text: 'Equipmentgroups Update', group: ['Equipmentgroups'], required: [] },
+    { code: 'equipmentgroupdelete', text: 'Equipmentgroups Delete', group: ['Equipmentgroups'], required: [] },
+    { code: 'equipmentgroupmanageview', text: 'Equipmentgroups Manage View', group: ['Equipmentgroups'], required: [] },
+    { code: 'equipmentgroupgetreport', text: 'Equipmentgroups Get Report', group: ['Equipmentgroups'], required: [] },
+
+    { code: 'equipmentscreen', text: 'Equipments Screen', group: ['Equipments'], required: [] },
+    { code: 'equipmentview', text: 'Equipments View', group: ['Equipments'], required: [] },
+    { code: 'equipmentadd', text: 'Equipments Add', group: ['Equipments'], required: [] },
+    { code: 'equipmentupdate', text: 'Equipments Update', group: ['Equipments'], required: [] },
+    { code: 'equipmentdelete', text: 'Equipments Delete', group: ['Equipments'], required: [] },
+    { code: 'equipmentmanageview', text: 'Equipments Manage View', group: ['Equipments'], required: [] },
+    { code: 'equipmentgetreport', text: 'Equipments Get Report', group: ['Equipments'], required: [] },
+
     { code: 'rolescreen', text: 'Roles Screen', group: ['Roles'], required: [] },
     { code: 'roleview', text: 'Roles View', group: ['Roles'], required: [] },
     { code: 'roleadd', text: 'Roles Add', group: ['Roles'], required: [] },
