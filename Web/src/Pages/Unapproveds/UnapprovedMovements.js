@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import { Breadcrumb, Button, Checkbox, Grid, Icon, Loader, Tab } from 'semantic-ui-react'
+import { Breadcrumb, Button, Checkbox, Grid, Icon, Loader, Modal, Tab } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import Settings from '../../Common/Settings'
 import Pagedivider from '../../Common/Styled/Pagedivider'
@@ -11,22 +11,25 @@ import NoDataScreen from '../../Utils/NoDataScreen'
 import { MOVEMENTTYPES, getInitialconfig } from '../../Utils/Constants'
 import DataTable from '../../Utils/DataTable'
 import MobileTable from '../../Utils/MobileTable'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
+import validator from '../../Utils/Validator'
 
 export default class UnapprovedMovements extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      canFilterstocks: false,
-      canFilterpurchaseorderstocks: false,
-      canFilterpatientstocks: false,
+      canFilterstocks: true,
+      canFilterpurchaseorderstocks: true,
+      canFilterpatientstocks: true,
       approveMultiplestocks: false,
       approveMultiplepurchaseorderstocks: false,
       approveMultiplepatientstocks: false,
       purchaseorders: [],
       patients: [],
-      stocks: []
+      stocks: [],
+      stockmodalOpen: false,
+      purchaseordermodalOpen: false,
+      patientmodalOpen: false,
     }
   }
 
@@ -56,8 +59,8 @@ export default class UnapprovedMovements extends Component {
 
   render() {
 
-    const { Profile, Patientstockmovements,
-      Stockmovements, Purchaseorderstockmovements } = this.props
+    const { Profile, Patientstockmovements, fillStockmovementnotification, ApprovemultipleStockmovements, ApprovemultiplePurchaseorderstockmovements,
+      Stockmovements, Purchaseorderstockmovements, ApprovemultiplePatientstockmovements } = this.props
 
     const colProps = {
       sortable: true,
@@ -66,6 +69,7 @@ export default class UnapprovedMovements extends Component {
     }
 
     let purchaseorderstockmovementColumns = [
+      { Header: "", accessor: 'Select', disableProps: true },
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
       { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', Firstheader: true, Cell: col => this.purchaseorderstockCellhandler(col) },
@@ -79,10 +83,10 @@ export default class UnapprovedMovements extends Component {
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', },
-      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', disableFilters: true, disableProps: true },
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     let patientstockmovementColumns = [
+      { Header: "", accessor: 'Select', disableProps: true },
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
       { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', Firstheader: true, Cell: col => this.patientstockCellhandler(col) },
@@ -96,10 +100,10 @@ export default class UnapprovedMovements extends Component {
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', },
-      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', disableFilters: true, disableProps: true },
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     let movementColumns = [
+      { Header: "", accessor: 'Select', disableProps: true },
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
       { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', Firstheader: true, Cell: col => this.stockCellhandler(col) },
@@ -113,23 +117,8 @@ export default class UnapprovedMovements extends Component {
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', },
-      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', disableFilters: true, disableProps: true },
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    let multiselectColumn = { Header: "", accessor: 'Select', disableProps: true }
-
-    if (this.state.canFilterstocks) {
-      movementColumns.unshift(multiselectColumn)
-      movementColumns.pop()
-    }
-    if (this.state.canFilterpurchaseorderstocks) {
-      purchaseorderstockmovementColumns.unshift(multiselectColumn)
-      purchaseorderstockmovementColumns.pop()
-    }
-    if (this.state.canFilterpatientstocks) {
-      patientstockmovementColumns.unshift(multiselectColumn)
-      patientstockmovementColumns.pop()
-    }
 
     const stockmovementlist = (Stockmovements.list || []).filter(u => u.Isactive && !u.Isapproved).map(item => {
       return {
@@ -143,8 +132,6 @@ export default class UnapprovedMovements extends Component {
               : this.setState({ stocks: [item.Uuid, ...this.state.stocks] })
           }
           } />,
-        approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
-        }} />,
       }
     })
 
@@ -160,8 +147,6 @@ export default class UnapprovedMovements extends Component {
               : this.setState({ purchaseorders: [item.Uuid, ...this.state.purchaseorders] })
           }
           } />,
-        approve: item.Iscompleted ? <Icon size='large' color='black' name='minus' /> : (item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
-        }} />),
       }
     })
 
@@ -177,18 +162,16 @@ export default class UnapprovedMovements extends Component {
               : this.setState({ patients: [item.Uuid, ...this.state.patients] })
           }
           } />,
-        approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
-        }} />,
       }
     })
 
-    const patientstockmovementMetaKey = "Patientstockmovements"
+    const patientstockmovementMetaKey = "Patientstockmovementsapprove"
     let patientstockmovementInitialconfig = getInitialconfig(Profile, patientstockmovementMetaKey)
 
-    const purchaseorderstockmovementMetaKey = "Purchaseorderstockmovements"
+    const purchaseorderstockmovementMetaKey = "Purchaseorderstockmovementsapprove"
     let purchaseorderstockmovementInitialconfig = getInitialconfig(Profile, purchaseorderstockmovementMetaKey)
 
-    const stockmovementMetaKey = "Stockmovements"
+    const stockmovementMetaKey = "Stockmovementsapprove"
     let stockmovementInitialconfig = getInitialconfig(Profile, stockmovementMetaKey)
 
     return (
@@ -219,11 +202,18 @@ export default class UnapprovedMovements extends Component {
                           {Profile.Ismobile ?
                             <MobileTable Columns={movementColumns} Data={stockmovementlist} Config={stockmovementInitialconfig} Profile={Profile} /> :
                             <div className='flex flex-col w-full justify-center items-center gap-2'>
-                              <div className='flex flex-row  justify-between items-center w-full'>
-                                <Button size='mini' onClick={() => { this.setState({ canFilterstocks: !this.state.canFilterstocks }) }} >{this.state.canFilterstocks ? Literals.Columns.CanSelectclose[Profile.Language] : Literals.Columns.CanSelect[Profile.Language]}</Button>
+                              <div className='flex flex-row  justify-end items-center w-full'>
                                 {this.state.canFilterstocks && this.state.stocks.length > 0
-                                  ? <Button size='mini' onClick={() => { this.setState({ approveMultiplestocks: true }) }} >{Literals.Columns.Multipleapprove[Profile.Language]}</Button>
+                                  ? <Button color='violet' floated='right' onClick={() => { this.setState({ approveMultiplestocks: true }) }} >{Literals.Columns.Multipleapprove[Profile.Language]}</Button>
                                   : null}
+                                <Settings
+                                  Profile={Profile}
+                                  Columns={movementColumns}
+                                  list={stockmovementlist}
+                                  initialConfig={stockmovementInitialconfig}
+                                  metaKey={stockmovementMetaKey}
+                                  Showcolumnchooser
+                                />
                               </div>
                               <DataTable Columns={movementColumns} Data={stockmovementlist} Config={stockmovementInitialconfig} />
                             </div>
@@ -245,9 +235,19 @@ export default class UnapprovedMovements extends Component {
                             <div className='flex flex-col w-full justify-center items-center gap-2'>
                               <div className='flex flex-row  justify-between items-center w-full'>
                                 <Button size='mini' onClick={() => { this.setState({ canFilterpatientstocks: !this.state.canFilterpatientstocks }) }} >{this.state.canFilterpatientstocks ? Literals.Columns.CanSelectclose[Profile.Language] : Literals.Columns.CanSelect[Profile.Language]}</Button>
-                                {this.state.canFilterpatientstocks && this.state.patients.length > 0
-                                  ? <Button size='mini' onClick={() => { this.setState({ approveMultiplepatientstocks: true }) }} >{Literals.Columns.Multipleapprove[Profile.Language]}</Button>
-                                  : null}
+                                <div className='flex flex-row justify-center items-center'>
+                                  {this.state.canFilterpatientstocks && this.state.patients.length > 0
+                                    ? <Button size='mini' onClick={() => { this.setState({ approveMultiplepatientstocks: true }) }} >{Literals.Columns.Multipleapprove[Profile.Language]}</Button>
+                                    : null}
+                                  <Settings
+                                    Profile={Profile}
+                                    Columns={patientstockmovementColumns}
+                                    list={patientstockmovementlist}
+                                    initialConfig={patientstockmovementInitialconfig}
+                                    metaKey={patientstockmovementMetaKey}
+                                    Showcolumnchooser
+                                  />
+                                </div>
                               </div>
                               <DataTable Columns={patientstockmovementColumns} Data={patientstockmovementlist} Config={patientstockmovementInitialconfig} />
                             </div>
@@ -269,9 +269,19 @@ export default class UnapprovedMovements extends Component {
                             <div className='flex flex-col w-full justify-center items-center gap-2'>
                               <div className='flex flex-row  justify-between items-center w-full'>
                                 <Button size='mini' onClick={() => { this.setState({ canFilterpurchaseorderstocks: !this.state.canFilterpurchaseorderstocks }) }} >{this.state.canFilterpurchaseorderstocks ? Literals.Columns.CanSelectclose[Profile.Language] : Literals.Columns.CanSelect[Profile.Language]}</Button>
-                                {this.state.canFilterpurchaseorderstocks && this.state.purchaseorders.length > 0
-                                  ? <Button size='mini' onClick={() => { this.setState({ approveMultiplepurchaseorderstocks: true }) }} >{Literals.Columns.Multipleapprove[Profile.Language]}</Button>
-                                  : null}
+                                <div className='flex flex-row justify-center items-center'>
+                                  {this.state.canFilterpurchaseorderstocks && this.state.purchaseorders.length > 0
+                                    ? <Button size='mini' onClick={() => { this.setState({ approveMultiplepurchaseorderstocks: true }) }} >{Literals.Columns.Multipleapprove[Profile.Language]}</Button>
+                                    : null}
+                                  <Settings
+                                    Profile={Profile}
+                                    Columns={purchaseorderstockmovementColumns}
+                                    list={purchaseorderstockmovementlist}
+                                    initialConfig={purchaseorderstockmovementInitialconfig}
+                                    metaKey={purchaseorderstockmovementMetaKey}
+                                    Showcolumnchooser
+                                  />
+                                </div>
                               </div>
                               <DataTable Columns={purchaseorderstockmovementColumns} Data={purchaseorderstockmovementlist} Config={purchaseorderstockmovementInitialconfig} />
                             </div>
@@ -285,6 +295,118 @@ export default class UnapprovedMovements extends Component {
               renderActiveOnly={false} />
           </Contentwrapper>
         </Pagewrapper>
+        <Modal
+          onClose={() => { this.setState({ approveMultiplestocks: false }) }}
+          onOpen={() => { this.setState({ approveMultiplestocks: true }) }}
+          open={this.state.approveMultiplestocks}
+        >
+          <Modal.Header> {Literals.Columns.Multipleapprove[Profile.Language]}</Modal.Header>
+          <Modal.Content image className='!block'>
+            <Modal.Description>
+              {Literals.Messages.Approvemovementmessage[Profile.Language]}
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color='black' onClick={() => { this.setState({ approveMultiplestocks: false }) }}>
+              {Literals.Button.Close[Profile.Language]}
+            </Button>
+            <Button
+              content={Literals.Button.Approve[Profile.Language]}
+              labelPosition='right'
+              icon='checkmark'
+              onClick={() => {
+                let errors = []
+                if (!validator.isArray(this.state.stocks)) {
+                  errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Needmovement[Profile.Language] })
+                }
+                if (errors.length > 0) {
+                  errors.forEach(error => {
+                    fillStockmovementnotification(error)
+                  })
+                } else {
+                  console.log('this.state.stocks: ', this.state.stocks);
+                  ApprovemultipleStockmovements(this.state.stocks)
+                  this.setState({ approveMultiplestocks: false })
+                }
+              }}
+              positive
+            />
+          </Modal.Actions>
+        </Modal>
+        <Modal
+          onClose={() => { this.setState({ approveMultiplepatientstocks: false }) }}
+          onOpen={() => { this.setState({ approveMultiplepatientstocks: true }) }}
+          open={this.state.approveMultiplepatientstocks}
+        >
+          <Modal.Header> {Literals.Columns.Multipleapprove[Profile.Language]}</Modal.Header>
+          <Modal.Content image className='!block'>
+            <Modal.Description>
+              {Literals.Messages.Approvemovementmessage[Profile.Language]}
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color='black' onClick={() => { this.setState({ approveMultiplepatientstocks: false }) }}>
+              {Literals.Button.Close[Profile.Language]}
+            </Button>
+            <Button
+              content={Literals.Button.Approve[Profile.Language]}
+              labelPosition='right'
+              icon='checkmark'
+              onClick={() => {
+                let errors = []
+                if (!validator.isArray(this.state.patients)) {
+                  errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Needmovement[Profile.Language] })
+                }
+                if (errors.length > 0) {
+                  errors.forEach(error => {
+                    fillStockmovementnotification(error)
+                  })
+                } else {
+                  ApprovemultiplePatientstockmovements(this.state.patients)
+                  this.setState({ approveMultiplepatientstocks: false })
+                }
+              }}
+              positive
+            />
+          </Modal.Actions>
+        </Modal>
+        <Modal
+          onClose={() => { this.setState({ approveMultiplepurchaseorderstocks: false }) }}
+          onOpen={() => { this.setState({ approveMultiplepurchaseorderstocks: true }) }}
+          open={this.state.approveMultiplepurchaseorderstocks}
+        >
+          <Modal.Header> {Literals.Columns.Multipleapprove[Profile.Language]}</Modal.Header>
+          <Modal.Content image className='!block'>
+            <Modal.Description>
+              {Literals.Messages.Approvemovementmessage[Profile.Language]}
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color='black' onClick={() => { this.setState({ approveMultiplepurchaseorderstocks: false }) }}>
+              {Literals.Button.Close[Profile.Language]}
+            </Button>
+            <Button
+              content={Literals.Button.Approve[Profile.Language]}
+              labelPosition='right'
+              icon='checkmark'
+              onClick={() => {
+                let errors = []
+                if (!validator.isArray(this.state.purchaseorders)) {
+                  errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Needmovement[Profile.Language] })
+                }
+                if (errors.length > 0) {
+                  errors.forEach(error => {
+                    fillStockmovementnotification(error)
+                  })
+                } else {
+                  ApprovemultiplePurchaseorderstockmovements(this.state.purchaseorders)
+                  this.setState({ approveMultiplepurchaseorderstocks: false })
+                }
+              }}
+              positive
+            />
+          </Modal.Actions>
+        </Modal>
       </React.Fragment >
     )
   }

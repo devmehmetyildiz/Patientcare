@@ -156,6 +156,28 @@ export const ApprovePurchaseorderstockmovements = createAsyncThunk(
     }
 );
 
+export const ApprovemultiplePurchaseorderstockmovements = createAsyncThunk(
+    'Purchaseorderstockmovements/ApprovemultiplePurchaseorderstockmovements',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCKMOVEMENT}/Approve`, data);
+            dispatch(fillPurchaseorderstockmovementnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.approvedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPurchaseorderstockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 
 export const PurchaseorderstockmovementsSlice = createSlice({
     name: 'Purchaseorderstockmovements',
@@ -246,6 +268,17 @@ export const PurchaseorderstockmovementsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(ApprovePurchaseorderstockmovements.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ApprovemultiplePurchaseorderstockmovements.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(ApprovemultiplePurchaseorderstockmovements.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(ApprovemultiplePurchaseorderstockmovements.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

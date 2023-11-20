@@ -158,6 +158,10 @@ const Literals = {
             tr: "Geri Dön",
             en: "Go Back"
         },
+        Close: {
+            tr: "Kapat",
+            en: "Close"
+        },
 
     },
     Messages: {
@@ -177,9 +181,21 @@ const Literals = {
             tr: "hastasına ait yapılacağı onaylamak istediğinize emin misiniz?",
             en: "'s Todo will approve, are you sure?"
         },
-        NameRequired: {
-            tr: "Yapılacak Adı Gerekli",
-            en: "Todo define name Required"
+        Needmovement: {
+            tr: "Hiç bir hareket seçili değil",
+            en: "There is no movement selected"
+        },
+        Needstock: {
+            tr: "Hiç bir stok seçili değil",
+            en: "There is no stock selected"
+        },
+        Needtodo: {
+            tr: "Hiç bir rutin seçili değil",
+            en: "There is no ruoutine selected"
+        },
+        Approvemovementmessage: {
+            tr: "Seçili Hareketleri Onaylamak istiyormusunuz?",
+            en: "Are you sure to approve selected movements"
         },
         Yes: {
             tr: "EVET",
