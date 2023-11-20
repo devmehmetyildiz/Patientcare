@@ -13,7 +13,6 @@ require("./Middlewares/Databaseconnector")()
     const MemoryStore = require('session-memory-store')(session)
     const errorHandlers = require('./Middlewares/Errorhandlers')
     const authorizationChecker = require('./Middlewares/Authorizationchecker');
-    const reqbodyhelper = require("./Middlewares/Reqbodyhelper")
     const crossDomainEnabler = require('./Middlewares/Crossdomainenabler');
     const languageHelper = require('./Middlewares/LanguageHelper')
     const whitelist = config.session.corsdomains

@@ -6,7 +6,7 @@ import { Accordion, Breadcrumb, Button, Container, Grid, GridColumn, Header, Ico
 import { Link } from 'react-router-dom'
 import Headerbredcrump from './Wrappers/Headerbredcrump'
 import './about.css'
-import { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3 } from './Changelogs'
+import { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3,version1_0_0_4 } from './Changelogs'
 
 export default class About extends Component {
 

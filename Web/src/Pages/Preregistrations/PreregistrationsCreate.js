@@ -27,7 +27,7 @@ export default class PreregistrationsCreate extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      newRegister: false,
+      newRegister: true,
       Isdatafetched: false,
       modelOpened: false
     }
@@ -70,7 +70,7 @@ export default class PreregistrationsCreate extends Component {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 
-    const Casesoptions = (Cases.list || []).filter(u => u.Isactive).filter(u => u.CaseStatus === 0).map(cases => {
+    const Casesoptions = (Cases.list || []).filter(u => u.Isactive).filter(u => u.CaseStatus === 2).map(cases => {
       let departments = (cases.Departmentuuids || [])
         .map(u => {
           const department = (Departments.list || []).find(department => department.Uuid === u.DepartmentID)

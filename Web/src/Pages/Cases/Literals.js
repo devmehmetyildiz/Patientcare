@@ -13,6 +13,10 @@ const Literals = {
                 tr: 'Tamamlama',
                 en: "Complete"
             },
+            value3: {
+                tr: 'Başlangıç',
+                en: "Start"
+            },
         },
     },
     Columns: {

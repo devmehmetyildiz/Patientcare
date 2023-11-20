@@ -53,7 +53,12 @@ export default class Cases extends Component {
         key: '1',
         text: Literals.Options.caseStatusoption.value2[Profile.Language],
         value: 1,
-      }
+      },
+      {
+        key: '2',
+        text: Literals.Options.caseStatusoption.value3[Profile.Language],
+        value: 2,
+      },
     ]
 
     const Columns = [
