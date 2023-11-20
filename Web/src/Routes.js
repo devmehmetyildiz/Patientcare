@@ -172,6 +172,14 @@ const Floors = lazy(() => import('./Containers/Floors/Floors'));
 const FloorsCreate = lazy(() => import('./Containers/Floors/FloorsCreate'));
 const FloorsEdit = lazy(() => import('./Containers/Floors/FloorsEdit'));
 
+const Equipmentgroups = lazy(() => import('./Containers/Equipmentgroups/Equipmentgroups'));
+const EquipmentgroupsCreate = lazy(() => import('./Containers/Equipmentgroups/EquipmentgroupsCreate'));
+const EquipmentgroupsEdit = lazy(() => import('./Containers/Equipmentgroups/EquipmentgroupsEdit'));
+
+const Equipments = lazy(() => import('./Containers/Equipments/Equipments'));
+const EquipmentsCreate = lazy(() => import('./Containers/Equipments/EquipmentsCreate'));
+const EquipmentsEdit = lazy(() => import('./Containers/Equipments/EquipmentsEdit'));
+
 const UnapprovedMovements = lazy(() => import('./Containers/Unapproveds/UnapprovedMovements'));
 
 const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
@@ -313,6 +321,12 @@ class Routes extends Component {
       { exact: true, path: "/Shifts", auth: true, component: Shifts, permission: 'shiftscreen' },
       { exact: true, path: "/Shifts/Create", auth: true, component: ShiftsCreate, permission: 'shiftscreen' },
       { exact: true, path: "/Shifts/:ShiftID/Edit", auth: true, component: ShiftsEdit, permission: 'shiftscreen' },
+      { exact: true, path: "/Equipmentgroups", auth: true, component: Equipmentgroups, permission: 'equipmentgroupscreen' },
+      { exact: true, path: "/Equipmentgroups/Create", auth: true, component: EquipmentgroupsCreate, permission: 'equipmentgroupscreen' },
+      { exact: true, path: "/Equipmentgroups/:EquipmentgroupID/Edit", auth: true, component: EquipmentgroupsEdit, permission: 'equipmentgroupscreen' },
+      { exact: true, path: "/Equipments", auth: true, component: Equipments, permission: 'equipmentscreen' },
+      { exact: true, path: "/Equipments/Create", auth: true, component: EquipmentsCreate, permission: 'equipmentscreen' },
+      { exact: true, path: "/Equipments/:EquipmentID/Edit", auth: true, component: EquipmentsEdit, permission: 'equipmentscreen' },
       { exact: true, path: "/UnapprovedMovements", auth: true, component: UnapprovedMovements, permission: 'stockmovementscreen' },
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'patientscreen' },

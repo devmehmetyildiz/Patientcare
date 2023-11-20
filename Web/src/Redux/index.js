@@ -32,6 +32,8 @@ import RoomSlice from "./RoomSlice";
 import BedSlice from "./BedSlice";
 import FloorSlice from "./FloorSlice";
 import ShiftSlice from "./ShiftSlice";
+import EquipmentSlice from "./EquipmentSlice";
+import EquipmentgroupSlice from "./EquipmentgroupSlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -66,7 +68,9 @@ const Slices = combineReducers({
     Printtemplates: PrinttemplateSlice,
     Todos: TodoSlice,
     Shifts: ShiftSlice,
-    Rules: RuleSlice
+    Rules: RuleSlice,
+    Equipments: EquipmentSlice,
+    Equipmentgroups: EquipmentgroupSlice
 });
 
 export default Slices;

@@ -38,6 +38,8 @@ import Floors from "../Pages/Floors/Literals"
 import Todos from "../Pages/Todos/Literals"
 import Unapproveds from "../Pages/Unapproveds/Literals"
 import Shifts from "../Pages/Shifts/Literals"
+import Equipmentgroups from "../Pages/Equipmentgroups/Literals"
+import Equipments from "../Pages/Equipments/Literals"
 
 const Literals = {
     Cases,
@@ -79,7 +81,9 @@ const Literals = {
     Purchaseordersupplies,
     Supplies,
     Unapproveds,
-    Shifts
+    Shifts,
+    Equipmentgroups,
+    Equipments
 }
 
 export default Literals

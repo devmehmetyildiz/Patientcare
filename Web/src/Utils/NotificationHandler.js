@@ -33,6 +33,8 @@ import { removeUnitnotification } from "../Redux/UnitSlice"
 import { removeUsernotification } from "../Redux/UserSlice"
 import { removeWarehousenotification } from "../Redux/WarehouseSlice"
 import { removeShiftnotification } from "../Redux/ShiftSlice"
+import { removeEquipmentnotification } from "../Redux/EquipmentSlice"
+import { removeEquipmentgroupnotification } from "../Redux/EquipmentgroupSlice"
 import Notificationwrapper from './Notification'
 
 export function NotificationHandler(props) {
@@ -52,7 +54,8 @@ export function NotificationHandler(props) {
             removePatientstocknotification, removePatientstockmovementnotification, removePatientnotification,
             removePatientmovementnotification, removePatientdefinenotification, removeMailsettingnotification,
             removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
-            removePeriodnotification, removeCasenotification, removeBednotification, removeShiftnotification
+            removePeriodnotification, removeCasenotification, removeBednotification, removeShiftnotification, removeEquipmentnotification,
+            removeEquipmentgroupnotification
         } = props
 
         const {
@@ -63,7 +66,7 @@ export function NotificationHandler(props) {
             Profile, Patienttypes, Patientstocks, Patientstockmovements,
             Patients, Patientmovements, Patientdefines, Mailsettings,
             Floors, Files, Departments, Costumertypes,
-            Periods, Cases, Beds, Shifts
+            Periods, Cases, Beds, Shifts, Equipmentgroups, Equipments
         } = props.states
 
         Notification(Warehouses.notifications, removeWarehousenotification)
@@ -99,6 +102,8 @@ export function NotificationHandler(props) {
         Notification(Periods.notifications, removePeriodnotification)
         Notification(Cases.notifications, removeCasenotification)
         Notification(Beds.notifications, removeBednotification)
+        Notification(Equipmentgroups.notifications, removeEquipmentgroupnotification)
+        Notification(Equipments.notifications, removeEquipmentnotification)
     })
 
     return null
@@ -118,7 +123,8 @@ const mapDispatchToProps = {
     removePatientstocknotification, removePatientstockmovementnotification, removePatientnotification,
     removePatientmovementnotification, removePatientdefinenotification, removeMailsettingnotification,
     removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
-    removePeriodnotification, removeCasenotification, removeBednotification, removeShiftnotification
+    removePeriodnotification, removeCasenotification, removeBednotification, removeShiftnotification,
+    removeEquipmentgroupnotification,removeEquipmentnotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationHandler)
