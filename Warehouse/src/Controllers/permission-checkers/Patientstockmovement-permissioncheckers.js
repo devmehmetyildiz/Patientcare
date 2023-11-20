@@ -43,6 +43,14 @@ async function ApprovePatientstockmovement(req, res, next) {
     }
 }
 
+async function ApprovePatientstockmovements(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientstockmovementupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Patientstockmovements Update', req.language, { en: 'Patientstockmovements Update', tr: 'Patientstockmovements Update' }))
+    }
+}
+
 async function DeletePatientstockmovement(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('patientstockmovementdelete')) || permissionchecker(req)) {
         next()
@@ -57,5 +65,6 @@ module.exports = {
     AddPatientstockmovement,
     UpdatePatientstockmovement,
     DeletePatientstockmovement,
+    ApprovePatientstockmovements,
     ApprovePatientstockmovement
 }

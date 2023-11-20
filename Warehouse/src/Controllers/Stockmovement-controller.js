@@ -210,6 +210,8 @@ async function ApproveStockmovements(req, res, next) {
 
     let validationErrors = []
     const body = req.body
+    console.log('req.body: ', req.body);
+    console.log('body: ', body);
 
     const t = await db.sequelize.transaction();
     try {

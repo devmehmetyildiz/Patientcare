@@ -41,6 +41,14 @@ async function ApproveStockmovement(req, res, next) {
     }
 }
 
+async function ApproveStockmovements(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('stockmovementupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Stockmovements Update', req.language, { en: 'Stockmovements Update', tr: 'Stockmovements Update' }))
+    }
+}
+
 async function DeleteStockmovement(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('stockmovementdelete')) || permissionchecker(req)) {
         next()
@@ -56,5 +64,6 @@ module.exports = {
     AddStockmovement,
     UpdateStockmovement,
     DeleteStockmovement,
-    ApproveStockmovement
+    ApproveStockmovement,
+    ApproveStockmovements
 }
