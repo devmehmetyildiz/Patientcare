@@ -160,6 +160,10 @@ const Rooms = lazy(() => import('./Containers/Rooms/Rooms'));
 const RoomsCreate = lazy(() => import('./Containers/Rooms/RoomsCreate'));
 const RoomsEdit = lazy(() => import('./Containers/Rooms/RoomsEdit'));
 
+const Shifts = lazy(() => import('./Containers/Shifts/Shifts'));
+const ShiftsCreate = lazy(() => import('./Containers/Shifts/ShiftsCreate'));
+const ShiftsEdit = lazy(() => import('./Containers/Shifts/ShiftsEdit'));
+
 const Beds = lazy(() => import('./Containers/Beds/Beds'));
 const BedsCreate = lazy(() => import('./Containers/Beds/BedsCreate'));
 const BedsEdit = lazy(() => import('./Containers/Beds/BedsEdit'));
@@ -167,6 +171,16 @@ const BedsEdit = lazy(() => import('./Containers/Beds/BedsEdit'));
 const Floors = lazy(() => import('./Containers/Floors/Floors'));
 const FloorsCreate = lazy(() => import('./Containers/Floors/FloorsCreate'));
 const FloorsEdit = lazy(() => import('./Containers/Floors/FloorsEdit'));
+
+const Equipmentgroups = lazy(() => import('./Containers/Equipmentgroups/Equipmentgroups'));
+const EquipmentgroupsCreate = lazy(() => import('./Containers/Equipmentgroups/EquipmentgroupsCreate'));
+const EquipmentgroupsEdit = lazy(() => import('./Containers/Equipmentgroups/EquipmentgroupsEdit'));
+
+const Equipments = lazy(() => import('./Containers/Equipments/Equipments'));
+const EquipmentsCreate = lazy(() => import('./Containers/Equipments/EquipmentsCreate'));
+const EquipmentsEdit = lazy(() => import('./Containers/Equipments/EquipmentsEdit'));
+
+const UnapprovedMovements = lazy(() => import('./Containers/Unapproveds/UnapprovedMovements'));
 
 const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
 const PasswordChange = lazy(() => import('./Containers/Auth/PasswordChange'));
@@ -304,6 +318,16 @@ class Routes extends Component {
       { exact: true, path: "/Rooms", auth: true, component: Rooms, permission: 'roomscreen' },
       { exact: true, path: "/Rooms/Create", auth: true, component: RoomsCreate, permission: 'roomscreen' },
       { exact: true, path: "/Rooms/:RoomID/Edit", auth: true, component: RoomsEdit, permission: 'roomscreen' },
+      { exact: true, path: "/Shifts", auth: true, component: Shifts, permission: 'shiftscreen' },
+      { exact: true, path: "/Shifts/Create", auth: true, component: ShiftsCreate, permission: 'shiftscreen' },
+      { exact: true, path: "/Shifts/:ShiftID/Edit", auth: true, component: ShiftsEdit, permission: 'shiftscreen' },
+      { exact: true, path: "/Equipmentgroups", auth: true, component: Equipmentgroups, permission: 'equipmentgroupscreen' },
+      { exact: true, path: "/Equipmentgroups/Create", auth: true, component: EquipmentgroupsCreate, permission: 'equipmentgroupscreen' },
+      { exact: true, path: "/Equipmentgroups/:EquipmentgroupID/Edit", auth: true, component: EquipmentgroupsEdit, permission: 'equipmentgroupscreen' },
+      { exact: true, path: "/Equipments", auth: true, component: Equipments, permission: 'equipmentscreen' },
+      { exact: true, path: "/Equipments/Create", auth: true, component: EquipmentsCreate, permission: 'equipmentscreen' },
+      { exact: true, path: "/Equipments/:EquipmentID/Edit", auth: true, component: EquipmentsEdit, permission: 'equipmentscreen' },
+      { exact: true, path: "/UnapprovedMovements", auth: true, component: UnapprovedMovements, permission: 'stockmovementscreen' },
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/:PatientID/Edit", auth: true, component: PreregistrationsEdit, permission: 'patientscreen' },
@@ -313,7 +337,7 @@ class Routes extends Component {
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit, permission: 'userscreen' },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange, permission: 'userscreen' },
       { exact: true, path: "/About", auth: true, component: About },
-      { exact: true, path: "/PasswordReset/:RequestID", auth: false, component: PasswordReset },
+      { exact: true, path: "/Passwordreset/:RequestID", auth: false, component: PasswordReset },
       { exact: true, path: "/Forgetpassword", auth: false, component: Passwordforget },
       { exact: false, path: "*", auth: false, component: Notfoundpage },
     ]
@@ -322,7 +346,7 @@ class Routes extends Component {
       <Suspense fallback={<Spinner />}>
         <Switch>
           {routes.map((route, index) => {
-            return route.auth ? (((roles || []).includes('admin') || (roles || []).includes(route.permission)) ? <ProtectedRoute key={index} exact={route.exact} path={route.path} component={route.component} /> : null) :
+            return route.auth === true ? (((roles || []).includes('admin') || (roles || []).includes(route.permission)) ? <ProtectedRoute key={index} exact={route.exact} path={route.path} component={route.component} /> : null) :
               <Route key={index} exact={route.exact} path={route.path} component={route.component} />
           })}
         </Switch>

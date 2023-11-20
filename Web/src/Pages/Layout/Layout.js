@@ -18,8 +18,12 @@ export default class Layout extends Component {
       "/Forget-password",
       "/Forgetpassword",
       "/forgetpassword",
+      "/Passwordreset",
     ]
-    if (!routes.includes(window.location.pathname)) {
+
+    const currentPath = window.location.pathname;
+
+    if (!routes.some(route => currentPath.toLowerCase().startsWith(route.toLowerCase()))) {
       GetActiveUser()
       GetUserRoles()
       GetTableMeta()

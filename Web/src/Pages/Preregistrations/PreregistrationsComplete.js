@@ -79,7 +79,7 @@ export default class PreregistrationsComplete extends Component {
       if (!selected_record) {
         history.push("/Preregistrations")
       }
-      if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoadingstatus && !this.state.isDatafetched) {
+      if (selected_record && Object.keys(selected_record).length > 0 && selected_record?.Id !== 0 && !isLoadingstatus && !this.state.isDatafetched) {
 
         const filesthatwillcheck = [
           Literals.Options.usageType3[Profile.Language],
@@ -92,7 +92,7 @@ export default class PreregistrationsComplete extends Component {
           let errors = []
           const neededfiles = []
           filesthatwillcheck.forEach(usagetype => {
-            const foundedfile = (Files.list || []).find(u => u.ParentID === selected_record.Uuid && u.Usagetype === usagetype)
+            const foundedfile = (Files.list || []).find(u => u.ParentID === selected_record?.Uuid && u.Usagetype === usagetype)
             if (!foundedfile) {
               errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: `${usagetype} ${Literals.Messages.filerequired[Profile.Language]}` })
               neededfiles.push(usagetype)
@@ -140,7 +140,7 @@ export default class PreregistrationsComplete extends Component {
     let Id = match?.params?.PatientID
     const selected_record = (Patients.list || []).find(u => u.Uuid === Id)
 
-    const patientstocks = (Patientstocks.list || []).filter(stock => stock.PatientID === selected_record.Uuid).map(stock => {
+    const patientstocks = (Patientstocks.list || []).filter(stock => stock.PatientID === selected_record?.Uuid).map(stock => {
       let amount = 0.0;
       let movements = (Patientstockmovements.list || []).filter(u => u.StockID === stock.Uuid && u.Isactive && u.Isapproved)
       movements.forEach(movement => {
@@ -216,7 +216,7 @@ export default class PreregistrationsComplete extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Header as='h2' icon textAlign='center'>
-              {(Files.list || []).filter(u => u.Usagetype === 'PP' && u.ParentID === selected_record.Uuid).length > 0 ? <img src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${(Files.list || []).filter(u => u.ParentID === selected_record.Uuid).find(u => u.Usagetype === 'PP')?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
+              {(Files.list || []).filter(u => u.Usagetype === 'PP' && u.ParentID === selected_record?.Uuid).length > 0 ? <img src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${(Files.list || []).filter(u => u.ParentID === selected_record?.Uuid).find(u => u.Usagetype === 'PP')?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
                 : <Icon name='users' circular />}
               <Header.Content>{`${patientdefine?.Firstname} 
                             ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`}</Header.Content>
@@ -251,7 +251,7 @@ export default class PreregistrationsComplete extends Component {
                     description={patientstocks.filter(u => u.Ismedicine).map(stock => {
                       var stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
                       var unit = (Units.list || []).find(u => u.Uuid === stockdefine.UnitID)
-                      return `${stock.Amount} ${unit?.Name} ${stockdefine?.Name} `
+                      return `${stock.Amount} ${unit?.Name || ''} ${stockdefine?.Name} `
                     }).join('')}
                   />}
                   position='bottom left'
@@ -267,7 +267,7 @@ export default class PreregistrationsComplete extends Component {
                     description={patientstocks.filter(u => !u.Ismedicine).map(stock => {
                       var stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
                       var unit = (Units.list || []).find(u => u.Uuid === stockdefine.UnitID)
-                      return `${stock.Amount} ${unit?.Name} ${stockdefine?.Name} `
+                      return `${stock.Amount} ${unit?.Name || ''} ${stockdefine?.Name} `
                     }).join('')}
                   />}
                   position='bottom left'

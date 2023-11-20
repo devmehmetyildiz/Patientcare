@@ -9,6 +9,9 @@ const stockModel = require('./StockModel')
 const stockmovementModel = require('./StockmovementModel')
 const applog_warehouseModel = require('./Applog_warehouseModel')
 const warehouseModel = require('./WarehouseModel')
+const equipmentModel = require('./EquipmentModel')
+const equipmentgroupModel = require('./EquipmentgroupModel')
+const equipmentpropertyModel = require('./EquipmentpropertyModel')
 
 
 module.exports = {
@@ -22,5 +25,8 @@ module.exports = {
     stockModel,
     stockmovementModel,
     warehouseModel,
+    equipmentModel,
+    equipmentgroupModel,
+    equipmentpropertyModel,
     applog_warehouseModel,
 }

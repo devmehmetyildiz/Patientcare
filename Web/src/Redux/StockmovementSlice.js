@@ -156,6 +156,29 @@ export const ApproveStockmovements = createAsyncThunk(
     }
 );
 
+export const ApprovemultipleStockmovements = createAsyncThunk(
+    'Stockmovements/ApprovemultipleStockmovements',
+    async (data, { dispatch, getState }) => {
+        console.log('data: ', data);
+        try {
+            
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, `${ROUTES.STOCKMOVEMENT}/Approve`, data);
+            dispatch(fillStockmovementnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.approvedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillStockmovementnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const StockmovementsSlice = createSlice({
     name: 'Stockmovements',
     initialState: {
@@ -178,7 +201,7 @@ export const StockmovementsSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeStockmovementnotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
@@ -245,6 +268,17 @@ export const StockmovementsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(ApproveStockmovements.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ApprovemultipleStockmovements.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(ApprovemultipleStockmovements.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(ApprovemultipleStockmovements.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

@@ -24,7 +24,8 @@ export default function Settings(props) {
         Showexcelimport,
         Showcreatebutton,
         Additionalfunctiontxt,
-        Additionalfunction
+        Additionalfunction,
+        additionalButtonsize
     } = props
 
     const options = {

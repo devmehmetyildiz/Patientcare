@@ -73,39 +73,36 @@ module.exports.init = function (app) {
           res.json(result)
           break
 
-        default:
-          if (isBodyParseError(err)) {
-            res.status(err.statusCode)
-            res.json({
-              type: err.type,
-              code: 'BODY_PARSE_ERROR',
-              description: err.message,
-              callstack: (config.env === 'development' ? err.stack : '')
-            })
-          } else {
-            res.status(500)
-            res.json({
-              type: 'SERVER_ERROR',
-              code: 'SERVER_ERROR',
-              description: 'Unexpected internal server error happened.',
-              callstack: (config.env === 'development' ? err.stack : '')
-            })
-            console.error(err)
-            process.exit(1)
-          }
+          default:
+            if (isBodyParseError(err)) {
+              res.status(err.statusCode)
+              res.json({
+                type: err.type,
+                code: 'BODY_PARSE_ERROR',
+                description: err.message,
+                callstack: (config.env === 'development' ? err.stack : '')
+              })
+            } else {
+              res.status(500)
+              res.json({
+                type: 'SERVER_ERROR',
+                code: 'SERVER_ERROR',
+                description: 'Unexpected internal server error happened.',
+                callstack: (config.env === 'development' ? err.stack : '')
+              })
+            }
+        }
       }
-    }
-    else {
-      res.status(500)
-      res.json({
-        type: 'SERVER_ERROR',
-        code: 'SERVER_ERROR',
-        description: err.message
-      })
-      console.log('err: ', err);
-    }
-  })
-}
+      else {
+        res.status(500)
+        res.json({
+          type: 'SERVER_ERROR',
+          code: 'SERVER_ERROR',
+          description: err.message
+        })
+      }
+    })
+  }
 
 
 function isBodyParseError(err) {

@@ -1,12 +1,13 @@
 import { connect } from 'react-redux'
 import UnapprovedMovements from '../../Pages/Unapproveds/UnapprovedMovements'
-import { GetPatientstockmovements, removePatientstockmovementnotification, ApprovePatientstockmovements } from '../../Redux/PatientstockmovementSlice'
-import { GetPatientstocks, removePatientstocknotification } from '../../Redux/PatientstockSlice'
-import { GetStockmovements, removeStockmovementnotification, ApproveStockmovements } from '../../Redux/StockmovementSlice'
-import { GetStocks, removeStocknotification } from '../../Redux/StockSlice'
-import { GetPurchaseorderstockmovements, removePurchaseorderstockmovementnotification, ApprovePurchaseorderstockmovements } from '../../Redux/PurchaseorderstockmovementSlice'
-import { GetPurchaseorderstocks, removePurchaseorderstocknotification } from '../../Redux/PurchaseorderstockSlice'
-import { GetStockdefines, removeStockdefinenotification } from '../../Redux/StockdefineSlice'
+import { GetPatientstockmovements, ApprovemultiplePatientstockmovements } from '../../Redux/PatientstockmovementSlice'
+import { GetPatientstocks } from '../../Redux/PatientstockSlice'
+import { GetStockmovements, ApprovemultipleStockmovements, fillStockmovementnotification } from '../../Redux/StockmovementSlice'
+import { GetStocks } from '../../Redux/StockSlice'
+import { GetPurchaseorderstockmovements, ApprovemultiplePurchaseorderstockmovements } from '../../Redux/PurchaseorderstockmovementSlice'
+import { GetPurchaseorderstocks } from '../../Redux/PurchaseorderstockSlice'
+import { GetStockdefines } from '../../Redux/StockdefineSlice'
+import { GetUnits } from '../../Redux/UnitSlice'
 
 const mapStateToProps = (state) => ({
     Profile: state.Profile,
@@ -17,13 +18,14 @@ const mapStateToProps = (state) => ({
     Purchaseorderstockmovements: state.Purchaseorderstockmovements,
     Purchaseorderstocks: state.Purchaseorderstocks,
     Stockdefines: state.Stockdefines,
+    Units: state.Units,
 })
 
 const mapDispatchToProps = {
-    GetPatientstockmovements, removePatientstockmovementnotification, ApprovePatientstockmovements, GetPatientstocks, removePatientstocknotification,
-    GetStockmovements, removeStockmovementnotification, ApproveStockmovements, GetStocks, removeStocknotification,
-    GetPurchaseorderstockmovements, removePurchaseorderstockmovementnotification, ApprovePurchaseorderstockmovements,
-    GetPurchaseorderstocks, removePurchaseorderstocknotification, GetStockdefines, removeStockdefinenotification
+    GetPatientstockmovements, ApprovemultiplePatientstockmovements, GetPatientstocks,
+    GetStockmovements, ApprovemultipleStockmovements, GetStocks,
+    GetPurchaseorderstockmovements, ApprovemultiplePurchaseorderstockmovements,
+    GetPurchaseorderstocks, GetStockdefines, GetUnits, fillStockmovementnotification
 }
 
 
