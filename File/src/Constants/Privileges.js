@@ -249,6 +249,14 @@ const Priveleges = [
     { code: 'filedelete', text: 'Files Delete', group: ['Files'], required: [] },
     { code: 'filemanageview', text: 'Files Manage View', group: ['Files'], required: [] },
     { code: 'filegetreport', text: 'Files Get Report', group: ['Files'], required: [] },
+ 
+    { code: 'usernotificationscreen', text: 'Usernotifications Screen', group: ['Usernotifications'], required: [] },
+    { code: 'usernotificationview', text: 'Usernotifications View', group: ['Usernotifications'], required: [] },
+    { code: 'usernotificationadd', text: 'Usernotifications Add', group: ['Usernotifications'], required: [] },
+    { code: 'usernotificationupdate', text: 'Usernotifications Update', group: ['Usernotifications'], required: [] },
+    { code: 'usernotificationdelete', text: 'Usernotifications Delete', group: ['Usernotifications'], required: [] },
+    { code: 'usernotificationmanageview', text: 'Usernotifications Manage View', group: ['Usernotifications'], required: [] },
+    { code: 'usernotificationgetreport', text: 'Usernotifications Get Report', group: ['Usernotifications'], required: [] },
 
     { code: 'patientscreen', text: 'Patients Screen', group: ['Patients'], required: [] },
     { code: 'patientview', text: 'Patients View', group: ['Patients'], required: [] },

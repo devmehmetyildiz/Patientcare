@@ -27,6 +27,13 @@ const Routes = [
   { method: 'post', path: '/Roles', controller: 'Role', action: 'AddRole' },
   { method: 'put', path: '/Roles', controller: 'Role', action: 'UpdateRole' },
   { method: 'delete', path: '/Roles/:roleId', controller: 'Role', action: 'DeleteRole' },
+
+  { method: 'get', path: '/Usernotifications', controller: 'Usernotification', action: 'GetUsernotifications' },
+  { method: 'get', path: '/Usernotifications/:notificationId', controller: 'Usernotification', action: 'GetUsernotification' },
+  { method: 'get', path: '/Usernotifications/GetUsernotificationsbyUserid/:userId', controller: 'Usernotification', action: 'GetUsernotificationsbyUserid' },
+  { method: 'post', path: '/Usernotifications', controller: 'Usernotification', action: 'AddUsernotification' },
+  { method: 'put', path: '/Usernotifications', controller: 'Usernotification', action: 'UpdateUsernotification' },
+  { method: 'delete', path: '/Usernotifications/:notificationId', controller: 'Usernotification', action: 'DeleteUsernotification' },
 ]
 
 module.exports = Routes
