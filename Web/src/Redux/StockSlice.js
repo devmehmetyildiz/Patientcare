@@ -257,6 +257,28 @@ export const ApproveStocks = createAsyncThunk(
     }
 );
 
+export const ApprovemultipleStocks = createAsyncThunk(
+    'Stocks/ApprovemultipleStocks',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, `${ROUTES.STOCK}/Approve`, data);
+            dispatch(fillStocknotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.approvedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillStocknotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const StocksSlice = createSlice({
     name: 'Stocks',
     initialState: {
@@ -279,7 +301,7 @@ export const StocksSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeStocknotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
@@ -346,6 +368,17 @@ export const StocksSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(ApproveStocks.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ApprovemultipleStocks.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(ApprovemultipleStocks.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(ApprovemultipleStocks.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

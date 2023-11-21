@@ -155,6 +155,27 @@ export const ApprovePurchaseorderstocks = createAsyncThunk(
     }
 );
 
+export const ApprovemultiplePurchaseorderstocks = createAsyncThunk(
+    'Purchaseorderstocks/ApprovemultiplePurchaseorderstocks',
+    async (data, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Warehouse, `${ROUTES.PURCHASEORDERSTOCK}/Approve`, data);
+            dispatch(fillPurchaseorderstocknotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.approvedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPurchaseorderstocknotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 
 export const PurchaseorderstocksSlice = createSlice({
     name: 'Purchaseorderstocks',
@@ -178,7 +199,7 @@ export const PurchaseorderstocksSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removePurchaseorderstocknotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
@@ -234,6 +255,17 @@ export const PurchaseorderstocksSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(ApprovePurchaseorderstocks.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ApprovemultiplePurchaseorderstocks.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(ApprovemultiplePurchaseorderstocks.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(ApprovemultiplePurchaseorderstocks.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

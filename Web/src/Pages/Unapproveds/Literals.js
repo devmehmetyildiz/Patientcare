@@ -2,94 +2,100 @@ const Literals = {
     Options: {
     },
     Columns: {
-        CanSelect: {
-            tr: 'Çoklu Seçim Yap',
-            en: 'Select Multiple'
-        },
-        Multipleapprove: {
-            tr: 'Toplu Onayla',
-            en: 'Approve Multiple'
-        },
-        CanSelectclose: {
-            tr: 'Çoklu Seçimi Kapat',
-            en: 'Close Multiple Select'
-        },
-        Id: {
-            tr: 'Id',
-            en: 'Id'
-        },
-        Uuid: {
-            tr: 'Tekil ID',
-            en: 'Unique ID'
-        },
-        Stockdefine: {
-            tr: 'Ürün Adı',
-            en: 'Stock Name'
-        },
-        Department: {
-            tr: 'Departman',
-            en: 'Department'
-        },
-        Username: {
-            tr: 'Kullanıcı',
-            en: 'Username'
-        },
-        Movementdate: {
-            tr: 'Hareket Tarihi',
-            en: 'Movement Date'
-        },
-        Movementtype: {
-            tr: 'Hareket Türü',
-            en: 'Movement Type'
-        },
-        Amount: {
-            tr: 'Miktar',
-            en: 'Amount'
-        },
-        Prevvalue: {
-            tr: 'Önceki Değer',
-            en: 'Prev Value'
-        },
-        Newvalue: {
-            tr: 'Yeni Değer',
-            en: 'New Value'
-        },
-        Isapproved: {
-            tr: 'Onaylandı mı?',
-            en: 'Is Approved?'
-        },
-        Createduser: {
-            tr: 'Oluşturan Kullanıcı',
-            en: 'Created User'
-        },
-        Updateduser: {
-            tr: 'Güncelleyen Kullanıcı',
-            en: 'Updated User'
-        },
-        Createtime: {
-            tr: 'Oluşturma Tarihi',
-            en: 'Create Time'
-        },
-        Updatetime: {
-            tr: 'Güncelleme Tarihi',
-            en: 'Update Time'
-        },
-        edit: {
-            tr: 'Güncelle',
-            en: 'Edit'
-        },
-        approve: {
-            tr: 'Onayla',
-            en: 'Approve'
-        },
-        watch: {
-            tr: 'İzle',
-            en: 'Watch'
-        },
-        delete: {
-            tr: 'Sil',
-            en: 'Delete'
-        },
+        Movement: {
+            CanSelect: {
+                tr: 'Çoklu Seçim Yap',
+                en: 'Select Multiple'
+            },
+            Multipleapprove: {
+                tr: 'Toplu Onayla',
+                en: 'Approve Multiple'
+            },
+            Approve: {
+                tr: 'Hareket Onaylama',
+                en: 'Movement Approve'
+            },
+            CanSelectclose: {
+                tr: 'Çoklu Seçimi Kapat',
+                en: 'Close Multiple Select'
+            },
+            Id: {
+                tr: 'Id',
+                en: 'Id'
+            },
+            Uuid: {
+                tr: 'Tekil ID',
+                en: 'Unique ID'
+            },
+            Stockdefine: {
+                tr: 'Ürün Adı',
+                en: 'Stock Name'
+            },
+            Department: {
+                tr: 'Departman',
+                en: 'Department'
+            },
+            Username: {
+                tr: 'Kullanıcı',
+                en: 'Username'
+            },
+            Movementdate: {
+                tr: 'Hareket Tarihi',
+                en: 'Movement Date'
+            },
+            Movementtype: {
+                tr: 'Hareket Türü',
+                en: 'Movement Type'
+            },
+            Amount: {
+                tr: 'Miktar',
+                en: 'Amount'
+            },
+            Prevvalue: {
+                tr: 'Önceki Değer',
+                en: 'Prev Value'
+            },
+            Newvalue: {
+                tr: 'Yeni Değer',
+                en: 'New Value'
+            },
+            Isapproved: {
+                tr: 'Onaylandı mı?',
+                en: 'Is Approved?'
+            },
+            Createduser: {
+                tr: 'Oluşturan Kullanıcı',
+                en: 'Created User'
+            },
+            Updateduser: {
+                tr: 'Güncelleyen Kullanıcı',
+                en: 'Updated User'
+            },
+            Createtime: {
+                tr: 'Oluşturma Tarihi',
+                en: 'Create Time'
+            },
+            Updatetime: {
+                tr: 'Güncelleme Tarihi',
+                en: 'Update Time'
+            },
+            edit: {
+                tr: 'Güncelle',
+                en: 'Edit'
+            },
+            approve: {
+                tr: 'Onayla',
+                en: 'Approve'
+            },
+            watch: {
+                tr: 'İzle',
+                en: 'Watch'
+            },
+            delete: {
+                tr: 'Sil',
+                en: 'Delete'
+            },
+        }
     },
     Page: {
         Movement: {
@@ -196,6 +202,10 @@ const Literals = {
         Approvemovementmessage: {
             tr: "Seçili Hareketleri Onaylamak istiyormusunuz?",
             en: "Are you sure to approve selected movements"
+        },
+        Approvemovementmessagesingle: {
+            tr: "Seçili Hareketi Onaylamak istiyormusunuz?",
+            en: "Are you sure to approve selected movement"
         },
         Yes: {
             tr: "EVET",
