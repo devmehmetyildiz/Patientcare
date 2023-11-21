@@ -33,7 +33,15 @@ function DefaultColumnFilter({
 
 
 export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
-    const columns = useMemo(() => Columns, [Columns])
+    const columns = useMemo(() => {
+        const data = (Columns || [])
+            .map(u => {
+                return (Object.keys(u).find(u => u === 'visible')) ? (u.visible ? u : null) : u
+            })
+            .filter(u => u)
+        return data
+    }, [Columns])
+
     const data = useMemo(() => Data, [Data])
 
     const pageSizes = [

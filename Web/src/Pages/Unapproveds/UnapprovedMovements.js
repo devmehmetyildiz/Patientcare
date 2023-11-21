@@ -18,18 +18,21 @@ export default class UnapprovedMovements extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      canFilterstocks: true,
-      canFilterpurchaseorderstocks: true,
-      canFilterpatientstocks: true,
+      canFilterstocks: false,
+      canFilterpurchaseorderstocks: false,
+      canFilterpatientstocks: false,
       approveMultiplestocks: false,
       approveMultiplepurchaseorderstocks: false,
       approveMultiplepatientstocks: false,
       purchaseorders: [],
       patients: [],
       stocks: [],
-      stockmodalOpen: false,
-      purchaseordermodalOpen: false,
-      patientmodalOpen: false,
+      stock: '',
+      patient: '',
+      purchaseorder: '',
+      approvestocks: false,
+      approvepurchaseorderstocks: false,
+      approvepatientstocks: false,
     }
   }
 
@@ -59,8 +62,9 @@ export default class UnapprovedMovements extends Component {
 
   render() {
 
-    const { Profile, Patientstockmovements, fillStockmovementnotification, ApprovemultipleStockmovements, ApprovemultiplePurchaseorderstockmovements,
-      Stockmovements, Purchaseorderstockmovements, ApprovemultiplePatientstockmovements } = this.props
+    const { Profile, Patientstockmovements, fillStockmovementnotification, ApprovemultipleStockmovements,
+      ApprovemultiplePurchaseorderstockmovements, Stockmovements, Purchaseorderstockmovements, ApprovemultiplePatientstockmovements,
+      ApprovePatientstockmovements, ApproveStockmovements, ApprovePurchaseorderstockmovements } = this.props
 
     const colProps = {
       sortable: true,
@@ -69,55 +73,62 @@ export default class UnapprovedMovements extends Component {
     }
 
     let purchaseorderstockmovementColumns = [
-      { Header: "", accessor: 'Select', disableProps: true },
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', Firstheader: true, Cell: col => this.purchaseorderstockCellhandler(col) },
-      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', Subheader: true, Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Movementtype[Profile.Language], accessor: 'Movementtype', Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', Finalheader: true, Cell: col => this.purchaseorderstockamountCellhandler(col) },
-      { Header: Literals.Columns.Prevvalue[Profile.Language], accessor: 'Prevvalue', Cell: col => this.purchaseorderstockamountCellhandler(col) },
-      { Header: Literals.Columns.Newvalue[Profile.Language], accessor: 'Newvalue', Cell: col => this.purchaseorderstockamountCellhandler(col) },
-      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', },
+      { Header: "", accessor: 'Select', disableProps: true, visible: this.state.canFilterpurchaseorderstocks },
+      { Header: Literals.Columns.Movement.Id[Profile.Language], accessor: 'Id', },
+      { Header: Literals.Columns.Movement.Uuid[Profile.Language], accessor: 'Uuid', },
+      { Header: Literals.Columns.Movement.Stockdefine[Profile.Language], accessor: 'StockID', Firstheader: true, Cell: col => this.purchaseorderstockCellhandler(col) },
+      { Header: Literals.Columns.Movement.Movementdate[Profile.Language], accessor: 'Movementdate', Subheader: true, Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.Movement.Movementtype[Profile.Language], accessor: 'Movementtype', Cell: col => this.movementCellhandler(col) },
+      { Header: Literals.Columns.Movement.Amount[Profile.Language], accessor: 'Amount', Finalheader: true, Cell: col => this.purchaseorderstockamountCellhandler(col) },
+      { Header: Literals.Columns.Movement.Prevvalue[Profile.Language], accessor: 'Prevvalue', Cell: col => this.purchaseorderstockamountCellhandler(col) },
+      { Header: Literals.Columns.Movement.Newvalue[Profile.Language], accessor: 'Newvalue', Cell: col => this.purchaseorderstockamountCellhandler(col) },
+      { Header: Literals.Columns.Movement.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Movement.Createduser[Profile.Language], accessor: 'Createduser', },
+      { Header: Literals.Columns.Movement.Updateduser[Profile.Language], accessor: 'Updateduser', },
+      { Header: Literals.Columns.Movement.Createtime[Profile.Language], accessor: 'Createtime', },
+      { Header: Literals.Columns.Movement.Updatetime[Profile.Language], accessor: 'Updatetime', },
+      { Header: Literals.Columns.Movement.approve[Profile.Language], accessor: 'approve', disableFilters: true, disableProps: true, visible: !this.state.canFilterpurchaseorderstocks },
+
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     let patientstockmovementColumns = [
-      { Header: "", accessor: 'Select', disableProps: true },
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', Firstheader: true, Cell: col => this.patientstockCellhandler(col) },
-      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', Subheader: true, Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Movementtype[Profile.Language], accessor: 'Movementtype', Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', Finalheader: true, Cell: col => this.patientstockamountCellhandler(col) },
-      { Header: Literals.Columns.Prevvalue[Profile.Language], accessor: 'Prevvalue', Cell: col => this.patientstockamountCellhandler(col) },
-      { Header: Literals.Columns.Newvalue[Profile.Language], accessor: 'Newvalue', Cell: col => this.patientstockamountCellhandler(col) },
-      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', },
+      { Header: "", accessor: 'Select', disableProps: true, visible: this.state.canFilterpatientstocks },
+      { Header: Literals.Columns.Movement.Id[Profile.Language], accessor: 'Id', },
+      { Header: Literals.Columns.Movement.Uuid[Profile.Language], accessor: 'Uuid', },
+      { Header: Literals.Columns.Movement.Stockdefine[Profile.Language], accessor: 'StockID', Firstheader: true, Cell: col => this.patientstockCellhandler(col) },
+      { Header: Literals.Columns.Movement.Movementdate[Profile.Language], accessor: 'Movementdate', Subheader: true, Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.Movement.Movementtype[Profile.Language], accessor: 'Movementtype', Cell: col => this.movementCellhandler(col) },
+      { Header: Literals.Columns.Movement.Amount[Profile.Language], accessor: 'Amount', Finalheader: true, Cell: col => this.patientstockamountCellhandler(col) },
+      { Header: Literals.Columns.Movement.Prevvalue[Profile.Language], accessor: 'Prevvalue', Cell: col => this.patientstockamountCellhandler(col) },
+      { Header: Literals.Columns.Movement.Newvalue[Profile.Language], accessor: 'Newvalue', Cell: col => this.patientstockamountCellhandler(col) },
+      { Header: Literals.Columns.Movement.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Movement.Createduser[Profile.Language], accessor: 'Createduser', },
+      { Header: Literals.Columns.Movement.Updateduser[Profile.Language], accessor: 'Updateduser', },
+      { Header: Literals.Columns.Movement.Createtime[Profile.Language], accessor: 'Createtime', },
+      { Header: Literals.Columns.Movement.Updatetime[Profile.Language], accessor: 'Updatetime', },
+      { Header: Literals.Columns.Movement.approve[Profile.Language], accessor: 'approve', disableFilters: true, disableProps: true, visible: !this.state.canFilterpatientstocks },
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     let movementColumns = [
-      { Header: "", accessor: 'Select', disableProps: true },
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', Firstheader: true, Cell: col => this.stockCellhandler(col) },
-      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', Subheader: true, Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Movementtype[Profile.Language], accessor: 'Movementtype', Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', Finalheader: true, Cell: col => this.stockamountCellhandler(col) },
-      { Header: Literals.Columns.Prevvalue[Profile.Language], accessor: 'Prevvalue', Cell: col => this.stockamountCellhandler(col) },
-      { Header: Literals.Columns.Newvalue[Profile.Language], accessor: 'Newvalue', Cell: col => this.stockamountCellhandler(col) },
-      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', },
+      { Header: "", accessor: 'Select', disableProps: true, visible: this.state.canFilterstocks },
+      { Header: Literals.Columns.Movement.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.Columns.Movement.Uuid[Profile.Language], accessor: 'Uuid', },
+      { Header: Literals.Columns.Movement.Stockdefine[Profile.Language], accessor: 'StockID', Firstheader: true, Cell: col => this.stockCellhandler(col) },
+      { Header: Literals.Columns.Movement.Movementdate[Profile.Language], accessor: 'Movementdate', Subheader: true, Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.Movement.Movementtype[Profile.Language], accessor: 'Movementtype', Cell: col => this.movementCellhandler(col) },
+      { Header: Literals.Columns.Movement.Amount[Profile.Language], accessor: 'Amount', Finalheader: true, Cell: col => this.stockamountCellhandler(col) },
+      { Header: Literals.Columns.Movement.Prevvalue[Profile.Language], accessor: 'Prevvalue', Cell: col => this.stockamountCellhandler(col) },
+      { Header: Literals.Columns.Movement.Newvalue[Profile.Language], accessor: 'Newvalue', Cell: col => this.stockamountCellhandler(col) },
+      { Header: Literals.Columns.Movement.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Movement.Createduser[Profile.Language], accessor: 'Createduser', },
+      { Header: Literals.Columns.Movement.Updateduser[Profile.Language], accessor: 'Updateduser', },
+      { Header: Literals.Columns.Movement.Createtime[Profile.Language], accessor: 'Createtime', },
+      { Header: Literals.Columns.Movement.Updatetime[Profile.Language], accessor: 'Updatetime', },
+      { Header: Literals.Columns.Movement.approve[Profile.Language], accessor: 'approve', disableFilters: true, disableProps: true, visible: !this.state.canFilterstocks },
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+
+
+
 
 
     const stockmovementlist = (Stockmovements.list || []).filter(u => u.Isactive && !u.Isapproved).map(item => {
@@ -132,6 +143,9 @@ export default class UnapprovedMovements extends Component {
               : this.setState({ stocks: [item.Uuid, ...this.state.stocks] })
           }
           } />,
+        approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+          this.setState({ stock: item.Uuid, approvestocks: true })
+        }} />,
       }
     })
 
@@ -147,6 +161,9 @@ export default class UnapprovedMovements extends Component {
               : this.setState({ purchaseorders: [item.Uuid, ...this.state.purchaseorders] })
           }
           } />,
+        approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+          this.setState({ purchaseorder: item.Uuid, approvepurchaseorderstocks: true })
+        }} />,
       }
     })
 
@@ -162,6 +179,9 @@ export default class UnapprovedMovements extends Component {
               : this.setState({ patients: [item.Uuid, ...this.state.patients] })
           }
           } />,
+        approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+          this.setState({ patient: item.Uuid, approvepatientstocks: true })
+        }} />,
       }
     })
 
@@ -202,18 +222,21 @@ export default class UnapprovedMovements extends Component {
                           {Profile.Ismobile ?
                             <MobileTable Columns={movementColumns} Data={stockmovementlist} Config={stockmovementInitialconfig} Profile={Profile} /> :
                             <div className='flex flex-col w-full justify-center items-center gap-2'>
-                              <div className='flex flex-row  justify-end items-center w-full'>
-                                {this.state.canFilterstocks && this.state.stocks.length > 0
-                                  ? <Button color='violet' floated='right' onClick={() => { this.setState({ approveMultiplestocks: true }) }} >{Literals.Columns.Multipleapprove[Profile.Language]}</Button>
-                                  : null}
-                                <Settings
-                                  Profile={Profile}
-                                  Columns={movementColumns}
-                                  list={stockmovementlist}
-                                  initialConfig={stockmovementInitialconfig}
-                                  metaKey={stockmovementMetaKey}
-                                  Showcolumnchooser
-                                />
+                              <div className='flex flex-row  justify-between items-center w-full'>
+                                <Button size='mini' onClick={() => { this.setState({ canFilterstocks: !this.state.canFilterstocks, stocks: [] }) }} >{this.state.canFilterstocks ? Literals.Columns.Movement.CanSelectclose[Profile.Language] : Literals.Columns.Movement.CanSelect[Profile.Language]}</Button>
+                                <div className='flex flex-row  justify-end items-center w-full'>
+                                  {this.state.canFilterstocks && this.state.stocks.length > 0
+                                    ? <Button color='violet' onClick={() => { this.setState({ approveMultiplestocks: true }) }} >{Literals.Columns.Movement.Multipleapprove[Profile.Language]}</Button>
+                                    : null}
+                                  <Settings
+                                    Profile={Profile}
+                                    Columns={movementColumns}
+                                    list={stockmovementlist}
+                                    initialConfig={stockmovementInitialconfig}
+                                    metaKey={stockmovementMetaKey}
+                                    Showcolumnchooser
+                                  />
+                                </div>
                               </div>
                               <DataTable Columns={movementColumns} Data={stockmovementlist} Config={stockmovementInitialconfig} />
                             </div>
@@ -234,10 +257,10 @@ export default class UnapprovedMovements extends Component {
                             <MobileTable Columns={patientstockmovementColumns} Data={patientstockmovementlist} Config={patientstockmovementInitialconfig} Profile={Profile} /> :
                             <div className='flex flex-col w-full justify-center items-center gap-2'>
                               <div className='flex flex-row  justify-between items-center w-full'>
-                                <Button size='mini' onClick={() => { this.setState({ canFilterpatientstocks: !this.state.canFilterpatientstocks }) }} >{this.state.canFilterpatientstocks ? Literals.Columns.CanSelectclose[Profile.Language] : Literals.Columns.CanSelect[Profile.Language]}</Button>
-                                <div className='flex flex-row justify-center items-center'>
+                                <Button size='mini' onClick={() => { this.setState({ canFilterpatientstocks: !this.state.canFilterpatientstocks, patients: [] }) }} >{this.state.canFilterpatientstocks ? Literals.Columns.Movement.CanSelectclose[Profile.Language] : Literals.Columns.Movement.CanSelect[Profile.Language]}</Button>
+                                <div className='flex flex-row  justify-end items-center w-full'>
                                   {this.state.canFilterpatientstocks && this.state.patients.length > 0
-                                    ? <Button size='mini' onClick={() => { this.setState({ approveMultiplepatientstocks: true }) }} >{Literals.Columns.Multipleapprove[Profile.Language]}</Button>
+                                    ? <Button color='violet' onClick={() => { this.setState({ approveMultiplepatientstocks: true }) }} >{Literals.Columns.Movement.Multipleapprove[Profile.Language]}</Button>
                                     : null}
                                   <Settings
                                     Profile={Profile}
@@ -268,10 +291,10 @@ export default class UnapprovedMovements extends Component {
                             <MobileTable Columns={purchaseorderstockmovementColumns} Data={purchaseorderstockmovementlist} Config={purchaseorderstockmovementInitialconfig} Profile={Profile} /> :
                             <div className='flex flex-col w-full justify-center items-center gap-2'>
                               <div className='flex flex-row  justify-between items-center w-full'>
-                                <Button size='mini' onClick={() => { this.setState({ canFilterpurchaseorderstocks: !this.state.canFilterpurchaseorderstocks }) }} >{this.state.canFilterpurchaseorderstocks ? Literals.Columns.CanSelectclose[Profile.Language] : Literals.Columns.CanSelect[Profile.Language]}</Button>
-                                <div className='flex flex-row justify-center items-center'>
+                                <Button size='mini' onClick={() => { this.setState({ canFilterpurchaseorderstocks: !this.state.canFilterpurchaseorderstocks, purchaseorderstocks: [] }) }} >{this.state.canFilterpurchaseorderstocks ? Literals.Columns.Movement.CanSelectclose[Profile.Language] : Literals.Columns.Movement.CanSelect[Profile.Language]}</Button>
+                                <div className='flex flex-row  justify-end items-center w-full'>
                                   {this.state.canFilterpurchaseorderstocks && this.state.purchaseorders.length > 0
-                                    ? <Button size='mini' onClick={() => { this.setState({ approveMultiplepurchaseorderstocks: true }) }} >{Literals.Columns.Multipleapprove[Profile.Language]}</Button>
+                                    ? <Button color='violet' onClick={() => { this.setState({ approveMultiplepurchaseorderstocks: true }) }} >{Literals.Columns.Movement.Multipleapprove[Profile.Language]}</Button>
                                     : null}
                                   <Settings
                                     Profile={Profile}
@@ -300,7 +323,7 @@ export default class UnapprovedMovements extends Component {
           onOpen={() => { this.setState({ approveMultiplestocks: true }) }}
           open={this.state.approveMultiplestocks}
         >
-          <Modal.Header> {Literals.Columns.Multipleapprove[Profile.Language]}</Modal.Header>
+          <Modal.Header> {Literals.Columns.Movement.Multipleapprove[Profile.Language]}</Modal.Header>
           <Modal.Content image className='!block'>
             <Modal.Description>
               {Literals.Messages.Approvemovementmessage[Profile.Language]}
@@ -324,7 +347,6 @@ export default class UnapprovedMovements extends Component {
                     fillStockmovementnotification(error)
                   })
                 } else {
-                  console.log('this.state.stocks: ', this.state.stocks);
                   ApprovemultipleStockmovements(this.state.stocks)
                   this.setState({ approveMultiplestocks: false })
                 }
@@ -338,7 +360,7 @@ export default class UnapprovedMovements extends Component {
           onOpen={() => { this.setState({ approveMultiplepatientstocks: true }) }}
           open={this.state.approveMultiplepatientstocks}
         >
-          <Modal.Header> {Literals.Columns.Multipleapprove[Profile.Language]}</Modal.Header>
+          <Modal.Header> {Literals.Columns.Movement.Multipleapprove[Profile.Language]}</Modal.Header>
           <Modal.Content image className='!block'>
             <Modal.Description>
               {Literals.Messages.Approvemovementmessage[Profile.Language]}
@@ -375,7 +397,7 @@ export default class UnapprovedMovements extends Component {
           onOpen={() => { this.setState({ approveMultiplepurchaseorderstocks: true }) }}
           open={this.state.approveMultiplepurchaseorderstocks}
         >
-          <Modal.Header> {Literals.Columns.Multipleapprove[Profile.Language]}</Modal.Header>
+          <Modal.Header> {Literals.Columns.Movement.Multipleapprove[Profile.Language]}</Modal.Header>
           <Modal.Content image className='!block'>
             <Modal.Description>
               {Literals.Messages.Approvemovementmessage[Profile.Language]}
@@ -401,6 +423,117 @@ export default class UnapprovedMovements extends Component {
                 } else {
                   ApprovemultiplePurchaseorderstockmovements(this.state.purchaseorders)
                   this.setState({ approveMultiplepurchaseorderstocks: false })
+                }
+              }}
+              positive
+            />
+          </Modal.Actions>
+        </Modal>
+        <Modal
+          onClose={() => { this.setState({ approvestocks: false }) }}
+          onOpen={() => { this.setState({ approvestocks: true }) }}
+          open={this.state.approvestocks}
+        >
+          <Modal.Header> {Literals.Columns.Movement.Multipleapprove[Profile.Language]}</Modal.Header>
+          <Modal.Content image className='!block'>
+            <Modal.Description>
+              {Literals.Messages.Approvemovementmessagesingle[Profile.Language]}
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color='black' onClick={() => { this.setState({ approvestocks: false }) }}>
+              {Literals.Button.Close[Profile.Language]}
+            </Button>
+            <Button
+              content={Literals.Button.Approve[Profile.Language]}
+              labelPosition='right'
+              icon='checkmark'
+              onClick={() => {
+                let errors = []
+                if (!validator.isString(this.state.stock)) {
+                  errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Needmovement[Profile.Language] })
+                }
+                if (errors.length > 0) {
+                  errors.forEach(error => {
+                    fillStockmovementnotification(error)
+                  })
+                } else {
+                  ApproveStockmovements({ Uuid: this.state.stock })
+                  this.setState({ approvestocks: false })
+                }
+              }}
+              positive
+            />
+          </Modal.Actions>
+        </Modal>
+        <Modal
+          onClose={() => { this.setState({ approvepurchaseorderstocks: false }) }}
+          onOpen={() => { this.setState({ approvepurchaseorderstocks: true }) }}
+          open={this.state.approvepurchaseorderstocks}
+        >
+          <Modal.Header> {Literals.Columns.Movement.Multipleapprove[Profile.Language]}</Modal.Header>
+          <Modal.Content image className='!block'>
+            <Modal.Description>
+              {Literals.Messages.Approvemovementmessagesingle[Profile.Language]}
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color='black' onClick={() => { this.setState({ approvepurchaseorderstocks: false }) }}>
+              {Literals.Button.Close[Profile.Language]}
+            </Button>
+            <Button
+              content={Literals.Button.Approve[Profile.Language]}
+              labelPosition='right'
+              icon='checkmark'
+              onClick={() => {
+                let errors = []
+                if (!validator.isString(this.state.purchaseorder)) {
+                  errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Needmovement[Profile.Language] })
+                }
+                if (errors.length > 0) {
+                  errors.forEach(error => {
+                    fillStockmovementnotification(error)
+                  })
+                } else {
+                  ApprovePurchaseorderstockmovements({ Uuid: this.state.purchaseorder })
+                  this.setState({ approvepurchaseorderstocks: false })
+                }
+              }}
+              positive
+            />
+          </Modal.Actions>
+        </Modal>
+        <Modal
+          onClose={() => { this.setState({ approvepatientstocks: false }) }}
+          onOpen={() => { this.setState({ approvepatientstocks: true }) }}
+          open={this.state.approvepatientstocks}
+        >
+          <Modal.Header> {Literals.Columns.Movement.Multipleapprove[Profile.Language]}</Modal.Header>
+          <Modal.Content image className='!block'>
+            <Modal.Description>
+              {Literals.Messages.Approvemovementmessagesingle[Profile.Language]}
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color='black' onClick={() => { this.setState({ approvepatientstocks: false }) }}>
+              {Literals.Button.Close[Profile.Language]}
+            </Button>
+            <Button
+              content={Literals.Button.Approve[Profile.Language]}
+              labelPosition='right'
+              icon='checkmark'
+              onClick={() => {
+                let errors = []
+                if (!validator.isString(this.state.patient)) {
+                  errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Needmovement[Profile.Language] })
+                }
+                if (errors.length > 0) {
+                  errors.forEach(error => {
+                    fillStockmovementnotification(error)
+                  })
+                } else {
+                  ApprovePatientstockmovements({ Uuid: this.state.patient })
+                  this.setState({ approvepatientstocks: false })
                 }
               }}
               positive
