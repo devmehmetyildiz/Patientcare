@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 global.Sequelize = Sequelize
 const db = {};
 const config = require('../Config');
-const ftp = require('basic-ftp')
+
 
 const makeSureMysqlThatConnect = () => new Promise((resolve, reject) => {
 
@@ -26,20 +26,7 @@ const makeSureMysqlThatConnect = () => new Promise((resolve, reject) => {
             })
             sequelize.sync({ /* force: true */ alter: true }).then(() => {
                 console.log('Database synced successfully.');
-
-                const server = {
-                    host: config.ftp.host,
-                    user: config.ftp.user,
-                    password: config.ftp.password
-                };
-
-                const client = new ftp.Client();
-                client.access(server).then(() => {
-                    global.client = client
-                    console.log('Ftp synced successfully.');
-                    resolve()
-                });
-
+                resolve()
             });
         })
         .catch(err => {
