@@ -46,6 +46,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
 
     const pageSizes = [
         { key: '15', value: 15, text: '15' },
+        { key: '20', value: 20, text: '20' },
         { key: '30', value: 30, text: '30' },
         { key: '45', value: 45, text: '45' },
     ]

@@ -242,7 +242,7 @@ export default class PatientsDetail extends Component {
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
-          <Contentwrapper additionalStyle="max-h-[calc(89vh-59px-2rem)]">
+          <Contentwrapper additionalStyle="max-h-[calc(91vh-59px-2rem)]">
             <Grid divided className='w-full flex justify-center items-center'>
               <Grid.Row>
                 <GridColumn width={14} >
