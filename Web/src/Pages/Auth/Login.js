@@ -12,7 +12,7 @@ class Login extends Component {
         const { Profile } = this.props
 
         return (
-            <div style={{ backgroundImage: `url(${img.loginbg})` }} className=' font-Common w-full h-[100vh] justify-center items-center flex bg-gray-100' >
+            <div style={{ backgroundImage: `url(${img.loginbg})`, backgroundPosition: 'center', backgroundSize: 'cover' }} className=' font-Common w-full h-[100vh] justify-center items-center flex bg-gray-100' >
                 <div className='bg-white rounded-lg w-4/5 md:w-[40vmin] lg:w-[40vmin]  shadow-sm shadow-white'>
                     <div className=' bg-[#2355a0] w-[20%] pb-[20%]   rounded-tl-lg rounded-br-[100%] ' />
                     <Grid textAlign='center' verticalAlign='middle'>
@@ -32,7 +32,7 @@ class Login extends Component {
                                 <div className='mt-4 w-full flex flex-col justify-end items-end'>
                                     <Link to='/Forgetpassword' className='text-[#3d3d3d] text-sm whitespace-nowrap'><Icon className='text-[#2355a0]' name='key' /> Parolamı Unuttum</Link>
                                     <div className='w-1/3 mt-2'>
-                                        <Button  loading={Profile.isLogging} className='mt-8 !bg-[#2355a0]'  fluid size='medium' >Giriş Yap</Button>
+                                        <Button loading={Profile.isLogging} className='mt-8 !bg-[#2355a0]' fluid size='medium' >Giriş Yap</Button>
                                     </div>
                                 </div>
                                 <div className='mt-4 flex flex-col justify-center items-center'>
@@ -47,6 +47,7 @@ class Login extends Component {
             </div>
         )
     }
+    
     LoginHandler = (event) => {
         event.preventDefault()
         const { history, logIn, Profile, fillnotification } = this.props

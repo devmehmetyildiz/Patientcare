@@ -91,7 +91,7 @@ export default class Preregistrations extends Component {
         ...item,
         Filestxt: "",
         Stockstxt: "",
-        actions: <React.Fragment>
+        actions: <React.Fragment key={Math.random()}>
           <Popup
             trigger={<Icon className='cursor-pointer' name='ellipsis vertical' />}
             content={<div className='flex flex-col justify-start items-start w-full gap-2'>
