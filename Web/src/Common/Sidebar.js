@@ -57,6 +57,7 @@ export function Sidebar(props) {
             icon: <TbGauge className=' text-blue-700' />,
             items: [
                 { id: 1, subtitle: Literals.Unapproveds.Page.Movement.Pageheader[Profile.Language], url: "/UnapprovedMovements", permission: checkAuth('stockmovementscreen') },
+                { id: 2, subtitle: Literals.Personels.Page.Pageheader[Profile.Language], url: "/Personels", permission: checkAuth('personelscreen') },
             ]
         },
         {

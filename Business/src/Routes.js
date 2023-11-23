@@ -26,6 +26,12 @@ const Routes = [
     { method: 'put', path: '/Patientmovements', controller: 'Patientmovement', action: 'UpdatePatientmovement' },
     { method: 'delete', path: '/Patientmovements/:patientmovementId', controller: 'Patientmovement', action: 'DeletePatientmovement' },
 
+    { method: 'get', path: '/Personels/:personelId', controller: 'Personel', action: 'GetPersonel' },
+    { method: 'get', path: '/Personels', controller: 'Personel', action: 'GetPersonels' },
+    { method: 'post', path: '/Personels', controller: 'Personel', action: 'AddPersonel' },
+    { method: 'put', path: '/Personels', controller: 'Personel', action: 'UpdatePersonel' },
+    { method: 'delete', path: '/Personels/:personelId', controller: 'Personel', action: 'DeletePersonel' },
+
     { method: 'get', path: '/Todos/GetTodosbyPatientID/:patientId', controller: 'Todo', action: 'GetTodosbyPatientID' },
     { method: 'get', path: '/Todos/:todoId', controller: 'Todo', action: 'GetTodo' },
     { method: 'get', path: '/Todos', controller: 'Todo', action: 'GetTodos' },

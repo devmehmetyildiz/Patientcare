@@ -180,6 +180,10 @@ const Equipments = lazy(() => import('./Containers/Equipments/Equipments'));
 const EquipmentsCreate = lazy(() => import('./Containers/Equipments/EquipmentsCreate'));
 const EquipmentsEdit = lazy(() => import('./Containers/Equipments/EquipmentsEdit'));
 
+const Personels = lazy(() => import('./Containers/Personels/Personels'));
+const PersonelsCreate = lazy(() => import('./Containers/Personels/PersonelsCreate'));
+const PersonelsEdit = lazy(() => import('./Containers/Personels/PersonelsEdit'));
+
 const UnapprovedMovements = lazy(() => import('./Containers/Unapproveds/UnapprovedMovements'));
 
 const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
@@ -327,6 +331,9 @@ class Routes extends Component {
       { exact: true, path: "/Equipments", auth: true, component: Equipments, permission: 'equipmentscreen' },
       { exact: true, path: "/Equipments/Create", auth: true, component: EquipmentsCreate, permission: 'equipmentscreen' },
       { exact: true, path: "/Equipments/:EquipmentID/Edit", auth: true, component: EquipmentsEdit, permission: 'equipmentscreen' },
+      { exact: true, path: "/Personels", auth: true, component: Personels, permission: 'personelscreen' },
+      { exact: true, path: "/Personels/Create", auth: true, component: PersonelsCreate, permission: 'personelscreen' },
+      { exact: true, path: "/Personels/:PersonelID/Edit", auth: true, component: PersonelsEdit, permission: 'personelscreen' },
       { exact: true, path: "/UnapprovedMovements", auth: true, component: UnapprovedMovements, permission: 'stockmovementscreen' },
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'patientscreen' },

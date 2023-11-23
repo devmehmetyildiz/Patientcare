@@ -96,5 +96,5 @@ class App extends Component {
 
 
 }
-App.contextType = FormContext
 export default withRouter(App);
+App.contextType = FormContext

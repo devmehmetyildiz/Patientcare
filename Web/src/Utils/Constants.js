@@ -12,6 +12,7 @@ export const ROUTES = {
     PATIENTTYPE: 'Patienttypes',
     PATIENTREPORT: 'Patientreport',
     PATIENTDEFINE: 'Patientdefines',
+    PERSONEL: 'Personels',
 
     COSTUMERTYPE: 'Costumertypes',
     CASE: 'Cases',

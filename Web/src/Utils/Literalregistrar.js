@@ -40,6 +40,7 @@ import Unapproveds from "../Pages/Unapproveds/Literals"
 import Shifts from "../Pages/Shifts/Literals"
 import Equipmentgroups from "../Pages/Equipmentgroups/Literals"
 import Equipments from "../Pages/Equipments/Literals"
+import Personels from "../Pages/Personels/Literals"
 
 const Literals = {
     Cases,
@@ -83,7 +84,8 @@ const Literals = {
     Unapproveds,
     Shifts,
     Equipmentgroups,
-    Equipments
+    Equipments,
+    Personels
 }
 
 export default Literals
