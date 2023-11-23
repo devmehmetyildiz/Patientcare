@@ -87,6 +87,7 @@ export default class PreregistrationsComplete extends Component {
           Literals.Options.usageType5[Profile.Language],
           Literals.Options.usageType6[Profile.Language],
           Literals.Options.usageType7[Profile.Language],
+          Literals.Options.usageType8[Profile.Language],
         ]
         if (!isLoadingstatus && !this.state.isFilechecked) {
           let errors = []
@@ -155,6 +156,7 @@ export default class PreregistrationsComplete extends Component {
       Literals.Options.usageType5[Profile.Language],
       Literals.Options.usageType6[Profile.Language],
       Literals.Options.usageType7[Profile.Language],
+      Literals.Options.usageType8[Profile.Language],
     ]
 
     const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {

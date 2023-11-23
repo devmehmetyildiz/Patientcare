@@ -32,6 +32,10 @@ const Literals = {
             tr: 'Genel Vucut Kontrol Formu',
             en: 'Genel Vucut Kontrol Formu'
         },
+        usageType8: {
+            tr: 'Sağlık Kurul Raporu',
+            en: 'Sağlık Kurul Raporu'
+        },
         TableColumnsOrder: {
             tr: 'Sıra',
             en: 'Order'
@@ -406,6 +410,10 @@ const Literals = {
         CaseID: {
             tr: "Durum Gerekli",
             en: "Case Required"
+        },
+        PatientIDdidntcatch: {
+            tr: "Hasta ID'si tespit edilemedi, lütfen sayfayı yenileyiniz",
+            en: "Patient Id didint catch please refresh page"
         },
         Registerdaterequired: {
             tr: "Kayıt Tarihi Gerekli",

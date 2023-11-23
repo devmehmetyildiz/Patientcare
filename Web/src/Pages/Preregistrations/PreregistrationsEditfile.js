@@ -20,6 +20,7 @@ import { useDropzone } from 'react-dropzone';
 
 export default function PreregistrationsEditfile(props) {
 
+    const [patient, setPatient] = useState({})
     const [isDatafetched, setisDatafetched] = useState(false)
     const [selectedFiles, setselectedFiles] = useState([])
 
@@ -46,28 +47,34 @@ export default function PreregistrationsEditfile(props) {
                     key: Math.random()
                 }
             });
-            setselectedFiles(response || [])
+            setselectedFiles([...response] || [])
             setisDatafetched(true)
+            setPatient(selected_record)
         }
     })
 
     const AddNewFile = () => {
-        const { Patients } = this.props
-        setselectedFiles([...selectedFiles, {
-            Name: '',
-            ParentID: Patients.selected_record?.Uuid,
-            Filename: '',
-            Filefolder: '',
-            Filepath: '',
-            Filetype: '',
-            Usagetype: '',
-            Canteditfile: false,
-            File: {},
-            key: Math.random(),
-            WillDelete: false,
-            fileChanged: true,
-            Order: selectedFiles.length,
-        }])
+        if (validator.isUUID(patient?.Uuid)) {
+            setselectedFiles(oldfiles => [...oldfiles, {
+                Name: '',
+                ParentID: patient?.Uuid,
+                Filename: '',
+                Filefolder: '',
+                Filepath: '',
+                Filetype: '',
+                Usagetype: '',
+                Canteditfile: false,
+                File: {},
+                key: Math.random(),
+                WillDelete: false,
+                fileChanged: true,
+                Order: selectedFiles.length,
+            }])
+        } else {
+            const { fillFilenotification, Profile } = props
+            fillFilenotification({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PatientIDdidntcatch[Profile.Language] })
+
+        }
     }
 
 
@@ -77,11 +84,11 @@ export default function PreregistrationsEditfile(props) {
 
         if (selectedfiles[index].Uuid) {
             selectedfiles[index].WillDelete = !(selectedfiles[index].WillDelete)
-            setselectedFiles(selectedfiles)
+            setselectedFiles([...selectedfiles])
         } else {
             let files = selectedfiles.filter(file => file.key !== key)
             files.filter(file => file.Order > order).forEach(file => file.Order--)
-            setselectedFiles(files)
+            setselectedFiles([...files])
         }
     }
 
@@ -96,7 +103,7 @@ export default function PreregistrationsEditfile(props) {
         }
         selectedfiles[index].fileChanged = !(selectedfiles[index].fileChanged)
         selectedfiles[index].File = {}
-        setselectedFiles(selectedfiles)
+        setselectedFiles([...selectedfiles])
     }
 
     const selectedFilesChangeHandler = (key, property, value) => {
@@ -116,7 +123,7 @@ export default function PreregistrationsEditfile(props) {
         } else {
             selectedfiles[index][property] = value
         }
-        setselectedFiles(selectedfiles)
+        setselectedFiles([...selectedfiles])
     }
 
     const DataCleaner = (data) => {
@@ -177,36 +184,40 @@ export default function PreregistrationsEditfile(props) {
     }
 
     const onDrop = useCallback((acceptedFiles) => {
-        const { Patients } = props
+        if (validator.isUUID(patient?.Uuid)) {
+            let files = []
+            for (const file of acceptedFiles) {
+                files.push({
+                    Name: file?.name,
+                    ParentID: patient?.Uuid,
+                    Filename: file?.name,
+                    Filefolder: '',
+                    Filepath: '',
+                    Filetype: '',
+                    Usagetype: '',
+                    Canteditfile: false,
+                    File: file,
+                    key: Math.random(),
+                    WillDelete: false,
+                    fileChanged: false,
+                    Order: selectedFiles.length,
+                })
+            }
+            setselectedFiles(oldfiles => [...oldfiles, ...files])
+        } else {
+            const { fillFilenotification, Profile } = props
+            fillFilenotification({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PatientIDdidntcatch[Profile.Language] })
 
-        let files = []
-        for (const file of acceptedFiles) {
-            files.push({
-                Name: file?.name,
-                ParentID: Patients.selected_record?.Uuid,
-                Filename: file?.name,
-                Filefolder: '',
-                Filepath: '',
-                Filetype: '',
-                Usagetype: '',
-                Canteditfile: false,
-                File: file,
-                key: Math.random(),
-                WillDelete: false,
-                fileChanged: false,
-                Order: selectedFiles.length,
-            })
         }
-        setselectedFiles(oldfiles => [...oldfiles, ...files])
-    }, []);
+    }, [patient]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, multiple: true, noClick: true });
 
     const { Files, Patients, Profile, history, Patientdefines, PatientID, match } = props
-    const { selected_record, isLoading, isDispatching } = Patients
+    const { isLoading, isDispatching } = Patients
 
-    const patientDefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
-    const patientPp = (Files.list || []).find(u => u.ParentID === selected_record?.Uuid && u.Usagetype === 'PP' && u.Isactive)
+    const patientDefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+    const patientPp = (Files.list || []).find(u => u.ParentID === patient?.Uuid && u.Usagetype === 'PP' && u.Isactive)
     const Id = match?.params?.PatientID || PatientID
     const usagetypes = [
         { key: Literals.Options.usageType0[Profile.Language], text: Literals.Options.usageType0[Profile.Language], value: Literals.Options.usageType0[Profile.Language] },
@@ -217,6 +228,7 @@ export default function PreregistrationsEditfile(props) {
         { key: Literals.Options.usageType5[Profile.Language], text: Literals.Options.usageType5[Profile.Language], value: Literals.Options.usageType5[Profile.Language] },
         { key: Literals.Options.usageType6[Profile.Language], text: Literals.Options.usageType6[Profile.Language], value: Literals.Options.usageType6[Profile.Language] },
         { key: Literals.Options.usageType7[Profile.Language], text: Literals.Options.usageType7[Profile.Language], value: Literals.Options.usageType7[Profile.Language] },
+        { key: Literals.Options.usageType8[Profile.Language], text: Literals.Options.usageType8[Profile.Language], value: Literals.Options.usageType8[Profile.Language] },
     ]
 
     return (
@@ -285,7 +297,7 @@ export default function PreregistrationsEditfile(props) {
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {file.fileChanged
-                                                    ? <Icon active={!file.WillDelete} onClick={() => { handleFilechange(file.key, file.fileChanged) }} className='cursor-pointer' color='red' name='times circle' />
+                                                    ? <Icon disabled={!file.WillDelete} onClick={() => { handleFilechange(file.key, file.fileChanged) }} className='cursor-pointer' color='red' name='times circle' />
                                                     : <Icon onClick={() => { handleFilechange(file.key, file.fileChanged) }} className='cursor-pointer' color='green' name='checkmark' />
                                                 }
                                             </Table.Cell>
