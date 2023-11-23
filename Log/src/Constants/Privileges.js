@@ -282,6 +282,14 @@ const Priveleges = [
     { code: 'patientmovementmanageview', text: 'Patientmovements Manage View', group: ['Patientmovements'], required: [] },
     { code: 'patientmovementgetreport', text: 'Patientmovements Get Report', group: ['Patientmovements'], required: [] },
 
+    { code: 'personelscreen', text: 'Personels Screen', group: ['Personels'], required: [] },
+    { code: 'personelview', text: 'Personels View', group: ['Personels'], required: [] },
+    { code: 'personeladd', text: 'Personels Add', group: ['Personels'], required: [] },
+    { code: 'personelupdate', text: 'Personels Update', group: ['Personels'], required: [] },
+    { code: 'personeldelete', text: 'Personels Delete', group: ['Personels'], required: [] },
+    { code: 'personelmanageview', text: 'Personels Manage View', group: ['Personels'], required: [] },
+    { code: 'personelgetreport', text: 'Personels Get Report', group: ['Personels'], required: [] },
+
     { code: 'todoscreen', text: 'Todos Screen', group: ['Todos'], required: [] },
     { code: 'todoview', text: 'Todos View', group: ['Todos'], required: [] },
     { code: 'todoadd', text: 'Todos Add', group: ['Todos'], required: [] },

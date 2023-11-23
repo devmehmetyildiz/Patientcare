@@ -12,6 +12,18 @@ const messages = {
         tr: 'hasta bulunamadı',
       }
     },
+    PERSONEL_NOT_FOUND: {
+      code: 'PERSONEL_NOT_FOUND', description: {
+        en: 'personel not found',
+        tr: 'çalışan bulunamadı',
+      }
+    },
+    PERSONEL_NOT_ACTIVE: {
+      code: 'PERSONEL_NOT_ACTIVE', description: {
+        en: 'personel not active',
+        tr: 'çalışan bulunamadı',
+      }
+    },
     FLOOR_NOT_FOUND: {
       code: 'FLOOR_NOT_FOUND', description: {
         en: 'floor not found',
@@ -85,7 +97,6 @@ const messages = {
         tr: 'hasta hareketi bulunamadı',
       }
     },
-
     TODO_NOT_FOUND: {
       code: 'TODO_NOT_FOUND', description: {
         en: 'todo not found',
@@ -98,10 +109,6 @@ const messages = {
         tr: 'Yapılacak bulunamadı',
       }
     },
-
-
-
-
   },
   VALIDATION_ERROR: {
     FIRSTNAME_REQUIRED: {
@@ -110,10 +117,40 @@ const messages = {
         tr: 'Bu işlem için ilk isim gerekli',
       }
     },
+    NAME_REQUIRED: {
+      code: 'NAME_REQUIRED', description: {
+        en: 'The name required',
+        tr: 'Bu işlem için isim gerekli',
+      }
+    },
     LASTNAME_REQUIRED: {
       code: 'LASTNAME_REQUIRED', description: {
         en: 'The lastname required',
         tr: 'Bu işlem için son isim gerekli',
+      }
+    },
+    SURNAME_REQUIRED: {
+      code: 'SURNAME_REQUIRED', description: {
+        en: 'The surname required',
+        tr: 'Bu işlem için soyisim gerekli',
+      }
+    },
+    PROFESSION_REQUIRED: {
+      code: 'PROFESSION_REQUIRED', description: {
+        en: 'The profession required',
+        tr: 'Bu işlem için meslek gerekli',
+      }
+    },
+    WORKSTARTTIME_REQUIRED: {
+      code: 'WORKSTARTTIME_REQUIRED', description: {
+        en: 'The work start time required',
+        tr: 'Bu işlem için meslek grubu gerekli',
+      }
+    },
+    GENDER_REQUIRED: {
+      code: 'GENDER_REQUIRED', description: {
+        en: 'The gender required',
+        tr: 'Bu işlem için cinsiyet gerekli',
       }
     },
     FATHERNAME_REQUIRED: {
@@ -460,10 +497,22 @@ const messages = {
         tr: 'Bu işlem için patientmovementid gerekli',
       }
     },
+    PERSONELID_REQUIRED: {
+      code: 'PERSONELID_REQUIRED', description: {
+        en: 'The personelid required',
+        tr: 'Bu işlem için personelid gerekli',
+      }
+    },
     UNSUPPORTED_PATIENTMOVEMENTID: {
       code: 'UNSUPPORTED_PATIENTMOVEMENTID', description: {
         en: 'The patientmovementid is unsupported',
         tr: 'Tanımsız patientmovementid',
+      }
+    },
+    UNSUPPORTED_PERSONELID: {
+      code: 'UNSUPPORTED_PERSONELID', description: {
+        en: 'The personelid is unsupported',
+        tr: 'Tanımsız personelid',
       }
     },
     UNSUPPORTED_PATIENTID: {
