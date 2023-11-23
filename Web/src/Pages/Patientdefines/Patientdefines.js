@@ -65,6 +65,7 @@ export default class Patientdefines extends Component {
       { Header: Literals.Columns.Contactname2[Profile.Language], accessor: 'Contactname2', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.CostumertypeName[Profile.Language], accessor: 'CostumertypeID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.costumertypeCellhandler(col) },
       { Header: Literals.Columns.PatienttypeName[Profile.Language], accessor: 'PatienttypeID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.patienttypeCellhandler(col) },
+      { Header: Literals.Columns.Medicalboardreport[Profile.Language], accessor: 'Medicalboardreport', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },

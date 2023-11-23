@@ -60,6 +60,10 @@ const Literals = {
             tr: 'Anne Biyolojik Yakınlık',
             en: 'Mother Biological Affinity'
         },
+        Medicalboardreport: {
+            tr: 'Sağlık Kurul Raporu',
+            en: 'Medical Baord Report'
+        },
         Ismotheralive: {
             tr: 'Anne Hayatta mı?',
             en: 'Is Mother Alive?'
