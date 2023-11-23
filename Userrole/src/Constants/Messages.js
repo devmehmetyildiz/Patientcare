@@ -61,10 +61,22 @@ const messages = {
         tr: 'Kullanıcı aktif değil',
       }
     },
+    NOTIFICATION_NOT_ACTIVE: {
+      code: 'NOTIFICATION_NOT_ACTIVE', description: {
+        en: 'notification not active',
+        tr: 'Bildirim aktif değil',
+      }
+    },
     USERROLE_NOT_FOUND: {
       code: 'USERROLE_NOT_FOUND', description: {
         en: 'User role not found',
         tr: 'Kullanıcı rolü bulunamadı',
+      }
+    },
+    NOTIFICATION_NOT_FOUND: {
+      code: 'NOTIFICATION_NOT_FOUND', description: {
+        en: 'notification not found',
+        tr: 'bildirim bulunamadı',
       }
     },
     USERSALT_NOT_FOUND: {
@@ -165,6 +177,12 @@ const messages = {
         tr: 'Bu işlem için kullanıcı uuid gerekli',
       }
     },
+    NOTIFICATIONID_REQUIRED: {
+      code: 'NOTIFICATIONID_REQUIRED', description: {
+        en: 'The notificationid required',
+        tr: 'Bu işlem için notificationid gerekli',
+      }
+    },
     DEPARTMENTS_REQUIRED: {
       code: 'DEPARTMENTS_REQUIRED', description: {
         en: 'The departments required',
@@ -187,6 +205,12 @@ const messages = {
       code: 'UNSUPPORTED_USERID', description: {
         en: 'Unstupported uuid has given',
         tr: 'Geçersiz kullanıcı id girişi',
+      }
+    },
+    UNSUPPORTED_NOTIFICATIONID: {
+      code: 'UNSUPPORTED_NOTIFICATIONID', description: {
+        en: 'Unstupported notificationid has given',
+        tr: 'Geçersiz notificationid girişi',
       }
     },
     UNSUPPORTED_STATIONID: {

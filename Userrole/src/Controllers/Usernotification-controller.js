@@ -4,7 +4,6 @@ const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const Priveleges = require("../Constants/Privileges")
 
 async function GetUsernotifications(req, res, next) {
     try {
@@ -19,22 +18,22 @@ async function GetUsernotification(req, res, next) {
 
     let validationErrors = []
     if (req.params.notificationId === undefined) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROLEID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.NOTIFICATIONID_REQUIRED)
     }
     if (!validator.isUUID(req.params.notificationId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_ROLEID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_NOTIFICATIONID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const notification = await db.usernotificationModel.findOne({ where: { Uuid: req.params.roleId } });
+        const notification = await db.usernotificationModel.findOne({ where: { Uuid: req.params.notificationId } });
         if (!notification) {
-            return next(createNotfounderror([messages.ERROR.ROLE_NOT_FOUND]))
+            return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_FOUND]))
         }
         if (!notification.Isactive) {
-            return next(createNotfounderror([messages.ERROR.ROLE_NOT_ACTIVE]))
+            return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_ACTIVE]))
         }
         res.status(200).json(notification)
     } catch (error) {
@@ -45,18 +44,18 @@ async function GetUsernotification(req, res, next) {
 async function GetUsernotificationsbyUserid(req, res, next) {
     try {
         let validationErrors = []
-        if (req.params.userId === undefined) {
-            validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        if (req.params.notificationId === undefined) {
+            validationErrors.push(messages.VALIDATION_ERROR.NOTIFICATIONID_REQUIRED)
         }
-        if (!validator.isUUID(req.params.userId)) {
-            validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+        if (!validator.isUUID(req.params.notificationId)) {
+            validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_NOTIFICATIONID)
         }
         if (validationErrors.length > 0) {
             return next(createValidationError(validationErrors, req.language))
         }
-        const notifications = await db.usernotificationModel.findAll({ where: { UserID: req.params.userId } })
+        const notifications = await db.usernotificationModel.findAll({ where: { UserID: req.params.notificationId } })
         if (!notifications) {
-            return next(createNotfounderror([messages.ERROR.USERROLE_NOT_FOUND], req.language))
+            return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_FOUND], req.language))
         }
         res.status(200).json(notifications)
     } catch (error) {
@@ -65,7 +64,6 @@ async function GetUsernotificationsbyUserid(req, res, next) {
 }
 
 async function AddUsernotification(req, res, next) {
-
 
     let notificationuuid = uuid()
 
@@ -94,10 +92,10 @@ async function UpdateUsernotification(req, res, next) {
     try {
         const notification = await db.usernotificationModel.findOne({ where: { Uuid: Uuid } })
         if (!notification) {
-            return next(createNotfounderror([messages.ERROR.ROLE_NOT_FOUND], req.language))
+            return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_FOUND], req.language))
         }
         if (notification.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.ROLE_NOT_ACTIVE], req.language))
+            return next(createAccessDenied([messages.ERROR.NOTIFICATION_NOT_ACTIVE], req.language))
         }
 
         await db.usernotificationModel.update({
@@ -119,10 +117,10 @@ async function DeleteUsernotification(req, res, next) {
     const Uuid = req.params.notificationId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.NOTIFICATIONID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_NOTIFICATIONID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -132,10 +130,10 @@ async function DeleteUsernotification(req, res, next) {
     try {
         const notification = await db.usernotificationModel.findOne({ where: { Uuid: Uuid } })
         if (!notification) {
-            return next(createNotfounderror([messages.ERROR.ROLE_NOT_FOUND], req.language))
+            return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_FOUND], req.language))
         }
         if (!notification.Isactive) {
-            return next(createNotfounderror([messages.ERROR.ROLE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_ACTIVE], req.language))
         }
 
         await db.usernotificationModel.update({
@@ -150,7 +148,6 @@ async function DeleteUsernotification(req, res, next) {
     }
     GetUsernotifications(req, res, next)
 }
-
 
 module.exports = {
     GetUsernotifications,
