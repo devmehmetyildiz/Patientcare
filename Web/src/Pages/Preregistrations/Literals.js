@@ -208,6 +208,10 @@ const Literals = {
             tr: 'Anne Adı',
             en: 'Mother Name'
         },
+        Medicalboardreport: {
+            tr: 'Sağlık Kurul Raporu',
+            en: 'Medical Baord Report'
+        },
         Dateofbirth: {
             tr: 'Doğum Tarihi',
             en: 'Date of Birth'
@@ -232,9 +236,21 @@ const Literals = {
             tr: 'TC Kimlik No',
             en: 'Country ID'
         },
+        Costumertype: {
+            tr: 'Müşteri Türü',
+            en: 'Costumer Type'
+        },
+        Patienttype: {
+            tr: 'Hasta Türü',
+            en: 'Patient Type'
+        },
         Registerdate: {
             tr: 'Kayıt Tarihi',
             en: 'Register Date'
+        },
+        Happensdate: {
+            tr: 'Olur Tarihi',
+            en: 'Happens Date'
         },
         Approvaldate: {
             tr: 'Kuruma Giriş Tarihi',

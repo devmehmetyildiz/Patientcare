@@ -4,9 +4,14 @@ import { AddPatients, fillPatientnotification } from "../../Redux/PatientSlice"
 import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
 import { GetDepartments } from "../../Redux/DepartmentSlice"
 import { GetCases } from "../../Redux/CaseSlice"
+import { GetCostumertypes } from "../../Redux/CostumertypeSlice"
+import { GetPatienttypes } from "../../Redux/PatienttypeSlice"
 
 const mapStateToProps = (state) => ({
   Patients: state.Patients,
+  Patientdefines: state.Patientdefines,
+  Costumertypes: state.Costumertypes,
+  Patienttypes: state.Patienttypes,
   Patientdefines: state.Patientdefines,
   Departments: state.Departments,
   Cases: state.Cases,
@@ -14,8 +19,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  AddPatients, fillPatientnotification,  GetPatientdefines,
-  GetDepartments,  GetCases
+  AddPatients, fillPatientnotification, GetPatientdefines,
+  GetDepartments, GetCases, GetPatienttypes, GetCostumertypes
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreregistrationsCreate)

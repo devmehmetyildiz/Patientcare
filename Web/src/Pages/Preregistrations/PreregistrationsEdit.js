@@ -77,7 +77,6 @@ export default class PreregistrationsEdit extends Component {
       return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
     })
 
-
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -100,6 +99,7 @@ export default class PreregistrationsEdit extends Component {
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Happensdate[Profile.Language]} name="Happensdate" type='date' />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -129,6 +129,9 @@ export default class PreregistrationsEdit extends Component {
     }
     if (!validator.isISODate(data.Approvaldate)) {
       data.Approvaldate = null
+    }
+    if (!validator.isISODate(data.Happensdate)) {
+      data.Happensdate = null
     }
 
     let errors = []
