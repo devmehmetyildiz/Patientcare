@@ -171,6 +171,7 @@ async function FastcreateFloor(req, res, next) {
                         Name: `${Formatbedstringstart || ''}${currentbedstart}${Formatbedstringend || ''}`,
                         Uuid: beduuid,
                         RoomID: roomuuid,
+                        Isoccupied: false,
                         Createduser: "System",
                         Createtime: new Date(),
                         Isactive: true
