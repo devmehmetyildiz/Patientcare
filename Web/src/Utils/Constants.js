@@ -37,6 +37,8 @@ export const ROUTES = {
     PATIENTSTOCKMOVEMENT: 'Patientstockmovements',
     EQUIPMENTGROUP: 'Equipmentgroups',
     EQUIPMENT: 'Equipments',
+    BREAKDOWN: 'Breakdowns',
+    MAINTEANCE: 'Mainteancies',
 
     TODODEFINE: 'Tododefines',
     TODOGROUPDEFINE: 'Todogroupdefines',
