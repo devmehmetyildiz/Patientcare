@@ -37,6 +37,7 @@ async function GetBed(req, res, next) {
 }
 
 
+
 async function AddBed(req, res, next) {
 
     let validationErrors = []
@@ -125,6 +126,51 @@ async function UpdateBed(req, res, next) {
     GetBeds(req, res, next)
 }
 
+async function ChangeBedstatus(req, res, next) {
+
+    let validationErrors = []
+    const {
+        Uuid,
+        Status
+    } = req.body
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
+    }
+    if (!validator.isBoolean(Status)) {
+        validationErrors.push(messages.VALIDATION_ERROR.ISOCCUPIED_REQUIRED)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const bed = db.bedModel.findOne({ where: { Uuid: Uuid } })
+        if (!bed) {
+            return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
+        }
+        if (bed.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.BED_NOT_ACTIVE], req.language))
+        }
+
+        await db.bedModel.update({
+            ...bed,
+            Isoccupied: Status,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetBeds(req, res, next)
+}
+
 async function DeleteBed(req, res, next) {
 
     let validationErrors = []
@@ -165,4 +211,5 @@ module.exports = {
     AddBed,
     UpdateBed,
     DeleteBed,
+    ChangeBedstatus
 }

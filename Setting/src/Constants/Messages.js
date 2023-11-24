@@ -201,6 +201,12 @@ const messages = {
         tr: 'Bu işlem için isim gerekli',
       }
     },
+    ISOCCUPIED_REQUIRED: {
+      code: 'ISOCCUPIED_REQUIRED', description: {
+        en: 'The is occupied required',
+        tr: 'Bu işlem için doluluk durumu',
+      }
+    },
     GENDER_REQUIRED: {
       code: 'GENDER_REQUIRED', description: {
         en: 'The gender required',
