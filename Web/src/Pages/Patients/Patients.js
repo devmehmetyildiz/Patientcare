@@ -60,7 +60,7 @@ export default class Patients extends Component {
 
 
   render() {
-    const { Patients, Profile, Floors, Rooms, Patientdefines } = this.props
+    const { Patients, Profile } = this.props
     const { isLoading, isDispatching } = Patients
 
     const Columns = [
@@ -109,15 +109,6 @@ export default class Patients extends Component {
       return patient.FloorID
     }))]
 
-    const filledFloorwithrooms = (filledFloors || []).map(floorID => {
-      return {
-        floor: floorID,
-        rooms: [...new Set(((Patients.list || []).filter(u => u.FloorID === floorID && !u.Iswaitingactivation).map(u => {
-          return u.RoomID
-        })))]
-      }
-    })
-
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>
@@ -133,10 +124,13 @@ export default class Patients extends Component {
                 </GridColumn>
                 <Settings
                   Profile={Profile}
+                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreatelink={"/Patients/Create"}
                   Columns={Columns}
                   list={list}
                   initialConfig={initialConfig}
                   metaKey={metaKey}
+                  Showcreatebutton
                   Showcolumnchooser
                   Showexcelexport
                 />
@@ -150,100 +144,6 @@ export default class Patients extends Component {
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
-            {/*             <Tab className='station-tab'
-                panes={[
-                  {
-                    menuItem: Literals.Columns.Gridscreen[Profile.Language],
-                    pane: {
-                      key: 'grid',
-                      content: <React.Fragment>
-                        {list.length > 0 ?
-                          <div className='w-full mx-auto '>
-                            {Profile.Ismobile ?
-                              <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                              <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-                          </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
-                        }
-                      </React.Fragment>
-                    }
-                  },
-                  {
-                    menuItem: Literals.Columns.Cardscren[Profile.Language],
-                    pane: {
-                      key: 'card',
-                      content: <React.Fragment>
-                        <List>
-                          {(filledFloorwithrooms || []).map((item) => {
-                            return <List.Item key={Math.random()}>
-                              <List.Icon size='large' name='bed' />
-                              <List.Content>
-                                <div className='cursor-pointer' onClick={() => { this.handleCollapstatus(item.floor) }}>
-                                  <List.Header as={'h3'}>{(Floors.list || []).find(u => u.Uuid === item.floor)?.Name}</List.Header>
-                                </div>
-                                <List.List>
-                                  <Collapse isOpened={this.state.collapseStatus.includes(item.floor)}>
-                                    {(item.rooms || []).map((room) => {
-                                      return <React.Fragment key={Math.random()}>
-                                        <Pagedivider />
-                                        <List.Item >
-                                          <List.Content>
-                                            <div className='cursor-pointer flex flex-row justify-start items-center' onClick={() => { this.handleCollapstatus(item.floor + room) }}>
-                                              <List.Icon size='small' name='file' />
-                                              <List.Header as={'h4'}>{(Rooms.list || []).find(u => u.Uuid === room)?.Name}</List.Header>
-                                            </div>
-                                            <Collapse isOpened={this.state.collapseStatus.includes(item.floor + room)}>
-                                              <List.List>
-                                                <div className='w-full flex flex-row justify-start items-center '>
-                                                  {(Patients.list || []).filter(u =>
-                                                    u.FloorID === item.floor &&
-                                                    u.RoomID === room &&
-                                                    !u.Iswaitingactivation).map(patient => {
-                                                      const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient.PatientdefineID)
-                                                      return <div className='m-2' key={Math.random()}>
-                                                        <Card>
-                                                          <Card.Content>
-                                                            <Image
-                                                              floated='right'
-                                                              size='mini'
-                                                              src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'
-                                                            />
-                                                            <Card.Header>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}`}</Card.Header>
-                                                            <Card.Meta>Friends of Elliot</Card.Meta>
-                                                            <Card.Description>
-                                                              Steve wants to add you to the group <strong>best friends</strong>
-                                                            </Card.Description>
-                                                          </Card.Content>
-                                                          <Card.Content extra>
-                                                            <div className='ui two buttons'>
-                                                              <Button basic color='green'>
-                                                                Approve
-                                                              </Button>
-                                                              <Button basic color='red'>
-                                                                Decline
-                                                              </Button>
-                                                            </div>
-                                                          </Card.Content>
-                                                        </Card>
-                                                      </div>
-                                                    })}
-                                                </div>
-                                              </List.List>
-                                            </Collapse>
-                                          </List.Content>
-                                        </List.Item>
-                                      </React.Fragment>
-                                    })}
-                                  </Collapse>
-                                </List.List>
-                              </List.Content>
-                            </List.Item>
-                          })}
-                        </List>
-                      </React.Fragment>
-                    }
-                  }
-                ]}
-                renderActiveOnly={false} /> */}
           </Pagewrapper>
         </React.Fragment >
     )
