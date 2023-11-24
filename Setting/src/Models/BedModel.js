@@ -13,6 +13,9 @@ module.exports = sequelize.define('bedModel', {
     RoomID: {
         type: Sequelize.STRING
     },
+    Isoccupied: {
+        type: Sequelize.INTEGER
+    },
     Createduser: {
         type: Sequelize.STRING
     },
