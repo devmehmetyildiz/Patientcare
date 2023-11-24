@@ -201,6 +201,12 @@ const messages = {
         tr: 'Bu işlem için isim gerekli',
       }
     },
+    GENDER_REQUIRED: {
+      code: 'GENDER_REQUIRED', description: {
+        en: 'The gender required',
+        tr: 'Bu işlem için cinsiyet gerekli',
+      }
+    },
     DAYPERIOD_REQUIRED: {
       code: 'DAYPERIOD_REQUIRED', description: {
         en: 'The day period required',
