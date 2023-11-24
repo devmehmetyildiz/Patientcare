@@ -16,14 +16,14 @@ async function GetBreakdowns(req, res, next) {
     }
 }
 
-async function GetEquipment(req, res, next) {
+async function GetBreakdown(req, res, next) {
 
     let validationErrors = []
     if (!req.params.breakdownId) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.BREAKDOWNID_REQUIRED)
     }
     if (!validator.isUUID(req.params.breakdownId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_EQUIPMENTID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BREAKDOWNID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -32,10 +32,10 @@ async function GetEquipment(req, res, next) {
     try {
         const breakdown = await db.breakdownModel.findOne({ where: { Uuid: req.params.breakdownId } });
         if (!breakdown) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENT_NOT_FOUND], req.language))
+            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
         }
         if (!breakdown.Isactive) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
         }
         res.status(200).json(breakdown)
     } catch (error) {
@@ -47,19 +47,18 @@ async function AddBreakdown(req, res, next) {
 
     let validationErrors = []
     const {
-        Name,
-        EquipmentgroupID,
-        UserID,
-        Equipmentproperties
+        Starttime,
+        EquipmentID,
+        ResponsibleuserID,
     } = req.body
 
-    if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+    if (!validator.isISODate(Starttime)) {
+        validationErrors.push(messages.VALIDATION_ERROR.STARTTIME_REQUIRED)
     }
-    if (!validator.isUUID(EquipmentgroupID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTGROUPID_REQUIRED)
+    if (!validator.isUUID(EquipmentID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
     }
-    if (!validator.isUUID(UserID)) {
+    if (!validator.isUUID(ResponsibleuserID)) {
         validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
     }
 
@@ -72,54 +71,46 @@ async function AddBreakdown(req, res, next) {
     const t = await db.sequelize.transaction();
 
     try {
-        await db.equipmentModel.create({
+        await db.breakdownModel.create({
             ...req.body,
-            Uuid: equipmentuuid,
+            Uuid: breakdownuuid,
             Createduser: "System",
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
-
-        for (const equipmentproperty of (Equipmentproperties || [])) {
-            await db.equipmentpropertyModel.create({
-                ...equipmentproperty,
-                EquipmentID: equipmentuuid,
-            }, { transaction: t });
-        }
 
         await t.commit()
     } catch (err) {
         await t.rollback()
         next(sequelizeErrorCatcher(err))
     }
-    GetEquipments(req, res, next)
+    GetBreakdowns(req, res, next)
 }
 
-async function UpdateEquipment(req, res, next) {
+async function UpdateBreakdown(req, res, next) {
 
     let validationErrors = []
     const {
-        Name,
         Uuid,
-        EquipmentgroupID,
-        UserID,
-        Equipmentproperties
+        Starttime,
+        EquipmentID,
+        ResponsibleuserID,
     } = req.body
 
-    if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+    if (!validator.isISODate(Starttime)) {
+        validationErrors.push(messages.VALIDATION_ERROR.STARTTIME_REQUIRED)
     }
-    if (!validator.isUUID(EquipmentgroupID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTGROUPID_REQUIRED)
+    if (!validator.isUUID(EquipmentID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
     }
-    if (!validator.isUUID(UserID)) {
+    if (!validator.isUUID(ResponsibleuserID)) {
         validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.BREAKDOWNID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_EQUIPMENTID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BREAKDOWNID)
     }
 
     if (validationErrors.length > 0) {
@@ -127,45 +118,38 @@ async function UpdateEquipment(req, res, next) {
     }
     const t = await db.sequelize.transaction();
     try {
-        const equipment = db.equipmentModel.findOne({ where: { Uuid: Uuid } })
-        if (!equipment) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
+        const breakdown = db.breakdownModel.findOne({ where: { Uuid: Uuid } })
+        if (!breakdown) {
+            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
         }
-        if (equipment.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.EQUIPMENTGROUP_NOT_ACTIVE], req.language))
+        if (breakdown.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
         }
 
-        await db.equipmentModel.update({
+        await db.breakdownModel.update({
             ...req.body,
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
-        await db.equipmentpropertyModel.destroy({ where: { EquipmentID: Uuid }, transaction: t });
-        for (const equipmentproperty of (Equipmentproperties || [])) {
-            await db.equipmentpropertyModel.create({
-                ...equipmentproperty,
-                EquipmentID: Uuid,
-            }, { transaction: t });
-        }
 
         await t.commit()
     } catch (error) {
         await t.rollback()
         return next(sequelizeErrorCatcher(error))
     }
-    GetEquipments(req, res, next)
+    GetBreakdowns(req, res, next)
 }
 
-async function DeleteEquipment(req, res, next) {
+async function DeleteBreakdown(req, res, next) {
 
     let validationErrors = []
-    const Uuid = req.params.equipmentId
+    const Uuid = req.params.breakdownId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.BREAKDOWNID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_EQUIPMENTID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BREAKDOWNID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -173,28 +157,27 @@ async function DeleteEquipment(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const equipment = db.equipmentModel.findOne({ where: { Uuid: Uuid } })
-        if (!equipment) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
+        const breakdown = db.breakdownModel.findOne({ where: { Uuid: Uuid } })
+        if (!breakdown) {
+            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
         }
-        if (equipment.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.EQUIPMENT_NOT_ACTIVE], req.language))
+        if (breakdown.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
         }
 
-        await db.equipmentModel.destroy({ where: { Uuid: Uuid }, transaction: t });
-        await db.equipmentpropertyModel.destroy({ where: { EquipmentID: Uuid }, transaction: t });
+        await db.breakdownModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
     } catch (error) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
-    GetEquipments(req, res, next)
+    GetBreakdowns(req, res, next)
 }
 
 module.exports = {
-    GetEquipments,
-    GetEquipment,
-    AddEquipment,
-    UpdateEquipment,
-    DeleteEquipment,
+    GetBreakdowns,
+    GetBreakdown,
+    AddBreakdown,
+    UpdateBreakdown,
+    DeleteBreakdown,
 }

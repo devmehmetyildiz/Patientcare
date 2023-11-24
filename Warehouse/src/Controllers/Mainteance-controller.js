@@ -7,73 +7,58 @@ const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const axios = require('axios')
 
-async function GetEquipments(req, res, next) {
+async function GetMainteancies(req, res, next) {
     try {
-        const equipments = await db.equipmentModel.findAll({ where: { Isactive: true } })
-        for (const equipment of equipments) {
-            equipment.Equipmentproperties = await db.equipmentpropertyModel.findAll({
-                where: {
-                    EquipmentID: equipment.Uuid,
-                }
-
-            });
-        }
-        res.status(200).json(equipments)
+        const mainteancies = await db.mainteanceModel.findAll({ where: { Isactive: true } })
+        res.status(200).json(mainteancies)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
 }
 
-async function GetEquipment(req, res, next) {
+async function GetMainteance(req, res, next) {
 
     let validationErrors = []
-    if (!req.params.equipmentId) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+    if (!req.params.mainteanceId) {
+        validationErrors.push(messages.VALIDATION_ERROR.MAINTEANCEID_REQUIRED)
     }
-    if (!validator.isUUID(req.params.equipmentId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_EQUIPMENTID)
+    if (!validator.isUUID(req.params.mainteanceId)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MAINTEANCEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const equipment = await db.equipmentModel.findOne({ where: { Uuid: req.params.equipmentId } });
-        if (!equipment) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENT_NOT_FOUND], req.language))
+        const mainteance = await db.mainteanceModel.findOne({ where: { Uuid: req.params.mainteanceId } });
+        if (!mainteance) {
+            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
         }
-        if (!equipment.Isactive) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENT_NOT_ACTIVE], req.language))
+        if (!mainteance.Isactive) {
+            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
         }
-        equipment.Equipmentproperties = await db.equipmentpropertyModel.findAll({
-            where: {
-                EquipmentID: equipment.Uuid,
-            }
-
-        });
-        res.status(200).json(equipment)
+        res.status(200).json(mainteance)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
 }
 
-async function AddEquipment(req, res, next) {
+async function AddMainteance(req, res, next) {
 
     let validationErrors = []
     const {
-        Name,
-        EquipmentgroupID,
-        UserID,
-        Equipmentproperties
+        Starttime,
+        EquipmentID,
+        ResponsibleuserID,
     } = req.body
 
-    if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+    if (!validator.isISODate(Starttime)) {
+        validationErrors.push(messages.VALIDATION_ERROR.STARTTIME_REQUIRED)
     }
-    if (!validator.isUUID(EquipmentgroupID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTGROUPID_REQUIRED)
+    if (!validator.isUUID(EquipmentID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
     }
-    if (!validator.isUUID(UserID)) {
+    if (!validator.isUUID(ResponsibleuserID)) {
         validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
     }
 
@@ -81,59 +66,51 @@ async function AddEquipment(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
-    let equipmentuuid = uuid()
+    let mainteanceuuid = uuid()
 
     const t = await db.sequelize.transaction();
 
     try {
-        await db.equipmentModel.create({
+        await db.mainteanceModel.create({
             ...req.body,
-            Uuid: equipmentuuid,
+            Uuid: mainteanceuuid,
             Createduser: "System",
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
-
-        for (const equipmentproperty of (Equipmentproperties || [])) {
-            await db.equipmentpropertyModel.create({
-                ...equipmentproperty,
-                EquipmentID: equipmentuuid,
-            }, { transaction: t });
-        }
 
         await t.commit()
     } catch (err) {
         await t.rollback()
         next(sequelizeErrorCatcher(err))
     }
-    GetEquipments(req, res, next)
+    GetMainteancies(req, res, next)
 }
 
-async function UpdateEquipment(req, res, next) {
+async function UpdateMainteance(req, res, next) {
 
     let validationErrors = []
     const {
-        Name,
         Uuid,
-        EquipmentgroupID,
-        UserID,
-        Equipmentproperties
+        Starttime,
+        EquipmentID,
+        ResponsibleuserID,
     } = req.body
 
-    if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+    if (!validator.isISODate(Starttime)) {
+        validationErrors.push(messages.VALIDATION_ERROR.STARTTIME_REQUIRED)
     }
-    if (!validator.isUUID(EquipmentgroupID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTGROUPID_REQUIRED)
+    if (!validator.isUUID(EquipmentID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
     }
-    if (!validator.isUUID(UserID)) {
+    if (!validator.isUUID(ResponsibleuserID)) {
         validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.MAINTEANCEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_EQUIPMENTID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MAINTEANCEID)
     }
 
     if (validationErrors.length > 0) {
@@ -141,45 +118,38 @@ async function UpdateEquipment(req, res, next) {
     }
     const t = await db.sequelize.transaction();
     try {
-        const equipment = db.equipmentModel.findOne({ where: { Uuid: Uuid } })
-        if (!equipment) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
+        const mainteance = db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
+        if (!mainteance) {
+            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
         }
-        if (equipment.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.EQUIPMENTGROUP_NOT_ACTIVE], req.language))
+        if (mainteance.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
         }
 
-        await db.equipmentModel.update({
+        await db.mainteanceModel.update({
             ...req.body,
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
-        await db.equipmentpropertyModel.destroy({ where: { EquipmentID: Uuid }, transaction: t });
-        for (const equipmentproperty of (Equipmentproperties || [])) {
-            await db.equipmentpropertyModel.create({
-                ...equipmentproperty,
-                EquipmentID: Uuid,
-            }, { transaction: t });
-        }
 
         await t.commit()
     } catch (error) {
         await t.rollback()
         return next(sequelizeErrorCatcher(error))
     }
-    GetEquipments(req, res, next)
+    GetMainteancies(req, res, next)
 }
 
-async function DeleteEquipment(req, res, next) {
+async function DeleteMainteance(req, res, next) {
 
     let validationErrors = []
-    const Uuid = req.params.equipmentId
+    const Uuid = req.params.mainteanceId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.MAINTEANCEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_EQUIPMENTID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MAINTEANCEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -187,28 +157,27 @@ async function DeleteEquipment(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const equipment = db.equipmentModel.findOne({ where: { Uuid: Uuid } })
-        if (!equipment) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
+        const mainteance = db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
+        if (!mainteance) {
+            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
         }
-        if (equipment.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.EQUIPMENT_NOT_ACTIVE], req.language))
+        if (mainteance.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
         }
 
-        await db.equipmentModel.destroy({ where: { Uuid: Uuid }, transaction: t });
-        await db.equipmentpropertyModel.destroy({ where: { EquipmentID: Uuid }, transaction: t });
+        await db.mainteanceModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();
     } catch (error) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
-    GetEquipments(req, res, next)
+    GetMainteancies(req, res, next)
 }
 
 module.exports = {
-    GetEquipments,
-    GetEquipment,
-    AddEquipment,
-    UpdateEquipment,
-    DeleteEquipment,
+    GetMainteancies,
+    GetMainteance,
+    AddMainteance,
+    UpdateMainteance,
+    DeleteMainteance,
 }
