@@ -32,6 +32,10 @@ const Literals = {
             tr: 'Genel Vucut Kontrol Formu',
             en: 'Genel Vucut Kontrol Formu'
         },
+        usageType8: {
+            tr: 'Sağlık Kurul Raporu',
+            en: 'Sağlık Kurul Raporu'
+        },
         TableColumnsOrder: {
             tr: 'Sıra',
             en: 'Order'
@@ -562,6 +566,10 @@ const Literals = {
         StockRequired: {
             tr: "Ürün Gerekli ",
             en: "Stock Required"
+        },
+        Filenamerequired: {
+            tr: "Dosya Adı Gerekli",
+            en: "File Name Required"
         },
         Needmoreamount: {
             tr: "Ambarda Yeterli Ürün Yok ",
