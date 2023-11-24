@@ -1,6 +1,15 @@
 const Literals = {
     Options: {
-
+        Genderoptions: {
+            value0: {
+                tr: "Erkek",
+                en: "Men"
+            },
+            value1: {
+                tr: "Kadın",
+                en: "Women"
+            },
+        },
     },
     Columns: {
         Id: {
@@ -14,6 +23,10 @@ const Literals = {
         Name: {
             tr: 'Kat İsmi',
             en: 'Floor Name'
+        },
+        Gender: {
+            tr: 'Cinsiyet',
+            en: 'Gender'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -52,7 +65,7 @@ const Literals = {
             en: 'Floor End String'
         },
         Formatroomstringstart: {
-            tr: 'Oda Bitiş Yazısı',
+            tr: 'Oda Başlangıç Yazısı',
             en: 'Room End String'
         },
         Formatroomstringend: {
@@ -60,7 +73,7 @@ const Literals = {
             en: 'Room End String'
         },
         Formatbedstringstart: {
-            tr: 'Yatak Bitiş Yazısı',
+            tr: 'Yatak Başlangıç Yazısı',
             en: 'Bed End String'
         },
         Formatbedstringend: {
@@ -154,6 +167,10 @@ const Literals = {
         Namerequired: {
             tr: "Kat Adı Gerekli",
             en: "Floor required"
+        },
+        Genderrequired: {
+            tr: "Cinsiyet Gerekli",
+            en: "Gender required"
         },
     }
 }

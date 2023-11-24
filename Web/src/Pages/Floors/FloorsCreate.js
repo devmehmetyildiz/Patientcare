@@ -24,6 +24,11 @@ export default class FloorsCreate extends Component {
   render() {
     const { Floors, Profile, history, closeModal } = this.props
 
+    const Genderoptions = [
+      { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
+      { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
+    ]
+
     return (
       Floors.isLoading || Floors.isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -41,6 +46,7 @@ export default class FloorsCreate extends Component {
           <Contentwrapper>
             <Form>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Gender[Profile.Language]} name="Gender" options={Genderoptions} formtype='dropdown' />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
@@ -68,6 +74,9 @@ export default class FloorsCreate extends Component {
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+    }
+    if (!validator.isString(data.Gender)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Genderrequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
