@@ -59,8 +59,11 @@ export default class BedsCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.RoomID[Profile.Language]} name="RoomID" options={Roomsoptions} formtype='dropdown' modal={RoomsCreate} />
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.RoomID[Profile.Language]} name="RoomID" options={Roomsoptions} formtype='dropdown' modal={RoomsCreate} />
+              </Form.Group>
+              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Isoccupied[Profile.Language]} name="Isoccupied" formtype={'checkbox'} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
