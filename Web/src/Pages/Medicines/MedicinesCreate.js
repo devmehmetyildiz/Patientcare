@@ -108,9 +108,6 @@ export default class MedicinesCreate extends Component {
     const { AddStocks, history, fillStocknotification, Profile, Stockdefines, closeModal } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
 
-    console.log('data: ', data);
-
-
     data.Order = 0
     data.Ismedicine = true
     data.Issupply = false

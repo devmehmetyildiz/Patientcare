@@ -44,7 +44,6 @@ export default class ProfileEdit extends Component {
             }
         }
 
-        console.log('this.state: ', this.state);
     }
 
     render() {

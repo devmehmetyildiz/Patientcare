@@ -159,7 +159,6 @@ export const ApproveStockmovements = createAsyncThunk(
 export const ApprovemultipleStockmovements = createAsyncThunk(
     'Stockmovements/ApprovemultipleStockmovements',
     async (data, { dispatch, getState }) => {
-        console.log('data: ', data);
         try {
             
             const state = getState()

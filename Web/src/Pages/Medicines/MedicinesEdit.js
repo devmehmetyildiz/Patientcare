@@ -55,6 +55,7 @@ export default class MedicinesEdit extends Component {
       && !Departments.isLoading
       && !Warehouses.isLoading
       && !Stockdefines.isLoading && !isLoading && !this.state.isDatafetched) {
+        
       this.setState({
         isDatafetched: true
       })
@@ -133,7 +134,6 @@ export default class MedicinesEdit extends Component {
     const { EditStocks, history, fillStocknotification, Stocks, Profile } = this.props
 
     const data = this.context.getForm(this.PAGE_NAME)
-    console.log('data: ', data);
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
