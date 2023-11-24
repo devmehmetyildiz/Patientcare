@@ -40,6 +40,13 @@ async function AddPatient(req, res, next) {
         next(createAccessDenied('Patients Add', req.language, { en: 'Patients Add', tr: 'Patients Add' }))
     }
 }
+async function AddPatientReturnPatient(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientadd')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Patients Add', req.language, { en: 'Patients Add', tr: 'Patients Add' }))
+    }
+}
 
 async function Completeprepatient(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
@@ -128,5 +135,6 @@ module.exports = {
     Editpatientstocks,
     OutPatient,
     InPatient,
-    UpdatePatientplace
+    UpdatePatientplace,
+    AddPatientReturnPatient
 }
