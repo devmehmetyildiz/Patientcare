@@ -25,6 +25,10 @@ module.exports = sequelize.define('mainteanceModel', {
     Closeinfo: {
         type: Sequelize.STRING
     },
+    Iscompleted: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+    },
     Createduser: {
         type: Sequelize.STRING
     },

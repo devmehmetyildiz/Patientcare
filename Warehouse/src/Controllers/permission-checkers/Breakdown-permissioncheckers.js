@@ -33,6 +33,14 @@ async function UpdateBreakdown(req, res, next) {
     }
 }
 
+async function CompleteBreakdown(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('breakdownupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Breakdowns Update', req.language, { en: 'Breakdowns Update', tr: 'Breakdowns Update' }))
+    }
+}
+
 async function DeleteBreakdown(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('breakdowndelete')) || permissionchecker(req)) {
         next()
@@ -47,4 +55,5 @@ module.exports = {
     AddBreakdown,
     UpdateBreakdown,
     DeleteBreakdown,
+    CompleteBreakdown
 }

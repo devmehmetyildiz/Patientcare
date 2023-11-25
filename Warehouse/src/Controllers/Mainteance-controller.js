@@ -47,14 +47,11 @@ async function AddMainteance(req, res, next) {
 
     let validationErrors = []
     const {
-        Starttime,
         EquipmentID,
         ResponsibleuserID,
     } = req.body
 
-    if (!validator.isISODate(Starttime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTTIME_REQUIRED)
-    }
+
     if (!validator.isUUID(EquipmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
     }
@@ -74,6 +71,7 @@ async function AddMainteance(req, res, next) {
         await db.mainteanceModel.create({
             ...req.body,
             Uuid: mainteanceuuid,
+            Starttime: new Date(),
             Createduser: "System",
             Createtime: new Date(),
             Isactive: true
@@ -92,14 +90,10 @@ async function UpdateMainteance(req, res, next) {
     let validationErrors = []
     const {
         Uuid,
-        Starttime,
         EquipmentID,
         ResponsibleuserID,
     } = req.body
 
-    if (!validator.isISODate(Starttime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTTIME_REQUIRED)
-    }
     if (!validator.isUUID(EquipmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
     }
@@ -128,6 +122,49 @@ async function UpdateMainteance(req, res, next) {
 
         await db.mainteanceModel.update({
             ...req.body,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetMainteancies(req, res, next)
+}
+
+async function CompleteMainteance(req, res, next) {
+
+    let validationErrors = []
+    const {
+        Uuid,
+    } = req.body
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.MAINTEANCEID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MAINTEANCEID)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    const t = await db.sequelize.transaction();
+    try {
+        const mainteance = db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
+        if (!mainteance) {
+            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
+        }
+        if (mainteance.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
+        }
+
+        await db.mainteanceModel.update({
+            ...req.body,
+            Iscompleted: true,
+            Endtime: new Date(),
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
@@ -180,4 +217,5 @@ module.exports = {
     AddMainteance,
     UpdateMainteance,
     DeleteMainteance,
+    CompleteMainteance
 }

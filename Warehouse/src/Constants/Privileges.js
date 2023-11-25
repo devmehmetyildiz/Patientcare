@@ -249,7 +249,7 @@ const Priveleges = [
     { code: 'filedelete', text: 'Files Delete', group: ['Files'], required: [] },
     { code: 'filemanageview', text: 'Files Manage View', group: ['Files'], required: [] },
     { code: 'filegetreport', text: 'Files Get Report', group: ['Files'], required: [] },
- 
+
     { code: 'usernotificationscreen', text: 'Usernotifications Screen', group: ['Usernotifications'], required: [] },
     { code: 'usernotificationview', text: 'Usernotifications View', group: ['Usernotifications'], required: [] },
     { code: 'usernotificationadd', text: 'Usernotifications Add', group: ['Usernotifications'], required: [] },
@@ -289,6 +289,22 @@ const Priveleges = [
     { code: 'personeldelete', text: 'Personels Delete', group: ['Personels'], required: [] },
     { code: 'personelmanageview', text: 'Personels Manage View', group: ['Personels'], required: [] },
     { code: 'personelgetreport', text: 'Personels Get Report', group: ['Personels'], required: [] },
+
+    { code: 'breakdownscreen', text: 'Breakdowns Screen', group: ['Breakdowns'], required: [] },
+    { code: 'breakdownview', text: 'Breakdowns View', group: ['Breakdowns'], required: [] },
+    { code: 'breakdownadd', text: 'Breakdowns Add', group: ['Breakdowns'], required: [] },
+    { code: 'breakdownupdate', text: 'Breakdowns Update', group: ['Breakdowns'], required: [] },
+    { code: 'breakdowndelete', text: 'Breakdowns Delete', group: ['Breakdowns'], required: [] },
+    { code: 'breakdownmanageview', text: 'Breakdowns Manage View', group: ['Breakdowns'], required: [] },
+    { code: 'breakdowngetreport', text: 'Breakdowns Get Report', group: ['Breakdowns'], required: [] },
+
+    { code: 'mainteancescreen', text: 'Mainteancies Screen', group: ['Mainteancies'], required: [] },
+    { code: 'mainteanceview', text: 'Mainteancies View', group: ['Mainteancies'], required: [] },
+    { code: 'mainteanceadd', text: 'Mainteancies Add', group: ['Mainteancies'], required: [] },
+    { code: 'mainteanceupdate', text: 'Mainteancies Update', group: ['Mainteancies'], required: [] },
+    { code: 'mainteancedelete', text: 'Mainteancies Delete', group: ['Mainteancies'], required: [] },
+    { code: 'mainteancemanageview', text: 'Mainteancies Manage View', group: ['Mainteancies'], required: [] },
+    { code: 'mainteancegetreport', text: 'Mainteancies Get Report', group: ['Mainteancies'], required: [] },
 
     { code: 'todoscreen', text: 'Todos Screen', group: ['Todos'], required: [] },
     { code: 'todoview', text: 'Todos View', group: ['Todos'], required: [] },

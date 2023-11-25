@@ -47,14 +47,10 @@ async function AddBreakdown(req, res, next) {
 
     let validationErrors = []
     const {
-        Starttime,
         EquipmentID,
         ResponsibleuserID,
     } = req.body
 
-    if (!validator.isISODate(Starttime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTTIME_REQUIRED)
-    }
     if (!validator.isUUID(EquipmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
     }
@@ -74,6 +70,7 @@ async function AddBreakdown(req, res, next) {
         await db.breakdownModel.create({
             ...req.body,
             Uuid: breakdownuuid,
+            Starttime: new Date(),
             Createduser: "System",
             Createtime: new Date(),
             Isactive: true
@@ -92,14 +89,11 @@ async function UpdateBreakdown(req, res, next) {
     let validationErrors = []
     const {
         Uuid,
-        Starttime,
         EquipmentID,
         ResponsibleuserID,
     } = req.body
 
-    if (!validator.isISODate(Starttime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTTIME_REQUIRED)
-    }
+
     if (!validator.isUUID(EquipmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
     }
@@ -128,6 +122,50 @@ async function UpdateBreakdown(req, res, next) {
 
         await db.breakdownModel.update({
             ...req.body,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetBreakdowns(req, res, next)
+}
+
+async function CompleteBreakdown(req, res, next) {
+
+    let validationErrors = []
+    const {
+        Uuid,
+    } = req.body
+
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.BREAKDOWNID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BREAKDOWNID)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    const t = await db.sequelize.transaction();
+    try {
+        const breakdown = db.breakdownModel.findOne({ where: { Uuid: Uuid } })
+        if (!breakdown) {
+            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
+        }
+        if (breakdown.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
+        }
+
+        await db.breakdownModel.update({
+            ...req.body,
+            Iscompleted: true,
+            Endtime: new Date(),
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
@@ -180,4 +218,5 @@ module.exports = {
     AddBreakdown,
     UpdateBreakdown,
     DeleteBreakdown,
+    CompleteBreakdown
 }

@@ -83,12 +83,14 @@ const Routes = [
   { method: 'get', path: '/Breakdowns/:breakdownId', controller: 'Breakdown', action: 'GetBreakdown' },
   { method: 'get', path: '/Breakdowns', controller: 'Breakdown', action: 'GetBreakdowns' },
   { method: 'post', path: '/Breakdowns', controller: 'Breakdown', action: 'AddBreakdown' },
+  { method: 'put', path: '/Breakdowns/Complete', controller: 'Breakdown', action: 'CompleteBreakdown' },
   { method: 'put', path: '/Breakdowns', controller: 'Breakdown', action: 'UpdateBreakdown' },
   { method: 'delete', path: '/Breakdowns/:breakdownId', controller: 'Breakdown', action: 'DeleteBreakdown' },
 
   { method: 'get', path: '/Mainteancies/:mainteanceId', controller: 'Mainteance', action: 'GetMainteance' },
   { method: 'get', path: '/Mainteancies', controller: 'Mainteance', action: 'GetMainteancies' },
   { method: 'post', path: '/Mainteancies', controller: 'Mainteance', action: 'AddMainteance' },
+  { method: 'put', path: '/Mainteancies/Complete', controller: 'Mainteance', action: 'CompleteMainteance' },
   { method: 'put', path: '/Mainteancies', controller: 'Mainteance', action: 'UpdateMainteance' },
   { method: 'delete', path: '/Mainteancies/:mainteanceId', controller: 'Mainteance', action: 'DeleteMainteance' },
 

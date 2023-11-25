@@ -33,6 +33,14 @@ async function UpdateMainteance(req, res, next) {
     }
 }
 
+async function CompleteMainteance(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('mainteanceupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Mainteancies Update', req.language, { en: 'Mainteancies Update', tr: 'Mainteancies Update' }))
+    }
+}
+
 async function DeleteMainteance(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('mainteancedelete')) || permissionchecker(req)) {
         next()
@@ -47,4 +55,5 @@ module.exports = {
     AddMainteance,
     UpdateMainteance,
     DeleteMainteance,
+    CompleteMainteance
 }

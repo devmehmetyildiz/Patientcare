@@ -8,7 +8,7 @@ module.exports = sequelize.define('breakdownModel', {
         type: Sequelize.STRING
     },
     Starttime: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
     },
     Endtime: {
         type: Sequelize.DATE
@@ -24,6 +24,10 @@ module.exports = sequelize.define('breakdownModel', {
     },
     Closeinfo: {
         type: Sequelize.STRING
+    },
+    Iscompleted: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
     },
     Createduser: {
         type: Sequelize.STRING
