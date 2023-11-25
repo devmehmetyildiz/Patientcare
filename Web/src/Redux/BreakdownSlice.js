@@ -108,6 +108,27 @@ export const EditBreakdowns = createAsyncThunk(
     }
 );
 
+export const CompleteBreakdowns = createAsyncThunk(
+    'Breakdowns/CompleteBreakdowns',
+    async (data, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Warehouse, ROUTES.BREAKDOWN + '/Complete', data);
+            dispatch(fillBreakdownnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillBreakdownnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const DeleteBreakdowns = createAsyncThunk(
     'Breakdowns/DeleteBreakdowns',
     async (data, { dispatch, getState }) => {
@@ -139,7 +160,8 @@ export const BreakdownsSlice = createSlice({
         notifications: [],
         isLoading: false,
         isDispatching: false,
-        isDeletemodalopen: false
+        isDeletemodalopen: false,
+        isCompletemodalopen: false,
     },
     reducers: {
         handleSelectedBreakdown: (state, action) => {
@@ -155,7 +177,10 @@ export const BreakdownsSlice = createSlice({
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
-        }
+        },
+        handleCompletemodal: (state, action) => {
+            state.isCompletemodalopen = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -207,6 +232,17 @@ export const BreakdownsSlice = createSlice({
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(CompleteBreakdowns.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(CompleteBreakdowns.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(CompleteBreakdowns.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(DeleteBreakdowns.pending, (state) => {
                 state.isDispatching = true;
             })
@@ -225,7 +261,8 @@ export const {
     handleSelectedBreakdown,
     fillBreakdownnotification,
     removeBreakdownnotification,
-    handleDeletemodal
+    handleDeletemodal,
+    handleCompletemodal
 } = BreakdownsSlice.actions;
 
 export default BreakdownsSlice.reducer;

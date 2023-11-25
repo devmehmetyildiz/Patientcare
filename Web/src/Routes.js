@@ -184,6 +184,14 @@ const Personels = lazy(() => import('./Containers/Personels/Personels'));
 const PersonelsCreate = lazy(() => import('./Containers/Personels/PersonelsCreate'));
 const PersonelsEdit = lazy(() => import('./Containers/Personels/PersonelsEdit'));
 
+const Breakdowns = lazy(() => import('./Containers/Breakdowns/Breakdowns'));
+const BreakdownsCreate = lazy(() => import('./Containers/Breakdowns/BreakdownsCreate'));
+const BreakdownsEdit = lazy(() => import('./Containers/Breakdowns/BreakdownsEdit'));
+
+const Mainteancies = lazy(() => import('./Containers/Mainteancies/Mainteancies'));
+const MainteanciesCreate = lazy(() => import('./Containers/Mainteancies/MainteanciesCreate'));
+const MainteanciesEdit = lazy(() => import('./Containers/Mainteancies/MainteanciesEdit'));
+
 const UnapprovedMovements = lazy(() => import('./Containers/Unapproveds/UnapprovedMovements'));
 
 const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
@@ -334,6 +342,12 @@ class Routes extends Component {
       { exact: true, path: "/Personels", auth: true, component: Personels, permission: 'personelscreen' },
       { exact: true, path: "/Personels/Create", auth: true, component: PersonelsCreate, permission: 'personelscreen' },
       { exact: true, path: "/Personels/:PersonelID/Edit", auth: true, component: PersonelsEdit, permission: 'personelscreen' },
+      { exact: true, path: "/Breakdowns", auth: true, component: Breakdowns, permission: 'breakdownscreen' },
+      { exact: true, path: "/Breakdowns/Create", auth: true, component: BreakdownsCreate, permission: 'breakdownscreen' },
+      { exact: true, path: "/Breakdowns/:BreakdownID/Edit", auth: true, component: BreakdownsEdit, permission: 'breakdownscreen' },
+      { exact: true, path: "/Mainteancies", auth: true, component: Mainteancies, permission: 'mainteancescreen' },
+      { exact: true, path: "/Mainteancies/Create", auth: true, component: MainteanciesCreate, permission: 'mainteancescreen' },
+      { exact: true, path: "/Mainteancies/:MainteanceID/Edit", auth: true, component: MainteanciesEdit, permission: 'mainteancescreen' },
       { exact: true, path: "/UnapprovedMovements", auth: true, component: UnapprovedMovements, permission: 'stockmovementscreen' },
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'patientscreen' },

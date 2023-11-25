@@ -108,6 +108,27 @@ export const EditMainteancies = createAsyncThunk(
     }
 );
 
+export const CompleteMainteancies = createAsyncThunk(
+    'Mainteancies/CompleteMainteancies',
+    async (data, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Warehouse, ROUTES.MAINTEANCE + '/Complete', data);
+            dispatch(fillMainteancenotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillMainteancenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const DeleteMainteancies = createAsyncThunk(
     'Mainteancies/DeleteMainteancies',
     async (data, { dispatch, getState }) => {
@@ -139,7 +160,8 @@ export const MainteanciesSlice = createSlice({
         notifications: [],
         isLoading: false,
         isDispatching: false,
-        isDeletemodalopen: false
+        isDeletemodalopen: false,
+        isCompletemodalopen: false,
     },
     reducers: {
         handleSelectedMainteance: (state, action) => {
@@ -155,7 +177,10 @@ export const MainteanciesSlice = createSlice({
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
-        }
+        },
+        handleCompletemodal: (state, action) => {
+            state.isCompletemodalopen = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -207,6 +232,17 @@ export const MainteanciesSlice = createSlice({
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(CompleteMainteancies.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(CompleteMainteancies.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(CompleteMainteancies.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(DeleteMainteancies.pending, (state) => {
                 state.isDispatching = true;
             })
@@ -225,7 +261,8 @@ export const {
     handleSelectedMainteance,
     fillMainteancenotification,
     removeMainteancenotification,
-    handleDeletemodal
+    handleDeletemodal,
+    handleCompletemodal
 } = MainteanciesSlice.actions;
 
 export default MainteanciesSlice.reducer;
