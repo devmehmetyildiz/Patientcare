@@ -58,7 +58,7 @@ async function AddPersonel(req, res, next) {
     if (!validator.isString(CountryID)) {
         validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
     }
-    if (!validator.isNumber(Professions)) {
+    if (!validator.isString(Professions)) {
         validationErrors.push(messages.VALIDATION_ERROR.PROFESSION_REQUIRED)
     }
     if (!validator.isISODate(Workstarttime)) {
@@ -93,6 +93,65 @@ async function AddPersonel(req, res, next) {
     GetPersonels(req, res, next)
 }
 
+async function AddRecordPersonel(req, res, next) {
+
+    const t = await db.sequelize.transaction();
+    try {
+        console.log('req.body: ', req.body);
+        for (const data of req.body) {
+            const {
+                Name,
+                Surname,
+                CountryID,
+                Professions,
+                Workstarttime,
+                Gender,
+            } = data
+
+            let validationErrors = []
+            
+            if (!validator.isString(Name)) {
+                validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+            }
+            if (!validator.isString(Surname)) {
+                validationErrors.push(messages.VALIDATION_ERROR.SURNAME_REQUIRED)
+            }
+            if (!validator.isString(CountryID)) {
+                validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
+            }
+            if (!validator.isString(Professions)) {
+                validationErrors.push(messages.VALIDATION_ERROR.PROFESSION_REQUIRED)
+            }
+            if (!validator.isISODate(Workstarttime)) {
+                validationErrors.push(messages.VALIDATION_ERROR.WORKSTARTTIME_REQUIRED)
+            }
+            if (!validator.isString(Gender)) {
+                validationErrors.push(messages.VALIDATION_ERROR.GENDER_REQUIRED)
+            }
+
+            if (validationErrors.length > 0) {
+                return next(createValidationError(validationErrors, req.language))
+            }
+
+            let personeluuid = uuid()
+
+            await db.personelModel.create({
+                ...data,
+                Uuid: personeluuid,
+                Createduser: "System",
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+        }
+
+        await t.commit()
+    } catch (err) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(err))
+    }
+    GetPersonels(req, res, next)
+}
+
 async function UpdatePersonel(req, res, next) {
 
     let validationErrors = []
@@ -115,7 +174,7 @@ async function UpdatePersonel(req, res, next) {
     if (!validator.isString(CountryID)) {
         validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
     }
-    if (!validator.isNumber(Professions)) {
+    if (!validator.isString(Professions)) {
         validationErrors.push(messages.VALIDATION_ERROR.PROFESSION_REQUIRED)
     }
     if (!validator.isISODate(Workstarttime)) {
@@ -195,4 +254,5 @@ module.exports = {
     AddPersonel,
     UpdatePersonel,
     DeletePersonel,
+    AddRecordPersonel
 }

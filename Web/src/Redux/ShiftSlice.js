@@ -36,7 +36,7 @@ export const GetShifts = createAsyncThunk(
     'Shifts/GetShifts',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.SHIFT);
+            const response = await instanse.get(config.services.Business, ROUTES.SHIFT);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -50,7 +50,7 @@ export const GetShift = createAsyncThunk(
     'Shifts/GetShift',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.SHIFT}/${guid}`);
+            const response = await instanse.get(config.services.Business, `${ROUTES.SHIFT}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -66,7 +66,7 @@ export const AddShifts = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Setting, ROUTES.SHIFT, data);
+            const response = await instanse.post(config.services.Business, ROUTES.SHIFT, data);
             dispatch(fillShiftnotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
@@ -90,7 +90,7 @@ export const EditShifts = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Setting, ROUTES.SHIFT, data);
+            const response = await instanse.put(config.services.Business, ROUTES.SHIFT, data);
             dispatch(fillShiftnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
@@ -115,7 +115,7 @@ export const DeleteShifts = createAsyncThunk(
 
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.SHIFT}/${data.Uuid}`);
+            const response = await instanse.delete(config.services.Business, `${ROUTES.SHIFT}/${data.Uuid}`);
             dispatch(fillShiftnotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],

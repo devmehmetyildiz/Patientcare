@@ -5,6 +5,7 @@ const patientmovementModel = require('./PatientmovementModel')
 const todoModel = require('./TodoModel')
 const patienttododefineModel = require('./PatienttododefineModel')
 const personelModel = require('./PersonelModel')
+const shiftModel = require('./ShiftModel')
 
 
 module.exports = {
@@ -14,5 +15,6 @@ module.exports = {
     patientmovementModel,
     todoModel,
     patienttododefineModel,
-    personelModel
+    personelModel,
+    shiftModel
 }

@@ -17,7 +17,7 @@ module.exports = sequelize.define('personelModel', {
         type: Sequelize.STRING
     },
     Professions: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
     },
     Workstarttime: {
         type: Sequelize.DATE

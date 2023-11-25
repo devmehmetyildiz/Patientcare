@@ -25,7 +25,7 @@ export default class Periods extends Component {
 
   render() {
 
-    const { Personels, Profile, handleDeletemodal, handleSelectedPersonel } = this.props
+    const { Personels, Profile, handleDeletemodal, handleSelectedPersonel, AddRecordPersonels } = this.props
     const { isLoading, isDispatching } = Personels
 
     const colProps = {
@@ -85,9 +85,11 @@ export default class Periods extends Component {
                   list={list}
                   initialConfig={initialConfig}
                   metaKey={metaKey}
+                  AddRecord={AddRecordPersonels}
                   Showcreatebutton
                   Showcolumnchooser
                   Showexcelexport
+                  Showexcelimport
                 />
               </Grid>
             </Headerwrapper>
@@ -124,11 +126,11 @@ export default class Periods extends Component {
   professionCellhandler = (col) => {
     const { Profile } = this.props
     const Professionoptions = [
-      { key: 0, text: Literals.Options.Professionoptions.value0[Profile.Language], value: 0 },
-      { key: 1, text: Literals.Options.Professionoptions.value1[Profile.Language], value: 1 },
-      { key: 2, text: Literals.Options.Professionoptions.value2[Profile.Language], value: 2 },
-      { key: 3, text: Literals.Options.Professionoptions.value3[Profile.Language], value: 3 },
-      { key: 4, text: Literals.Options.Professionoptions.value4[Profile.Language], value: 4 },
+      { key: 0, text: Literals.Options.Professionoptions.value0[Profile.Language], value: "0" },
+      { key: 1, text: Literals.Options.Professionoptions.value1[Profile.Language], value: "1" },
+      { key: 2, text: Literals.Options.Professionoptions.value2[Profile.Language], value: "2" },
+      { key: 3, text: Literals.Options.Professionoptions.value3[Profile.Language], value: "3" },
+      { key: 4, text: Literals.Options.Professionoptions.value4[Profile.Language], value: "4" },
     ]
     return Professionoptions.find(u => u.value === col.value)?.text
   }

@@ -131,7 +131,7 @@ export default class PersonelsEdit extends Component {
     if (!validator.isString(data.CountryID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Countryidrequired[Profile.Language] })
     }
-    if (!validator.isNumber(data.Professions)) {
+    if (!validator.isString(data.Professions)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Professionsrequired[Profile.Language] })
     }
     if (!validator.isISODate(data.Workstarttime)) {

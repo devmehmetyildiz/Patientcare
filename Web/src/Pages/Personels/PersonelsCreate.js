@@ -33,11 +33,11 @@ export default class PersonelsCreate extends Component {
     ]
 
     const Professionoptions = [
-      { key: 0, text: Literals.Options.Professionoptions.value0[Profile.Language], value: 0 },
-      { key: 1, text: Literals.Options.Professionoptions.value1[Profile.Language], value: 1 },
-      { key: 2, text: Literals.Options.Professionoptions.value2[Profile.Language], value: 2 },
-      { key: 3, text: Literals.Options.Professionoptions.value3[Profile.Language], value: 3 },
-      { key: 4, text: Literals.Options.Professionoptions.value4[Profile.Language], value: 4 },
+      { key: 0, text: Literals.Options.Professionoptions.value0[Profile.Language], value: "0" },
+      { key: 1, text: Literals.Options.Professionoptions.value1[Profile.Language], value: "1" },
+      { key: 2, text: Literals.Options.Professionoptions.value2[Profile.Language], value: "2" },
+      { key: 3, text: Literals.Options.Professionoptions.value3[Profile.Language], value: "3" },
+      { key: 4, text: Literals.Options.Professionoptions.value4[Profile.Language], value: "4" },
     ]
 
 
@@ -102,7 +102,7 @@ export default class PersonelsCreate extends Component {
     if (!validator.isString(data.CountryID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Countryidrequired[Profile.Language] })
     }
-    if (!validator.isNumber(data.Professions)) {
+    if (!validator.isString(data.Professions)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Professionsrequired[Profile.Language] })
     }
     if (!validator.isISODate(data.Workstarttime)) {

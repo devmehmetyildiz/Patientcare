@@ -84,6 +84,30 @@ export const AddPersonels = createAsyncThunk(
     }
 );
 
+export const AddRecordPersonels = createAsyncThunk(
+    'Personels/AddRecordPersonels',
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Business, ROUTES.PERSONEL + '/Addrecord', data);
+            dispatch(fillPersonelnotification({
+                type: 'Success',
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
+            }));
+            clearForm && clearForm('PersonelsCreate')
+            closeModal && closeModal()
+            history && history.push(redirectUrl ? redirectUrl : '/Personels');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPersonelnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 
 export const EditPersonels = createAsyncThunk(
     'Personels/EditPersonels',
@@ -194,6 +218,17 @@ export const PersonelsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(AddPersonels.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddRecordPersonels.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(AddRecordPersonels.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(AddRecordPersonels.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })

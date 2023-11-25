@@ -29,9 +29,16 @@ const Routes = [
 
     { method: 'get', path: '/Personels/:personelId', controller: 'Personel', action: 'GetPersonel' },
     { method: 'get', path: '/Personels', controller: 'Personel', action: 'GetPersonels' },
+    { method: 'post', path: '/Personels/Addrecord', controller: 'Personel', action: 'AddRecordPersonel' },
     { method: 'post', path: '/Personels', controller: 'Personel', action: 'AddPersonel' },
     { method: 'put', path: '/Personels', controller: 'Personel', action: 'UpdatePersonel' },
     { method: 'delete', path: '/Personels/:personelId', controller: 'Personel', action: 'DeletePersonel' },
+
+    { method: 'get', path: '/Shifts/:shiftId', controller: 'Shift', action: 'GetShift' },
+    { method: 'get', path: '/Shifts', controller: 'Shift', action: 'GetShifts' },
+    { method: 'post', path: '/Shifts', controller: 'Shift', action: 'AddShift' },
+    { method: 'put', path: '/Shifts', controller: 'Shift', action: 'UpdateShift' },
+    { method: 'delete', path: '/Shifts/:shiftId', controller: 'Shift', action: 'DeleteShift' },
 
     { method: 'get', path: '/Todos/GetTodosbyPatientID/:patientId', controller: 'Todo', action: 'GetTodosbyPatientID' },
     { method: 'get', path: '/Todos/:todoId', controller: 'Todo', action: 'GetTodo' },
