@@ -109,8 +109,56 @@ const messages = {
         tr: 'Yapılacak bulunamadı',
       }
     },
+    SHIFT_NOT_FOUND: {
+      code: 'SHIFT_NOT_FOUND', description: {
+        en: 'Shift not found',
+        tr: 'Vardiya bulunamadı',
+      }
+    },
+    SHIFT_NOT_ACTIVE: {
+      code: 'SHIFT_NOT_ACTIVE', description: {
+        en: 'Shift not active',
+        tr: 'Vardiya aktif değil',
+      }
+    },
   },
   VALIDATION_ERROR: {
+    STARTDATE_REQUIRED: {
+      code: 'STARTDATE_REQUIRED', description: {
+        en: 'The start date required',
+        tr: 'Bu işlem başlangıç tarihi gerekli',
+      }
+    },
+    PERIOD_REQUIRED: {
+      code: 'PERIOD_REQUIRED', description: {
+        en: 'The period required',
+        tr: 'Bu işlem periyot gerekli',
+      }
+    },
+    STARTTIME_REQUIRED: {
+      code: 'STARTTIME_REQUIRED', description: {
+        en: 'The start time required',
+        tr: 'Bu işlem başlangıç saati gerekli',
+      }
+    },
+    ENDTIME_REQUIRED: {
+      code: 'ENDTIME_REQUIRED', description: {
+        en: 'The end time required',
+        tr: 'Bu işlem bitiş saati gerekli',
+      }
+    },
+    UNSUPPORTED_SHIFTID: {
+      code: 'UNSUPPORTED_SHIFTID', description: {
+        en: 'shift id is unsupported',
+        tr: 'Vardiya numarası geçersiz',
+      }
+    },
+    SHIFTID_REQUIRED: {
+      code: 'SHIFTID_REQUIRED', description: {
+        en: 'The shift id required',
+        tr: 'Bu işlem için vardiya no gerekli',
+      }
+    },
     FIRSTNAME_REQUIRED: {
       code: 'FIRSTNAME_REQUIRED', description: {
         en: 'The firstname required',

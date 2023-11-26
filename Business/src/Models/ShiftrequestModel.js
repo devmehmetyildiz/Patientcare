@@ -1,4 +1,4 @@
-module.exports = sequelize.define('shiftModel', {
+module.exports = sequelize.define('shiftrequestModel', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -7,20 +7,14 @@ module.exports = sequelize.define('shiftModel', {
     Uuid: {
         type: Sequelize.STRING
     },
-    Name: {
-        type: Sequelize.STRING
+    Startdate: {
+        type: Sequelize.DATE
     },
-    Starttime: {
-        type: Sequelize.STRING
+    Enddate: {
+        type: Sequelize.DATE
     },
-    Endtime: {
-        type: Sequelize.STRING
-    },
-    Priority: {
+    Period: {
         type: Sequelize.INTEGER
-    },
-    Createduser: {
-        type: Sequelize.STRING
     },
     Createtime: {
         type: Sequelize.DATE
@@ -41,6 +35,6 @@ module.exports = sequelize.define('shiftModel', {
         type: Sequelize.BOOLEAN
     }
 }, {
-    tableName: 'shifts', // replace with the name of your existing table
+    tableName: 'shiftrequests', // replace with the name of your existing table
     timestamps: false
 });

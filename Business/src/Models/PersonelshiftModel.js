@@ -1,4 +1,4 @@
-module.exports = sequelize.define('shiftModel', {
+module.exports = sequelize.define('personelshiftModel', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -7,19 +7,19 @@ module.exports = sequelize.define('shiftModel', {
     Uuid: {
         type: Sequelize.STRING
     },
-    Name: {
+    ShiftrequestID: {
         type: Sequelize.STRING
     },
-    Starttime: {
+    PersonelID: {
         type: Sequelize.STRING
     },
-    Endtime: {
+    ShiftID: {
         type: Sequelize.STRING
     },
-    Priority: {
-        type: Sequelize.INTEGER
+    FloorID: {
+        type: Sequelize.STRING
     },
-    Createduser: {
+    Occuredday: {
         type: Sequelize.STRING
     },
     Createtime: {
@@ -41,6 +41,6 @@ module.exports = sequelize.define('shiftModel', {
         type: Sequelize.BOOLEAN
     }
 }, {
-    tableName: 'shifts', // replace with the name of your existing table
+    tableName: 'personelshifts', // replace with the name of your existing table
     timestamps: false
 });
