@@ -120,6 +120,6 @@ export default class Beds extends Component {
 
   boolCellhandler = (col) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    return col.value !== null && (col.value ? Literals.Messages.Filled[Profile.Language] : Literals.Messages.Empty[Profile.Language])
   }
 }

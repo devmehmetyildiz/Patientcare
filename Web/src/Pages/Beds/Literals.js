@@ -117,7 +117,15 @@ const Literals = {
         No: {
             tr: "HAYIR",
             en: "NO"
-        }
+        },
+        Filled: {
+            tr: "Dolu",
+            en: "Filled"
+        },
+        Empty: {
+            tr: "Boş",
+            en: "Empty"
+        },
     }
 }
 

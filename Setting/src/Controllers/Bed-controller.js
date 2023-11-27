@@ -130,18 +130,15 @@ async function ChangeBedstatus(req, res, next) {
 
     let validationErrors = []
     const {
-        Uuid,
-        Status
+        OldUuid,
+        NewUuid
     } = req.body
 
-    if (!Uuid) {
+    if (!NewUuid) {
         validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
     }
-    if (!validator.isUUID(Uuid)) {
+    if (!validator.isUUID(NewUuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
-    }
-    if (!validator.isBoolean(Status)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISOCCUPIED_REQUIRED)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -149,20 +146,36 @@ async function ChangeBedstatus(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const bed = db.bedModel.findOne({ where: { Uuid: Uuid } })
-        if (!bed) {
+        if (OldUuid && validator.isUUID(OldUuid)) {
+            const oldbed = db.bedModel.findOne({ where: { Uuid: OldUuid } })
+            if (!oldbed) {
+                return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
+            }
+            if (oldbed.Isactive === false) {
+                return next(createAccessDenied([messages.ERROR.BED_NOT_ACTIVE], req.language))
+            }
+
+            await db.bedModel.update({
+                ...oldbed,
+                Isoccupied: false,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { Uuid: OldUuid } }, { transaction: t })
+        }
+        const newBed = db.bedModel.findOne({ where: { Uuid: NewUuid } })
+        if (!newBed) {
             return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
         }
-        if (bed.Isactive === false) {
+        if (newBed.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.BED_NOT_ACTIVE], req.language))
         }
 
         await db.bedModel.update({
-            ...bed,
-            Isoccupied: Status,
+            ...newBed,
+            Isoccupied: true,
             Updateduser: "System",
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: NewUuid } }, { transaction: t })
 
         await t.commit()
     } catch (error) {

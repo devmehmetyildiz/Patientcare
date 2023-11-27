@@ -186,7 +186,7 @@ export default function PatientsCreate(props) {
   const Bedoptions = (
     validator.isUUID(context.formstates[`${PAGE_NAME}/FloorID`]) &&
     validator.isUUID(context.formstates[`${PAGE_NAME}/RoomID`])) ?
-    (Beds.list || []).filter(u => u.Isactive && u.RoomID === context.formstates[`${PAGE_NAME}/RoomID`]).map(bed => {
+    (Beds.list || []).filter(u => u.Isactive && u.Isoccupied === 0 && u.RoomID === context.formstates[`${PAGE_NAME}/RoomID`]).map(bed => {
       return { key: bed.Uuid, text: bed.Name, value: bed.Uuid }
     }) : []
 

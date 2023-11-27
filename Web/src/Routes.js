@@ -193,6 +193,8 @@ const MainteanciesCreate = lazy(() => import('./Containers/Mainteancies/Maintean
 const MainteanciesEdit = lazy(() => import('./Containers/Mainteancies/MainteanciesEdit'));
 
 const UnapprovedMovements = lazy(() => import('./Containers/Unapproveds/UnapprovedMovements'));
+const Personelshifts = lazy(() => import('./Containers/Personelshifts/Personelshifts'));
+const PersonelshiftsDetail = lazy(() => import('./Containers/Personelshifts/PersonelshiftsDetail'));
 
 const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
 const PasswordChange = lazy(() => import('./Containers/Auth/PasswordChange'));
@@ -349,6 +351,8 @@ class Routes extends Component {
       { exact: true, path: "/Mainteancies/Create", auth: true, component: MainteanciesCreate, permission: 'mainteancescreen' },
       { exact: true, path: "/Mainteancies/:MainteanceID/Edit", auth: true, component: MainteanciesEdit, permission: 'mainteancescreen' },
       { exact: true, path: "/UnapprovedMovements", auth: true, component: UnapprovedMovements, permission: 'stockmovementscreen' },
+      { exact: true, path: "/Personelshifts", auth: true, component: Personelshifts, permission: 'shiftscreen' },
+      { exact: true, path: "/Personelshifts/:ShiftID", auth: true, component: PersonelshiftsDetail, permission: 'shiftscreen' },
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/:PatientID/Edit", auth: true, component: PreregistrationsEdit, permission: 'patientscreen' },

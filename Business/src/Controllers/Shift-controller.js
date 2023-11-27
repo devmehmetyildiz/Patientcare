@@ -38,10 +38,27 @@ async function GetShift(req, res, next) {
 }
 
 async function GetShiftrequests(req, res, next) {
-
-
     try {
         const shiftrequests = await db.shiftrequestModel.findAll()
+        res.status(200).json(shiftrequests)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function GetShiftrequest(req, res, next) {
+    let validationErrors = []
+    if (!req.params.shiftrequestId) {
+        validationErrors.push(messages.VALIDATION_ERROR.SHIFTID_REQUIRED)
+    }
+    if (!validator.isUUID(req.params.shiftrequestId)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    try {
+        const shiftrequests = await db.shiftrequestModel.findOne({ where: { Uuid: req.params.shiftrequestId } });
         res.status(200).json(shiftrequests)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -196,6 +213,41 @@ async function DeleteShift(req, res, next) {
         return next(sequelizeErrorCatcher(error))
     }
     GetShifts(req, res, next)
+}
+
+async function DeleteShiftrequest(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.shiftId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.SHIFTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const shift = db.shiftrequestModel.findOne({ where: { Uuid: Uuid } })
+        if (!shift) {
+            return next(createNotfounderror([messages.ERROR.SHIFT_NOT_FOUND], req.language))
+        }
+        if (shift.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.SHIFT_NOT_ACTIVE], req.language))
+        }
+
+        await db.shiftrequestModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.personelshiftModel.destroy({ where: { ShiftrequestID: Uuid }, transaction: t });
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetShiftrequests(req, res, next)
 }
 
 async function Addshiftperiod(req, res, next) {
@@ -364,5 +416,7 @@ module.exports = {
     DeleteShift,
     Addshiftperiod,
     GetShiftrequests,
-    GetPersonelshifts
+    GetPersonelshifts,
+    GetShiftrequest,
+    DeleteShiftrequest
 }

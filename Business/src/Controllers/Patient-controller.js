@@ -316,6 +316,21 @@ async function Completeprepatient(req, res, next) {
             Isactive: true
         }, { where: { Uuid: patient.Uuid } }, { transaction: t })
 
+        try {
+            await axios({
+                method: 'PUT',
+                url: config.services.Setting + "Beds/ChangeBedstatus",
+                headers: {
+                    session_key: config.session.secret
+                },
+                data: {
+                    OldUuid: null,
+                    NewUuid: BedID
+                }
+            })
+        } catch (error) {
+            return next(requestErrorCatcher(error, 'Setting'))
+        }
 
         const lastpatientmovement = await db.patientmovementModel.findOne({
             order: [['Id', 'DESC']],
@@ -550,6 +565,22 @@ async function UpdatePatientplace(req, res, next) {
         }
         if (patient.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+        }
+
+        try {
+            await axios({
+                method: 'PUT',
+                url: config.services.Setting + "Beds/ChangeBedstatus",
+                headers: {
+                    session_key: config.session.secret
+                },
+                data: {
+                    OldUuid: patient.BedID,
+                    NewUuid: BedID
+                }
+            })
+        } catch (error) {
+            return next(requestErrorCatcher(error, 'Setting'))
         }
 
         await db.patientModel.update({

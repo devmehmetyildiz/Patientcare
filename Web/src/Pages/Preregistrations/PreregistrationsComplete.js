@@ -197,7 +197,7 @@ export default class PreregistrationsComplete extends Component {
     const Bedoptions = (
       validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/FloorID`]) &&
       validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/RoomID`])) ?
-      (Beds.list || []).filter(u => u.Isactive && u.RoomID === this.context.formstates[`${this.PAGE_NAME}/RoomID`]).map(bed => {
+      (Beds.list || []).filter(u => u.Isactive && u.Isoccupied === 0 && u.RoomID === this.context.formstates[`${this.PAGE_NAME}/RoomID`]).map(bed => {
         return { key: bed.Uuid, text: bed.Name, value: bed.Uuid }
       }) : []
 

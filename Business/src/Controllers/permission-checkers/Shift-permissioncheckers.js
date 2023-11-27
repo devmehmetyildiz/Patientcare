@@ -15,6 +15,15 @@ async function GetShiftrequests(req, res, next) {
         next(createAccessDenied('Shift View', req.language, { en: 'View Shift', tr: 'View Shift' }))
     }
 }
+
+async function GetShiftrequest(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('shiftview')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Shift View', req.language, { en: 'View Shift', tr: 'View Shift' }))
+    }
+}
+
 async function GetPersonelshifts(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('shiftview')) || permissionchecker(req)) {
         next()
@@ -63,6 +72,14 @@ async function DeleteShift(req, res, next) {
     }
 }
 
+async function DeleteShiftrequest(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('shiftdelete')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Shift Delete', req.language, { en: 'Shift Delete', tr: 'Shift Delete' }))
+    }
+}
+
 module.exports = {
     GetShifts,
     GetShift,
@@ -71,5 +88,7 @@ module.exports = {
     DeleteShift,
     Addshiftperiod,
     GetShiftrequests,
-    GetPersonelshifts
+    GetPersonelshifts,
+    GetShiftrequest,
+    DeleteShiftrequest
 }
