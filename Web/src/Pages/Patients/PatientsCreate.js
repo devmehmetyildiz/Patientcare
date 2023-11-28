@@ -13,7 +13,6 @@ import FormInput from '../../Utils/FormInput'
 import CostumertypesCreate from '../../Containers/Costumertypes/CostumertypesCreate'
 import PatienttypesCreate from '../../Containers/Patienttypes/PatienttypesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
-import CasesCreate from '../../Containers/Cases/CasesCreate'
 import PatientdefinesCreate from '../../Containers/Patientdefines/PatientdefinesCreate'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import { useDropzone } from 'react-dropzone';
@@ -24,7 +23,6 @@ import StockdefinesCreate from '../../Containers/Stockdefines/StockdefinesCreate
 import AddModal from '../../Utils/AddModal'
 import LoadingPage from '../../Utils/LoadingPage'
 import { FormContext } from '../../Provider/FormProvider'
-import { GetBed } from '../../Redux/BedSlice'
 
 export default function PatientsCreate(props) {
 

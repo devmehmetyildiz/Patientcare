@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Loader, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
+import { Breadcrumb, Icon, Loader, Grid, GridColumn } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'

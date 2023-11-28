@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Loader, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
-import { MOVEMENTTYPES } from '../../Utils/Constants'
+import { Icon, Loader } from 'semantic-ui-react'
+import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Notification from '../../Utils/Notification'
 import Literals from './Literals'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
@@ -25,7 +22,7 @@ export default class Beds extends Component {
   }
 
   render() {
-    const { Beds, Profile, handleDeletemodal, handleSelectedBed, AddRecordBeds } = this.props
+    const { Beds, Profile, handleDeletemodal, handleSelectedBed } = this.props
     const { isLoading, isDispatching } = Beds
 
     const Columns = [

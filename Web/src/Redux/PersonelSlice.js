@@ -3,7 +3,6 @@ import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
-import notification from '../Utils/Notification';
 
 const Literals = {
     addcode: {

@@ -118,7 +118,7 @@ export default function FormInput(props) {
                         return <Form.Input
                             {...contextProp}
                             icon={display ? true : false}
-                            defaultValue={formdata[name] ? formdata[name] : ''}
+                            value={formdata[name] ? formdata[name] : ''}
                             onChange={(e) => {
                                 e.preventDefault()
                                 if (disableOnchange) {

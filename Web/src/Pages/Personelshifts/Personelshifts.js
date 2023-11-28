@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
+import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
@@ -15,7 +15,6 @@ import { getInitialconfig } from '../../Utils/Constants'
 import validator from '../../Utils/Validator'
 
 export default class Personelshifts extends Component {
-
 
   componentDidMount() {
     const { GetShiftrequests } = this.props

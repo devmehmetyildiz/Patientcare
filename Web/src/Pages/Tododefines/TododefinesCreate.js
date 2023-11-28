@@ -1,11 +1,8 @@
 
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Checkbox, Divider, Dropdown, Form, Icon, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
-import formToObject from 'form-to-object'
+import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
-import Notification from '../../Utils/Notification'
 import Literals from './Literals'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'

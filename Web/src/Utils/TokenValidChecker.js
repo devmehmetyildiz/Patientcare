@@ -1,7 +1,6 @@
 import Cookies from 'universal-cookie';
 import jwtDecode from 'jwt-decode';
 
-
 export const TokenValidChecker = () => {
   try {
     const cookies = new Cookies();

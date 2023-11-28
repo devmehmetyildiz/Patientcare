@@ -10,7 +10,6 @@ export default function PatientsEditplace(
         Editpatientplace,
         fillPatientnotification,
         handlePlacemodal,
-        handleSelectedPatient,
         GetFloors,
         GetRooms,
         GetBeds,

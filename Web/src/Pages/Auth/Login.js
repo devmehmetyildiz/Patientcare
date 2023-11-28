@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import img from "../../Assets/img"
 import { Button, Form, Grid, Header, Divider, Icon } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
-import Notification from '../../Utils/Notification'
 import { Link, withRouter } from 'react-router-dom'
 
 class Login extends Component {

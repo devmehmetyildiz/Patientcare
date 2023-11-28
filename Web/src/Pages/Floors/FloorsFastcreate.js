@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Literals from './Literals'
-import { Button, Dropdown, Form, Label, Modal } from 'semantic-ui-react'
+import { Button, Dropdown, Form, Modal } from 'semantic-ui-react'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 
 export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, handleFastcreatemodal }) {
@@ -39,23 +39,23 @@ export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, ha
                         </Form.Field>
                         <Form.Group widths={'equal'}>
                             <Form.Input
-                                onChange={(e) => { setRecord({ ...record, ['Formatfloorstringstart']: e.target.value }) }}
+                                onChange={(e) => { setRecord({ ...record, 'Formatfloorstringstart': e.target.value }) }}
                                 label={Literals.Columns.Formatfloorstringstart[Profile.Language]}
                                 placeholder={Literals.Columns.Formatfloorstringstart[Profile.Language]}
                             />
                             <Form.Input
-                                onChange={(e) => { setRecord({ ...record, ['Formatfloorstringend']: e.target.value }) }}
+                                onChange={(e) => { setRecord({ ...record, 'Formatfloorstringend': e.target.value }) }}
                                 label={Literals.Columns.Formatfloorstringend[Profile.Language]}
                                 placeholder={Literals.Columns.Formatfloorstringend[Profile.Language]}
                             />
                             <Form.Input
-                                onChange={(e) => { setRecord({ ...record, ['Floorstartnumber']: e.target.value }) }}
+                                onChange={(e) => { setRecord({ ...record, 'Floorstartnumber': e.target.value }) }}
                                 label={Literals.Columns.Floorstartnumber[Profile.Language]}
                                 placeholder={Literals.Columns.Floorstartnumber[Profile.Language]}
                                 type='number'
                             />
                             <Form.Input
-                                onChange={(e) => { setRecord({ ...record, ['Floorendnumber']: e.target.value }) }}
+                                onChange={(e) => { setRecord({ ...record, 'Floorendnumber': e.target.value }) }}
                                 label={Literals.Columns.Floorendnumber[Profile.Language]}
                                 placeholder={Literals.Columns.Floorendnumber[Profile.Language]}
                                 type='number'
@@ -64,23 +64,23 @@ export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, ha
                         <Pagedivider />
                         <Form.Group widths={'equal'}>
                             <Form.Input
-                                onChange={(e) => { setRecord({ ...record, ['Formatroomstringstart']: e.target.value }) }}
+                                onChange={(e) => { setRecord({ ...record, 'Formatroomstringstart': e.target.value }) }}
                                 label={Literals.Columns.Formatroomstringstart[Profile.Language]}
                                 placeholder={Literals.Columns.Formatroomstringstart[Profile.Language]}
                             />
                             <Form.Input
-                                onChange={(e) => { setRecord({ ...record, ['Formatroomstringend']: e.target.value }) }}
+                                onChange={(e) => { setRecord({ ...record, 'Formatroomstringend': e.target.value }) }}
                                 label={Literals.Columns.Formatroomstringend[Profile.Language]}
                                 placeholder={Literals.Columns.Formatroomstringend[Profile.Language]}
                             />
                             <Form.Input
-                                onChange={(e) => { setRecord({ ...record, ['Roomstartnumber']: e.target.value }) }}
+                                onChange={(e) => { setRecord({ ...record, 'Roomstartnumber': e.target.value }) }}
                                 label={Literals.Columns.Roomstartnumber[Profile.Language]}
                                 placeholder={Literals.Columns.Roomstartnumber[Profile.Language]}
                                 type='number'
                             />
                             <Form.Input
-                                onChange={(e) => { setRecord({ ...record, ['Roomendnumber']: e.target.value }) }}
+                                onChange={(e) => { setRecord({ ...record, 'Roomendnumber': e.target.value }) }}
                                 label={Literals.Columns.Roomendnumber[Profile.Language]}
                                 placeholder={Literals.Columns.Roomendnumber[Profile.Language]}
                                 type='number'
@@ -89,23 +89,23 @@ export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, ha
                         <Pagedivider />
                         <Form.Group widths={'equal'}>
                             <Form.Input
-                                onChange={(e) => { setRecord({ ...record, ['Formatbedstringstart']: e.target.value }) }}
+                                onChange={(e) => { setRecord({ ...record, 'Formatbedstringstart': e.target.value }) }}
                                 label={Literals.Columns.Formatbedstringstart[Profile.Language]}
                                 placeholder={Literals.Columns.Formatbedstringstart[Profile.Language]}
                             />
                             <Form.Input
-                                onChange={(e) => { setRecord({ ...record, ['Formatbedstringend']: e.target.value }) }}
+                                onChange={(e) => { setRecord({ ...record, 'Formatbedstringend': e.target.value }) }}
                                 label={Literals.Columns.Formatbedstringend[Profile.Language]}
                                 placeholder={Literals.Columns.Formatbedstringend[Profile.Language]}
                             />
                             <Form.Input
-                                onChange={(e) => { setRecord({ ...record, ['Bedstartnumber']: e.target.value }) }}
+                                onChange={(e) => { setRecord({ ...record, 'Bedstartnumber': e.target.value }) }}
                                 label={Literals.Columns.Bedstartnumber[Profile.Language]}
                                 placeholder={Literals.Columns.Bedstartnumber[Profile.Language]}
                                 type='number'
                             />
                             <Form.Input
-                                onChange={(e) => { setRecord({ ...record, ['Bedendnumber']: e.target.value }) }}
+                                onChange={(e) => { setRecord({ ...record, 'Bedendnumber': e.target.value }) }}
                                 label={Literals.Columns.Bedendnumber[Profile.Language]}
                                 placeholder={Literals.Columns.Bedendnumber[Profile.Language]}
                                 type='number'

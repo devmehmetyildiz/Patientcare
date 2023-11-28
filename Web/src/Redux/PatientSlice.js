@@ -4,7 +4,6 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import Cookies from 'universal-cookie';
 import config from "../Config";
-import notification from '../Utils/Notification';
 import axios from 'axios'
 import validator from '../Utils/Validator';
 

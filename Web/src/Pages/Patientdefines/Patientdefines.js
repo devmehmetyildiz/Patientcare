@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Loader } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
+import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
-import Notification from '../../Utils/Notification'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import Literals from './Literals'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
@@ -26,7 +24,7 @@ export default class Patientdefines extends Component {
 
   render() {
 
-    const { Patientdefines, Profile, handleSelectedPatientdefine, handleDeletemodal, AddRecordPatientdefines } = this.props
+    const { Patientdefines, Profile, handleSelectedPatientdefine, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Patientdefines
 
     const Columns = [

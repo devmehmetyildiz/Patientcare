@@ -35,10 +35,6 @@ const Literals = {
             tr: 'Açılış Açıklaması',
             en: 'Open Info'
         },
-        Openinfo: {
-            tr: 'Açılış Açıklaması',
-            en: 'Open Info'
-        },
         Closeinfo: {
             tr: 'Kapanış Açıklaması',
             en: 'Close Info'

@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Accordion, Divider, Form, Icon, } from 'semantic-ui-react'
-import { Breadcrumb, Button } from 'semantic-ui-react'
-import formToObject from 'form-to-object'
-import Notification from '../../Utils/Notification'
+import { Accordion, Form, Icon, } from 'semantic-ui-react'
+import { Breadcrumb } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
 import validator from "../../Utils/Validator"
 import Literals from './Literals'

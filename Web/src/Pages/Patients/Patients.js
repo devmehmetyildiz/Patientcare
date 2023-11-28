@@ -1,23 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Accordion, Breadcrumb, Button, Card, Divider, Dropdown, Grid, GridColumn, GridRow, Header, Icon, Image, List, Loader, Modal, Popup, Segment, Tab, Table, Transition } from 'semantic-ui-react'
+import { Breadcrumb, Grid, GridColumn, Icon, Loader } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Notification from "../../Utils/Notification"
-import InnerHTML from '../../Utils/DangerouslySetHtmlContent'
-import PrintBodyReplacer from "../../Utils/PrintBodyReplacer"
-import { ROUTES } from '../../Utils/Constants'
-import jsPDF from 'jspdf';
-import myTurkishFont from '../../Assets/fonts/AbhayaLibre-Medium.ttf';
-import config from '../../Config'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Literals from './Literals'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import DataTable from '../../Utils/DataTable'
-import { Collapse } from 'react-collapse';
 import MobileTable from '../../Utils/MobileTable'
 import Settings from '../../Common/Settings'
 

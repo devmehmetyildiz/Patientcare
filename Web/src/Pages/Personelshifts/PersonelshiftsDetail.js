@@ -1,24 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Form, Grid, GridColumn, Header, Icon, Label, Loader } from 'semantic-ui-react'
-import Notification from '../../Utils/Notification'
-import formToObject from 'form-to-object'
+import { Breadcrumb, Grid, GridColumn, Icon, Label, Loader } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
-import { FormContext } from '../../Provider/FormProvider'
 import Literals from './Literals'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Pagedivider from '../../Common/Styled/Pagedivider'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
-import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
-import Submitbutton from '../../Common/Submitbutton'
-import Gobackbutton from '../../Common/Gobackbutton'
-import { getInitialconfig } from '../../Utils/Constants'
 import DataTable from '../../Utils/DataTable'
-
 export default class PersonelshiftsDetail extends Component {
 
   PAGE_NAME = "PersonelshiftsDetail"
@@ -48,7 +37,7 @@ export default class PersonelshiftsDetail extends Component {
     let days = []
     let startdate = new Date(startdatestr)
     let enddate = new Date(enddatestr)
-    
+
     for (let index = startdate.getDate(); index < enddate.getDate(); index++) {
       days.push(index)
     }

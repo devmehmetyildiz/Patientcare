@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header, Label, Loader } from 'semantic-ui-react'
+import {  Label, Loader } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import Literals from './Literals'
 

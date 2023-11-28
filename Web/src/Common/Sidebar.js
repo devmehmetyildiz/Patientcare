@@ -5,7 +5,7 @@ import { MdSettings } from "react-icons/md";
 import { Collapse } from 'react-collapse';
 import { withRouter } from 'react-router-dom';
 import Literals from "../Utils/Literalregistrar"
-import { Icon, Label, Menu } from "semantic-ui-react"
+import { Icon, Label } from "semantic-ui-react"
 import config from '../Config';
 import { Link } from 'react-router-dom';
 

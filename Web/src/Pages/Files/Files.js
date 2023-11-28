@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
+import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
-import Notification from '../../Utils/Notification'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import FilesDelete from '../../Containers/Files/FilesDelete'
 import Literals from './Literals'
 import Pagedivider from '../../Common/Styled/Pagedivider'
@@ -32,7 +30,7 @@ export class Files extends Component {
   render() {
 
 
-    const { Files, Profile, handleSelectedFile, handleDeletemodal, AddRecordFiles } = this.props
+    const { Files, Profile, handleSelectedFile, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Files
 
     const Columns = [

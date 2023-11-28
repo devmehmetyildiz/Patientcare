@@ -178,7 +178,7 @@ const version1_0_0_4 = {
 }
 
 const version1_0_0_5 = {
-    version: "1.0.0.4",
+    version: "1.0.0.5",
     features: [
         {
             title: "Kurum Yönetimi", commits: [
@@ -226,7 +226,9 @@ const version1_0_0_5 = {
     bugs: [
         {
             title: "Ön Yüz", commits: [
-                "Bazı sayfalarda scroll'a düşmeme durumu düzeltildi"
+                "Bazı sayfalarda scroll'a düşmeme durumu düzeltildi",
+                "Gereksiz kütühaneler temizlendi",
+                "Departmanlarda sayfa altyapısı test için değiştirildi.",
             ],
         },
     ],
