@@ -12,6 +12,8 @@ const warehouseModel = require('./WarehouseModel')
 const equipmentModel = require('./EquipmentModel')
 const equipmentgroupModel = require('./EquipmentgroupModel')
 const equipmentpropertyModel = require('./EquipmentpropertyModel')
+const mainteanceModel = require('./MainteanceModel')
+const breakdownModel = require('./BreakdownModel')
 
 
 module.exports = {
@@ -28,5 +30,7 @@ module.exports = {
     equipmentModel,
     equipmentgroupModel,
     equipmentpropertyModel,
+    breakdownModel,
+    mainteanceModel,
     applog_warehouseModel,
 }

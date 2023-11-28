@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Dropdown, Form, Header, Icon, Modal, Tab, Table } from 'semantic-ui-react'
+import { Breadcrumb, Button, Dropdown, Form, Header, Icon, Tab, Table } from 'semantic-ui-react'
 import { ROUTES } from '../../Utils/Constants'
 import LoadingPage from '../../Utils/LoadingPage'
 import StockdefinesCreate from "../../Containers/Stockdefines/StockdefinesCreate"

@@ -37,6 +37,7 @@ async function GetBed(req, res, next) {
 }
 
 
+
 async function AddBed(req, res, next) {
 
     let validationErrors = []
@@ -125,6 +126,64 @@ async function UpdateBed(req, res, next) {
     GetBeds(req, res, next)
 }
 
+async function ChangeBedstatus(req, res, next) {
+
+    let validationErrors = []
+    const {
+        OldUuid,
+        NewUuid
+    } = req.body
+
+    if (!NewUuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
+    }
+    if (!validator.isUUID(NewUuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        if (OldUuid && validator.isUUID(OldUuid)) {
+            const oldbed = db.bedModel.findOne({ where: { Uuid: OldUuid } })
+            if (!oldbed) {
+                return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
+            }
+            if (oldbed.Isactive === false) {
+                return next(createAccessDenied([messages.ERROR.BED_NOT_ACTIVE], req.language))
+            }
+
+            await db.bedModel.update({
+                ...oldbed,
+                Isoccupied: false,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { Uuid: OldUuid } }, { transaction: t })
+        }
+        const newBed = db.bedModel.findOne({ where: { Uuid: NewUuid } })
+        if (!newBed) {
+            return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
+        }
+        if (newBed.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.BED_NOT_ACTIVE], req.language))
+        }
+
+        await db.bedModel.update({
+            ...newBed,
+            Isoccupied: true,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: NewUuid } }, { transaction: t })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetBeds(req, res, next)
+}
+
 async function DeleteBed(req, res, next) {
 
     let validationErrors = []
@@ -165,4 +224,5 @@ module.exports = {
     AddBed,
     UpdateBed,
     DeleteBed,
+    ChangeBedstatus
 }

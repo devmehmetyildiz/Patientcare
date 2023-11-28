@@ -3,7 +3,6 @@ import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
-import notification from '../Utils/Notification';
 
 const Literals = {
     addcode: {
@@ -62,7 +61,7 @@ export const GetWarehouse = createAsyncThunk(
 
 export const AddWarehouses = createAsyncThunk(
     'Warehouses/AddWarehouses',
-    async ({ data, history, redirectUrl, closeModal, clearForm  }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -86,7 +85,7 @@ export const AddWarehouses = createAsyncThunk(
 
 export const AddRecordWarehouses = createAsyncThunk(
     'Warehouses/AddRecordWarehouses',
-    async ({ data, history, redirectUrl, closeModal, clearForm  }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -110,7 +109,7 @@ export const AddRecordWarehouses = createAsyncThunk(
 
 export const EditWarehouses = createAsyncThunk(
     'Warehouses/EditWarehouses',
-    async ({ data, history, redirectUrl, closeModal, clearForm  }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -175,7 +174,7 @@ export const WarehousesSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeWarehousenotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload

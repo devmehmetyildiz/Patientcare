@@ -32,6 +32,10 @@ const Literals = {
             tr: 'Genel Vucut Kontrol Formu',
             en: 'Genel Vucut Kontrol Formu'
         },
+        usageType8: {
+            tr: 'Sağlık Kurul Raporu',
+            en: 'Sağlık Kurul Raporu'
+        },
         TableColumnsOrder: {
             tr: 'Sıra',
             en: 'Order'
@@ -204,6 +208,10 @@ const Literals = {
             tr: 'Anne Adı',
             en: 'Mother Name'
         },
+        Medicalboardreport: {
+            tr: 'Sağlık Kurul Raporu',
+            en: 'Medical Baord Report'
+        },
         Dateofbirth: {
             tr: 'Doğum Tarihi',
             en: 'Date of Birth'
@@ -228,9 +236,21 @@ const Literals = {
             tr: 'TC Kimlik No',
             en: 'Country ID'
         },
+        Costumertype: {
+            tr: 'Müşteri Türü',
+            en: 'Costumer Type'
+        },
+        Patienttype: {
+            tr: 'Hasta Türü',
+            en: 'Patient Type'
+        },
         Registerdate: {
             tr: 'Kayıt Tarihi',
             en: 'Register Date'
+        },
+        Happensdate: {
+            tr: 'Olur Tarihi',
+            en: 'Happens Date'
         },
         Approvaldate: {
             tr: 'Kuruma Giriş Tarihi',
@@ -406,6 +426,10 @@ const Literals = {
         CaseID: {
             tr: "Durum Gerekli",
             en: "Case Required"
+        },
+        PatientIDdidntcatch: {
+            tr: "Hasta ID'si tespit edilemedi, lütfen sayfayı yenileyiniz",
+            en: "Patient Id didint catch please refresh page"
         },
         Registerdaterequired: {
             tr: "Kayıt Tarihi Gerekli",

@@ -81,7 +81,7 @@ class ExcelImport extends Component {
                 const dataArray = jsonData.slice(1).map((row) => {
                     const obj = {};
                     columnHeaders.forEach((header, index) => {
-                        obj[header] = row[index];
+                        obj[header] = String(row[index]);
                     });
                     return obj;
                 });

@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form, } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
-import formToObject from 'form-to-object'
+import { Breadcrumb, Form } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
-import Notification from '../../Utils/Notification'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
@@ -77,7 +74,6 @@ export default class PreregistrationsEdit extends Component {
       return { key: cases.Uuid, text: cases.Name, value: cases.Uuid }
     })
 
-
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <Pagewrapper>
@@ -100,6 +96,7 @@ export default class PreregistrationsEdit extends Component {
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Happensdate[Profile.Language]} name="Happensdate" type='date' />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -129,6 +126,9 @@ export default class PreregistrationsEdit extends Component {
     }
     if (!validator.isISODate(data.Approvaldate)) {
       data.Approvaldate = null
+    }
+    if (!validator.isISODate(data.Happensdate)) {
+      data.Happensdate = null
     }
 
     let errors = []

@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Loader, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
-import { MOVEMENTTYPES } from '../../Utils/Constants'
+import { Icon, Loader } from 'semantic-ui-react'
+import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Notification from '../../Utils/Notification'
 import Literals from './Literals'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
@@ -25,7 +22,7 @@ export default class Beds extends Component {
   }
 
   render() {
-    const { Beds, Profile, handleDeletemodal, handleSelectedBed, AddRecordBeds } = this.props
+    const { Beds, Profile, handleDeletemodal, handleSelectedBed } = this.props
     const { isLoading, isDispatching } = Beds
 
     const Columns = [
@@ -33,6 +30,7 @@ export default class Beds extends Component {
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.RoomID[Profile.Language], accessor: 'RoomID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.roomCellhandler(col) },
+      { Header: Literals.Columns.Isoccupied[Profile.Language], accessor: 'Isoccupied', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -115,5 +113,10 @@ export default class Beds extends Component {
       const floor = (Floors.list || []).find(u => u.Uuid === room?.FloorID)
       return `${room?.Name} (${floor?.Name})`
     }
+  }
+
+  boolCellhandler = (col) => {
+    const { Profile } = this.props
+    return col.value !== null && (col.value ? Literals.Messages.Filled[Profile.Language] : Literals.Messages.Empty[Profile.Language])
   }
 }

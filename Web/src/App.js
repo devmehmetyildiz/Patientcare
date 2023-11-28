@@ -40,8 +40,8 @@ class App extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
-      this.onRouteChanged();
       this.context.setFormstates({})
+      this.onRouteChanged();
     }
   }
 
@@ -96,5 +96,5 @@ class App extends Component {
 
 
 }
-App.contextType = FormContext
 export default withRouter(App);
+App.contextType = FormContext

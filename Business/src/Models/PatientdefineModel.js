@@ -30,7 +30,7 @@ module.exports = sequelize.define('patientdefineModel', {
     },
     Isfatheralive: {
         type: Sequelize.BOOLEAN
-    },    
+    },
     CountryID: {
         type: Sequelize.STRING
     },
@@ -44,6 +44,9 @@ module.exports = sequelize.define('patientdefineModel', {
         type: Sequelize.DATE
     },
     Placeofdeath: {
+        type: Sequelize.STRING
+    },
+    Medicalboardreport: {
         type: Sequelize.STRING
     },
     Deathinfo: {

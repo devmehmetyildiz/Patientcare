@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form, Icon, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button } from 'semantic-ui-react'
-import formToObject from 'form-to-object'
-import Notification from '../../Utils/Notification'
+import { Breadcrumb, Button,Form } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
 import Literals from './Literals'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
@@ -40,7 +37,10 @@ export default class ShiftsCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Priority[Profile.Language]} name="Priority" type='number' />
+              </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Starttime[Profile.Language]} name="Starttime" type='time' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Endtime[Profile.Language]} name="Endtime" type='time' />

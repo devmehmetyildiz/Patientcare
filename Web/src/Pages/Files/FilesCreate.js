@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Table } from 'semantic-ui-react'
 import { Breadcrumb, Button } from 'semantic-ui-react'
-import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
@@ -24,7 +23,7 @@ export class FilesCreate extends Component {
   }
   render() {
 
-    const { Files, Profile,history, closeModal } = this.props
+    const { Files, Profile, history, closeModal } = this.props
     const { isLoading, isDispatching } = Files
 
     return (

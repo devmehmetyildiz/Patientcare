@@ -174,22 +174,11 @@ const messages = {
         tr: 'Yapılacak grup tanımı aktif değil',
       }
     },
-    SHIFT_NOT_FOUND: {
-      code: 'SHIFT_NOT_FOUND', description: {
-        en: 'Shift not found',
-        tr: 'Vardiya bulunamadı',
-      }
-    },
+   
     TODOGROUPDEFINE_NOT_ACTIVE: {
       code: 'TODOGROUPDEFINE_NOT_ACTIVE', description: {
         en: 'Todogroup define not active',
         tr: 'Yapılacak grup tanımı aktif değil',
-      }
-    },
-    SHIFT_NOT_ACTIVE: {
-      code: 'SHIFT_NOT_ACTIVE', description: {
-        en: 'Shift not active',
-        tr: 'Vardiya aktif değil',
       }
     },
 
@@ -199,6 +188,18 @@ const messages = {
       code: 'NAME_REQUIRED', description: {
         en: 'The name required',
         tr: 'Bu işlem için isim gerekli',
+      }
+    },
+    ISOCCUPIED_REQUIRED: {
+      code: 'ISOCCUPIED_REQUIRED', description: {
+        en: 'The is occupied required',
+        tr: 'Bu işlem için doluluk durumu',
+      }
+    },
+    GENDER_REQUIRED: {
+      code: 'GENDER_REQUIRED', description: {
+        en: 'The gender required',
+        tr: 'Bu işlem için cinsiyet gerekli',
       }
     },
     DAYPERIOD_REQUIRED: {
@@ -441,28 +442,11 @@ const messages = {
         tr: 'Bu işlem için oda numarası gerekli',
       }
     },
-    SHIFTID_REQUIRED: {
-      code: 'SHIFTID_REQUIRED', description: {
-        en: 'The shift id required',
-        tr: 'Bu işlem için vardiya no gerekli',
-      }
-    },
+   
     FLOORID_REQUIRED: {
       code: 'FLOORID_REQUIRED', description: {
         en: 'The floor id required',
         tr: 'Bu işlem için kat numarası gerekli',
-      }
-    },
-    STARTTIME_REQUIRED: {
-      code: 'STARTTIME_REQUIRED', description: {
-        en: 'The start time required',
-        tr: 'Bu işlem başlangıç saati gerekli',
-      }
-    },
-    ENDTIME_REQUIRED: {
-      code: 'ENDTIME_REQUIRED', description: {
-        en: 'The end time required',
-        tr: 'Bu işlem bitiş saati gerekli',
       }
     },
     PERIOD_REQUIRED: {
@@ -531,12 +515,7 @@ const messages = {
         tr: 'Kat numarası geçersiz',
       }
     },
-    UNSUPPORTED_SHIFTID: {
-      code: 'UNSUPPORTED_SHIFTID', description: {
-        en: 'shift id is unsupported',
-        tr: 'Vardiya numarası geçersiz',
-      }
-    },
+   
   }
 
 }

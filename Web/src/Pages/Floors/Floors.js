@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Loader, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
+import { Icon } from 'semantic-ui-react'
+import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Notification from '../../Utils/Notification'
 import Literals from './Literals'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
@@ -15,6 +13,7 @@ import FloorsDelete from '../../Containers/Floors/FloorsDelete'
 import FloorsFastcreate from '../../Containers/Floors/FloorsFastcreate'
 import Settings from '../../Common/Settings'
 import MobileTable from '../../Utils/MobileTable'
+import { getInitialconfig } from '../../Utils/Constants'
 
 export default class Floors extends Component {
 
@@ -27,10 +26,16 @@ export default class Floors extends Component {
     const { Floors, Profile, handleDeletemodal, handleSelectedFloor, handleFastcreatemodal } = this.props
     const { isLoading, isDispatching } = Floors
 
+    const Genderoptions = [
+      { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
+      { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
+    ]
+
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
+      { Header: Literals.Columns.Gender[Profile.Language], accessor: 'Gender', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true, Cell: col => this.genderCellhandler(col, Genderoptions) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -39,18 +44,7 @@ export default class Floors extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const metaKey = "Floors"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
-    const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
-        return item.key
-      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
-        return item.key
-      }) : [],
-      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
-        return item.key
-      }) : [],
-    };
+    let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Floors.list || []).filter(u => u.Isactive).map(item => {
       return {
@@ -105,5 +99,9 @@ export default class Floors extends Component {
           <FloorsFastcreate />
         </React.Fragment>
     )
+  }
+
+  genderCellhandler = (col, genderOption) => {
+    return genderOption.find(u => u.value === col.value)?.text || 'Tanımsız'
   }
 }

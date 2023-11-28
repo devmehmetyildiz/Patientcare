@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form, Icon, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
-import formToObject from 'form-to-object'
-import Notification from '../../Utils/Notification'
+import { Form } from 'semantic-ui-react'
+import { Breadcrumb } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
 import Literals from './Literals'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
@@ -55,6 +53,7 @@ export default class MedicinesEdit extends Component {
       && !Departments.isLoading
       && !Warehouses.isLoading
       && !Stockdefines.isLoading && !isLoading && !this.state.isDatafetched) {
+
       this.setState({
         isDatafetched: true
       })
@@ -133,7 +132,6 @@ export default class MedicinesEdit extends Component {
     const { EditStocks, history, fillStocknotification, Stocks, Profile } = this.props
 
     const data = this.context.getForm(this.PAGE_NAME)
-    console.log('data: ', data);
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {

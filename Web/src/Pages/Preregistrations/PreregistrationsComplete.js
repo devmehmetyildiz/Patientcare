@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Breadcrumb, Button, Card, Form, Grid, GridColumn, Header, Icon, Label, Modal, Popup } from 'semantic-ui-react'
+import { Breadcrumb, Card, Form, Header, Icon, Label, Popup } from 'semantic-ui-react'
 import Literals from './Literals'
-import Notification from '../../Utils/Notification'
 import LoadingPage from '../../Utils/LoadingPage'
 import { ROUTES } from '../../Utils/Constants'
 import config from '../../Config'
@@ -13,7 +12,6 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import validator from '../../Utils/Validator'
 import FormInput from '../../Utils/FormInput'
-import formToObject from 'form-to-object'
 import { FormContext } from '../../Provider/FormProvider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import Gobackbutton from '../../Common/Gobackbutton'
@@ -87,6 +85,7 @@ export default class PreregistrationsComplete extends Component {
           Literals.Options.usageType5[Profile.Language],
           Literals.Options.usageType6[Profile.Language],
           Literals.Options.usageType7[Profile.Language],
+          Literals.Options.usageType8[Profile.Language],
         ]
         if (!isLoadingstatus && !this.state.isFilechecked) {
           let errors = []
@@ -155,6 +154,7 @@ export default class PreregistrationsComplete extends Component {
       Literals.Options.usageType5[Profile.Language],
       Literals.Options.usageType6[Profile.Language],
       Literals.Options.usageType7[Profile.Language],
+      Literals.Options.usageType8[Profile.Language],
     ]
 
     const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
@@ -195,7 +195,7 @@ export default class PreregistrationsComplete extends Component {
     const Bedoptions = (
       validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/FloorID`]) &&
       validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/RoomID`])) ?
-      (Beds.list || []).filter(u => u.Isactive && u.RoomID === this.context.formstates[`${this.PAGE_NAME}/RoomID`]).map(bed => {
+      (Beds.list || []).filter(u => u.Isactive && u.Isoccupied === 0 && u.RoomID === this.context.formstates[`${this.PAGE_NAME}/RoomID`]).map(bed => {
         return { key: bed.Uuid, text: bed.Name, value: bed.Uuid }
       }) : []
 

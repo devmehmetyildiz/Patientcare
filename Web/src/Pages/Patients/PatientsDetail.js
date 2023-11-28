@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Dropdown, Form, Grid, GridColumn, Header, Icon, Label, Loader, Popup } from 'semantic-ui-react'
-import Notification from '../../Utils/Notification'
-import formToObject from 'form-to-object'
+import { Breadcrumb, Button, Grid, GridColumn, Header, Icon, Label, Loader } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
-import FormInput from '../../Utils/FormInput'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
@@ -13,7 +10,6 @@ import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import config from '../../Config'
 import { PATIENTMOVEMENTTYPE, ROUTES } from '../../Utils/Constants'
 import DataTable from '../../Utils/DataTable'
@@ -242,7 +238,7 @@ export default class PatientsDetail extends Component {
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
-          <Contentwrapper additionalStyle="max-h-[calc(89vh-59px-2rem)]">
+          <Contentwrapper additionalStyle="max-h-[calc(91vh-59px-2rem)]">
             <Grid divided className='w-full flex justify-center items-center'>
               <Grid.Row>
                 <GridColumn width={14} >

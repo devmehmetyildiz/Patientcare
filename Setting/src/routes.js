@@ -66,6 +66,7 @@ const Routes = [
   { method: 'get', path: '/Beds/:bedId', controller: 'Bed', action: 'GetBed' },
   { method: 'get', path: '/Beds', controller: 'Bed', action: 'GetBeds' },
   { method: 'post', path: '/Beds', controller: 'Bed', action: 'AddBed' },
+  { method: 'put', path: '/Beds/ChangeBedstatus', controller: 'Bed', action: 'ChangeBedstatus' },
   { method: 'put', path: '/Beds', controller: 'Bed', action: 'UpdateBed' },
   { method: 'delete', path: '/Beds/:bedId', controller: 'Bed', action: 'DeleteBed' },
 
@@ -74,12 +75,7 @@ const Routes = [
   { method: 'post', path: '/Rooms', controller: 'Room', action: 'AddRoom' },
   { method: 'put', path: '/Rooms', controller: 'Room', action: 'UpdateRoom' },
   { method: 'delete', path: '/Rooms/:roomId', controller: 'Room', action: 'DeleteRoom' },
- 
-  { method: 'get', path: '/Shifts/:shiftId', controller: 'Shift', action: 'GetShift' },
-  { method: 'get', path: '/Shifts', controller: 'Shift', action: 'GetShifts' },
-  { method: 'post', path: '/Shifts', controller: 'Shift', action: 'AddShift' },
-  { method: 'put', path: '/Shifts', controller: 'Shift', action: 'UpdateShift' },
-  { method: 'delete', path: '/Shifts/:shiftId', controller: 'Shift', action: 'DeleteShift' },
+
 ]
 
 module.exports = Routes

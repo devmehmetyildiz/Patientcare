@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Loader, Modal, Popup } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
+import { Breadcrumb, Grid, GridColumn, Icon, Loader, Popup } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
 import { ROUTES } from '../../Utils/Constants'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
-import Notification from '../../Utils/Notification'
 import config from '../../Config'
 import Literals from './Literals'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
@@ -91,7 +88,7 @@ export default class Preregistrations extends Component {
         ...item,
         Filestxt: "",
         Stockstxt: "",
-        actions: <React.Fragment>
+        actions: <React.Fragment key={Math.random()}>
           <Popup
             trigger={<Icon className='cursor-pointer' name='ellipsis vertical' />}
             content={<div className='flex flex-col justify-start items-start w-full gap-2'>

@@ -1,10 +1,8 @@
-import React, { Component } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Checkbox, Divider, Dropdown, Form, Icon, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
-import formToObject from 'form-to-object'
+import { Form } from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
-import Notification from '../../Utils/Notification'
 import FormInput from '../../Utils/FormInput'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
@@ -16,77 +14,36 @@ import Pagedivider from '../../Common/Styled/Pagedivider'
 import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
 import StationsCreate from '../../Containers/Stations/StationsCreate'
-import AddModal from '../../Utils/AddModal'
 import Gobackbutton from '../../Common/Gobackbutton'
 import Submitbutton from '../../Common/Submitbutton'
-export default class DepartmentsCreate extends Component {
 
-  PAGE_NAME = "DepartmentsCreate"
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      modelOpened: false
-    }
-  }
 
-  componentDidMount() {
-    const { GetStations } = this.props
+export default function DepartmentsCreate(props) {
+
+  const { GetStations, Departments, AddDepartments, history, fillDepartmentnotification, Stations, Profile, closeModal } = props
+
+  const PAGE_NAME = "DepartmentsCreate"
+  const context = useContext(FormContext)
+  const [stationoptions, setStationoptions] = useState([])
+
+  useEffect(() => {
     GetStations()
-  }
+  }, [])
 
-  render() {
-    const { Departments, Stations, Profile, history, closeModal } = this.props
 
+  useEffect(() => {
     const Stationoptions = (Stations.list || []).filter(u => u.Isactive).map(station => {
       return { key: station.Uuid, text: station.Name, value: station.Uuid }
     })
-
-    return (
-      Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Departments"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
-            </Headerbredcrump>
-            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype="dropdown" modal={StationsCreate} />
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Ishavepatients[Profile.Language]} name="Ishavepatients" formtype="checkbox" />
-              {this.context.formstates[`${this.PAGE_NAME}/Ishavepatients`] ?
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Isdefaultpatientdepartment[Profile.Language]} name="Isdefaultpatientdepartment" formtype="checkbox" /> : null}
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Departments"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
-            />
-            <Submitbutton
-              isLoading={Departments.isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
-    )
-  }
+    setStationoptions(Stationoptions)
+  }, [Stations])
 
 
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddDepartments, history, fillDepartmentnotification, Stations, Profile, closeModal } = this.props
-    const data = this.context.getForm(this.PAGE_NAME)
+    const data = context.getForm(PAGE_NAME)
     data.Isdefaultpatientdepartment = data.Ishavepatients ? true : false
     data.Stations = (data.Stations || []).map(id => {
       return (Stations.list || []).find(u => u.Uuid === id)
@@ -104,5 +61,42 @@ export default class DepartmentsCreate extends Component {
       AddDepartments({ data, history, closeModal })
     }
   }
+
+  return (
+    Departments.isLoading ? <LoadingPage /> :
+      <Pagewrapper>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Departments"}>
+              <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+          </Headerbredcrump>
+          {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Form>
+            <FormInput page={PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+            <FormInput page={PAGE_NAME} placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={stationoptions} formtype="dropdown" modal={StationsCreate} />
+            <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Ishavepatients[Profile.Language]} name="Ishavepatients" formtype="checkbox" />
+            {context.formstates[`${PAGE_NAME}/Ishavepatients`] ?
+              <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Isdefaultpatientdepartment[Profile.Language]} name="Isdefaultpatientdepartment" formtype="checkbox" /> : null}
+          </Form>
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Departments"}
+            buttonText={Literals.Button.Goback[Profile.Language]}
+          />
+          <Submitbutton
+            isLoading={Departments.isLoading}
+            buttonText={Literals.Button.Create[Profile.Language]}
+            submitFunction={handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
+  )
 }
-DepartmentsCreate.contextType = FormContext

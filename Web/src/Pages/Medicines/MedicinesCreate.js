@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Dropdown, Form, Icon, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Header } from 'semantic-ui-react'
-import formToObject from 'form-to-object'
-import Notification from '../../Utils/Notification'
+import { Form } from 'semantic-ui-react'
+import { Breadcrumb, Button } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
 import Literals from './Literals'
 import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
@@ -108,9 +106,6 @@ export default class MedicinesCreate extends Component {
     const { AddStocks, history, fillStocknotification, Profile, Stockdefines, closeModal } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
 
-    console.log('data: ', data);
-
-
     data.Order = 0
     data.Ismedicine = true
     data.Issupply = false
@@ -138,11 +133,5 @@ export default class MedicinesCreate extends Component {
     }
   }
 
-  getLocalDate = () => {
-    var today = new Date();
-    let test = today.toLocaleString('tr-TR', { timeZone: 'UTC' }).substring(0, 10)
-    let value = today.toISOString().substring(0, 10)
-    return '2023-06-20'
-  }
 }
 MedicinesCreate.contextType = FormContext

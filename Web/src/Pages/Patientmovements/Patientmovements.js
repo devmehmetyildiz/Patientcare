@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Loader } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
+import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Notification from '../../Utils/Notification'
 import Literals from './Literals'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
@@ -26,7 +24,7 @@ export default class Patientmovements extends Component {
 
   render() {
 
-    const { Patientmovements, Profile, handleSelectedPatientmovement, handleDeletemodal, AddRecordPatientmovements } = this.props
+    const { Patientmovements, Profile, handleSelectedPatientmovement, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Patientmovements
 
     const Columns = [

@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import UnapprovedStocks from '../../Pages/Unapproveds/UnapprovedStocks'
-import { GetPatientstocks, fillPatientstocknotification, ApprovePatientstocks } from '../../Redux/PatientstockSlice'
-import { GetStocks, fillStocknotification, ApproveStocks } from '../../Redux/StockSlice'
-import { GetPurchaseorderstocks, fillPurchaseorderstocknotification, ApprovePurchaseorderstocks } from '../../Redux/PurchaseorderstockSlice'
+import { GetPatientstocks, fillPatientstocknotification, ApprovePatientstocks, ApprovemultiplePatientstocks } from '../../Redux/PatientstockSlice'
+import { GetStocks, fillStocknotification, ApproveStocks, ApprovemultipleStocks } from '../../Redux/StockSlice'
+import { GetPurchaseorderstocks, fillPurchaseorderstocknotification, ApprovePurchaseorderstocks, ApprovemultiplePurchaseorderstocks } from '../../Redux/PurchaseorderstockSlice'
 import { GetPatients } from '../../Redux/PatientSlice'
 import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
 import { GetPatientstockmovements } from '../../Redux/PatientstockmovementSlice'
@@ -32,7 +32,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     GetPatients, GetPatientstocks, fillPatientstocknotification, ApprovePatientstocks, GetPatientstockmovements, GetPatientdefines,
     GetPurchaseorders, GetPurchaseorderstocks, fillPurchaseorderstocknotification, ApprovePurchaseorderstocks, GetPurchaseorderstockmovements,
-    GetStocks, fillStocknotification, ApproveStocks, GetStockmovements, GetDepartments, GetStockdefines, GetUnits
+    GetStocks, fillStocknotification, ApproveStocks, GetStockmovements, GetDepartments, GetStockdefines, GetUnits, ApprovemultiplePatientstocks,
+    ApprovemultipleStocks, ApprovemultiplePurchaseorderstocks
 }
 
 

@@ -10,6 +10,9 @@ module.exports = sequelize.define('floorModel', {
     Name: {
         type: Sequelize.STRING
     },
+    Gender: {
+        type: Sequelize.STRING
+    },
     Createduser: {
         type: Sequelize.STRING
     },

@@ -1,6 +1,5 @@
 import Cookies from "universal-cookie";
 import config from "../Config";
-import { ROUTES } from "./Constants";
 import instanse from "../Redux/axios";
 
 const INTERVAL = 1000 * 60 * 2

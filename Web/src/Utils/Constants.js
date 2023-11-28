@@ -12,6 +12,7 @@ export const ROUTES = {
     PATIENTTYPE: 'Patienttypes',
     PATIENTREPORT: 'Patientreport',
     PATIENTDEFINE: 'Patientdefines',
+    PERSONEL: 'Personels',
 
     COSTUMERTYPE: 'Costumertypes',
     CASE: 'Cases',
@@ -36,6 +37,8 @@ export const ROUTES = {
     PATIENTSTOCKMOVEMENT: 'Patientstockmovements',
     EQUIPMENTGROUP: 'Equipmentgroups',
     EQUIPMENT: 'Equipments',
+    BREAKDOWN: 'Breakdowns',
+    MAINTEANCE: 'Mainteancies',
 
     TODODEFINE: 'Tododefines',
     TODOGROUPDEFINE: 'Todogroupdefines',
