@@ -177,7 +177,62 @@ const version1_0_0_4 = {
     ],
 }
 
-export { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3, version1_0_0_4 }
+const version1_0_0_5 = {
+    version: "1.0.0.4",
+    features: [
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Onaylanmayan Hareketler, tekli onaylama seçeneği eklendi",
+                "Onaylanmayan Stoklar geliştiriliyor, Eklenecek",
+                "Kullanıcı bildirimleri için servis geliştirmeleri yapıldı, ön yüze eklenecek",
+                "Personeller Eklendi",
+                "Arıza Talepleri Eklendi",
+                "Bakım Talepleri Eklendi",
+                "Personel vardiyaları ekranı eklendi geliştirmeler eklenecek",
+            ]
+        },
+        {
+            title: "Hastalar", commits: [
+                "Dosya Kayıt İşlemlerinde çoklu dosya ekleme ve sürükle bırak özelliği eklendi",
+                "Ön Kayıtlarda olur tarihi, hasta türü ve müşteri türü eklendi",
+                "Aktif olarak kurumda olan hastalar için hızlı hasta ekleme sayfası eklendi",
+            ]
+        },
+        {
+            title: "Ayarlar", commits: [
+                "Katlara cinsiyet bilgisi eklendi",
+                "Yataklara dolumu boşmu bilgisi eklendi",
+            ]
+        },
+    ],
+    changes: [
+        {
+            title: "Servis", commits: [
+                "File mikroservisi ftp bağlantıları düzenlendi ve güçlendirildi",
+            ],
+        },
+        {
+            title: "Ön Yüz", commits: [
+                "Tablolarda 20'li görüntüleme eklendi",
+            ],
+        },
+        {
+            title: "Hastalar", commits: [
+                "Hasta tanım düzenleme ekranlarında öncelikli girişler ikiye ayrıldı. (Ek Bilgiler)",
+            ],
+        },
+
+    ],
+    bugs: [
+        {
+            title: "Ön Yüz", commits: [
+                "Bazı sayfalarda scroll'a düşmeme durumu düzeltildi"
+            ],
+        },
+    ],
+}
+
+export { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3, version1_0_0_4, version1_0_0_5 }
 
 /* const version1000 = {
     version: "1.0.0.0",

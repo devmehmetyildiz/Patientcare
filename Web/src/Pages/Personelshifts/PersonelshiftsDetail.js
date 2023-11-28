@@ -90,7 +90,6 @@ export default class PersonelshiftsDetail extends Component {
       days.map(u => {
         return { Header: u, accessor: 'Occuredday' + u, Cell: col => this.boolCellhandler(col) }
       }))
-    console.log('Columns: ', Columns);
 
     const floors = (Floors.list || []).filter(u => u.Isactive)
 
