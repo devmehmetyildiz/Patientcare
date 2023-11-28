@@ -19,6 +19,10 @@ const Literals = {
             tr: 'Oda',
             en: 'Room'
         },
+        Isoccupied: {
+            tr: 'Doluluk Durumu',
+            en: 'Occupied Status'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'
@@ -105,6 +109,22 @@ const Literals = {
         RoomIDrequired: {
             tr: "Oda Gerekli",
             en: "Room required"
+        },
+        Yes: {
+            tr: "EVET",
+            en: "YES"
+        },
+        No: {
+            tr: "HAYIR",
+            en: "NO"
+        },
+        Filled: {
+            tr: "Dolu",
+            en: "Filled"
+        },
+        Empty: {
+            tr: "Boş",
+            en: "Empty"
         },
     }
 }

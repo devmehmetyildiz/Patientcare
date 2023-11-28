@@ -35,8 +35,8 @@ code {
 
 .contentWrapper {
   background-image: url("./Assets/img/contentbg.png");
-  background-repeat: repeat-y;
-  object-fit: contain;
+  background-size: cover;
+  background-position: center;
 }
 
 .modal {

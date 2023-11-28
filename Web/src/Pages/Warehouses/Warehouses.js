@@ -1,19 +1,14 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
+import { Breadcrumb, Icon, Grid, GridColumn } from 'semantic-ui-react'
 import LoadingPage from '../../Utils/LoadingPage'
-import Notification from '../../Utils/Notification'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import WarehousesList from './WarehousesList'
 import Literals from './Literals'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import WarehousesDelete from '../../Containers/Warehouses/WarehousesDelete'
-import ExcelImport from '../../Containers/Utils/ExcelImport'
-import ExcelExport from '../../Containers/Utils/ExcelExport'
 import Settings from '../../Common/Settings'
 import MobileTable from '../../Utils/MobileTable'
 
@@ -30,7 +25,7 @@ export default class Warehouses extends Component {
   }
 
   render() {
-    const { Warehouses, Departments, Units, Stocks, Stockmovements, Stockdefines, handleDeletemodal, handleSelectedWarehouse, Profile, AddRecordCases } = this.props
+    const { Warehouses, Departments, Units, Stocks, Stockmovements, Stockdefines, handleDeletemodal, handleSelectedWarehouse, Profile } = this.props
     const { isLoading, isDispatching } = Warehouses
 
     const Columns = [

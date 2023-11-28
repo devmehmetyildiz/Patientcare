@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Icon, Modal } from 'semantic-ui-react'
 
 export default function AddModal({ Content }) {

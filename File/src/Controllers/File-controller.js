@@ -8,6 +8,7 @@ const uuid = require('uuid').v4
 const fs = require('fs');
 const stream = require("stream");
 const Reconnectftp = require("../Utilities/Reconnectftp")
+const ftp = require('basic-ftp')
 
 async function GetFiles(req, res, next) {
     try {
@@ -120,6 +121,13 @@ async function Downloadfile(req, res, next) {
 
         await (async () => {
             try {
+                const client = new ftp.Client();
+                const server = {
+                    host: config.ftp.host,
+                    user: config.ftp.user,
+                    password: config.ftp.password
+                };
+                await client.access(server);
 
                 await client.downloadTo(fileStream, remoteFilePath, 0);
 
@@ -130,7 +138,7 @@ async function Downloadfile(req, res, next) {
                 });
 
             } catch (err) {
-                await Reconnectftp()
+                console.log('errondownload: ', err);
                 return next(createValidationError(messages.ERROR.FILE_DOWNLOAD_ERROR))
             }
         })();
@@ -328,6 +336,13 @@ async function Uploadfiletoftp(fileObject) {
 
     await (async () => {
         try {
+            const client = new ftp.Client();
+            const server = {
+                host: config.ftp.host,
+                user: config.ftp.user,
+                password: config.ftp.password
+            };
+            await client.access(server);
             await client.uploadFrom(fileStream, remoteFilePath);
             isuploaded = true
         } catch (err) {
@@ -346,7 +361,13 @@ async function Checkdirectoryfromftp(directoryname) {
     await (async () => {
 
         try {
-
+            const client = new ftp.Client();
+            const server = {
+                host: config.ftp.host,
+                user: config.ftp.user,
+                password: config.ftp.password
+            };
+            await client.access(server);
             const dirList = await client.list(`/${config.ftp.mainfolder}/`);
             const directoryExists = dirList.some((item) => item.name === directoryname);
 
@@ -358,7 +379,6 @@ async function Checkdirectoryfromftp(directoryname) {
             }
         } catch (err) {
             isdirectoryactive = false
-            await Reconnectftp()
         }
     })();
     return isdirectoryactive
@@ -377,11 +397,18 @@ async function Removefileandfolderfromftp(fileObject) {
         await (async () => {
 
             try {
+                const client = new ftp.Client();
+                const server = {
+                    host: config.ftp.host,
+                    user: config.ftp.user,
+                    password: config.ftp.password
+                };
+                await client.access(server);
+
                 await client.removeDir(remoteFolderpath, remoteFilePath);
                 isremoved = true
             } catch (err) {
                 isremoved = false
-                await Reconnectftp()
             }
         })();
     }

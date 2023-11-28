@@ -5,7 +5,7 @@ import { MdSettings } from "react-icons/md";
 import { Collapse } from 'react-collapse';
 import { withRouter } from 'react-router-dom';
 import Literals from "../Utils/Literalregistrar"
-import { Icon, Label, Menu } from "semantic-ui-react"
+import { Icon, Label } from "semantic-ui-react"
 import config from '../Config';
 import { Link } from 'react-router-dom';
 
@@ -57,6 +57,10 @@ export function Sidebar(props) {
             icon: <TbGauge className=' text-blue-700' />,
             items: [
                 { id: 1, subtitle: Literals.Unapproveds.Page.Movement.Pageheader[Profile.Language], url: "/UnapprovedMovements", permission: checkAuth('stockmovementscreen') },
+                { id: 2, subtitle: Literals.Personels.Page.Pageheader[Profile.Language], url: "/Personels", permission: checkAuth('personelscreen') },
+                { id: 3, subtitle: Literals.Breakdowns.Page.Pageheader[Profile.Language], url: "/Breakdowns", permission: checkAuth('breakdownscreen') },
+                { id: 3, subtitle: Literals.Mainteancies.Page.Pageheader[Profile.Language], url: "/Mainteancies", permission: checkAuth('mainteancescreen') },
+                { id: 3, subtitle: Literals.Personelshifts.Page.Pageheader[Profile.Language], url: "/Personelshifts", permission: checkAuth('shiftscreen') },
             ]
         },
         {
@@ -124,12 +128,12 @@ export function Sidebar(props) {
                 { id: 1, subtitle: Literals.Roles.Page.Pageheader[Profile.Language], url: "/Roles", permission: checkAuth('rulescreen') },
                 { id: 2, subtitle: Literals.Departments.Page.Pageheader[Profile.Language], url: "/Departments", permission: checkAuth('departmentscreen') },
                 { id: 3, subtitle: Literals.Stations.Page.Pageheader[Profile.Language], url: "/Stations", permission: checkAuth('stationscreen') },
-                { id: 4, subtitle: Literals.Users.Page.Pageheader[Profile.Language], url: "/Users", permission: checkAuth('userscreen') },
-                { id: 5, subtitle: Literals.Cases.Page.Pageheader[Profile.Language], url: "/Cases", permission: checkAuth('casescreen') },
-                { id: 6, subtitle: Literals.Units.Page.Pageheader[Profile.Language], url: "/Units", permission: checkAuth('unitscreen') },
-                { id: 7, subtitle: Literals.Stockdefines.Page.Pageheader[Profile.Language], url: "/Stockdefines", permission: checkAuth('stockdefinescreen') },
-                { id: 8, subtitle: Literals.Files.Page.Pageheader[Profile.Language], url: "/Files", permission: checkAuth('filescreen') },
-                { id: 9, subtitle: Literals.Shifts.Page.Pageheader[Profile.Language], url: "/Shifts", permission: checkAuth('shiftscreen') },
+                { id: 4, subtitle: Literals.Shifts.Page.Pageheader[Profile.Language], url: "/Shifts", permission: checkAuth('shiftscreen') },
+                { id: 5, subtitle: Literals.Users.Page.Pageheader[Profile.Language], url: "/Users", permission: checkAuth('userscreen') },
+                { id: 6, subtitle: Literals.Cases.Page.Pageheader[Profile.Language], url: "/Cases", permission: checkAuth('casescreen') },
+                { id: 7, subtitle: Literals.Units.Page.Pageheader[Profile.Language], url: "/Units", permission: checkAuth('unitscreen') },
+                { id: 8, subtitle: Literals.Stockdefines.Page.Pageheader[Profile.Language], url: "/Stockdefines", permission: checkAuth('stockdefinescreen') },
+                { id: 9, subtitle: Literals.Files.Page.Pageheader[Profile.Language], url: "/Files", permission: checkAuth('filescreen') },
                 { id: 10, subtitle: Literals.Floors.Page.Pageheader[Profile.Language], url: "/Floors", permission: checkAuth('floorscreen') },
                 { id: 11, subtitle: Literals.Rooms.Page.Pageheader[Profile.Language], url: "/Rooms", permission: checkAuth('roomscreen') },
                 { id: 12, subtitle: Literals.Beds.Page.Pageheader[Profile.Language], url: "/Beds", permission: checkAuth('bedscreen') },

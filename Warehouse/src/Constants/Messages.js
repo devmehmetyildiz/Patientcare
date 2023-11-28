@@ -12,6 +12,30 @@ const messages = {
         tr: 'Stok tanımı bulunamadı',
       }
     },
+    BREAKDOWN_NOT_FOUND: {
+      code: 'BREAKDOWN_NOT_FOUND', description: {
+        en: 'breakdown not found',
+        tr: 'Arıza talebi bulunamadı',
+      }
+    },
+    BREAKDOWN_NOT_ACTIVE: {
+      code: 'BREAKDOWN_NOT_ACTIVE', description: {
+        en: 'breakdown not active',
+        tr: 'Arıza talebi aktif değil',
+      }
+    },
+    MAINTEANCE_NOT_FOUND: {
+      code: 'MAINTEANCE_NOT_FOUND', description: {
+        en: 'maintance not found',
+        tr: 'Bakım talebi bulunamadı',
+      }
+    },
+    MAINTEANCE_NOT_ACTIVE: {
+      code: 'MAINTEANCE_NOT_ACTIVE', description: {
+        en: 'maintance not active',
+        tr: 'Bakım talebi aktif değil',
+      }
+    },
     STOCKDEFINE_NOT_ACTIVE: {
       code: 'STOCKDEFINE_NOT_ACTIVE', description: {
         en: 'Stockdefine not active',
@@ -96,10 +120,40 @@ const messages = {
 
   },
   VALIDATION_ERROR: {
+    STARTTIME_REQUIRED: {
+      code: 'STARTTIME_REQUIRED', description: {
+        en: 'The start time required',
+        tr: 'Bu işlem için başlangıç zamanı gerekli',
+      }
+    },
     NAME_REQUIRED: {
       code: 'NAME_REQUIRED', description: {
         en: 'The name required',
         tr: 'Bu işlem için isim gerekli',
+      }
+    },
+    BREAKDOWNID_REQUIRED: {
+      code: 'BREAKDOWNID_REQUIRED', description: {
+        en: 'The breakdownid required',
+        tr: 'Bu işlem için breakdownid gerekli',
+      }
+    },
+    UNSUPPORTED_BREAKDOWNID: {
+      code: 'UNSUPPORTED_BREAKDOWNID', description: {
+        en: 'The breakdownid is unsupported',
+        tr: 'geçersiz breakdownid',
+      }
+    },
+    MAINTEANCEID_REQUIRED: {
+      code: 'MAINTEANCEID_REQUIRED', description: {
+        en: 'The mainteanceid required',
+        tr: 'Bu işlem için mainteanceid gerekli',
+      }
+    },
+    UNSUPPORTED_MAINTEANCEID: {
+      code: 'UNSUPPORTED_BREAKDOWNID', description: {
+        en: 'The mainteanceid is unsupported',
+        tr: 'geçersiz mainteanceid',
       }
     },
     DESCIRIPTION_REQUIRED: {

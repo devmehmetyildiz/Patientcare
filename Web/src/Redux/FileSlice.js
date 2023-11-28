@@ -5,7 +5,6 @@ import instanse from "./axios";
 import config from "../Config";
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import notification from '../Utils/Notification';
 
 const Literals = {
     addcode: {

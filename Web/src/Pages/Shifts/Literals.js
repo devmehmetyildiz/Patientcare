@@ -23,6 +23,10 @@ const Literals = {
             tr: 'Bitiş Zamanı',
             en: 'End Time'
         },
+        Priority: {
+            tr: 'Öncelik Sırası',
+            en: 'Priority order'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'

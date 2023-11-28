@@ -10,7 +10,7 @@ const FormProvider = ({ children }) => {
 
     useEffect(() => {
         if (buffer.length > 0) {
-            setFormstates({ ...formstates, [buffer[0]?.key]: buffer[0]?.value })
+            setFormstates(prevstate=>({ ...prevstate, [buffer[0]?.key]: buffer[0]?.value }))
             setBuffer(buffer.slice(1))
         }
     }, [buffer])
@@ -20,7 +20,8 @@ const FormProvider = ({ children }) => {
         Object.keys(form).map(u => {
             newform[pageName + '/' + u] = form[u]
         })
-        setFormstates({ ...formstates, ...newform })
+        console.log('newform: ', newform);
+        setFormstates(prevstate => ({ ...prevstate, ...newform }))
     }
 
     const clearForm = (pageName) => {

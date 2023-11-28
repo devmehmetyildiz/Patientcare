@@ -33,6 +33,14 @@ async function UpdateBed(req, res, next) {
     }
 }
 
+async function ChangeBedstatus(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('bedupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Beds Update', req.language, { en: 'Beds Update', tr: 'Beds Update' }))
+    }
+}
+
 async function DeleteBed(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('beddelete')) || permissionchecker(req)) {
         next()
@@ -47,4 +55,5 @@ module.exports = {
     AddBed,
     UpdateBed,
     DeleteBed,
+    ChangeBedstatus
 }

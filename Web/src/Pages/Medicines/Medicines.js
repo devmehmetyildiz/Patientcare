@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Loader } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
+import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Notification from '../../Utils/Notification'
 import Literals from './Literals'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
@@ -39,7 +37,7 @@ export default class Medicines extends Component {
   render() {
 
 
-    const { Stocks, Profile, handleDeletemodal, handleSelectedStock, handleApprovemodal, AddRecordMedicines } = this.props
+    const { Stocks, Profile, handleDeletemodal, handleSelectedStock, handleApprovemodal } = this.props
     const { isLoading, isDispatching } = Stocks
 
     const Columns = [

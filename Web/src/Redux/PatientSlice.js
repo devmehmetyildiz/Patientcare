@@ -2,13 +2,35 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
+import Cookies from 'universal-cookie';
 import config from "../Config";
-import notification from '../Utils/Notification';
+import axios from 'axios'
+import validator from '../Utils/Validator';
 
 const Literals = {
     addcode: {
         en: 'Data Save',
         tr: 'Veri Kaydetme'
+    },
+    adddescriptionpatientfull: {
+        en: 'Patient added successfully, Files will Add',
+        tr: 'Hasta Başarı ile eklendi, Dosyalar Eklenecek'
+    },
+    adddescriptionfilefull: {
+        en: 'Patient files added successfully, Stocks will Add',
+        tr: 'Hasta dosyaları Başarı ile eklendi, Stoklar Eklenecek'
+    },
+    adddescriptionstocksfull: {
+        en: 'Patient Stocks added successfully, Patient will Enter to Facility',
+        tr: 'Hasta Stokları Başarı ile eklendi, Hasta Kuruma Alınacak'
+    },
+    adddescriptioncompletefull: {
+        en: 'Patient Entered Facility',
+        tr: 'Hasta Kuruma Alındı'
+    },
+    addpatienterror: {
+        en: 'Ekleme Sırasında hasta Id değeri gelmedi',
+        tr: 'Ekleme Sırasında hasta Id değeri gelmedi'
     },
     adddescription: {
         en: 'Patient added successfully',
@@ -102,6 +124,90 @@ export const AddPatients = createAsyncThunk(
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patients');
             return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const AddPatientReturnPatient = createAsyncThunk(
+    'Patients/AddPatientReturnPatient',
+    async ({ Patientdata, files, stocks, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const createdpatientresponse = await instanse.post(config.services.Business, ROUTES.PATIENT + '/AddPatientReturnPatient', Patientdata);
+            const createdpatient = createdpatientresponse.data
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: Literals.addcode[Language],
+                description: Literals.adddescriptionpatientfull[Language],
+            }));
+
+            if (validator.isUUID(createdpatient?.Uuid)) {
+                if ((files || []).length > 0) {
+                    const formData = new FormData();
+                    const newFiles = (files || []).map(u => {
+                        return { ...u, ParentID: createdpatient?.Uuid }
+                    })
+                    newFiles.forEach((data, index) => {
+                        Object.keys(data).forEach(element => {
+                            formData.append(`list[${index}].${element}`, data[element])
+                        });
+                    })
+
+                    const localcookies = new Cookies();
+                    await axios({
+                        method: `put`,
+                        url: config.services.File + `${ROUTES.FILE}`,
+                        headers: { Authorization: "Bearer  " + localcookies.get('patientcare'), contentType: 'mime/form-data' },
+                        data: formData
+                    })
+                    dispatch(fillPatientnotification({
+                        type: 'Success',
+                        code: Literals.addcode[Language],
+                        description: Literals.adddescriptionfilefull[Language],
+                    }));
+                }
+                if ((stocks || []).length > 0) {
+                    const newStocks = (stocks || []).map(u => {
+                        return { ...u, PatientID: createdpatient?.Uuid }
+                    })
+                    await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Editpatientstocks", newStocks);
+                    dispatch(fillPatientnotification({
+                        type: 'Success',
+                        code: Literals.addcode[Language],
+                        description: Literals.adddescriptionstocksfull[Language],
+                    }));
+                }
+                const completebody = {
+                    ...createdpatient,
+                    WarehouseID: Patientdata.WarehouseID,
+                    RoomID: Patientdata.RoomID,
+                    FloorID: Patientdata.FloorID,
+                    BedID: Patientdata.BedID,
+                    Iswilltransfer: Patientdata.Iswilltransfer
+                }
+                const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Complete", completebody);
+                dispatch(fillPatientnotification({
+                    type: 'Success',
+                    code: Literals.addcode[Language],
+                    description: Literals.adddescriptioncompletefull[Language],
+                }));
+                clearForm && clearForm('PatientsCreate')
+                closeModal && closeModal()
+                history && history.push(redirectUrl ? redirectUrl : '/Patients');
+                return response.data;
+            } else {
+                dispatch(fillPatientnotification({
+                    type: 'Error',
+                    code: Literals.addcode[Language],
+                    description: Literals.addpatienterror[Language],
+                }));
+            }
+            return [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillPatientnotification(errorPayload));
@@ -401,111 +507,122 @@ export const PatientsSlice = createSlice({
                 state.errMsg = action.error.message;
             })
             .addCase(AddPatients.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(AddPatients.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(AddPatients.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddPatientReturnPatient.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(AddPatientReturnPatient.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(AddPatientReturnPatient.rejected, (state, action) => {
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(EditPatients.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(EditPatients.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(EditPatients.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(CompletePrepatients.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(CompletePrepatients.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(CompletePrepatients.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(EditPatientstocks.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(EditPatientstocks.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(EditPatientstocks.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(DeletePatients.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(DeletePatients.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(DeletePatients.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(OutPatients.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(OutPatients.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.selected_record = action.payload;
             })
             .addCase(OutPatients.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(InPatients.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(InPatients.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.selected_record = action.payload;
             })
             .addCase(InPatients.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(Editpatientcase.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(Editpatientcase.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
             })
             .addCase(Editpatientcase.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(Editpatientplace.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(Editpatientplace.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.selected_record = action.payload
             })
             .addCase(Editpatientplace.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(UpdatePatienttododefines.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(UpdatePatienttododefines.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
             })
             .addCase(UpdatePatienttododefines.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
     },

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Divider, Dropdown, Form, Header, Image } from 'semantic-ui-react'
-import Notification from '../../Utils/Notification'
 import formToObject from 'form-to-object'
 import LoadingPage from '../../Utils/LoadingPage'
 import img from '../../Assets/img'
@@ -44,7 +43,6 @@ export default class ProfileEdit extends Component {
             }
         }
 
-        console.log('this.state: ', this.state);
     }
 
     render() {
@@ -117,7 +115,7 @@ export default class ProfileEdit extends Component {
                                                 label="Bildirim Görünür Kalma Süresi (ms)"
                                                 placeholder="Görünür Kalma Süresi"
                                                 fluid
-                                                onChange={(e) => { this.setState({ userConfig: { ...userConfig, ['autoClose']: e.target.value } }) }}
+                                                onChange={(e) => { this.setState({ userConfig: { ...userConfig, 'autoClose': e.target.value } }) }}
                                             />
                                         </Form.Field>
                                         <Form.Field>
@@ -127,7 +125,7 @@ export default class ProfileEdit extends Component {
                                                 clearable
                                                 selection
                                                 fluid
-                                                onChange={(e, { value }) => { this.setState({ userConfig: { ...userConfig, ['position']: value } }) }}
+                                                onChange={(e, { value }) => { this.setState({ userConfig: { ...userConfig, 'position': value } }) }}
                                                 options={Notificaitonoptions}
                                             />
                                         </Form.Field>

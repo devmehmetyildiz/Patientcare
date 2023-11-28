@@ -155,6 +155,108 @@ async function AddPatient(req, res, next) {
     GetPatients(req, res, next)
 }
 
+async function AddPatientReturnPatient(req, res, next) {
+
+    let validationErrors = []
+    const {
+        Approvaldate,
+        Registerdate,
+        DepartmentID,
+        CaseID,
+        Patientdefine,
+        PatientdefineID
+    } = req.body
+
+
+    if (!validator.isString(Patientdefine.CountryID) && !validator.isUUID(Patientdefine.Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
+    }
+    if (Object.keys(Patientdefine).length <= 0 && !validator.isUUID(PatientdefineID)) {
+        validationErrors.push(messages.ERROR.PATIENTDEFINE_NOT_FOUND)
+    }
+    if (!validator.isUUID(DepartmentID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
+    }
+    if (!validator.isUUID(CaseID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+    }
+    if (!validator.isISODate(Registerdate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.REGISTERDATE_REQUIRED)
+    }
+    if (!validator.isISODate(Approvaldate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.APPROVALDATE_REQUIRED)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    let casedata = null
+
+    try {
+        const caseresponse = await axios({
+            method: 'GET',
+            url: config.services.Setting + `Cases/` + CaseID,
+            headers: {
+                session_key: config.session.secret
+            }
+        })
+        casedata = caseresponse.data
+    } catch (error) {
+        return next(requestErrorCatcher(error, 'Setting'))
+    }
+
+    const t = await db.sequelize.transaction();
+
+    try {
+        if (!validator.isUUID(Patientdefine.Uuid)) {
+            let patientdefineuuid = uuid()
+            await db.patientdefineModel.create({
+                ...Patientdefine,
+                Uuid: patientdefineuuid,
+                Createduser: "System",
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+            req.body.PatientdefineID = patientdefineuuid
+        }
+        let patientuuid = uuid()
+        await db.patientModel.create({
+            ...req.body,
+            Uuid: patientuuid,
+            Createduser: "System",
+            Createtime: new Date(),
+            Isactive: true
+        }, { transaction: t })
+
+        let patientmovementuuid = uuid()
+
+        await db.patientmovementModel.create({
+            Uuid: patientmovementuuid,
+            OldPatientmovementtype: 0,
+            Patientmovementtype: casedata?.Patientstatus || 2,
+            NewPatientmovementtype: casedata?.Patientstatus || 2,
+            Createduser: "System",
+            Createtime: new Date(),
+            PatientID: patientuuid,
+            Movementdate: new Date(),
+            IsDeactive: false,
+            IsTodoneed: false,
+            IsTodocompleted: false,
+            IsComplated: true,
+            Iswaitingactivation: false,
+            Isactive: true
+        }, { transaction: t })
+
+        await t.commit()
+        req.params.patientId = patientuuid
+    } catch (err) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(err))
+    }
+    GetPatient(req, res, next)
+}
+
 async function Completeprepatient(req, res, next) {
 
     let validationErrors = []
@@ -214,6 +316,21 @@ async function Completeprepatient(req, res, next) {
             Isactive: true
         }, { where: { Uuid: patient.Uuid } }, { transaction: t })
 
+        try {
+            await axios({
+                method: 'PUT',
+                url: config.services.Setting + "Beds/ChangeBedstatus",
+                headers: {
+                    session_key: config.session.secret
+                },
+                data: {
+                    OldUuid: null,
+                    NewUuid: BedID
+                }
+            })
+        } catch (error) {
+            return next(requestErrorCatcher(error, 'Setting'))
+        }
 
         const lastpatientmovement = await db.patientmovementModel.findOne({
             order: [['Id', 'DESC']],
@@ -448,6 +565,22 @@ async function UpdatePatientplace(req, res, next) {
         }
         if (patient.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+        }
+
+        try {
+            await axios({
+                method: 'PUT',
+                url: config.services.Setting + "Beds/ChangeBedstatus",
+                headers: {
+                    session_key: config.session.secret
+                },
+                data: {
+                    OldUuid: patient.BedID,
+                    NewUuid: BedID
+                }
+            })
+        } catch (error) {
+            return next(requestErrorCatcher(error, 'Setting'))
         }
 
         await db.patientModel.update({
@@ -762,5 +895,6 @@ module.exports = {
     Editpatientstocks,
     UpdatePatientplace,
     OutPatient,
-    InPatient
+    InPatient,
+    AddPatientReturnPatient
 }

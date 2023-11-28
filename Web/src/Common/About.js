@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import Pagewrapper from './Wrappers/Pagewrapper'
 import Headerwrapper from './Wrappers/Headerwrapper'
 import Pagedivider from './Styled/Pagedivider'
-import { Accordion, Breadcrumb, Button, Container, Grid, GridColumn, Header, Icon, Label, Segment, Transition } from 'semantic-ui-react'
+import { Accordion, Breadcrumb, Button, Grid, GridColumn, Header, Icon, Segment, Transition } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import Headerbredcrump from './Wrappers/Headerbredcrump'
 import './about.css'
-import { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3,version1_0_0_4 } from './Changelogs'
+import { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3, version1_0_0_4, version1_0_0_5 } from './Changelogs'
 
 export default class About extends Component {
 
@@ -20,6 +20,8 @@ export default class About extends Component {
 
     render() {
         const Changelogs = [
+            version1_0_0_5,
+            version1_0_0_4,
             version1_0_0_3,
             version1_0_0_2,
             version1_0_0_1,

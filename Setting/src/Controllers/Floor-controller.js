@@ -42,10 +42,14 @@ async function AddFloor(req, res, next) {
     let validationErrors = []
     const {
         Name,
+        Gender
     } = req.body
 
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+    }
+    if (!validator.isString(Gender)) {
+        validationErrors.push(messages.VALIDATION_ERROR.GENDER_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -84,6 +88,7 @@ async function FastcreateFloor(req, res, next) {
         Formatbedstringend,
         Floorstartnumber,
         Floorendnumber,
+        Gender,
         Roomstartnumber,
         Roomendnumber,
         Bedstartnumber,
@@ -91,6 +96,9 @@ async function FastcreateFloor(req, res, next) {
     } = req.body
 
 
+    if (!validator.isString(Gender)) {
+        validationErrors.push(messages.VALIDATION_ERROR.GENDER_REQUIRED)
+    }
     if (!validator.isNumber(parseInt(Floorstartnumber))) {
         validationErrors.push(messages.VALIDATION_ERROR.FLOORSTARTNUMBER_REQUIRED)
     }
@@ -138,6 +146,7 @@ async function FastcreateFloor(req, res, next) {
             await db.floorModel.create({
                 Name: `${Formatfloorstringstart || ''}${currentfloorstart}${Formatfloorstringend || ''}`,
                 Uuid: flooruuid,
+                Gender: Gender,
                 Createduser: "System",
                 Createtime: new Date(),
                 Isactive: true
@@ -162,6 +171,7 @@ async function FastcreateFloor(req, res, next) {
                         Name: `${Formatbedstringstart || ''}${currentbedstart}${Formatbedstringend || ''}`,
                         Uuid: beduuid,
                         RoomID: roomuuid,
+                        Isoccupied: false,
                         Createduser: "System",
                         Createtime: new Date(),
                         Isactive: true
@@ -187,10 +197,14 @@ async function UpdateFloor(req, res, next) {
     const {
         Name,
         Uuid,
+        Gender
     } = req.body
 
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+    }
+    if (!validator.isString(Gender)) {
+        validationErrors.push(messages.VALIDATION_ERROR.GENDER_REQUIRED)
     }
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)

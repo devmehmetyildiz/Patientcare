@@ -4,7 +4,10 @@ const patientdefineModel = require('./PatientdefineModel')
 const patientmovementModel = require('./PatientmovementModel')
 const todoModel = require('./TodoModel')
 const patienttododefineModel = require('./PatienttododefineModel')
-
+const personelModel = require('./PersonelModel')
+const shiftModel = require('./ShiftModel')
+const shiftrequestModel = require('./ShiftrequestModel')
+const personelshiftModel = require('./PersonelshiftModel')
 
 module.exports = {
     applog_businessModel,
@@ -12,5 +15,9 @@ module.exports = {
     patientdefineModel,
     patientmovementModel,
     todoModel,
-    patienttododefineModel
+    patienttododefineModel,
+    personelModel,
+    shiftModel,
+    shiftrequestModel,
+    personelshiftModel
 }

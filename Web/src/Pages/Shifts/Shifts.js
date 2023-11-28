@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Divider, Icon, Loader, Modal } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn, Header } from 'semantic-ui-react'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
-import { MOVEMENTTYPES } from '../../Utils/Constants'
+import { Breadcrumb, Icon, Grid, GridColumn } from 'semantic-ui-react'
+import { getInitialconfig } from '../../Utils/Constants'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import Notification from '../../Utils/Notification'
 import Literals from './Literals'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
 import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
@@ -33,6 +30,7 @@ export default class Shifts extends Component {
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
       { Header: Literals.Columns.Starttime[Profile.Language], accessor: 'Starttime', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
       { Header: Literals.Columns.Endtime[Profile.Language], accessor: 'Endtime', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
+      { Header: Literals.Columns.Priority[Profile.Language], accessor: 'Priority', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
@@ -41,18 +39,7 @@ export default class Shifts extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
 
     const metaKey = "Shifts"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
-    const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
-        return item.key
-      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
-        return item.key
-      }) : [],
-      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
-        return item.key
-      }) : [],
-    };
+    let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Shifts.list || []).filter(u => u.Isactive).map(item => {
       return {

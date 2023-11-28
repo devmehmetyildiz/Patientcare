@@ -4,7 +4,6 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 import Cookies from 'universal-cookie';
-import notification from '../Utils/Notification';
 
 export const logIn = createAsyncThunk(
     'Profile/logIn',

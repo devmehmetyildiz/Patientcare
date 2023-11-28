@@ -3,7 +3,6 @@ import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
-import notification from '../Utils/Notification';
 
 const Literals = {
     addcode: {
@@ -159,7 +158,6 @@ export const ApproveStockmovements = createAsyncThunk(
 export const ApprovemultipleStockmovements = createAsyncThunk(
     'Stockmovements/ApprovemultipleStockmovements',
     async (data, { dispatch, getState }) => {
-        console.log('data: ', data);
         try {
             
             const state = getState()

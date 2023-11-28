@@ -10,7 +10,6 @@ export default function PatientsEditplace(
         Editpatientplace,
         fillPatientnotification,
         handlePlacemodal,
-        handleSelectedPatient,
         GetFloors,
         GetRooms,
         GetBeds,
@@ -35,7 +34,7 @@ export default function PatientsEditplace(
         return { key: room.Uuid, text: room.Name, value: room.Uuid }
     })
 
-    const Bedsoptions = (Beds.list || []).filter(u => u.Isactive && u.RoomID === record?.RoomID).map(bed => {
+    const Bedsoptions = (Beds.list || []).filter(u => u.Isactive && u.Isoccupied === 0 && u.RoomID === record?.RoomID).map(bed => {
         return { key: bed.Uuid, text: bed.Name, value: bed.Uuid }
     })
 

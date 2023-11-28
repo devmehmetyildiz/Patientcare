@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Loader } from 'semantic-ui-react'
-import { Breadcrumb, Button, Grid, GridColumn } from 'semantic-ui-react'
+import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import DataTable from '../../Utils/DataTable'
 import LoadingPage from '../../Utils/LoadingPage'
-import Notification from '../../Utils/Notification'
 import NoDataScreen from '../../Utils/NoDataScreen'
-import ColumnChooser from '../../Containers/Utils/ColumnChooser'
 import Literals from './Literals'
 import Pagedivider from '../../Common/Styled/Pagedivider'
 import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
@@ -26,7 +24,7 @@ export default class Patientdefines extends Component {
 
   render() {
 
-    const { Patientdefines, Profile, handleSelectedPatientdefine, handleDeletemodal, AddRecordPatientdefines } = this.props
+    const { Patientdefines, Profile, handleSelectedPatientdefine, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Patientdefines
 
     const Columns = [
@@ -65,6 +63,7 @@ export default class Patientdefines extends Component {
       { Header: Literals.Columns.Contactname2[Profile.Language], accessor: 'Contactname2', sortable: true, canGroupBy: true, canFilter: true },
       { Header: Literals.Columns.CostumertypeName[Profile.Language], accessor: 'CostumertypeID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.costumertypeCellhandler(col) },
       { Header: Literals.Columns.PatienttypeName[Profile.Language], accessor: 'PatienttypeID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.patienttypeCellhandler(col) },
+      { Header: Literals.Columns.Medicalboardreport[Profile.Language], accessor: 'Medicalboardreport', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },

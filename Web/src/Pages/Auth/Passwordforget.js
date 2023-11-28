@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import img from "../../Assets/img"
 import { Button, Form, Grid, Header, Divider } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
-import Notification from '../../Utils/Notification'
 
 export default class Passwordforget extends Component {
 
