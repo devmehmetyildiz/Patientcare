@@ -5,7 +5,7 @@ import { MdSettings } from "react-icons/md";
 import { Collapse } from 'react-collapse';
 import { withRouter } from 'react-router-dom';
 import Literals from "../Utils/Literalregistrar"
-import { Icon, Label } from "semantic-ui-react"
+import { Icon, Label, Popup } from "semantic-ui-react"
 import config from '../Config';
 import { Link } from 'react-router-dom';
 
@@ -178,7 +178,7 @@ export function Sidebar(props) {
         setPages(defaultpages)
     }, [Profile.Language])
 
-    const version = `Version : ${config.version}`
+    const version = `V${config.version}`
     return (
         <div className={`${iconOnly ? `${hideMobile ? 'w-[0px] ' : 'w-[50px] '}` : 'w-[250px] overflow-x-hidden overflow-y-auto'} relative flex flex-col z-40 justify-start items-start mt-[58.61px]  h-[calc(100vh-58.61px)] bg-white dark:bg-Contentfg  transition-all ease-in-out duration-500`}>
             {Pages.map((item, index) => {
@@ -243,13 +243,30 @@ export function Sidebar(props) {
                         </div>}
                 </div> : null
             })}
-            <div className='h-full mt-auto mb-4 w-full mx-auto flex justify-center items-end'>
+            <div className='h-full mt-auto mb-2 w-full mx-auto flex justify-center items-end'>
                 <div className='w-full flex flex-row justify-center items-center cursor-pointer group'>
                     <Link to="/About">
+                        {/* <Label basic color='blue'><Icon name='question' />{version}</Label> */}
+                        {/* <Icon name='question' color='blue' className='group-hover:text-lg transition-all ease-in-out duration-500' /> */}
                         {!iconOnly ?
-                            <Label basic color='blue'><Icon name='question' />{version}</Label>
+                            <div className='
+                            py-2 px-8 rounded-full bg-blue-500 text-white 
+                            font-bold hover:shadow-2xl relative versionbutton
+                            transition-all ease-out duration-1000
+                            hover:shadow-blue-800 hover:bg-blue-800'
+                            >
+                                {version}
+                            </div>
                             :
-                            <Icon name='question' color='blue' className='group-hover:text-lg transition-all ease-in-out duration-500' />
+                            <Popup
+                                position='right center'
+                                trigger={<div className='p-2 rounded-full bg-blue-500 text-white 
+                          font-bold hover:shadow-2xl relative versionbutton
+                          transition-all ease-out duration-1000
+                          hover:shadow-blue-800 hover:bg-blue-800' >V</div>}
+                            >
+                                {version}
+                            </Popup>
                         }
                     </Link>
                 </div>
