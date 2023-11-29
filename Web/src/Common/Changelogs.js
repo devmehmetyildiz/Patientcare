@@ -234,7 +234,19 @@ const version1_0_0_5 = {
     ],
 }
 
-export { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3, version1_0_0_4, version1_0_0_5 }
+const version1_0_0_6 = {
+    version: "1.0.0.6",
+    bugs: [
+        {
+            title: "Ayarlar", commits: [
+                "Departmanlarda güncelleme ekranında veri gelmeme sorunu düzeltildi",
+                "Yataklarda güncelleme ekranında veri gelmeme sorunu düzeltildi",
+            ],
+        },
+    ],
+}
+
+export { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3, version1_0_0_4, version1_0_0_5, version1_0_0_6 }
 
 /* const version1000 = {
     version: "1.0.0.0",
