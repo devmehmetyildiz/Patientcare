@@ -19,7 +19,7 @@ import Submitbutton from '../../Common/Submitbutton'
 
 export default function DepartmentsEdit(props) {
 
-  const { GetDepartment, match, history, GetStations, DepartmentID, Departments, Stations, Profile, EditDepartments, fillDepartmentnotification } = props
+  const { GetDepartment, match, history, GetStations, DepartmentID, Departments, Stations, Profile, EditDepartments, fillDepartmentnotification, handleSelectedDepartment } = props
 
   const PAGE_NAME = "DepartmentsEdit"
   const [isDatafetched, setisDatafetched] = useState(false)
@@ -41,7 +41,7 @@ export default function DepartmentsEdit(props) {
     const { selected_record, isLoading } = Departments
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !Stations.isLoading && !isLoading && !isDatafetched) {
       setisDatafetched(true)
-      console.log('selected_record: ', selected_record);
+      handleSelectedDepartment({})
       context.setForm(PAGE_NAME, { ...selected_record, Stations: selected_record.Stationuuids.map(u => { return u.StationID }) })
     }
   }, [Departments, Stations])
