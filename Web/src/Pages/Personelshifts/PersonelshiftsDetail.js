@@ -13,11 +13,10 @@ export default class PersonelshiftsDetail extends Component {
   PAGE_NAME = "PersonelshiftsDetail"
 
   componentDidMount() {
-    const { GetPersonelshifts, match, history, ShiftID, GetFloors, GetShifts, GetPersonels, GetShiftrequest } = this.props
+    const { GetPersonelshift, match, history, ShiftID, GetFloors, GetShifts, GetPersonels } = this.props
     let Id = ShiftID || match?.params?.ShiftID
     if (validator.isUUID(Id)) {
-      GetPersonelshifts(Id)
-      GetShiftrequest(Id)
+      GetPersonelshift(Id)
       GetFloors()
       GetShifts()
       GetPersonels()
@@ -28,11 +27,11 @@ export default class PersonelshiftsDetail extends Component {
 
   render() {
 
-    const { Shifts, Profile, Floors } = this.props
-    const { isLoading, isDispatching, selected_shiftrequest } = Shifts
+    const { Personelshifts, Profile, Floors } = this.props
+    const { isLoading, isDispatching, selected_record } = Personelshifts
 
-    const startdatestr = selected_shiftrequest?.Startdate || null
-    const enddatestr = selected_shiftrequest?.Enddate || null
+    const startdatestr = selected_record?.shiftrequests?.Startdate || null
+    const enddatestr = selected_record?.shiftrequests?.Enddate || null
 
     let days = []
     let startdate = new Date(startdatestr)
@@ -42,7 +41,7 @@ export default class PersonelshiftsDetail extends Component {
       days.push(index)
     }
 
-    const list = (Shifts.Personelshifts || [])
+    const list = (selected_record?.personelshifts || [])
     const personellist = [...new Set(list.map(u => {
       return u.PersonelID
     }))]
@@ -61,6 +60,7 @@ export default class PersonelshiftsDetail extends Component {
 
       const res = {
         PersonelID: personelID,
+        ShiftID: list.find(u => u.PersonelID === personelID)?.ShiftID,
         FloorID: list.find(u => u.PersonelID === personelID)?.FloorID
       }
 
@@ -74,7 +74,8 @@ export default class PersonelshiftsDetail extends Component {
     })
 
     let Columns = [
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'PersonelID', Cell: col => this.personelCellhandler(col) }
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'PersonelID', Cell: col => this.personelCellhandler(col) },
+      { Header: Literals.Columns.Shift[Profile.Language], accessor: 'ShiftID', Cell: col => this.shiftCellhandler(col) }
     ].concat(
       days.map(u => {
         return { Header: u, accessor: 'Occuredday' + u, Cell: col => this.boolCellhandler(col) }
@@ -135,6 +136,16 @@ export default class PersonelshiftsDetail extends Component {
     } else {
       const personel = (Personels.list || []).find(u => u.Uuid === col.value)
       return personel ? `${personel?.Name} ${personel?.Surname}` : 'Tanımsız'
+    }
+  }
+
+  shiftCellhandler = (col) => {
+    const { Shifts } = this.props
+    if (Shifts.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const shift = (Shifts.list || []).find(u => u.Uuid === col.value)
+      return `${shift?.Starttime}/${shift?.Endtime}` || 'Tanımsız'
     }
   }
 

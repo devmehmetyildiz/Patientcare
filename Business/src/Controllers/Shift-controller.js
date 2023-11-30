@@ -78,8 +78,9 @@ async function GetPersonelshifts(req, res, next) {
     }
 
     try {
-        const shiftrequests = await db.personelshiftModel.findAll({ where: { ShiftrequestID: req.params.shiftrequestId } })
-        res.status(200).json(shiftrequests)
+        const personelshifts = await db.personelshiftModel.findAll({ where: { ShiftrequestID: req.params.shiftrequestId } })
+        const shiftrequests = await db.shiftrequestModel.findOne({ where: { Uuid: req.params.shiftrequestId } });
+        res.status(200).json({ shiftrequests: shiftrequests, personelshifts: personelshifts })
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }

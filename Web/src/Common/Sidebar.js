@@ -246,24 +246,22 @@ export function Sidebar(props) {
             <div className='h-full mt-auto mb-2 w-full mx-auto flex justify-center items-end'>
                 <div className='w-full flex flex-row justify-center items-center cursor-pointer group'>
                     <Link to="/About">
-                        {/* <Label basic color='blue'><Icon name='question' />{version}</Label> */}
-                        {/* <Icon name='question' color='blue' className='group-hover:text-lg transition-all ease-in-out duration-500' /> */}
                         {!iconOnly ?
                             <div className='
-                            py-2 px-8 rounded-full bg-blue-500 text-white 
+                            py-1 px-8 rounded-full bg-gray-500 text-white 
                             font-bold hover:shadow-2xl relative versionbutton
                             transition-all ease-out duration-1000
-                            hover:shadow-blue-800 hover:bg-blue-800'
+                            hover:shadow-gray-800 hover:bg-gray-600'
                             >
                                 {version}
                             </div>
                             :
                             <Popup
                                 position='right center'
-                                trigger={<div className='p-2 rounded-full bg-blue-500 text-white 
+                                trigger={<div className='p-2 rounded-full bg-gray-500 text-white 
                           font-bold hover:shadow-2xl relative versionbutton
                           transition-all ease-out duration-1000
-                          hover:shadow-blue-800 hover:bg-blue-800' >V</div>}
+                          hover:shadow-gray-800 hover:bg-gray-600' >V</div>}
                             >
                                 {version}
                             </Popup>

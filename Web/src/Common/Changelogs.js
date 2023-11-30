@@ -246,7 +246,18 @@ const version1_0_0_6 = {
     ],
 }
 
-export { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3, version1_0_0_4, version1_0_0_5, version1_0_0_6 }
+const version1_0_0_7 = {
+    version: "1.0.0.7",
+    withoutIssues: [
+        {
+            title: "Önyüz", commits: [
+                "Versiyon button style düzenlemesi",
+            ]
+        }
+    ]
+}
+
+export { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3, version1_0_0_4, version1_0_0_5, version1_0_0_6, version1_0_0_7 }
 
 /* const version1000 = {
     version: "1.0.0.0",

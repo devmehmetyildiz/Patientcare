@@ -10,15 +10,15 @@ const Literals = {
         tr: 'Veri Kaydetme'
     },
     adddescription: {
-        en: 'Shift added successfully',
-        tr: 'Vardiya Başarı ile eklendi'
+        en: 'Personel Shift added successfully',
+        tr: 'Personel Vardiyası Başarı ile eklendi'
     },
     updatecode: {
         en: 'Data Update',
         tr: 'Veri Güncelleme'
     },
     updatedescription: {
-        en: 'Shift updated successfully',
+        en: 'Personel Shift updated successfully',
         tr: 'Vardiya Başarı ile güncellendi'
     },
     deletecode: {
@@ -26,111 +26,89 @@ const Literals = {
         tr: 'Veri Silme'
     },
     deletedescription: {
-        en: 'Shift Deleted successfully',
-        tr: 'Vardiya Başarı ile Silindi'
+        en: 'Personel Shift Deleted successfully',
+        tr: 'Personel Vardiyası Başarı ile Silindi'
     },
 }
 
-export const GetShifts = createAsyncThunk(
-    'Shifts/GetShifts',
+
+export const GetPersonelshifts = createAsyncThunk(
+    'Personelshifts/GetPersonelshifts',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Business, ROUTES.SHIFT);
+            const response = await instanse.get(config.services.Business, `${ROUTES.SHIFT}/GetShiftrequests`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
+            dispatch(fillPersonelshiftnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetShift = createAsyncThunk(
-    'Shifts/GetShift',
+export const GetPersonelshift = createAsyncThunk(
+    'Personelshifts/GetPersonelshift',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Business, `${ROUTES.SHIFT}/${guid}`);
+            const response = await instanse.get(config.services.Business, `${ROUTES.SHIFT}/GetPersonelshifts/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
+            dispatch(fillPersonelshiftnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddShifts = createAsyncThunk(
-    'Shifts/AddShifts',
+export const AddPersonelshifts = createAsyncThunk(
+    'Personelshifts/AddPersonelshifts',
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Business, ROUTES.SHIFT, data);
-            dispatch(fillShiftnotification({
+            const response = await instanse.post(config.services.Business, ROUTES.SHIFT + '/Addshiftperiod', data);
+            dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
+                description: Literals.adddescription[Language],
             }));
-            clearForm && clearForm('ShiftsCreate')
+            clearForm && clearForm('PerosnelshiftsCreate')
             closeModal && closeModal()
-            history && history.push(redirectUrl ? redirectUrl : '/Shifts');
+            history && history.push(redirectUrl ? redirectUrl : '/Personelshifts');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
+            dispatch(fillPersonelshiftnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditShifts = createAsyncThunk(
-    'Shifts/EditShifts',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
-        try {
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Business, ROUTES.SHIFT, data);
-            dispatch(fillShiftnotification({
-                type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
-            }));
-            clearForm && clearForm('ShiftsUpdate')
-            closeModal && closeModal()
-            history && history.push(redirectUrl ? redirectUrl : '/Shifts');
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
-export const DeleteShifts = createAsyncThunk(
-    'Shifts/DeleteShifts',
+export const DeletePersonelshifts = createAsyncThunk(
+    'Personelshifts/DeletePersonelshifts',
     async (data, { dispatch, getState }) => {
         try {
 
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.delete(config.services.Business, `${ROUTES.SHIFT}/${data.Uuid}`);
-            dispatch(fillShiftnotification({
+            const response = await instanse.delete(config.services.Business, `${ROUTES.SHIFT}/DeleteShiftrequest/${data.Uuid}`);
+            dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
+            dispatch(fillPersonelshiftnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const ShiftsSlice = createSlice({
-    name: 'Shifts',
+
+export const PerosnelshiftsSlice = createSlice({
+    name: 'Perosnelshifts',
     initialState: {
         list: [],
         selected_record: {},
@@ -141,15 +119,15 @@ export const ShiftsSlice = createSlice({
         isDeletemodalopen: false,
     },
     reducers: {
-        handleSelectedShift: (state, action) => {
+        handleSelectedPersonelshift: (state, action) => {
             state.selected_record = action.payload;
         },
-        fillShiftnotification: (state, action) => {
+        fillPersonelshiftnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removeShiftnotification: (state) => {
+        removePersonelshiftnotification: (state) => {
             state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
@@ -158,62 +136,51 @@ export const ShiftsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetShifts.pending, (state) => {
+            .addCase(GetPersonelshifts.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetShifts.fulfilled, (state, action) => {
+            .addCase(GetPersonelshifts.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetShifts.rejected, (state, action) => {
+            .addCase(GetPersonelshifts.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetShift.pending, (state) => {
+            .addCase(GetPersonelshift.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetShift.fulfilled, (state, action) => {
+            .addCase(GetPersonelshift.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetShift.rejected, (state, action) => {
+            .addCase(GetPersonelshift.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddShifts.pending, (state) => {
+            .addCase(AddPersonelshifts.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(AddShifts.fulfilled, (state, action) => {
+            .addCase(AddPersonelshifts.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(AddShifts.rejected, (state, action) => {
+            .addCase(AddPersonelshifts.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditShifts.pending, (state) => {
+            .addCase(DeletePersonelshifts.pending, (state) => {
                 state.isDispatching = true;
             })
-            .addCase(EditShifts.fulfilled, (state, action) => {
+            .addCase(DeletePersonelshifts.fulfilled, (state, action) => {
                 state.isDispatching = false;
                 state.list = action.payload;
             })
-            .addCase(EditShifts.rejected, (state, action) => {
-                state.isDispatching = false;
-                state.errMsg = action.error.message;
-            })
-            .addCase(DeleteShifts.pending, (state) => {
-                state.isDispatching = true;
-            })
-            .addCase(DeleteShifts.fulfilled, (state, action) => {
-                state.isDispatching = false;
-                state.list = action.payload;
-            })
-            .addCase(DeleteShifts.rejected, (state, action) => {
+            .addCase(DeletePersonelshifts.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
@@ -221,10 +188,10 @@ export const ShiftsSlice = createSlice({
 });
 
 export const {
-    handleSelectedShift,
-    fillShiftnotification,
-    removeShiftnotification,
+    handleSelectedPersonelshift,
+    fillPersonelshiftnotification,
+    removePersonelshiftnotification,
     handleDeletemodal
-} = ShiftsSlice.actions;
+} = PerosnelshiftsSlice.actions;
 
-export default ShiftsSlice.reducer;
+export default PerosnelshiftsSlice.reducer;

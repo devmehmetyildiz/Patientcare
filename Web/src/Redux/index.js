@@ -37,6 +37,7 @@ import EquipmentgroupSlice from "./EquipmentgroupSlice";
 import PersonelSlice from "./PersonelSlice";
 import BreakdownSlice from "./BreakdownSlice";
 import MainteanceSlice from "./MainteanceSlice";
+import PersonelshiftSlice from "./PersonelshiftSlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -77,6 +78,7 @@ const Slices = combineReducers({
     Personels: PersonelSlice,
     Breakdowns: BreakdownSlice,
     Mainteancies: MainteanceSlice,
+    Personelshifts: PersonelshiftSlice,
 });
 
 export default Slices;

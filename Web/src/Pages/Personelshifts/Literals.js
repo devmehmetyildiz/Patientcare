@@ -58,6 +58,10 @@ const Literals = {
             tr: 'Gün Sayısı',
             en: 'Day Count'
         },
+        Shift: {
+            tr: 'Vardiya',
+            en: 'Shift'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'
@@ -97,8 +101,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Personel Silme",
-            en: "Delete Personel"
+            tr: "Personel Vardiyası Silme",
+            en: "Delete Personel Shift"
         }
     },
     Button: {
@@ -130,16 +134,16 @@ const Literals = {
             en: "There is no Personel found"
         },
         Deletecheck: {
-            tr: "personelini silmek istediğinize emin misiniz?",
-            en: "personel will delete, are you sure?"
+            tr: "personel vardiyasını silmek istediğinize emin misiniz?",
+            en: "personel shift will delete, are you sure?"
         },
-        Namerequired: {
-            tr: "İsim Gerekli",
-            en: "Name Required"
+        Startdaterequired: {
+            tr: "Başlangıç Tarihi Gerekli",
+            en: "Startdate required"
         },
-        Surnamerequired: {
-            tr: "Soyisim Gerekli",
-            en: "Surname Required"
+        Periodrequired: {
+            tr: "Gün sayısı Gerekli",
+            en: "Period required"
         },
         Countryidrequired: {
             tr: "Tc Gerekli",
