@@ -192,9 +192,6 @@ async function ApproveStock(req, res, next) {
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
     }
-    if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
-    }
 
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -216,6 +213,47 @@ async function ApproveStock(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetStocks(req, res, next)
+}
+
+async function ApproveStocks(req, res, next) {
+
+    let validationErrors = []
+    const body = req.body
+
+    const t = await db.sequelize.transaction();
+    try {
+        for (const data of (body || [])) {
+            if (!data) {
+                validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+            }
+            if (!validator.isUUID(data)) {
+                validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
+            }
+            if (validationErrors.length > 0) {
+                return next(createValidationError(validationErrors, req.language))
+            }
+
+            const stock = await db.stockModel.findOne({ where: { Uuid: data } })
+            if (!stock) {
+                return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
+            }
+            if (stock.Isactive === false) {
+                return next(createAccessDenied([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+            }
+
+            await db.stockModel.update({
+                ...stock,
+                Isapproved: true,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { Uuid: data } }, { transaction: t })
+        }
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -572,6 +610,7 @@ module.exports = {
     UpdateStock,
     DeleteStock,
     ApproveStock,
+    ApproveStocks,
     TransferfromPatient,
     TransfertoPatient
 }

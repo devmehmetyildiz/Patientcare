@@ -248,6 +248,13 @@ const version1_0_0_6 = {
 
 const version1_0_0_7 = {
     version: "1.0.0.7",
+    features: [
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Toplu stok onaylama ekranı eklendi",
+            ]
+        },
+    ],
     withoutIssues: [
         {
             title: "Önyüz", commits: [

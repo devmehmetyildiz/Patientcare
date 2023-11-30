@@ -195,9 +195,6 @@ async function ApprovePurchaseorderstock(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
-    if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
-    }
     const t = await db.sequelize.transaction();
     try {
         const purchaseorderstock = await db.purchaseorderstockModel.findOne({ where: { Uuid: Uuid } })
@@ -215,6 +212,47 @@ async function ApprovePurchaseorderstock(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPurchaseorderstocks(req, res, next)
+}
+
+async function ApprovePurchaseorderstocks(req, res, next) {
+
+    let validationErrors = []
+    const body = req.body
+
+    const t = await db.sequelize.transaction();
+    try {
+        for (const data of (body || [])) {
+            if (!data) {
+                validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+            }
+            if (!validator.isUUID(data)) {
+                validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
+            }
+            if (validationErrors.length > 0) {
+                return next(createValidationError(validationErrors, req.language))
+            }
+
+            const purchaseorderstock = await db.purchaseorderstockModel.findOne({ where: { Uuid: data } })
+            if (!purchaseorderstock) {
+                return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
+            }
+            if (purchaseorderstock.Isactive === false) {
+                return next(createAccessDenied([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+            }
+
+            await db.purchaseorderstockModel.update({
+                ...purchaseorderstock,
+                Isapproved: true,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { Uuid: data } }, { transaction: t })
+        }
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -265,4 +303,5 @@ module.exports = {
     UpdatePurchaseorderstock,
     DeletePurchaseorderstock,
     ApprovePurchaseorderstock,
+    ApprovePurchaseorderstocks,
 }

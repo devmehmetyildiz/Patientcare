@@ -41,6 +41,14 @@ async function ApproveStock(req, res, next) {
     }
 }
 
+async function ApproveStocks(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('stockupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Stocks Update', req.language, { en: 'Stocks Update', tr: 'Stocks Update' }))
+    }
+}
+
 async function DeleteStock(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('stockdelete')) || permissionchecker(req)) {
         next()
@@ -72,6 +80,7 @@ module.exports = {
     UpdateStock,
     DeleteStock,
     ApproveStock,
+    ApproveStocks,
     TransferfromPatient,
     TransfertoPatient
 }
