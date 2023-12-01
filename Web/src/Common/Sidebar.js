@@ -62,6 +62,7 @@ export function Sidebar(props) {
                 { id: 3, subtitle: Literals.Breakdowns.Page.Pageheader[Profile.Language], url: "/Breakdowns", permission: checkAuth('breakdownscreen') },
                 { id: 3, subtitle: Literals.Mainteancies.Page.Pageheader[Profile.Language], url: "/Mainteancies", permission: checkAuth('mainteancescreen') },
                 { id: 3, subtitle: Literals.Personelshifts.Page.Pageheader[Profile.Language], url: "/Personelshifts", permission: checkAuth('shiftscreen') },
+                { id: 3, subtitle: Literals.Placeviews.Page.Pageheader[Profile.Language], url: "/Placeviews", permission: checkAuth('patientscreen') },
             ]
         },
         {
