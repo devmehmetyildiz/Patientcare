@@ -252,6 +252,7 @@ const version1_0_0_7 = {
         {
             title: "Kurum Yönetimi", commits: [
                 "Toplu stok onaylama ekranı eklendi",
+                "Hasta Yerleşimleri takip ekranı eklendi",
             ]
         },
     ],
