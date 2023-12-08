@@ -34,7 +34,8 @@ export default class PatientsDetail extends Component {
       GetPatientdefines, GetCases, GetCostumertypes,
       GetPatienttypes, GetFloors, GetRooms, GetBeds,
       GetPatientstocks, GetStockdefines, GetUnits, GetTodosbyPatient,
-      GetPatientmovements, GetFiles, GetPatientstockmovements, GetTododefines
+      GetPatientmovements, GetFiles, GetPatientstockmovements, GetTododefines,
+      GetPatientcashmovements
     } = this.props
     let Id = PatientID || match?.params?.PatientID
     if (validator.isUUID(Id)) {
@@ -54,6 +55,7 @@ export default class PatientsDetail extends Component {
       GetPatientstockmovements()
       GetTodosbyPatient(Id)
       GetTododefines()
+      GetPatientcashmovements()
     } else {
       history.length > 1 ? history.goBack() : history.push(Id ? `/Patients/${Id}` : `/Patients`)
     }
@@ -66,6 +68,7 @@ export default class PatientsDetail extends Component {
       Costumertypes, Patienttypes,
       Floors, Rooms, Beds,
       Patientstocks, Stockdefines, Units,
+      Patientcashmovements,
       Patientmovements, Files, Todos } = this.props
 
     const { selected_record } = Patients
@@ -86,7 +89,8 @@ export default class PatientsDetail extends Component {
       Patientstockmovements.isLoading &&
       Files.isLoading &&
       Todos.isLoading &&
-      Tododefines.isLoading
+      Tododefines.isLoading &&
+      Patientcashmovements.isLoading
 
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && isLoadingstatus && !this.state.isDatafetched) {
       this.setState({ isDatafetched: true })
@@ -100,7 +104,7 @@ export default class PatientsDetail extends Component {
       Patients, Patientdefines, Cases, Costumertypes, Patienttypes,
       Floors, Rooms, Beds, Patientstocks, Stockdefines, Units, Patientstockmovements,
       Patientmovements, Files, Profile, history, match, PatientID, handleSelectedPatient,
-      Todos, handlePlacemodal
+      Todos, Patientcashmovements, handlePlacemodal
     } = this.props
 
 
@@ -122,7 +126,8 @@ export default class PatientsDetail extends Component {
       Units.isLoading &&
       Patientmovements.isLoading &&
       Patientstockmovements.isLoading &&
-      Files.isLoading
+      Files.isLoading &&
+      Patientcashmovements.isLoading
 
 
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
@@ -221,6 +226,12 @@ export default class PatientsDetail extends Component {
       return { ...stock, Amount: amount, Stockname: stockdefine?.Name, Unitname: unit?.Name || '' }
     })
 
+    let patientCash = 0.0;
+    (Patientcashmovements.list || []).filter(u => u.PatientID === selected_record?.Uuid && u.Isactive).forEach(cash => {
+      patientCash += cash.Movementtype * cash.Movementvalue
+    })
+    const [integerPart, decimalPart] = patientCash.toFixed(2).split('.')
+
     return (
       isLoadingstatus ? <LoadingPage /> :
         < Pagewrapper >
@@ -244,6 +255,11 @@ export default class PatientsDetail extends Component {
                 <GridColumn width={14} >
                   <Grid.Row className='flex justify-between items-center'>
                     <Label size='huge' style={{ backgroundColor: casedata?.Casecolor }} horizontal>{casedata?.Name}</Label>
+                    <div className='flex items-baseline cursor-pointer'>
+                      <span className='text-[36px] font-bold'>{integerPart}</span>
+                      <span className='text-[24px] opacity-[0.7]'>.{decimalPart}</span>
+                      <span className='text-[24px]'>₺</span>
+                    </div>
                     <div className='flex justify-start items-center'>
                       <Header as='h1'>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`}</Header>
                     </div>
@@ -331,6 +347,7 @@ export default class PatientsDetail extends Component {
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
+                    <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editcash`) }}>{Literals.Button.Editcash[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { handlePlacemodal(true) }}>{Literals.Button.Changeplace[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Changetodos[Profile.Language]}</Button>
                     <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>

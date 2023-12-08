@@ -314,6 +314,30 @@ const Priveleges = [
     { code: 'todomanageview', text: 'Todos Manage View', group: ['Todos'], required: [] },
     { code: 'todogetreport', text: 'Todos Get Report', group: ['Todos'], required: [] },
 
+    { code: 'patientcashregisterscreen', text: 'Patientcashregisters Screen', group: ['Patientcashregisters'], required: [] },
+    { code: 'patientcashregisterview', text: 'Patientcashregisters View', group: ['Patientcashregisters'], required: [] },
+    { code: 'patientcashregisteradd', text: 'Patientcashregisters Add', group: ['Patientcashregisters'], required: [] },
+    { code: 'patientcashregisterupdate', text: 'Patientcashregisters Update', group: ['Patientcashregisters'], required: [] },
+    { code: 'patientcashregisterdelete', text: 'Patientcashregisters Delete', group: ['Patientcashregisters'], required: [] },
+    { code: 'patientcashregistermanageview', text: 'Patientcashregisters Manage View', group: ['Patientcashregisters'], required: [] },
+    { code: 'patientcashregistergetreport', text: 'Patientcashregisters Get Report', group: ['Patientcashregisters'], required: [] },
+
+    { code: 'patientcashmovementscreen', text: 'Patientcashmovements Screen', group: ['Patientcashmovements'], required: [] },
+    { code: 'patientcashmovementview', text: 'Patientcashmovements View', group: ['Patientcashmovements'], required: [] },
+    { code: 'patientcashmovementadd', text: 'Patientcashmovements Add', group: ['Patientcashmovements'], required: [] },
+    { code: 'patientcashmovementupdate', text: 'Patientcashmovements Update', group: ['Patientcashmovements'], required: [] },
+    { code: 'patientcashmovementdelete', text: 'Patientcashmovements Delete', group: ['Patientcashmovements'], required: [] },
+    { code: 'patientcashmovementmanageview', text: 'Patientcashmovements Manage View', group: ['Patientcashmovements'], required: [] },
+    { code: 'patientcashmovementgetreport', text: 'Patientcashmovements Get Report', group: ['Patientcashmovements'], required: [] },
+
+    { code: 'companycashmovementscreen', text: 'Companycashmovements Screen', group: ['Companycashmovements'], required: [] },
+    { code: 'companycashmovementview', text: 'Companycashmovements View', group: ['Companycashmovements'], required: [] },
+    { code: 'companycashmovementadd', text: 'Companycashmovements Add', group: ['Companycashmovements'], required: [] },
+    { code: 'companycashmovementupdate', text: 'Companycashmovements Update', group: ['Companycashmovements'], required: [] },
+    { code: 'companycashmovementdelete', text: 'Companycashmovements Delete', group: ['Companycashmovements'], required: [] },
+    { code: 'companycashmovementmanageview', text: 'Companycashmovements Manage View', group: ['Companycashmovements'], required: [] },
+    { code: 'companycashmovementgetreport', text: 'Companycashmovements Get Report', group: ['Companycashmovements'], required: [] },
+
 ]
 
 module.exports = Priveleges

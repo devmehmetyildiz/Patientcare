@@ -13,6 +13,9 @@ export const ROUTES = {
     PATIENTREPORT: 'Patientreport',
     PATIENTDEFINE: 'Patientdefines',
     PERSONEL: 'Personels',
+    COMPANYCASHMOVEMENT: 'Companycashmovements',
+    PATIENTCASHMOVEMENT: 'Patientcashmovements',
+    PATIENTCASHREGISTER: 'Patientcashregisters',
 
     COSTUMERTYPE: 'Costumertypes',
     CASE: 'Cases',
@@ -57,6 +60,12 @@ export const MOVEMENTTYPES = [
     { Name: "Stokdan düşme", value: -1, color: 'gray' },
     { Name: "Transfer", value: 0, color: 'green' },
     { Name: "Stok Ekleme", value: 1, color: 'orange' },
+]
+
+export const CASHYPES = [
+    { Name: "Cüzdana Ekleme", value: -1, color: 'gray' },
+    { Name: "Pasif", value: 0, color: 'green' },
+    { Name: "Cüzdandan Çıkartma", value: 1, color: 'orange' },
 ]
 
 export const PATIENTMOVEMENTTYPE = [

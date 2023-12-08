@@ -57,12 +57,12 @@ export function Sidebar(props) {
             icon: <TbGauge className=' text-blue-700' />,
             items: [
                 { id: 1, subtitle: Literals.Unapproveds.Page.Movement.Pageheader[Profile.Language], url: "/UnapprovedMovements", permission: checkAuth('stockmovementscreen') },
-                { id: 1, subtitle: Literals.Unapproveds.Page.Stock.Pageheader[Profile.Language], url: "/UnapprovedStocks", permission: checkAuth('stockscreen') },
-                { id: 2, subtitle: Literals.Personels.Page.Pageheader[Profile.Language], url: "/Personels", permission: checkAuth('personelscreen') },
-                { id: 3, subtitle: Literals.Breakdowns.Page.Pageheader[Profile.Language], url: "/Breakdowns", permission: checkAuth('breakdownscreen') },
-                { id: 3, subtitle: Literals.Mainteancies.Page.Pageheader[Profile.Language], url: "/Mainteancies", permission: checkAuth('mainteancescreen') },
-                { id: 3, subtitle: Literals.Personelshifts.Page.Pageheader[Profile.Language], url: "/Personelshifts", permission: checkAuth('shiftscreen') },
-                { id: 3, subtitle: Literals.Placeviews.Page.Pageheader[Profile.Language], url: "/Placeviews", permission: checkAuth('patientscreen') },
+                { id: 2, subtitle: Literals.Unapproveds.Page.Stock.Pageheader[Profile.Language], url: "/UnapprovedStocks", permission: checkAuth('stockscreen') },
+                { id: 3, subtitle: Literals.Personels.Page.Pageheader[Profile.Language], url: "/Personels", permission: checkAuth('personelscreen') },
+                { id: 4, subtitle: Literals.Breakdowns.Page.Pageheader[Profile.Language], url: "/Breakdowns", permission: checkAuth('breakdownscreen') },
+                { id: 5, subtitle: Literals.Mainteancies.Page.Pageheader[Profile.Language], url: "/Mainteancies", permission: checkAuth('mainteancescreen') },
+                { id: 6, subtitle: Literals.Personelshifts.Page.Pageheader[Profile.Language], url: "/Personelshifts", permission: checkAuth('shiftscreen') },
+                { id: 7, subtitle: Literals.Placeviews.Page.Pageheader[Profile.Language], url: "/Placeviews", permission: checkAuth('patientscreen') },
             ]
         },
         {
@@ -79,6 +79,7 @@ export function Sidebar(props) {
                 { id: 6, subtitle: Literals.Patientmedicines.Page.Pageheader[Profile.Language], url: "/Patientmedicines", permission: checkAuth('patientstockscreen') },
                 { id: 7, subtitle: Literals.Patientsupplies.Page.Pageheader[Profile.Language], url: "/Patientsupplies", permission: checkAuth('patientstockscreen') },
                 { id: 8, subtitle: Literals.Patientstockmovements.Page.Pageheader[Profile.Language], url: "/Patientstockmovements", permission: checkAuth('patientstockmovementscreen') },
+                { id: 8, subtitle: Literals.Patientcashmovements.Page.Pageheader[Profile.Language], url: "/Patientcashmovements", permission: checkAuth('patientcashmovementscreen') },
                 { id: 9, subtitle: Literals.Todos.Page.Pageheader[Profile.Language], url: "/Todos", permission: checkAuth('todoscreen') },
             ]
         },
@@ -139,11 +140,12 @@ export function Sidebar(props) {
                 { id: 10, subtitle: Literals.Floors.Page.Pageheader[Profile.Language], url: "/Floors", permission: checkAuth('floorscreen') },
                 { id: 11, subtitle: Literals.Rooms.Page.Pageheader[Profile.Language], url: "/Rooms", permission: checkAuth('roomscreen') },
                 { id: 12, subtitle: Literals.Beds.Page.Pageheader[Profile.Language], url: "/Beds", permission: checkAuth('bedscreen') },
-                { id: 13, subtitle: Literals.Patienttypes.Page.Pageheader[Profile.Language], url: "/Patienttypes", permission: checkAuth('patienttypescreen') },
-                { id: 14, subtitle: Literals.Costumertypes.Page.Pageheader[Profile.Language], url: "/Costumertypes", permission: checkAuth('costumertypescreen') },
-                { id: 15, subtitle: Literals.Periods.Page.Pageheader[Profile.Language], url: "/Periods", permission: checkAuth('periodscreen') },
-                { id: 16, subtitle: Literals.Tododefines.Page.Pageheader[Profile.Language], url: "/Tododefines", permission: checkAuth('tododefinescreen') },
-                { id: 17, subtitle: Literals.Todogroupdefines.Page.Pageheader[Profile.Language], url: "/Todogroupdefines", permission: checkAuth('todogroupdefinescreen') },
+                { id: 13, subtitle: Literals.Patientcashregisters.Page.Pageheader[Profile.Language], url: "/Patientcashregisters", permission: checkAuth('patientcashregisterscreen') },
+                { id: 14, subtitle: Literals.Patienttypes.Page.Pageheader[Profile.Language], url: "/Patienttypes", permission: checkAuth('patienttypescreen') },
+                { id: 15, subtitle: Literals.Costumertypes.Page.Pageheader[Profile.Language], url: "/Costumertypes", permission: checkAuth('costumertypescreen') },
+                { id: 16, subtitle: Literals.Periods.Page.Pageheader[Profile.Language], url: "/Periods", permission: checkAuth('periodscreen') },
+                { id: 17, subtitle: Literals.Tododefines.Page.Pageheader[Profile.Language], url: "/Tododefines", permission: checkAuth('tododefinescreen') },
+                { id: 18, subtitle: Literals.Todogroupdefines.Page.Pageheader[Profile.Language], url: "/Todogroupdefines", permission: checkAuth('todogroupdefinescreen') },
             ]
         },
     ]

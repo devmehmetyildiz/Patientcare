@@ -45,6 +45,8 @@ import Breakdowns from "../Pages/Breakdowns/Literals"
 import Mainteancies from "../Pages/Mainteancies/Literals"
 import Personelshifts from "../Pages/Personelshifts/Literals"
 import Placeviews from "../Pages/Placeviews/Literals"
+import Patientcashregisters from "../Pages/Patientcashregisters/Literals"
+import Patientcashmovements from "../Pages/Patientcashmovements/Literals"
 
 const Literals = {
     Cases,
@@ -93,7 +95,9 @@ const Literals = {
     Breakdowns,
     Mainteancies,
     Personelshifts,
-    Placeviews
+    Placeviews,
+    Patientcashregisters,
+    Patientcashmovements
 }
 
 export default Literals

@@ -39,6 +39,9 @@ import { removePersonelnotification } from "../Redux/PersonelSlice"
 import { removeBreakdownnotification } from "../Redux/BreakdownSlice"
 import { removeMainteancenotification } from "../Redux/MainteanceSlice"
 import { removePersonelshiftnotification } from "../Redux/PersonelshiftSlice"
+import { removeCompanycashmovementnotification } from "../Redux/CompanycashmovementSlice"
+import { removePatientcashmovementnotification } from "../Redux/PatientcashmovementSlice"
+import { removePatientcashregisternotification } from "../Redux/PatientcashregisterSlice"
 import Notificationwrapper from './Notification'
 
 export function NotificationHandler(props) {
@@ -60,7 +63,8 @@ export function NotificationHandler(props) {
             removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
             removePeriodnotification, removeCasenotification, removeBednotification, removeShiftnotification, removeEquipmentnotification,
             removeEquipmentgroupnotification, removePersonelnotification, removeBreakdownnotification, removeMainteancenotification,
-            removePersonelshiftnotification
+            removePersonelshiftnotification, removeCompanycashmovementnotification, removePatientcashmovementnotification,
+            removePatientcashregisternotification
         } = props
 
         const {
@@ -72,7 +76,8 @@ export function NotificationHandler(props) {
             Patients, Patientmovements, Patientdefines, Mailsettings,
             Floors, Files, Departments, Costumertypes, Breakdowns, Mainteancies,
             Periods, Cases, Beds, Shifts, Equipmentgroups, Equipments, Personels,
-            Personelshifts
+            Personelshifts, Companycashmovements, Patientcashmovements,
+            Patientcashregisters
         } = props.states
 
         Notification(Warehouses.notifications, removeWarehousenotification)
@@ -114,6 +119,9 @@ export function NotificationHandler(props) {
         Notification(Breakdowns.notifications, removeBreakdownnotification)
         Notification(Mainteancies.notifications, removeMainteancenotification)
         Notification(Personelshifts.notifications, removePersonelshiftnotification)
+        Notification(Companycashmovements.notifications, removeCompanycashmovementnotification)
+        Notification(Patientcashmovements.notifications, removePatientcashmovementnotification)
+        Notification(Patientcashregisters.notifications, removePatientcashregisternotification)
     })
 
     return null
@@ -135,7 +143,8 @@ const mapDispatchToProps = {
     removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
     removePeriodnotification, removeCasenotification, removeBednotification, removeShiftnotification,
     removeEquipmentgroupnotification, removeEquipmentnotification, removePersonelnotification, removeBreakdownnotification,
-    removeMainteancenotification, removePersonelshiftnotification
+    removeMainteancenotification, removePersonelshiftnotification, removeCompanycashmovementnotification, removePatientcashmovementnotification,
+    removePatientcashregisternotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationHandler)

@@ -34,6 +34,24 @@ const Routes = [
     { method: 'put', path: '/Personels', controller: 'Personel', action: 'UpdatePersonel' },
     { method: 'delete', path: '/Personels/:personelId', controller: 'Personel', action: 'DeletePersonel' },
 
+    { method: 'get', path: '/Companycashmovements/:movementId', controller: 'Companycashmovement', action: 'GetCompanycashmovement' },
+    { method: 'get', path: '/Companycashmovements', controller: 'Companycashmovement', action: 'GetCompanycashmovements' },
+    { method: 'post', path: '/Companycashmovements', controller: 'Companycashmovement', action: 'AddCompanycashmovement' },
+    { method: 'put', path: '/Companycashmovements', controller: 'Companycashmovement', action: 'UpdateCompanycashmovement' },
+    { method: 'delete', path: '/Companycashmovements/:movementId', controller: 'Companycashmovement', action: 'DeleteCompanycashmovement' },
+
+    { method: 'get', path: '/Patientcashmovements/:movementId', controller: 'Patientcashmovement', action: 'GetPatientcashmovement' },
+    { method: 'get', path: '/Patientcashmovements', controller: 'Patientcashmovement', action: 'GetPatientcashmovements' },
+    { method: 'post', path: '/Patientcashmovements', controller: 'Patientcashmovement', action: 'AddPatientcashmovement' },
+    { method: 'put', path: '/Patientcashmovements', controller: 'Patientcashmovement', action: 'UpdatePatientcashmovement' },
+    { method: 'delete', path: '/Patientcashmovements/:movementId', controller: 'Patientcashmovement', action: 'DeletePatientcashmovement' },
+
+    { method: 'get', path: '/Patientcashregisters/:cashregisterId', controller: 'Patientcashregister', action: 'GetPatientcashregister' },
+    { method: 'get', path: '/Patientcashregisters', controller: 'Patientcashregister', action: 'GetPatientcashregisters' },
+    { method: 'post', path: '/Patientcashregisters', controller: 'Patientcashregister', action: 'AddPatientcashregister' },
+    { method: 'put', path: '/Patientcashregisters', controller: 'Patientcashregister', action: 'UpdatePatientcashregister' },
+    { method: 'delete', path: '/Patientcashregisters/:cashregisterId', controller: 'Patientcashregister', action: 'DeletePatientcashregister' },
+
     { method: 'get', path: '/Shifts/GetPersonelshifts/:shiftrequestId', controller: 'Shift', action: 'GetPersonelshifts' },
     { method: 'get', path: '/Shifts/GetShiftrequests/:shiftrequestId', controller: 'Shift', action: 'GetShiftrequest' },
     { method: 'get', path: '/Shifts/GetShiftrequests', controller: 'Shift', action: 'GetShiftrequests' },
