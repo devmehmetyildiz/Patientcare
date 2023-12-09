@@ -159,7 +159,7 @@ export default function UnapprovedStocks(props) {
     columns.push({ Header: Literals.Columns.Stock.Updateduser[Profile.Language], accessor: 'Updateduser', })
     columns.push({ Header: Literals.Columns.Stock.Createtime[Profile.Language], accessor: 'Createtime', })
     columns.push({ Header: Literals.Columns.Stock.Updatetime[Profile.Language], accessor: 'Updatetime', })
-    columns.push({ Header: Literals.Columns.Stock.approve[Profile.Language], accessor: 'approve', disableFilters: true, disableProps: true, visible: !selectVisiblestate })
+    columns.push({ Header: Literals.Columns.Stock.approve[Profile.Language], accessor: 'approve', disableProps: true, visible: !selectVisiblestate })
     columns.map(u => { return u.disableProps ? u : { ...u, ...colProps } })
     return columns
   }

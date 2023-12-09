@@ -6,6 +6,7 @@ import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pag
 import PurchaseordersList from './PurchaseordersList'
 import PurchaseordersDelete from '../../Containers/Purchaseorders/PurchaseordersDelete'
 import PurchaseordersComplete from '../../Containers/Purchaseorders/PurcaseordersComplete'
+import { getInitialconfig } from '../../Utils/Constants'
 
 export default class Purchaseorders extends Component {
 
@@ -35,10 +36,15 @@ export default class Purchaseorders extends Component {
       Departments, Stockdefines, Purchaseorderstocks, Purchaseorderstockmovements } = this.props
     const { isLoading, isDispatching } = Purchaseorders
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
       {
-        Header: () => null,
-        id: 'expander', accessor: 'expander', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true,
+        Header: () => null, id: 'expander', accessor: 'expander', disableProps: true,
         Cell: ({ row }) => (
           !Profile.Ismobile && <span {...row.getToggleRowExpandedProps()}>
             {row.isExpanded ? <Icon name='triangle down' /> : <Icon name='triangle right' />}
@@ -46,37 +52,28 @@ export default class Purchaseorders extends Component {
         ),
 
       },
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Warehouse[Profile.Language], accessor: 'WarehouseID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.warehouseCellhandler(col) },
-      { Header: Literals.Columns.Company[Profile.Language], accessor: 'Company', sortable: true, canGroupBy: true, canFilter: true, Subheader: true },
-      { Header: Literals.Columns.Purchasenumber[Profile.Language], accessor: 'Purchasenumber', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
-      { Header: Literals.Columns.RecievedUserID[Profile.Language], accessor: 'RecievedUserID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.userCellhandler(col) },
-      { Header: Literals.Columns.Companypersonelname[Profile.Language], accessor: 'Companypersonelname', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Purchasedate[Profile.Language], accessor: 'Purchasedate', sortable: true, canGroupBy: true, canFilter: true, Finalheader: true, Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.CaseName[Profile.Language], accessor: 'CaseID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.caseCellhandler(col) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.complete[Profile.Language], accessor: 'complete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
+      { Header: Literals.Columns.Warehouse[Profile.Language], accessor: 'WarehouseID', Cell: col => this.warehouseCellhandler(col) },
+      { Header: Literals.Columns.Company[Profile.Language], accessor: 'Company', Subheader: true },
+      { Header: Literals.Columns.Purchasenumber[Profile.Language], accessor: 'Purchasenumber', Firstheader: true },
+      { Header: Literals.Columns.RecievedUserID[Profile.Language], accessor: 'RecievedUserID', Cell: col => this.userCellhandler(col) },
+      { Header: Literals.Columns.Companypersonelname[Profile.Language], accessor: 'Companypersonelname', },
+      { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username' },
+      { Header: Literals.Columns.Purchasedate[Profile.Language], accessor: 'Purchasedate', Finalheader: true, Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.CaseName[Profile.Language], accessor: 'CaseID', Cell: col => this.caseCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
+      { Header: Literals.Columns.complete[Profile.Language], accessor: 'complete', disableProps: true },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+
 
     const metaKey = "Purchaseorders"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
-    const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
-        return item.key
-      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
-        return item.key
-      }) : [],
-      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
-        return item.key
-      }) : [],
-    };
+    let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Purchaseorders.list || []).filter(u => u.Isactive).map(item => {
       return {

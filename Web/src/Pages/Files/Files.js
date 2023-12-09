@@ -25,21 +25,28 @@ export class Files extends Component {
     const { Files, Profile, handleSelectedFile, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Files
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.ParentID[Profile.Language], accessor: 'ParentID', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
-      { Header: Literals.Columns.Filename[Profile.Language], accessor: 'Filename', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Filefolder[Profile.Language], accessor: 'Filefolder', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Filepath[Profile.Language], accessor: 'Filepath', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Filetype[Profile.Language], accessor: 'Filetype', sortable: true, canGroupBy: true, canFilter: true, Subheader: true },
-      { Header: Literals.Columns.Usagetype[Profile.Language], accessor: 'Usagetype', sortable: true, canGroupBy: true, canFilter: true, Finalheader: true },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
+      { Header: Literals.Columns.ParentID[Profile.Language], accessor: 'ParentID' },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
+      { Header: Literals.Columns.Filename[Profile.Language], accessor: 'Filename' },
+      { Header: Literals.Columns.Filefolder[Profile.Language], accessor: 'Filefolder' },
+      { Header: Literals.Columns.Filepath[Profile.Language], accessor: 'Filepath' },
+      { Header: Literals.Columns.Filetype[Profile.Language], accessor: 'Filetype', Subheader: true },
+      { Header: Literals.Columns.Usagetype[Profile.Language], accessor: 'Usagetype', Finalheader: true },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Files"
     let initialConfig = getInitialconfig(Profile, metaKey)

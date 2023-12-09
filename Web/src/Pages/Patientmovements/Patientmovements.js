@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Loader, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
+import { PATIENTMOVEMENTTYPE, getInitialconfig } from '../../Utils/Constants'
 import Literals from './Literals'
 import PatientmovementsDelete from "../../Containers/Patientmovements/PatientmovementsDelete"
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
@@ -19,38 +19,33 @@ export default class Patientmovements extends Component {
     const { Patientmovements, Profile, handleSelectedPatientmovement, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Patientmovements
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.PatientdefineFirstname[Profile.Language], accessor: 'PatientID', Firstheader: true, sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.nameCellhandler(col) },
-      { Header: Literals.Columns.Patientmovementtype[Profile.Language], accessor: 'Patientmovementtype', Finalheader: true, sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.IsDeactive[Profile.Language], accessor: 'IsDeactive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.OldPatientmovementtype[Profile.Language], accessor: 'OldPatientmovementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.NewPatientmovementtype[Profile.Language], accessor: 'NewPatientmovementtype', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.IsTodoneed[Profile.Language], accessor: 'IsTodoneed', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.IsTodocompleted[Profile.Language], accessor: 'IsTodocompleted', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.IsComplated[Profile.Language], accessor: 'IsComplated', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Iswaitingactivation[Profile.Language], accessor: 'Iswaitingactivation', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: true, Subheader: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-    ]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
+      { Header: Literals.Columns.PatientdefineFirstname[Profile.Language], accessor: 'PatientID', Firstheader: true, Cell: col => this.nameCellhandler(col) },
+      { Header: Literals.Columns.Patientmovementtype[Profile.Language], accessor: 'Patientmovementtype', Finalheader: true, Cell: col => this.movementCellhandler(col) },
+      { Header: Literals.Columns.IsDeactive[Profile.Language], accessor: 'IsDeactive', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.OldPatientmovementtype[Profile.Language], accessor: 'OldPatientmovementtype', Cell: col => this.movementCellhandler(col) },
+      { Header: Literals.Columns.NewPatientmovementtype[Profile.Language], accessor: 'NewPatientmovementtype', Cell: col => this.movementCellhandler(col) },
+      { Header: Literals.Columns.IsTodoneed[Profile.Language], accessor: 'IsTodoneed', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.IsTodocompleted[Profile.Language], accessor: 'IsTodocompleted', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.IsComplated[Profile.Language], accessor: 'IsComplated', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Iswaitingactivation[Profile.Language], accessor: 'Iswaitingactivation', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', Subheader: true, Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Patientmovements"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
-    const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
-        return item.key
-      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
-        return item.key
-      }) : [],
-      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
-        return item.key
-      }) : [],
-    };
+    let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Patientmovements.list || []).map(item => {
       return {

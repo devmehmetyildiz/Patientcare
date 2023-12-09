@@ -54,23 +54,30 @@ export default class Cases extends Component {
       },
     ]
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
-      { Header: Literals.Columns.Shortname[Profile.Language], accessor: 'Shortname', sortable: true, canGroupBy: true, canFilter: true, Finalheader: true },
-      { Header: Literals.Columns.CaseStatus[Profile.Language], accessor: 'CaseStatus', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.casesstatusCellhandler(col, casestatusOption) },
-      { Header: Literals.Columns.Casecolor[Profile.Language], accessor: 'Casecolor', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.casecolorCellhandler(col) },
-      { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, Subheader: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Patientstatus[Profile.Language], accessor: 'Patientstatus', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.Iscalculateprice[Profile.Language], accessor: 'Iscalculateprice', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Isroutinework[Profile.Language], accessor: 'Isroutinework', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
+      { Header: Literals.Columns.Shortname[Profile.Language], accessor: 'Shortname', Finalheader: true },
+      { Header: Literals.Columns.CaseStatus[Profile.Language], accessor: 'CaseStatus', Cell: col => this.casesstatusCellhandler(col, casestatusOption) },
+      { Header: Literals.Columns.Casecolor[Profile.Language], accessor: 'Casecolor', Cell: col => this.casecolorCellhandler(col) },
+      { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: 'Departmentstxt', Subheader: true, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Patientstatus[Profile.Language], accessor: 'Patientstatus', Cell: col => this.movementCellhandler(col) },
+      { Header: Literals.Columns.Iscalculateprice[Profile.Language], accessor: 'Iscalculateprice', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Isroutinework[Profile.Language], accessor: 'Isroutinework', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Cases"
     let initialConfig = getInitialconfig(Profile, metaKey)

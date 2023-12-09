@@ -103,12 +103,18 @@ export default class PatientsAddmedicine extends Component {
       return { key: stock?.Uuid, text: `${stockdefine?.Name} (${this.dateCellhandler(stock?.Skt)})`, value: stock?.Uuid }
     })
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
-      { Header: Literals.AddMedicine.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.AddMedicine.Medicinename[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
-      { Header: Literals.AddMedicine.Skt[Profile.Language], accessor: 'Skt', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.columndateCellhandler(col) },
-      { Header: Literals.AddMedicine.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
-    ]
+      { Header: Literals.AddMedicine.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.AddMedicine.Medicinename[Profile.Language], accessor: 'StockdefineID', Cell: col => this.stockdefineCellhandler(col) },
+      { Header: Literals.AddMedicine.Skt[Profile.Language], accessor: 'Skt', Cell: col => this.columndateCellhandler(col) },
+      { Header: Literals.AddMedicine.Amount[Profile.Language], accessor: 'Amount', Cell: col => this.amountCellhandler(col) },
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
     return (

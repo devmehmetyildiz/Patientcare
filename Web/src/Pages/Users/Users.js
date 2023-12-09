@@ -4,6 +4,7 @@ import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import UsersDelete from '../../Containers/Users/UsersDelete'
+import { getInitialconfig } from '../../Utils/Constants'
 export default class Users extends Component {
 
   constructor(props) {
@@ -29,47 +30,43 @@ export default class Users extends Component {
     const { Users, Profile, handleDeletemodal, handleSelectedUser, Departments, Stations, Roles } = this.props
     const { isLoading, isDispatching } = Users
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
-      { Header: Literals.Columns.NormalizedUsername[Profile.Language], accessor: 'NormalizedUsername', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Email[Profile.Language], accessor: 'Email', sortable: true, canGroupBy: true, canFilter: true, Subheader: true },
-      { Header: Literals.Columns.EmailConfirmed[Profile.Language], accessor: 'EmailConfirmed', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.AccessFailedCount[Profile.Language], accessor: 'AccessFailedCount', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Surname[Profile.Language], accessor: 'Surname', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.PhoneNumber[Profile.Language], accessor: 'PhoneNumber', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.PhoneNumberConfirmed[Profile.Language], accessor: 'PhoneNumberConfirmed', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.City[Profile.Language], accessor: 'City', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Town[Profile.Language], accessor: 'Town', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Address[Profile.Language], accessor: 'Address', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Language[Profile.Language], accessor: 'Language', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.UserID[Profile.Language], accessor: 'UserID', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Defaultdepartment[Profile.Language], accessor: 'Defaultdepartment', sortable: true, canGroupBy: true, canFilter: true, Finalheader: true },
-      { Header: Literals.Columns.Stations[Profile.Language], accessor: 'Stationstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.stationCellhandler(col) },
-      { Header: Literals.Columns.Departments[Profile.Language], accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Roles[Profile.Language], accessor: 'Rolestxt', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.rolesCellhandler(col) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
+      { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', Firstheader: true },
+      { Header: Literals.Columns.NormalizedUsername[Profile.Language], accessor: 'NormalizedUsername', },
+      { Header: Literals.Columns.Email[Profile.Language], accessor: 'Email', Subheader: true },
+      { Header: Literals.Columns.EmailConfirmed[Profile.Language], accessor: 'EmailConfirmed', },
+      { Header: Literals.Columns.AccessFailedCount[Profile.Language], accessor: 'AccessFailedCount', },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', },
+      { Header: Literals.Columns.Surname[Profile.Language], accessor: 'Surname', },
+      { Header: Literals.Columns.PhoneNumber[Profile.Language], accessor: 'PhoneNumber', },
+      { Header: Literals.Columns.PhoneNumberConfirmed[Profile.Language], accessor: 'PhoneNumberConfirmed', },
+      { Header: Literals.Columns.City[Profile.Language], accessor: 'City', },
+      { Header: Literals.Columns.Town[Profile.Language], accessor: 'Town', },
+      { Header: Literals.Columns.Address[Profile.Language], accessor: 'Address', },
+      { Header: Literals.Columns.Language[Profile.Language], accessor: 'Language', },
+      { Header: Literals.Columns.UserID[Profile.Language], accessor: 'UserID', },
+      { Header: Literals.Columns.Defaultdepartment[Profile.Language], accessor: 'Defaultdepartment', Finalheader: true },
+      { Header: Literals.Columns.Stations[Profile.Language], accessor: 'Stationstxt', isOpen: false, Cell: col => this.stationCellhandler(col) },
+      { Header: Literals.Columns.Departments[Profile.Language], accessor: 'Departmentstxt', isOpen: false, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Roles[Profile.Language], accessor: 'Rolestxt', isOpen: false, Cell: col => this.rolesCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Users"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
-    const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
-        return item.key
-      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
-        return item.key
-      }) : [],
-      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
-        return item.key
-      }) : [],
-    };
+    let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Users.list || []).map(item => {
       var rolestext = (item.Roleuuids || []).map(u => {

@@ -5,6 +5,7 @@ import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import RulesDelete from '../../Containers/Rules/RulesDelete'
 import RulesLog from '../../Containers/Rules/RulesLog'
+import { getInitialconfig } from '../../Utils/Constants'
 export class Rules extends Component {
 
   componentDidMount() {
@@ -16,33 +17,29 @@ export class Rules extends Component {
     const { Rules, Profile, handleDeletemodal, handleSelectedRule, handleLogmodal, GetRulelogs, StopRules } = this.props
     const { isLoading, isDispatching } = Rules
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
-      { Header: Literals.Columns.Status[Profile.Language], accessor: 'Status', sortable: false, canGroupBy: false, canFilter: false, Subheader: true, filterDisable: true, newWidht: 30, Cell: col => this.statusCellhandler(col) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Stop[Profile.Language], accessor: 'Stop', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.log[Profile.Language], accessor: 'log', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
+      { Header: Literals.Columns.Status[Profile.Language], accessor: 'Status', disableProps: true, Subheader: true, Cell: col => this.statusCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', },
+      { Header: Literals.Columns.Stop[Profile.Language], accessor: 'Stop', disableProps: true },
+      { Header: Literals.Columns.log[Profile.Language], accessor: 'log', disableProps: true },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Rules"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
-    const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
-        return item.key
-      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
-        return item.key
-      }) : [],
-      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
-        return item.key
-      }) : [],
-    };
+    let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Rules.list || []).filter(u => u.Isactive).map(item => {
       return {

@@ -21,23 +21,30 @@ export default class Breakdowns extends Component {
     const { Breakdowns, Profile, handleDeletemodal, handleSelectedBreakdown, handleCompletemodal } = this.props
     const { isLoading, isDispatching } = Breakdowns
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Starttime[Profile.Language], accessor: 'Starttime', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Endtime[Profile.Language], accessor: 'Endtime', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.EquipmentID[Profile.Language], accessor: 'EquipmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.equipmentCellhandler(col) },
-      { Header: Literals.Columns.ResponsibleuserID[Profile.Language], accessor: 'ResponsibleuserID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.personelCellhandler(col) },
-      { Header: Literals.Columns.Openinfo[Profile.Language], accessor: 'Openinfo', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Closeinfo[Profile.Language], accessor: 'Closeinfo', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Iscompleted[Profile.Language], accessor: 'Iscompleted', sortable: false, canGroupBy: false, canFilter: false, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.complete[Profile.Language], accessor: 'complete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
+      { Header: Literals.Columns.Starttime[Profile.Language], accessor: 'Starttime', Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.Endtime[Profile.Language], accessor: 'Endtime', Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.EquipmentID[Profile.Language], accessor: 'EquipmentID', Cell: col => this.equipmentCellhandler(col) },
+      { Header: Literals.Columns.ResponsibleuserID[Profile.Language], accessor: 'ResponsibleuserID', Cell: col => this.personelCellhandler(col) },
+      { Header: Literals.Columns.Openinfo[Profile.Language], accessor: 'Openinfo' },
+      { Header: Literals.Columns.Closeinfo[Profile.Language], accessor: 'Closeinfo' },
+      { Header: Literals.Columns.Iscompleted[Profile.Language], accessor: 'Iscompleted', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
+      { Header: Literals.Columns.complete[Profile.Language], accessor: 'complete', disableProps: true },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Breakdowns"
     let initialConfig = getInitialconfig(Profile, metaKey)

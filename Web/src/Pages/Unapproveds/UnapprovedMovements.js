@@ -79,7 +79,7 @@ export default class UnapprovedMovements extends Component {
       { Header: Literals.Columns.Movement.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Movement.Createtime[Profile.Language], accessor: 'Createtime', },
       { Header: Literals.Columns.Movement.Updatetime[Profile.Language], accessor: 'Updatetime', },
-      { Header: Literals.Columns.Movement.approve[Profile.Language], accessor: 'approve', disableFilters: true, disableProps: true, visible: !this.state.canFilterpurchaseorderstocks },
+      { Header: Literals.Columns.Movement.approve[Profile.Language], accessor: 'approve', disableProps: true, visible: !this.state.canFilterpurchaseorderstocks },
 
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
@@ -98,7 +98,7 @@ export default class UnapprovedMovements extends Component {
       { Header: Literals.Columns.Movement.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Movement.Createtime[Profile.Language], accessor: 'Createtime', },
       { Header: Literals.Columns.Movement.Updatetime[Profile.Language], accessor: 'Updatetime', },
-      { Header: Literals.Columns.Movement.approve[Profile.Language], accessor: 'approve', disableFilters: true, disableProps: true, visible: !this.state.canFilterpatientstocks },
+      { Header: Literals.Columns.Movement.approve[Profile.Language], accessor: 'approve', disableProps: true, visible: !this.state.canFilterpatientstocks },
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     let movementColumns = [
@@ -116,7 +116,7 @@ export default class UnapprovedMovements extends Component {
       { Header: Literals.Columns.Movement.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Movement.Createtime[Profile.Language], accessor: 'Createtime', },
       { Header: Literals.Columns.Movement.Updatetime[Profile.Language], accessor: 'Updatetime', },
-      { Header: Literals.Columns.Movement.approve[Profile.Language], accessor: 'approve', disableFilters: true, disableProps: true, visible: !this.state.canFilterstocks },
+      { Header: Literals.Columns.Movement.approve[Profile.Language], accessor: 'approve', disableProps: true, visible: !this.state.canFilterstocks },
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 

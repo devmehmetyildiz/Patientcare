@@ -4,6 +4,7 @@ import { Icon, Loader, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
 import PatientdefinesDelete from "../../Containers/Patientdefines/PatientdefinesDelete"
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
+import { getInitialconfig } from '../../Utils/Constants'
 export default class Patientdefines extends Component {
 
   componentDidMount() {
@@ -19,63 +20,59 @@ export default class Patientdefines extends Component {
     const { Patientdefines, Profile, handleSelectedPatientdefine, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Patientdefines
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Firstname[Profile.Language], accessor: 'Firstname', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
-      { Header: Literals.Columns.Lastname[Profile.Language], accessor: 'Lastname', sortable: true, canGroupBy: true, canFilter: true, Subheader: true },
-      { Header: Literals.Columns.Fathername[Profile.Language], accessor: 'Fathername', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Mothername[Profile.Language], accessor: 'Mothername', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Motherbiologicalaffinity[Profile.Language], accessor: 'Motherbiologicalaffinity', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Ismotheralive[Profile.Language], accessor: 'Ismotheralive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Fatherbiologicalaffinity[Profile.Language], accessor: 'Fatherbiologicalaffinity', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Isfatheralive[Profile.Language], accessor: 'Isfatheralive', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.CountryID[Profile.Language], accessor: 'CountryID', sortable: true, canGroupBy: true, canFilter: true, Finalheader: true },
-      { Header: Literals.Columns.Dateofbirth[Profile.Language], accessor: 'Dateofbirth', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Placeofbirth[Profile.Language], accessor: 'Placeofbirth', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Dateofdeath[Profile.Language], accessor: 'Dateofdeath', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Placeofdeath[Profile.Language], accessor: 'Placeofdeath', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Deathinfo[Profile.Language], accessor: 'Deathinfo', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Gender[Profile.Language], accessor: 'Gender', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Marialstatus[Profile.Language], accessor: 'Marialstatus', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Criminalrecord[Profile.Language], accessor: 'Criminalrecord', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Childnumber[Profile.Language], accessor: 'Childnumber', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Disabledchildnumber[Profile.Language], accessor: 'Disabledchildnumber', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Siblingstatus[Profile.Language], accessor: 'Siblingstatus', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Sgkstatus[Profile.Language], accessor: 'Sgkstatus', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Budgetstatus[Profile.Language], accessor: 'Budgetstatus', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.City[Profile.Language], accessor: 'City', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Town[Profile.Language], accessor: 'Town', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Address1[Profile.Language], accessor: 'Address1', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Address2[Profile.Language], accessor: 'Address2', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Country[Profile.Language], accessor: 'Country', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Contactnumber1[Profile.Language], accessor: 'Contactnumber1', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Contactnumber2[Profile.Language], accessor: 'Contactnumber2', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Contactname1[Profile.Language], accessor: 'Contactname1', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Contactname2[Profile.Language], accessor: 'Contactname2', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.CostumertypeName[Profile.Language], accessor: 'CostumertypeID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.costumertypeCellhandler(col) },
-      { Header: Literals.Columns.PatienttypeName[Profile.Language], accessor: 'PatienttypeID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.patienttypeCellhandler(col) },
-      { Header: Literals.Columns.Medicalboardreport[Profile.Language], accessor: 'Medicalboardreport', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
+      { Header: Literals.Columns.Firstname[Profile.Language], accessor: 'Firstname', Firstheader: true },
+      { Header: Literals.Columns.Lastname[Profile.Language], accessor: 'Lastname', Subheader: true },
+      { Header: Literals.Columns.Fathername[Profile.Language], accessor: 'Fathername' },
+      { Header: Literals.Columns.Mothername[Profile.Language], accessor: 'Mothername' },
+      { Header: Literals.Columns.Motherbiologicalaffinity[Profile.Language], accessor: 'Motherbiologicalaffinity' },
+      { Header: Literals.Columns.Ismotheralive[Profile.Language], accessor: 'Ismotheralive', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Fatherbiologicalaffinity[Profile.Language], accessor: 'Fatherbiologicalaffinity' },
+      { Header: Literals.Columns.Isfatheralive[Profile.Language], accessor: 'Isfatheralive', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.CountryID[Profile.Language], accessor: 'CountryID', Finalheader: true },
+      { Header: Literals.Columns.Dateofbirth[Profile.Language], accessor: 'Dateofbirth' },
+      { Header: Literals.Columns.Placeofbirth[Profile.Language], accessor: 'Placeofbirth' },
+      { Header: Literals.Columns.Dateofdeath[Profile.Language], accessor: 'Dateofdeath' },
+      { Header: Literals.Columns.Placeofdeath[Profile.Language], accessor: 'Placeofdeath' },
+      { Header: Literals.Columns.Deathinfo[Profile.Language], accessor: 'Deathinfo' },
+      { Header: Literals.Columns.Gender[Profile.Language], accessor: 'Gender' },
+      { Header: Literals.Columns.Marialstatus[Profile.Language], accessor: 'Marialstatus' },
+      { Header: Literals.Columns.Criminalrecord[Profile.Language], accessor: 'Criminalrecord' },
+      { Header: Literals.Columns.Childnumber[Profile.Language], accessor: 'Childnumber' },
+      { Header: Literals.Columns.Disabledchildnumber[Profile.Language], accessor: 'Disabledchildnumber' },
+      { Header: Literals.Columns.Siblingstatus[Profile.Language], accessor: 'Siblingstatus' },
+      { Header: Literals.Columns.Sgkstatus[Profile.Language], accessor: 'Sgkstatus' },
+      { Header: Literals.Columns.Budgetstatus[Profile.Language], accessor: 'Budgetstatus' },
+      { Header: Literals.Columns.City[Profile.Language], accessor: 'City' },
+      { Header: Literals.Columns.Town[Profile.Language], accessor: 'Town' },
+      { Header: Literals.Columns.Address1[Profile.Language], accessor: 'Address1' },
+      { Header: Literals.Columns.Address2[Profile.Language], accessor: 'Address2' },
+      { Header: Literals.Columns.Country[Profile.Language], accessor: 'Country' },
+      { Header: Literals.Columns.Contactnumber1[Profile.Language], accessor: 'Contactnumber1' },
+      { Header: Literals.Columns.Contactnumber2[Profile.Language], accessor: 'Contactnumber2' },
+      { Header: Literals.Columns.Contactname1[Profile.Language], accessor: 'Contactname1' },
+      { Header: Literals.Columns.Contactname2[Profile.Language], accessor: 'Contactname2' },
+      { Header: Literals.Columns.CostumertypeName[Profile.Language], accessor: 'CostumertypeID', Cell: col => this.costumertypeCellhandler(col) },
+      { Header: Literals.Columns.PatienttypeName[Profile.Language], accessor: 'PatienttypeID', Cell: col => this.patienttypeCellhandler(col) },
+      { Header: Literals.Columns.Medicalboardreport[Profile.Language], accessor: 'Medicalboardreport' },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Patientdefines"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
-    const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
-        return item.key
-      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
-        return item.key
-      }) : [],
-      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
-        return item.key
-      }) : [],
-    };
+    let initialConfig = getInitialconfig(Profile, metaKey)
 
 
     const list = (Patientdefines.list || []).filter(u => u.Isactive).map(item => {

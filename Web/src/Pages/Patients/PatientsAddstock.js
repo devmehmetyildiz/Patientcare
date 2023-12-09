@@ -113,13 +113,18 @@ export default class PatientsAddstock extends Component {
       return { key: stock?.Uuid, text: `${stockdefine?.Name} (${department?.Name})`, value: stock?.Uuid }
     })
 
-    const Columns = [
-      { Header: Literals.AddStock.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.AddStock.Stockname[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
-      { Header: Literals.AddStock.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.AddStock.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
-    ]
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
 
+    const Columns = [
+      { Header: Literals.AddStock.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.AddStock.Stockname[Profile.Language], accessor: 'StockdefineID', Cell: col => this.stockdefineCellhandler(col) },
+      { Header: Literals.AddStock.Department[Profile.Language], accessor: 'DepartmentID', Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.AddStock.Amount[Profile.Language], accessor: 'Amount', Cell: col => this.amountCellhandler(col) },
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     return (
       isLoadingstatus ? <LoadingPage /> :

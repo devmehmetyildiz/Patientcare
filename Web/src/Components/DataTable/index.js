@@ -175,7 +175,10 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                                 <tr {...headerGroup.getHeaderGroupProps()}>
                                     {headerGroup.headers.map(column => {
                                         const foundedColumn = columns.find(u => u.accessor === column.id);
-                                        return <th {...column.getHeaderProps()} style={column.newWidht && { width: column.newWidht }}>
+                                        let style = {}
+                                        column.newWidht && (style.width = column.newWidht)
+                                        column.disableProps && (style.width = '10px')
+                                        return <th {...column.getHeaderProps()} style={style}>
                                             <div className='react-table-header-column'>
                                                 {
                                                     foundedColumn?.sortable ?
@@ -209,15 +212,20 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                                     <React.Fragment key={`rw-${row.id}`}>
                                         <tr {...row.getRowProps()} style={{ backgroundColor: row.original?.Case ? row.original.Case?.Casecolor : null }} >
                                             {row.cells.map(cell => {
+                                                const Isicon = cell?.column?.disableProps
                                                 return (
-                                                    <td  {...cell.getCellProps({ className: cell.column.className })}>
+                                                    <td  {...cell.getCellProps({ className: cell.column.className })} >
                                                         {cell.isGrouped ? (
                                                             // If it's a grouped cell, add an expander and row count
                                                             <React.Fragment>
                                                                 <span {...row.getToggleRowExpandedProps()}>
                                                                     {row.isExpanded ? <Icon className='text-info' name='minus' /> : <Icon className='text-info' name='plus' />}
                                                                 </span>{' '}
-                                                                {cell.render('Cell', { editable: false })} (
+                                                                {Isicon ?
+                                                                    <div className='flex w-full justify-center items-center '>
+                                                                        {cell.render('Cell', { editable: false })}
+                                                                    </div>
+                                                                    : cell.render('Cell', { editable: false })} (
                                                                 {row.subRows.length})
                                                             </React.Fragment>
                                                         ) : cell.isAggregated ? (
@@ -226,7 +234,11 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                                                             cell.render('Aggregated')
                                                         ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
                                                             // Otherwise, just render the regular cell
-                                                            cell.render('Cell', { editable: true })
+                                                            Isicon ?
+                                                                <div className='flex w-full justify-center items-center '>
+                                                                    {cell.render('Cell', { editable: false })}
+                                                                </div>
+                                                                : cell.render('Cell', { editable: false })
                                                         )}
                                                     </td>
                                                 )

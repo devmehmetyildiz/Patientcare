@@ -75,19 +75,26 @@ export default function Departments(props) {
 
   const { isLoading, isDispatching } = Departments
 
+  const colProps = {
+    sortable: true,
+    canGroupBy: true,
+    canFilter: true
+  }
+
   const Columns = [
-    { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-    { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-    { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
-    { Header: Literals.Columns.stationstxt[Profile.Language], accessor: 'Stations', sortable: true, canGroupBy: true, Subheader: true, canFilter: true, isOpen: false, Cell: col => stationCellhandler(col) },
-    { Header: Literals.Columns.Ishavepatients[Profile.Language], accessor: 'Ishavepatients', sortable: true, canGroupBy: true, Finalheader: true, canFilter: true, isOpen: false, Cell: col => boolCellhandler(col) },
-    { Header: Literals.Columns.Isdefaultpatientdepartment[Profile.Language], accessor: 'Isdefaultpatientdepartment', sortable: true, canGroupBy: true, Finalheader: true, canFilter: true, isOpen: false, Cell: col => boolCellhandler(col) },
-    { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-    { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-    { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-    { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-    { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-    { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+    { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
+    { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
+    { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
+    { Header: Literals.Columns.stationstxt[Profile.Language], accessor: 'Stations', Subheader: true, Cell: col => stationCellhandler(col) },
+    { Header: Literals.Columns.Ishavepatients[Profile.Language], accessor: 'Ishavepatients', Finalheader: true, Cell: col => boolCellhandler(col) },
+    { Header: Literals.Columns.Isdefaultpatientdepartment[Profile.Language], accessor: 'Isdefaultpatientdepartment', Finalheader: true, Cell: col => boolCellhandler(col) },
+    { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
+    { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
+    { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
+    { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
+    { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
+    { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
   const metaKey = "Departments"
   const initialConfig = getInitialconfig(Profile, metaKey)

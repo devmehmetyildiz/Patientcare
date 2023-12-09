@@ -141,38 +141,44 @@ export default class PatientsDetail extends Component {
     const completedTodos = (Todos.list || []).filter(u => u.IsCompleted)
     const waitingTodos = (Todos.list || []).filter(u => !u.IsCompleted)
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const stocksColumns = [
-      { Header: Literals.Details.Stockname[Profile.Language], accessor: 'Stockname', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
-      { Header: Literals.Details.Amount[Profile.Language], accessor: 'Amount', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
-      { Header: Literals.Details.Unitname[Profile.Language], accessor: 'Unitname', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
-      { Header: Literals.Details.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.dateCellhandler(col) }
-    ]
+      { Header: Literals.Details.Stockname[Profile.Language], accessor: 'Stockname' },
+      { Header: Literals.Details.Amount[Profile.Language], accessor: 'Amount' },
+      { Header: Literals.Details.Unitname[Profile.Language], accessor: 'Unitname' },
+      { Header: Literals.Details.Movementdate[Profile.Language], accessor: 'Movementdate', Cell: col => this.dateCellhandler(col) }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const todoColumns = [
-      { Header: Literals.Details.Tododefine[Profile.Language], accessor: 'TododefineID', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.tododefineCellhandler(col) },
-      { Header: Literals.Details.Occuredtime[Profile.Language], accessor: 'Occuredtime', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
-      { Header: Literals.Details.Checktime[Profile.Language], accessor: 'Checktime', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
-      { Header: Literals.Details.Isapproved[Profile.Language], accessor: 'Isapproved', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Details.IsComplated[Profile.Language], accessor: 'IsCompleted', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.boolCellhandler(col) }
-    ]
+      { Header: Literals.Details.Tododefine[Profile.Language], accessor: 'TododefineID', Cell: col => this.tododefineCellhandler(col) },
+      { Header: Literals.Details.Occuredtime[Profile.Language], accessor: 'Occuredtime' },
+      { Header: Literals.Details.Checktime[Profile.Language], accessor: 'Checktime' },
+      { Header: Literals.Details.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Details.IsComplated[Profile.Language], accessor: 'IsCompleted', Cell: col => this.boolCellhandler(col) }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const stockandmedicineColumns = [
-      { Header: Literals.Details.Stockname[Profile.Language], accessor: 'Stockname', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
-      { Header: Literals.Details.Amount[Profile.Language], accessor: 'Amount', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
-      { Header: Literals.Details.Unitname[Profile.Language], accessor: 'Unitname', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
-    ]
+      { Header: Literals.Details.Stockname[Profile.Language], accessor: 'Stockname' },
+      { Header: Literals.Details.Amount[Profile.Language], accessor: 'Amount' },
+      { Header: Literals.Details.Unitname[Profile.Language], accessor: 'Unitname' },
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const movementColumns = [
-      { Header: Literals.Details.Patientmovementype[Profile.Language], accessor: 'Patientmovementtype', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.patientmovementCellhandler(col) },
-      { Header: Literals.Details.Movementdate[Profile.Language], accessor: 'Movementdate', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Details.IsComplated[Profile.Language], accessor: 'IsComplated', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true, Cell: col => this.boolCellhandler(col) }
-    ]
+      { Header: Literals.Details.Patientmovementype[Profile.Language], accessor: 'Patientmovementtype', Cell: col => this.patientmovementCellhandler(col) },
+      { Header: Literals.Details.Movementdate[Profile.Language], accessor: 'Movementdate', Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Details.IsComplated[Profile.Language], accessor: 'IsComplated', Cell: col => this.boolCellhandler(col) }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const fileColumns = [
-      { Header: Literals.Details.Filename[Profile.Language], accessor: 'Filename', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
-      { Header: Literals.Details.Filetype[Profile.Language], accessor: 'Filetype', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
-      { Header: Literals.Details.Usagetype[Profile.Language], accessor: 'Usagetype', sortable: false, canGroupBy: false, canFilter: false, filterDisable: true },
-    ]
+      { Header: Literals.Details.Filename[Profile.Language], accessor: 'Filename' },
+      { Header: Literals.Details.Filetype[Profile.Language], accessor: 'Filetype' },
+      { Header: Literals.Details.Usagetype[Profile.Language], accessor: 'Usagetype' },
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const lastincomestocks = (Patientstockmovements.list || []).filter(u => u.Movementtype === 1 && u.Isapproved).sort((a, b) => { return b.Id - a.Id }).slice(0, 5).map(movement => {
       const stock = (Patientstocks.list || []).find(u => u.Uuid === movement.StockID && u.PatientID === selected_record?.Uuid)
