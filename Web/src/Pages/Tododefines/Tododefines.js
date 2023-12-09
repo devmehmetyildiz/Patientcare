@@ -1,16 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Grid, GridColumn, Icon } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import TododefinesDelete from '../../Containers/Tododefines/TododefinesDelete'
-import MobileTable from '../../Utils/MobileTable'
-import Settings from '../../Common/Settings'
 export default class Tododefines extends Component {
 
   constructor(props) {

@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { FaUserAlt } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { Button, Dropdown, Header, Icon, Modal } from 'semantic-ui-react'
-import { ROUTES } from '../Utils/Constants'
-import config from '../Config'
+import { ROUTES } from '../../Utils/Constants'
+import config from '../../Config'
 const navbarLiterals = {
   editProfile: {
     en: "Edit Profile",
@@ -43,7 +43,7 @@ export class Navbar extends Component {
   handleClose = () => this.setState({ open: false })
 
   render() {
-    const { iconOnly, seticonOnly, Profile, isMobile, Files, sethideMobile, hideMobile } = this.props
+    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile } = this.props
     const ishavePP = (Profile?.meta?.Files || []).find(u => u.Usagetype === 'PP')
 
     const trigger = (
@@ -113,7 +113,7 @@ export class Navbar extends Component {
     )
   }
 
-  LogoutHandler = (e) => {
+  LogoutHandler = () => {
     const { logOut } = this.props
     this.setState({ open: false })
     logOut()

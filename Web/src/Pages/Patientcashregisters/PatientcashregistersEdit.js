@@ -1,19 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Form } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
-import { FormContext } from '../../Provider/FormProvider'
+import { Form, Breadcrumb } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import FormInput from '../../Utils/FormInput'
-import Submitbutton from '../../Common/Submitbutton'
-import Gobackbutton from '../../Common/Gobackbutton'
+import { FormContext } from '../../Provider/FormProvider'
+import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 
 export default class PatientcashregistersEdit extends Component {
 

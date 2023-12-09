@@ -1,17 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Loader } from 'semantic-ui-react'
-import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import TodosApprove from '../../Containers/Todos/TodosApprove'
-import MobileTable from '../../Utils/MobileTable'
-import Settings from '../../Common/Settings'
 export default class Todos extends Component {
 
   componentDidMount() {

@@ -1,20 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Form, Label } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
-import FormInput from '../../Utils/FormInput'
+import { Form, Breadcrumb, Label } from 'semantic-ui-react'
 import Literals from './Literals'
-import validator from "../../Utils/Validator"
+import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import CasesCreate from '../../Containers/Cases/CasesCreate'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Submitbutton from '../../Common/Submitbutton'
 
 export default class PatientsEditcase extends Component {
 

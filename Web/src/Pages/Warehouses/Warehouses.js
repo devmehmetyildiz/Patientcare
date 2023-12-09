@@ -1,16 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Icon, Grid, GridColumn } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
-import WarehousesList from './WarehousesList'
+import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
+import WarehousesList from './WarehousesList'
 import WarehousesDelete from '../../Containers/Warehouses/WarehousesDelete'
-import Settings from '../../Common/Settings'
-import MobileTable from '../../Utils/MobileTable'
 
 export default class Warehouses extends Component {
 

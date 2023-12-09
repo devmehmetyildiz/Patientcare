@@ -1,18 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon, Loader, Popup } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
 import { ROUTES } from '../../Utils/Constants'
 import config from '../../Config'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import PreregistrationsDelete from '../../Containers/Preregistrations/PreregistrationsDelete'
-import MobileTable from '../../Utils/MobileTable'
-import Settings from '../../Common/Settings'
 
 export default class Preregistrations extends Component {
 

@@ -1,10 +1,9 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Checkbox, Dropdown, Form, Icon, Label, Popup } from 'semantic-ui-react'
-import { FormContext } from '../Provider/FormProvider';
-import store from '..';
-import validator from './Validator';
-import TimePicker from 'react-time-picker';
-import AddModal from './AddModal';
+import { FormContext } from '../../Provider/FormProvider';
+import store from '../..';
+import validator from '../../Utils/Validator';
+import { AddModal } from '../../Components'
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 

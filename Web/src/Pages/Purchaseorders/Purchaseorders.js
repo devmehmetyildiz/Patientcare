@@ -1,17 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Icon, Loader, Grid, GridColumn } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
-import PurchaseordersList from './PurchaseordersList'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
+import PurchaseordersList from './PurchaseordersList'
 import PurchaseordersDelete from '../../Containers/Purchaseorders/PurchaseordersDelete'
 import PurchaseordersComplete from '../../Containers/Purchaseorders/PurcaseordersComplete'
-import Settings from '../../Common/Settings'
-import MobileTable from '../../Utils/MobileTable'
 
 export default class Purchaseorders extends Component {
 

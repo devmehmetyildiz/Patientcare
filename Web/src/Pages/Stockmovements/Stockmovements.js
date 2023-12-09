@@ -1,18 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Icon, Loader, Grid, GridColumn } from 'semantic-ui-react'
-import { MOVEMENTTYPES } from '../../Utils/Constants'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import StockmovementsDelete from '../../Containers/Stockmovements/StockmovementsDelete'
 import StockmovementsApprove from '../../Containers/Stockmovements/StockmovementsApprove'
-import MobileTable from '../../Utils/MobileTable'
-import Settings from '../../Common/Settings'
+import { MOVEMENTTYPES } from '../../Utils/Constants'
 export default class Stockmovements extends Component {
 
   componentDidMount() {

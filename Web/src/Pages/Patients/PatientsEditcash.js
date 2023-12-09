@@ -1,19 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, Loader } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
 import Literals from './Literals'
-import validator from "../../Utils/Validator"
+import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import { Settings, MobileTable, NoDataScreen, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, DataTable } from '../../Components'
 import { CASHYPES, getInitialconfig } from '../../Utils/Constants'
-import MobileTable from '../../Utils/MobileTable'
-import DataTable from '../../Utils/DataTable'
-import NoDataScreen from '../../Utils/NoDataScreen'
-import Settings from '../../Common/Settings'
 
 export default class PatientsEditcash extends Component {
 

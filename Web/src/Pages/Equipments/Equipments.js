@@ -1,18 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Loader } from 'semantic-ui-react'
-import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Breadcrumb, Grid, GridColumn, Icon, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import EquipmentsDelete from "../../Containers/Equipments/EquipmentsDelete"
-import Settings from '../../Common/Settings'
-import MobileTable from '../../Utils/MobileTable'
 import { getInitialconfig } from '../../Utils/Constants'
+import {
+  DataTable, Headerwrapper, LoadingPage,
+  MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings
+} from '../../Components'
 
 export default class Equipments extends Component {
 

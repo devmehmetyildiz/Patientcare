@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
-import Pagewrapper from './Wrappers/Pagewrapper'
-import Headerwrapper from './Wrappers/Headerwrapper'
-import Pagedivider from './Styled/Pagedivider'
 import { Accordion, Breadcrumb, Button, Grid, GridColumn, Header, Icon, Segment, Transition } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import Headerbredcrump from './Wrappers/Headerbredcrump'
-import './about.css'
+import { Headerbredcrump, Pagewrapper, Headerwrapper, Pagedivider } from '../../Components'
 import { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3, version1_0_0_4, version1_0_0_5, version1_0_0_6, version1_0_0_7 } from './Changelogs'
+import './About.css'
 
 export default class About extends Component {
 

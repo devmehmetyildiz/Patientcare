@@ -1,20 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form, Label } from 'semantic-ui-react'
-import { Breadcrumb } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
-import FormInput from '../../Utils/FormInput'
+import { Form, Breadcrumb ,Label} from 'semantic-ui-react'
 import Literals from './Literals'
-import validator from "../../Utils/Validator"
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Submitbutton from '../../Common/Submitbutton'
+import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 
 export default class PatientmedicinesEdit extends Component {
 

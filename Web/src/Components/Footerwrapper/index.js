@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { Button, Modal } from 'semantic-ui-react'
-import Pagedivider from '../Styled/Pagedivider'
+import { Pagedivider } from '../../Components'
 
-export function Footerwrapper({ Profile, children }) {
+function Footerwrapper({ Profile, children }) {
 
     const [modalOpen, setmodalOpen] = useState(false)
     const options = {

@@ -1,20 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Loader } from 'semantic-ui-react'
-import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
+import { Icon, Loader, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import { getInitialconfig } from '../../Utils/Constants'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
 import MainteanciesDelete from '../../Containers/Mainteancies/MainteanciesDelete'
 import MainteanciesComplete from '../../Containers/Mainteancies/MainteanciesComplete'
-import Settings from '../../Common/Settings'
-import MobileTable from '../../Utils/MobileTable'
 import validator from '../../Utils/Validator'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 
 export default class Mainteancies extends Component {
 

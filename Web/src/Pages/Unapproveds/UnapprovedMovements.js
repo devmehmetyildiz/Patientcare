@@ -1,18 +1,10 @@
 import React, { Component } from 'react'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import { Breadcrumb, Button, Checkbox, Grid, Icon, Loader, Modal, Tab } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import Settings from '../../Common/Settings'
-import Pagedivider from '../../Common/Styled/Pagedivider'
+import { Checkbox, Tab, Button, Modal, Loader, Icon, Breadcrumb, Grid } from 'semantic-ui-react'
 import Literals from './Literals'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Contentwrapper, Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import { MOVEMENTTYPES, getInitialconfig } from '../../Utils/Constants'
-import DataTable from '../../Utils/DataTable'
-import MobileTable from '../../Utils/MobileTable'
 import validator from '../../Utils/Validator'
-
 export default class UnapprovedMovements extends Component {
 
   constructor(props) {

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Grid, GridColumn, Icon, Modal } from 'semantic-ui-react'
-import ColumnChooser from '../Containers/Utils/ColumnChooser'
-import ExcelImport from '../Containers/Utils/ExcelImport'
-import ExcelExport from '../Containers/Utils/ExcelExport'
-import Pagedivider from './Styled/Pagedivider'
+import ColumnChooser from '../../Containers/Utils/ColumnChooser'
+import ExcelImport from '../../Containers/Utils/ExcelImport'
+import ExcelExport from '../../Containers/Utils/ExcelExport'
+import { Pagedivider } from '../../Components'
 
 export default function Settings(props) {
 
@@ -25,7 +25,6 @@ export default function Settings(props) {
         Showcreatebutton,
         Additionalfunctiontxt,
         Additionalfunction,
-        additionalButtonsize
     } = props
 
     const options = {

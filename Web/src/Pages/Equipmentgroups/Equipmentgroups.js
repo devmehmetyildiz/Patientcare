@@ -1,37 +1,28 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Loader } from 'semantic-ui-react'
-import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Breadcrumb, Grid, GridColumn, Icon, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import EquipmentgroupsDelete from "../../Containers/Equipmentgroups/EquipmentgroupsDelete"
-import Settings from '../../Common/Settings'
-import MobileTable from '../../Utils/MobileTable'
 import { getInitialconfig } from '../../Utils/Constants'
+import {
+  DataTable, Headerwrapper, LoadingPage, MobileTable,
+  NoDataScreen, Pagedivider, Pagewrapper, Settings
+} from '../../Components'
 
 export default class Equipmentgroups extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      open: false,
-      selectedrecord: {},
       stationsStatus: []
     }
   }
-
 
   componentDidMount() {
     const { GetDepartments, GetEquipmentgroups } = this.props
     GetDepartments()
     GetEquipmentgroups()
   }
-
 
   render() {
 

@@ -1,22 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Form } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
+import { Form, Breadcrumb } from 'semantic-ui-react'
 import Literals from './Literals'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
+import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import WarehousesCreate from '../../Containers/Warehouses/WarehousesCreate'
 import StockdefinesCreate from '../../Containers/Stockdefines/StockdefinesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Submitbutton from '../../Common/Submitbutton'
 export default class StocksEdit extends Component {
 
   PAGE_NAME = "StocksEdit"
@@ -25,7 +16,6 @@ export default class StocksEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
-      modelOpened: false
     }
   }
 

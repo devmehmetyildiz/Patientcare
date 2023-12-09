@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Grid, Icon, Modal } from 'semantic-ui-react'
-import Pagedivider from '../Common/Styled/Pagedivider'
+import { Pagedivider } from '../../Components'
 
 export default function MobileTable(props) {
 

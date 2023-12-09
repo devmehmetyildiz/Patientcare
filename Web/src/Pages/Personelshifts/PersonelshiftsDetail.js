@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon, Label, Loader } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
 import validator from '../../Utils/Validator'
-import DataTable from '../../Utils/DataTable'
+import { Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, DataTable } from '../../Components'
+
 export default class PersonelshiftsDetail extends Component {
 
   PAGE_NAME = "PersonelshiftsDetail"

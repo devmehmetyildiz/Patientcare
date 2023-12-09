@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
-import Navbar from '../../Common/Navbar'
-import { Sidebar } from '../../Common/Sidebar'
-import notification from '../../Utils/Notification'
 import Cookies from 'universal-cookie'
-import LoadingPage from '../../Utils/LoadingPage'
 import Routes from '../../Routes'
+import { Sidebar, LoadingPage, Navbar } from '../../Components'
 
 export default class Layout extends Component {
 

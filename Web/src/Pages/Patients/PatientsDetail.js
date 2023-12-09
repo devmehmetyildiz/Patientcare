@@ -1,22 +1,18 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Grid, GridColumn, Header, Icon, Label, Loader } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import config from '../../Config'
 import { PATIENTMOVEMENTTYPE, ROUTES } from '../../Utils/Constants'
-import DataTable from '../../Utils/DataTable'
 import PatientsOut from '../../Containers/Patients/PatientsOut'
 import PatientsIn from '../../Containers/Patients/PatientsIn'
 import PatientsEditplace from '../../Containers/Patients/PatientsEditplace'
-
+import {
+  DataTable, Contentwrapper,
+  Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper
+} from '../../Components'
 export default class PatientsDetail extends Component {
 
   PAGE_NAME = 'PatientsDetail'

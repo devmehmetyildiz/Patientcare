@@ -1,17 +1,10 @@
-import React, { Component, useEffect, useState } from 'react'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import { Breadcrumb, Button, Checkbox, Grid, Icon, Label, Loader, Modal, Tab } from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Settings from '../../Common/Settings'
-import Pagedivider from '../../Common/Styled/Pagedivider'
+import { Breadcrumb, Button, Checkbox, Grid, Icon, Label, Loader, Modal, Tab } from 'semantic-ui-react'
+import { Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import Literals from './Literals'
-import NoDataScreen from '../../Utils/NoDataScreen'
-import { MOVEMENTTYPES, getInitialconfig } from '../../Utils/Constants'
-import DataTable from '../../Utils/DataTable'
-import MobileTable from '../../Utils/MobileTable'
 import validator from '../../Utils/Validator'
+import { getInitialconfig } from '../../Utils/Constants'
 
 
 export default function UnapprovedStocks(props) {

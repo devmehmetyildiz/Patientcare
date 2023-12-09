@@ -4,9 +4,9 @@ import { IoIosArrowDown } from "react-icons/io";
 import { MdSettings } from "react-icons/md";
 import { Collapse } from 'react-collapse';
 import { withRouter } from 'react-router-dom';
-import Literals from "../Utils/Literalregistrar"
-import { Icon, Label, Popup } from "semantic-ui-react"
-import config from '../Config';
+import Literals from "../../Utils/Literalregistrar"
+import { Popup } from "semantic-ui-react"
+import config from '../../Config';
 import { Link } from 'react-router-dom';
 
 export function Sidebar(props) {

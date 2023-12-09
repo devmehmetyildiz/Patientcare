@@ -1,19 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon } from 'semantic-ui-react'
-import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Breadcrumb, Grid, GridColumn, Icon } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
 import FloorsDelete from '../../Containers/Floors/FloorsDelete'
 import FloorsFastcreate from '../../Containers/Floors/FloorsFastcreate'
-import Settings from '../../Common/Settings'
-import MobileTable from '../../Utils/MobileTable'
 import { getInitialconfig } from '../../Utils/Constants'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 
 export default class Floors extends Component {
 

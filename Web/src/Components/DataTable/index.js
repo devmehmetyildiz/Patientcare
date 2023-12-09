@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useMemo } from 'react'
 import { useColumnOrder, useExpanded, useFilters, useGroupBy, usePagination, useRowSelect, useSortBy, useTable } from "react-table"
 import { Icon, Pagination, Select, Popup, } from 'semantic-ui-react'
-import "../Common/Table.css"
+import "./index.css"
 
 function DefaultColumnFilter({
     column: { filterValue, preFilteredRows, setFilter },

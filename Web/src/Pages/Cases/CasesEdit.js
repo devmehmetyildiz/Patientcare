@@ -1,21 +1,15 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Form } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
-import FormInput from '../../Utils/FormInput'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
-import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Submitbutton from '../../Common/Submitbutton'
+import {
+  Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump,
+  Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
+} from '../../Components'
+import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
 export default class CasesEdit extends Component {
 
   PAGE_NAME = 'CasesEdit'
@@ -24,7 +18,6 @@ export default class CasesEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
-      modelOpened: false
     }
   }
 

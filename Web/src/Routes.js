@@ -1,7 +1,6 @@
 import React, { Component, Suspense, lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Spinner from './Common/Spinner'
-import ProtectedRoute from './Utils/ProtectedRoute';
+import { ProtectedRoute, Spinner } from './Components'
 
 const Login = lazy(() => import('./Containers/Auth/Login'));
 const Register = lazy(() => import('./Containers/Auth/Register'));
@@ -9,7 +8,7 @@ const Roles = lazy(() => import('./Containers/Roles/Roles'));
 const RolesCreate = lazy(() => import('./Containers/Roles/RolesCreate'));
 const RolesEdit = lazy(() => import('./Containers/Roles/RolesEdit'));
 
-const About = lazy(() => import('./Common/About'));
+const About = lazy(() => import('./Components/About'));
 
 const Rules = lazy(() => import('./Containers/Rules/Rules'));
 const RulesCreate = lazy(() => import('./Containers/Rules/RulesCreate'));
@@ -215,7 +214,7 @@ const PasswordChange = lazy(() => import('./Containers/Auth/PasswordChange'));
 const Passwordforget = lazy(() => import('./Containers/Auth/Passwordforget'));
 const PasswordReset = lazy(() => import('./Containers/Auth/PasswordReset'));
 const Home = lazy(() => import('./Pages/Home'));
-const Notfoundpage = lazy(() => import('./Utils/Notfoundpage'));
+const Notfoundpage = lazy(() => import('./Components/Notfoundpage'));
 
 class Routes extends Component {
   render() {
@@ -388,7 +387,7 @@ class Routes extends Component {
       { exact: true, path: "/About", auth: true, component: About },
       { exact: true, path: "/Passwordreset/:RequestID", auth: false, component: PasswordReset },
       { exact: true, path: "/Forgetpassword", auth: false, component: Passwordforget },
-      { exact: false, path: "*", auth: false, component: Notfoundpage },
+      { exact: false, path: "*", auth: false, component: Notfoundpage }
     ]
 
     return (
