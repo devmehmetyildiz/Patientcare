@@ -4,6 +4,7 @@ export const ROUTES = {
     AUTH: 'Auth',
     ROLE: 'Roles',
     USER: 'Users',
+    USERNOTIFICATION: 'Usernotifications',
 
     ACTIVEPATIENT: 'Activepatient',
     PATIENT: 'Patients',

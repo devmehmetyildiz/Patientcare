@@ -483,3 +483,7 @@ code {
       0% 0%;
   }
 }
+
+.notificationpopup.ui.bottom.right.popup:before{
+  right: 5px;
+}

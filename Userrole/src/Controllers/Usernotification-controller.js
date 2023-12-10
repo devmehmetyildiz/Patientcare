@@ -44,16 +44,16 @@ async function GetUsernotification(req, res, next) {
 async function GetUsernotificationsbyUserid(req, res, next) {
     try {
         let validationErrors = []
-        if (req.params.notificationId === undefined) {
+        if (req.params.userId === undefined) {
             validationErrors.push(messages.VALIDATION_ERROR.NOTIFICATIONID_REQUIRED)
         }
-        if (!validator.isUUID(req.params.notificationId)) {
+        if (!validator.isUUID(req.params.userId)) {
             validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_NOTIFICATIONID)
         }
         if (validationErrors.length > 0) {
             return next(createValidationError(validationErrors, req.language))
         }
-        const notifications = await db.usernotificationModel.findAll({ where: { UserID: req.params.notificationId } })
+        const notifications = await db.usernotificationModel.findAll({ where: { UserID: req.params.userId } })
         if (!notifications) {
             return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_FOUND], req.language))
         }
