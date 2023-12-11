@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form, Breadcrumb, Button, Tab } from 'semantic-ui-react'
+import { Form, Breadcrumb, Button, Tab, Dropdown } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import Editor from '@monaco-editor/react'
+import { breakdownmainteanciesrule } from './Templates'
 
 export default class RulesEdit extends Component {
 
@@ -44,6 +45,10 @@ export default class RulesEdit extends Component {
         const { Rules, Profile, history } = this.props
         const { isLoading, isDispatching } = Rules
 
+        const Templateoptions = [
+            { key: 1, text: "Breakdown and Mainteancies Notification Rule", value: breakdownmainteanciesrule, }
+        ]
+
         return (
             isLoading || isDispatching ? <LoadingPage /> :
                 <Pagewrapper>
@@ -66,7 +71,10 @@ export default class RulesEdit extends Component {
                                         pane: {
                                             key: 'save',
                                             content: <div className='max-h-[calc(66vh-10px)] overflow-y-auto overflow-x-hidden'>
-                                                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                                                <Form.Group widths={'equal'}>
+                                                    <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                                                    <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                                                </Form.Group>
                                                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Status[Profile.Language]} name="Status" formtype={'checkbox'} />
                                             </div>
                                         }
@@ -76,9 +84,24 @@ export default class RulesEdit extends Component {
                                         pane: {
                                             key: 'design',
                                             content: <div className='max-h-[calc(66vh-10px)] overflow-y-auto overflow-x-hidden'>
+                                                <Form.Field>
+                                                    <label className='text-[#000000de]'>{Literals.Columns.Templates[Profile.Language]}</label>
+                                                    <Dropdown
+                                                        placeholder={Literals.Columns.Templates[Profile.Language]}
+                                                        onChange={(e, data) => {
+                                                            console.log('data.value: ', data.value);
+                                                            this.setState({ template: data.value })
+                                                        }}
+                                                        options={Templateoptions}
+                                                        clearable
+                                                        search
+                                                        fluid
+                                                        selection
+                                                    />
+                                                </Form.Field>
                                                 <div className='p-2 shadow-lg shadow-gray-300'>
                                                     <Editor
-                                                        height="60vh"
+                                                        height="54vh"
                                                         language="javascript"
                                                         value={this.state.template}
                                                         onMount={this.handleTemplateEditorDidMount}

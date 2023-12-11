@@ -27,6 +27,7 @@ export class Rules extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
+      { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info' },
       { Header: Literals.Columns.Status[Profile.Language], accessor: 'Status', disableProps: true, Subheader: true, Cell: col => this.statusCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
