@@ -32,6 +32,7 @@ const Routes = [
   { method: 'get', path: '/Usernotifications/:notificationId', controller: 'Usernotification', action: 'GetUsernotification' },
   { method: 'get', path: '/Usernotifications', controller: 'Usernotification', action: 'GetUsernotifications' },
   { method: 'post', path: '/Usernotifications', controller: 'Usernotification', action: 'AddUsernotification' },
+  { method: 'put', path: '/Usernotifications/Editrecord', controller: 'Usernotification', action: 'UpdateUsernotifications' },
   { method: 'put', path: '/Usernotifications', controller: 'Usernotification', action: 'UpdateUsernotification' },
   { method: 'delete', path: '/Usernotifications/:notificationId', controller: 'Usernotification', action: 'DeleteUsernotification' },
 ]

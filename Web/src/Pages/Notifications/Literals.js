@@ -51,6 +51,14 @@ const Literals = {
             tr: "Geri Dön",
             en: "Go Back"
         },
+        Close: {
+            tr: "Kapat",
+            en: "Close"
+        },
+        Go: {
+            tr: "Detaya Git",
+            en: "Go to Detail"
+        },
 
     },
     Messages: {
@@ -59,8 +67,8 @@ const Literals = {
             en: "There is no notification found"
         },
         Deletecheck: {
-            tr: "İlacını silmek istediğinize emin misiniz?",
-            en: "Medicine will delete, are you sure?"
+            tr: "Bildirimi silmek istediğinize emin misiniz?",
+            en: "Notification will delete, are you sure?"
         },
         Approvecheck: {
             tr: "İlacını onaylamak istediğinize emin misiniz?",

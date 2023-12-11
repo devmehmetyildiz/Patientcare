@@ -90,7 +90,7 @@ async function UpdateUsernotification(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const notification = await db.usernotificationModel.findOne({ where: { Uuid: Uuid } })
+        const notification = await db.usernotificationModel.findOne({ where: { Uuid: req.body.Uuid } })
         if (!notification) {
             return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_FOUND], req.language))
         }
@@ -103,6 +103,34 @@ async function UpdateUsernotification(req, res, next) {
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: req.body?.Uuid } }, { transaction: t })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetUsernotifications(req, res, next)
+}
+
+async function UpdateUsernotifications(req, res, next) {
+
+    const t = await db.sequelize.transaction();
+    try {
+        const list = req.body
+        for (const data of list) {
+            const notification = await db.usernotificationModel.findOne({ where: { Uuid: data?.Uuid } })
+            if (!notification) {
+                return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_FOUND], req.language))
+            }
+            if (notification.Isactive === false) {
+                return next(createAccessDenied([messages.ERROR.NOTIFICATION_NOT_ACTIVE], req.language))
+            }
+
+            await db.usernotificationModel.update({
+                ...data,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { Uuid: data?.Uuid } }, { transaction: t })
+        }
 
         await t.commit()
     } catch (error) {
@@ -156,4 +184,5 @@ module.exports = {
     UpdateUsernotification,
     DeleteUsernotification,
     GetUsernotificationsbyUserid,
+    UpdateUsernotifications
 }

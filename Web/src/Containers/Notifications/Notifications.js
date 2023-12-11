@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Notifications from '../../Pages/Notifications/Notifications'
-import { GetUsernotifications, handleViewmodal, handleDeletemodal, handleSelectedUsernotification } from "../../Redux/UsernotificationSlice"
+import { GetUsernotifications, EditUsernotifications, handleViewmodal, handleDeletemodal, handleSelectedUsernotification, EditRecordUsernotifications, DeleteUsernotifications } from "../../Redux/UsernotificationSlice"
 
 const mapStateToProps = (state) => ({
     Usernotifications: state.Usernotifications,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetUsernotifications, handleViewmodal, handleDeletemodal, handleSelectedUsernotification
+    GetUsernotifications, handleViewmodal, handleDeletemodal, handleSelectedUsernotification, EditUsernotifications, EditRecordUsernotifications, DeleteUsernotifications
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Notifications)

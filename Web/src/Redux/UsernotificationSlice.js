@@ -107,6 +107,30 @@ export const EditUsernotifications = createAsyncThunk(
     }
 );
 
+export const EditRecordUsernotifications = createAsyncThunk(
+    'Usernotifications/EditRecordUsernotifications',
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Userrole, ROUTES.USERNOTIFICATION + '/Editrecord', data);
+            dispatch(fillUsernotificationnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            clearForm && clearForm('UsernotificationsUpdate')
+            closeModal && closeModal()
+            history && history.push(redirectUrl ? redirectUrl : '/Usernotifications');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillUsernotificationnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const DeleteUsernotifications = createAsyncThunk(
     'Usernotifications/DeleteUsernotifications',
     async (data, { dispatch, getState }) => {
@@ -207,6 +231,17 @@ export const UsernotificationsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(EditUsernotifications.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditRecordUsernotifications.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(EditRecordUsernotifications.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(EditRecordUsernotifications.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
