@@ -5,7 +5,7 @@ const config = require('./Config')
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("./Utilities/Error")
 
 async function CroneJobs() {
-    const rules = await db.ruleModel.findAll({ where: { Isactive: true } })
+    const rules = await db.ruleModel.findAll({ where: { Isactive: true, Status: true } })
     rules.forEach((rule, index) => {
 
         if (!childProcesses[rule.Uuid]) {
