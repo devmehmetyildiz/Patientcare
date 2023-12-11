@@ -60,9 +60,6 @@ require("./Middlewares/Databaseconnector")()
         if (config.env === 'development') {
           console.log(`${config.session.name} service is running at http://localhost:${httpServer.address().port} for public usage`)
           jobs.CroneJobs()
-          setInterval(() => {
-            jobs.CheckPatient()
-          }, 1000 * 60);
           db.applog_systemModel.create({
             Event: "App opened at: " + new Date()
           }).catch(() => {
