@@ -85,12 +85,12 @@ export const AddUsernotifications = createAsyncThunk(
 
 export const EditUsernotifications = createAsyncThunk(
     'Usernotifications/EditUsernotifications',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, dontShownotification }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Userrole, ROUTES.USERNOTIFICATION, data);
-            dispatch(fillUsernotificationnotification({
+            !dontShownotification && dispatch(fillUsernotificationnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
@@ -109,12 +109,12 @@ export const EditUsernotifications = createAsyncThunk(
 
 export const EditRecordUsernotifications = createAsyncThunk(
     'Usernotifications/EditRecordUsernotifications',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, dontShownotification }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.put(config.services.Userrole, ROUTES.USERNOTIFICATION + '/Editrecord', data);
-            dispatch(fillUsernotificationnotification({
+            !dontShownotification && dispatch(fillUsernotificationnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
@@ -139,6 +139,50 @@ export const DeleteUsernotifications = createAsyncThunk(
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.delete(config.services.Userrole, `${ROUTES.USERNOTIFICATION}/${data.Uuid}`);
+            dispatch(fillUsernotificationnotification({
+                type: 'Success',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillUsernotificationnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeleteUsernotificationbyidreaded = createAsyncThunk(
+    'Usernotifications/DeleteUsernotificationbyidreaded',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.delete(config.services.Userrole, `${ROUTES.USERNOTIFICATION}/DeleteUsernotificationbyidreaded/${data}`);
+            dispatch(fillUsernotificationnotification({
+                type: 'Success',
+                code: Literals.deletecode[Language],
+                description: Literals.deletedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillUsernotificationnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeleteUsernotificationbyid = createAsyncThunk(
+    'Usernotifications/DeleteUsernotificationbyid',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.delete(config.services.Userrole, `${ROUTES.USERNOTIFICATION}/DeleteUsernotificationbyid/${data}`);
             dispatch(fillUsernotificationnotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
@@ -189,7 +233,7 @@ export const UsernotificationsSlice = createSlice({
             .addCase(GetUsernotifications.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.list = [];
+                // state.list = [];
             })
             .addCase(GetUsernotifications.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -253,6 +297,28 @@ export const UsernotificationsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(DeleteUsernotifications.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeleteUsernotificationbyidreaded.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeleteUsernotificationbyidreaded.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeleteUsernotificationbyidreaded.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeleteUsernotificationbyid.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(DeleteUsernotificationbyid.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(DeleteUsernotificationbyid.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });

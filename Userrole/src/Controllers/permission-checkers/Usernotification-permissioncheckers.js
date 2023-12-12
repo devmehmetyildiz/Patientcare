@@ -55,6 +55,22 @@ async function DeleteUsernotification(req, res, next) {
     }
 }
 
+async function DeleteUsernotificationbyid(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('usernotificationdelete')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Usernotifications Delete', req.language, { en: 'Usernotifications Delete', tr: 'Usernotifications Delete' }))
+    }
+}
+
+async function DeleteUsernotificationbyidreaded(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('usernotificationdelete')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Usernotifications Delete', req.language, { en: 'Usernotifications Delete', tr: 'Usernotifications Delete' }))
+    }
+}
+
 
 module.exports = {
     GetUsernotifications,
@@ -63,5 +79,7 @@ module.exports = {
     UpdateUsernotification,
     DeleteUsernotification,
     GetUsernotificationsbyUserid,
-    UpdateUsernotifications
+    UpdateUsernotifications,
+    DeleteUsernotificationbyid,
+    DeleteUsernotificationbyidreaded
 }

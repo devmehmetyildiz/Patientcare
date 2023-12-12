@@ -177,6 +177,66 @@ async function DeleteUsernotification(req, res, next) {
     GetUsernotifications(req, res, next)
 }
 
+async function DeleteUsernotificationbyid(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.userId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.NOTIFICATIONID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_NOTIFICATIONID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        await db.usernotificationModel.update({
+            Updateduser: "System",
+            Updatetime: new Date(),
+            Isactive: false
+        }, { where: { UserID: Uuid } }, { transaction: t })
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetUsernotifications(req, res, next)
+}
+
+async function DeleteUsernotificationbyidreaded(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.userId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.NOTIFICATIONID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_NOTIFICATIONID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        await db.usernotificationModel.update({
+            Updateduser: "System",
+            Updatetime: new Date(),
+            Isactive: false
+        }, { where: { UserID: Uuid, Isreaded: true } }, { transaction: t })
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetUsernotifications(req, res, next)
+}
+
 module.exports = {
     GetUsernotifications,
     GetUsernotification,
@@ -184,5 +244,7 @@ module.exports = {
     UpdateUsernotification,
     DeleteUsernotification,
     GetUsernotificationsbyUserid,
-    UpdateUsernotifications
+    UpdateUsernotifications,
+    DeleteUsernotificationbyid,
+    DeleteUsernotificationbyidreaded
 }

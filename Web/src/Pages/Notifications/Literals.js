@@ -2,7 +2,7 @@ const Literals = {
     Options: {
     },
     Columns: {
-      
+
     },
     Page: {
         Pageheader: {
@@ -17,9 +17,13 @@ const Literals = {
             tr: "Güncelle",
             en: "Update"
         },
-        Pagedeleteheader: {
-            tr: "İlaç Silme",
-            en: "Delete Medicines"
+        Pagedeleteallheader: {
+            tr: "Bütün Bildirimleri Silme",
+            en: "Delete All Notifications"
+        },
+        PagedeleteReadedheader: {
+            tr: "Okunmuş Bildirimleri Silme",
+            en: "Delete Readed Notifications"
         },
         Pageapproveheader: {
             tr: "İlaç Onaylama",
@@ -69,6 +73,14 @@ const Literals = {
         Deletecheck: {
             tr: "Bildirimi silmek istediğinize emin misiniz?",
             en: "Notification will delete, are you sure?"
+        },
+        Deleteallcheck: {
+            tr: "Bütün Bildirimleri silmek istediğinize emin misiniz?",
+            en: "All Notifications will delete, are you sure?"
+        },
+        Deletereadcheck: {
+            tr: "Okunmuş Bildirimleri silmek istediğinize emin misiniz?",
+            en: "Readed Notifications will delete, are you sure?"
         },
         Approvecheck: {
             tr: "İlacını onaylamak istediğinize emin misiniz?",

@@ -1,16 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Icon, Loader, Modal, Popup } from 'semantic-ui-react'
+import { Button, Icon, Loader, Modal, Popup, Transition } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { NoDataScreen } from '../../Components'
 import { useHistory } from 'react-router-dom'
+
 export default function Notifications(props) {
-    const { GetUsernotifications, handleViewmodal, EditUsernotifications, EditRecordUsernotifications, DeleteUsernotifications, Usernotifications, Profile } = props
+    const { GetUsernotifications, handleViewmodal, EditUsernotifications, DeleteUsernotificationbyid, DeleteUsernotificationbyidreaded,
+        EditRecordUsernotifications, DeleteUsernotifications, Usernotifications, Profile } = props
     const { isViewmodalopen, isLoading } = Usernotifications
-    const list = (Usernotifications.list || []).filter(u => u.Isactive)
+    const list = (Usernotifications.list || []).filter(u => u.Isactive).reverse()
     const history = useHistory()
     const [detailModal, setdetailModal] = useState(false)
     const [deleteModal, setdeleteModal] = useState(false)
+    const [deleteAllModal, setdeleteAllModal] = useState(false)
+    const [deleteReadModal, setdeleteReadModal] = useState(false)
+    const [open, setOpen] = useState(false)
     const [selectedNotification, setselectedNotification] = useState({})
 
 
@@ -19,14 +24,15 @@ export default function Notifications(props) {
             const unshowednotifications = (list || []).filter(u => !u.Isshowed)
             if (unshowednotifications.length > 0) {
                 let data = []
-                for (const notification of unshowednotifications) {
+                for (const notification of unshowednotifications.slice(0, 1000)) {
                     data.push({
                         Uuid: notification?.Uuid,
                         Isshowed: true
                     })
                 }
                 EditRecordUsernotifications({
-                    data: data
+                    data: data,
+                    dontShownotification: true
                 })
             }
         }
@@ -50,17 +56,31 @@ export default function Notifications(props) {
     }, [isViewmodalopen])
 
     const Content = useCallback(() => {
-        return <div className='w-96 max-h-[90vh] flex flex-col justify-start items-center'>
+        return <div className='w-[26rem] h-[90vh] flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden'>
             <div className='w-full flex justify-between items-center'>
                 <div className='font-bold text-xl'>{Literals.Page.Pageheader[Profile.Language]}</div>
-                <div className='cursor-pointer'><Icon name='bars' className='text-gray-500' /></div>
+                <div onClick={() => { setOpen(!open) }} className='cursor-pointer'><Icon name={open ? 'arrow up' : 'arrow down'} className='text-gray-500' /></div>
             </div>
+            <Transition visible={open} animation='fade down' duration={500}>
+                <div className='mt-2 mb-2 flex flex-col justify-start items-center gap-4 w-full'>
+                    <div
+                        className='mt-2 cursor-pointer w-full py-1 px-2 rounded-lg bg-blue-300 hover:bg-blue-400 transition-all duration-500'
+                        onClick={() => {
+                            setdeleteAllModal(true)
+                        }}>Tümünü Sil</div>
+                    <div
+                        className='mt-2 cursor-pointer w-full py-1 px-2 rounded-lg bg-blue-300 hover:bg-blue-400 transition-all duration-500'
+                        onClick={() => {
+                            setdeleteReadModal(true)
+                        }}>Sadece Okunanları Sil</div>
+                </div>
+            </Transition>
             {isLoading
                 ? <div className='w-full h-4'><Loader /></div>
                 : ((list || []).length > 0
-                    ? <div className='w-full flex flex-col justify-center items-center'>
+                    ? <div className='w-full flex flex-col justify-center items-center '>
                         {(list || []).map(notification => {
-                            return <div className='w-full flex justify-between items-center flex-row'>
+                            return <div key={Math.random()} className='w-full flex justify-between items-center flex-row'>
                                 <div
                                     className='w-full justify-center items-center flex flex-col py-4 px-2 
                                         hover:bg-gray-300  cursor-pointer  transition-all ease-in-out duration-400 rounded-md'
@@ -69,14 +89,15 @@ export default function Notifications(props) {
                                             data: {
                                                 Uuid: notification?.Uuid,
                                                 Isreaded: true
-                                            }
+                                            },
+                                            dontShownotification: true
                                         })
                                         setselectedNotification(notification)
                                         setdetailModal(true)
                                     }}
                                 >
                                     <div className=' w-full flex flex-row justify-start items-center '>
-                                        <div><Icon name='attention circle' className='text-gray-600' /></div>
+                                        <div><Icon name='attention' className='text-gray-600' /></div>
                                         <div className='font-bold whitespace-nowrap'>
                                             {notification?.Subject}
                                         </div>
@@ -89,7 +110,7 @@ export default function Notifications(props) {
                                     </div>
                                 </div>
                                 <div
-                                    className='w-[10px] group cursor-pointer'
+                                    className='w-[10px] pr-6 group cursor-pointer'
                                     onClick={() => {
                                         setselectedNotification(notification)
                                         setdeleteModal(true)
@@ -190,6 +211,74 @@ export default function Notifications(props) {
                             DeleteUsernotifications(selectedNotification)
                             setdeleteModal(false)
                             setselectedNotification({})
+                        }}
+                        positive
+                    />
+                </Modal.Actions>
+            </Modal>
+            <Modal
+                onClose={() => setdeleteAllModal(false)}
+                onOpen={() => setdeleteAllModal(true)}
+                open={deleteAllModal}
+            >
+                <Modal.Header> {Literals.Page.Pagedeleteallheader[Profile.Language]}</Modal.Header>
+                <Modal.Content image>
+                    <Modal.Description>
+                        <p>
+                            {Literals.Messages.Deleteallcheck[Profile.Language]}
+                        </p>
+                    </Modal.Description>
+                </Modal.Content>
+                <Modal.Actions>
+                    <Button color='black' onClick={() => {
+                        setdeleteAllModal(false)
+                    }}>
+                        {Literals.Button.Close[Profile.Language]}
+                    </Button>
+                    <Button
+                        content={Literals.Button.Delete[Profile.Language]}
+                        labelPosition='right'
+                        icon='checkmark'
+                        onClick={() => {
+                            const { meta } = Profile
+                            if (validator.isUUID(meta?.Uuid)) {
+                                DeleteUsernotificationbyid(meta?.Uuid)
+                                setdeleteAllModal(false)
+                            }
+                        }}
+                        positive
+                    />
+                </Modal.Actions>
+            </Modal>
+            <Modal
+                onClose={() => setdeleteReadModal(false)}
+                onOpen={() => setdeleteReadModal(true)}
+                open={deleteReadModal}
+            >
+                <Modal.Header> {Literals.Page.PagedeleteReadedheader[Profile.Language]}</Modal.Header>
+                <Modal.Content image>
+                    <Modal.Description>
+                        <p>
+                            {Literals.Messages.Deletereadcheck[Profile.Language]}
+                        </p>
+                    </Modal.Description>
+                </Modal.Content>
+                <Modal.Actions>
+                    <Button color='black' onClick={() => {
+                        setdeleteReadModal(false)
+                    }}>
+                        {Literals.Button.Close[Profile.Language]}
+                    </Button>
+                    <Button
+                        content={Literals.Button.Delete[Profile.Language]}
+                        labelPosition='right'
+                        icon='checkmark'
+                        onClick={() => {
+                            const { meta } = Profile
+                            if (validator.isUUID(meta?.Uuid)) {
+                                DeleteUsernotificationbyidreaded(meta?.Uuid)
+                                setdeleteReadModal(false)
+                            }
                         }}
                         positive
                     />
