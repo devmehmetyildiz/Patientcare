@@ -170,7 +170,8 @@ async function UpdateRule(req, res, next) {
         if (!rule.Isactive) {
             return next(createAccessDenied([messages.ERROR.RULE_NOT_ACTIVE], req.language))
         }
-
+        await jobs.stopChildProcess(Uuid)
+        
         await db.ruleModel.update({
             ...req.body,
             Updateduser: "System",
@@ -179,7 +180,6 @@ async function UpdateRule(req, res, next) {
 
         await t.commit()
 
-        await jobs.stopChildProcess(Uuid)
         await jobs.CroneJobs()
     } catch (error) {
         await t.rollback()

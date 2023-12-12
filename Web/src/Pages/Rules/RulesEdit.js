@@ -6,7 +6,7 @@ import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import Editor from '@monaco-editor/react'
-import { breakdownmainteanciesrule } from './Templates'
+import { breakdownmainteanciesrule, patienttodoccreaterule } from './Templates'
 
 export default class RulesEdit extends Component {
 
@@ -46,7 +46,8 @@ export default class RulesEdit extends Component {
         const { isLoading, isDispatching } = Rules
 
         const Templateoptions = [
-            { key: 1, text: "Breakdown and Mainteancies Notification Rule", value: breakdownmainteanciesrule, }
+            { key: 1, text: "Breakdown and Mainteancies Notification Rule", value: breakdownmainteanciesrule },
+            { key: 2, text: "Patient Todo Create Rule", value: patienttodoccreaterule },
         ]
 
         return (
@@ -140,6 +141,7 @@ export default class RulesEdit extends Component {
 
         const { EditRules, history, fillRulenotification, Rules, Profile } = this.props
         const data = this.context.getForm(this.PAGE_NAME)
+        console.log('data: ', data);
         data.Rule = this.state.template
         let errors = []
         if (!validator.isString(data.Name)) {
