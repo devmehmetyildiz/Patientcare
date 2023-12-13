@@ -52,7 +52,8 @@ export const ROUTES = {
 
     MAILSETTING: 'Mailsettings',
     PRINTTEMPLATE: 'Printtemplates',
-    RULE: 'Rules'
+    RULE: 'Rules',
+    LOG: 'Logs',
 
 }
 

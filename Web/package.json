@@ -20,6 +20,8 @@
     "file-saver": "^2.0.5",
     "form-to-object": "^6.0.0",
     "generate-pdf-from-react-html": "^1.0.5",
+    "highcharts": "^11.2.0",
+    "highcharts-react-official": "^3.2.1",
     "history": "^5.3.0",
     "html-to-pdf": "^0.1.11",
     "html2canvas": "^1.4.1",
