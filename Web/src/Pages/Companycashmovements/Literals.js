@@ -11,14 +11,6 @@ const Literals = {
             tr: 'Tekil ID',
             en: 'Unique ID'
         },
-        Patient: {
-            tr: 'Hasta',
-            en: 'Patient'
-        },
-        Register: {
-            tr: 'Para Kaynağı',
-            en: 'Money Source'
-        },
         Movementtype: {
             tr: 'Hareket Türü',
             en: 'Movement Type'
@@ -34,10 +26,6 @@ const Literals = {
         Info: {
             tr: 'Açıklama',
             en: 'Info'
-        },
-        Includecompany: {
-            tr: 'Kurum Kasasını dahil et',
-            en: 'Include Company Wallet'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -66,8 +54,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Hasta Cüzdanları",
-            en: "Patient Wallets"
+            tr: "Kurum Cüzdanı",
+            en: "Company Wallet"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -78,8 +66,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Hasta Para Hareketi Silme",
-            en: "Delete Patient Cash Movement"
+            tr: "Para Hareketi Silme",
+            en: "Delete Cash Movement"
         }
     },
     Button: {
@@ -107,20 +95,12 @@ const Literals = {
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Hasta Para Cüzdanı Yok",
-            en: "There is no Patient Cash Wallet found"
+            tr: "Tanımlı Para Hareketi Yok",
+            en: "There is no Cash movement found"
         },
         Deletecheck: {
-            tr: "hasta para hareketini silmek istediğinize emin misiniz?",
-            en: "patient cash movement will delete, are you sure?"
-        },
-        Patientrequired: {
-            tr: "Hasta Gerekli",
-            en: "Patient Required"
-        },
-        Registerrequired: {
-            tr: "Kaynak Gerekli",
-            en: "Money Source Required"
+            tr: "para hareketini silmek istediğinize emin misiniz?",
+            en: "cash movement will delete, are you sure?"
         },
         Reportnorequired: {
             tr: "Tahsilat No Gerekli",

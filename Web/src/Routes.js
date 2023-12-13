@@ -209,6 +209,10 @@ const Patientcashmovements = lazy(() => import('./Containers/Patientcashmovement
 const PatientcashmovementsCreate = lazy(() => import('./Containers/Patientcashmovements/PatientcashmovementsCreate'));
 const PatientcashmovementsEdit = lazy(() => import('./Containers/Patientcashmovements/PatientcashmovementsEdit'));
 
+const Companycashmovements = lazy(() => import('./Containers/Companycashmovements/Companycashmovements'));
+const CompanycashmovementsCreate = lazy(() => import('./Containers/Companycashmovements/CompanycashmovementsCreate'));
+const CompanycashmovementsEdit = lazy(() => import('./Containers/Companycashmovements/CompanycashmovementsEdit'));
+
 const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
 const PasswordChange = lazy(() => import('./Containers/Auth/PasswordChange'));
 const Passwordforget = lazy(() => import('./Containers/Auth/Passwordforget'));
@@ -379,6 +383,9 @@ class Routes extends Component {
       { exact: true, path: "/Patientcashmovements", auth: true, component: Patientcashmovements, permission: 'patientcashmovementscreen' },
       { exact: true, path: "/Patientcashmovements/Create", auth: true, component: PatientcashmovementsCreate, permission: 'patientcashmovementscreen' },
       { exact: true, path: "/Patientcashmovements/:PatientcashmovementID/Edit", auth: true, component: PatientcashmovementsEdit, permission: 'patientcashmovementscreen' },
+      { exact: true, path: "/Companycashmovements", auth: true, component: Companycashmovements, permission: 'companycashmovementscreen' },
+      { exact: true, path: "/Companycashmovements/Create", auth: true, component: CompanycashmovementsCreate, permission: 'companycashmovementscreen' },
+      { exact: true, path: "/Companycashmovements/:CompanycashmovementID/Edit", auth: true, component: CompanycashmovementsEdit, permission: 'companycashmovementscreen' },
       { exact: true, path: "/Appreports", auth: true, component: Appreports, permission: 'appreports' },
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'patientscreen' },

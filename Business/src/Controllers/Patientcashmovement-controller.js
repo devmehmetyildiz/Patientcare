@@ -47,6 +47,7 @@ async function AddPatientcashmovement(req, res, next) {
         Movementtype,
         Movementvalue,
         ReportID,
+        Includecompany
     } = req.body
 
 
@@ -76,6 +77,21 @@ async function AddPatientcashmovement(req, res, next) {
     const t = await db.sequelize.transaction();
 
     try {
+
+        if (Includecompany) {
+            let companyuuid = uuid()
+            await db.companycashmovementModel.create({
+                Movementtype: (Movementtype * -1),
+                Movementvalue: Movementvalue,
+                ReportID: ReportID,
+                Info: '',
+                Uuid: companyuuid,
+                Createduser: "System",
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+        }
+
         await db.patientcashmovementModel.create({
             ...req.body,
             Uuid: movementuuid,

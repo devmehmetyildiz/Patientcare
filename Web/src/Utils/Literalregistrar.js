@@ -48,6 +48,7 @@ import Placeviews from "../Pages/Placeviews/Literals"
 import Patientcashregisters from "../Pages/Patientcashregisters/Literals"
 import Patientcashmovements from "../Pages/Patientcashmovements/Literals"
 import Appreports from "../Pages/Appreports/Literals"
+import Companycashmovements from "../Pages/Companycashmovements/Literals"
 
 const Literals = {
     Cases,
@@ -99,7 +100,8 @@ const Literals = {
     Placeviews,
     Patientcashregisters,
     Patientcashmovements,
-    Appreports
+    Appreports,
+    Companycashmovements
 }
 
 export default Literals
