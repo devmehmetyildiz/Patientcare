@@ -64,9 +64,9 @@ export const MOVEMENTTYPES = [
 ]
 
 export const CASHYPES = [
-    { Name: "Cüzdana Ekleme", value: -1, color: 'gray' },
+    { Name: "Cüzdandan Çıkartma", value: -1, color: 'gray' },
     { Name: "Pasif", value: 0, color: 'green' },
-    { Name: "Cüzdandan Çıkartma", value: 1, color: 'orange' },
+    { Name: "Cüzdana Ekleme", value: 1, color: 'orange' },
 ]
 
 export const PATIENTMOVEMENTTYPE = [

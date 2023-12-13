@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Grid, Loader } from 'semantic-ui-react'
+import { Breadcrumb, Grid, Icon, Label, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Settings, MobileTable, NoDataScreen, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, DataTable } from '../../Components'
 import { CASHYPES, getInitialconfig } from '../../Utils/Constants'
+import PatientcashmovementsDelete from '../../Containers/Patientcashmovements/PatientcashmovementsDelete'
 
 export default class PatientsEditcash extends Component {
 
@@ -51,7 +52,7 @@ export default class PatientsEditcash extends Component {
 
     render() {
 
-        const { Patients, Patientdefines, Patientcashmovements, Patientcashregisters,
+        const { Patients, Patientdefines, Patientcashmovements, Patientcashregisters, handleSelectedPatientcashmovement, handleDeletemodal,
             Profile, match, PatientID } = this.props
 
         const Id = match?.params?.PatientID || PatientID
@@ -62,7 +63,16 @@ export default class PatientsEditcash extends Component {
             Patientcashmovements.isLoading &&
             Patientcashregisters.isLoading
 
-        const list = (Patientcashmovements.list || []).filter(u => u.PatientID === Id)
+        const list = (Patientcashmovements.list || []).filter(u => u.PatientID === Id).map(item => {
+            return {
+                ...item,
+                edit: <Link to={`/Patientcashmovements/${item.Uuid}/edit?PatientID=${item?.Uuid}`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+                delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+                    handleSelectedPatientcashmovement(item)
+                    handleDeletemodal(true)
+                }} />
+            }
+        })
 
         const colProps = {
             sortable: true,
@@ -92,6 +102,12 @@ export default class PatientsEditcash extends Component {
         const patient = (Patients.list || []).find(u => u.Uuid === Id)
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
 
+        let patientCash = 0.0;
+        (Patientcashmovements.list || []).filter(u => u.PatientID === Id && u.Isactive).forEach(cash => {
+            patientCash += cash.Movementtype * cash.Movementvalue
+        })
+        const [integerPart, decimalPart] = patientCash.toFixed(2).split('.')
+
         return (
             isLoadingstatus ? <LoadingPage /> :
                 <Pagewrapper >
@@ -113,7 +129,7 @@ export default class PatientsEditcash extends Component {
                             <Settings
                                 Profile={Profile}
                                 Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
-                                Pagecreatelink={"/Cases/Create"}
+                                Pagecreatelink={`/Patientcashmovements/Create?PatientID=${Id}`}
                                 Columns={Columns}
                                 list={list}
                                 initialConfig={initialConfig}
@@ -125,6 +141,10 @@ export default class PatientsEditcash extends Component {
                         </Grid>
                     </Headerwrapper>
                     <Pagedivider />
+                    <div className='w-full flex justify-start items-center'>
+                        <Label color='blue' size='big'>Cüzdan : {integerPart}.{decimalPart}₺</Label>
+                    </div>
+                    <Pagedivider />
                     {list.length > 0 ?
                         <div className='w-full mx-auto '>
                             {Profile.Ismobile ?
@@ -132,6 +152,7 @@ export default class PatientsEditcash extends Component {
                                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
                         </div> : <NoDataScreen message={Literals.Messages.Nomovementfind[Profile.Language]} />
                     }
+                    <PatientcashmovementsDelete />
                 </Pagewrapper >
         )
     }

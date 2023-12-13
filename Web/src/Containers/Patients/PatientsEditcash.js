@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PatientsEditcash from '../../Pages/Patients/PatientsEditcash'
-import { GetPatientcashmovements } from "../../Redux/PatientcashmovementSlice"
+import { GetPatientcashmovements, handleSelectedPatientcashmovement, handleDeletemodal } from "../../Redux/PatientcashmovementSlice"
 import { GetPatientcashregisters } from "../../Redux/PatientcashregisterSlice"
 import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
 import { GetPatients } from "../../Redux/PatientSlice"
@@ -14,7 +14,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetPatientcashmovements, GetPatientcashregisters, GetPatientdefines, GetPatients
+    GetPatientcashmovements, GetPatientcashregisters, GetPatientdefines, GetPatients, handleSelectedPatientcashmovement, handleDeletemodal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsEditcash)

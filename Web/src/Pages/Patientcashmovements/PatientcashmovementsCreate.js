@@ -18,10 +18,25 @@ export default class PatientcashmovementsCreate extends Component {
     GetPatientcashregisters()
   }
 
+  componentDidUpdate() {
+
+    const { Patients, location } = this.props
+
+    if (!validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/PatientID`])) {
+      const search = new URLSearchParams(location.search)
+      const PatientID = search.get('PatientID') ? search.get('PatientID') : ''
+      if (validator.isUUID(PatientID) && (Patients.list || []).find(u => u.Uuid === PatientID)) {
+        this.context.setFormstates({
+          ...this.context.formstates,
+          [`${this.PAGE_NAME}/PatientID`]: PatientID ? PatientID : '',
+        })
+      }
+    }
+  }
 
   render() {
 
-    const { Patientcashmovements, Profile, history, closeModal, Patients, Patientdefines, Patientcashregisters } = this.props
+    const { Patientcashmovements, Profile, history, closeModal, Patients, Patientdefines, Patientcashregisters, location } = this.props
     const { isLoading, isDispatching } = Patientcashmovements
 
     const Patientoptions = (Patients.list || []).filter(u => u.Isactive).map(patient => {
@@ -32,6 +47,14 @@ export default class PatientcashmovementsCreate extends Component {
     const Patientcashregisteroptions = (Patientcashregisters.list || []).filter(u => u.Isactive).map(register => {
       return { key: register.Uuid, text: register.Name, value: register.Uuid }
     })
+
+    const patientID = this.context.formstates[`${this.PAGE_NAME}/PatientID`]
+    const search = new URLSearchParams(location.search)
+    const patientIDparam = search.get('PatientID') ? search.get('PatientID') : ''
+    const IshaveparamId = validator.isUUID(patientID) && validator.isUUID(patientIDparam)
+
+    const patient = (Patients.list || []).find(u => u.Uuid === patientID)
+    const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
 
     const Movementoptions = [
       { key: CASHYPES[0]?.value, text: CASHYPES[0]?.Name, value: CASHYPES[0]?.value },
@@ -47,6 +70,12 @@ export default class PatientcashmovementsCreate extends Component {
               <Link to={"/Patientcashmovements"}>
                 <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
               </Link>
+              {IshaveparamId && <React.Fragment>
+                <Breadcrumb.Divider icon='right chevron' />
+                <Link to={"/Patients/" + patientID}>
+                  <Breadcrumb.Section>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}`}</Breadcrumb.Section>
+                </Link>
+              </React.Fragment>}
               <Breadcrumb.Divider icon='right chevron' />
               <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
             </Headerbredcrump>
@@ -56,7 +85,7 @@ export default class PatientcashmovementsCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patient[Profile.Language]} name="PatientID" options={Patientoptions} formtype='dropdown' />
+                {!IshaveparamId && <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patient[Profile.Language]} name="PatientID" options={Patientoptions} formtype='dropdown' />}
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Register[Profile.Language]} name="RegisterID" options={Patientcashregisteroptions} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths={'equal'}>
@@ -88,7 +117,7 @@ export default class PatientcashmovementsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddPatientcashmovements, history, fillPatientcashmovementnotification, Profile, closeModal } = this.props
+    const { AddPatientcashmovements, history, fillPatientcashmovementnotification, Profile, closeModal, location } = this.props
 
     const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
@@ -112,7 +141,20 @@ export default class PatientcashmovementsCreate extends Component {
         fillPatientcashmovementnotification(error)
       })
     } else {
-      AddPatientcashmovements({ data, history, closeModal })
+
+      const patientID = this.context.formstates[`${this.PAGE_NAME}/PatientID`]
+      const search = new URLSearchParams(location.search)
+      const patientIDparam = search.get('PatientID') ? search.get('PatientID') : ''
+      const IshaveparamId = validator.isUUID(patientID) && validator.isUUID(patientIDparam)
+
+      let body = {
+        data, history, closeModal
+      }
+      if (IshaveparamId) {
+        body.redirectUrl = `/Patients/${patientID}`
+      }
+
+      AddPatientcashmovements(body)
     }
   }
 }

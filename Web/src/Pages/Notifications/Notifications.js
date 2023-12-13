@@ -20,6 +20,7 @@ export default function Notifications(props) {
 
 
     useEffect(() => {
+        console.log("useEffectisViewmodalopen")
         if (isViewmodalopen && (list || []).length > 0 && !isLoading) {
             const unshowednotifications = (list || []).filter(u => !u.Isshowed)
             if (unshowednotifications.length > 0) {
@@ -39,6 +40,7 @@ export default function Notifications(props) {
     }, [isViewmodalopen])
 
     useEffect(() => {
+        console.log("notificationRefreshinterval")
         const notificationRefreshinterval = 1000 * 60
         setInterval(() => {
             const { meta } = Profile
@@ -49,6 +51,7 @@ export default function Notifications(props) {
     }, [])
 
     useEffect(() => {
+        console.log("isViewmodalopen")
         const { meta } = Profile
         if (validator.isUUID(meta?.Uuid)) {
             GetUsernotifications(meta?.Uuid)
