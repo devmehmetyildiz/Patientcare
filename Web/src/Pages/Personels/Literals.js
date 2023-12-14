@@ -42,6 +42,18 @@ const Literals = {
             tr: 'Tekil ID',
             en: 'Unique ID'
         },
+        Personels: {
+            tr: 'Personel Listesi',
+            en: 'Personel list'
+        },
+        Activeshift: {
+            tr: 'Aktif Vardiya Listesi',
+            en: 'Active Shift List'
+        },
+        Fullname: {
+            tr: 'İsim',
+            en: 'Name'
+        },
         Name: {
             tr: 'İsim',
             en: 'Name'
