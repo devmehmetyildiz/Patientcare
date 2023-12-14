@@ -29,9 +29,7 @@ async function GetTodosbyPatientID(req, res, next) {
     }
 
     try {
-
         const movements = await db.patientmovementModel.findAll({ where: { Isactive: true, PatientID: req.params.patientId } })
-
         const todos = await db.todoModel.findAll({
             where: {
                 Isactive: true,
@@ -294,6 +292,47 @@ async function ApproveTodo(req, res, next) {
     GetTodos(req, res, next)
 }
 
+async function ApproveTodos(req, res, next) {
+
+    let validationErrors = []
+    const body = req.body
+
+    const t = await db.sequelize.transaction();
+    try {
+        for (const data of (body || [])) {
+            if (!data) {
+                validationErrors.push(messages.VALIDATION_ERROR.TODOID_REQUIRED)
+            }
+            if (!validator.isUUID(data)) {
+                validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOID)
+            }
+            if (validationErrors.length > 0) {
+                return next(createValidationError(validationErrors, req.language))
+            }
+
+            const todo = await db.todoModel.findOne({ where: { Uuid: data } })
+            if (!todo) {
+                return next(createNotfounderror([messages.ERROR.TODO_NOT_FOUND], req.language))
+            }
+            if (todo.Isactive === false) {
+                return next(createAccessDenied([messages.ERROR.TODO_NOT_ACTIVE], req.language))
+            }
+
+            await db.todoModel.update({
+                ...todo,
+                Isapproved: true,
+                IsCompleted: true,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { Uuid: data } }, { transaction: t })
+        }
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetTodos(req, res, next)
+}
+
 async function DeleteTodo(req, res, next) {
 
     let validationErrors = []
@@ -336,5 +375,6 @@ module.exports = {
     DeleteTodo,
     AddPatienttodolist,
     GetTodosbyPatientID,
-    ApproveTodo
+    ApproveTodo,
+    ApproveTodos
 }

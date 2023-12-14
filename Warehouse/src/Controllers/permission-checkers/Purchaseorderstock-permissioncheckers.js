@@ -41,6 +41,14 @@ async function ApprovePurchaseorderstock(req, res, next) {
     }
 }
 
+async function ApprovePurchaseorderstocks(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Purchaseorderstocks Update', req.language, { en: 'Purchaseorderstocks Update', tr: 'Purchaseorderstocks Update' }))
+    }
+}
+
 async function UpdatePurchaseorderstock(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockupdate')) || permissionchecker(req)) {
         next()
@@ -64,4 +72,5 @@ module.exports = {
     UpdatePurchaseorderstock,
     DeletePurchaseorderstock,
     ApprovePurchaseorderstock,
+    ApprovePurchaseorderstocks,
 }

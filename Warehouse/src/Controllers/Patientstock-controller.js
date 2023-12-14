@@ -408,6 +408,48 @@ async function ApprovePatientstock(req, res, next) {
     GetPatientstocks(req, res, next)
 }
 
+async function ApprovePatientstocks(req, res, next) {
+
+    let validationErrors = []
+    const body = req.body
+
+    const t = await db.sequelize.transaction();
+    try {
+        for (const data of (body || [])) {
+            if (!data) {
+                validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+            }
+            if (!validator.isUUID(data)) {
+                validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
+            }
+            if (validationErrors.length > 0) {
+                return next(createValidationError(validationErrors, req.language))
+            }
+
+            const patientstock = await db.patientstockModel.findOne({ where: { Uuid: data } })
+            if (!patientstock) {
+                return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
+            }
+            if (patientstock.Isactive === false) {
+                return next(createAccessDenied([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+            }
+
+            await db.patientstockModel.update({
+                ...patientstock,
+                Isapproved: true,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { Uuid: data } }, { transaction: t })
+        }
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatientstocks(req, res, next)
+}
+
+
 async function DeletePatientstock(req, res, next) {
 
     let validationErrors = []
@@ -476,5 +518,6 @@ module.exports = {
     DeletePatientstock,
     Transferpatientstock,
     UpdatePatientstocklist,
-    ApprovePatientstock
+    ApprovePatientstock,
+    ApprovePatientstocks
 }

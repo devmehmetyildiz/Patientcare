@@ -1,44 +1,11 @@
-import React, { Component, useEffect, useState } from 'react'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import { Breadcrumb, Button, Checkbox, Grid, Icon, Loader, Modal, Tab } from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Settings from '../../Common/Settings'
-import Pagedivider from '../../Common/Styled/Pagedivider'
+import { Breadcrumb, Button, Checkbox, Grid, Icon, Label, Loader, Modal, Tab } from 'semantic-ui-react'
+import { Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import Literals from './Literals'
-import NoDataScreen from '../../Utils/NoDataScreen'
-import { MOVEMENTTYPES, getInitialconfig } from '../../Utils/Constants'
-import DataTable from '../../Utils/DataTable'
-import MobileTable from '../../Utils/MobileTable'
 import validator from '../../Utils/Validator'
+import { getInitialconfig } from '../../Utils/Constants'
 
-/*   approveMultiplestocks: false,
-   approveMultiplepurchaseorderstocks: false,
-   approveMultiplepatientstocks: false,
-   purchaseorders: [],
-   patientstocks: [],
-   stocks: [],
-   medicines: [],
-   supplies: [],
-   stock: '',
-   medicine: '',
-   supply: '',
-   patientstock: '',
-   patientmedicine: '',
-   patientsupply: '',
-   purchaseorderstock: '',
-   purchaseordermedicine: '',
-   purchaseordersupply: '',
-   approvestocks: false,
-   approvemedicines: false,
-   approvesıpplies: false,
-   approvepurchaseorderstocks: false,
-   approvepurchaseordermedicines: false,
-   approvepurchaseordersupplies: false,
-   approvepatientstocks: false,
-   approvepatientmedicines: false,
-   approvepatientsupplies: false, */
 
 export default function UnapprovedStocks(props) {
 
@@ -84,29 +51,46 @@ export default function UnapprovedStocks(props) {
 
   const [stocksmodal, setStocksmodal] = useState(false)
   const [medicinesmodal, setMedicinesmodal] = useState(false)
-  const [supplysmodal, setSuppliesmodal] = useState(false)
-  const [purchaseordersstockmodal, setPurchaseorderstocksmodal] = useState(false)
-  const [purchaseordersmedicinemodal, setPurchaseordermedicinesmodal] = useState(false)
-  const [purchaseorderssupplymodal, setPurchaseordersuppliesmodal] = useState(false)
+  const [suppliesmodal, setSuppliesmodal] = useState(false)
+  const [purchaseorderstocksmodal, setPurchaseorderstocksmodal] = useState(false)
+  const [purchaseordermedicinesmodal, setPurchaseordermedicinesmodal] = useState(false)
+  const [purchaseordersuppliesmodal, setPurchaseordersuppliesmodal] = useState(false)
   const [patientstocksmodal, setPatientstocksmodal] = useState(false)
   const [patientmedicinesmodal, setPatientmedicinesmodal] = useState(false)
-  const [patientsupplysmodal, setPatientsuppliesmodal] = useState(false)
+  const [patientsuppliesmodal, setPatientsuppliesmodal] = useState(false)
+
+  const {
+    GetPatientstocks,
+    GetStocks,
+    GetPurchaseorderstocks,
+    GetPatients,
+    GetPatientdefines,
+    GetPatientstockmovements,
+    GetPurchaseorders,
+    GetPurchaseorderstockmovements,
+    GetStockmovements,
+    GetDepartments,
+    GetStockdefines,
+    GetWarehouses,
+    GetUnits,
+    Profile,
+    Stocks,
+    Warehouses,
+    Purchaseorderstocks,
+    Patientstocks,
+    fillPatientstocknotification,
+    ApprovePatientstocks, ApprovemultiplePatientstocks,
+    ApprovePurchaseorderstocks, ApprovemultiplePurchaseorderstocks,
+    ApproveStocks, ApprovemultipleStocks
+  } = props
+
+  const colProps = {
+    sortable: true,
+    canGroupBy: true,
+    canFilter: true
+  }
 
   useEffect(() => {
-    const {
-      GetPatientstocks,
-      GetStocks,
-      GetPurchaseorderstocks,
-      GetPatients,
-      GetPatientdefines,
-      GetPatientstockmovements,
-      GetPurchaseorders,
-      GetPurchaseorderstockmovements,
-      GetStockmovements,
-      GetDepartments,
-      GetStockdefines,
-      GetUnits
-    } = props
     GetPatientstocks()
     GetStocks()
     GetPurchaseorderstocks()
@@ -119,22 +103,23 @@ export default function UnapprovedStocks(props) {
     GetDepartments()
     GetStockdefines()
     GetUnits()
+    GetWarehouses()
   }, [])
 
 
   const getAmountcolumn = (type, col) => {
     switch (type) {
       case 'stocks':
-        return this.stockamountCellhandler(col)
+        return stockamountCellhandler(col)
       case 'purchaseorders':
-        return this.purchaseorderamountCellhandler(col)
+        return purchaseorderamountCellhandler(col)
       case 'patients':
-        return this.patientstockamountCellhandler(col)
+        return patientstockamountCellhandler(col)
     }
   }
 
   const getDecoratedlist = (List, filters, setFilters, setItem, setApprovemodal) => {
-    (List.list || []).filter(u => u.Isactive && !u.Isapproved).map(item => {
+    return (List.list || []).filter(u => u.Isactive && !u.Isapproved).map(item => {
       return {
         ...item,
         Select: <Checkbox
@@ -154,27 +139,27 @@ export default function UnapprovedStocks(props) {
     })
   }
 
+
   const generteColumn = (selectVisiblestate, type, medicine) => {
     let columns = []
     columns.push({ Header: "", accessor: 'Select', disableProps: true, visible: selectVisiblestate })
-    columns.push({ Header: Literals.Columns.Movement.Id[Profile.Language], accessor: 'Id', })
-    columns.push({ Header: Literals.Columns.Movement.Id[Profile.Language], accessor: 'Id', })
-    type === 'stocks' && columns.push({ Header: Literals.Columns.Warehouse[Profile.Language], accessor: 'WarehouseID', Cell: col => this.warehouseCellhandler(col) })
-    type === 'patients' && columns.push({ Header: Literals.Columns.Patient[Profile.Language], accessor: 'PatientID', Cell: col => this.patientCellhandler(col) })
-    type === 'purchaseorders' && columns.push({ Header: Literals.Columns.Purchaseorder[Profile.Language], accessor: 'PurchaseorderID', Cell: col => this.purchaseorderCellhandler(col) })
-    columns.push({ Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', Firstheader: true, Cell: col => this.stockdefineCellhandler(col) })
-    columns.push({ Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', Subheader: true, Cell: col => this.departmentCellhandler(col) })
-    medicine && columns.push({ Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', Cell: col => this.dateCellhandler(col) })
-    medicine && columns.push({ Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno', })
-    columns.push({ Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', Finalheader: true, Cell: col => this.getAmountcolumn(type, col) })
-    columns.push({ Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', })
-    columns.push({ Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) })
-    medicine && columns.push({ Header: Literals.Columns.Isredprescription[Profile.Language], accessor: 'Isredprescription', Cell: col => this.boolCellhandler(col) })
-    columns.push({ Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', })
-    columns.push({ Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', })
-    columns.push({ Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', })
-    columns.push({ Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', })
-    columns.push({ Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', disableFilters: true, disableProps: true, visible: !selectVisiblestate })
+    columns.push({ Header: Literals.Columns.Stock.Id[Profile.Language], accessor: 'Id', })
+    type === 'stocks' && columns.push({ Header: Literals.Columns.Stock.Warehouse[Profile.Language], accessor: 'WarehouseID', Cell: col => warehouseCellhandler(col) })
+    type === 'patients' && columns.push({ Header: Literals.Columns.Stock.Patient[Profile.Language], accessor: 'PatientID', Cell: col => patientCellhandler(col) })
+    type === 'purchaseorders' && columns.push({ Header: Literals.Columns.Stock.Purchaseorder[Profile.Language], accessor: 'PurchaseorderID', Cell: col => purchaseorderCellhandler(col) })
+    columns.push({ Header: Literals.Columns.Stock.Stockdefine[Profile.Language], accessor: 'StockdefineID', Firstheader: true, Cell: col => stockdefineCellhandler(col) })
+    columns.push({ Header: Literals.Columns.Stock.Department[Profile.Language], accessor: 'DepartmentID', Subheader: true, Cell: col => departmentCellhandler(col) })
+    medicine && columns.push({ Header: Literals.Columns.Stock.Skt[Profile.Language], accessor: 'Skt', Cell: col => dateCellhandler(col) })
+    medicine && columns.push({ Header: Literals.Columns.Stock.Barcodeno[Profile.Language], accessor: 'Barcodeno', })
+    columns.push({ Header: Literals.Columns.Stock.Amount[Profile.Language], accessor: 'Amount', Finalheader: true, Cell: col => getAmountcolumn(type, col) })
+    columns.push({ Header: Literals.Columns.Stock.Info[Profile.Language], accessor: 'Info', })
+    columns.push({ Header: Literals.Columns.Stock.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => boolCellhandler(col) })
+    medicine && columns.push({ Header: Literals.Columns.Stock.Isredprescription[Profile.Language], accessor: 'Isredprescription', Cell: col => boolCellhandler(col) })
+    columns.push({ Header: Literals.Columns.Stock.Createduser[Profile.Language], accessor: 'Createduser', })
+    columns.push({ Header: Literals.Columns.Stock.Updateduser[Profile.Language], accessor: 'Updateduser', })
+    columns.push({ Header: Literals.Columns.Stock.Createtime[Profile.Language], accessor: 'Createtime', })
+    columns.push({ Header: Literals.Columns.Stock.Updatetime[Profile.Language], accessor: 'Updatetime', })
+    columns.push({ Header: Literals.Columns.Stock.approve[Profile.Language], accessor: 'approve', disableProps: true, visible: !selectVisiblestate })
     columns.map(u => { return u.disableProps ? u : { ...u, ...colProps } })
     return columns
   }
@@ -219,6 +204,22 @@ export default function UnapprovedStocks(props) {
       });
       return amount
     }
+  }
+
+  const purchaseorderCellhandler = (col) => {
+    const { Purchaseorders } = props
+    if (Purchaseorders.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Purchaseorders.list || []).find(u => u.Uuid === col.value)?.Purchasenumber
+    }
+  }
+
+  const dateCellhandler = (col) => {
+    if (col.value) {
+      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+    }
+    return null
   }
 
   const patientCellhandler = (col) => {
@@ -279,17 +280,17 @@ export default function UnapprovedStocks(props) {
   const patientmedicineColumns = generteColumn(openPatientmedicinefilter, 'patients', true)
   const patientsupplyColumns = generteColumn(openPatientsupplyfilter, 'patients', true)
 
-  const stockslist = getDecoratedlist(Stocks, stocks, setStocks, setStock, setStockmodal).filter(u => !u.Isupply, !u.Ismedicine)
-  const medicineslist = getDecoratedlist(Stocks, medicines, setMedicines, setMedicine, setMedicinemodal).filter(u => !u.Isupply, u.Ismedicine)
-  const supplieslist = getDecoratedlist(Stocks, supplies, setSupplies, setSupply, setSupplymodal).filter(u => u.Isupply, !u.Ismedicine)
+  const stockslist = getDecoratedlist(Stocks, stocks, setStocks, setStock, setStockmodal).filter(u => !u.Issupply && !u.Ismedicine)
+  const medicineslist = getDecoratedlist(Stocks, medicines, setMedicines, setMedicine, setMedicinemodal).filter(u => !u.Issupply && u.Ismedicine)
+  const supplieslist = getDecoratedlist(Stocks, supplies, setSupplies, setSupply, setSupplymodal).filter(u => u.Issupply && !u.Ismedicine)
 
-  const patientstockslist = getDecoratedlist(Patientstocks, patientstocks, setPatientstocks, setPatientstock, setPatientstockmodal).filter(u => !u.Isupply, !u.Ismedicine)
-  const patientmedicineslist = getDecoratedlist(Patientstocks, patientmedicines, setPatientmedicines, setPatientmedicine, setPatientmedicinemodal).filter(u => !u.Isupply, u.Ismedicine)
-  const patientsupplieslist = getDecoratedlist(Patientstocks, patientsupplies, setPatientsupplies, setPatientsupply, setPatientsupplymodal).filter(u => u.Isupply, !u.Ismedicine)
+  const patientstockslist = getDecoratedlist(Patientstocks, patientstocks, setPatientstocks, setPatientstock, setPatientstockmodal).filter(u => !u.Issupply && !u.Ismedicine)
+  const patientmedicineslist = getDecoratedlist(Patientstocks, patientmedicines, setPatientmedicines, setPatientmedicine, setPatientmedicinemodal).filter(u => !u.Issupply && u.Ismedicine)
+  const patientsupplieslist = getDecoratedlist(Patientstocks, patientsupplies, setPatientsupplies, setPatientsupply, setPatientsupplymodal).filter(u => u.Issupply && !u.Ismedicine)
 
-  const purchaseorderstockslist = getDecoratedlist(Purchaseorderstocks, purchaseorderstocks, setPurchaseorderstocks, setPurchaseorderstock, setPurchaseorderstockmodal).filter(u => !u.Isupply, !u.Ismedicine)
-  const purchaseordermedicineslist = getDecoratedlist(Purchaseorderstocks, purchaseordermedicines, setPurchaseordermedicines, setPurchaseordermedicine, setPurchaseordermedicinemodal).filter(u => !u.Isupply, u.Ismedicine)
-  const purchaseordersupplieslist = getDecoratedlist(Purchaseorderstocks, purchaseordersupplies, setPurchaseordersupplies, setPurchaseordersupply, setPurchaseordersupplymodal).filter(u => u.Isupply, !u.Ismedicine)
+  const purchaseorderstockslist = getDecoratedlist(Purchaseorderstocks, purchaseorderstocks, setPurchaseorderstocks, setPurchaseorderstock, setPurchaseorderstockmodal).filter(u => !u.Issupply && !u.Ismedicine)
+  const purchaseordermedicineslist = getDecoratedlist(Purchaseorderstocks, purchaseordermedicines, setPurchaseordermedicines, setPurchaseordermedicine, setPurchaseordermedicinemodal).filter(u => !u.Issupply && u.Ismedicine)
+  const purchaseordersupplieslist = getDecoratedlist(Purchaseorderstocks, purchaseordersupplies, setPurchaseordersupplies, setPurchaseordersupply, setPurchaseordersupplymodal).filter(u => u.Issupply && !u.Ismedicine)
 
 
   const stocksMetakey = "Stocksapprove"
@@ -316,9 +317,11 @@ export default function UnapprovedStocks(props) {
 
   const Listdata = [
     {
-      pageHeader: Literals.Page.Stock.PageStockheader[Profile.Language],
+      pageHeader: Literals.Page.Stock.PageStockmainheader[Profile.Language],
+      key: 'stockmain',
       pages: [
         {
+          pageHeader: Literals.Page.Stock.PageStockheader[Profile.Language],
           list: stockslist,
           column: stockColumns,
           key: 'stock',
@@ -332,13 +335,205 @@ export default function UnapprovedStocks(props) {
           filters: stocks,
           openMultiplemodal: () => { setStocksmodal(true) },
           multipleModalstate: stocksmodal,
-          setmultipleModalstate: (state) => { setStocksmodal(state) }
-        }
+          setmultipleModalstate: (state) => { setStocksmodal(state) },
+          approvemultiple: () => { ApprovemultipleStocks(stocks) },
+          singleModalstate: stockmodal,
+          filter: stock,
+          setsingleModalstate: (state) => { setStockmodal(state) },
+          approvesingle: () => { ApproveStocks({ Uuid: stock }) },
+        },
+        {
+          pageHeader: Literals.Page.Stock.PageMedicineheader[Profile.Language],
+          list: medicineslist,
+          column: medicineColumns,
+          key: 'medicine',
+          config: medicinesInitialconfig,
+          meta: medicinesMetakey,
+          openFilter: () => {
+            setopenMedicinefilter(!openMedicinefilter)
+            setMedicines([])
+          },
+          openfilter: openMedicinefilter,
+          filters: medicines,
+          openMultiplemodal: () => { setMedicinesmodal(true) },
+          multipleModalstate: medicinesmodal,
+          setmultipleModalstate: (state) => { setMedicinesmodal(state) },
+          approvemultiple: () => { ApprovemultipleStocks(medicines) },
+          singleModalstate: medicinemodal,
+          filter: medicine,
+          setsingleModalstate: (state) => { setMedicinemodal(state) },
+          approvesingle: () => { ApproveStocks({ Uuid: medicine }) },
+        },
+        {
+          pageHeader: Literals.Page.Stock.PageSupplyheader[Profile.Language],
+          list: supplieslist,
+          column: supplyColumns,
+          key: 'supply',
+          config: supplyInitialconfig,
+          meta: suppliesMetakey,
+          openFilter: () => {
+            setopenSupplyfilter(!openSupplyfilter)
+            setSupplies([])
+          },
+          openfilter: openSupplyfilter,
+          filters: supplies,
+          openMultiplemodal: () => { setSuppliesmodal(true) },
+          multipleModalstate: suppliesmodal,
+          setmultipleModalstate: (state) => { setSuppliesmodal(state) },
+          approvemultiple: () => { ApprovemultipleStocks(supplies) },
+          singleModalstate: supplymodal,
+          filter: supply,
+          setsingleModalstate: (state) => { setSupplymodal(state) },
+          approvesingle: () => { ApproveStocks({ Uuid: supply }) },
+        },
 
+      ]
+    },
+    {
+      pageHeader: Literals.Page.Stock.PagePurchaseordermainheader[Profile.Language],
+      key: 'purchaseordermain',
+      pages: [
+        {
+          pageHeader: Literals.Page.Stock.PagePurchaseorderstockheader[Profile.Language],
+          list: purchaseorderstockslist,
+          column: purchaseorderstockColumns,
+          key: 'purcasheroderstock',
+          config: purchaseorderstocksInitialconfig,
+          meta: purchaseorderstocksMetakey,
+          openFilter: () => {
+            setopenPurchaseorderstockfilter(!openPurchaseorderstockfilter)
+            setPurchaseorderstocks([])
+          },
+          openfilter: openPurchaseorderstockfilter,
+          filters: purchaseorderstocks,
+          openMultiplemodal: () => { setPurchaseorderstocksmodal(true) },
+          multipleModalstate: purchaseorderstocksmodal,
+          setmultipleModalstate: (state) => { setPurchaseorderstocksmodal(state) },
+          approvemultiple: () => { ApprovemultiplePurchaseorderstocks(purchaseorderstocks) },
+          singleModalstate: purchaseorderstockmodal,
+          filter: purchaseorderstock,
+          setsingleModalstate: (state) => { setPurchaseorderstockmodal(state) },
+          approvesingle: () => { ApprovePurchaseorderstocks({ Uuid: purchaseorderstock }) },
+        },
+        {
+          pageHeader: Literals.Page.Stock.PagePurchaseordermedicineheader[Profile.Language],
+          list: purchaseordermedicineslist,
+          column: purchaseordermedicineColumns,
+          key: 'purchaseordermedicine',
+          config: purchaseordermedicinesInitialconfig,
+          meta: purchaseordermedicinesMetakey,
+          openFilter: () => {
+            setopenPurchaseordermedicinefilter(!openPurchaseordermedicinefilter)
+            setPurchaseordermedicines([])
+          },
+          openfilter: openPurchaseordermedicinefilter,
+          filters: purchaseordermedicines,
+          openMultiplemodal: () => { setPurchaseordermedicinesmodal(true) },
+          multipleModalstate: purchaseordermedicinesmodal,
+          setmultipleModalstate: (state) => { setPurchaseordermedicinesmodal(state) },
+          approvemultiple: () => { ApprovemultiplePurchaseorderstocks(purchaseordermedicines) },
+          singleModalstate: purchaseordermedicinemodal,
+          filter: purchaseordermedicine,
+          setsingleModalstate: (state) => { setPurchaseordermedicinemodal(state) },
+          approvesingle: () => { ApprovePurchaseorderstocks({ Uuid: purchaseordermedicine }) },
+        },
+        {
+          pageHeader: Literals.Page.Stock.PagePurchaseordersupplyheader[Profile.Language],
+          list: purchaseordersupplieslist,
+          column: purchaseordersupplyColumns,
+          key: 'purchaseordersupply',
+          config: purchaseordersupplyInitialconfig,
+          meta: purchaseordersuppliesMetakey,
+          openFilter: () => {
+            setopenPurchaseordersupplyfilter(!openPurchaseordersupplyfilter)
+            setPurchaseordersupplies([])
+          },
+          openfilter: openPurchaseordersupplyfilter,
+          filters: purchaseordersupplies,
+          openMultiplemodal: () => { setPurchaseordersuppliesmodal(true) },
+          multipleModalstate: purchaseordersuppliesmodal,
+          setmultipleModalstate: (state) => { setPurchaseordersuppliesmodal(state) },
+          approvemultiple: () => { ApprovemultiplePurchaseorderstocks(purchaseordersupplies) },
+          singleModalstate: purchaseordersupplymodal,
+          filter: purchaseordersupply,
+          setsingleModalstate: (state) => { setPurchaseordersupplymodal(state) },
+          approvesingle: () => { ApprovePurchaseorderstocks({ Uuid: purchaseordersupply }) },
+        },
+      ]
+    },
+    {
+      pageHeader: Literals.Page.Stock.PagePatientmainheader[Profile.Language],
+      key: 'patientmain',
+      pages: [
+        {
+          pageHeader: Literals.Page.Stock.PagePatientstockheader[Profile.Language],
+          list: patientstockslist,
+          column: patientstockColumns,
+          key: 'patientstock',
+          config: patientstocksInitialconfig,
+          meta: patientstocksMetakey,
+          openFilter: () => {
+            setopenPatientstockfilter(!openPatientstockfilter)
+            setPatientstocks([])
+          },
+          openfilter: openPatientstockfilter,
+          filters: patientstocks,
+          openMultiplemodal: () => { setPatientstocksmodal(true) },
+          multipleModalstate: patientstocksmodal,
+          setmultipleModalstate: (state) => { setPatientstocksmodal(state) },
+          approvemultiple: () => { ApprovemultiplePatientstocks(patientstocks) },
+          singleModalstate: patientstockmodal,
+          filter: patientstock,
+          setsingleModalstate: (state) => { setPatientstockmodal(state) },
+          approvesingle: () => { ApprovePatientstocks({ Uuid: patientstock }) },
+        },
+        {
+          pageHeader: Literals.Page.Stock.PagePatientmedicineheader[Profile.Language],
+          list: patientmedicineslist,
+          column: patientmedicineColumns,
+          key: 'patientmedicine',
+          config: patientmedicinesInitialconfig,
+          meta: patientmedicinesMetakey,
+          openFilter: () => {
+            setopenPatientmedicinefilter(!openPatientmedicinefilter)
+            setPatientmedicines([])
+          },
+          openfilter: openPatientmedicinefilter,
+          filters: patientmedicines,
+          openMultiplemodal: () => { setPatientmedicinesmodal(true) },
+          multipleModalstate: patientmedicinesmodal,
+          setmultipleModalstate: (state) => { setPatientmedicinesmodal(state) },
+          approvemultiple: () => { ApprovemultiplePatientstocks(patientmedicines) },
+          singleModalstate: patientmedicinemodal,
+          filter: patientmedicine,
+          setsingleModalstate: (state) => { setPatientmedicinemodal(state) },
+          approvesingle: () => { ApprovePatientstocks({ Uuid: patientmedicine }) },
+        },
+        {
+          pageHeader: Literals.Page.Stock.PagePatientsupplyheader[Profile.Language],
+          list: patientsupplieslist,
+          column: patientsupplyColumns,
+          key: 'patientsupply',
+          config: patientsupplyInitialconfig,
+          meta: patientsuppliesMetakey,
+          openFilter: () => {
+            setopenPatientsupplyfilter(!openPatientsupplyfilter)
+            setPatientsupplies([])
+          },
+          openfilter: openPatientsupplyfilter,
+          filters: patientsupplies,
+          openMultiplemodal: () => { setPatientsuppliesmodal(true) },
+          multipleModalstate: patientsuppliesmodal,
+          setmultipleModalstate: (state) => { setPatientsuppliesmodal(state) },
+          approvemultiple: () => { ApprovemultiplePatientstocks(patientsupplies) },
+          singleModalstate: patientsupplymodal,
+          filter: patientsupply,
+          setsingleModalstate: (state) => { setPatientsupplymodal(state) },
+          approvesingle: () => { ApprovePatientstocks({ Uuid: patientsupply }) },
+        },
       ]
     }
   ]
-
   return (
     <React.Fragment>
       <Pagewrapper>
@@ -347,23 +542,26 @@ export default function UnapprovedStocks(props) {
             <Grid.Column width={8}>
               <Breadcrumb size='big'>
                 <Link to={"/Unapprovedmovements"}>
-                  <Breadcrumb.Section>{Literals.Page.Movement.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                  <Breadcrumb.Section>{Literals.Page.Stock.Pageheader[Profile.Language]}</Breadcrumb.Section>
                 </Link>
               </Breadcrumb>
             </Grid.Column>
           </Grid>
         </Headerwrapper>
         <Pagedivider />
-        <Contentwrapper>
-          <Tab
-            className='station-tab'
-            pages={Listdata.map(data => {
-              return {
-                menuItem: data.pageHeader,
-                pane: data.pages.map((page => {
-                  return {
-                    key: page.key,
-                    content: <React.Fragment>
+        <Tab
+          className="w-full bg-white"
+          panes={Listdata.map(data => {
+            return {
+              menuItem: data.pageHeader,
+              pane: {
+                key: data.key,
+                content: <div className='w-full flex flex-col justify-start items-center'>
+                  {data.pages.map((page => {
+                    return page.list.length > 0 ? <div className='w-full mt-4 flex flex-col items-center justify-center' key={Math.random()}>
+                      <div className='py-2 w-full flex justify-start items-center'>
+                        <Label size='large' color={'blue'}>{page.pageHeader}</Label>
+                      </div>
                       {page.list.length > 0 ?
                         <div className='w-full mx-auto '>
                           {Profile.Ismobile ?
@@ -373,7 +571,7 @@ export default function UnapprovedStocks(props) {
                                 <Button size='mini' onClick={() => { page.openFilter() }} >{page.openfilter ? Literals.Columns.Movement.CanSelectclose[Profile.Language] : Literals.Columns.Movement.CanSelect[Profile.Language]}</Button>
                                 <div className='flex flex-row  justify-end items-center w-full'>
                                   {page.openfilter && page.filters.length > 0
-                                    ? <Button color='violet' onClick={page.openMultiplemodal} >{Literals.Columns.Movement.Multipleapprove[Profile.Language]}</Button>
+                                    ? <Button color='violet' onClick={() => { page.openMultiplemodal() }} >{Literals.Columns.Movement.Multipleapprove[Profile.Language]}</Button>
                                     : null}
                                   <Settings
                                     Profile={Profile}
@@ -385,30 +583,30 @@ export default function UnapprovedStocks(props) {
                                   />
                                 </div>
                               </div>
-                              <DataTable Columns={page.column} Data={page.list} Config={page.column} />
+                              <DataTable Columns={page.column} Data={page.list} Config={page.config} />
                             </div>
                           }
                         </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} style={{ height: 'auto' }} />
                       }
-                    </React.Fragment>
-                  }
-                }))
+                    </div> : null
+                  }))}
+                </div>
               }
-            })}
-            renderActiveOnly={false} />
-        </Contentwrapper>
+            }
+          })}
+          renderActiveOnly={false} />
       </Pagewrapper>
       {Listdata.map(data => {
         return data.pages.map(page => {
           return <Modal
-            onClose={page.setmultipleModalstate(false)}
+            onClose={() => { page.setmultipleModalstate(false) }}
             onOpen={() => { page.setmultipleModalstate(true) }}
             open={page.multipleModalstate}
           >
-            <Modal.Header> {Literals.Columns.Movement.Multipleapprove[Profile.Language]}</Modal.Header>
+            <Modal.Header> {Literals.Columns.Stock.Multipleapprove[Profile.Language]}</Modal.Header>
             <Modal.Content image className='!block'>
               <Modal.Description>
-                {Literals.Messages.Approvemovementmessage[Profile.Language]}
+                {Literals.Messages.Approvestockmessage[Profile.Language]}
               </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
@@ -421,16 +619,16 @@ export default function UnapprovedStocks(props) {
                 icon='checkmark'
                 onClick={() => {
                   let errors = []
-                  if (!validator.isArray(this.state.stocks)) {
-                    errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Needmovement[Profile.Language] })
+                  if (!validator.isArray(page.filters)) {
+                    errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Needstock[Profile.Language] })
                   }
                   if (errors.length > 0) {
                     errors.forEach(error => {
-                      fillStockmovementnotification(error)
+                      fillPatientstocknotification(error)
                     })
                   } else {
-                    ApprovemultipleStockmovements(this.state.stocks)
-                    this.setState({ approveMultiplestocks: false })
+                    page.approvemultiple()
+                    page.setmultipleModalstate(false)
                   }
                 }}
                 positive
@@ -439,7 +637,49 @@ export default function UnapprovedStocks(props) {
           </Modal>
         })
       })}
-    
+      {Listdata.map(data => {
+        return data.pages.map(page => {
+          return <Modal
+            onClose={() => { page.setsingleModalstate(false) }}
+            onOpen={() => { page.setsingleModalstate(true) }}
+            open={page.singleModalstate}
+          >
+            <Modal.Header> {Literals.Columns.Stock.Approve[Profile.Language]}</Modal.Header>
+            <Modal.Content image className='!block'>
+              <Modal.Description>
+                {Literals.Messages.Approvestockmessagesingle[Profile.Language]}
+              </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button color='black' onClick={() => { page.setsingleModalstate(false) }}>
+                {Literals.Button.Close[Profile.Language]}
+              </Button>
+              <Button
+                content={Literals.Button.Approve[Profile.Language]}
+                labelPosition='right'
+                icon='checkmark'
+                onClick={() => {
+                  let errors = []
+                  if (!validator.isString(page.filter)) {
+                    errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Needstock[Profile.Language] })
+                  }
+                  if (errors.length > 0) {
+                    errors.forEach(error => {
+                      fillPatientstocknotification(error)
+                    })
+                  } else {
+                    page.approvesingle()
+                    page.setsingleModalstate(false)
+                  }
+                }}
+                positive
+              />
+            </Modal.Actions>
+          </Modal>
+        })
+      })}
     </React.Fragment >
   )
 }
+
+

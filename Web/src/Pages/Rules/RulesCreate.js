@@ -1,21 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form, Tab } from 'semantic-ui-react'
-import { Breadcrumb, Button } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
+import { Form, Breadcrumb, Button, Tab, Dropdown } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import validator from '../../Utils/Validator'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import FormInput from '../../Utils/FormInput'
-import Editor from '@monaco-editor/react'
 import { FormContext } from '../../Provider/FormProvider'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Submitbutton from '../../Common/Submitbutton'
+import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import Editor from '@monaco-editor/react'
+import { breakdownmainteanciesrule, patienttodoccreaterule, personelshifteditorrule } from './Templates'
 
 export default class RulesCreate extends Component {
 
@@ -24,7 +15,6 @@ export default class RulesCreate extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            selectedDepartment: "",
             template: ''
         }
         this.templateEditorRef = React.createRef()
@@ -33,6 +23,12 @@ export default class RulesCreate extends Component {
     render() {
         const { Rules, Profile, history, closeModal } = this.props
         const { isLoading, isDispatching } = Rules
+
+        const Templateoptions = [
+            { key: 1, text: "Breakdown and Mainteancies Notification Rule", value: breakdownmainteanciesrule },
+            { key: 2, text: "Patient Todo Create Rule", value: patienttodoccreaterule },
+            { key: 3, text: "Personel Shift Editor Rule", value: personelshifteditorrule },
+        ]
 
         return (
             isLoading || isDispatching ? <LoadingPage /> :
@@ -57,7 +53,10 @@ export default class RulesCreate extends Component {
                                         pane: {
                                             key: 'save',
                                             content: <div className='max-h-[calc(66vh-10px)] overflow-y-auto overflow-x-hidden'>
-                                                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                                                <Form.Group widths={'equal'}>
+                                                    <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                                                    <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                                                </Form.Group>
                                                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Status[Profile.Language]} name="Status" formtype={'checkbox'} />
                                             </div>
                                         }
@@ -66,10 +65,25 @@ export default class RulesCreate extends Component {
                                         menuItem: Literals.Columns.Editorscreen[Profile.Language],
                                         pane: {
                                             key: 'design',
-                                            content: <div className='max-h-[calc(66vh-10px)] overflow-y-auto overflow-x-hidden'>
+                                            content: <div className='max-h-[calc(66vh-10px)] overflow-y-auto overflow-x-hidden w-full'>
+                                                <Form.Field>
+                                                    <label className='text-[#000000de]'>{Literals.Columns.Templates[Profile.Language]}</label>
+                                                    <Dropdown
+                                                        placeholder={Literals.Columns.Templates[Profile.Language]}
+                                                        onChange={(e, data) => {
+                                                            console.log('data.value: ', data.value);
+                                                            this.setState({ template: data.value })
+                                                        }}
+                                                        options={Templateoptions}
+                                                        clearable
+                                                        search
+                                                        fluid
+                                                        selection
+                                                    />
+                                                </Form.Field>
                                                 <div className='p-2 shadow-lg shadow-gray-300'>
                                                     <Editor
-                                                        height="60vh"
+                                                        height="54vh"
                                                         language="javascript"
                                                         value={this.state.template}
                                                         onMount={this.handleTemplateEditorDidMount}

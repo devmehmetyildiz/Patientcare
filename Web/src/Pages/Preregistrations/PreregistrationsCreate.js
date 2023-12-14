@@ -1,22 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form, Label } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import FormInput from '../../Utils/FormInput'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
+import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import PatientdefinesCreate from '../../Containers/Patientdefines/PatientdefinesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import CasesCreate from '../../Containers/Cases/CasesCreate'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Submitbutton from '../../Common/Submitbutton'
 import CostumertypesCreate from '../../Containers/Costumertypes/CostumertypesCreate'
 import PatienttypesCreate from '../../Containers/Patienttypes/PatienttypesCreate'
 export default class PreregistrationsCreate extends Component {
@@ -28,7 +19,6 @@ export default class PreregistrationsCreate extends Component {
     this.state = {
       newRegister: true,
       Isdatafetched: false,
-      modelOpened: false
     }
   }
 

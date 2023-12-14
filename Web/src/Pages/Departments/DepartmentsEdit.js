@@ -1,25 +1,19 @@
-import React, { Component, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Form } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
-import FormInput from '../../Utils/FormInput'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import StationsCreate from '../../Containers/Stations/StationsCreate'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Submitbutton from '../../Common/Submitbutton'
-
+import {
+  Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump,
+  Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
+} from '../../Components'
 
 export default function DepartmentsEdit(props) {
 
-  const { GetDepartment, match, history, GetStations, DepartmentID, Departments, Stations, Profile, EditDepartments, fillDepartmentnotification, handleSelectedDepartment } = props
+  const { GetDepartment, match, history, GetStations, DepartmentID, Departments,
+    Stations, Profile, EditDepartments, fillDepartmentnotification, handleSelectedDepartment } = props
 
   const PAGE_NAME = "DepartmentsEdit"
   const [isDatafetched, setisDatafetched] = useState(false)

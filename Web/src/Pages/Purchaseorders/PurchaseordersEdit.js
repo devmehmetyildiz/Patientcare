@@ -1,25 +1,14 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Dropdown, Form, Icon, Tab, Table } from 'semantic-ui-react'
-import { Breadcrumb, Button } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
-import FormInput from '../../Utils/FormInput'
+import { Dropdown, Form, Icon, Tab, Table, Breadcrumb, Button } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import StockdefinesCreate from '../../Containers/Stockdefines/StockdefinesCreate'
 import { FormContext } from '../../Provider/FormProvider'
+import { FormInput, AddModal, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import StockdefinesCreate from '../../Containers/Stockdefines/StockdefinesCreate'
 import CasesCreate from '../../Containers/Cases/CasesCreate'
 import WarehousesCreate from '../../Containers/Warehouses/WarehousesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
-import AddModal from '../../Utils/AddModal'
-import Submitbutton from '../../Common/Submitbutton'
-import Gobackbutton from '../../Common/Gobackbutton'
 export default class PurchaseordersEdit extends Component {
 
   PAGE_NAME = "PurchaseordersEdit"

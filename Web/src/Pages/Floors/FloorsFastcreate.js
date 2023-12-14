@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Literals from './Literals'
 import { Button, Dropdown, Form, Modal } from 'semantic-ui-react'
-import Pagedivider from '../../Common/Styled/Pagedivider'
+import { Pagedivider } from '../../Components'
 
 export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, handleFastcreatemodal }) {
 

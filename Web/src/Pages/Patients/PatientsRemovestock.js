@@ -1,22 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Form, Label, Loader } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
-import FormInput from '../../Utils/FormInput'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
-import DataTable from '../../Utils/DataTable'
-import NoDataScreen from '../../Utils/NoDataScreen'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Submitbutton from '../../Common/Submitbutton'
-
+import {
+    FormInput, DataTable, NoDataScreen, Contentwrapper, Footerwrapper, Gobackbutton,
+    Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
+} from '../../Components'
 export default class PatientsRemovestock extends Component {
 
     PAGE_NAME = 'PatientsRemovestock'

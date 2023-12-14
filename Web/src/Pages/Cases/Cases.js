@@ -1,18 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon } from 'semantic-ui-react'
-import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
 import CasesDelete from '../../Containers/Cases/CasesDelete'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
-import Settings from '../../Common/Settings'
-import MobileTable from '../../Utils/MobileTable'
+import { PATIENTMOVEMENTTYPE, getInitialconfig } from '../../Utils/Constants'
+import {
+  DataTable, Headerwrapper, LoadingPage,
+  MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings
+} from '../../Components'
 
 export default class Cases extends Component {
 
@@ -59,37 +54,33 @@ export default class Cases extends Component {
       },
     ]
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
-      { Header: Literals.Columns.Shortname[Profile.Language], accessor: 'Shortname', sortable: true, canGroupBy: true, canFilter: true, Finalheader: true },
-      { Header: Literals.Columns.CaseStatus[Profile.Language], accessor: 'CaseStatus', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.casesstatusCellhandler(col, casestatusOption) },
-      { Header: Literals.Columns.Casecolor[Profile.Language], accessor: 'Casecolor', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.casecolorCellhandler(col) },
-      { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: 'Departmentstxt', sortable: true, canGroupBy: true, canFilter: true, Subheader: true, isOpen: false, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Patientstatus[Profile.Language], accessor: 'Patientstatus', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.Iscalculateprice[Profile.Language], accessor: 'Iscalculateprice', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Isroutinework[Profile.Language], accessor: 'Isroutinework', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
+      { Header: Literals.Columns.Shortname[Profile.Language], accessor: 'Shortname', Finalheader: true },
+      { Header: Literals.Columns.CaseStatus[Profile.Language], accessor: 'CaseStatus', Cell: col => this.casesstatusCellhandler(col, casestatusOption) },
+      { Header: Literals.Columns.Casecolor[Profile.Language], accessor: 'Casecolor', Cell: col => this.casecolorCellhandler(col) },
+      { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: 'Departmentstxt', Subheader: true, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Patientstatus[Profile.Language], accessor: 'Patientstatus', Cell: col => this.movementCellhandler(col) },
+      { Header: Literals.Columns.Iscalculateprice[Profile.Language], accessor: 'Iscalculateprice', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Isroutinework[Profile.Language], accessor: 'Isroutinework', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Cases"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
-    const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
-        return item.key
-      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
-        return item.key
-      }) : [],
-      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
-        return item.key
-      }) : [],
-    };
+    let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Cases.list || []).map(item => {
 

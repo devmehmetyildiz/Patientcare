@@ -399,6 +399,10 @@ const Literals = {
             tr: "Ürün Ekle",
             en: "Add Stock"
         },
+        Pageeditcashheader: {
+            tr: "Hasta Cüzdanı",
+            en: "Edit Cash"
+        },
         Pageremovestockheader: {
             tr: "Ürün Çıkart",
             en: "Remove Stock"
@@ -533,6 +537,10 @@ const Literals = {
             tr: "Tanım Düzenle",
             en: "Edit Define"
         },
+        Editcash: {
+            tr: "Hasta Cüzdanı",
+            en: "Edit Cash"
+        },
         Saveroutine: {
             tr: "Rutini Kaydet",
             en: "Save Routine"
@@ -546,6 +554,10 @@ const Literals = {
         Nodatafind: {
             tr: "Tanımlı Hasta Yok",
             en: "There is no patient found"
+        },
+        Nomovementfind: {
+            tr: "Tanımlı Para Hareketi Yok",
+            en: "There is no cash movement found"
         },
         Nostockfind: {
             tr: "Tanımlı Ürün Yok",
@@ -623,6 +635,60 @@ const Literals = {
             tr: "HAYIR",
             en: "NO"
         }
+    },
+    Editcash: {
+        Id: {
+            tr: 'Id',
+            en: 'Id'
+        },
+        Uuid: {
+            tr: 'Tekil ID',
+            en: 'Unique ID'
+        },
+        Patient: {
+            tr: 'Hasta',
+            en: 'Patient'
+        },
+        Register: {
+            tr: 'Katkı Payı',
+            en: 'Register ID'
+        },
+        Movementtype: {
+            tr: 'Hareket Türü',
+            en: 'Movement Type'
+        },
+        Movementvalue: {
+            tr: 'Değer',
+            en: 'Value'
+        },
+        Report: {
+            tr: 'Tahsilat No',
+            en: 'Report No'
+        },
+        Createduser: {
+            tr: 'Oluşturan Kullanıcı',
+            en: 'Created User'
+        },
+        Updateduser: {
+            tr: 'Güncelleyen Kullanıcı',
+            en: 'Updated User'
+        },
+        Createtime: {
+            tr: 'Oluşturma Tarihi',
+            en: 'Create Time'
+        },
+        Updatetime: {
+            tr: 'Güncelleme Tarihi',
+            en: 'Update Time'
+        },
+        edit: {
+            tr: 'Güncelle',
+            en: 'Edit'
+        },
+        delete: {
+            tr: 'Sil',
+            en: 'Delete'
+        },
     },
     Editroutinecolumns: {
         Name: {

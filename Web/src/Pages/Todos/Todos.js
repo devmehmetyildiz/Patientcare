@@ -1,17 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Loader } from 'semantic-ui-react'
-import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import TodosApprove from '../../Containers/Todos/TodosApprove'
-import MobileTable from '../../Utils/MobileTable'
-import Settings from '../../Common/Settings'
+import { getInitialconfig } from '../../Utils/Constants'
 export default class Todos extends Component {
 
   componentDidMount() {
@@ -27,37 +20,32 @@ export default class Todos extends Component {
     const { Todos, Profile, handleApprovemodal, handleSelectedTodo } = this.props
     const { isLoading, isDispatching, } = Todos
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Patient[Profile.Language], accessor: 'MovementID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.Tododefine[Profile.Language], accessor: 'TododefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.tododefineCellhandler(col) },
-      { Header: Literals.Columns.Order[Profile.Language], accessor: 'Order', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Occuredtime[Profile.Language], accessor: 'Occuredtime', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Checktime[Profile.Language], accessor: 'Checktime', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Willapprove[Profile.Language], accessor: 'Willapprove', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Iscompleted[Profile.Language], accessor: 'IsCompleted', sortable: true, canGroupBy: true, canFilter: true, isOpen: false, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-    ]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
+      { Header: Literals.Columns.Patient[Profile.Language], accessor: 'MovementID', Cell: col => this.movementCellhandler(col) },
+      { Header: Literals.Columns.Tododefine[Profile.Language], accessor: 'TododefineID', Cell: col => this.tododefineCellhandler(col) },
+      { Header: Literals.Columns.Order[Profile.Language], accessor: 'Order' },
+      { Header: Literals.Columns.Occuredtime[Profile.Language], accessor: 'Occuredtime' },
+      { Header: Literals.Columns.Checktime[Profile.Language], accessor: 'Checktime' },
+      { Header: Literals.Columns.Willapprove[Profile.Language], accessor: 'Willapprove', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Iscompleted[Profile.Language], accessor: 'IsCompleted', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
+      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', disableProps: true },
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Todos"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
-    const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
-        return item.key
-      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
-        return item.key
-      }) : [],
-      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
-        return item.key
-      }) : [],
-    };
+    let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Todos.list || []).map(item => {
       return {

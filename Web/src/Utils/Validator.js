@@ -40,8 +40,12 @@ const isObjectId = function (value) {
 }
 
 const isISODate = function (value) {
-  const date = new Date(value);
-  return !isNaN(date);
+  if (value) {
+    const date = new Date(value);
+    return !isNaN(date);
+  } else {
+    return false
+  }
 }
 
 const isEpochTime = function (value) {

@@ -1,16 +1,23 @@
 import { connect } from 'react-redux'
 import UnapprovedTodos from '../../Pages/Unapproveds/UnapprovedTodos'
-import { GetTodos, ApproveTodos } from '../../Redux/TodoSlice'
+import { GetTodos, ApproveTodos, ApprovemultipleTodos, fillTodonotification } from '../../Redux/TodoSlice'
 import { GetTododefines } from '../../Redux/TododefineSlice'
+import { GetPatients } from '../../Redux/PatientSlice'
+import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
+import { GetPatientmovements } from '../../Redux/PatientmovementSlice'
 
 const mapStateToProps = (state) => ({
     Profile: state.Profile,
     Todos: state.Todos,
-    GetTododefines: state.GetTododefines,
+    Tododefines: state.Tododefines,
+    Patients: state.Patients,
+    Patientdefines: state.Patientdefines,
+    Patientmovements: state.Patientmovements,
 })
 
 const mapDispatchToProps = {
-    GetTodos, ApproveTodos, GetTododefines
+    GetTodos, GetTododefines, GetPatients, GetPatientdefines, GetPatientmovements,
+    ApproveTodos, ApprovemultipleTodos, fillTodonotification
 }
 
 

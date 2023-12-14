@@ -2,21 +2,13 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Dropdown, Form, Header, Icon, Tab, Table } from 'semantic-ui-react'
 import { ROUTES } from '../../Utils/Constants'
-import LoadingPage from '../../Utils/LoadingPage'
-import StockdefinesCreate from "../../Containers/Stockdefines/StockdefinesCreate"
 import config from '../../Config'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import validator from '../../Utils/Validator'
+import { AddModal, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
-import Submitbutton from '../../Common/Submitbutton'
-import Gobackbutton from '../../Common/Gobackbutton'
-import AddModal from '../../Utils/AddModal'
+import StockdefinesCreate from "../../Containers/Stockdefines/StockdefinesCreate"
+
 export default class PreregistrationsEditstock extends Component {
 
   constructor(props) {
@@ -24,8 +16,6 @@ export default class PreregistrationsEditstock extends Component {
     this.state = {
       isDatafetched: false,
       selectedStocks: [],
-      open: false,
-      modelOpened: false
     }
   }
 

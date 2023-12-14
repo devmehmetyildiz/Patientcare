@@ -1,21 +1,11 @@
 import React, { Component } from 'react'
 import { Link, } from 'react-router-dom'
-import { Form } from 'semantic-ui-react'
-import { Breadcrumb } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
+import { Breadcrumb, Form } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
-import FormInput from '../../Utils/FormInput'
-import Navbar from '../../Common/Navbar'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import { Footerwrapper } from '../../Common/Wrappers/Footerwrapper'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import { Pagewrapper } from '../../Common/Wrappers/Pagewrapper'
-import Submitbutton from '../../Common/Submitbutton'
 import { FormContext } from '../../Provider/FormProvider'
+import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, 
+    Headerwrapper, LoadingPage, Navbar, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 
 export default class PasswordReset extends Component {
 

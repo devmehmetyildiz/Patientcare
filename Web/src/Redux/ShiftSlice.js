@@ -45,48 +45,6 @@ export const GetShifts = createAsyncThunk(
     }
 );
 
-export const GetShiftrequests = createAsyncThunk(
-    'Shifts/GetShiftrequests',
-    async (_, { dispatch }) => {
-        try {
-            const response = await instanse.get(config.services.Business, ROUTES.SHIFT + '/GetShiftrequests');
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
-export const GetShiftrequest = createAsyncThunk(
-    'Shifts/GetShiftrequest',
-    async (guid, { dispatch }) => {
-        try {
-            const response = await instanse.get(config.services.Business, ROUTES.SHIFT + '/GetShiftrequests/' + guid);
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
-export const GetPersonelshifts = createAsyncThunk(
-    'Shifts/GetPersonelshifts',
-    async (guid, { dispatch }) => {
-        try {
-            const response = await instanse.get(config.services.Business, `${ROUTES.SHIFT}/GetPersonelshifts/${guid}`);
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
 export const GetShift = createAsyncThunk(
     'Shifts/GetShift',
     async (guid, { dispatch }) => {
@@ -171,36 +129,11 @@ export const DeleteShifts = createAsyncThunk(
     }
 );
 
-export const DeleteShiftrequests = createAsyncThunk(
-    'Shifts/DeleteShiftrequests',
-    async (data, { dispatch, getState }) => {
-        try {
-
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.delete(config.services.Business, `${ROUTES.SHIFT}/DeleteShiftrequest/${data.Uuid}`);
-            dispatch(fillShiftnotification({
-                type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
-            }));
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
 export const ShiftsSlice = createSlice({
     name: 'Shifts',
     initialState: {
         list: [],
-        Shiftrequests: [],
-        Personelshifts: [],
         selected_record: {},
-        selected_shiftrequest: {},
         errMsg: null,
         notifications: [],
         isLoading: false,
@@ -238,42 +171,16 @@ export const ShiftsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetShiftrequests.pending, (state) => {
+            .addCase(GetShift.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.Shiftrequests = [];
+                state.selected_record = {};
             })
-            .addCase(GetShiftrequests.fulfilled, (state, action) => {
+            .addCase(GetShift.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.Shiftrequests = action.payload;
+                state.selected_record = action.payload;
             })
-            .addCase(GetShiftrequests.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errMsg = action.error.message;
-            })
-            .addCase(GetShiftrequest.pending, (state) => {
-                state.isLoading = true;
-                state.errMsg = null;
-                state.selected_shiftrequest = [];
-            })
-            .addCase(GetShiftrequest.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.selected_shiftrequest = action.payload;
-            })
-            .addCase(GetShiftrequest.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errMsg = action.error.message;
-            })
-            .addCase(GetPersonelshifts.pending, (state) => {
-                state.isLoading = true;
-                state.errMsg = null;
-                state.Personelshifts = [];
-            })
-            .addCase(GetPersonelshifts.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.Personelshifts = action.payload;
-            })
-            .addCase(GetPersonelshifts.rejected, (state, action) => {
+            .addCase(GetShift.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
@@ -310,17 +217,6 @@ export const ShiftsSlice = createSlice({
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteShiftrequests.pending, (state) => {
-                state.isDispatching = true;
-            })
-            .addCase(DeleteShiftrequests.fulfilled, (state, action) => {
-                state.isDispatching = false;
-                state.Shiftrequests = action.payload;
-            })
-            .addCase(DeleteShiftrequests.rejected, (state, action) => {
-                state.isDispatching = false;
-                state.errMsg = action.error.message;
-            });
     },
 });
 

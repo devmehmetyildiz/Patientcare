@@ -1,22 +1,12 @@
 import React, { Component } from 'react'
-import { Link, } from 'react-router-dom'
-import { Form, Grid, GridColumn, Tab } from 'semantic-ui-react'
-import { Breadcrumb, Button } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
+import { Link } from 'react-router-dom'
+import { Form, Breadcrumb, Button, Tab, Grid } from 'semantic-ui-react'
+import Literals from './Literals'
+import validator from '../../Utils/Validator'
+import { FormContext } from '../../Provider/FormProvider'
+import {FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import Editor from "@monaco-editor/react";
 import InnerHTML from '../../Utils/DangerouslySetHtmlContent'
-import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
-import validator from '../../Utils/Validator'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import FormInput from '../../Utils/FormInput'
-import { FormContext } from '../../Provider/FormProvider'
-import Submitbutton from '../../Common/Submitbutton'
-import Gobackbutton from '../../Common/Gobackbutton'
 export default class PrinttemplatesCreate extends Component {
 
   PAGE_NAME = 'PrinttemplatesCreate'
@@ -70,7 +60,7 @@ export default class PrinttemplatesCreate extends Component {
                       content: <div className='max-h-[calc(66vh-10px)] overflow-y-auto overflow-x-hidden'>
                         <Grid columns={2}>
                           <Grid.Row>
-                            <GridColumn>
+                            <Grid.Column>
                               <div className='p-2 shadow-lg shadow-gray-300'>
                                 <Editor
                                   height="60vh"
@@ -79,14 +69,14 @@ export default class PrinttemplatesCreate extends Component {
                                   onMount={this.handleTemplateEditorDidMount}
                                 />
                               </div>
-                            </GridColumn>
-                            <GridColumn>
+                            </Grid.Column>
+                            <Grid.Column>
                               <div className='p-2 shadow-lg shadow-gray-300'>
                                 <InnerHTML html={true ?
                                   this.state.template ? this.state.template : '<div class="print-design-preview-message">No code to show.</div>' :
                                   '<div class="print-design-preview-message">Preview only available in html design</div>'} />
                               </div>
-                            </GridColumn>
+                            </Grid.Column>
                           </Grid.Row>
                         </Grid>
                       </div>

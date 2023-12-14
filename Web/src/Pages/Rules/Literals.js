@@ -22,6 +22,14 @@ const Literals = {
             tr: 'Durum',
             en: 'Status'
         },
+        Info: {
+            tr: 'Açıklama',
+            en: 'Info'
+        },
+        Templates: {
+            tr: 'Taslaklar',
+            en: 'Templates'
+        },
         Savescreen: {
             tr: 'Kayıt',
             en: 'Save'

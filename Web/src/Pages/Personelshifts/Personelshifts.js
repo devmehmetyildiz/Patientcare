@@ -1,30 +1,23 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon } from 'semantic-ui-react'
-import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import MobileTable from '../../Utils/MobileTable'
-import Settings from '../../Common/Settings'
-import { getInitialconfig } from '../../Utils/Constants'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import validator from '../../Utils/Validator'
+import { getInitialconfig } from '../../Utils/Constants'
+import PersonelshiftsDelete from '../../Containers/Personelshifts/PersonelshiftsDelete'
 
 export default class Personelshifts extends Component {
 
   componentDidMount() {
-    const { GetShiftrequests } = this.props
-    GetShiftrequests()
+    const { GetPersonelshifts } = this.props
+    GetPersonelshifts()
   }
 
   render() {
 
-    const { Shifts, Profile } = this.props
-    const { isLoading, isDispatching } = Shifts
+    const { Personelshifts, Profile, handleDeletemodal, handleSelectedPersonelshift } = this.props
+    const { isLoading, isDispatching } = Personelshifts
 
     const colProps = {
       sortable: true,
@@ -42,12 +35,13 @@ export default class Personelshifts extends Component {
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
       { Header: Literals.Columns.detail[Profile.Language], accessor: 'detail', disableProps: true },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Personelshifts"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
-    const list = (Shifts.Shiftrequests || []).map(item => {
+    const list = (Personelshifts.list || []).map(item => {
       return {
         ...item,
         detail: <div className='w-full flex justify-center items-center'>
@@ -55,6 +49,12 @@ export default class Personelshifts extends Component {
             <Icon size='large' className='row-edit' name='magnify' />
           </Link>
         </div>,
+        delete: <div className='w-full flex justify-center items-center'>
+          <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+            handleSelectedPersonelshift(item)
+            handleDeletemodal(true)
+          }} />
+        </div >
       }
     })
 
@@ -93,6 +93,7 @@ export default class Personelshifts extends Component {
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>
+          <PersonelshiftsDelete />
         </React.Fragment>
     )
   }

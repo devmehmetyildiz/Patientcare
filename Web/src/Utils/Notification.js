@@ -25,6 +25,9 @@ function Notification(notifications, removeNotification, Profile) {
                 case "Success":
                     toast.success(<CustomToast title={code} message={description} />, config);
                     break;
+                case "Information":
+                    toast.info(<CustomToast title={code} message={description} />, config);
+                    break;
                 case "Error":
                     toast.error(<CustomToast title={code} message={description} />, config);
 

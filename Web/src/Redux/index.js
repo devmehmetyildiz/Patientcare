@@ -37,6 +37,12 @@ import EquipmentgroupSlice from "./EquipmentgroupSlice";
 import PersonelSlice from "./PersonelSlice";
 import BreakdownSlice from "./BreakdownSlice";
 import MainteanceSlice from "./MainteanceSlice";
+import PersonelshiftSlice from "./PersonelshiftSlice";
+import CompanycashmovementSlice from "./CompanycashmovementSlice";
+import PatientcashmovementSlice from "./PatientcashmovementSlice";
+import PatientcashregisterSlice from "./PatientcashregisterSlice";
+import UsernotificationSlice from "./UsernotificationSlice";
+import ReportSlice from "./ReportSlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -77,6 +83,12 @@ const Slices = combineReducers({
     Personels: PersonelSlice,
     Breakdowns: BreakdownSlice,
     Mainteancies: MainteanceSlice,
+    Personelshifts: PersonelshiftSlice,
+    Companycashmovements: CompanycashmovementSlice,
+    Patientcashmovements: PatientcashmovementSlice,
+    Patientcashregisters: PatientcashregisterSlice,
+    Usernotifications: UsernotificationSlice,
+    Reports: ReportSlice,
 });
 
 export default Slices;
