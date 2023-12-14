@@ -29,7 +29,7 @@ module.exports = sequelize.define('logModel', {
         type: Sequelize.STRING
     },
     Data: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
     },
     Createduser: {
         type: Sequelize.STRING
