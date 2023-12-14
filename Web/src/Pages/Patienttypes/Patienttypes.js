@@ -1,17 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon } from 'semantic-ui-react'
-import { Breadcrumb,  Grid, GridColumn } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import PatienttypesDelete from '../../Containers/Patienttypes/PatienttypesDelete'
-import MobileTable from '../../Utils/MobileTable'
-import Settings from '../../Common/Settings'
+import { getInitialconfig } from '../../Utils/Constants'
 export default class Patienttypes extends Component {
 
   constructor(props) {
@@ -31,30 +24,26 @@ export default class Patienttypes extends Component {
     const { Patienttypes, Profile, handleDeletemodal, handleSelectedPatienttype } = this.props
     const { isLoading, isDispatching } = Patienttypes
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', sortable: true, canGroupBy: true, canFilter: true, Firstheader: true },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Patienttypes"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
-    const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
-        return item.key
-      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
-        return item.key
-      }) : [],
-      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
-        return item.key
-      }) : [],
-    };
+    let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Patienttypes.list || []).map(item => {
       return {

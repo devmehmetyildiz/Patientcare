@@ -340,7 +340,6 @@ code {
   border: none !important;
 }
 
-
 /* .versionbutton {
   position: relative;
   padding: 10px 22px;
@@ -483,4 +482,8 @@ code {
       0% 0%,
       0% 0%;
   }
+}
+
+.notificationpopup.ui.bottom.right.popup:before{
+  right: 5px;
 }

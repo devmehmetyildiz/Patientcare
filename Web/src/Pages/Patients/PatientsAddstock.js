@@ -1,21 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Form, Label, Loader, Tab } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
-import FormInput from '../../Utils/FormInput'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
-import DataTable from '../../Utils/DataTable'
-import NoDataScreen from '../../Utils/NoDataScreen'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Submitbutton from '../../Common/Submitbutton'
+import {
+  DataTable, NoDataScreen, FormInput, Contentwrapper, Footerwrapper, Gobackbutton,
+  Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
+} from '../../Components'
 
 export default class PatientsAddstock extends Component {
 
@@ -121,13 +113,18 @@ export default class PatientsAddstock extends Component {
       return { key: stock?.Uuid, text: `${stockdefine?.Name} (${department?.Name})`, value: stock?.Uuid }
     })
 
-    const Columns = [
-      { Header: Literals.AddStock.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.AddStock.Stockname[Profile.Language], accessor: 'StockdefineID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
-      { Header: Literals.AddStock.Department[Profile.Language], accessor: 'DepartmentID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.AddStock.Amount[Profile.Language], accessor: 'Amount', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
-    ]
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
 
+    const Columns = [
+      { Header: Literals.AddStock.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.AddStock.Stockname[Profile.Language], accessor: 'StockdefineID', Cell: col => this.stockdefineCellhandler(col) },
+      { Header: Literals.AddStock.Department[Profile.Language], accessor: 'DepartmentID', Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.AddStock.Amount[Profile.Language], accessor: 'Amount', Cell: col => this.amountCellhandler(col) },
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     return (
       isLoadingstatus ? <LoadingPage /> :

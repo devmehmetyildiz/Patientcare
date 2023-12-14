@@ -57,6 +57,14 @@ async function ApproveTodo(req, res, next) {
     }
 }
 
+async function ApproveTodos(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('todoupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Todos Update', req.language, { en: 'Todos Update', tr: 'Todos Update' }))
+    }
+}
+
 async function DeleteTodo(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('tododelete')) || permissionchecker(req)) {
         next()
@@ -73,5 +81,6 @@ module.exports = {
     DeleteTodo,
     AddPatienttodolist,
     GetTodosbyPatientID,
-    ApproveTodo
+    ApproveTodo,
+    ApproveTodos
 }

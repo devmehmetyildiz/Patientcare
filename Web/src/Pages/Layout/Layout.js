@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
-import Navbar from '../../Common/Navbar'
-import { Sidebar } from '../../Common/Sidebar'
-import notification from '../../Utils/Notification'
 import Cookies from 'universal-cookie'
-import LoadingPage from '../../Utils/LoadingPage'
 import Routes from '../../Routes'
+import { Sidebar, LoadingPage, Navbar } from '../../Components'
 
 export default class Layout extends Component {
 
@@ -41,15 +38,32 @@ export default class Layout extends Component {
   }
 
   render() {
-    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile } = this.props
+    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal } = this.props
     return (
       Profile.isLogging || Profile.isFetching ?
         <LoadingPage />
         :
         <div className='bg-white dark:bg-Contentbg overflow-hidden' >
-          <Navbar iconOnly={isMobile ? true : iconOnly} seticonOnly={seticonOnly} Profile={Profile} logOut={logOut} isMobile={isMobile} Files={Files} sethideMobile={sethideMobile} hideMobile={hideMobile} />
+          <Navbar
+            iconOnly={isMobile ? true : iconOnly}
+            seticonOnly={seticonOnly}
+            Profile={Profile}
+            logOut={logOut}
+            isMobile={isMobile}
+            Files={Files}
+            sethideMobile={sethideMobile}
+            hideMobile={hideMobile}
+            handleViewmodal={handleViewmodal}
+          />
           <div className='flex flex-row justify-start items-start '>
-            <Sidebar history={history} iconOnly={isMobile ? true : iconOnly} seticonOnly={seticonOnly} Profile={Profile} isMobile={isMobile} hideMobile={hideMobile} />
+            <Sidebar
+              history={history}
+              iconOnly={isMobile ? true : iconOnly}
+              seticonOnly={seticonOnly}
+              Profile={Profile}
+              isMobile={isMobile}
+              hideMobile={hideMobile}
+            />
             <div className={`mt-[58.61px] p-4 w-full min-w-[0px] contentWrapper`}>
               <div className='w-full '>
                 <Routes Profile={Profile} />

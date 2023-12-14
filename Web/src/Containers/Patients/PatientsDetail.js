@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PatientsDetail from '../../Pages/Patients/PatientsDetail'
-import { GetPatient, setPatient, handleDeletemodal, handleSelectedPatient, handleInmodal, handleOutmodal,handlePlacemodal } from "../../Redux/PatientSlice"
+import { GetPatient, setPatient, handleDeletemodal, handleSelectedPatient, handleInmodal, handleOutmodal, handlePlacemodal } from "../../Redux/PatientSlice"
 import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
 import { GetCases } from "../../Redux/CaseSlice"
 import { GetCostumertypes } from "../../Redux/CostumertypeSlice"
@@ -16,6 +16,7 @@ import { GetFiles } from "../../Redux/FileSlice"
 import { GetPatientstockmovements } from "../../Redux/PatientstockmovementSlice"
 import { GetTodosbyPatient } from "../../Redux/TodoSlice"
 import { GetTododefines } from "../../Redux/TododefineSlice"
+import { GetPatientcashmovements } from "../../Redux/PatientcashmovementSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -35,15 +36,16 @@ const mapStateToProps = (state) => ({
     Patientstockmovements: state.Patientstockmovements,
     Todos: state.Todos,
     Tododefines: state.Tododefines,
+    Patientcashmovements: state.Patientcashmovements
 })
 
 const mapDispatchToProps = {
     GetPatient, setPatient, handleDeletemodal, handleSelectedPatient,
     GetPatientdefines, GetCases,
     GetCostumertypes, GetPatienttypes,
-    GetFloors, GetRooms, GetBeds,
+    GetFloors, GetRooms, GetBeds, GetPatientcashmovements,
     GetPatientstocks, GetStockdefines, GetUnits,
-    GetPatientmovements, GetFiles,handlePlacemodal,
+    GetPatientmovements, GetFiles, handlePlacemodal,
     GetPatientstockmovements, handleInmodal, handleOutmodal, GetTodosbyPatient, GetTododefines
 }
 

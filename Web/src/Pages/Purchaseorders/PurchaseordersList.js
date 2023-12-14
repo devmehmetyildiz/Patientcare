@@ -1,7 +1,7 @@
 import React from 'react'
-import {  Label, Loader } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
+import { Label, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
+import { DataTable } from '../../Components'
 
 export default function PurchaseordersList({ Data, Columns, initialConfig, Profile, Departments, Stockdefines, Purchaseorderstocks, Purchaseorderstockmovements }) {
 

@@ -10,7 +10,6 @@ const mapStateToProps = (state) => ({
     Patientstocks: state.Patientstocks,
     Patients: state.Patients,
     Patientdefines: state.Patientdefines,
-    Patients: state.Patients,
     Stockdefines: state.Stockdefines,
     Departments: state.Departments,
     Profile: state.Profile

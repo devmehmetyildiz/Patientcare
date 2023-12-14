@@ -106,10 +106,6 @@ const Literals = {
             tr: 'Dosyalar',
             en: 'Files'
         },
-        Firstname: {
-            tr: 'İlkisim',
-            en: 'Firstname'
-        },
         Lastname: {
             tr: 'Soyisim',
             en: 'Lastname'

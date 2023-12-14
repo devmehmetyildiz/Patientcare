@@ -1,38 +1,21 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form } from 'semantic-ui-react'
-import { Breadcrumb, Button } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
-import FormInput from '../../Utils/FormInput'
+import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import { FormContext } from '../../Provider/FormProvider'
 import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Submitbutton from '../../Common/Submitbutton'
+import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, 
+  Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 export default class CasesCreate extends Component {
 
   PAGE_NAME = 'CasesCreate'
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      modelOpened: false
-    }
-  }
 
   componentDidMount() {
     const { GetDepartments } = this.props
     GetDepartments()
   }
-
 
   render() {
     const { Cases, Departments, Profile, history, closeModal } = this.props

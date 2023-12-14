@@ -1,28 +1,23 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Icon, Grid, GridColumn } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Icon, Breadcrumb, Grid, GridColumn, Tab, Label } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
 import PersonelsDelete from '../../Containers/Personels/PersonelsDelete'
-import MobileTable from '../../Utils/MobileTable'
-import Settings from '../../Common/Settings'
 import { getInitialconfig } from '../../Utils/Constants'
 export default class Periods extends Component {
 
 
   componentDidMount() {
-    const { GetPersonels } = this.props
+    const { GetPersonels, GetShifts, GetFloors } = this.props
     GetPersonels()
+    GetShifts()
+    GetFloors()
   }
 
   render() {
 
-    const { Personels, Profile, handleDeletemodal, handleSelectedPersonel, AddRecordPersonels } = this.props
+    const { Personels, Profile, handleDeletemodal, handleSelectedPersonel, AddRecordPersonels, Shifts, Floors } = this.props
     const { isLoading, isDispatching } = Personels
 
     const colProps = {
@@ -61,6 +56,43 @@ export default class Periods extends Component {
       }
     })
 
+    const activeShift = (Shifts.list || []).find(u => this.isTimeInRange(u.Starttime, u.Endtime))
+
+    const panes = [
+      {
+        menuItem: Literals.Columns.Activeshift[Profile.Language], render: () => <Tab.Pane>
+          {(Floors.list || []).map(floor => {
+
+            const personels = (Personels.list || []).filter(u => u.ShiftID === activeShift?.Uuid && u.FloorID === floor?.Uuid)
+
+            return <div key={Math.random()} className='w-full flex flex-col justify-center items-center px-4'>
+              <div className='w-full flex justify-start items-center my-2'>
+                <Label size='large' color={floor.Gender === "0" ? 'blue' : 'red'}>{`${floor?.Name}`}</Label>
+              </div>
+              <div className='w-full flex  justify-start items-center gap-4'>
+                {(personels || []).map(personel => {
+                  return <div className='cursor-pointer font-bold'>{`${personel?.Name} ${personel?.Surname}`}</div>
+                })}
+              </div>
+              <Pagedivider />
+            </div>
+          })}
+        </Tab.Pane>
+      },
+      {
+        menuItem: Literals.Columns.Personels[Profile.Language], render: () => <Tab.Pane>
+          {list.length > 0 ?
+            <div className='w-full mx-auto '>
+              {Profile.Ismobile ?
+                <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+            </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+          }
+        </Tab.Pane>
+      },
+    ]
+
+
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>
@@ -91,13 +123,9 @@ export default class Periods extends Component {
               </Grid>
             </Headerwrapper>
             <Pagedivider />
-            {list.length > 0 ?
-              <div className='w-full mx-auto '>
-                {Profile.Ismobile ?
-                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
-            }
+            <Contentwrapper additionalStyle={'max-h-[90vh]'}>
+              <Tab panes={panes} />
+            </Contentwrapper>
           </Pagewrapper>
           <PersonelsDelete />
         </React.Fragment>
@@ -130,5 +158,26 @@ export default class Periods extends Component {
       { key: 4, text: Literals.Options.Professionoptions.value4[Profile.Language], value: "4" },
     ]
     return Professionoptions.find(u => u.value === col.value)?.text
+  }
+
+  isTimeInRange = (startTime, endTime) => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinutes = now.getMinutes();
+
+    const [startHour, startMinutes] = startTime.split(':').map(Number);
+    const [endHour, endMinutes] = endTime.split(':').map(Number);
+
+    // Convert time to minutes for easier comparison
+    const currentTimeInMinutes = currentHour * 60 + currentMinutes;
+    const startTimeInMinutes = startHour * 60 + startMinutes;
+    const endTimeInMinutes = endHour * 60 + endMinutes;
+
+    // Check if current time falls within the range
+    if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes <= endTimeInMinutes) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

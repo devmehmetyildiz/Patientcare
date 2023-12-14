@@ -1,18 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Loader } from 'semantic-ui-react'
-import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import DataTable from '../../Utils/DataTable'
-import LoadingPage from '../../Utils/LoadingPage'
-import NoDataScreen from '../../Utils/NoDataScreen'
+import { Icon, Loader, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import PatientstocksDelete from "../../Containers/Patientstocks/PatientstocksDelete"
 import PatientstocksApprove from "../../Containers/Patientstocks/PatientstocksApprove"
-import MobileTable from '../../Utils/MobileTable'
-import Settings from '../../Common/Settings'
+import { getInitialconfig } from '../../Utils/Constants'
 export default class Patientstocks extends Component {
   constructor(props) {
     super(props)
@@ -38,37 +31,33 @@ export default class Patientstocks extends Component {
     const { Patientstocks, Profile, handleDeletemodal, handleSelectedPatientstock, handleApprovemodal } = this.props
     const { isLoading, isDispatching } = Patientstocks
 
+    const colProps = {
+      sortable: true,
+      canGroupBy: true,
+      canFilter: true
+    }
+
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Patient[Profile.Language], accessor: 'PatientID', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.patientCellhandler(col) },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', Firstheader: true, sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.stockdefineCellhandler(col) },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', Subheader: true, sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', sortable: true, Finalheader: true, canGroupBy: true, canFilter: true, Cell: col => this.amountCellhandler(col) },
-      { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', sortable: true, canGroupBy: true, canFilter: true },
-      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', sortable: true, canGroupBy: true, canFilter: true, Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', sortable: true, canGroupBy: true, canFilter: true, },
-      { Header: Literals.Columns.change[Profile.Language], accessor: 'change', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', canGroupBy: false, canFilter: false, disableFilters: true, sortable: false, className: 'text-center action-column' }]
+      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
+      { Header: Literals.Columns.Patient[Profile.Language], accessor: 'PatientID', Cell: col => this.patientCellhandler(col) },
+      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
+      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', Firstheader: true, Cell: col => this.stockdefineCellhandler(col) },
+      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', Subheader: true, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', Finalheader: true, Cell: col => this.amountCellhandler(col) },
+      { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info' },
+      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
+      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
+      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
+      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
+      { Header: Literals.Columns.change[Profile.Language], accessor: 'change', disableProps: true },
+      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', disableProps: true },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Patientstocks"
-    let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
-    const initialConfig = {
-      hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
-        return item.key
-      }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
-      columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
-        return item.key
-      }) : [],
-      groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
-        return item.key
-      }) : [],
-    };
+    let initialConfig = getInitialconfig(Profile,metaKey)
 
     const list = (Patientstocks.list || []).filter(u => !u.Ismedicine && !u.Issupply && u.Isactive).map(item => {
       return {

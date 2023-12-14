@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import Literals from './Literals'
 import { Button, Modal } from 'semantic-ui-react'
-import NoDataScreen from '../../Utils/NoDataScreen'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
+import { NoDataScreen, Footerwrapper } from '../../Components'
 
 export default class RulesLog extends Component {
 

@@ -57,6 +57,14 @@ async function ApprovePatientstock(req, res, next) {
     }
 }
 
+async function ApprovePatientstocks(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientstockupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Patientstocks Update', req.language, { en: 'Patientstocks Update', tr: 'Patientstocks Update' }))
+    }
+}
+
 async function DeletePatientstock(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('patientstockdelete')) || permissionchecker(req)) {
         next()
@@ -74,5 +82,6 @@ module.exports = {
     DeletePatientstock,
     Transferpatientstock,
     UpdatePatientstocklist,
-    ApprovePatientstock
+    ApprovePatientstock,
+    ApprovePatientstocks,
 }

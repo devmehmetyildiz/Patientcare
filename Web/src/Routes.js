@@ -1,7 +1,6 @@
 import React, { Component, Suspense, lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Spinner from './Common/Spinner'
-import ProtectedRoute from './Utils/ProtectedRoute';
+import { ProtectedRoute, Spinner } from './Components'
 
 const Login = lazy(() => import('./Containers/Auth/Login'));
 const Register = lazy(() => import('./Containers/Auth/Register'));
@@ -9,7 +8,7 @@ const Roles = lazy(() => import('./Containers/Roles/Roles'));
 const RolesCreate = lazy(() => import('./Containers/Roles/RolesCreate'));
 const RolesEdit = lazy(() => import('./Containers/Roles/RolesEdit'));
 
-const About = lazy(() => import('./Common/About'));
+const About = lazy(() => import('./Components/About'));
 
 const Rules = lazy(() => import('./Containers/Rules/Rules'));
 const RulesCreate = lazy(() => import('./Containers/Rules/RulesCreate'));
@@ -70,6 +69,7 @@ const PatientsRemovestock = lazy(() => import('./Containers/Patients/PatientsRem
 const PatientsRemovemedicine = lazy(() => import('./Containers/Patients/PatientsRemovemedicine'));
 const PatientsEditcase = lazy(() => import('./Containers/Patients/PatientsEditcase'));
 const PatientsEditroutine = lazy(() => import('./Containers/Patients/PatientsEditroutine'));
+const PatientsEditcash = lazy(() => import('./Containers/Patients/PatientsEditcash'));
 
 const Patientstocks = lazy(() => import('./Containers/Patientstocks/Patientstocks'));
 const PatientstocksCreate = lazy(() => import('./Containers/Patientstocks/PatientstocksCreate'));
@@ -193,15 +193,36 @@ const MainteanciesCreate = lazy(() => import('./Containers/Mainteancies/Maintean
 const MainteanciesEdit = lazy(() => import('./Containers/Mainteancies/MainteanciesEdit'));
 
 const UnapprovedMovements = lazy(() => import('./Containers/Unapproveds/UnapprovedMovements'));
+const UnapprovedStocks = lazy(() => import('./Containers/Unapproveds/UnapprovedStocks'));
+const UnapprovedTodos = lazy(() => import('./Containers/Unapproveds/UnapprovedTodos'));
+
+const Placeviews = lazy(() => import('./Containers/Placeviews/Placeviews'));
+
 const Personelshifts = lazy(() => import('./Containers/Personelshifts/Personelshifts'));
+const PersonelshiftsCreate = lazy(() => import('./Containers/Personelshifts/PersonelshiftsCreate'));
 const PersonelshiftsDetail = lazy(() => import('./Containers/Personelshifts/PersonelshiftsDetail'));
+
+const Patientcashregisters = lazy(() => import('./Containers/Patientcashregisters/Patientcashregisters'));
+const PatientcashregistersCreate = lazy(() => import('./Containers/Patientcashregisters/PatientcashregistersCreate'));
+const PatientcashregistersEdit = lazy(() => import('./Containers/Patientcashregisters/PatientcashregistersEdit'));
+
+const Patientcashmovements = lazy(() => import('./Containers/Patientcashmovements/Patientcashmovements'));
+const PatientcashmovementsCreate = lazy(() => import('./Containers/Patientcashmovements/PatientcashmovementsCreate'));
+const PatientcashmovementsEdit = lazy(() => import('./Containers/Patientcashmovements/PatientcashmovementsEdit'));
+
+const Companycashmovements = lazy(() => import('./Containers/Companycashmovements/Companycashmovements'));
+const CompanycashmovementsCreate = lazy(() => import('./Containers/Companycashmovements/CompanycashmovementsCreate'));
+const CompanycashmovementsEdit = lazy(() => import('./Containers/Companycashmovements/CompanycashmovementsEdit'));
 
 const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
 const PasswordChange = lazy(() => import('./Containers/Auth/PasswordChange'));
 const Passwordforget = lazy(() => import('./Containers/Auth/Passwordforget'));
 const PasswordReset = lazy(() => import('./Containers/Auth/PasswordReset'));
+
+const Appreports = lazy(() => import('./Containers/Appreports/Appreports'));
+
 const Home = lazy(() => import('./Pages/Home'));
-const Notfoundpage = lazy(() => import('./Utils/Notfoundpage'));
+const Notfoundpage = lazy(() => import('./Components/Notfoundpage'));
 
 class Routes extends Component {
   render() {
@@ -274,6 +295,7 @@ class Routes extends Component {
       { exact: true, path: "/Patients/:PatientID/Removemedicine", auth: true, component: PatientsRemovemedicine, permission: 'patientscreen' },
       { exact: true, path: "/Patients/:PatientID/Editcase", auth: true, component: PatientsEditcase, permission: 'patientscreen' },
       { exact: true, path: "/Patients/:PatientID/Editroutine", auth: true, component: PatientsEditroutine, permission: 'patientscreen' },
+      { exact: true, path: "/Patients/:PatientID/Editcash", auth: true, component: PatientsEditcash, permission: 'patientscreen' },
       { exact: true, path: "/Warehouses", auth: true, component: Warehouses, permission: 'warehousescreen' },
       { exact: true, path: "/Warehouses/Create", auth: true, component: WarehousesCreate, permission: 'warehousescreen' },
       { exact: true, path: "/Warehouses/:WarehouseID/Edit", auth: true, component: WarehousesEdit, permission: 'warehousescreen' },
@@ -351,8 +373,22 @@ class Routes extends Component {
       { exact: true, path: "/Mainteancies/Create", auth: true, component: MainteanciesCreate, permission: 'mainteancescreen' },
       { exact: true, path: "/Mainteancies/:MainteanceID/Edit", auth: true, component: MainteanciesEdit, permission: 'mainteancescreen' },
       { exact: true, path: "/UnapprovedMovements", auth: true, component: UnapprovedMovements, permission: 'stockmovementscreen' },
+      { exact: true, path: "/UnapprovedStocks", auth: true, component: UnapprovedStocks, permission: 'stockscreen' },
+      { exact: true, path: "/UnapprovedTodos", auth: true, component: UnapprovedTodos, permission: 'todoscreen' },
+      { exact: true, path: "/Placeviews", auth: true, component: Placeviews, permission: 'patientscreen' },
       { exact: true, path: "/Personelshifts", auth: true, component: Personelshifts, permission: 'shiftscreen' },
+      { exact: true, path: "/Personelshifts/Create", auth: true, component: PersonelshiftsCreate, permission: 'shiftscreen' },
       { exact: true, path: "/Personelshifts/:ShiftID", auth: true, component: PersonelshiftsDetail, permission: 'shiftscreen' },
+      { exact: true, path: "/Patientcashregisters", auth: true, component: Patientcashregisters, permission: 'patientcashregisterscreen' },
+      { exact: true, path: "/Patientcashregisters/Create", auth: true, component: PatientcashregistersCreate, permission: 'patientcashregisterscreen' },
+      { exact: true, path: "/Patientcashregisters/:PatientcashregisterID/Edit", auth: true, component: PatientcashregistersEdit, permission: 'patientcashregisterscreen' },
+      { exact: true, path: "/Patientcashmovements", auth: true, component: Patientcashmovements, permission: 'patientcashmovementscreen' },
+      { exact: true, path: "/Patientcashmovements/Create", auth: true, component: PatientcashmovementsCreate, permission: 'patientcashmovementscreen' },
+      { exact: true, path: "/Patientcashmovements/:PatientcashmovementID/Edit", auth: true, component: PatientcashmovementsEdit, permission: 'patientcashmovementscreen' },
+      { exact: true, path: "/Companycashmovements", auth: true, component: Companycashmovements, permission: 'companycashmovementscreen' },
+      { exact: true, path: "/Companycashmovements/Create", auth: true, component: CompanycashmovementsCreate, permission: 'companycashmovementscreen' },
+      { exact: true, path: "/Companycashmovements/:CompanycashmovementID/Edit", auth: true, component: CompanycashmovementsEdit, permission: 'companycashmovementscreen' },
+      { exact: true, path: "/Appreports", auth: true, component: Appreports, permission: 'appreports' },
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/:PatientID/Edit", auth: true, component: PreregistrationsEdit, permission: 'patientscreen' },
@@ -364,7 +400,7 @@ class Routes extends Component {
       { exact: true, path: "/About", auth: true, component: About },
       { exact: true, path: "/Passwordreset/:RequestID", auth: false, component: PasswordReset },
       { exact: true, path: "/Forgetpassword", auth: false, component: Passwordforget },
-      { exact: false, path: "*", auth: false, component: Notfoundpage },
+      { exact: false, path: "*", auth: false, component: Notfoundpage }
     ]
 
     return (

@@ -1,19 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Form } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
+import { Form, Breadcrumb } from 'semantic-ui-react'
 import Literals from './Literals'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import FormInput from '../../Utils/FormInput'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import Submitbutton from '../../Common/Submitbutton'
-import Gobackbutton from '../../Common/Gobackbutton'
+import { FormInput,Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 
 export default class ShiftsEdit extends Component {
 

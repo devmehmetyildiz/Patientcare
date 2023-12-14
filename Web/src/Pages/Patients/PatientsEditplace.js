@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Dropdown, Form, Label, Modal } from 'semantic-ui-react'
 import Literals from './Literals'
-import LoadingPage from '../../Utils/LoadingPage'
 import validator from '../../Utils/Validator'
-import Pagedivider from '../../Common/Styled/Pagedivider'
+import { Pagedivider, LoadingPage } from '../../Components'
 
 export default function PatientsEditplace(
     {

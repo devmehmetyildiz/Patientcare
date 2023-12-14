@@ -164,6 +164,27 @@ export const ApproveTodos = createAsyncThunk(
     }
 );
 
+export const ApprovemultipleTodos = createAsyncThunk(
+    'Todos/ApprovemultipleTodos',
+    async (data, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Business, `${ROUTES.TODO}/Approve`, data);
+            dispatch(fillTodonotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillTodonotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const TodosSlice = createSlice({
     name: 'Todos',
     initialState: {
@@ -186,7 +207,7 @@ export const TodosSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeTodonotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
@@ -277,6 +298,17 @@ export const TodosSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(ApproveTodos.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ApprovemultipleTodos.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(ApprovemultipleTodos.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(ApprovemultipleTodos.rejected, (state, action) => {
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             });

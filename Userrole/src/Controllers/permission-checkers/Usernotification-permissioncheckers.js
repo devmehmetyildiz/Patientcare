@@ -39,8 +39,31 @@ async function UpdateUsernotification(req, res, next) {
         next(createAccessDenied('Usernotifications Update', req.language, { en: 'Usernotifications Update', tr: 'Usernotifications Update' }))
     }
 }
+async function UpdateUsernotifications(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('usernotificationupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Usernotifications Update', req.language, { en: 'Usernotifications Update', tr: 'Usernotifications Update' }))
+    }
+}
 
 async function DeleteUsernotification(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('usernotificationdelete')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Usernotifications Delete', req.language, { en: 'Usernotifications Delete', tr: 'Usernotifications Delete' }))
+    }
+}
+
+async function DeleteUsernotificationbyid(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('usernotificationdelete')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Usernotifications Delete', req.language, { en: 'Usernotifications Delete', tr: 'Usernotifications Delete' }))
+    }
+}
+
+async function DeleteUsernotificationbyidreaded(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('usernotificationdelete')) || permissionchecker(req)) {
         next()
     } else {
@@ -56,4 +79,7 @@ module.exports = {
     UpdateUsernotification,
     DeleteUsernotification,
     GetUsernotificationsbyUserid,
+    UpdateUsernotifications,
+    DeleteUsernotificationbyid,
+    DeleteUsernotificationbyidreaded
 }

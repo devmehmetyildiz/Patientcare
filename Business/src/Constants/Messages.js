@@ -24,6 +24,18 @@ const messages = {
         tr: 'çalışan bulunamadı',
       }
     },
+    CASHREGISTER_NOT_FOUND: {
+      code: 'CASHREGISTER_NOT_FOUND', description: {
+        en: 'cash register type not found',
+        tr: 'para kayıt türü bulunamadı',
+      }
+    },
+    CASHREGISTER_NOT_ACTIVE: {
+      code: 'CASHREGISTER_NOT_ACTIVE', description: {
+        en: 'cash register type not active',
+        tr: 'para kayıt türü bulunamadı',
+      }
+    },
     FLOOR_NOT_FOUND: {
       code: 'FLOOR_NOT_FOUND', description: {
         en: 'floor not found',
@@ -95,6 +107,18 @@ const messages = {
       code: 'PATIENTMOVEMENT_NOT_ACTIVE', description: {
         en: 'patient movement not active',
         tr: 'hasta hareketi bulunamadı',
+      }
+    },
+    MOVEMENT_NOT_FOUND: {
+      code: 'MOVEMENT_NOT_FOUND', description: {
+        en: 'movement not found',
+        tr: 'hareket bulunamadı',
+      }
+    },
+    MOVEMENT_NOT_ACTIVE: {
+      code: 'MOVEMENT_NOT_ACTIVE', description: {
+        en: 'movement not active',
+        tr: 'hareket bulunamadı',
       }
     },
     TODO_NOT_FOUND: {
@@ -436,6 +460,12 @@ const messages = {
         tr: 'Bu işlem için Yatak numarası gerekli',
       }
     },
+    CASHREGISTERID_REQUIRED: {
+      code: 'CASHREGISTERID_REQUIRED', description: {
+        en: 'Cash register type id required',
+        tr: 'Bu işlem için para kayıt tür idsi gerekli',
+      }
+    },
     DEPARTMENTID_REQUIRED: {
       code: 'DEPARTMENTID_REQUIRED', description: {
         en: 'The DepartmentID required',
@@ -477,6 +507,12 @@ const messages = {
       code: 'PATIENTID_REQUIRED', description: {
         en: 'The PatientID required',
         tr: 'Bu işlem için PatientID gerekli',
+      }
+    },
+    REGISTERID_REQUIRED: {
+      code: 'REGISTERID_REQUIRED', description: {
+        en: 'The RegisterID required',
+        tr: 'Bu işlem için RegisterID gerekli',
       }
     },
     PATIENTMOVEMENTTYPE_REQUIRED: {
@@ -533,10 +569,10 @@ const messages = {
         tr: 'Bu işlem için hareket tarihi gerekli',
       }
     },
-    UNSUPPORTED_PATIENTDEFINEID: {
-      code: 'UNSUPPORTEDPATIENTDEFINEID_REQUIRED', description: {
-        en: 'The patientdefineid is unsupported',
-        tr: 'Tanımsız patientdefineid',
+    UNSUPPORTED_CASHREGISTERID: {
+      code: 'UNSUPPORTED_CASHREGISTERID', description: {
+        en: 'The cash register id is unsupported',
+        tr: 'Tanımsız para kayıt tür idsi',
       }
     },
     PATIENTMOVEMENTID_REQUIRED: {
@@ -567,6 +603,30 @@ const messages = {
       code: 'UNSUPPORTED_PATIENTID', description: {
         en: 'The patientid is unsupported',
         tr: 'Tanımsız patientid',
+      }
+    },
+    UNSUPPORTED_MOVEMENTID: {
+      code: 'UNSUPPORTED_MOVEMENTID', description: {
+        en: 'The movementid is unsupported',
+        tr: 'Tanımsız movementid',
+      }
+    },
+    REPORTID_REQUIRED: {
+      code: 'REPORTID_REQUIRED', description: {
+        en: 'The report id required',
+        tr: 'Bu işlem için tahsilat no gerekli',
+      }
+    },
+    MOVEMENTVALUE_REQUIRED: {
+      code: 'MOVEMENTVALUE_REQUIRED', description: {
+        en: 'The movement value required',
+        tr: 'Bu işlem için hareket değeri gerekli',
+      }
+    },
+    MOVEMENTTYPE_REQUIRED: {
+      code: 'MOVEMENTTYPE_REQUIRED', description: {
+        en: 'The movement type required',
+        tr: 'Bu işlem için hareket türü gerekli',
       }
     },
     TODOID_REQUIRED: {

@@ -12,6 +12,7 @@ import { GetStockmovements } from '../../Redux/StockmovementSlice'
 import { GetDepartments } from '../../Redux/DepartmentSlice'
 import { GetStockdefines } from '../../Redux/StockdefineSlice'
 import { GetUnits } from '../../Redux/UnitSlice'
+import { GetWarehouses } from '../../Redux/WarehouseSlice'
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -26,6 +27,7 @@ const mapStateToProps = (state) => ({
     Departments: state.Departments,
     Stockdefines: state.Stockdefines,
     Units: state.Units,
+    Warehouses: state.Warehouses,
     Profile: state.Profile
 })
 
@@ -33,7 +35,7 @@ const mapDispatchToProps = {
     GetPatients, GetPatientstocks, fillPatientstocknotification, ApprovePatientstocks, GetPatientstockmovements, GetPatientdefines,
     GetPurchaseorders, GetPurchaseorderstocks, fillPurchaseorderstocknotification, ApprovePurchaseorderstocks, GetPurchaseorderstockmovements,
     GetStocks, fillStocknotification, ApproveStocks, GetStockmovements, GetDepartments, GetStockdefines, GetUnits, ApprovemultiplePatientstocks,
-    ApprovemultipleStocks, ApprovemultiplePurchaseorderstocks
+    ApprovemultipleStocks, ApprovemultiplePurchaseorderstocks, GetWarehouses
 }
 
 

@@ -1,20 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form, Icon, Table } from 'semantic-ui-react'
-import { Breadcrumb, Button } from 'semantic-ui-react'
-import LoadingPage from '../../Utils/LoadingPage'
-import FormInput from '../../Utils/FormInput'
+import { Breadcrumb, Button, Form, Icon, Table } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
 import { FormContext } from '../../Provider/FormProvider'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Submitbutton from '../../Common/Submitbutton'
+import {
+  Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump,
+  Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
+} from '../../Components'
 
 export default class EquipmentsCreate extends Component {
 
@@ -23,7 +16,6 @@ export default class EquipmentsCreate extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      modelOpened: false,
       selectedProperties: []
     }
   }

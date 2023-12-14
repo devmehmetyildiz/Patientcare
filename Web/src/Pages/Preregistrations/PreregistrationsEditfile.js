@@ -2,20 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Dropdown, Form, Header, Icon, Label, Table } from 'semantic-ui-react'
 import { ROUTES } from '../../Utils/Constants'
-import LoadingPage from '../../Utils/LoadingPage'
 import config from '../../Config'
-import Pagewrapper from '../../Common/Wrappers/Pagewrapper'
-import Headerwrapper from '../../Common/Wrappers/Headerwrapper'
-import Pagedivider from '../../Common/Styled/Pagedivider'
-import Contentwrapper from '../../Common/Wrappers/Contentwrapper'
-import Footerwrapper from '../../Common/Wrappers/Footerwrapper'
-import Headerbredcrump from '../../Common/Wrappers/Headerbredcrump'
 import Literals from './Literals'
-import Gobackbutton from '../../Common/Gobackbutton'
-import Submitbutton from '../../Common/Submitbutton'
 import validator from '../../Utils/Validator'
 import { useDropzone } from 'react-dropzone';
-
+import { Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 
 export default function PreregistrationsEditfile(props) {
 
