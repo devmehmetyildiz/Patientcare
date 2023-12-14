@@ -67,6 +67,7 @@ const Routes = [
     { method: 'get', path: '/Todos/:todoId', controller: 'Todo', action: 'GetTodo' },
     { method: 'get', path: '/Todos', controller: 'Todo', action: 'GetTodos' },
     { method: 'post', path: '/Todos/Approve/:todoId', controller: 'Todo', action: 'ApproveTodo' },
+    { method: 'post', path: '/Todos/Approve', controller: 'Todo', action: 'ApproveTodos' },
     { method: 'post', path: '/Todos/AddPatienttodolist', controller: 'Todo', action: 'AddPatienttodolist' },
     { method: 'post', path: '/Todos', controller: 'Todo', action: 'AddTodo' },
     { method: 'put', path: '/Todos', controller: 'Todo', action: 'UpdateTodo' },

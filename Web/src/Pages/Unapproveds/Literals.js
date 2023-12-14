@@ -96,6 +96,100 @@ const Literals = {
                 en: 'Delete'
             },
         },
+        Todo: {
+            CanSelect: {
+                tr: 'Çoklu Seçim Yap',
+                en: 'Select Multiple'
+            },
+            Multipleapprove: {
+                tr: 'Toplu Onayla',
+                en: 'Approve Multiple'
+            },
+            Approve: {
+                tr: 'Rutin Onaylama',
+                en: 'Movement Routine'
+            },
+            CanSelectclose: {
+                tr: 'Çoklu Seçimi Kapat',
+                en: 'Close Multiple Select'
+            },
+            Id: {
+                tr: 'Id',
+                en: 'Id'
+            },
+            Uuid: {
+                tr: 'Tekil ID',
+                en: 'Unique ID'
+            },
+            Name: {
+                tr: 'Yapılacak Tanım Adı',
+                en: 'Todo Define Name'
+            },
+            Patient: {
+                tr: 'Hasta',
+                en: 'Patient'
+            },
+            Tododefine: {
+                tr: 'Yapılacak',
+                en: 'Todo Define'
+            },
+            Order: {
+                tr: 'Sıra',
+                en: 'Order'
+            },
+            Occuredtime: {
+                tr: 'Gerçekleşme Tarihi',
+                en: 'Occured Time'
+            },
+            Checktime: {
+                tr: 'Kontrol Süresi',
+                en: 'Check Time'
+            },
+            Willapprove: {
+                tr: 'Onaylanacak mı?',
+                en: 'Will Approve'
+            },
+            Isapproved: {
+                tr: 'Onaylandı mı?',
+                en: 'Is Approved'
+            },
+            Iscompleted: {
+                tr: 'Tamamlandı mı?',
+                en: 'Is Completed'
+            },
+            Createduser: {
+                tr: 'Oluşturan Kullanıcı',
+                en: 'Created User'
+            },
+            Updateduser: {
+                tr: 'Güncelleyen Kullanıcı',
+                en: 'Updated User'
+            },
+            Createtime: {
+                tr: 'Oluşturma Tarihi',
+                en: 'Create Time'
+            },
+            Updatetime: {
+                tr: 'Güncelleme Tarihi',
+                en: 'Update Time'
+            },
+            approve: {
+                tr: 'Onayla',
+                en: 'Approve'
+            },
+            edit: {
+                tr: 'Güncelle',
+                en: 'Edit'
+            },
+            watch: {
+                tr: 'İzle',
+                en: 'Watch'
+            },
+            delete: {
+                tr: 'Sil',
+                en: 'Delete'
+            },
+        },
         Stock: {
             Id: {
                 tr: 'Id',
@@ -268,6 +362,10 @@ const Literals = {
                 en: "Patient Supplies"
             },
         },
+        PageTodoheader: {
+            tr: "Onay Bekleyen Rutinler",
+            en: "Routines Awaiting Approval"
+        },
         Pageapproveheader: {
             tr: "Onaylama",
             en: "Approve"
@@ -337,6 +435,10 @@ const Literals = {
             tr: "Seçili Hareketleri Onaylamak istiyormusunuz?",
             en: "Are you sure to approve selected movements"
         },
+        Approvetodomessage: {
+            tr: "Seçili Rutinleri Onaylamak istiyormusunuz?",
+            en: "Are you sure to approve selected todos"
+        },
         Approvestockmessage: {
             tr: "Seçili Stokları Onaylamak istiyormusunuz?",
             en: "Are you sure to approve selected stocks"
@@ -344,6 +446,10 @@ const Literals = {
         Approvemovementmessagesingle: {
             tr: "Seçili Hareketi Onaylamak istiyormusunuz?",
             en: "Are you sure to approve selected movement"
+        },
+        Approvetodomessagesingle: {
+            tr: "Seçili Rutini Onaylamak istiyormusunuz?",
+            en: "Are you sure to approve selected todo"
         },
         Approvestockmessagesingle: {
             tr: "Seçili Stoğu Onaylamak istiyormusunuz?",

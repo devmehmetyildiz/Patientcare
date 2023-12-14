@@ -194,6 +194,7 @@ const MainteanciesEdit = lazy(() => import('./Containers/Mainteancies/Mainteanci
 
 const UnapprovedMovements = lazy(() => import('./Containers/Unapproveds/UnapprovedMovements'));
 const UnapprovedStocks = lazy(() => import('./Containers/Unapproveds/UnapprovedStocks'));
+const UnapprovedTodos = lazy(() => import('./Containers/Unapproveds/UnapprovedTodos'));
 
 const Placeviews = lazy(() => import('./Containers/Placeviews/Placeviews'));
 
@@ -373,6 +374,7 @@ class Routes extends Component {
       { exact: true, path: "/Mainteancies/:MainteanceID/Edit", auth: true, component: MainteanciesEdit, permission: 'mainteancescreen' },
       { exact: true, path: "/UnapprovedMovements", auth: true, component: UnapprovedMovements, permission: 'stockmovementscreen' },
       { exact: true, path: "/UnapprovedStocks", auth: true, component: UnapprovedStocks, permission: 'stockscreen' },
+      { exact: true, path: "/UnapprovedTodos", auth: true, component: UnapprovedTodos, permission: 'todoscreen' },
       { exact: true, path: "/Placeviews", auth: true, component: Placeviews, permission: 'patientscreen' },
       { exact: true, path: "/Personelshifts", auth: true, component: Personelshifts, permission: 'shiftscreen' },
       { exact: true, path: "/Personelshifts/Create", auth: true, component: PersonelshiftsCreate, permission: 'shiftscreen' },

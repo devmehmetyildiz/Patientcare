@@ -58,6 +58,7 @@ export function Sidebar(props) {
             items: [
                 { id: 1, subtitle: Literals.Unapproveds.Page.Movement.Pageheader[Profile.Language], url: "/UnapprovedMovements", permission: checkAuth('stockmovementscreen') },
                 { id: 2, subtitle: Literals.Unapproveds.Page.Stock.Pageheader[Profile.Language], url: "/UnapprovedStocks", permission: checkAuth('stockscreen') },
+                { id: 2, subtitle: Literals.Unapproveds.Page.PageTodoheader[Profile.Language], url: "/UnapprovedTodos", permission: checkAuth('todoscreen') },
                 { id: 3, subtitle: Literals.Personels.Page.Pageheader[Profile.Language], url: "/Personels", permission: checkAuth('personelscreen') },
                 { id: 4, subtitle: Literals.Breakdowns.Page.Pageheader[Profile.Language], url: "/Breakdowns", permission: checkAuth('breakdownscreen') },
                 { id: 5, subtitle: Literals.Mainteancies.Page.Pageheader[Profile.Language], url: "/Mainteancies", permission: checkAuth('mainteancescreen') },
