@@ -257,10 +257,8 @@ export default class PatientsDetail extends Component {
                 <GridColumn width={14} >
                   <Grid.Row className='flex justify-between items-center'>
                     <Label size='huge' style={{ backgroundColor: casedata?.Casecolor }} horizontal>{casedata?.Name}</Label>
-                    <div className='flex items-baseline cursor-pointer'>
-                      <span className='text-[36px] font-bold'>{integerPart}</span>
-                      <span className='text-[24px] opacity-[0.7]'>.{decimalPart}</span>
-                      <span className='text-[24px]'>₺</span>
+                    <div className=' flex justify-start items-center'>
+                      <Label color='blue' size='big'>Cüzdan : {integerPart}.{decimalPart}₺</Label>
                     </div>
                     <div className='flex justify-start items-center'>
                       <Header as='h1'>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`}</Header>

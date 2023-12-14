@@ -1,8 +1,8 @@
-import React, {  useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Card, Grid, GridColumn, Loader } from 'semantic-ui-react'
+import { Breadcrumb, Card, Grid, GridColumn, Loader, Tab } from 'semantic-ui-react'
 import Literals from './Literals'
-import { Headerwrapper, LoadingPage, NoDataScreen, Pagedivider, Pagewrapper } from '../../Components'
+import { Contentwrapper, Headerwrapper, LoadingPage, NoDataScreen, Pagedivider, Pagewrapper } from '../../Components'
 
 export default function Placeviews(props) {
     const { GetPatients, GetPatientdefines, GetFloors, GetRooms, GetBeds, GetCases,
@@ -58,24 +58,72 @@ export default function Placeviews(props) {
         }
     }
 
-    const bedlist = onlyFilled ? (Beds.list || []).filter(u => u.Isoccupied && u.Isactive) : (Beds.list || []).filter(u => u.Isactive)
-    const list = (Floors.list || []).filter(u => u.Isactive).flatMap(floor =>
-        (Rooms.list || []).filter(u => u.Isactive)
-            .filter(room => room.FloorID === floor?.Uuid)
-            .flatMap(room =>
-                bedlist
-                    .filter(bed => bed.RoomID === room?.Uuid)
-                    .map(bed => ({
-                        header: <div className='w-full flex flex-col justify-start items-start'>
-                            <div className='font-bold'>{floor?.Name}</div>
-                            <div>{`${room?.Name} ${bed?.Name}`}</div>
-                        </div>,
-                        meta: <div>{bed.Isoccupied ? nameCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''}</div>,
-                        description: <div>{bed.Isoccupied ? caseCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''}</div>,
-                        color: bed.Isoccupied ? casecolorCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''
-                    }))
-            )
-    );
+    const list = (Beds.list || []).filter(u => u.Isactive).map(bed => {
+        const room = (Rooms.list || []).find(u => u.Uuid === bed?.RoomID)
+        const floor = (Floors.list || []).find(u => u.Uuid === room?.FloorID)
+        return {
+            header: <div className='w-full flex flex-col justify-start items-start'>
+                <div className='font-bold'>{floor?.Name}</div>
+                <div>{`${room?.Name} ${bed?.Name}`}</div>
+            </div>,
+            meta: <div>{bed.Isoccupied ? nameCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''}</div>,
+            description: <div>{bed.Isoccupied ? caseCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''}</div>,
+            color: bed.Isoccupied ? casecolorCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''
+        }
+    })
+
+    const filledlist = (Beds.list || []).filter(u => u.Isactive && u.Isoccupied).map(bed => {
+        const room = (Rooms.list || []).find(u => u.Uuid === bed?.RoomID)
+        const floor = (Floors.list || []).find(u => u.Uuid === room?.FloorID)
+        return {
+            header: <div className='w-full flex flex-col justify-start items-start'>
+                <div className='font-bold'>{floor?.Name}</div>
+                <div>{`${room?.Name} ${bed?.Name}`}</div>
+            </div>,
+            meta: <div>{bed.Isoccupied ? nameCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''}</div>,
+            description: <div>{bed.Isoccupied ? caseCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''}</div>,
+            color: bed.Isoccupied ? casecolorCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''
+        }
+    })
+
+    const panes = [
+        {
+            menuItem: Literals.Columns.Onlyfilled[Profile.Language], render: () => <Tab.Pane>
+                {filledlist.length > 0
+                    ? <div className='w-full mx-auto '>
+                        <Card.Group>
+                            {(filledlist || []).map((card, index) => {
+                                return <Card key={index} style={{ backgroundColor: card.color }} >
+                                    <Card.Content className='!p-1 !m-0' header={card.header} />
+                                    <Card.Content className=' !p-1 !m-0' header={card.meta} />
+                                    <Card.Content className=' !p-1 !m-0' header={card.description} />
+                                </Card>
+                            })}
+                        </Card.Group>
+                    </div>
+                    : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+                }
+            </Tab.Pane>
+        },
+        {
+            menuItem: Literals.Columns.All[Profile.Language], render: () => <Tab.Pane>
+                {list.length > 0
+                    ? <div className='w-full mx-auto '>
+                        <Card.Group>
+                            {(list || []).map((card, index) => {
+                                return <Card key={index} style={{ backgroundColor: card.color }} >
+                                    <Card.Content className='!p-1 !m-0' header={card.header} />
+                                    <Card.Content className=' !p-1 !m-0' header={card.meta} />
+                                    <Card.Content className=' !p-1 !m-0' header={card.description} />
+                                </Card>
+                            })}
+                        </Card.Group>
+                    </div>
+                    : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+                }
+            </Tab.Pane>
+        },
+    ]
 
     return (
         Patients.isLoading ? <LoadingPage /> :
@@ -93,20 +141,9 @@ export default function Placeviews(props) {
                         </Grid>
                     </Headerwrapper>
                     <Pagedivider />
-                    {list.length > 0
-                        ? <div className='w-full mx-auto '>
-                            <Card.Group>
-                                {(list || []).map((card, index) => {
-                                    return <Card key={index} style={{ backgroundColor: card.color }} >
-                                        <Card.Content className='!p-1 !m-0' header={card.header} />
-                                        <Card.Content className=' !p-1 !m-0' header={card.meta} />
-                                        <Card.Content className=' !p-1 !m-0' header={card.description} />
-                                    </Card>
-                                })}
-                            </Card.Group>
-                        </div>
-                        : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
-                    }
+                    <Contentwrapper additionalStyle={'max-h-[90vh]'}>
+                        <Tab panes={panes} />
+                    </Contentwrapper>
                 </Pagewrapper>
             </React.Fragment >
     )

@@ -1,9 +1,16 @@
 const Literals = {
     Options: {
-       
+
     },
     Columns: {
-      
+        Onlyfilled: {
+            tr: "Dolu Yataklar",
+            en: "Filled Places"
+        },
+        All: {
+            tr: "Tüm Yataklar",
+            en: "All Places"
+        },
     },
     Page: {
         Pageheader: {
@@ -51,7 +58,7 @@ const Literals = {
             tr: "Tanımlı Yerleşim Yok",
             en: "There is no Personel found"
         },
-      
+
 
     }
 }
