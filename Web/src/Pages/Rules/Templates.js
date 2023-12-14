@@ -352,5 +352,185 @@ setInterval(() => {
     patienttodoProcess()
 }, interval)
 `
+const personelshifteditorrule = `
+const axios = require('axios')
+const interval = 1000
+const secret = process.env.APP_SESSION_SECRET
+const businesseurl = process.env.BUSINESS_URL
 
-export { breakdownmainteanciesrule, patienttodoccreaterule }
+const editorProcess = async () => {
+    try {
+        console.log("/////// JOB BAŞLADI ///////")
+        const currentdate = new Date()
+        const currentday = currentdate.getDay().toString()
+        const shiftrequests = await getShiftrequests()
+        const shifts = await getShifts()
+        const currentShiftrequest = getCurrentshiftrequest((shiftrequests || []))
+        const currentShift = getCurrentshift((shifts || []))
+        if (!currentShiftrequest) {
+            console.log("Shift request bulunamadı")
+            return
+        }
+        const personelShiftsandshiftrequest = await getPersonelshifts(currentShiftrequest?.Uuid)
+        const personelShifts = personelShiftsandshiftrequest?.personelshifts
+        if (!personelShifts) {
+            console.log("Personel shift requests bulunamadı")
+            return
+        }
+        const personels = await getPersonels()
+        for (const personel of (personels || [])) {
+            const personelshift = (personelShifts || []).find(u => u.PersonelID === personel?.Uuid && u.ShiftID === currentShift?.Uuid && u.Occuredday === currentday)
+            if (!personelshift) {
+                //personelin bu vardiyada işi yok
+                console.log("personelin bu vardiyada işi yok")
+                if (personel?.ShiftID || personel?.FloorID || personel?.Iswildcard) {
+                    const newpersonel = {
+                        ...personel,
+                        ShiftID: null,
+                        FloorID: null,
+                        Iswildcard: false
+                    }
+                    await editPersonels(newpersonel)
+                    console.log("personel cleared with uuid" , personel?.Uuid)
+                }
+            } else {
+                if ((personel?.FloorID !== personelshift?.FloorID) || ((personel?.ShiftID !== personelshift?.ShiftID))) {
+                    const newpersonel = {
+                        ...personel,
+                        ShiftID: personelshift?.ShiftID,
+                        FloorID: personelshift?.FloorID,
+                        Iswildcard: false
+                    }
+                    await editPersonels(newpersonel)
+                    console.log("personel filled with uuid" , personel?.Uuid)
+                }
+            }
+        }
+
+    }
+    catch (error) {
+        console.log("error", error)
+    }
+}
+
+const getCurrentshiftrequest = (shiftRequests) => {
+    const now = new Date();
+    for (const shiftRequest of shiftRequests) {
+        const startDate = new Date(shiftRequest.Startdate);
+        const endDate = new Date(shiftRequest.Enddate);
+        if (startDate <= now && endDate >= now) {
+            return shiftRequest;
+        }
+    }
+    return null;
+}
+
+getCurrentshift = (shifts) => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinutes = now.getMinutes();
+
+    for (const shift of (shifts || [])) {
+        const [startHour, startMinutes] = (shift?.Starttime || '').split(':').map(Number);
+        const [endHour, endMinutes] = (shift?.Endtime || '').split(':').map(Number);
+
+        const currentTimeInMinutes = currentHour * 60 + currentMinutes;
+        const startTimeInMinutes = startHour * 60 + startMinutes;
+        const endTimeInMinutes = endHour * 60 + endMinutes;
+
+        if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes <= endTimeInMinutes) {
+            return shift;
+        }
+    }
+    return null;
+}
+
+const getShiftrequests = async () => {
+    try {
+        const response = await axios({
+            method: 'GET',
+            url: businesseurl + 'Shifts/GetShiftrequests',
+            headers: {
+                session_key: secret
+            },
+        })
+        return response?.data
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+const getPersonels = async () => {
+    try {
+        const response = await axios({
+            method: 'GET',
+            url: businesseurl + 'Personels',
+            headers: {
+                session_key: secret
+            },
+        })
+        return response?.data
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+const getShifts = async () => {
+    try {
+        const response = await axios({
+            method: 'GET',
+            url: businesseurl + 'Shifts',
+            headers: {
+                session_key: secret
+            },
+        })
+        return response?.data
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+const editPersonels = async (data) => {
+    try {
+        const response = await axios({
+            method: 'PUT',
+            url: businesseurl + 'Personels',
+            headers: {
+                session_key: secret
+            },
+            data
+        })
+        return response?.data
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+const getPersonelshifts = async (shiftRequestid) => {
+    try {
+        const response = await axios({
+            method: 'GET',
+            url: businesseurl + 'Shifts/GetPersonelshifts/' + shiftRequestid,
+            headers: {
+                session_key: secret
+            },
+        })
+        return response?.data
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+
+setInterval(() => {
+    editorProcess()
+}, interval)
+`
+
+
+export { breakdownmainteanciesrule, patienttodoccreaterule,personelshifteditorrule }
