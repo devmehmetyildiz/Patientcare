@@ -252,65 +252,45 @@ const version1_0_0_7 = {
         {
             title: "Kurum Yönetimi", commits: [
                 "Toplu stok onaylama ekranı eklendi",
+                "Toplu Rutin onaylama ekranı eklendi",
                 "Hasta Yerleşimleri takip ekranı eklendi",
+                "Personelleri vardiyaya atama kuralı eklendi",
             ]
         },
+        {
+            title: "Sistem", commits: [
+                "Uygulama Kullanım raporu eklendi",
+                "Kurallar gelişti, 3 tane kural eklendi",
+            ]
+        },
+        {
+            title: "Hastalar", commits: [
+                "Kurum Cüzdanı Eklendi",
+                "Hasta Cüzdanı Eklendi",
+                "Kurum Cüzdanı ile hasta cüzdanı arasında etkileşim eklendi",
+            ]
+        },
+        {
+            title: "Kullanıcı", commits: [
+                "Bildirimler Eklendi",
+                "Arıza ve Bakım talepleri bildirim kuralı eklendi",
+            ]
+        },
+    ],
+    bugs: [
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Vardiyalarda güncelleme",
+            ]
+        }
     ],
     withoutIssues: [
         {
             title: "Önyüz", commits: [
-                "Versiyon button style düzenlemesi",
+                "Sayfaların hızlanması için performans güncellemesi",
             ]
         }
     ]
 }
 
 export { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3, version1_0_0_4, version1_0_0_5, version1_0_0_6, version1_0_0_7 }
-
-/* const version1000 = {
-    version: "1.0.0.0",
-    features: [
-        {
-            title: "testtitle", commits: [
-                "test1",
-                "test2"
-            ]
-        },
-        {
-            title: "testtitle1", commits: [
-                "test1",
-                "test2"
-            ]
-        },
-        {
-            title: "testtitle2", commits: [
-                "test1",
-                "test2"
-            ]
-        },
-    ],
-    changes: [
-        {
-            title: "testtitle", commits: [
-                "test1",
-                "test2"
-            ]
-        }
-    ],
-    bugs: [
-        {
-            title: "testtitle", commits: [
-                "test1",
-                "test2"
-            ]
-        }
-    ],
-    withoutIssues: [
-        {
-            title: "testtitle", commits: [
-                "test1",
-                "test2"
-            ]
-        }
-    ]
-} */
