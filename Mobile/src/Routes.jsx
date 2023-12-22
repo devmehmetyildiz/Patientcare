@@ -1,11 +1,10 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { Component } from 'react';
-import { navigationRef } from './Services/Navigationservice';
-import Login from './Pages/Login/Login';
+import { navigationRef } from './Provider/NavigationProvider';
 import Cases from './Pages/Cases/Cases';
-import Home from './Pages/Home/Home';
-
+import Login from './Pages/Login/Login';
+import Units from './Pages/Units/Units';
 
 const Stack = createNativeStackNavigator();
 export default class Routes extends Component {
@@ -14,14 +13,14 @@ export default class Routes extends Component {
         return (
             <NavigationContainer ref={navigationRef}>
                 <Stack.Navigator
-                    initialRouteName="Home"
+                    initialRouteName="Cases"
                     screenOptions={{
                         headerShown: false
                     }}
                 >
+                    <Stack.Screen name="Cases" component={Cases} />
+                    <Stack.Screen name="Units" component={Units} />
                     <Stack.Screen name="Login" component={Login} />
-                    <Stack.Screen name="Case" component={Cases} />
-                    <Stack.Screen name="Home" component={Home} />
                 </Stack.Navigator>
             </NavigationContainer>
         )

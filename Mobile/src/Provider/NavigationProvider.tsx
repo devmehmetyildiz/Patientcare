@@ -2,7 +2,7 @@ import { createNavigationContainerRef, Route } from '@react-navigation/native';
 
 const navigationRef = createNavigationContainerRef();
 
-class Navigationservice {
+class NavigationProvider {
     public static GetCurrentScreen(): string {
         return navigationRef.getCurrentRoute().name;
     }
@@ -23,4 +23,4 @@ export interface IRouteProps<T extends object> {
     route: Route<string, T>;
 }
 
-export { Navigationservice, navigationRef };
+export { NavigationProvider, navigationRef };
