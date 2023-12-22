@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import Cookies from 'universal-cookie'
 import Routes from '../../Routes'
 import { Sidebar, LoadingPage, Navbar } from '../../Components'
-
+import cookies from 'universal-cookie';
 export default class Layout extends Component {
 
   componentDidMount() {
-    const { GetActiveUser, GetUserRoles, GetTableMeta, GetUserMeta } = this.props
+    const { GetActiveUser, GetUserRoles, GetTableMeta, GetUserMeta, Checktoken } = this.props
     const routes = [
       "/Login",
       "/login",
@@ -21,10 +21,14 @@ export default class Layout extends Component {
     const currentPath = window.location.pathname;
 
     if (!routes.some(route => currentPath.toLowerCase().startsWith(route.toLowerCase()))) {
+      const localcookies = new cookies();
       GetActiveUser()
       GetUserRoles()
       GetTableMeta()
       GetUserMeta()
+      Checktoken({
+        token: localcookies.get('patientcare')
+      })
     }
   }
 
@@ -38,9 +42,9 @@ export default class Layout extends Component {
   }
 
   render() {
-    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal } = this.props
+    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal, Istokenchecking } = this.props
     return (
-      Profile.isLogging || Profile.isFetching ?
+      Istokenchecking || Profile.isLogging || Profile.isFetching ?
         <LoadingPage />
         :
         <div className='bg-white dark:bg-Contentbg overflow-hidden' >
