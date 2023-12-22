@@ -210,6 +210,20 @@ export const Createpasswordforget = createAsyncThunk(
     }
 );
 
+export const Checktoken = createAsyncThunk(
+    'Profile/Checktoken',
+    async ({ token }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Auth, 'Oauth/ValidateToken', { accessToken: token });
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 
 
 export const ProfileSlice = createSlice({
@@ -231,7 +245,8 @@ export const ProfileSlice = createSlice({
         resetpasswordStatus: false,
         passwordrequestsended: false,
         resetrequestuser: {},
-        Ismobile: false
+        Ismobile: false,
+        Istokenchecking: false,
     },
     reducers: {
         fillnotification: (state, action) => {
@@ -407,6 +422,17 @@ export const ProfileSlice = createSlice({
             })
             .addCase(Resetpassword.rejected, (state, action) => {
                 state.isLogging = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(Checktoken.pending, (state) => {
+                state.Istokenchecking = true;
+                state.errMsg = null;
+            })
+            .addCase(Checktoken.fulfilled, (state, action) => {
+                state.Istokenchecking = false;
+            })
+            .addCase(Checktoken.rejected, (state, action) => {
+                state.Istokenchecking = false;
                 state.errMsg = action.error.message;
             })
     },

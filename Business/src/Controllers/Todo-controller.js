@@ -299,7 +299,7 @@ async function ApproveTodos(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        for (const data of (body || [])) {
+        for (const data of body) {
             if (!data) {
                 validationErrors.push(messages.VALIDATION_ERROR.TODOID_REQUIRED)
             }

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Layout from "../../Pages/Layout/Layout"
-import { GetActiveUser, GetUserRoles, logOut, GetTableMeta, GetUserMeta, removenotification, handlemobile } from "../../Redux/ProfileSlice"
+import { GetActiveUser, GetUserRoles, logOut, GetTableMeta, GetUserMeta, removenotification, handlemobile, Checktoken } from "../../Redux/ProfileSlice"
 import { removeUsernotification } from "../../Redux/UserSlice"
 import { handleViewmodal } from "../../Redux/UsernotificationSlice"
 import { GetFiles, removeFilenotification } from "../../Redux/FileSlice"
@@ -12,7 +12,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetActiveUser, GetUserRoles, logOut, GetTableMeta, GetUserMeta, removenotification, removeUsernotification, GetFiles, removeFilenotification, handlemobile, handleViewmodal
+    GetActiveUser, GetUserRoles, logOut, GetTableMeta, GetUserMeta, removenotification, removeUsernotification,
+    GetFiles, removeFilenotification, handlemobile, handleViewmodal, Checktoken
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Layout)

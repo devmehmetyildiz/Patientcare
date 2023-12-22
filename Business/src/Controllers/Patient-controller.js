@@ -880,6 +880,87 @@ async function InPatient(req, res, next) {
     GetPatient(req, res, next)
 }
 
+async function Createfromtemplate(req, res, next) {
+
+    const body = req.body
+    const t = await db.sequelize.transaction();
+    try {
+
+        for (const patientdata of body) {
+
+            let patientdefineuuid = uuid()
+
+            await db.patientdefineModel.create({
+                Uuid: patientdefineuuid,
+                Firstname: patientdata.Firstname,
+                Lastname: patientdata.Lastname,
+                PatienttypeID: patientdata.PatienttypeID,
+                CostumertypeID: patientdata.CostumertypeID,
+                Gender: String(patientdata.Gender),
+                CountryID: String(patientdata.CountryID),
+                Createduser: "System",
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+
+            let patientuuid = uuid()
+            await db.patientModel.create({
+                PatientdefineID: patientdefineuuid,
+                Approvaldate: "2023-11-01 00:00:00",
+                Registerdate: "2023-11-01 00:00:00",
+                Happensdate: patientdata.Happensdate,
+                DepartmentID: "f276eb15-0c06-4367-b075-30150c520d2a",
+                CaseID: "e599c0e3-5a87-4612-bb1c-6733466643c5",
+                Iswaitingactivation: 0,
+                Uuid: patientuuid,
+                Createduser: "System",
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+
+            await db.patientmovementModel.create({
+                Uuid: uuid(),
+                OldPatientmovementtype: 0,
+                Patientmovementtype: 2,
+                NewPatientmovementtype: 2,
+                Createduser: "System",
+                Createtime: "2023-11-01 00:00:00",
+                PatientID: patientuuid,
+                Movementdate: new Date(),
+                IsDeactive: false,
+                IsTodoneed: false,
+                IsTodocompleted: false,
+                IsComplated: true,
+                Iswaitingactivation: false,
+                Isactive: true
+            }, { transaction: t })
+
+            await db.patientmovementModel.create({
+                Uuid: uuid(),
+                OldPatientmovementtype: 2,
+                Patientmovementtype: 1,
+                NewPatientmovementtype: 1,
+                Createduser: "System",
+                Createtime: "2023-11-01 00:00:00",
+                PatientID: patientuuid,
+                Movementdate: new Date(),
+                IsDeactive: false,
+                IsTodoneed: false,
+                IsTodocompleted: false,
+                IsComplated: true,
+                Iswaitingactivation: false,
+                Isactive: true
+            }, { transaction: t })
+        }
+
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    return res.status(200).json({ message: "success" })
+}
+
 
 module.exports = {
     GetPatients,
@@ -896,5 +977,6 @@ module.exports = {
     UpdatePatientplace,
     OutPatient,
     InPatient,
-    AddPatientReturnPatient
+    AddPatientReturnPatient,
+    Createfromtemplate
 }
