@@ -5,7 +5,6 @@ const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetPatientcashmovements(req, res, next) {
     try {
@@ -47,7 +46,6 @@ async function AddPatientcashmovement(req, res, next) {
         Movementtype,
         Movementvalue,
         ReportID,
-        Includecompany
     } = req.body
 
 
@@ -78,7 +76,15 @@ async function AddPatientcashmovement(req, res, next) {
 
     try {
 
-        if (Includecompany) {
+        const registertype = await db.patientcashregisterModel.findAll({ where: { Isactive: true, Uuid: RegisterID } })
+        if (!registertype) {
+            return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_FOUND], req.language))
+        }
+        if (registertype.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.CASHREGISTER_NOT_ACTIVE], req.language))
+        }
+
+        if (registertype.Iseffectcompany) {
             let companyuuid = uuid()
             await db.companycashmovementModel.create({
                 Movementtype: (Movementtype * -1),

@@ -15,6 +15,10 @@ const Literals = {
             tr: 'Hasta Para Türü',
             en: 'Patient Cash Type'
         },
+        Iseffectcompany: {
+            tr: 'Firma Kasasını Etkiler mi?',
+            en: 'Will Effect Company Wallet'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'
@@ -94,7 +98,14 @@ const Literals = {
             tr: "Hasta Para Tür Adı Gerekli",
             en: "Patient Cash Type Name Required"
         },
-
+        Yes: {
+            tr: "EVET",
+            en: "YES"
+        },
+        No: {
+            tr: "HAYIR",
+            en: "NO"
+        }
     }
 }
 

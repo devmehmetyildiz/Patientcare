@@ -10,6 +10,9 @@ module.exports = sequelize.define('patientcashregisterModel', {
     Name: {
         type: Sequelize.STRING
     },
+    Iseffectcompany: {
+        type: Sequelize.BOOLEAN
+    },
     Createduser: {
         type: Sequelize.STRING
     },
