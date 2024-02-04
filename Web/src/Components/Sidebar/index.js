@@ -81,8 +81,11 @@ export function Sidebar(props) {
                 { id: 6, subtitle: Literals.Patientmedicines.Page.Pageheader[Profile.Language], url: "/Patientmedicines", permission: checkAuth('patientstockscreen') },
                 { id: 7, subtitle: Literals.Patientsupplies.Page.Pageheader[Profile.Language], url: "/Patientsupplies", permission: checkAuth('patientstockscreen') },
                 { id: 8, subtitle: Literals.Patientstockmovements.Page.Pageheader[Profile.Language], url: "/Patientstockmovements", permission: checkAuth('patientstockmovementscreen') },
-                { id: 8, subtitle: Literals.Patientcashmovements.Page.Pageheader[Profile.Language], url: "/Patientcashmovements", permission: checkAuth('patientcashmovementscreen') },
-                { id: 9, subtitle: Literals.Todos.Page.Pageheader[Profile.Language], url: "/Todos", permission: checkAuth('todoscreen') },
+                { id: 9, subtitle: Literals.Patientcashmovements.Page.Pageheader[Profile.Language], url: "/Patientcashmovements", permission: checkAuth('patientcashmovementscreen') },
+                { id: 10, subtitle: Literals.Patientcashmovements.Page.Pageheader[Profile.Language], url: "/Patientcashmovements", permission: checkAuth('patientcashmovementscreen') },
+                { id: 11, subtitle: Literals.Patientusestocks.Page.Pageheader[Profile.Language], url: "/Patientusestocks", permission: checkAuth('patientscreen') },
+                { id: 12, subtitle: Literals.Patientusemedicines.Page.Pageheader[Profile.Language], url: "/Patientusemedicines", permission: checkAuth('patientscreen') },
+                { id: 13, subtitle: Literals.Patientusesupplies.Page.Pageheader[Profile.Language], url: "/Patientusesupplies", permission: checkAuth('patientscreen') },
             ]
         },
         {
@@ -250,7 +253,7 @@ export function Sidebar(props) {
                         </div>}
                 </div> : null
             })}
-            <div className='h-full mt-auto mb-2 w-full mx-auto flex justify-center items-end'>
+            {!hideMobile && <div className='h-full mt-auto mb-2 w-full mx-auto flex justify-center items-end'>
                 <div className='w-full flex flex-row justify-center items-center cursor-pointer group'>
                     <Link to="/About">
                         {!iconOnly ?
@@ -275,7 +278,7 @@ export function Sidebar(props) {
                         }
                     </Link>
                 </div>
-            </div>
+            </div>}
         </div >
     )
 }

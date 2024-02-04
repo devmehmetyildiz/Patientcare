@@ -96,9 +96,6 @@ export default class PatientcashmovementsCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Report[Profile.Language]} name="ReportID" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
-              <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Includecompany[Profile.Language]} name="Includecompany" formtype='checkbox' />
-              </Form.Group>
             </Form>
           </Contentwrapper>
           <Footerwrapper>

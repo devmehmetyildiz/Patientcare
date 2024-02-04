@@ -2,7 +2,18 @@ import React, { Component } from 'react'
 import { Accordion, Breadcrumb, Button, Grid, GridColumn, Header, Icon, Segment, Transition } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Headerbredcrump, Pagewrapper, Headerwrapper, Pagedivider } from '../../Components'
-import { version1_0_0_0, version1_0_0_1, version1_0_0_2, version1_0_0_3, version1_0_0_4, version1_0_0_5, version1_0_0_6, version1_0_0_7, version1_0_0_8 } from './Changelogs'
+import {
+    version1_0_0_0,
+    version1_0_0_1,
+    version1_0_0_2,
+    version1_0_0_3,
+    version1_0_0_4,
+    version1_0_0_5,
+    version1_0_0_6,
+    version1_0_0_7,
+    version1_0_0_8,
+    version1_0_0_9
+} from './Changelogs'
 import './About.css'
 
 export default class About extends Component {
@@ -17,6 +28,7 @@ export default class About extends Component {
 
     render() {
         const Changelogs = [
+            version1_0_0_9,
             version1_0_0_8,
             version1_0_0_7,
             version1_0_0_6,

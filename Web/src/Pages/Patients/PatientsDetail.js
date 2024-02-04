@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Grid, GridColumn, Header, Icon, Label, Loader } from 'semantic-ui-react'
+import { Breadcrumb, Button, Grid, GridColumn, Header, Icon, Label, Loader, Popup } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
@@ -31,7 +31,7 @@ export default class PatientsDetail extends Component {
       GetPatienttypes, GetFloors, GetRooms, GetBeds,
       GetPatientstocks, GetStockdefines, GetUnits, GetTodosbyPatient,
       GetPatientmovements, GetFiles, GetPatientstockmovements, GetTododefines,
-      GetPatientcashmovements
+      GetPatientcashmovements, GetPatientcashregisters
     } = this.props
     let Id = PatientID || match?.params?.PatientID
     if (validator.isUUID(Id)) {
@@ -52,6 +52,7 @@ export default class PatientsDetail extends Component {
       GetTodosbyPatient(Id)
       GetTododefines()
       GetPatientcashmovements()
+      GetPatientcashregisters()
     } else {
       history.length > 1 ? history.goBack() : history.push(Id ? `/Patients/${Id}` : `/Patients`)
     }
@@ -65,7 +66,7 @@ export default class PatientsDetail extends Component {
       Floors, Rooms, Beds,
       Patientstocks, Stockdefines, Units,
       Patientcashmovements,
-      Patientmovements, Files, Todos } = this.props
+      Patientmovements, Files, Todos, Patientcashregisters } = this.props
 
     const { selected_record } = Patients
 
@@ -86,6 +87,7 @@ export default class PatientsDetail extends Component {
       Files.isLoading &&
       Todos.isLoading &&
       Tododefines.isLoading &&
+      Patientcashregisters.isLoading &&
       Patientcashmovements.isLoading
 
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && isLoadingstatus && !this.state.isDatafetched) {
@@ -100,7 +102,7 @@ export default class PatientsDetail extends Component {
       Patients, Patientdefines, Cases, Costumertypes, Patienttypes,
       Floors, Rooms, Beds, Patientstocks, Stockdefines, Units, Patientstockmovements,
       Patientmovements, Files, Profile, history, match, PatientID, handleSelectedPatient,
-      Todos, Patientcashmovements, handlePlacemodal
+      Todos, Patientcashmovements, handlePlacemodal, Patientcashregisters
     } = this.props
 
 
@@ -123,6 +125,7 @@ export default class PatientsDetail extends Component {
       Patientmovements.isLoading &&
       Patientstockmovements.isLoading &&
       Files.isLoading &&
+      Patientcashregisters.isLoading &&
       Patientcashmovements.isLoading
 
 
@@ -229,10 +232,24 @@ export default class PatientsDetail extends Component {
     })
 
     let patientCash = 0.0;
+    let patientCashdetail = [];
+
     (Patientcashmovements.list || []).filter(u => u.PatientID === selected_record?.Uuid && u.Isactive).forEach(cash => {
       patientCash += cash.Movementtype * cash.Movementvalue
+      let registername = (Patientcashregisters.list || []).find(u => u.Uuid === cash.RegisterID)?.Name || 'tanımsız'
+      patientCashdetail.push({ label: registername, value: cash.Movementtype * cash.Movementvalue, key: cash.RegisterID })
     })
     const [integerPart, decimalPart] = patientCash.toFixed(2).split('.')
+
+    let fixedpatientCashdetail = [];
+    patientCashdetail.forEach(cash => {
+      let fixeditem = fixedpatientCashdetail.find(u => u.key === cash.key)
+      if (fixeditem) {
+        fixeditem.value += cash?.value
+      } else {
+        fixedpatientCashdetail.push(cash)
+      }
+    });
 
     return (
       isLoadingstatus ? <LoadingPage /> :
@@ -258,7 +275,23 @@ export default class PatientsDetail extends Component {
                   <Grid.Row className='flex justify-between items-center'>
                     <Label size='huge' style={{ backgroundColor: casedata?.Casecolor }} horizontal>{casedata?.Name}</Label>
                     <div className=' flex justify-start items-center'>
-                      <Label color='blue' size='big'>Cüzdan : {integerPart}.{decimalPart}₺</Label>
+                      <Popup
+                        trigger={<Label color='blue' size='big'>Cüzdan : {integerPart}.{decimalPart}₺</Label>}
+                        on='hover'
+                        basic
+                        onOpen={() => {
+
+                        }}
+                        position='bottom center'
+                        style={{ height: 'auto', width: 'auto' }
+                        } >
+                        <div>
+                          {fixedpatientCashdetail.map(cash => {
+                            const [integerPart, decimalPart] = cash?.value.toFixed(2).split('.')
+                            return <Label key={Math.random()} basic>{cash?.label} : {integerPart}.{decimalPart}₺</Label>
+                          })}
+                        </div>
+                      </Popup>
                     </div>
                     <div className='flex justify-start items-center'>
                       <Header as='h1'>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`}</Header>

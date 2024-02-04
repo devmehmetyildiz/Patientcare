@@ -221,6 +221,10 @@ const PasswordReset = lazy(() => import('./Containers/Auth/PasswordReset'));
 
 const Appreports = lazy(() => import('./Containers/Appreports/Appreports'));
 
+const Patientusestocks = lazy(() => import('./Containers/Patientusestocks/Patientusestocks'));
+const Patientusesupplies = lazy(() => import('./Containers/Patientusesupplies/Patientusesupplies'));
+const Patientusemedicines = lazy(() => import('./Containers/Patientusemedicines/Patientusemedicines'));
+
 const Home = lazy(() => import('./Pages/Home'));
 const Notfoundpage = lazy(() => import('./Components/Notfoundpage'));
 
@@ -389,6 +393,9 @@ class Routes extends Component {
       { exact: true, path: "/Companycashmovements/Create", auth: true, component: CompanycashmovementsCreate, permission: 'companycashmovementscreen' },
       { exact: true, path: "/Companycashmovements/:CompanycashmovementID/Edit", auth: true, component: CompanycashmovementsEdit, permission: 'companycashmovementscreen' },
       { exact: true, path: "/Appreports", auth: true, component: Appreports, permission: 'appreports' },
+      { exact: true, path: "/Patientusestocks", auth: true, component: Patientusestocks, permission: 'patientscreen' },
+      { exact: true, path: "/Patientusesupplies", auth: true, component: Patientusesupplies, permission: 'patientscreen' },
+      { exact: true, path: "/Patientusemedicines", auth: true, component: Patientusemedicines, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/:PatientID/Edit", auth: true, component: PreregistrationsEdit, permission: 'patientscreen' },
