@@ -28,7 +28,7 @@ export default class Rooms extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-      { Header: Literals.Columns.FloorID[Profile.Language], accessor: 'FloorID', Subheader: true, Cell: col => this.floorCellhandler(col) },
+      { Header: Literals.Columns.FloorID[Profile.Language], accessor: 'FloorID', Subheader: true, accessor: (value) => this.floorCellhandler({ value }) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
@@ -38,6 +38,7 @@ export default class Rooms extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Rooms"
+    
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Rooms.list || []).filter(u => u.Isactive).map(item => {
@@ -97,10 +98,8 @@ export default class Rooms extends Component {
     if (Floors.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const floor = (Floors.list || []).find(u => u.Uuid === col.value)
+      const floor = (Floors.list || []).find(u => u.Uuid === col?.value || col)
       return floor?.Name
     }
-
   }
-
 }

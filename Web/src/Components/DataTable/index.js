@@ -4,9 +4,9 @@ import { useColumnOrder, useExpanded, useFilters, useGroupBy, usePagination, use
 import { Icon, Pagination, Select, Popup, } from 'semantic-ui-react'
 import "./index.css"
 
-function DefaultColumnFilter({
-    column: { filterValue, preFilteredRows, setFilter },
-}) {
+function DefaultColumnFilter({ column }) {
+
+    const { filterValue, preFilteredRows, setFilter } = column
     const count = preFilteredRows.length
 
     return (
@@ -174,7 +174,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                             {headerGroups.map(headerGroup => (
                                 <tr {...headerGroup.getHeaderGroupProps()}>
                                     {headerGroup.headers.map(column => {
-                                        const foundedColumn = columns.find(u => u.accessor === column.id);
+                                        const foundedColumn = columns.find(u => u.accessor === column.id || u.Header === column.id);
                                         let style = {}
                                         column.newWidht && (style.width = column.newWidht)
                                         column.disableProps && (style.width = '10px')
@@ -229,11 +229,8 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                                                                 {row.subRows.length})
                                                             </React.Fragment>
                                                         ) : cell.isAggregated ? (
-                                                            // If the cell is aggregated, use the Aggregated
-                                                            // renderer for cell
                                                             cell.render('Aggregated')
-                                                        ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
-                                                            // Otherwise, just render the regular cell
+                                                        ) : cell.isPlaceholder ? null : (
                                                             Isicon ?
                                                                 <div className='flex w-full justify-center items-center '>
                                                                     {cell.render('Cell', { editable: false })}
@@ -247,13 +244,6 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                                         {row.isExpanded && renderRowSubComponent ? (
                                             <tr>
                                                 <td colSpan={visibleColumns.length}>
-                                                    {/*
-                          Inside it, call our renderRowSubComponent function. In reality,
-                          you could pass whatever you want as props to
-                          a component like this, including the entire
-                          table instance. But for this example, we'll just
-                          pass the row
-                        */}
                                                     {renderRowSubComponent({ row })}
                                                 </td>
                                             </tr>
@@ -266,7 +256,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                 </div>
             </div>
             {
-                pageOptions.length > 1 ?
+                (pageOptions.length > 1 || pageSize !== 15) ?
                     <div className='flex flex-row justify-between items-center w-full p-2'>
                         <Select className='ml-2' placeholder='Set Page Size' value={pageSize} onChange={(e, data) => { setPageSize(data.value) }} options={pageSizes} />
                         <div className="pagination">
