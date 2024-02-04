@@ -4,7 +4,7 @@ import styled from 'styled-components/native'
 import Sidebar from './Sidebar'
 import LinearGradient from 'react-native-linear-gradient';
 
-export default function Pageheader({ children }) {
+export default function Pageheader({ children, pageName }) {
     return (
         <Container>
             <LinearGradient
@@ -16,6 +16,9 @@ export default function Pageheader({ children }) {
                 <Navbar />
                 <Lowercontainer>
                     <Sidebar />
+                    <Title>
+                        <Pagename>{pageName}</Pagename>
+                    </Title>
                     <Childcontainer>
                         {children}
                     </Childcontainer>
@@ -39,4 +42,14 @@ const Lowercontainer = styled.View({
 
 const Childcontainer = styled.View({
     width: '100%'
+})
+
+const Pagename = styled.Text({
+    color: 'black',
+    fontSize: '20px',
+    fontWeight: 'bold'
+})
+
+const Title = styled.View({
+    margin: '10px'
 })

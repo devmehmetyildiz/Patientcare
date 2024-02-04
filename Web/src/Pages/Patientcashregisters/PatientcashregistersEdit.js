@@ -59,6 +59,7 @@ export default class PatientcashregistersEdit extends Component {
           <Contentwrapper>
             <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Iseffectcompany[Profile.Language]} name="Iseffectcompany" formtype='checkbox' />
             </Form>
           </Contentwrapper>
           <Footerwrapper>

@@ -99,7 +99,7 @@ export default class Beds extends Component {
     if (Rooms.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const room = (Rooms.list || []).find(u => u.Uuid === col.value)
+      const room = (Rooms.list || []).find(u => u.Uuid === col.value || col)
       const floor = (Floors.list || []).find(u => u.Uuid === room?.FloorID)
       return `${room?.Name} (${floor?.Name})`
     }

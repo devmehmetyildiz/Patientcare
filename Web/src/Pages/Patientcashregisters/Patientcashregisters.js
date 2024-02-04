@@ -28,6 +28,7 @@ export default class Patientcashregisters extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
+      { Header: Literals.Columns.Iseffectcompany[Profile.Language], accessor: 'Iseffectcompany', Cell: col => this.boolCellhandler(col) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -89,5 +90,10 @@ export default class Patientcashregisters extends Component {
           <PatientcashregistersDelete />
         </React.Fragment>
     )
+  }
+
+  boolCellhandler = (col) => {
+    const { Profile } = this.props
+    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 }

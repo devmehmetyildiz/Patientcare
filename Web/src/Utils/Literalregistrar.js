@@ -49,6 +49,9 @@ import Patientcashregisters from "../Pages/Patientcashregisters/Literals"
 import Patientcashmovements from "../Pages/Patientcashmovements/Literals"
 import Appreports from "../Pages/Appreports/Literals"
 import Companycashmovements from "../Pages/Companycashmovements/Literals"
+import Patientusestocks from "../Pages/Patientusestocks/Literals"
+import Patientusemedicines from "../Pages/Patientusemedicines/Literals"
+import Patientusesupplies from "../Pages/Patientusesupplies/Literals"
 
 const Literals = {
     Cases,
@@ -101,7 +104,10 @@ const Literals = {
     Patientcashregisters,
     Patientcashmovements,
     Appreports,
-    Companycashmovements
+    Companycashmovements,
+    Patientusestocks,
+    Patientusemedicines,
+    Patientusesupplies
 }
 
 export default Literals

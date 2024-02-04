@@ -57,7 +57,7 @@ export default class Patientstocks extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Patientstocks"
-    let initialConfig = getInitialconfig(Profile,metaKey)
+    let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Patientstocks.list || []).filter(u => !u.Ismedicine && !u.Issupply && u.Isactive).map(item => {
       return {

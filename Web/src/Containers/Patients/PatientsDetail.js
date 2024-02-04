@@ -17,6 +17,7 @@ import { GetPatientstockmovements } from "../../Redux/PatientstockmovementSlice"
 import { GetTodosbyPatient } from "../../Redux/TodoSlice"
 import { GetTododefines } from "../../Redux/TododefineSlice"
 import { GetPatientcashmovements } from "../../Redux/PatientcashmovementSlice"
+import { GetPatientcashregisters } from "../../Redux/PatientcashregisterSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -36,7 +37,8 @@ const mapStateToProps = (state) => ({
     Patientstockmovements: state.Patientstockmovements,
     Todos: state.Todos,
     Tododefines: state.Tododefines,
-    Patientcashmovements: state.Patientcashmovements
+    Patientcashmovements: state.Patientcashmovements,
+    Patientcashregisters: state.Patientcashregisters,
 })
 
 const mapDispatchToProps = {
@@ -46,7 +48,8 @@ const mapDispatchToProps = {
     GetFloors, GetRooms, GetBeds, GetPatientcashmovements,
     GetPatientstocks, GetStockdefines, GetUnits,
     GetPatientmovements, GetFiles, handlePlacemodal,
-    GetPatientstockmovements, handleInmodal, handleOutmodal, GetTodosbyPatient, GetTododefines
+    GetPatientstockmovements, handleInmodal, handleOutmodal, GetTodosbyPatient, GetTododefines,
+    GetPatientcashregisters
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsDetail)
