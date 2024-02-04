@@ -30,8 +30,8 @@ class Login extends Component {
                                 <Divider />
                                 <div className='mt-4 w-full flex flex-col justify-end items-end'>
                                     <Link to='/Forgetpassword' className='text-[#3d3d3d] text-sm whitespace-nowrap'><Icon className='text-[#2355a0]' name='key' /> Parolamı Unuttum</Link>
-                                    <div className='w-1/3 mt-2'>
-                                        <Button loading={Profile.isLogging} className='mt-8 !bg-[#2355a0]' fluid size='medium' >Giriş Yap</Button>
+                                    <div className='w-1/2 lg:w-1/3 mt-2'>
+                                        <Button loading={Profile.isLogging} className='mt-8 !bg-[#2355a0] whitespace-nowrap' fluid size='medium' >Giriş Yap</Button>
                                     </div>
                                 </div>
                                 <div className='mt-4 flex flex-col justify-center items-center'>

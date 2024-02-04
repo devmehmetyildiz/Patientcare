@@ -253,7 +253,7 @@ export function Sidebar(props) {
                         </div>}
                 </div> : null
             })}
-            <div className='h-full mt-auto mb-2 w-full mx-auto flex justify-center items-end'>
+            {!hideMobile && <div className='h-full mt-auto mb-2 w-full mx-auto flex justify-center items-end'>
                 <div className='w-full flex flex-row justify-center items-center cursor-pointer group'>
                     <Link to="/About">
                         {!iconOnly ?
@@ -278,7 +278,7 @@ export function Sidebar(props) {
                         }
                     </Link>
                 </div>
-            </div>
+            </div>}
         </div >
     )
 }
