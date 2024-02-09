@@ -314,6 +314,42 @@ const version1_0_0_9 = {
         }
     ],
 }
+
+const version1_0_0_10 = {
+    version: "1.0.0.10",
+    changes: [
+        {
+            title: "Hastalar", commits: [
+                "Kullanım Türleri ekranında oluşturulan dosya türleri, dosya ekranlarında kullanılabilecek",
+                "Kullanım Türleri çoklu seçilebilecek",
+                "Zorunlu seçilen türler kuruma alma ekranlarında zorunlu olacak",
+                "Hasta Detay Ekran Tasarımı Geliştirildi",
+            ]
+        },
+        {
+            title: "Dosyalar", commits: [
+                "Pdf dosyaları yeni sekmede açılabilecek",
+            ]
+        },
+        {
+            title: "Ayarlar", commits: [
+                "Rutinler ve listelerin isimlendirmeleri değiştirildi",
+            ]
+        }
+    ],
+    features: [
+        {
+            title: "Hastalar", commits: [
+                "Hastalar ekranında fotoğraflar gözükebilecek",
+            ]
+        },
+        {
+            title: "Ayarlar", commits: [
+                "Dosya Türleri ekranı eklendi",
+            ]
+        }
+    ],
+}
 export {
     version1_0_0_0,
     version1_0_0_1,
@@ -324,5 +360,6 @@ export {
     version1_0_0_6,
     version1_0_0_7,
     version1_0_0_8,
-    version1_0_0_9
+    version1_0_0_9,
+    version1_0_0_10
 }
