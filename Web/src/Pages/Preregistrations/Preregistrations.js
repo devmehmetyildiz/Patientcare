@@ -23,13 +23,14 @@ export default class Preregistrations extends Component {
     const { GetPatients, GetWarehouses, GetCases,
       GetPatientdefines, GetRooms, GetBeds, GetFloors,
       GetFiles, GetPatientstocks, GetPatientstockmovements,
-      GetStockdefines } = this.props
+      GetStockdefines, GetUsagetypes } = this.props
     GetPatients()
     GetWarehouses()
     GetCases()
     GetPatientdefines()
     GetRooms()
     GetBeds()
+    GetUsagetypes()
     GetFloors()
     GetFiles()
     GetPatientstocks()
@@ -169,10 +170,11 @@ export default class Preregistrations extends Component {
   }
 
   nameCellhandler = (col) => {
-    const { Files, Patientdefines } = this.props
+    const { Files, Patientdefines, Usagetypes } = this.props
     const patient = col.row.original
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
-    let file = (Files.list || []).filter(u => u.ParentID === patient?.Uuid).find(u => u.Usagetype === 'PP')
+    let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
+    let file = (Files.list || []).filter(u => u.ParentID === patient?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
     return <div className='flex justify-center items-center flex-row flex-nowrap whitespace-nowrap'>{file ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file?.Uuid}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
       : null}{patientdefine?.Firstname ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}` : `${patientdefine?.CountryID}`}</div>
   }

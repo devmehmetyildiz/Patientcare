@@ -214,6 +214,10 @@ const Companycashmovements = lazy(() => import('./Containers/Companycashmovement
 const CompanycashmovementsCreate = lazy(() => import('./Containers/Companycashmovements/CompanycashmovementsCreate'));
 const CompanycashmovementsEdit = lazy(() => import('./Containers/Companycashmovements/CompanycashmovementsEdit'));
 
+const Usagetypes = lazy(() => import('./Containers/Usagetypes/Usagetypes'));
+const UsagetypesCreate = lazy(() => import('./Containers/Usagetypes/UsagetypesCreate'));
+const UsagetypesEdit = lazy(() => import('./Containers/Usagetypes/UsagetypesEdit'));
+
 const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
 const PasswordChange = lazy(() => import('./Containers/Auth/PasswordChange'));
 const Passwordforget = lazy(() => import('./Containers/Auth/Passwordforget'));
@@ -392,6 +396,9 @@ class Routes extends Component {
       { exact: true, path: "/Companycashmovements", auth: true, component: Companycashmovements, permission: 'companycashmovementscreen' },
       { exact: true, path: "/Companycashmovements/Create", auth: true, component: CompanycashmovementsCreate, permission: 'companycashmovementscreen' },
       { exact: true, path: "/Companycashmovements/:CompanycashmovementID/Edit", auth: true, component: CompanycashmovementsEdit, permission: 'companycashmovementscreen' },
+      { exact: true, path: "/Usagetypes", auth: true, component: Usagetypes, permission: 'usagetypescreen' },
+      { exact: true, path: "/Usagetypes/Create", auth: true, component: UsagetypesCreate, permission: 'usagetypescreen' },
+      { exact: true, path: "/Usagetypes/:UsagetypeID/Edit", auth: true, component: UsagetypesEdit, permission: 'usagetypescreen' },
       { exact: true, path: "/Appreports", auth: true, component: Appreports, permission: 'appreports' },
       { exact: true, path: "/Patientusestocks", auth: true, component: Patientusestocks, permission: 'patientscreen' },
       { exact: true, path: "/Patientusesupplies", auth: true, component: Patientusesupplies, permission: 'patientscreen' },

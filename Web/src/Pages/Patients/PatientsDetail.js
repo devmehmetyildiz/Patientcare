@@ -31,7 +31,7 @@ export default class PatientsDetail extends Component {
       GetPatienttypes, GetFloors, GetRooms, GetBeds,
       GetPatientstocks, GetStockdefines, GetUnits, GetTodosbyPatient,
       GetPatientmovements, GetFiles, GetPatientstockmovements, GetTododefines,
-      GetPatientcashmovements, GetPatientcashregisters
+      GetPatientcashmovements, GetPatientcashregisters, GetUsagetypes
     } = this.props
     let Id = PatientID || match?.params?.PatientID
     if (validator.isUUID(Id)) {
@@ -53,6 +53,7 @@ export default class PatientsDetail extends Component {
       GetTododefines()
       GetPatientcashmovements()
       GetPatientcashregisters()
+      GetUsagetypes()
     } else {
       history.length > 1 ? history.goBack() : history.push(Id ? `/Patients/${Id}` : `/Patients`)
     }
@@ -65,7 +66,7 @@ export default class PatientsDetail extends Component {
       Costumertypes, Patienttypes,
       Floors, Rooms, Beds,
       Patientstocks, Stockdefines, Units,
-      Patientcashmovements,
+      Patientcashmovements, Usagetypes,
       Patientmovements, Files, Todos, Patientcashregisters } = this.props
 
     const { selected_record } = Patients
@@ -88,6 +89,7 @@ export default class PatientsDetail extends Component {
       Todos.isLoading &&
       Tododefines.isLoading &&
       Patientcashregisters.isLoading &&
+      Usagetypes.isLoading &&
       Patientcashmovements.isLoading
 
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && isLoadingstatus && !this.state.isDatafetched) {
@@ -102,7 +104,7 @@ export default class PatientsDetail extends Component {
       Patients, Patientdefines, Cases, Costumertypes, Patienttypes,
       Floors, Rooms, Beds, Patientstocks, Stockdefines, Units, Patientstockmovements,
       Patientmovements, Files, Profile, history, match, PatientID, handleSelectedPatient,
-      Todos, Patientcashmovements, handlePlacemodal, Patientcashregisters
+      Todos, Patientcashmovements, handlePlacemodal, Patientcashregisters, Usagetypes
     } = this.props
 
 
@@ -126,6 +128,7 @@ export default class PatientsDetail extends Component {
       Patientstockmovements.isLoading &&
       Files.isLoading &&
       Patientcashregisters.isLoading &&
+      Usagetypes.isLoading &&
       Patientcashmovements.isLoading
 
 
@@ -139,7 +142,8 @@ export default class PatientsDetail extends Component {
 
     const casedata = (Cases.list || []).find(u => u.Uuid === selected_record?.CaseID)
 
-    const files = (Files.list || []).find(u => u.Usagetype === 'PP' && u.ParentID === selected_record?.Uuid)
+    let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
+    const files = (Files.list || []).find(u => u.ParentID === selected_record?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
     const completedTodos = (Todos.list || []).filter(u => u.IsCompleted)
     const waitingTodos = (Todos.list || []).filter(u => !u.IsCompleted)

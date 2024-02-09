@@ -13,6 +13,7 @@ import { GetFloors } from "../../Redux/FloorSlice"
 import { GetRooms } from "../../Redux/RoomSlice"
 import { GetBeds } from "../../Redux/BedSlice"
 import { GetWarehouses } from "../../Redux/WarehouseSlice"
+import { GetUsagetypes } from "../../Redux/UsagetypeSlice"
 
 const mapStateToProps = (state) => ({
   Patients: state.Patients,
@@ -26,12 +27,13 @@ const mapStateToProps = (state) => ({
   Rooms: state.Rooms,
   Beds: state.Beds,
   Warehouses: state.Warehouses,
+  Usagetypes: state.Usagetypes,
   Profile: state.Profile,
 })
 
 const mapDispatchToProps = {
   GetPatientdefines, GetDepartments, GetCases, GetCostumertypes, fillPatientnotification, EditPatientstocks,
-  GetPatienttypes, GetStockdefines, GetFloors, GetRooms, GetBeds, GetWarehouses, EditFiles, AddPatientReturnPatient
+  GetPatienttypes, GetStockdefines, GetFloors, GetRooms, GetBeds, GetWarehouses, EditFiles, AddPatientReturnPatient, GetUsagetypes
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsCreate)

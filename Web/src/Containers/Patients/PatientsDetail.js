@@ -18,6 +18,7 @@ import { GetTodosbyPatient } from "../../Redux/TodoSlice"
 import { GetTododefines } from "../../Redux/TododefineSlice"
 import { GetPatientcashmovements } from "../../Redux/PatientcashmovementSlice"
 import { GetPatientcashregisters } from "../../Redux/PatientcashregisterSlice"
+import { GetUsagetypes } from "../../Redux/UsagetypeSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -39,6 +40,7 @@ const mapStateToProps = (state) => ({
     Tododefines: state.Tododefines,
     Patientcashmovements: state.Patientcashmovements,
     Patientcashregisters: state.Patientcashregisters,
+    Usagetypes: state.Usagetypes,
 })
 
 const mapDispatchToProps = {
@@ -49,7 +51,7 @@ const mapDispatchToProps = {
     GetPatientstocks, GetStockdefines, GetUnits,
     GetPatientmovements, GetFiles, handlePlacemodal,
     GetPatientstockmovements, handleInmodal, handleOutmodal, GetTodosbyPatient, GetTododefines,
-    GetPatientcashregisters
+    GetPatientcashregisters, GetUsagetypes
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsDetail)

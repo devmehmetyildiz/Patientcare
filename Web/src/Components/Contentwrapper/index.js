@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-export default function Contentwrapper({ children, additionalStyle }) {
+export default function Contentwrapper({ children, additionalStyle, isfullscreen }) {
     const [isOverflowing, setIsOverflowing] = useState(false);
 
     const checkOverflow = () => {
@@ -19,7 +19,7 @@ export default function Contentwrapper({ children, additionalStyle }) {
         <div
             id="content-container"
             style={style}
-            className={`w-full max-h-[calc(80vh-59px-2rem)] bg-white px-4 pt-2 pb-4 rounded-t-lg shadow-md outline outline-[1px] outline-gray-200 ${additionalStyle}`}>
+            className={`w-full ${isfullscreen ? '' : 'max-'}h-[calc(80vh-59px-2rem)] z-0 bg-white px-4 pt-2 pb-4 rounded-t-lg shadow-md outline outline-[1px] outline-gray-200 ${additionalStyle}`}>
             {children}
         </div>
     )

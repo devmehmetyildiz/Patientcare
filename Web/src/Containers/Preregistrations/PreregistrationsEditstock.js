@@ -7,6 +7,7 @@ import { GetFiles } from "../../Redux/FileSlice"
 import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
 import { GetPatientstocks } from "../../Redux/PatientstockSlice"
 import { GetPatientstockmovements } from "../../Redux/PatientstockmovementSlice"
+import { GetUsagetypes } from "../../Redux/UsagetypeSlice"
 
 const mapStateToProps = (state) => ({
     Departments: state.Departments,
@@ -16,13 +17,14 @@ const mapStateToProps = (state) => ({
     Files: state.Files,
     Patientdefines: state.Patientdefines,
     Patientstocks: state.Patientstocks,
-    Patientstockmovements: state.Patientstockmovements
+    Patientstockmovements: state.Patientstockmovements,
+    Usagetypes: state.Usagetypes
 })
 
 const mapDispatchToProps = {
     GetPatient, EditPatientstocks, fillPatientnotification, GetPatientstocks,
     GetStockdefines, AddStockdefines, fillStockdefinenotification, GetPatientstockmovements,
-    GetDepartments, GetFiles,  GetPatientdefines
+    GetDepartments, GetFiles,  GetPatientdefines,GetUsagetypes
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreregistrationsEditstock)

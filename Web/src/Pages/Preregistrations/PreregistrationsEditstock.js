@@ -26,7 +26,8 @@ export default class PreregistrationsEditstock extends Component {
       GetFiles,
       GetPatientdefines,
       GetPatientstocks,
-      GetPatientstockmovements
+      GetPatientstockmovements,
+      GetUsagetypes
     } = this.props
     if (match.params.PatientID) {
       GetPatient(match.params.PatientID)
@@ -36,13 +37,14 @@ export default class PreregistrationsEditstock extends Component {
       GetPatientdefines()
       GetPatientstocks()
       GetPatientstockmovements()
+      GetUsagetypes()
     } else {
       history.push("/Preregistrations")
     }
   }
 
   componentDidUpdate() {
-    const { Patients, Departments, Stockdefines,
+    const { Patients, Departments, Stockdefines, Usagetypes,
       Files, Patientdefines, Patientstocks, Patientstockmovements, } = this.props
     const { selected_record, isLoading } = Patients
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading
@@ -51,6 +53,7 @@ export default class PreregistrationsEditstock extends Component {
       !Patientdefines.isLoading &&
       !Patientstocks.isLoading &&
       !Patientstockmovements.isLoading &&
+      !Usagetypes.isLoading &&
       !Files.isLoading &&
       !this.state.isDatafetched) {
       var response = (Patientstocks.list || []).filter(u => u.PatientID === selected_record?.Uuid && u.Isactive).map(u => { return { ...u, key: Math.random() } })
@@ -61,7 +64,7 @@ export default class PreregistrationsEditstock extends Component {
   }
 
   render() {
-    const { Patients, Stockdefines, Departments, Files, Patientdefines, Profile, history } = this.props
+    const { Patients, Stockdefines, Departments, Files, Patientdefines, Profile, history, Usagetypes } = this.props
     const { selected_record, isLoading, isDispatching } = Patients
 
     const Stockdefinesoption = (Stockdefines.list || []).filter(u => !u.Ismedicine && u.Isactive).map(stockdefine => {
@@ -81,7 +84,8 @@ export default class PreregistrationsEditstock extends Component {
     })
 
     const patientDefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
-    const patientPP = (Files.list || []).find(u => u.ParentID === selected_record?.Uuid && u.Usagetype === 'PP' && u.Isactive)
+    let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
+    const patientPP = (Files.list || []).find(u => u.ParentID === selected_record?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
     return (
       isLoading || isDispatching ? <LoadingPage /> :

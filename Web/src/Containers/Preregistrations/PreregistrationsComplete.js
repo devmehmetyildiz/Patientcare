@@ -13,6 +13,7 @@ import { GetUnits } from "../../Redux/UnitSlice"
 import { GetStockdefines } from "../../Redux/StockdefineSlice"
 import { GetCases } from "../../Redux/CaseSlice"
 import { GetDepartments } from "../../Redux/DepartmentSlice"
+import { GetUsagetypes } from "../../Redux/UsagetypeSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -28,7 +29,8 @@ const mapStateToProps = (state) => ({
     Units: state.Units,
     Stockdefines: state.Stockdefines,
     Cases: state.Cases,
-    Departments: state.Departments
+    Departments: state.Departments,
+    Usagetypes: state.Usagetypes
 })
 
 const mapDispatchToProps = {
@@ -37,7 +39,8 @@ const mapDispatchToProps = {
     GetBeds, GetFiles, GetPatientdefines,
     GetPatients, fillPatientnotification,
     GetPatientstockmovements, GetPatientstocks,
-    GetUnits, GetStockdefines, GetCases, GetDepartments
+    GetUnits, GetStockdefines, GetCases, GetDepartments,
+    GetUsagetypes
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreregistrationsComplete)

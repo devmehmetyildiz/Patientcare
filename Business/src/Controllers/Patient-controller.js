@@ -342,7 +342,6 @@ async function Completeprepatient(req, res, next) {
         let patientmovementuuid = uuid()
 
         await db.patientmovementModel.create({
-            ...req.body,
             Uuid: patientmovementuuid,
             OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
             Patientmovementtype: 1,

@@ -43,6 +43,7 @@ import PatientcashmovementSlice from "./PatientcashmovementSlice";
 import PatientcashregisterSlice from "./PatientcashregisterSlice";
 import UsernotificationSlice from "./UsernotificationSlice";
 import ReportSlice from "./ReportSlice";
+import UsagetypeSlice from "./UsagetypeSlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -89,6 +90,7 @@ const Slices = combineReducers({
     Patientcashregisters: PatientcashregisterSlice,
     Usernotifications: UsernotificationSlice,
     Reports: ReportSlice,
+    Usagetypes: UsagetypeSlice,
 });
 
 export default Slices;

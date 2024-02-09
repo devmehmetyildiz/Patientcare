@@ -27,6 +27,7 @@ export const ROUTES = {
     UNIT: 'Units',
     ROOM: 'Rooms',
     BED: 'Beds',
+    USAGETYPE: 'Usagetypes',
     FLOOR: 'Floors',
     SHIFT: 'Shifts',
 

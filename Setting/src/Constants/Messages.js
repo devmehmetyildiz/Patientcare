@@ -12,6 +12,18 @@ const messages = {
         tr: 'Durum aktif değil',
       }
     },
+    USAGETYPE_NOT_FOUND: {
+      code: 'USAGETYPE_NOT_FOUND', description: {
+        en: 'Usage type not found',
+        tr: 'Kullanım türü bulunamadı',
+      }
+    },
+    USAGETYPE_NOT_ACTIVE: {
+      code: 'USAGETYPE_NOT_ACTIVE', description: {
+        en: 'Usage type not active',
+        tr: 'Kullanım türü aktif değil',
+      }
+    },
     BED_NOT_FOUND: {
       code: 'BED_NOT_FOUND', description: {
         en: 'Bed not found',
@@ -174,7 +186,7 @@ const messages = {
         tr: 'Yapılacak grup tanımı aktif değil',
       }
     },
-   
+
     TODOGROUPDEFINE_NOT_ACTIVE: {
       code: 'TODOGROUPDEFINE_NOT_ACTIVE', description: {
         en: 'Todogroup define not active',
@@ -418,6 +430,12 @@ const messages = {
         tr: 'Bu işlem için açıklama gerekli',
       }
     },
+    VALUE_REQUIRED: {
+      code: 'VALUE_REQUIRED', description: {
+        en: 'The value required',
+        tr: 'Bu işlem için değer gerekli',
+      }
+    },
     ISREQUIRED_REQUIRED: {
       code: 'INFO_REQUIRED', description: {
         en: 'The isrequired required',
@@ -442,7 +460,7 @@ const messages = {
         tr: 'Bu işlem için oda numarası gerekli',
       }
     },
-   
+
     FLOORID_REQUIRED: {
       code: 'FLOORID_REQUIRED', description: {
         en: 'The floor id required',
@@ -491,6 +509,12 @@ const messages = {
         tr: 'Bu için Yatak Bitiş Numarası Gerekli',
       }
     },
+    USAGETYPEID_REQUIRED: {
+      code: 'USAGETYPEID_REQUIRED', description: {
+        en: 'The usage type id required',
+        tr: 'Kullanım türü id Gerekli',
+      }
+    },
     STARTNUMBER_CANTSMALL: {
       code: 'STARTNUMBER_CANTSMALL', description: {
         en: 'The Start number cant small',
@@ -515,7 +539,12 @@ const messages = {
         tr: 'Kat numarası geçersiz',
       }
     },
-   
+    UNSUPPORTED_USAGETYPEID: {
+      code: 'UNSUPPORTED_USAGETYPEID', description: {
+        en: 'usagetype id is unsupported',
+        tr: 'Kullanım türü id numarası geçersiz',
+      }
+    },
   }
 
 }

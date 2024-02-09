@@ -6,7 +6,7 @@ import cookies from 'universal-cookie';
 export default class Layout extends Component {
 
   componentDidMount() {
-    const { GetActiveUser, GetUserRoles, GetTableMeta, GetUserMeta, Checktoken } = this.props
+    const { GetActiveUser, GetUserRoles, GetTableMeta, GetUserMeta, Checktoken,GetUsagetypes } = this.props
     const routes = [
       "/Login",
       "/login",
@@ -25,6 +25,7 @@ export default class Layout extends Component {
       GetActiveUser()
       GetUserRoles()
       GetTableMeta()
+      GetUsagetypes()
       GetUserMeta()
       Checktoken({
         token: localcookies.get('patientcare')
@@ -42,7 +43,7 @@ export default class Layout extends Component {
   }
 
   render() {
-    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal, Istokenchecking } = this.props
+    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal, Istokenchecking,Usagetypes } = this.props
     return (
       Istokenchecking || Profile.isLogging || Profile.isFetching ?
         <LoadingPage />
@@ -55,6 +56,7 @@ export default class Layout extends Component {
             logOut={logOut}
             isMobile={isMobile}
             Files={Files}
+            Usagetypes={Usagetypes}
             sethideMobile={sethideMobile}
             hideMobile={hideMobile}
             handleViewmodal={handleViewmodal}

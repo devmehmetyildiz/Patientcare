@@ -14,26 +14,30 @@ export default function PatientsFiles(props) {
     const [selectedFiles, setselectedFiles] = useState([])
 
     useEffect(() => {
-        const { GetPatient, match, history, GetFiles, GetPatientdefines, PatientID } = props
+        const { GetPatient, match, history, GetFiles, GetPatientdefines, PatientID, GetUsagetypes } = props
         const Id = match?.params?.PatientID || PatientID
         if (Id) {
             GetPatient(Id)
             GetFiles()
             GetPatientdefines()
+            GetUsagetypes()
         } else {
             history.length > 1 ? history.goBack() : history.push(Id ? `/Patients/${Id}` : `/Patients`)
         }
     }, [])
 
     useEffect(() => {
-        const { Files, Patients, Patientdefines } = props
+        const { Files, Patients, Patientdefines, Usagetypes } = props
         const { selected_record, isLoading } = Patients
-        if (selected_record && !Patientdefines.isLoading && !Files.isLoading && Object.keys(selected_record).length > 0 &&
+        if (selected_record && !Patientdefines.isLoading && !Usagetypes.isLoading && !Files.isLoading && Object.keys(selected_record).length > 0 &&
             selected_record.Id !== 0 && !isLoading && !isDatafetched) {
             var response = (Files.list || []).filter(u => u.ParentID === selected_record?.Uuid).map(element => {
                 return {
                     ...element,
-                    key: Math.random()
+                    key: Math.random(),
+                    Usagetype: (element.Usagetype.split(',') || []).map(u => {
+                        return u
+                    })
                 }
             });
             setselectedFiles([...response] || [])
@@ -51,7 +55,7 @@ export default function PatientsFiles(props) {
                 Filefolder: '',
                 Filepath: '',
                 Filetype: '',
-                Usagetype: '',
+                Usagetype: [],
                 Canteditfile: false,
                 File: {},
                 key: Math.random(),
@@ -156,7 +160,7 @@ export default function PatientsFiles(props) {
             })
         } else {
             const files = uncleanfiles.map(data => {
-                return DataCleaner(data)
+                return DataCleaner({ ...data, Usagetype: (data.Usagetype || []).join(',') })
             });
 
             const formData = new FormData();
@@ -181,7 +185,7 @@ export default function PatientsFiles(props) {
                     Filefolder: '',
                     Filepath: '',
                     Filetype: '',
-                    Usagetype: '',
+                    Usagetype: [],
                     Canteditfile: false,
                     File: file,
                     key: Math.random(),
@@ -200,22 +204,15 @@ export default function PatientsFiles(props) {
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, multiple: true, noClick: true });
 
-    const { Files, Patients, Profile, history, Patientdefines, PatientID, match } = props
+    const { Files, Patients, Profile, history, Patientdefines, PatientID, match, Usagetypes } = props
     const { isLoading, isDispatching } = Patients
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
     const patientPp = (Files.list || []).find(u => u.ParentID === patient?.Uuid && u.Usagetype === 'PP' && u.Isactive)
     const Id = match?.params?.PatientID || PatientID
-    const usagetypes = [
-        { key: Literals.Options.usageType0[Profile.Language], text: Literals.Options.usageType0[Profile.Language], value: Literals.Options.usageType0[Profile.Language] },
-        { key: Literals.Options.usageType1[Profile.Language], text: Literals.Options.usageType1[Profile.Language], value: Literals.Options.usageType1[Profile.Language] },
-        { key: Literals.Options.usageType2[Profile.Language], text: Literals.Options.usageType2[Profile.Language], value: "PP" },
-        { key: Literals.Options.usageType3[Profile.Language], text: Literals.Options.usageType3[Profile.Language], value: Literals.Options.usageType3[Profile.Language] },
-        { key: Literals.Options.usageType4[Profile.Language], text: Literals.Options.usageType4[Profile.Language], value: Literals.Options.usageType4[Profile.Language] },
-        { key: Literals.Options.usageType5[Profile.Language], text: Literals.Options.usageType5[Profile.Language], value: Literals.Options.usageType5[Profile.Language] },
-        { key: Literals.Options.usageType6[Profile.Language], text: Literals.Options.usageType6[Profile.Language], value: Literals.Options.usageType6[Profile.Language] },
-        { key: Literals.Options.usageType7[Profile.Language], text: Literals.Options.usageType7[Profile.Language], value: Literals.Options.usageType7[Profile.Language] },
-        { key: Literals.Options.usageType8[Profile.Language], text: Literals.Options.usageType8[Profile.Language], value: Literals.Options.usageType8[Profile.Language] },
-    ]
+    const usagetypes = (Usagetypes.list || []).filter(u => u.Isactive).map(type => {
+        return { key: type.Uuid, text: type.Name, value: type.Uuid }
+    })
+
     return (
         Files.isLoading || Files.isDispatching || isLoading || isDispatching ? <LoadingPage /> :
             <Pagewrapper>
@@ -233,7 +230,7 @@ export default function PatientsFiles(props) {
                     </Headerbredcrump>
                 </Headerwrapper>
                 <Pagedivider />
-                <Contentwrapper>
+                <Contentwrapper isfullscreen>
                     <Header as='h2' icon textAlign='center'>
                         {patientPp
                             ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPp?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
@@ -248,7 +245,7 @@ export default function PatientsFiles(props) {
                                     <Table.Row>
                                         <Table.HeaderCell width={1}>{Literals.Options.TableColumnsOrder[Profile.Language]}</Table.HeaderCell>
                                         <Table.HeaderCell width={3}>{Literals.Options.TableColumnsFileName[Profile.Language]}</Table.HeaderCell>
-                                        <Table.HeaderCell width={3}>{Literals.Options.TableColumnsUploadStatus[Profile.Language]}</Table.HeaderCell>
+                                        <Table.HeaderCell width={3}>{Literals.Options.TableColumnsUsagetype[Profile.Language]}</Table.HeaderCell>
                                         <Table.HeaderCell width={9}>{Literals.Options.TableColumnsFile[Profile.Language]}</Table.HeaderCell>
                                         <Table.HeaderCell width={9}>{Literals.Options.TableColumnsUploadStatus[Profile.Language]}</Table.HeaderCell>
                                         <Table.HeaderCell width={1}>{Literals.Options.TableColumnsDelete[Profile.Language]}</Table.HeaderCell>
@@ -267,7 +264,7 @@ export default function PatientsFiles(props) {
                                                 <Form.Input disabled={file.WillDelete} value={file.Name} placeholder={Literals.Options.TableColumnsFileName[Profile.Language]} name="Name" fluid onChange={(e) => { selectedFilesChangeHandler(file.key, 'Name', e.target.value) }} />
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <Dropdown disabled={file.WillDelete} value={file.Usagetype} placeholder={Literals.Options.TableColumnsUsagetype[Profile.Language]} name="Usagetype" clearable selection search fluid options={usagetypes} onChange={(e, data) => { selectedFilesChangeHandler(file.key, 'Usagetype', data.value) }} />
+                                                <Dropdown disabled={file.WillDelete} value={file.Usagetype} placeholder={Literals.Options.TableColumnsUsagetype[Profile.Language]} name="Usagetype" clearable selection search fluid multiple options={usagetypes} onChange={(e, data) => { selectedFilesChangeHandler(file.key, 'Usagetype', data.value) }} />
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {file.fileChanged

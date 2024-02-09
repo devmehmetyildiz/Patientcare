@@ -11,6 +11,7 @@ import { GetFiles } from "../../Redux/FileSlice"
 import { GetPatientstocks } from "../../Redux/PatientstockSlice"
 import { GetPatientstockmovements } from "../../Redux/PatientstockmovementSlice"
 import { GetStockdefines } from "../../Redux/StockdefineSlice"
+import { GetUsagetypes } from "../../Redux/UsagetypeSlice"
 
 const mapStateToProps = (state) => ({
   Patients: state.Patients,
@@ -24,13 +25,14 @@ const mapStateToProps = (state) => ({
   Warehouses: state.Warehouses,
   Floors: state.Floors,
   Rooms: state.Rooms,
-  Beds: state.Beds
+  Beds: state.Beds,
+  Usagetypes: state.Usagetypes,
 })
 
 const mapDispatchToProps = {
   GetPatients, CompletePrepatients, DeletePatients, GetPatientstockmovements,
   handleDeletemodal, handleSelectedPatient, fillPatientnotification, GetWarehouses, GetStockdefines,
-  GetCases, GetPatientdefines, GetRooms, handleCompletemodal,
+  GetCases, GetPatientdefines, GetRooms, handleCompletemodal, GetUsagetypes,
   GetBeds, GetFloors, GetFiles, GetPatientstocks
 }
 

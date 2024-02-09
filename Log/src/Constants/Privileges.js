@@ -338,6 +338,14 @@ const Priveleges = [
     { code: 'companycashmovementmanageview', text: 'Companycashmovements Manage View', group: ['Companycashmovements'], required: [] },
     { code: 'companycashmovementgetreport', text: 'Companycashmovements Get Report', group: ['Companycashmovements'], required: [] },
 
+    { code: 'usagetypescreen', text: 'Usagetypes Screen', group: ['Usagetypes'], required: [] },
+    { code: 'usagetypeview', text: 'Usagetypes View', group: ['Usagetypes'], required: [] },
+    { code: 'usagetypeadd', text: 'Usagetypes Add', group: ['Usagetypes'], required: [] },
+    { code: 'usagetypeupdate', text: 'Usagetypes Update', group: ['Usagetypes'], required: [] },
+    { code: 'usagetypedelete', text: 'Usagetypes Delete', group: ['Usagetypes'], required: [] },
+    { code: 'usagetypemanageview', text: 'Usagetypes Manage View', group: ['Usagetypes'], required: [] },
+    { code: 'usagetypegetreport', text: 'Usagetypes Get Report', group: ['Usagetypes'], required: [] },
+
 ]
 
 module.exports = Priveleges

@@ -76,6 +76,12 @@ const Routes = [
   { method: 'put', path: '/Rooms', controller: 'Room', action: 'UpdateRoom' },
   { method: 'delete', path: '/Rooms/:roomId', controller: 'Room', action: 'DeleteRoom' },
 
+  { method: 'get', path: '/Usagetypes/:usagetypeId', controller: 'Usagetype', action: 'GetUsagetype' },
+  { method: 'get', path: '/Usagetypes', controller: 'Usagetype', action: 'GetUsagetypes' },
+  { method: 'post', path: '/Usagetypes', controller: 'Usagetype', action: 'AddUsagetype' },
+  { method: 'put', path: '/Usagetypes', controller: 'Usagetype', action: 'UpdateUsagetype' },
+  { method: 'delete', path: '/Usagetypes/:usagetypeId', controller: 'Usagetype', action: 'DeleteUsagetype' },
+
 ]
 
 module.exports = Routes

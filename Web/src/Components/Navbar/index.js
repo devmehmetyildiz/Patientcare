@@ -44,8 +44,8 @@ export class Navbar extends Component {
   handleClose = () => this.setState({ open: false })
 
   render() {
-    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, handleViewmodal } = this.props
-    const ishavePP = (Profile?.meta?.Files || []).find(u => u.Usagetype === 'PP')
+    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, handleViewmodal, Usagetypes } = this.props
+    const ishavePP = (Profile?.meta?.Files || []).find(u => (u.Usagetype.split(',') || []).map(uuids => { return (Usagetypes.list || []).find(type => type.Uuid === uuids)?.Value || '' }).includes('PP'))
 
     const trigger = (
       <div className='flex flex-row justify-center items-center select-none'>

@@ -25,19 +25,20 @@ export default class ProfileEdit extends Component {
     }
 
     componentDidMount() {
-        const { Profile } = this.props
+        const { Profile, GetUsagetypes } = this.props
         const { meta } = Profile
         if (meta && meta.Id !== 0 && Object.keys(meta).length > 0) {
             this.setState({ selectedLanguage: meta.Language })
+            GetUsagetypes()
         }
     }
 
     componentDidUpdate() {
-        const { Profile } = this.props
+        const { Profile, Usagetypes } = this.props
         const { meta } = Profile
-        if (meta && meta.Id !== 0 && Object.keys(meta).length > 0 && !this.state.isDatafetched) {
+        if (meta && meta.Id !== 0 && Object.keys(meta).length > 0 && !Usagetypes?.isLoading && !this.state.isDatafetched) {
             if (meta.Files && Array.isArray(meta.Files)) {
-                let pp = meta.Files.find(u => u.Usagetype === "PP")
+                let pp = (Profile?.meta?.Files || []).find(u => (u.Usagetype.split(',') || []).map(uuids => { return (Usagetypes.list || []).find(type => type.Uuid === uuids)?.Value || '' }).includes('PP'))
                 const userconfig = validator.isString(meta?.Config) ? JSON.parse(meta?.Config) : null
                 this.setState({ file: pp ? pp : {}, isDatafetched: true, fetchedFromapi: true, showImg: pp ? true : false, userConfig: userconfig })
             }
@@ -169,11 +170,12 @@ export default class ProfileEdit extends Component {
     }
 
     handleFile = () => {
-        const { EditFiles, Profile } = this.props
+        const { EditFiles, Profile, Usagetypes } = this.props
         const { imgChanged, selectedimage, file } = this.state
-
+        console.log('this.state: ', this.state);
+        let ppType = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || ''
         if (imgChanged) {
-            if (!selectedimage && Object.keys(file).length > 0) {
+            if (Object.keys(selectedimage).length === 0 && Object.keys(file).length > 0) {
                 let filecontent = { ...file }
                 filecontent.WillDelete = true
                 delete filecontent.Updatetime
@@ -195,7 +197,7 @@ export default class ProfileEdit extends Component {
                 delete filecontent.Updatetime
                 delete filecontent.Deletetime
                 let files = [{
-                    ...filecontent, File: selectedimage
+                    ...filecontent, File: selectedimage, fileChanged: true
                 }]
                 const formData = new FormData();
                 files.forEach((data, index) => {
@@ -215,12 +217,12 @@ export default class ProfileEdit extends Component {
                     Filefolder: '',
                     Filepath: '',
                     Filetype: '',
-                    Usagetype: 'PP',
+                    Usagetype: ppType,
                     Canteditfile: false,
                     File: selectedimage,
                     Willdelete: false,
                     FileChanged: true,
-                    order: Profile.meta.Files.length,
+                    Order: 0,
                 }]
 
                 const formData = new FormData();

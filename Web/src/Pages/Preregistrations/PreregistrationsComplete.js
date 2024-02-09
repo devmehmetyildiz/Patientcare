@@ -6,7 +6,7 @@ import config from '../../Config'
 import { Link } from 'react-router-dom'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import { FormInput,Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 
 export default class PreregistrationsComplete extends Component {
 
@@ -30,11 +30,12 @@ export default class PreregistrationsComplete extends Component {
   componentDidMount() {
     const { GetStockdefines, GetWarehouses, GetUnits, GetPatients, GetRooms,
       GetFloors, GetBeds, GetFiles, GetPatientdefines, GetPatientstocks,
-      GetPatientstockmovements, GetCases, GetDepartments } = this.props
+      GetPatientstockmovements, GetCases, GetDepartments, GetUsagetypes } = this.props
     GetPatients()
     GetStockdefines()
     GetWarehouses()
     GetRooms()
+    GetUsagetypes()
     GetFloors()
     GetBeds()
     GetFiles()
@@ -51,13 +52,13 @@ export default class PreregistrationsComplete extends Component {
       Cases, Patients, Warehouses, Rooms, Beds,
       Files, Floors, Patientdefines, Patientstocks, Patientstockmovements,
       Units, Stockdefines, Profile, fillPatientnotification,
-      match, history, Departments
+      match, history, Departments, Usagetypes
     } = this.props
 
     const isLoadingstatus = Patients.isLoading || Warehouses.isLoading || Rooms.isLoading
       || Beds.isLoading || Files.isLoading || Floors.isLoading || Patientdefines.isLoading
       || Patientstocks.isLoading || Patientstockmovements.isLoading || Stockdefines.isLoading
-      || Units.isLoading || Cases.isLoading || Departments.isLoading
+      || Units.isLoading || Cases.isLoading || Departments.isLoading || Usagetypes.isLoading
     if (!isLoadingstatus && !this.state.isDatafetched) {
 
       let Id = match?.params?.PatientID
@@ -71,21 +72,15 @@ export default class PreregistrationsComplete extends Component {
       }
       if (selected_record && Object.keys(selected_record).length > 0 && selected_record?.Id !== 0 && !isLoadingstatus && !this.state.isDatafetched) {
 
-        const filesthatwillcheck = [
-          Literals.Options.usageType3[Profile.Language],
-          Literals.Options.usageType4[Profile.Language],
-          Literals.Options.usageType5[Profile.Language],
-          Literals.Options.usageType6[Profile.Language],
-          Literals.Options.usageType7[Profile.Language],
-          Literals.Options.usageType8[Profile.Language],
-        ]
+        const filesthatwillcheck = (Usagetypes.list || []).filter(u => u.Isactive && u.Isrequired).map(u => { return u.Uuid })
         if (!isLoadingstatus && !this.state.isFilechecked) {
           let errors = []
           const neededfiles = []
           filesthatwillcheck.forEach(usagetype => {
-            const foundedfile = (Files.list || []).find(u => u.ParentID === selected_record?.Uuid && u.Usagetype === usagetype)
+            const foundedfile = (Files.list || []).find(u => u.ParentID === selected_record?.Uuid && ((u.Usagetype || '').split(',') || []).includes(usagetype))
             if (!foundedfile) {
-              errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: `${usagetype} ${Literals.Messages.filerequired[Profile.Language]}` })
+              let usagetypeName = (Usagetypes.list || []).find(type => type.Uuid === usagetype)?.Name || ''
+              errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: `${usagetypeName} ${Literals.Messages.filerequired[Profile.Language]}` })
               neededfiles.push(usagetype)
             }
           });
@@ -121,13 +116,14 @@ export default class PreregistrationsComplete extends Component {
       Stockdefines,
       Units,
       Departments,
+      Usagetypes,
       Profile, match, history } = this.props
 
 
     const isLoadingstatus = Patients.isLoading || Warehouses.isLoading || Rooms.isLoading
       || Beds.isLoading || Files.isLoading || Floors.isLoading || Patientdefines.isLoading
       || Patientstocks.isLoading || Patientstockmovements.isLoading || Stockdefines.isLoading
-      || Units.isLoading || Cases.isLoading || Departments.isLoading
+      || Units.isLoading || Cases.isLoading || Departments.isLoading || Usagetypes.isLoading
     let Id = match?.params?.PatientID
     const selected_record = (Patients.list || []).find(u => u.Uuid === Id)
 
@@ -140,14 +136,7 @@ export default class PreregistrationsComplete extends Component {
       return { ...stock, Amount: amount }
     })
 
-    const filesthatwillcheck = [
-      Literals.Options.usageType3[Profile.Language],
-      Literals.Options.usageType4[Profile.Language],
-      Literals.Options.usageType5[Profile.Language],
-      Literals.Options.usageType6[Profile.Language],
-      Literals.Options.usageType7[Profile.Language],
-      Literals.Options.usageType8[Profile.Language],
-    ]
+    const filesthatwillcheck = (Usagetypes.list || []).filter(u => u.Isactive && u.Isrequired).map(u => { return u.Uuid })
 
     const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(warehouse => {
       return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
@@ -286,10 +275,11 @@ export default class PreregistrationsComplete extends Component {
                 </Header>
                 <div className='flex flex-row justify-center items-center w-full'>
                   {filesthatwillcheck.map(filename => {
+                    let filedisplayName = (Usagetypes.list || []).find(u => u.Uuid === filename)?.Name || 'Tanımsız'
                     if (this.state.neededFilefounded.includes(filename)) {
-                      return <Label key={Math.random()} color='red'>{filename}</Label>
+                      return <Label key={Math.random()} color='red'>{filedisplayName}</Label>
                     } else {
-                      return <Label key={Math.random()} color='green'>{filename}</Label>
+                      return <Label key={Math.random()} color='green'>{filedisplayName}</Label>
                     }
                   })}
                 </div>

@@ -23,13 +23,13 @@ export default function PatientsCreate(props) {
   const [selectedFiles, setselectedFiles] = useState([])
   const [selectedStocks, setselectedStocks] = useState([])
 
-  const { Patientdefines, Patients, Departments, Cases, Profile, history, closeModal,
+  const { Patientdefines, Patients, Departments, Cases, Profile, history, closeModal, Usagetypes,
     Costumertypes, Patienttypes, Stockdefines, fillPatientnotification, Floors, Rooms, Beds, Warehouses, AddPatientReturnPatient } = props
   const { isLoading } = Patients
 
   useEffect(() => {
     const { GetPatientdefines, GetDepartments, GetCases,
-      GetCostumertypes, GetPatienttypes, GetStockdefines, GetFloors, GetBeds, GetRooms, GetWarehouses } = props
+      GetCostumertypes, GetPatienttypes, GetStockdefines, GetFloors, GetBeds, GetRooms, GetWarehouses, GetUsagetypes } = props
     GetPatientdefines()
     GetDepartments()
     GetCases()
@@ -40,6 +40,7 @@ export default function PatientsCreate(props) {
     GetBeds()
     GetRooms()
     GetWarehouses()
+    GetUsagetypes()
   }, [])
 
 
@@ -178,17 +179,9 @@ export default function PatientsCreate(props) {
       return { key: bed.Uuid, text: bed.Name, value: bed.Uuid }
     }) : []
 
-  const usagetypes = [
-    { key: Literals.Create.Options.usageType0[Profile.Language], text: Literals.Create.Options.usageType0[Profile.Language], value: Literals.Create.Options.usageType0[Profile.Language] },
-    { key: Literals.Create.Options.usageType1[Profile.Language], text: Literals.Create.Options.usageType1[Profile.Language], value: Literals.Create.Options.usageType1[Profile.Language] },
-    { key: Literals.Create.Options.usageType2[Profile.Language], text: Literals.Create.Options.usageType2[Profile.Language], value: "PP" },
-    { key: Literals.Create.Options.usageType3[Profile.Language], text: Literals.Create.Options.usageType3[Profile.Language], value: Literals.Create.Options.usageType3[Profile.Language] },
-    { key: Literals.Create.Options.usageType4[Profile.Language], text: Literals.Create.Options.usageType4[Profile.Language], value: Literals.Create.Options.usageType4[Profile.Language] },
-    { key: Literals.Create.Options.usageType5[Profile.Language], text: Literals.Create.Options.usageType5[Profile.Language], value: Literals.Create.Options.usageType5[Profile.Language] },
-    { key: Literals.Create.Options.usageType6[Profile.Language], text: Literals.Create.Options.usageType6[Profile.Language], value: Literals.Create.Options.usageType6[Profile.Language] },
-    { key: Literals.Create.Options.usageType7[Profile.Language], text: Literals.Create.Options.usageType7[Profile.Language], value: Literals.Create.Options.usageType7[Profile.Language] },
-    { key: Literals.Create.Options.usageType8[Profile.Language], text: Literals.Create.Options.usageType8[Profile.Language], value: Literals.Create.Options.usageType8[Profile.Language] },
-  ]
+  const usagetypes = (Usagetypes.list || []).filter(u => u.Isactive).map(type => {
+    return { key: type.Uuid, text: type.Name, value: type.Uuid }
+  })
 
   const AddNewFile = () => {
     setselectedFiles(oldfiles => [...oldfiles, {
@@ -198,7 +191,7 @@ export default function PatientsCreate(props) {
       Filefolder: '',
       Filepath: '',
       Filetype: '',
-      Usagetype: '',
+      Usagetype: [],
       Canteditfile: false,
       File: {},
       key: Math.random(),
@@ -332,7 +325,7 @@ export default function PatientsCreate(props) {
         Filefolder: '',
         Filepath: '',
         Filetype: '',
-        Usagetype: '',
+        Usagetype: [],
         Canteditfile: false,
         File: file,
         key: Math.random(),
@@ -470,19 +463,13 @@ export default function PatientsCreate(props) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Create.Errors.Caserequired[Profile.Language] })
     }
 
-    const filesthatwillcheck = [
-      Literals.Create.Options.usageType3[Profile.Language],
-      Literals.Create.Options.usageType4[Profile.Language],
-      Literals.Create.Options.usageType5[Profile.Language],
-      Literals.Create.Options.usageType6[Profile.Language],
-      Literals.Create.Options.usageType7[Profile.Language],
-      Literals.Create.Options.usageType8[Profile.Language],
-    ]
+    const filesthatwillcheck = (Usagetypes.list || []).filter(u => u.Isactive && u.Isrequired).map(u => { return u.Uuid })
 
     filesthatwillcheck.forEach(usagetype => {
-      const foundedfile = selectedFiles.find(u => u.Usagetype === usagetype)
+      const foundedfile = selectedFiles.find(u => (u.Usagetype || []).includes(usagetype))
       if (!foundedfile) {
-        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: `${usagetype} ${Literals.Create.Errors.filerequired[Profile.Language]}` })
+        let usagetypeName = (Usagetypes.list || []).find(type => type.Uuid === usagetype)?.Name || ''
+        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: `${usagetypeName} ${Literals.Create.Errors.filerequired[Profile.Language]}` })
       }
     });
 
@@ -493,7 +480,7 @@ export default function PatientsCreate(props) {
     } else {
 
       const files = uncleanfiles.map(data => {
-        return DataCleaner(data)
+        return DataCleaner({ ...data, Usagetype: (data.Usagetype || []).join(',') })
       });
 
 
@@ -557,7 +544,7 @@ export default function PatientsCreate(props) {
                   <Table.Row>
                     <Table.HeaderCell width={1}>{Literals.Create.Options.TableColumnsOrder[Profile.Language]}</Table.HeaderCell>
                     <Table.HeaderCell width={3}>{Literals.Create.Options.TableColumnsFileName[Profile.Language]}</Table.HeaderCell>
-                    <Table.HeaderCell width={3}>{Literals.Create.Options.TableColumnsUploadStatus[Profile.Language]}</Table.HeaderCell>
+                    <Table.HeaderCell width={3}>{Literals.Create.Options.TableColumnsUsagetype[Profile.Language]}</Table.HeaderCell>
                     <Table.HeaderCell width={9}>{Literals.Create.Options.TableColumnsFile[Profile.Language]}</Table.HeaderCell>
                     <Table.HeaderCell width={9}>{Literals.Create.Options.TableColumnsUploadStatus[Profile.Language]}</Table.HeaderCell>
                     <Table.HeaderCell width={1}>{Literals.Create.Options.TableColumnsDelete[Profile.Language]}</Table.HeaderCell>
@@ -576,7 +563,7 @@ export default function PatientsCreate(props) {
                         <Form.Input disabled={file.WillDelete} value={file.Name} placeholder={Literals.Create.Options.TableColumnsFileName[Profile.Language]} name="Name" fluid onChange={(e) => { selectedFilesChangeHandler(file.key, 'Name', e.target.value) }} />
                       </Table.Cell>
                       <Table.Cell>
-                        <Dropdown disabled={file.WillDelete} value={file.Usagetype} placeholder={Literals.Create.Options.TableColumnsUsagetype[Profile.Language]} name="Usagetype" clearable selection search fluid options={usagetypes} onChange={(e, data) => { selectedFilesChangeHandler(file.key, 'Usagetype', data.value) }} />
+                        <Dropdown disabled={file.WillDelete} value={file.Usagetype} multiple placeholder={Literals.Create.Options.TableColumnsUsagetype[Profile.Language]} name="Usagetype" clearable selection search fluid options={usagetypes} onChange={(e, data) => { selectedFilesChangeHandler(file.key, 'Usagetype', data.value) }} />
                       </Table.Cell>
                       <Table.Cell>
                         {file.fileChanged
