@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Grid, GridColumn, Header, Icon, Label, Loader, Popup } from 'semantic-ui-react'
+import { Breadcrumb, Button, Divider, Form, Grid, GridColumn, Header, Icon, Label, Loader, Popup } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
@@ -273,144 +273,144 @@ export default class PatientsDetail extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper additionalStyle="max-h-[calc(91vh-59px-2rem)]">
-            <Grid divided className='w-full flex justify-center items-center'>
-              <Grid.Row>
-                <GridColumn width={14} >
-                  <Grid.Row className='flex justify-between items-center'>
-                    <Label size='huge' style={{ backgroundColor: casedata?.Casecolor }} horizontal>{casedata?.Name}</Label>
-                    <div className=' flex justify-start items-center'>
-                      <Popup
-                        trigger={<Label color='blue' size='big'>Cüzdan : {integerPart}.{decimalPart}₺</Label>}
-                        on='hover'
-                        basic
-                        onOpen={() => {
+            <div className='w-full justify-between items-start flex flex-col md:flex-row lg:flex-row gap-4'>
+              <div className='flex flex-col justify-center items-center min-w-[250px] gap-5 md:border-r-2'>
+                <div className='flex justify-center items-center flex-col gap-1'>
+                  <div className='flex justify-start items-center '>
+                    <Header as='h3'>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}`}</Header>
+                  </div>
+                  <div className='flex justify-start items-center'>
+                    <Header as='h3'>{`${patientdefine?.CountryID}`}</Header>
+                  </div>
+                  {files ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${files?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
+                    : <Header as='h2' icon textAlign='center'><Icon name='users' circular /></Header>}
+                  <Label size='huge' style={{ backgroundColor: casedata?.Casecolor }} horizontal>{casedata?.Name}</Label>
+                </div>
+                <div className='flex justify-start flex-col items-start gap-1'>
+                  <Popup
+                    trigger={
+                      <Label size='large' as='a' color='blue' image ribbon>
+                        {Literals.Details.Wallet[Profile.Language]}:
+                        <Label.Detail>{integerPart}.{decimalPart}₺</Label.Detail>
+                      </Label>
+                    }
+                    on='hover'
+                    basic
+                    onOpen={() => {
 
-                        }}
-                        position='bottom center'
-                        style={{ height: 'auto', width: 'auto' }
-                        } >
-                        <div>
-                          {fixedpatientCashdetail.map(cash => {
-                            const [integerPart, decimalPart] = cash?.value.toFixed(2).split('.')
-                            return <Label key={Math.random()} basic>{cash?.label} : {integerPart}.{decimalPart}₺</Label>
-                          })}
-                        </div>
-                      </Popup>
+                    }}
+                    position='bottom center'
+                    style={{ height: 'auto', width: 'auto' }
+                    } >
+                    <div>
+                      {fixedpatientCashdetail.map(cash => {
+                        const [integerPart, decimalPart] = cash?.value.toFixed(2).split('.')
+                        return <Label key={Math.random()} basic>{cash?.label} : {integerPart}.{decimalPart}₺</Label>
+                      })}
                     </div>
-                    <div className='flex justify-start items-center'>
-                      <Header as='h1'>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`}</Header>
-                    </div>
-                  </Grid.Row>
-                  <Grid.Row className='mt-8 flex flex-row justify-center items-center w-full gap-4'>
-                    <Label size='large' as='a' color='blue' image>
-                      {Literals.Details.Costumertype[Profile.Language]}
-                      <Label.Detail>{costumertype?.Name}</Label.Detail>
-                    </Label>
-                    <Label size='large' as='a' color='blue' image>
-                      {Literals.Details.Patienttype[Profile.Language]}
-                      <Label.Detail>{patienttype?.Name}</Label.Detail>
-                    </Label>
-                    <Label size='large' as='a' color='blue' image>
-                      {Literals.Details.Floor[Profile.Language]}
-                      <Label.Detail>{floor?.Name}</Label.Detail>
-                    </Label>
-                    <Label size='large' as='a' color='blue' image>
-                      {Literals.Details.Room[Profile.Language]}
-                      <Label.Detail>{room?.Name}</Label.Detail>
-                    </Label>
-                    <Label size='large' as='a' color='blue' image>
-                      {Literals.Details.Bed[Profile.Language]}
-                      <Label.Detail>{bed?.Name}</Label.Detail>
-                    </Label>
-                  </Grid.Row>
-                </GridColumn>
-                <Grid.Column width={2}>
-                  <Header as='h2' icon textAlign='center'>
-                    {files ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${files?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
-                      : <Icon name='users' circular />}
-                  </Header>
-                </Grid.Column>
-              </Grid.Row>
-              <Pagedivider />
-              <Grid.Row>
-                <Grid.Column width={14}>
-                  <div className=' w-full'>
-                    <Grid columns={2} divided>
-                      <Grid.Column>
-                        <Label color='blue' basic>{Literals.Details.Last5incomemovement[Profile.Language]}</Label>
-                        <DataTable
-                          Columns={stocksColumns}
-                          Data={lastincomestocks}
-                        />
-                        <Pagedivider />
-                        <Label color='blue' basic>{Literals.Details.Last5outcomemovement[Profile.Language]}</Label>
-                        <DataTable
-                          Columns={stocksColumns}
-                          Data={lastoutcomestocks}
-                        />
-                      </Grid.Column>
-                      <Grid.Column>
-                        <Label color='blue' basic>{Literals.Details.Last5movement[Profile.Language]}</Label>
-                        <DataTable
-                          Columns={movementColumns}
-                          Data={lastmovements}
-                        />
-                        <Pagedivider />
-                        <Label color='blue' basic>{Literals.Details.Last5File[Profile.Language]}</Label>
-                        <DataTable
-                          Columns={fileColumns}
-                          Data={lastfiles}
-                        />
-                        <Pagedivider />
-                        <Label color='blue' basic>{Literals.Details.PatientStocks[Profile.Language]}</Label>
-                        <DataTable
-                          Columns={stockandmedicineColumns}
-                          Data={patientstocks}
-                        />
-                        <Pagedivider />
-                        <Label color='blue' basic>{Literals.Details.Patientmedicines[Profile.Language]}</Label>
-                        <DataTable
-                          Columns={stockandmedicineColumns}
-                          Data={patientmedicines}
-                        />
-                      </Grid.Column>
-                    </Grid>
+                  </Popup>
+                  <Label size='large' as='a' color='blue' image ribbon>
+                    {Literals.Details.Costumertype[Profile.Language]}
+                    <Label.Detail>{costumertype?.Name}</Label.Detail>
+                  </Label>
+                  <Label size='large' as='a' color='blue' image ribbon>
+                    {Literals.Details.Patienttype[Profile.Language]}
+                    <Label.Detail>{patienttype?.Name}</Label.Detail>
+                  </Label>
+                  <Label size='large' as='a' color='blue' image ribbon>
+                    {Literals.Details.Floor[Profile.Language]}
+                    <Label.Detail>{floor?.Name}</Label.Detail>
+                  </Label>
+                  <Label size='large' as='a' color='blue' image ribbon>
+                    {Literals.Details.Room[Profile.Language]}
+                    <Label.Detail>{room?.Name}</Label.Detail>
+                  </Label>
+                  <Label size='large' as='a' color='blue' image ribbon>
+                    {Literals.Details.Bed[Profile.Language]}
+                    <Label.Detail>{bed?.Name}</Label.Detail>
+                  </Label>
+                </div>
+                <Pagedivider />
+                <div className='w-full flex flex-col justify-center items-center gap-3 px-4'>
+                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Addmedicine`) }}>{Literals.Button.Givemedicine[Profile.Language]}</Button>
+                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Removemedicine`) }}>{Literals.Button.Takemedicine[Profile.Language]}</Button>
+                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
+                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
+                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
+                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editcash`) }}>{Literals.Button.Editcash[Profile.Language]}</Button>
+                  <Button primary fluid onClick={() => { handlePlacemodal(true) }}>{Literals.Button.Changeplace[Profile.Language]}</Button>
+                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Changetodos[Profile.Language]}</Button>
+                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>
+                  <Button primary fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`, { redirectUrl: "/Patients/" + Id }) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>
+                </div>
+              </div>
+              <div className=' w-full flex flex-col justify-start items-start gap-4'>
+                <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
+                  <div className='w-full'>
+                    <Label color='blue' basic>{Literals.Details.Last5incomemovement[Profile.Language]}</Label>
+                    <DataTable
+                      Columns={stocksColumns}
+                      Data={lastincomestocks}
+                    />
                   </div>
-                </Grid.Column>
-                <Grid.Column width={2} textAlign='center'>
-                  <div className='w-full flex flex-col justify-center items-center gap-3'>
-                    <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Addmedicine`) }}>{Literals.Button.Givemedicine[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Removemedicine`) }}>{Literals.Button.Takemedicine[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editcash`) }}>{Literals.Button.Editcash[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { handlePlacemodal(true) }}>{Literals.Button.Changeplace[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Changetodos[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>
-                    <Button primary fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`, { redirectUrl: "/Patients/" + Id }) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>
+                  <div className='w-full'>
+                    <Label color='blue' basic>{Literals.Details.Last5outcomemovement[Profile.Language]}</Label>
+                    <DataTable
+                      Columns={stocksColumns}
+                      Data={lastoutcomestocks}
+                    />
                   </div>
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid columns={2} divided>
-                  <Grid.Column>
+                </div>
+                <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
+                  <div className='w-full'>
+                    <Label color='blue' basic>{Literals.Details.Last5movement[Profile.Language]}</Label>
+                    <DataTable
+                      Columns={movementColumns}
+                      Data={lastmovements}
+                    />
+                  </div>
+                  <div className='w-full'>
+                    <Label color='blue' basic>{Literals.Details.Last5File[Profile.Language]}</Label>
+                    <DataTable
+                      Columns={fileColumns}
+                      Data={lastfiles}
+                    />
+                  </div>
+                </div>
+                <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
+                  <div className='w-full'>
+                    <Label color='blue' basic>{Literals.Details.PatientStocks[Profile.Language]}</Label>
+                    <DataTable
+                      Columns={stockandmedicineColumns}
+                      Data={patientstocks}
+                    />
+                  </div>
+                  <div className='w-full'>
+                    <Label color='blue' basic>{Literals.Details.Patientmedicines[Profile.Language]}</Label>
+                    <DataTable
+                      Columns={stockandmedicineColumns}
+                      Data={patientmedicines}
+                    />
+                  </div>
+                </div>
+                <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
+                  <div className='w-full'>
                     <Label color='blue' basic>{Literals.Details.Completedtodos[Profile.Language]}</Label>
                     <DataTable
                       Columns={todoColumns}
                       Data={completedTodos}
                     />
-                  </Grid.Column>
-                  <Grid.Column>
+                  </div>
+                  <div className='w-full'>
                     <Label color='blue' basic>{Literals.Details.Noncompletedtodos[Profile.Language]}</Label>
                     <DataTable
                       Columns={todoColumns}
                       Data={waitingTodos}
                     />
-                  </Grid.Column>
-                </Grid>
-              </Grid.Row>
-            </Grid>
+                  </div>
+                </div>
+              </div>
+            </div>
           </Contentwrapper>
           <PatientsIn />
           <PatientsOut />

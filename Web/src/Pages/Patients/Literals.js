@@ -164,6 +164,10 @@ const Literals = {
         },
     },
     Details: {
+        Wallet: {
+            tr: "Cüzdan",
+            en: "Wallet"
+        },
         Costumertype: {
             tr: "Müşteri Türü",
             en: "Costumer Type"
@@ -209,8 +213,8 @@ const Literals = {
             en: "Activation Status"
         },
         IsComplated: {
-            tr: "Tamamlanma Durumu",
-            en: "Complete Status"
+            tr: "Durumu",
+            en: "Status"
         },
         Filename: {
             tr: "Dosya Adı",
@@ -257,16 +261,16 @@ const Literals = {
             en: "Patient Medicines"
         },
         Tododefine: {
-            tr: "Yapılacak Adı",
-            en: "Todo Name"
+            tr: "Rutin",
+            en: "Routine"
         },
         Occuredtime: {
-            tr: "Gerçekleşme Saati",
-            en: "Occured Time"
+            tr: "Saat",
+            en: "Time"
         },
         Checktime: {
-            tr: "Kontrol Saati",
-            en: "Check Time"
+            tr: "Kontrol",
+            en: "Check"
         },
         Isapproved: {
             tr: "Onaylandı mı?",
