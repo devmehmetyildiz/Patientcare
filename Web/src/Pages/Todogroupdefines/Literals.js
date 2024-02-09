@@ -11,12 +11,12 @@ const Literals = {
             en: 'Unique ID'
         },
         Name: {
-            tr: 'Yapılacaklar Grup Adı',
-            en: 'Todo Group Define Name'
+            tr: 'Rutin Liste Adı',
+            en: 'Routine list Name'
         },
         Tododefines: {
-            tr: 'Yapılacaklar',
-            en: 'Todo Defines'
+            tr: 'Rutinler',
+            en: 'Routines'
         },
         Department: {
             tr: 'Departman',
@@ -53,8 +53,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Yapılacaklar Grup Tanımları",
-            en: "Todo Group Defines"
+            tr: "Rutin Listeleri",
+            en: "Routine Lists"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -65,8 +65,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Yapılacaklar Grup Tanımı Silme",
-            en: "Delete Todo Group Defines"
+            tr: "Rutin Listesi Silme",
+            en: "Delete Routine List"
         }
     },
     Button: {
@@ -94,20 +94,20 @@ const Literals = {
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Yapılacak Grup Tanımı Yok",
-            en: "There is no todo group define found"
+            tr: "Tanımlı Rutin Listesi Yok",
+            en: "There is no Routine list found"
         },
         Deletecheck: {
-            tr: "Yapılacak Grup tanımını silmek istediğinize emin misiniz?",
-            en: "Todo Group define will delete, are you sure?"
+            tr: "Rutin Listesini silmek istediğinize emin misiniz?",
+            en: "Routine list will delete, are you sure?"
         },
         NameRequired: {
-            tr: "Yapılacak Grup Adı Gerekli",
-            en: "Todo group define name Required"
+            tr: "Rutin Liste Adı Gerekli",
+            en: "Routine List Name Required"
         },
         TododefininesRequired: {
-            tr: "Yapılacak Tanımları Gerekli",
-            en: "Todo defines Required"
+            tr: "Routinler Gerekli",
+            en: "Routines Required"
         },
         DepartmentRequired: {
             tr: "Departman Gerekli",

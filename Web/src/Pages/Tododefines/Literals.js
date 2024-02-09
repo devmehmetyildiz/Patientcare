@@ -11,11 +11,11 @@ const Literals = {
             en: 'Unique ID'
         },
         Name: {
-            tr: 'Yapılacak Tanım Adı',
-            en: 'Todo Define Name'
+            tr: 'Rutin Adı',
+            en: 'Routine Name'
         },
         IsRequired: {
-            tr: 'Zorunlu alan mı?',
+            tr: 'Zorunlu mu?',
             en: 'Is Required'
         },
         IsNeedactivation: {
@@ -65,8 +65,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Yapılacak Tanımları",
-            en: "Todo Defines"
+            tr: "Rutinler",
+            en: "Routines"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -77,8 +77,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Yapılacak Tanımı Silme",
-            en: "Delete Todo Defines"
+            tr: "Rutin Silme",
+            en: "Delete Routines"
         }
     },
     Button: {
@@ -106,12 +106,12 @@ const Literals = {
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Yapılacak Tanımı Yok",
-            en: "There is no todo define found"
+            tr: "Rutin Yok",
+            en: "There is no routine found"
         },
         Deletecheck: {
-            tr: "Yapılacak tanımını silmek istediğinize emin misiniz?",
-            en: "Todo define will delete, are you sure?"
+            tr: "Rutini silmek istediğinize emin misiniz?",
+            en: "Routine will delete, are you sure?"
         },
         PeriodsRequired: {
             tr: "Periyotlar Gerekli",
@@ -122,8 +122,8 @@ const Literals = {
             en: "Occured Period Required"
         },
         NameRequired: {
-            tr: "Yapılacak Adı Gerekli",
-            en: "Todo define name Required"
+            tr: "Rutin Adı Gerekli",
+            en: "Routine name Required"
         },
         Yes: {
             tr: "EVET",
