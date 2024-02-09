@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
-import { getInitialconfig } from '../../Utils/Constants'
+import { ROUTES, getInitialconfig } from '../../Utils/Constants'
+import config from '../../Config'
 export default class Patients extends Component {
 
   constructor(props) {
@@ -29,6 +30,7 @@ export default class Patients extends Component {
       GetFiles,
       GetPatientstocks,
       GetStockdefines,
+      GetUsagetypes
     } = this.props
     GetPatients()
     GetPatientdefines()
@@ -38,6 +40,7 @@ export default class Patients extends Component {
     GetCases()
     GetFiles()
     GetPatientstocks()
+    GetUsagetypes()
     GetStockdefines()
   }
 
@@ -148,13 +151,13 @@ export default class Patients extends Component {
   }
 
   patientdefineCellhandler = (col) => {
-    const { Patientdefines } = this.props
-    if (Patientdefines.isLoading) {
-      return <Loader size='small' active inline='centered' ></Loader>
-    } else {
-      const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === col.value)
-      return `${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`
-    }
+    const { Files, Patientdefines, Usagetypes } = this.props
+    const patient = col.row.original
+    const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+    let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
+    let file = (Files.list || []).filter(u => u.ParentID === patient?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
+    return <div className='flex justify-center items-center flex-row flex-nowrap whitespace-nowrap'>{file ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file?.Uuid}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
+      : null}{patientdefine?.Firstname ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}` : `${patientdefine?.CountryID}`}</div>
   }
   floorCellhandler = (col) => {
     const { Floors } = this.props
