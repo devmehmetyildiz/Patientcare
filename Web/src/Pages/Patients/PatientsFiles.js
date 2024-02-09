@@ -7,6 +7,7 @@ import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { useDropzone } from 'react-dropzone';
 import { Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import axios from 'axios'
 
 export default function PatientsFiles(props) {
     const [patient, setPatient] = useState({})
@@ -202,6 +203,31 @@ export default function PatientsFiles(props) {
         }
     }, [patient]);
 
+    const downloadFile = (fileID, fileName) => {
+        axios.get(`${config.services.File}${ROUTES.FILE}/Downloadfile/${fileID}`, {
+            responseType: 'blob'
+        }).then((res) => {
+            const fileType = res.headers['content-type']
+            const blob = new Blob([res.data], {
+                type: fileType
+            });
+            console.log('fileType = ', fileType);
+            const url = window.URL.createObjectURL(blob);
+            if (fileType.includes('pdf')) {
+                window.open(url)
+                a.href = null;
+                window.URL.revokeObjectURL(url);
+            }
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }).catch((err) => {
+            console.log(err.message)
+        });
+    }
+
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, multiple: true, noClick: true });
 
     const { Files, Patients, Profile, history, Patientdefines, PatientID, match, Usagetypes } = props
@@ -269,17 +295,14 @@ export default function PatientsFiles(props) {
                                             <Table.Cell>
                                                 {file.fileChanged
                                                     ? <Form.Input disabled={file.WillDelete} className='w-full flex justify-center items-center' type='File' name="File" fluid onChange={(e) => { selectedFilesChangeHandler(file.key, 'File', e) }} />
-                                                    : <>
+                                                    : <div className='flex flex-row'>
                                                         <Label color='blue'>{file.Filename}</Label>
                                                         {validator.isUUID(file.Uuid) &&
-                                                            <a
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                href={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file.Uuid}`}
-                                                            >
-                                                                <Icon name='download' />
-                                                            </a>}
-                                                    </>}
+                                                            <div className='cursor-pointer' onClick={() => { downloadFile(file.Uuid, file.Name) }}>
+                                                                <Icon color='blue' name='download' />
+                                                            </div>
+                                                        }
+                                                    </div>}
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {file.fileChanged
