@@ -118,6 +118,10 @@ const Literals = {
             tr: 'Rutinler',
             en: 'Routines'
         },
+        Supportplans: {
+            tr: 'Destek PLanları',
+            en: 'Support Plans'
+        },
         Stocks: {
             tr: 'Stoklar',
             en: 'Stocks'
@@ -427,6 +431,10 @@ const Literals = {
             tr: "Rutin Değiştir",
             en: "Change Routine"
         },
+        Pageeditsupportplanheader: {
+            tr: "Destek Planı Değiştir",
+            en: "Change Support Plan"
+        },
         Pageeditplaceheader: {
             tr: "Konum Değiştir",
             en: "Change Place"
@@ -525,9 +533,13 @@ const Literals = {
             tr: "Kurumdan Çıkart",
             en: "Get Off"
         },
-        Changetodos: {
+        Editroutine: {
             tr: "Rutin Düzenle",
             en: "Edit Rutines"
+        },
+        Editsupportplan: {
+            tr: "Destek Planı Düzenle",
+            en: "Edit Support Plan"
         },
         Editplace: {
             tr: "Yatak Değiştir",
@@ -552,6 +564,14 @@ const Literals = {
         Selectroutine: {
             tr: "Hazır Rutin Listesi Seç",
             en: "Select Routine List"
+        },
+        Saveplan: {
+            tr: "Destek Plan Listesini Kaydet",
+            en: "Save Support Plan List"
+        },
+        Selectplan: {
+            tr: "Hazır Destek Plan Listesi Seç",
+            en: "Select Support Plan List"
         },
     },
     Messages: {
@@ -614,6 +634,10 @@ const Literals = {
         TododefininesRequired: {
             tr: "Rutin Tanımları Gerekli",
             en: "Routine Defines Required"
+        },
+        SupportplansRequired: {
+            tr: "Destek Planları Gerekli",
+            en: "Support Plans Required"
         },
         DepartmentRequired: {
             tr: "Departman Gerekli",
@@ -738,6 +762,52 @@ const Literals = {
         SaveRoutineList: {
             tr: 'Rutin Listesi Kaydet',
             en: 'Save Routine List'
+        },
+    },
+    Editsupportplancolumns: {
+        Name: {
+            tr: 'Plan Adı',
+            en: 'Plan Name'
+        },
+        Department: {
+            tr: 'Departman',
+            en: 'Department'
+        },
+        Supportplanlistname: {
+            tr: 'Destek Plan Liste Adı',
+            en: 'Support plan List Name'
+        },
+        IsRequired: {
+            tr: 'Zorunlu mu?',
+            en: 'Is Required'
+        },
+        IsNeedactivation: {
+            tr: 'Onay Gerekli mi?',
+            en: 'Is Need Activation'
+        },
+        Shortname: {
+            tr: 'Kısaltma',
+            en: 'Shortname'
+        },
+        Info: {
+            tr: 'Açıklama',
+            en: 'Info'
+        },
+        Periods: {
+            tr: 'Periyotlar',
+            en: 'Periods'
+        },
+        Remove: {
+            tr: 'Kaldır',
+            en: 'Remove'
+        },
+        ReadySupportplanLists: {
+            tr: 'Hazır Destek Plan Listeleri',
+            en: 'Ready Support Plan Lists'
+        },
+        SaveSupportplanList: {
+            tr: 'Destek Plan Listesi Kaydet',
+            en: 'Save Support Plan List'
         },
     },
     Create: {

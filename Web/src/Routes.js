@@ -69,6 +69,7 @@ const PatientsRemovestock = lazy(() => import('./Containers/Patients/PatientsRem
 const PatientsRemovemedicine = lazy(() => import('./Containers/Patients/PatientsRemovemedicine'));
 const PatientsEditcase = lazy(() => import('./Containers/Patients/PatientsEditcase'));
 const PatientsEditroutine = lazy(() => import('./Containers/Patients/PatientsEditroutine'));
+const PatientsEditsupportplan = lazy(() => import('./Containers/Patients/PatientsEditsupportplan'));
 const PatientsEditcash = lazy(() => import('./Containers/Patients/PatientsEditcash'));
 
 const Patientstocks = lazy(() => import('./Containers/Patientstocks/Patientstocks'));
@@ -311,6 +312,7 @@ class Routes extends Component {
       { exact: true, path: "/Patients/:PatientID/Removemedicine", auth: true, component: PatientsRemovemedicine, permission: 'patientscreen' },
       { exact: true, path: "/Patients/:PatientID/Editcase", auth: true, component: PatientsEditcase, permission: 'patientscreen' },
       { exact: true, path: "/Patients/:PatientID/Editroutine", auth: true, component: PatientsEditroutine, permission: 'patientscreen' },
+      { exact: true, path: "/Patients/:PatientID/Editsupportplan", auth: true, component: PatientsEditsupportplan, permission: 'patientscreen' },
       { exact: true, path: "/Patients/:PatientID/Editcash", auth: true, component: PatientsEditcash, permission: 'patientscreen' },
       { exact: true, path: "/Warehouses", auth: true, component: Warehouses, permission: 'warehousescreen' },
       { exact: true, path: "/Warehouses/Create", auth: true, component: WarehousesCreate, permission: 'warehousescreen' },

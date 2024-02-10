@@ -304,6 +304,27 @@ export const UpdatePatienttododefines = createAsyncThunk(
         }
     }
 );
+export const UpdatePatientsupportplans = createAsyncThunk(
+    'Patients/UpdatePatientsupportplans',
+    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientsupportplans", data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
 
 export const EditPatientstocks = createAsyncThunk(
     'Patients/EditPatientstocks',
@@ -622,6 +643,16 @@ export const PatientsSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(UpdatePatienttododefines.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(UpdatePatientsupportplans.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(UpdatePatientsupportplans.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(UpdatePatientsupportplans.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

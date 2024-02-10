@@ -16,7 +16,7 @@ const Literals = {
         },
         Shortname: {
             tr: 'Kısaltma',
-            en: 'Kısaltma'
+            en: 'Shortname'
         },
         IsRequired: {
             tr: 'Zorunlu mu?',
