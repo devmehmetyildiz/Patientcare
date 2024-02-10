@@ -247,6 +247,7 @@ export const ProfileSlice = createSlice({
         resetrequestuser: {},
         Ismobile: false,
         Istokenchecking: false,
+        isFocusedpage: false
     },
     reducers: {
         fillnotification: (state, action) => {
@@ -265,6 +266,9 @@ export const ProfileSlice = createSlice({
         },
         handleauth: (state) => {
             state.auth = true
+        },
+        handleFocus: (state, action) => {
+            state.isFocusedpage = action.payload
         },
         logOut: () => {
             const localcookies = new Cookies();
@@ -444,7 +448,8 @@ export const {
     logOut,
     removeauth,
     handleauth,
-    handlemobile
+    handlemobile,
+    handleFocus
 } = ProfileSlice.actions;
 
 export default ProfileSlice.reducer;

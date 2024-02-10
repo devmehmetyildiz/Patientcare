@@ -55,7 +55,9 @@ const notificationMiddleware = store => next => action => {
             if (!routes.some(route => currentPath.toLowerCase().startsWith(route.toLowerCase()))) {
                 const state = store.getState()
                 const meta = state.Profile?.meta
-                if (validator.isUUID(meta?.Uuid)) {
+                const isfocused = state.Profile?.isFocusedpage
+
+                if (validator.isUUID(meta?.Uuid) && isfocused) {
                     let allnotifications = []
                     try {
                         const notifications = await instanse.get(config.services.Userrole, `Usernotifications/GetUsernotificationsbyUserid/${meta?.Uuid}`);

@@ -6,7 +6,9 @@ import cookies from 'universal-cookie';
 export default class Layout extends Component {
 
   componentDidMount() {
-    const { GetActiveUser, GetUserRoles, GetTableMeta, GetUserMeta, Checktoken,GetUsagetypes } = this.props
+    window.addEventListener("focus", this.onFocus)
+    window.addEventListener("blur", this.onBlur);
+    const { GetActiveUser, GetUserRoles, GetTableMeta, GetUserMeta, Checktoken, GetUsagetypes } = this.props
     const routes = [
       "/Login",
       "/login",
@@ -42,8 +44,18 @@ export default class Layout extends Component {
     }
   }
 
+  onFocus = () => {
+    const { handleFocus } = this.props
+    handleFocus(true)
+  }
+
+  onBlur = () => {
+    const { handleFocus } = this.props
+    handleFocus(false)
+  }
+
   render() {
-    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal, Istokenchecking,Usagetypes } = this.props
+    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal, Istokenchecking, Usagetypes } = this.props
     return (
       Istokenchecking || Profile.isLogging || Profile.isFetching ?
         <LoadingPage />
