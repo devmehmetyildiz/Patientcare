@@ -229,6 +229,14 @@ const Patientusestocks = lazy(() => import('./Containers/Patientusestocks/Patien
 const Patientusesupplies = lazy(() => import('./Containers/Patientusesupplies/Patientusesupplies'));
 const Patientusemedicines = lazy(() => import('./Containers/Patientusemedicines/Patientusemedicines'));
 
+const Supportplans = lazy(() => import('./Containers/Supportplans/Supportplans'));
+const SupportplansCreate = lazy(() => import('./Containers/Supportplans/SupportplansCreate'));
+const SupportplansEdit = lazy(() => import('./Containers/Supportplans/SupportplansEdit'));
+
+const Supportplanlists = lazy(() => import('./Containers/Supportplanlists/Supportplanlists'));
+const SupportplanlistsCreate = lazy(() => import('./Containers/Supportplanlists/SupportplanlistsCreate'));
+const SupportplanlistsEdit = lazy(() => import('./Containers/Supportplanlists/SupportplanlistsEdit'));
+
 const Home = lazy(() => import('./Pages/Home'));
 const Notfoundpage = lazy(() => import('./Components/Notfoundpage'));
 
@@ -396,6 +404,12 @@ class Routes extends Component {
       { exact: true, path: "/Companycashmovements", auth: true, component: Companycashmovements, permission: 'companycashmovementscreen' },
       { exact: true, path: "/Companycashmovements/Create", auth: true, component: CompanycashmovementsCreate, permission: 'companycashmovementscreen' },
       { exact: true, path: "/Companycashmovements/:CompanycashmovementID/Edit", auth: true, component: CompanycashmovementsEdit, permission: 'companycashmovementscreen' },
+      { exact: true, path: "/Supportplans", auth: true, component: Supportplans, permission: 'supportplanscreen' },
+      { exact: true, path: "/Supportplans/Create", auth: true, component: SupportplansCreate, permission: 'supportplanscreen' },
+      { exact: true, path: "/Supportplans/:SupportplanID/Edit", auth: true, component: SupportplansEdit, permission: 'supportplanscreen' },
+      { exact: true, path: "/Supportplanlists", auth: true, component: Supportplanlists, permission: 'supportplanlistscreen' },
+      { exact: true, path: "/Supportplanlists/Create", auth: true, component: SupportplanlistsCreate, permission: 'supportplanlistscreen' },
+      { exact: true, path: "/Supportplanlists/:SupportplanlistID/Edit", auth: true, component: SupportplanlistsEdit, permission: 'supportplanlistscreen' },
       { exact: true, path: "/Usagetypes", auth: true, component: Usagetypes, permission: 'usagetypescreen' },
       { exact: true, path: "/Usagetypes/Create", auth: true, component: UsagetypesCreate, permission: 'usagetypescreen' },
       { exact: true, path: "/Usagetypes/:UsagetypeID/Edit", auth: true, component: UsagetypesEdit, permission: 'usagetypescreen' },

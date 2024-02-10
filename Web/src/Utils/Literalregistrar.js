@@ -53,6 +53,8 @@ import Patientusestocks from "../Pages/Patientusestocks/Literals"
 import Patientusemedicines from "../Pages/Patientusemedicines/Literals"
 import Patientusesupplies from "../Pages/Patientusesupplies/Literals"
 import Usagetypes from "../Pages/Usagetypes/Literals"
+import Supportplans from "../Pages/Supportplans/Literals"
+import Supportplanlists from "../Pages/Supportplanlists/Literals"
 
 const Literals = {
     Cases,
@@ -109,7 +111,9 @@ const Literals = {
     Patientusestocks,
     Patientusemedicines,
     Patientusesupplies,
-    Usagetypes
+    Usagetypes,
+    Supportplans,
+    Supportplanlists,
 }
 
 export default Literals
