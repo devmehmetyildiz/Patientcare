@@ -18,6 +18,9 @@ const floorModel = require('./FloorModel')
 const bedModel = require('./BedModel')
 const roomModel = require('./RoomModel')
 const usagetypeModel = require('./UsagetypeModel')
+const supportplanModel = require('./SupportplanModel')
+const supportplanlistModel = require('./SupportplanlistModel')
+const supportplanlistsupportplanModel = require('./SupportplanlistsupportplanModel')
 
 
 module.exports = {
@@ -40,5 +43,8 @@ module.exports = {
     unitModel,
     applog_settingModel,
     tododefineperiodModel,
-    usagetypeModel
+    usagetypeModel,
+    supportplanModel,
+    supportplanlistModel,
+    supportplanlistsupportplanModel,
 }
