@@ -13,6 +13,7 @@ const Routes = [
     { method: 'put', path: '/Patients/UpdatePatientcase', controller: 'Patient', action: 'UpdatePatientcase' },
     { method: 'put', path: '/Patients/UpdatePatientplace', controller: 'Patient', action: 'UpdatePatientplace' },
     { method: 'put', path: '/Patients/UpdatePatienttododefines', controller: 'Patient', action: 'UpdatePatienttododefines' },
+    { method: 'put', path: '/Patients/UpdatePatientsupportplans', controller: 'Patient', action: 'UpdatePatientsupportplans' },
     { method: 'put', path: '/Patients', controller: 'Patient', action: 'UpdatePatient' },
     { method: 'delete', path: '/Patients/:patientId', controller: 'Patient', action: 'DeletePatient' },
 

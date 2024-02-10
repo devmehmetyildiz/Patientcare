@@ -653,6 +653,18 @@ const messages = {
         tr: 'Bu işlem için tododefineid gerekli',
       }
     },
+    SUPPORTPLANID_REQUIRED: {
+      code: 'SUPPORTPLANID_REQUIRED', description: {
+        en: 'The support plan id required',
+        tr: 'Bu işlem için destek plan id bilgisi gerekli',
+      }
+    },
+    SUPPORTPLANS_REQUIRED: {
+      code: 'SUPPORTPLANS_REQUIRED', description: {
+        en: 'The support plans required',
+        tr: 'Bu işlem için destek planları gerekli',
+      }
+    },
     CHECKTIME_REQUIRED: {
       code: 'CHECKTIME_REQUIRED', description: {
         en: 'The checktime required',

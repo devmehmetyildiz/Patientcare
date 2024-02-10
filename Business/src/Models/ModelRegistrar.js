@@ -11,6 +11,7 @@ const personelshiftModel = require('./PersonelshiftModel')
 const companycashmovementModel = require('./CompanycashmovementModel')
 const patientcashmovementModel = require('./PatientcashmovementModel')
 const patientcashregisterModel = require('./PatientcashregisterModel')
+const patientsupportplanModel = require('./PatientsupportplanModel')
 
 module.exports = {
     applog_businessModel,
@@ -25,5 +26,6 @@ module.exports = {
     personelshiftModel,
     companycashmovementModel,
     patientcashregisterModel,
-    patientcashmovementModel
+    patientcashmovementModel,
+    patientsupportplanModel,
 }

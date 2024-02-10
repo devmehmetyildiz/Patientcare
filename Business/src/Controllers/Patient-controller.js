@@ -17,6 +17,12 @@ async function GetPatients(req, res, next) {
                 },
                 attributes: ['TododefineID']
             });
+            patient.Supportplanuuids = await db.patientsupportplanModel.findAll({
+                where: {
+                    PatientID: patient.Uuid,
+                },
+                attributes: ['PlanID']
+            });
         }
         res.status(200).json(patients)
     } catch (error) {
@@ -62,6 +68,12 @@ async function GetPatient(req, res, next) {
                 PatientID: patient.Uuid,
             },
             attributes: ['TododefineID']
+        });
+        patient.Supportplanuuids = await db.patientsupportplanModel.findAll({
+            where: {
+                PatientID: patient.Uuid,
+            },
+            attributes: ['PlanID']
         });
         res.status(200).json(patient)
     } catch (error) {
@@ -673,6 +685,53 @@ async function UpdatePatienttododefines(req, res, next) {
     GetPatients(req, res, next)
 }
 
+async function UpdatePatientsupportplans(req, res, next) {
+
+    let validationErrors = []
+    const {
+        PatientID,
+        Supportplans,
+    } = req.body
+
+    if (!validator.isUUID(PatientID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+    }
+    if (!validator.isArray(Supportplans)) {
+        validationErrors.push(messages.VALIDATION_ERROR.SUPPORTPLANS_REQUIRED)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
+        if (!patient) {
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
+        }
+        if (patient.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.patientsupportplanModel.destroy({ where: { PatientID: PatientID }, transaction: t });
+        for (const supportplan of Supportplans) {
+            if (!supportplan.Uuid || !validator.isUUID(supportplan.Uuid)) {
+                return next(createValidationError(messages.VALIDATION_ERROR.SUPPORTPLANID_REQUIRED, req.language))
+            }
+            await db.patientsupportplanModel.create({
+                PatientID: PatientID,
+                PlanID: supportplan.Uuid
+            }, { transaction: t });
+        }
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatients(req, res, next)
+}
+
 async function DeletePatient(req, res, next) {
 
     let validationErrors = []
@@ -977,5 +1036,6 @@ module.exports = {
     OutPatient,
     InPatient,
     AddPatientReturnPatient,
-    Createfromtemplate
+    Createfromtemplate,
+    UpdatePatientsupportplans
 }
