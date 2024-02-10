@@ -4,7 +4,7 @@ import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import { getInitialconfig } from '../../Utils/Constants'
-import SupportplanlistsDelete from '../../Containers/Supportplanlists/SupportplanlistsDelete'
+import SupportplansDelete from '../../Containers/Supportplans/SupportplansDelete'
 
 export default class Supportplans extends Component {
 
@@ -89,7 +89,7 @@ export default class Supportplans extends Component {
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>
-          <SupportplanlistsDelete />
+          <SupportplansDelete />
         </React.Fragment>
     )
   }

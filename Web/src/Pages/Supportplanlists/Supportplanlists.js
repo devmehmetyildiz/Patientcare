@@ -36,7 +36,7 @@ export default class Supportplanlists extends Component {
             { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
             { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
             { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-            { Header: Literals.Columns.Supportplans[Profile.Language], accessor: 'Supportplanstxt', Subheader: true, Cell: col => this.SupportplanCellhandler(col) },
+            { Header: Literals.Columns.Supportplans[Profile.Language], accessor: 'Supportplanstxt', Subheader: true, Cell: col => this.supportplanCellhandler(col) },
             { Header: Literals.Columns.Department[Profile.Language], accessor: 'Department', Finalheader: true },
             { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
             { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
@@ -126,7 +126,7 @@ export default class Supportplanlists extends Component {
         if (col.value) {
             if (!col.cell?.isGrouped && !Profile.Ismobile) {
                 const itemId = col?.row?.original?.Id
-                const itemSupportplans = (col.row.original.Supportplansuuids || []).map(u => { return (Supportplans.list || []).find(plan => plan.Uuid === u.PlanID) })
+                const itemSupportplans = (col.row.original.Supportplanuuids || []).map(u => { return (Supportplans.list || []).find(plan => plan.Uuid === u.PlanID) })
                 return col.value.length - 35 > 20 ?
                     (
                         !this.state.supportplanStatus.includes(itemId) ?

@@ -10,24 +10,24 @@ const Literals = {
         tr: 'Veri Kaydetme'
     },
     adddescription: {
-        en: 'Todo define added successfully',
-        tr: 'Yapılacak Tanımı Başarı ile eklendi'
+        en: 'Routine added successfully',
+        tr: 'Rutin Başarı ile eklendi'
     },
     updatecode: {
         en: 'Data Update',
         tr: 'Veri Güncelleme'
     },
     updatedescription: {
-        en: 'Todo define updated successfully',
-        tr: 'Yapılacak Tanımı Başarı ile güncellendi'
+        en: 'Routine updated successfully',
+        tr: 'Rutin Başarı ile güncellendi'
     },
     deletecode: {
         en: 'Data Delete',
         tr: 'Veri Silme'
     },
     deletedescription: {
-        en: 'Todo define Deleted successfully',
-        tr: 'Yapılacak Tanımı Başarı ile Silindi'
+        en: 'Routine Deleted successfully',
+        tr: 'Rutin Başarı ile Silindi'
     },
 }
 
