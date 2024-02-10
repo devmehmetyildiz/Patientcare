@@ -50,6 +50,8 @@ export const ROUTES = {
     PATIENTMOVEMENT: 'Patientmovements',
     CHECKPERIOD: 'Checkperiods',
     PERIOD: 'Periods',
+    SUPPORTPLAN: 'Supportplans',
+    SUPPORTPLANLIST: 'Supportplanlists',
 
     MAILSETTING: 'Mailsettings',
     PRINTTEMPLATE: 'Printtemplates',
