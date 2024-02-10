@@ -82,6 +82,18 @@ const Routes = [
   { method: 'put', path: '/Usagetypes', controller: 'Usagetype', action: 'UpdateUsagetype' },
   { method: 'delete', path: '/Usagetypes/:usagetypeId', controller: 'Usagetype', action: 'DeleteUsagetype' },
 
+  { method: 'get', path: '/Supportplanlists/:supportplanlistId', controller: 'Supportplanlist', action: 'GetSupportplanlist' },
+  { method: 'get', path: '/Supportplanlists', controller: 'Supportplanlist', action: 'GetSupportplanlists' },
+  { method: 'post', path: '/Supportplanlists', controller: 'Supportplanlist', action: 'AddSupportplanlist' },
+  { method: 'put', path: '/Supportplanlists', controller: 'Supportplanlist', action: 'UpdateSupportplanlist' },
+  { method: 'delete', path: '/Supportplanlists/:supportplanlistId', controller: 'Supportplanlist', action: 'DeleteSupportplanlist' },
+
+  { method: 'get', path: '/Supportplans/:supportplanId', controller: 'Supportplan', action: 'GetSupportplan' },
+  { method: 'get', path: '/Supportplans', controller: 'Supportplan', action: 'GetSupportplans' },
+  { method: 'post', path: '/Supportplans', controller: 'Supportplan', action: 'AddSupportplan' },
+  { method: 'put', path: '/Supportplans', controller: 'Supportplan', action: 'UpdateSupportplan' },
+  { method: 'delete', path: '/Supportplans/:supportplanId', controller: 'Supportplan', action: 'DeleteSupportplan' },
+
 ]
 
 module.exports = Routes

@@ -350,6 +350,31 @@ const version1_0_0_10 = {
         }
     ],
 }
+const version1_0_0_11 = {
+    version: "1.0.0.11",
+    bugs: [
+        {
+            title: "Common", commits: [
+                "Pagination artık kaybolmayacak"
+            ]
+        },
+    ],
+    changes: [
+        {
+            title: "Hastalar", commits: [
+                "Hasta cüzdan hareketlerinde yer alan kurum kasasından düş seçeneği ayarlayara taşındı"
+            ]
+        },
+    ],
+    features: [
+        {
+            title: "Hastalar", commits: [
+                "Cüzdanın üstüne gelindiğinde detay popup gözüküyor",
+                "Hasta İlaç,Stok,Sarf malzeme tüketim ekranları eklendi",
+            ]
+        },
+    ],
+}
 export {
     version1_0_0_0,
     version1_0_0_1,
@@ -361,5 +386,6 @@ export {
     version1_0_0_7,
     version1_0_0_8,
     version1_0_0_9,
-    version1_0_0_10
+    version1_0_0_10,
+    version1_0_0_11,
 }

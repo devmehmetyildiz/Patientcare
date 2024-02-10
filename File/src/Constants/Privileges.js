@@ -346,6 +346,22 @@ const Priveleges = [
     { code: 'usagetypemanageview', text: 'Usagetypes Manage View', group: ['Usagetypes'], required: [] },
     { code: 'usagetypegetreport', text: 'Usagetypes Get Report', group: ['Usagetypes'], required: [] },
 
+    { code: 'supportplanlistscreen', text: 'Supportplanlists Screen', group: ['Supportplanlists'], required: [] },
+    { code: 'supportplanlistview', text: 'Supportplanlists View', group: ['Supportplanlists'], required: [] },
+    { code: 'supportplanlistadd', text: 'Supportplanlists Add', group: ['Supportplanlists'], required: [] },
+    { code: 'supportplanlistupdate', text: 'Supportplanlists Update', group: ['Supportplanlists'], required: [] },
+    { code: 'supportplanlistdelete', text: 'Supportplanlists Delete', group: ['Supportplanlists'], required: [] },
+    { code: 'supportplanlistmanageview', text: 'Supportplanlists Manage View', group: ['Supportplanlists'], required: [] },
+    { code: 'supportplanlistgetreport', text: 'Supportplanlists Get Report', group: ['Supportplanlists'], required: [] },
+   
+    { code: 'supportplanscreen', text: 'Supportplans Screen', group: ['Supportplans'], required: [] },
+    { code: 'supportplanview', text: 'Supportplans View', group: ['Supportplans'], required: [] },
+    { code: 'supportplanadd', text: 'Supportplans Add', group: ['Supportplans'], required: [] },
+    { code: 'supportplanupdate', text: 'Supportplans Update', group: ['Supportplans'], required: [] },
+    { code: 'supportplandelete', text: 'Supportplans Delete', group: ['Supportplans'], required: [] },
+    { code: 'supportplanmanageview', text: 'Supportplans Manage View', group: ['Supportplans'], required: [] },
+    { code: 'supportplangetreport', text: 'Supportplans Get Report', group: ['Supportplans'], required: [] },
+
 ]
 
 module.exports = Priveleges

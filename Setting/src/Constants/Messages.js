@@ -12,6 +12,30 @@ const messages = {
         tr: 'Durum aktif değil',
       }
     },
+    SUPPORTPLAN_NOT_FOUND: {
+      code: 'SUPPORTPLAN_NOT_FOUND', description: {
+        en: 'Support plan not found',
+        tr: 'Destek Planı bulunamadı',
+      }
+    },
+    SUPPORTPLAN_NOT_ACTIVE: {
+      code: 'SUPPORTPLAN_NOT_ACTIVE', description: {
+        en: 'Support plan not active',
+        tr: 'Destek Planı aktif değil',
+      }
+    },
+    SUPPORTPLANLIST_NOT_FOUND: {
+      code: 'SUPPORTPLANLIST_NOT_FOUND', description: {
+        en: 'Support plan list not found',
+        tr: 'Destek Planı listesi bulunamadı',
+      }
+    },
+    SUPPORTPLANLIST_NOT_ACTIVE: {
+      code: 'SUPPORTPLANLIST_NOT_ACTIVE', description: {
+        en: 'Support plan list not active',
+        tr: 'Destek Planı listesi aktif değil',
+      }
+    },
     USAGETYPE_NOT_FOUND: {
       code: 'USAGETYPE_NOT_FOUND', description: {
         en: 'Usage type not found',
@@ -298,6 +322,12 @@ const messages = {
         tr: 'Yapılacaklar gereklidir',
       }
     },
+    SUPPORTPLANS_REQUIRED: {
+      code: 'SUPPORTPLANS_REQUIRED', description: {
+        en: 'The Support plans are required',
+        tr: 'Destek PLanları gereklidir',
+      }
+    },
     PERIODS_REQUIRED: {
       code: 'PERIODS_REQUIRED', description: {
         en: 'The Periods is required',
@@ -543,6 +573,36 @@ const messages = {
       code: 'UNSUPPORTED_USAGETYPEID', description: {
         en: 'usagetype id is unsupported',
         tr: 'Kullanım türü id numarası geçersiz',
+      }
+    },
+    SUPPORTPLANID_REQUIRED: {
+      code: 'SUPPORTPLANID_REQUIRED', description: {
+        en: 'The support plan id required',
+        tr: 'Bu için destek plan id numarası Gerekli',
+      }
+    },
+    SUPPORTPLANLISTID_REQUIRED: {
+      code: 'SUPPORTPLANLISTID_REQUIRED', description: {
+        en: 'The support plan list id required',
+        tr: 'Bu için destek plan liste id numarası Gerekli',
+      }
+    },
+    UNSUPPORTED_SUPPORTPLANID: {
+      code: 'UNSUPPORTED_SUPPORTPLANID', description: {
+        en: 'Support plan id is unsupported',
+        tr: 'Destek PLanı id numarası geçersiz',
+      }
+    },
+    UNSUPPORTED_SUPPORTPLANLISTID: {
+      code: 'UNSUPPORTED_SUPPORTPLANLISTID', description: {
+        en: 'Support plan list id is unsupported',
+        tr: 'Destek PLanı liste id numarası geçersiz',
+      }
+    },
+    UNSUPPORTED_SUPPORTPLANLISTID: {
+      code: 'UNSUPPORTED_SUPPORTPLANLISTID', description: {
+        en: 'Support plan list id is unsupported',
+        tr: 'Destek PLanı liste id numarası geçersiz',
       }
     },
   }
