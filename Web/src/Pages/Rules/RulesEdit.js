@@ -91,7 +91,6 @@ export default class RulesEdit extends Component {
                                                     <Dropdown
                                                         placeholder={Literals.Columns.Templates[Profile.Language]}
                                                         onChange={(e, data) => {
-                                                            console.log('data.value: ', data.value);
                                                             this.setState({ template: data.value })
                                                         }}
                                                         options={Templateoptions}
@@ -142,7 +141,6 @@ export default class RulesEdit extends Component {
 
         const { EditRules, history, fillRulenotification, Rules, Profile } = this.props
         const data = this.context.getForm(this.PAGE_NAME)
-        console.log('data: ', data);
         data.Rule = this.state.template
         let errors = []
         if (!validator.isString(data.Name)) {

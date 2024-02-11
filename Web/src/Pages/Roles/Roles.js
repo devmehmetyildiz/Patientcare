@@ -124,11 +124,11 @@ export class Roles extends Component {
     if (col.value) {
       if (!col.cell?.isGrouped && !Profile.Ismobile) {
         const itemId = col?.row?.original?.Id
-        const itemPrivileges = col.row.original.Privileges
+        const itemPrivileges = (col.row.original.Privileges || '').split(',')
         return col.value.length - 35 > 20 ?
           (
             !this.state.privilegesStatus.includes(itemId) ?
-              [col.value.slice(0, 35) + ' ...(' + itemPrivileges.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandAuthory(itemId)}> ...Daha Fazla Göster</Link>] :
+              [col.value.slice(0, 35) + ' ...(' + (itemPrivileges || []).length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandAuthory(itemId)}> ...Daha Fazla Göster</Link>] :
               [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkAuthory(itemId)}> ...Daha Az Göster</Link>]
           ) : col.value
       }

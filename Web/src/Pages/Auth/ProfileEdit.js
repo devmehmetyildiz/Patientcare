@@ -172,7 +172,6 @@ export default class ProfileEdit extends Component {
     handleFile = () => {
         const { EditFiles, Profile, Usagetypes } = this.props
         const { imgChanged, selectedimage, file } = this.state
-        console.log('this.state: ', this.state);
         let ppType = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || ''
         if (imgChanged) {
             if (Object.keys(selectedimage).length === 0 && Object.keys(file).length > 0) {

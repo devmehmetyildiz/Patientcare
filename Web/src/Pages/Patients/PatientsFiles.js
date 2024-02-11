@@ -211,7 +211,6 @@ export default function PatientsFiles(props) {
             const blob = new Blob([res.data], {
                 type: fileType
             });
-            console.log('fileType = ', fileType);
             const url = window.URL.createObjectURL(blob);
             if (fileType.includes('pdf')) {
                 window.open(url)

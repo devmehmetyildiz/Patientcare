@@ -20,7 +20,6 @@ const FormProvider = ({ children }) => {
         Object.keys(form).map(u => {
             newform[pageName + '/' + u] = form[u]
         })
-        console.log('newform: ', newform);
         setFormstates(prevstate => ({ ...prevstate, ...newform }))
     }
 

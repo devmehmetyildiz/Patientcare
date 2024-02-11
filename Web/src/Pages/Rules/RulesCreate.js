@@ -71,7 +71,6 @@ export default class RulesCreate extends Component {
                                                     <Dropdown
                                                         placeholder={Literals.Columns.Templates[Profile.Language]}
                                                         onChange={(e, data) => {
-                                                            console.log('data.value: ', data.value);
                                                             this.setState({ template: data.value })
                                                         }}
                                                         options={Templateoptions}
