@@ -362,7 +362,7 @@ const version1_0_0_10 = {
 }
 
 const version1_0_0_12 = {
-    version: "1.0.0.11",
+    version: "1.0.0.12",
     changes: [
         {
             title: "Hastalar", commits: [
