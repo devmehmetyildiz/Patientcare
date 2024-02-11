@@ -317,6 +317,13 @@ const version1_0_0_9 = {
 
 const version1_0_0_10 = {
     version: "1.0.0.10",
+    bugs: [
+        {
+            title: "Common", commits: [
+                "Pagination artık kaybolmayacak"
+            ]
+        },
+    ],
     changes: [
         {
             title: "Hastalar", commits: [
@@ -324,6 +331,7 @@ const version1_0_0_10 = {
                 "Kullanım Türleri çoklu seçilebilecek",
                 "Zorunlu seçilen türler kuruma alma ekranlarında zorunlu olacak",
                 "Hasta Detay Ekran Tasarımı Geliştirildi",
+                "Hasta cüzdan hareketlerinde yer alan kurum kasasından düş seçeneği ayarlayara taşındı"
             ]
         },
         {
@@ -341,11 +349,13 @@ const version1_0_0_10 = {
         {
             title: "Hastalar", commits: [
                 "Hastalar ekranında fotoğraflar gözükebilecek",
+                "Hasta Sarfiyat İlaç Tüketim Ekranları Eklendi",
             ]
         },
         {
             title: "Ayarlar", commits: [
                 "Dosya Türleri ekranı eklendi",
+                "Cüzdanın üstüne gelindiğinde detay popup gözüküyor",
             ]
         }
     ],
@@ -354,23 +364,15 @@ const version1_0_0_11 = {
     version: "1.0.0.11",
     bugs: [
         {
-            title: "Common", commits: [
-                "Pagination artık kaybolmayacak"
-            ]
-        },
-    ],
-    changes: [
-        {
             title: "Hastalar", commits: [
-                "Hasta cüzdan hareketlerinde yer alan kurum kasasından düş seçeneği ayarlayara taşındı"
+                "Hastalar ekranı mobil ekran hataya düşme sorunu giderildi"
             ]
         },
     ],
     features: [
         {
-            title: "Hastalar", commits: [
-                "Cüzdanın üstüne gelindiğinde detay popup gözüküyor",
-                "Hasta İlaç,Stok,Sarf malzeme tüketim ekranları eklendi",
+            title: "Ayarlar", commits: [
+                "Destek Planları hazırlama ekranları eklendi",
             ]
         },
     ],
