@@ -82,10 +82,9 @@ export function Sidebar(props) {
                 { id: 7, subtitle: Literals.Patientsupplies.Page.Pageheader[Profile.Language], url: "/Patientsupplies", permission: checkAuth('patientstockscreen') },
                 { id: 8, subtitle: Literals.Patientstockmovements.Page.Pageheader[Profile.Language], url: "/Patientstockmovements", permission: checkAuth('patientstockmovementscreen') },
                 { id: 9, subtitle: Literals.Patientcashmovements.Page.Pageheader[Profile.Language], url: "/Patientcashmovements", permission: checkAuth('patientcashmovementscreen') },
-                { id: 10, subtitle: Literals.Patientcashmovements.Page.Pageheader[Profile.Language], url: "/Patientcashmovements", permission: checkAuth('patientcashmovementscreen') },
-                { id: 11, subtitle: Literals.Patientusestocks.Page.Pageheader[Profile.Language], url: "/Patientusestocks", permission: checkAuth('patientscreen') },
-                { id: 12, subtitle: Literals.Patientusemedicines.Page.Pageheader[Profile.Language], url: "/Patientusemedicines", permission: checkAuth('patientscreen') },
-                { id: 13, subtitle: Literals.Patientusesupplies.Page.Pageheader[Profile.Language], url: "/Patientusesupplies", permission: checkAuth('patientscreen') },
+                { id: 10, subtitle: Literals.Patientusestocks.Page.Pageheader[Profile.Language], url: "/Patientusestocks", permission: checkAuth('patientscreen') },
+                { id: 11, subtitle: Literals.Patientusemedicines.Page.Pageheader[Profile.Language], url: "/Patientusemedicines", permission: checkAuth('patientscreen') },
+                { id: 12, subtitle: Literals.Patientusesupplies.Page.Pageheader[Profile.Language], url: "/Patientusesupplies", permission: checkAuth('patientscreen') },
             ]
         },
         {

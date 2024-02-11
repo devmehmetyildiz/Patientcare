@@ -28,16 +28,16 @@ export default class Patientmovements extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.PatientdefineFirstname[Profile.Language], accessor: 'PatientID', Firstheader: true, Cell: col => this.nameCellhandler(col) },
-      { Header: Literals.Columns.Patientmovementtype[Profile.Language], accessor: 'Patientmovementtype', Finalheader: true, Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.IsDeactive[Profile.Language], accessor: 'IsDeactive', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.OldPatientmovementtype[Profile.Language], accessor: 'OldPatientmovementtype', Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.NewPatientmovementtype[Profile.Language], accessor: 'NewPatientmovementtype', Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.IsTodoneed[Profile.Language], accessor: 'IsTodoneed', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.IsTodocompleted[Profile.Language], accessor: 'IsTodocompleted', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.IsComplated[Profile.Language], accessor: 'IsComplated', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Iswaitingactivation[Profile.Language], accessor: 'Iswaitingactivation', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', Subheader: true, Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.PatientdefineFirstname[Profile.Language], accessor: row => this.nameCellhandler(row?.PatientID), Title: true },
+      { Header: Literals.Columns.Patientmovementtype[Profile.Language], accessor: row => this.movementCellhandler(row?.Patientmovementtype), Subtitle: true, Withtext: true },
+      { Header: Literals.Columns.IsDeactive[Profile.Language], accessor: row => this.boolCellhandler(row?.IsDeactive) },
+      { Header: Literals.Columns.OldPatientmovementtype[Profile.Language], accessor: row => this.movementCellhandler(row?.OldPatientmovementtype) },
+      { Header: Literals.Columns.NewPatientmovementtype[Profile.Language], accessor: row => this.movementCellhandler(row?.NewPatientmovementtype) },
+      { Header: Literals.Columns.IsTodoneed[Profile.Language], accessor: row => this.boolCellhandler(row?.IsTodoneed) },
+      { Header: Literals.Columns.IsTodocompleted[Profile.Language], accessor: row => this.boolCellhandler(row?.IsTodocompleted) },
+      { Header: Literals.Columns.IsComplated[Profile.Language], accessor: row => this.boolCellhandler(row?.IsComplated), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Iswaitingactivation[Profile.Language], accessor: row => this.boolCellhandler(row?.Iswaitingactivation) },
+      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Movementdate) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -98,29 +98,28 @@ export default class Patientmovements extends Component {
     )
   }
 
-  boolCellhandler = (col) => {
-    return col.value !== null && (col.value ? "EVET" : "HAYIR")
+  boolCellhandler = (value) => {
+    return value !== null && (value ? "EVET" : "HAYIR")
   }
 
-  movementCellhandler = (col) => {
-    return PATIENTMOVEMENTTYPE.find(u => u.value === col.value) ? PATIENTMOVEMENTTYPE.find(u => u.value === col.value).Name : col.value
+  movementCellhandler = (value) => {
+    return PATIENTMOVEMENTTYPE.find(u => u.value === value) ? PATIENTMOVEMENTTYPE.find(u => u.value === value).Name : value
   }
 
-  nameCellhandler = (col) => {
-
+  nameCellhandler = (value) => {
     const { Patients, Patientdefines } = this.props
     if (Patientdefines.isLoading || Patients.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const patient = (Patients.list || []).find(u => u.Uuid === col.value)
+      const patient = (Patients.list || []).find(u => u.Uuid === value)
       const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
       return `${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`
     }
   }
 
-  dateCellhandler = (col) => {
-    if (col.value) {
-      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+  dateCellhandler = (value) => {
+    if (value) {
+      return value.split('T').length > 0 ? value.split('T')[0] : value
     }
     return null
   }

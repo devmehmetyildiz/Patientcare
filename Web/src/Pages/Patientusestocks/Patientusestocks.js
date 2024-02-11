@@ -46,8 +46,8 @@ export default class Patientusestocks extends Component {
         const stockdefine = (Stockdefines.list).find(u => u.Uuid === stock?.StockdefineID)
 
         const patientstockColumns = [
-            { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', Cell: col => this.stockdefineCellhandler(col) },
-            { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', Cell: col => this.amountCellhandler(col), disableProps: true },
+            { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: row => this.stockdefineCellhandler(row?.StockdefineID) },
+            { Header: Literals.Columns.Amount[Profile.Language], accessor: row => this.amountCellhandler(row) },
             { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true }
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
@@ -202,12 +202,12 @@ export default class Patientusestocks extends Component {
         }
     }
 
-    amountCellhandler = (col) => {
+    amountCellhandler = (row) => {
         const { Patientstockmovements, Patientstocks, Stockdefines, Units } = this.props
         if (Patientstockmovements.isLoading || Patientstocks.isLoading) {
             return <Loader size='small' active inline='centered' ></Loader>
         } else {
-            const selectedStock = (Patientstocks.list || []).find(u => u.Id === col?.row?.original?.Id)
+            const selectedStock = (Patientstocks.list || []).find(u => u.Id === row?.Id)
             const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === selectedStock?.StockdefineID)
             const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
             let amount = 0.0;
@@ -219,12 +219,12 @@ export default class Patientusestocks extends Component {
         }
     }
 
-    stockdefineCellhandler = (col) => {
+    stockdefineCellhandler = (value) => {
         const { Stockdefines } = this.props
         if (Stockdefines.isLoading) {
             return <Loader size='small' active inline='centered' ></Loader>
         } else {
-            return (Stockdefines.list || []).find(u => u.Uuid === col.value)?.Name
+            return (Stockdefines.list || []).find(u => u.Uuid === value)?.Name
         }
     }
 }

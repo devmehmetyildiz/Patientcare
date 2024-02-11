@@ -360,6 +360,19 @@ const version1_0_0_10 = {
         }
     ],
 }
+
+const version1_0_0_12 = {
+    version: "1.0.0.11",
+    changes: [
+        {
+            title: "Hastalar", commits: [
+                "Hastalara ait ekranlarda mobil ekranlar düzenlendi",
+                "Hastalara ait ekranlarda grid filterleri düzenlendi"
+            ]
+        },
+    ],
+}
+
 const version1_0_0_11 = {
     version: "1.0.0.11",
     bugs: [
@@ -377,6 +390,7 @@ const version1_0_0_11 = {
         },
     ],
 }
+
 export {
     version1_0_0_0,
     version1_0_0_1,
@@ -390,4 +404,5 @@ export {
     version1_0_0_9,
     version1_0_0_10,
     version1_0_0_11,
+    version1_0_0_12,
 }

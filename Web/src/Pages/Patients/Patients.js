@@ -58,15 +58,15 @@ export default class Patients extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'PatientdefineID', Firstheader: true, Cell: col => this.patientdefineCellhandler(col) },
-      { Header: Literals.Columns.Registerdate[Profile.Language], accessor: 'Registerdate', Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Approvaldate[Profile.Language], accessor: 'Approvaldate', Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Floor[Profile.Language], accessor: 'FloorID', Subheader: true, Cell: col => this.floorCellhandler(col) },
-      { Header: Literals.Columns.Room[Profile.Language], accessor: 'RoomID', Cell: col => this.roomCellhandler(col) },
-      { Header: Literals.Columns.Bed[Profile.Language], accessor: 'BedID', Cell: col => this.bedCellhandler(col) },
-      { Header: Literals.Columns.Case[Profile.Language], accessor: 'CaseID', Cell: col => this.caseCellhandler(col) },
-      { Header: Literals.Columns.Stocks[Profile.Language], accessor: 'Stockstxt', Cell: col => this.stockCellhandler(col) },
-      { Header: Literals.Columns.Files[Profile.Language], accessor: 'Filestxt', Finalheader: true, Cell: col => this.filesCellhandler(col) },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: row => this.nameCellhandler(row), Cell: (col, row) => this.imageCellhandler(col, row), Title: true },
+      { Header: Literals.Columns.Registerdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Registerdate) },
+      { Header: Literals.Columns.Approvaldate[Profile.Language], accessor: row => this.dateCellhandler(row?.Approvaldate) },
+      { Header: Literals.Columns.Floor[Profile.Language], accessor: row => this.floorCellhandler(row?.FloorID), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Room[Profile.Language], accessor: row => this.roomCellhandler(row?.RoomID), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Bed[Profile.Language], accessor: row => this.bedCellhandler(row?.BedID), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Case[Profile.Language], accessor: row => this.caseCellhandler(row?.CaseID), Subtitle: true },
+      { Header: Literals.Columns.Stocks[Profile.Language], accessor: row => this.stockCellhandler(row) },
+      { Header: Literals.Columns.Files[Profile.Language], accessor: row => this.filesCellhandler(row) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -150,100 +150,103 @@ export default class Patients extends Component {
     }
   }
 
-  patientdefineCellhandler = (col) => {
-    const { Files, Patientdefines, Usagetypes, Profile } = this.props
-    if (!col.cell?.isGrouped && !Profile.Ismobile) {
-      const patient = col?.row?.original
-      const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
-      let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
-      let file = (Files.list || []).filter(u => u.ParentID === patient?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
-      return <div className='flex justify-center items-center flex-row flex-nowrap whitespace-nowrap'>{file ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file?.Uuid}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
-        : null}{patientdefine?.Firstname ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}` : `${patientdefine?.CountryID}`}</div>
-    }
+  nameCellhandler = (row) => {
+    const { Patientdefines } = this.props
+    const patient = row
+    const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+    return `${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`
   }
-  
-  floorCellhandler = (col) => {
+
+  imageCellhandler = (col, row) => {
+    const { Files, Patientdefines, Usagetypes } = this.props
+    const patient = col?.row?.original || row
+    const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+    let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
+    let file = (Files.list || []).filter(u => u.ParentID === patient?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
+    return <div className='flex justify-center items-center flex-row flex-nowrap whitespace-nowrap'>
+      {file
+        ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file?.Uuid}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
+        : null}
+      {patientdefine?.Firstname ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}` : `${patientdefine?.CountryID}`}
+    </div>
+  }
+
+  floorCellhandler = (value) => {
     const { Floors } = this.props
     if (Floors.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return `${(Floors.list || []).find(u => u.Uuid === col.value)?.Name}`
+      return `${(Floors.list || []).find(u => u.Uuid === value)?.Name}`
     }
   }
 
-  roomCellhandler = (col) => {
+  roomCellhandler = (value) => {
     const { Rooms } = this.props
     if (Rooms.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return `${(Rooms.list || []).find(u => u.Uuid === col.value)?.Name}`
+      return `${(Rooms.list || []).find(u => u.Uuid === value)?.Name}`
     }
   }
 
-  bedCellhandler = (col) => {
+  bedCellhandler = (value) => {
     const { Beds } = this.props
     if (Beds.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return `${(Beds.list || []).find(u => u.Uuid === col.value)?.Name}`
+      return `${(Beds.list || []).find(u => u.Uuid === value)?.Name}`
     }
   }
 
-  caseCellhandler = (col) => {
+  caseCellhandler = (value) => {
     const { Cases } = this.props
     if (Cases.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return `${(Cases.list || []).find(u => u.Uuid === col.value)?.Name}`
+      return `${(Cases.list || []).find(u => u.Uuid === value)?.Name}`
     }
   }
 
-  dateCellhandler = (col) => {
-    if (col.value) {
-      return col.value.split('T')[0]
+  dateCellhandler = (value) => {
+    if (value) {
+      return value.split('T')[0]
     }
     return null
   }
 
-  stockCellhandler = (col) => {
+  stockCellhandler = (row) => {
 
-    const { Patientstocks, Stockdefines, Profile } = this.props
+    const { Patientstocks, Stockdefines } = this.props
 
-    const itemId = col?.row?.original?.Uuid
+    const itemId = row?.Uuid
     const itemStocks = (Patientstocks.list || []).filter(u => u.PatientID === itemId)
     let stockstext = (itemStocks || []).map((stock) => {
       return (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)?.Name
     }).join(", ")
 
-    if (!col?.cell?.isGrouped && !Profile.Ismobile) {
-      return stockstext.length - 35 > 20 ?
-        (
-          !this.state.stocksStatus.includes(itemId) ?
-            [stockstext.slice(0, 35) + ' ...(' + itemStocks.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandStocks(itemId)}> ...Daha Fazla Göster</Link>] :
-            [stockstext, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkStocks(itemId)}> ...Daha Az Göster</Link>]
-        ) : stockstext
-    }
-    return stockstext
+    return stockstext.length - 35 > 20 ?
+      (
+        !this.state.stocksStatus.includes(itemId) ?
+          [stockstext.slice(0, 35) + ' ...(' + itemStocks.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandStocks(itemId)}> ...Daha Fazla Göster</Link>] :
+          [stockstext, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkStocks(itemId)}> ...Daha Az Göster</Link>]
+      ) : stockstext
   }
 
-  filesCellhandler = (col) => {
+  filesCellhandler = (row) => {
 
-    const { Files, Profile } = this.props
-    const itemId = col?.row?.original?.Uuid
+    const { Files } = this.props
+    const itemId = row?.Uuid
     const itemFiles = (Files.list || []).filter(u => u.ParentID === itemId)
     let filestext = (itemFiles || []).map((file) => {
       return file.Name;
     }).join(", ")
 
-    if (!col?.cell?.isGrouped && !Profile.Ismobile) {
-      return filestext.length - 35 > 20 ?
-        (
-          !this.state.filesStatus.includes(itemId) ?
-            [filestext.slice(0, 35) + ' ...(' + itemFiles.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandFiles(itemId)}> ...Daha Fazla Göster</Link>] :
-            [filestext, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkFiles(itemId)}> ...Daha Az Göster</Link>]
-        ) : filestext
-    }
-    return filestext
+    return filestext.length - 35 > 20 ?
+      (
+        !this.state.filesStatus.includes(itemId) ?
+          [filestext.slice(0, 35) + ' ...(' + itemFiles.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandFiles(itemId)}> ...Daha Fazla Göster</Link>] :
+          [filestext, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkFiles(itemId)}> ...Daha Az Göster</Link>]
+      ) : filestext
   }
 
   expandStocks = (rowid) => {

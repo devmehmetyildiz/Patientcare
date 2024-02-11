@@ -12,10 +12,6 @@ class ExcelExport extends Component {
     }
   }
 
-  componentDidMount() {
-
-  }
-
   render() {
 
     const { Profile } = this.props
@@ -25,39 +21,43 @@ class ExcelExport extends Component {
     </React.Fragment>
   }
 
-
   exportToExcel = () => {
     const { data, name, Config, columns } = this.props
-    const isHavedata = Array.isArray(data) && data.length > 0
-    let decoratedColumns = {}
-    columns.forEach(element => {
-      decoratedColumns[element.accessor] = element.accessor
-    });
-    const decoratedData = data.map(row => {
-      let obj = {}
-      Object.keys(row).forEach(cell => {
-        if (!validator.isObject(row[cell])) {
-          obj[cell] = row[cell]
-        }
-      })
-      return obj
+
+    let excelData = []
+
+    let headerRow = []
+    columns.forEach(col => {
+      const accessor = validator.isString(col.accessor) ? col.accessor : col.Header;
+      const hiddenColumns = Config?.hiddenColumns || ['edit', 'delete', 'Isactive', 'Deleteduser', 'Deletetime'];
+      if (!hiddenColumns.includes(accessor) && !col.disableProps) {
+        headerRow.push(col.Header)
+      }
     })
-    const headers = Object.keys(isHavedata ? decoratedData[0] : decoratedColumns)
-      .map(key => {
-        if (!(((Config.hiddenColumns).concat(['edit', 'delete', 'Isactive', 'Deleteduser', 'Deletetime']) || []).includes(key))) { return key; } return '';
-      })
-      .filter(key => key !== '').map(u => { return columns.find(column => column.accessor === u)?.Header || "Tanımsız" })
-    const exceldata = new Array(headers).concat(decoratedData.map(value => {
-      let filteredValue = Object.keys(value).map(key => {
-        if (headers.includes(key)) {
-          return value[key]
-        } else {
-          return null
+    excelData.push(headerRow)
+    data.forEach(row => {
+      let dataRow = []
+      columns.forEach(col => {
+        const accessor = validator.isString(col.accessor) ? col.accessor : col.Header;
+        const hiddenColumns = Config?.hiddenColumns || ['edit', 'delete', 'Isactive', 'Deleteduser', 'Deletetime'];
+        if (!hiddenColumns.includes(accessor) && !col.disableProps) {
+          let isAccessor = columns.find(u => u.accessor === accessor)
+            ? true
+            : false
+
+          let cellData = null
+          if (isAccessor) {
+            cellData = row[accessor] || ''
+          } else {
+            let renderer = columns.find(u => u.Header === accessor)
+            cellData = renderer.accessor(row, true) || ''
+          }
+          dataRow.push(cellData)
         }
-      }).filter(key => key !== null);
-      return filteredValue
-    }))
-    const worksheet = utils.aoa_to_sheet(exceldata);
+      })
+      excelData.push(dataRow)
+    })
+    const worksheet = utils.aoa_to_sheet(excelData);
     const workbook = utils.book_new();
     utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 
@@ -65,8 +65,6 @@ class ExcelExport extends Component {
     const excelBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(excelBlob, `${name}.xlsx`);
   }
-};
 
-
-
+}
 export default ExcelExport

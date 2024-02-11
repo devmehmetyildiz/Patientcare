@@ -31,10 +31,10 @@ export default class Patientcashmovements extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Patient[Profile.Language], accessor: 'PatientID', Cell: col => this.patientCellhandler(col) },
-      { Header: Literals.Columns.Register[Profile.Language], accessor: 'RegisterID', Cell: col => this.registerCellhandler(col) },
-      { Header: Literals.Columns.Movementtype[Profile.Language], accessor: 'Movementtype', Cell: col => this.typeCellhandler(col) },
-      { Header: Literals.Columns.Movementvalue[Profile.Language], accessor: 'Movementvalue', Cell: col => this.cashCellhandler(col) },
+      { Header: Literals.Columns.Patient[Profile.Language], accessor: row => this.patientCellhandler(row?.PatientID), Title: true },
+      { Header: Literals.Columns.Register[Profile.Language], accessor: row => this.registerCellhandler(row?.RegisterID), Subtitle: true },
+      { Header: Literals.Columns.Movementtype[Profile.Language], accessor: row => this.typeCellhandler(row?.Movementtype), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Movementvalue[Profile.Language], accessor: row => this.cashCellhandler(row?.Movementvalue), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Report[Profile.Language], accessor: 'ReportID' },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
@@ -99,31 +99,31 @@ export default class Patientcashmovements extends Component {
     )
   }
 
-  typeCellhandler = (col) => {
-    return CASHYPES.find(u => u.value === col.value) ? CASHYPES.find(u => u.value === col.value).Name : col.value
+  typeCellhandler = (value) => {
+    return CASHYPES.find(u => u.value === value) ? CASHYPES.find(u => u.value === value).Name : value
   }
 
-  cashCellhandler = (col) => {
-    return col.value + ' TL'
+  cashCellhandler = (value) => {
+    return value + ' TL'
   }
 
-  patientCellhandler = (col) => {
+  patientCellhandler = (value) => {
     const { Patients, Patientdefines } = this.props
     if (Patientdefines.isLoading || Patients.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const patient = (Patients.list || []).find(u => u.Uuid === col.value)
+      const patient = (Patients.list || []).find(u => u.Uuid === value)
       const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
       return `${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}`
     }
   }
 
-  registerCellhandler = (col) => {
+  registerCellhandler = (value) => {
     const { Patientcashregisters } = this.props
     if (Patientcashregisters.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const register = (Patientcashregisters.list || []).find(u => u.Uuid === col.value)
+      const register = (Patientcashregisters.list || []).find(u => u.Uuid === value)
       return register?.Name || "tanımsız"
     }
   }

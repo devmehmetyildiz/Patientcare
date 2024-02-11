@@ -20,16 +20,16 @@ class ColumnChooser extends Component {
       const metaColumns = JSON.parse(tableMeta.Config)
       const decoratedColumns = metaColumns.length === columns.length ?
         metaColumns.map((item, index) => {
-          return { order: index, isVisible: item.isVisible, name: columns.find(u => u.accessor === item.key)?.Header, key: item.key, isGroup: item.isGroup }
+          return { order: index, isVisible: item.isVisible, name: columns.find(u => this.getAccessor(u) === item.key)?.Header, key: item.key, isGroup: item.isGroup }
         }) :
         columns.map((item, index) => {
-          return { order: index, isVisible: true, name: item.Header, key: item.accessor, isGroup: false }
+          return { order: index, isVisible: true, name: item.Header, key: this.getAccessor(item), isGroup: false }
         })
       this.setState({ decoratedColumns: decoratedColumns })
     } else {
       const defaultHiddens = ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
       const decoratedColumns = columns.map((item, index) => {
-        return { order: index, isVisible: defaultHiddens.includes(item.accessor) ? false : true, name: item.Header, key: item.accessor, isGroup: false }
+        return { order: index, isVisible: defaultHiddens.includes(this.getAccessor(item)) ? false : true, name: item.Header, key: this.getAccessor(item), isGroup: false }
       })
       this.setState({ decoratedColumns: decoratedColumns })
     }
@@ -43,16 +43,16 @@ class ColumnChooser extends Component {
         const metaColumns = JSON.parse(tableMeta.Config)
         const decoratedColumns = metaColumns.length === columns.length ?
           metaColumns.map((item, index) => {
-            return { order: index, isVisible: item.isVisible, name: columns.find(u => u.accessor === item.key)?.Header, key: item.key, isGroup: item.isGroup }
+            return { order: index, isVisible: item.isVisible, name: columns.find(u => this.getAccessor(item) === item.key)?.Header, key: item.key, isGroup: item.isGroup }
           }) :
           columns.map((item, index) => {
-            return { order: index, isVisible: true, name: item.Header, key: item.accessor, isGroup: false }
+            return { order: index, isVisible: true, name: item.Header, key: this.getAccessor(item), isGroup: false }
           })
         this.setState({ decoratedColumns: decoratedColumns })
       } else {
         const defaultHiddens = ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
         const decoratedColumns = columns.map((item, index) => {
-          return { order: index, isVisible: defaultHiddens.includes(item.accessor) ? false : true, name: item.Header, key: item.accessor, isGroup: false }
+          return { order: index, isVisible: defaultHiddens.includes(this.getAccessor(item)) ? false : true, name: item.Header, key: this.getAccessor(item), isGroup: false }
         })
         this.setState({ decoratedColumns: decoratedColumns })
       }
@@ -176,6 +176,14 @@ class ColumnChooser extends Component {
     const index = Columns.findIndex(column => column.key === property)
     Columns[index].isGroup = !Columns[index].isGroup
     this.setState({ decoratedColumns: Columns })
+  }
+
+  getAccessor = (data) => {
+    if (validator.isString(data?.accessor)) {
+      return data?.accessor
+    } else {
+      return data.Header
+    }
   }
 }
 

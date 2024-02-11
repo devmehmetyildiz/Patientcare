@@ -34,15 +34,15 @@ export default class Patientsupplies extends Component {
 
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
-      { Header: Literals.Columns.Patient[Profile.Language], accessor: 'PatientID', Cell: col => this.patientCellhandler(col) },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', Cell: col => this.stockdefineCellhandler(col) },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.Patient[Profile.Language], accessor: row => this.patientCellhandler(row?.PatientID), Title: true },
+      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: row => this.stockdefineCellhandler(row?.StockdefineID), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Department[Profile.Language], accessor: row => this.departmentCellhandler(row?.DepartmentID), },
+      { Header: Literals.Columns.Skt[Profile.Language], accessor: row => this.dateCellhandler(row?.Skt), },
       { Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno' },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', Cell: col => this.amountCellhandler(col) },
+      { Header: Literals.Columns.Amount[Profile.Language], accessor: row => this.amountCellhandler(row), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info' },
-      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved), Subtitle: true, Withtext: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -114,41 +114,41 @@ export default class Patientsupplies extends Component {
     )
   }
 
-  departmentCellhandler = (col) => {
+  departmentCellhandler = (value) => {
     const { Departments } = this.props
     if (Departments.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Departments.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Departments.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  patientCellhandler = (col) => {
+  patientCellhandler = (value) => {
     const { Patients, Patientdefines } = this.props
     if (Patientdefines.isLoading || Patients.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const patient = (Patients.list || []).find(u => u.Uuid === col.value)
+      const patient = (Patients.list || []).find(u => u.Uuid === value)
       const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
       return `${patientdefine?.Firstname} ${patientdefine?.Lastname}`
     }
   }
 
-  stockdefineCellhandler = (col) => {
+  stockdefineCellhandler = (value) => {
     const { Stockdefines } = this.props
     if (Stockdefines.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Stockdefines.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Stockdefines.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  amountCellhandler = (col) => {
+  amountCellhandler = (row) => {
     const { Patientstockmovements, Patientstocks } = this.props
     if (Patientstockmovements.isLoading || Patientstocks.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const selectedStock = (Patientstocks.list || []).find(u => u.Id === col?.row?.original?.Id)
+      const selectedStock = (Patientstocks.list || []).find(u => u.Id === row?.Id)
       let amount = 0.0;
       let movements = (Patientstockmovements.list || []).filter(u => u.StockID === selectedStock?.Uuid && u.Isactive && u.Isapproved)
       movements.forEach(movement => {
@@ -158,15 +158,15 @@ export default class Patientsupplies extends Component {
     }
   }
 
-  dateCellhandler = (col) => {
-    if (col.value) {
-      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+  dateCellhandler = (value) => {
+    if (value) {
+      return value.split('T').length > 0 ? value.split('T')[0] : value
     }
     return null
   }
 
-  boolCellhandler = (col) => {
+  boolCellhandler = (value) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 }

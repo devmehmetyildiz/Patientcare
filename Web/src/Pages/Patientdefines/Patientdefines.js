@@ -29,18 +29,18 @@ export default class Patientdefines extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Firstname[Profile.Language], accessor: 'Firstname', Firstheader: true },
-      { Header: Literals.Columns.Lastname[Profile.Language], accessor: 'Lastname', Subheader: true },
+      { Header: Literals.Columns.Firstname[Profile.Language], accessor: 'Firstname', Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Lastname[Profile.Language], accessor: 'Lastname', Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Fathername[Profile.Language], accessor: 'Fathername' },
       { Header: Literals.Columns.Mothername[Profile.Language], accessor: 'Mothername' },
       { Header: Literals.Columns.Motherbiologicalaffinity[Profile.Language], accessor: 'Motherbiologicalaffinity' },
-      { Header: Literals.Columns.Ismotheralive[Profile.Language], accessor: 'Ismotheralive', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Ismotheralive[Profile.Language], accessor: row => this.boolCellhandler(row?.Ismotheralive) },
       { Header: Literals.Columns.Fatherbiologicalaffinity[Profile.Language], accessor: 'Fatherbiologicalaffinity' },
-      { Header: Literals.Columns.Isfatheralive[Profile.Language], accessor: 'Isfatheralive', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.CountryID[Profile.Language], accessor: 'CountryID', Finalheader: true },
-      { Header: Literals.Columns.Dateofbirth[Profile.Language], accessor: 'Dateofbirth' },
+      { Header: Literals.Columns.Isfatheralive[Profile.Language], accessor: row => this.boolCellhandler(row?.Isfatheralive) },
+      { Header: Literals.Columns.CountryID[Profile.Language], accessor: 'CountryID', Title: true },
+      { Header: Literals.Columns.Dateofbirth[Profile.Language], accessor: row => this.dateCellhandler(row?.Dateofbirth) },
       { Header: Literals.Columns.Placeofbirth[Profile.Language], accessor: 'Placeofbirth' },
-      { Header: Literals.Columns.Dateofdeath[Profile.Language], accessor: 'Dateofdeath' },
+      { Header: Literals.Columns.Dateofdeath[Profile.Language], accessor: row => this.dateCellhandler(row?.Dateofdeath) },
       { Header: Literals.Columns.Placeofdeath[Profile.Language], accessor: 'Placeofdeath' },
       { Header: Literals.Columns.Deathinfo[Profile.Language], accessor: 'Deathinfo' },
       { Header: Literals.Columns.Gender[Profile.Language], accessor: 'Gender' },
@@ -60,8 +60,8 @@ export default class Patientdefines extends Component {
       { Header: Literals.Columns.Contactnumber2[Profile.Language], accessor: 'Contactnumber2' },
       { Header: Literals.Columns.Contactname1[Profile.Language], accessor: 'Contactname1' },
       { Header: Literals.Columns.Contactname2[Profile.Language], accessor: 'Contactname2' },
-      { Header: Literals.Columns.CostumertypeName[Profile.Language], accessor: 'CostumertypeID', Cell: col => this.costumertypeCellhandler(col) },
-      { Header: Literals.Columns.PatienttypeName[Profile.Language], accessor: 'PatienttypeID', Cell: col => this.patienttypeCellhandler(col) },
+      { Header: Literals.Columns.CostumertypeName[Profile.Language], accessor: row => this.costumertypeCellhandler(row?.CostumertypeID), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.PatienttypeName[Profile.Language], accessor: row => this.patienttypeCellhandler(row?.PatienttypeID), Subtitle: true, Withtext: true },
       { Header: Literals.Columns.Medicalboardreport[Profile.Language], accessor: 'Medicalboardreport' },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
@@ -73,7 +73,6 @@ export default class Patientdefines extends Component {
 
     const metaKey = "Patientdefines"
     let initialConfig = getInitialconfig(Profile, metaKey)
-
 
     const list = (Patientdefines.list || []).filter(u => u.Isactive).map(item => {
       return {
@@ -127,26 +126,34 @@ export default class Patientdefines extends Component {
     )
   }
 
-  boolCellhandler = (col) => {
+  boolCellhandler = (value) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 
-  costumertypeCellhandler = (col) => {
+  costumertypeCellhandler = (value) => {
     const { Costumertypes } = this.props
     if (Costumertypes.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Costumertypes.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Costumertypes.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  patienttypeCellhandler = (col) => {
+  dateCellhandler = (value) => {
+    if (value) {
+      return value.split('T')[0]
+    }
+    return null
+  }
+
+
+  patienttypeCellhandler = (value) => {
     const { Patienttypes } = this.props
     if (Patienttypes.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Patienttypes.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Patienttypes.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 

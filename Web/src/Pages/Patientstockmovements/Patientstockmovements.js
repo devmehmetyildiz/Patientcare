@@ -31,21 +31,21 @@ export default class Patientstockmovements extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', Cell: col => this.stockCellhandler(col) },
-      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Movementtype[Profile.Language], accessor: 'Movementtype', Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', Cell: col => this.amountCellhandler(col) },
-      { Header: Literals.Columns.Prevvalue[Profile.Language], accessor: 'Prevvalue', Cell: col => this.amountCellhandler(col) },
-      { Header: Literals.Columns.Newvalue[Profile.Language], accessor: 'Newvalue', Cell: col => this.amountCellhandler(col) },
-      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: row => this.stockCellhandler(row?.StockID), Title: true },
+      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Movementdate) },
+      { Header: Literals.Columns.Movementtype[Profile.Language], accessor: row => this.movementCellhandler(row?.Movementtype), Subtitle: true, Withtext: true },
+      { Header: Literals.Columns.Amount[Profile.Language], accessor: row => this.amountCellhandler(row), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Prevvalue[Profile.Language], accessor: row => this.prevamountCellhandler(row) },
+      { Header: Literals.Columns.Newvalue[Profile.Language], accessor: row => this.newamountCellhandler(row) },
+      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-      { Header: Literals.Columns.watch[Profile.Language], accessor: 'watch' },
-      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve' },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit' },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete' }
+      { Header: Literals.Columns.watch[Profile.Language], accessor: 'watch', disableProps: true },
+      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', disableProps: true },
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
@@ -110,46 +110,71 @@ export default class Patientstockmovements extends Component {
     )
   }
 
-  amountCellhandler = (col) => {
+  amountCellhandler = (row) => {
     const { Patientstockmovements, Patientstocks, Stockdefines, Units } = this.props
     if (Patientstocks.isLoading || Stockdefines.isLoading || Units.isLoading || Patientstockmovements.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const stockmovement = (Patientstockmovements.list || []).find(u => u.Id === col?.row?.original?.Id)
+      const stockmovement = (Patientstockmovements.list || []).find(u => u.Id === row?.Id)
       const stock = (Patientstocks.list || []).find(u => u.Uuid === stockmovement?.StockID)
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
       const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
-      return <p>{`${col.value || ''}  ${unit?.Name || ''}`}</p>
+      return `${row?.Amount || 0}  ${unit?.Name || ''}`
     }
-
   }
 
-  stockCellhandler = (col) => {
+  prevamountCellhandler = (row) => {
+    const { Patientstockmovements, Patientstocks, Stockdefines, Units } = this.props
+    if (Patientstocks.isLoading || Stockdefines.isLoading || Units.isLoading || Patientstockmovements.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const stockmovement = (Patientstockmovements.list || []).find(u => u.Id === row?.Id)
+      const stock = (Patientstocks.list || []).find(u => u.Uuid === stockmovement?.StockID)
+      const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
+      const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
+      return `${row?.Prevvalue || 0}  ${unit?.Name || ''}`
+    }
+  }
+
+  newamountCellhandler = (row) => {
+    const { Patientstockmovements, Patientstocks, Stockdefines, Units } = this.props
+    if (Patientstocks.isLoading || Stockdefines.isLoading || Units.isLoading || Patientstockmovements.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const stockmovement = (Patientstockmovements.list || []).find(u => u.Id === row?.Id)
+      const stock = (Patientstocks.list || []).find(u => u.Uuid === stockmovement?.StockID)
+      const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
+      const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
+      return `${row?.Newvalue || 0}  ${unit?.Name || ''}`
+    }
+  }
+
+  stockCellhandler = (value) => {
     const { Patientstocks, Stockdefines } = this.props
     if (Patientstocks.isLoading || Stockdefines.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const stock = (Patientstocks.list || []).find(u => u.Uuid === col.value)
+      const stock = (Patientstocks.list || []).find(u => u.Uuid === value)
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
       return stockdefine?.Name
     }
 
   }
 
-  dateCellhandler = (col) => {
-    if (col.value) {
-      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+  dateCellhandler = (value) => {
+    if (value) {
+      return value.split('T').length > 0 ? value.split('T')[0] : value
     }
     return null
   }
 
-  movementCellhandler = (col) => {
-    return MOVEMENTTYPES.find(u => u.value === col.value) ? MOVEMENTTYPES.find(u => u.value === col.value).Name : col.value
+  movementCellhandler = (value) => {
+    return MOVEMENTTYPES.find(u => u.value === value) ? MOVEMENTTYPES.find(u => u.value === value).Name : value
   }
 
-  boolCellhandler = (col) => {
+  boolCellhandler = (value) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 
 }
