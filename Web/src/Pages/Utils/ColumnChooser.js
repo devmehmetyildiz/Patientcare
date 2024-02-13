@@ -76,7 +76,7 @@ class ColumnChooser extends Component {
     const { decoratedColumns } = this.state
 
     return <React.Fragment>
-      <Button color='violet' floated='right' onClick={() => { this.setState({ opened: !this.state.opened }) }} >{Literals.Columns.Visible[Profile.Language]}</Button>
+      <Button className='!bg-[#2355a0] !text-white' floated='right' onClick={() => { this.setState({ opened: !this.state.opened }) }} >{Literals.Columns.Visible[Profile.Language]}</Button>
       <Modal
         open={this.state.opened}
         size={'tiny'}

@@ -44,14 +44,14 @@ export default function Settings(props) {
                 onOpen={() => { setmodalOpen(true) }}
                 basic
                 size='tiny'
-                trigger={<Button className='h-fit !m-auto' color='violet' floated='right'>{options[Profile.Language]}</Button>} >
+                trigger={<Button className='h-fit !m-auto !bg-[#2355a0] !text-white' floated='right'>{options[Profile.Language]}</Button>} >
                 <Modal.Content>
                     <div className='m-4 flex flex-col justify-center items-center w-full '>
                         <Grid stackable columns={1}>
                             <GridColumn stretched={Profile.Ismobile} width={8} >
                                 {Showcreatebutton && <>
                                     <Link className="pr-1" to={Pagecreatelink}>
-                                        <Button fluid={Profile.Ismobile} color='blue' floated={`${Profile.Ismobile ? 'left' : 'right'}`} className='list-right-green-button'>
+                                        <Button className='!bg-[#2355a0] !text-white' fluid={Profile.Ismobile} floated={`${Profile.Ismobile ? 'left' : 'right'}`} >
                                             {Pagecreateheader}
                                         </Button>
                                     </Link>
@@ -84,12 +84,12 @@ export default function Settings(props) {
             </Modal>
             : <GridColumn stretched={Profile.Ismobile} width={8} >
                 {Showcreatebutton && <Link className="pr-1" to={Pagecreatelink}>
-                    <Button fluid={Profile.Ismobile} color='blue' floated={`${Profile.Ismobile ? '' : 'right'}`} className='list-right-green-button'>
+                    <Button className='!bg-[#2355a0] !text-white' fluid={Profile.Ismobile} floated={`${Profile.Ismobile ? '' : 'right'}`} >
                         {Pagecreateheader}
                     </Button>
                 </Link>}
                 {Showcolumnchooser && <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />}
-                {Additionalfunction && <Button color='violet' floated='right' onClick={Additionalfunction} >{Additionalfunctiontxt}</Button>}
+                {Additionalfunction && <Button className='!bg-[#2355a0] !text-white' floated='right' onClick={Additionalfunction} >{Additionalfunctiontxt}</Button>}
                 {Showexcelimport && <ExcelImport columns={Columns} addData={AddRecord} />}
                 {Showexcelexport && <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />}
             </GridColumn>

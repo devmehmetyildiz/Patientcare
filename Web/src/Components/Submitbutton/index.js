@@ -7,6 +7,6 @@ export default function Submitbutton({
     submitFunction
 }) {
     return (
-        <Button disabled={isLoading} loading={isLoading} onClick={submitFunction} floated="right" type='submit' color='blue'>{buttonText}</Button>
+        <Button disabled={isLoading} loading={isLoading} onClick={submitFunction} floated="right" type='submit' className='!bg-[#2355a0] !text-white'>{buttonText}</Button>
     )
 }

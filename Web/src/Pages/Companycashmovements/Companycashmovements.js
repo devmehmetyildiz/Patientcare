@@ -87,7 +87,7 @@ export default class Companycashmovements extends Component {
             </Headerwrapper>
             <Pagedivider />
             <div className='w-full flex justify-start items-center'>
-              <Label color='blue' size='big'>Cüzdan : {integerPart}.{decimalPart}₺</Label>
+              <Label className='!bg-[#2355a0] !text-white' size='big'>Cüzdan : {integerPart}.{decimalPart}₺</Label>
             </div>
             <Pagedivider />
             {list.length > 0 ?

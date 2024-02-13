@@ -9,6 +9,7 @@ import {
     version1_0_0_11,
     version1_0_0_12,
     version1_0_0_13,
+    version1_0_0_14,
     version1_0_0_2,
     version1_0_0_3,
     version1_0_0_4,
@@ -32,6 +33,7 @@ export default class About extends Component {
 
     render() {
         const Changelogs = [
+            version1_0_0_14,
             version1_0_0_13,
             version1_0_0_12,
             version1_0_0_11,

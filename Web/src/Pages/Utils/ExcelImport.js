@@ -23,7 +23,7 @@ class ExcelImport extends Component {
         const { Profile } = this.props
 
         return <React.Fragment>
-            <Button color='violet' floated='right' onClick={() => { this.setState({ opened: !this.state.opened }) }} >{Literals.Columns.Excelimport[Profile.Language]}</Button>
+            <Button className='!bg-[#2355a0] !text-white' floated='right' onClick={() => { this.setState({ opened: !this.state.opened }) }} >{Literals.Columns.Excelimport[Profile.Language]}</Button>
             <Modal
                 open={this.state.opened}
                 size={'large'}

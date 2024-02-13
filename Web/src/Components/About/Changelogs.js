@@ -402,6 +402,17 @@ const version1_0_0_13 = {
     ],
 }
 
+const version1_0_0_14 = {
+    version: "1.0.0.14",
+    changes: [
+        {
+            title: "Common", commits: [
+                "Renk Palet Düzenlemesi",
+            ]
+        },
+    ],
+}
+
 export {
     version1_0_0_0,
     version1_0_0_1,
@@ -417,4 +428,5 @@ export {
     version1_0_0_11,
     version1_0_0_12,
     version1_0_0_13,
+    version1_0_0_14,
 }

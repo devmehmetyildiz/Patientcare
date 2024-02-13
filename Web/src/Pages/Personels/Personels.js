@@ -67,7 +67,7 @@ export default class Periods extends Component {
 
             return <div key={Math.random()} className='w-full flex flex-col justify-center items-center px-4'>
               <div className='w-full flex justify-start items-center my-2'>
-                <Label size='large' color={floor.Gender === "0" ? 'blue' : 'red'}>{`${floor?.Name}`}</Label>
+                <Label size='large' className={`${floor.Gender === "0" ? '!bg-[#2355a0] !text-white' : '!bg-red-400 !text-white'}`} >{`${floor?.Name}`}</Label>
               </div>
               <div className='w-full flex  justify-start items-center gap-4'>
                 {(personels || []).map(personel => {

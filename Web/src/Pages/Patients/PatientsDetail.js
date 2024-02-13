@@ -289,7 +289,7 @@ export default class PatientsDetail extends Component {
                 <div className='flex justify-center items-center md:justify-start flex-col md:items-start gap-1'>
                   <Popup
                     trigger={
-                      <Label size='large' as='a' color='blue' image ribbon={!Profile.Ismobile}>
+                      <Label size='large' as='a'  className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
                         {Literals.Details.Wallet[Profile.Language]}:
                         <Label.Detail>{integerPart}.{decimalPart}₺</Label.Detail>
                       </Label>
@@ -309,46 +309,46 @@ export default class PatientsDetail extends Component {
                       })}
                     </div>
                   </Popup>
-                  <Label size='large' as='a' color='blue' image ribbon={!Profile.Ismobile}>
+                  <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
                     {Literals.Details.Costumertype[Profile.Language]}
                     <Label.Detail>{costumertype?.Name}</Label.Detail>
                   </Label>
-                  <Label size='large' as='a' color='blue' image ribbon={!Profile.Ismobile}>
+                  <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
                     {Literals.Details.Patienttype[Profile.Language]}
                     <Label.Detail>{patienttype?.Name}</Label.Detail>
                   </Label>
-                  <Label size='large' as='a' color='blue' image ribbon={!Profile.Ismobile}>
+                  <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
                     {Literals.Details.Floor[Profile.Language]}
                     <Label.Detail>{floor?.Name}</Label.Detail>
                   </Label>
-                  <Label size='large' as='a' color='blue' image ribbon={!Profile.Ismobile}>
+                  <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
                     {Literals.Details.Room[Profile.Language]}
                     <Label.Detail>{room?.Name}</Label.Detail>
                   </Label>
-                  <Label size='large' as='a' color='blue' image ribbon={!Profile.Ismobile}>
+                  <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
                     {Literals.Details.Bed[Profile.Language]}
                     <Label.Detail>{bed?.Name}</Label.Detail>
                   </Label>
                 </div>
                 <Pagedivider />
                 <div className='w-full flex flex-col justify-center items-center gap-3 px-4'>
-                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Addmedicine`) }}>{Literals.Button.Givemedicine[Profile.Language]}</Button>
-                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Removemedicine`) }}>{Literals.Button.Takemedicine[Profile.Language]}</Button>
-                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
-                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
-                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
-                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editcash`) }}>{Literals.Button.Editcash[Profile.Language]}</Button>
-                  <Button primary fluid onClick={() => { handlePlacemodal(true) }}>{Literals.Button.Changeplace[Profile.Language]}</Button>
-                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Editroutine[Profile.Language]}</Button>
-                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editsupportplan`) }}>{Literals.Button.Editsupportplan[Profile.Language]}</Button>
-                  <Button primary fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>
-                  <Button primary fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`, { redirectUrl: "/Patients/" + Id }) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>
+                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Addmedicine`) }}>{Literals.Button.Givemedicine[Profile.Language]}</Button>
+                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Removemedicine`) }}>{Literals.Button.Takemedicine[Profile.Language]}</Button>
+                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
+                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
+                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
+                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editcash`) }}>{Literals.Button.Editcash[Profile.Language]}</Button>
+                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { handlePlacemodal(true) }}>{Literals.Button.Changeplace[Profile.Language]}</Button>
+                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Editroutine[Profile.Language]}</Button>
+                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editsupportplan`) }}>{Literals.Button.Editsupportplan[Profile.Language]}</Button>
+                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>
+                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`, { redirectUrl: "/Patients/" + Id }) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>
                 </div>
               </div>
               <div className=' w-full flex flex-col justify-start items-start gap-4'>
                 <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
                   <div className='w-full'>
-                    <Label color='blue'>{Literals.Details.Last5incomemovement[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white'>{Literals.Details.Last5incomemovement[Profile.Language]}</Label>
                     <Transition >
                       {Profile.Ismobile ?
                         <MobileTable Columns={stocksColumns} Data={lastincomestocks} Profile={Profile} /> :
@@ -356,7 +356,7 @@ export default class PatientsDetail extends Component {
                     </Transition>
                   </div>
                   <div className='w-full'>
-                    <Label color='blue' >{Literals.Details.Last5outcomemovement[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.Last5outcomemovement[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={stocksColumns} Data={lastoutcomestocks} Profile={Profile} /> :
                       <DataTable Columns={stocksColumns} Data={lastoutcomestocks} />}
@@ -364,13 +364,13 @@ export default class PatientsDetail extends Component {
                 </div>
                 <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
                   <div className='w-full'>
-                    <Label color='blue' >{Literals.Details.Last5movement[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.Last5movement[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={movementColumns} Data={lastmovements} Profile={Profile} /> :
                       <DataTable Columns={movementColumns} Data={lastmovements} />}
                   </div>
                   <div className='w-full'>
-                    <Label color='blue' >{Literals.Details.Last5File[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.Last5File[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={fileColumns} Data={lastfiles} Profile={Profile} /> :
                       <DataTable Columns={fileColumns} Data={lastfiles} />}
@@ -378,13 +378,13 @@ export default class PatientsDetail extends Component {
                 </div>
                 <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
                   <div className='w-full'>
-                    <Label color='blue' >{Literals.Details.PatientStocks[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.PatientStocks[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={stockandmedicineColumns} Data={patientstocks} Profile={Profile} /> :
                       <DataTable Columns={stockandmedicineColumns} Data={patientstocks} />}
                   </div>
                   <div className='w-full'>
-                    <Label color='blue' >{Literals.Details.Patientmedicines[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.Patientmedicines[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={stockandmedicineColumns} Data={patientmedicines} Profile={Profile} /> :
                       <DataTable Columns={stockandmedicineColumns} Data={patientmedicines} />}
@@ -392,13 +392,13 @@ export default class PatientsDetail extends Component {
                 </div>
                 <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
                   <div className='w-full'>
-                    <Label color='blue' >{Literals.Details.Completedtodos[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.Completedtodos[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={todoColumns} Data={completedTodos} Profile={Profile} /> :
                       <DataTable Columns={todoColumns} Data={completedTodos} />}
                   </div>
                   <div className='w-full'>
-                    <Label color='blue' >{Literals.Details.Noncompletedtodos[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.Noncompletedtodos[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={todoColumns} Data={waitingTodos} Profile={Profile} /> :
                       <DataTable Columns={todoColumns} Data={waitingTodos} />}

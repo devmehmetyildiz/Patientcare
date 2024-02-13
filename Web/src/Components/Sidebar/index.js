@@ -54,7 +54,7 @@ export function Sidebar(props) {
             id: 1,
             title: Sidebarliterals.Organisation[Profile.Language],
             isOpened: false,
-            icon: <TbGauge className=' text-blue-700' />,
+            icon: <TbGauge className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: Literals.Unapproveds.Page.Movement.Pageheader[Profile.Language], url: "/UnapprovedMovements", permission: checkAuth('stockmovementscreen') },
                 { id: 2, subtitle: Literals.Unapproveds.Page.Stock.Pageheader[Profile.Language], url: "/UnapprovedStocks", permission: checkAuth('stockscreen') },
@@ -71,7 +71,7 @@ export function Sidebar(props) {
             id: 2,
             title: Sidebarliterals.Patients[Profile.Language],
             isOpened: false,
-            icon: <Tb3DRotate className='text-red-700' />,
+            icon: <Tb3DRotate className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: Literals.Preregistrations.Page.Pageheader[Profile.Language], url: "/Preregistrations", permission: checkAuth('patientscreen') },
                 { id: 2, subtitle: Literals.Patients.Page.Pageheader[Profile.Language], url: "/Patients", permission: checkAuth('patientscreen') },
@@ -91,7 +91,7 @@ export function Sidebar(props) {
             id: 3,
             title: Sidebarliterals.Orders[Profile.Language],
             isOpened: false,
-            icon: <TbAccessPoint className='text-orange-300' />,
+            icon: <TbAccessPoint className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: Literals.Purchaseorders.Page.Pageheader[Profile.Language], url: "/Purchaseorders", permission: checkAuth('purchaseorderscreen') },
                 { id: 2, subtitle: Literals.Purchaseorderstocks.Page.Pageheader[Profile.Language], url: "/Purchaseorderstocks", permission: checkAuth('purchaseorderstockscreen') },
@@ -104,7 +104,7 @@ export function Sidebar(props) {
             id: 4,
             title: Sidebarliterals.Warehouse[Profile.Language],
             isOpened: false,
-            icon: <TbActivity className='text-green-400' />,
+            icon: <TbActivity className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: Literals.Warehouses.Page.Pageheader[Profile.Language], url: "/Warehouses", permission: checkAuth('warehousescreen') },
                 { id: 2, subtitle: Literals.Medicines.Page.Pageheader[Profile.Language], url: "/Medicines", permission: checkAuth('stockscreen') },
@@ -119,7 +119,7 @@ export function Sidebar(props) {
             id: 5,
             title: Sidebarliterals.System[Profile.Language],
             isOpened: false,
-            icon: <TbGauge className='text-purple-400' />,
+            icon: <TbGauge className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: Literals.Rules.Page.Pageheader[Profile.Language], url: "/Rules", permission: checkAuth('rulescreen') },
                 { id: 2, subtitle: Literals.Mailsettings.Page.Pageheader[Profile.Language], url: "/Mailsettings", permission: checkAuth('mailsettingscreen') },
@@ -131,7 +131,7 @@ export function Sidebar(props) {
             id: 6,
             title: Sidebarliterals.Setting[Profile.Language],
             isOpened: false,
-            icon: <MdSettings className='text-green-800' />,
+            icon: <MdSettings className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: Literals.Roles.Page.Pageheader[Profile.Language], url: "/Roles", permission: checkAuth('rulescreen') },
                 { id: 2, subtitle: Literals.Departments.Page.Pageheader[Profile.Language], url: "/Departments", permission: checkAuth('departmentscreen') },
@@ -259,20 +259,20 @@ export function Sidebar(props) {
                     <Link to="/About">
                         {!iconOnly ?
                             <div className='
-                            py-1 px-8 rounded-full bg-gray-500 text-white 
+                            py-1 px-8 rounded-full bg-[#2355a0] text-white 
                             font-bold hover:shadow-2xl relative versionbutton
                             transition-all ease-out duration-1000
-                            hover:shadow-gray-800 hover:bg-gray-600'
+                            hover:shadow-gray-800 hover:bg-[#325992]'
                             >
                                 {version}
                             </div>
                             :
                             <Popup
-                                position='right center'
-                                trigger={<div className='p-2 rounded-full bg-gray-500 text-white 
+                                position='bottom right'
+                                trigger={<div className='w-[25px] h-[25px] text-center flex justify-center items-center rounded-full bg-[#2355a0] text-white 
                           font-bold hover:shadow-2xl relative versionbutton
                           transition-all ease-out duration-1000
-                          hover:shadow-gray-800 hover:bg-gray-600' >V</div>}
+                          hover:shadow-gray-800 hover:bg-[#325992]' >V</div>}
                             >
                                 {version}
                             </Popup>

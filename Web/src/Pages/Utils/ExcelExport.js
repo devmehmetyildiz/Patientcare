@@ -17,7 +17,7 @@ class ExcelExport extends Component {
     const { Profile } = this.props
 
     return <React.Fragment>
-      <Button color='violet' floated='right' onClick={this.exportToExcel} >{Literals.Columns.Excelexport[Profile.Language]}</Button>
+      <Button className='!bg-[#2355a0] !text-white' floated='right' onClick={this.exportToExcel} >{Literals.Columns.Excelexport[Profile.Language]}</Button>
     </React.Fragment>
   }
 
