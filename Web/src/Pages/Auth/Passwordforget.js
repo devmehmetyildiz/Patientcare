@@ -29,8 +29,8 @@ export default class Passwordforget extends Component {
                 <Divider />
                 <div className='mt-4 w-full flex justify-end items-center'>
                   <div className='w-1/3 '>
-                    {Profile.isLogging ? <Button loading className='mt-4' color='blue' fluid size='medium' >Gönder</Button>
-                      : <Button className='mt-4' color='blue' fluid size='medium' type='submit' >Gönder</Button>}
+                    {Profile.isLogging ? <Button loading className='mt-4 !bg-[#2355a0] !text-white' fluid size='medium' >Gönder</Button>
+                      : <Button className='mt-4 !bg-[#2355a0] !text-white' fluid size='medium' type='submit' >Gönder</Button>}
                   </div>
                 </div>
                 <div className='mt-4 flex flex-col justify-center items-center'>

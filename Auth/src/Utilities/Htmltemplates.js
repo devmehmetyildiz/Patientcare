@@ -127,11 +127,12 @@ function Createresettemplate(Username, Url) {
         }
         
         .button--green {
-          background-color: #22BC66;
-          border-top: 10px solid #22BC66;
-          border-right: 18px solid #22BC66;
-          border-bottom: 10px solid #22BC66;
-          border-left: 18px solid #22BC66;
+          background-color: #2355a0;
+          border-top: 10px solid #2355a0;
+          border-right: 18px solid #2355a0;
+          border-bottom: 10px solid #2355a0;
+          border-left: 18px solid #2355a0;
+          color:white !important;
         }
         
         .button--red {
@@ -327,7 +328,7 @@ function Createresettemplate(Username, Url) {
         .email-masthead_name {
           font-size: 16px;
           font-weight: bold;
-          color: #A8AAAF;
+          color: #2355a0;
           text-decoration: none;
           text-shadow: 0 1px 0 white;
         }
@@ -439,7 +440,7 @@ function Createresettemplate(Username, Url) {
       <![endif]-->
       </head>
       <body>
-        <span class="preheader">Use this link to reset your password. The link is only valid for 24 hours.</span>
+        <span class="preheader">Şifrenizi sıfırlamak için bu bağlantıyı kullanın. Bağlantı yalnızca 24 saat geçerlidir.</span>
         <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
           <tr>
             <td align="center">
@@ -459,8 +460,8 @@ function Createresettemplate(Username, Url) {
                       <tr>
                         <td class="content-cell">
                           <div class="f-fallback">
-                            <h1>Hi ${Username},</h1>
-                            <p>You recently requested to reset your password for your Elder care account. Use the button below to reset it. <strong>This password reset is only valid for the next 24 hours.</strong></p>
+                            <h1>Merhaba ${Username},</h1>
+                            <p>Yakın zamanda Elder Care hesabınızın şifresini sıfırlama talebinde bulundunuz. Sıfırlamak için aşağıdaki düğmeyi kullanın. <strong>Bu şifre sıfırlama yalnızca önümüzdeki 24 saat için geçerlidir.</strong></p>
                             <!-- Action -->
                             <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                               <tr>
@@ -470,20 +471,20 @@ function Createresettemplate(Username, Url) {
                                   <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
                                     <tr>
                                       <td align="center">
-                                        <a href="${Url}" class="f-fallback button button--green" target="_blank">Reset your password</a>
+                                        <a href="${Url}" class="f-fallback button button--green" target="_blank">Parolanı Sıfırla</a>
                                       </td>
                                     </tr>
                                   </table>
                                 </td>
                               </tr>
                             </table>
-                            <p>Thanks,
-                              <br>The Elder Care team</p>
+                            <p>Teşekkürler,
+                              <br>Elder Care Takımı</p>
                             <!-- Sub copy -->
                             <table class="body-sub" role="presentation">
                               <tr>
                                 <td>
-                                  <p class="f-fallback sub">If you’re having trouble with the button above, copy and paste the URL below into your web browser.</p>
+                                  <p class="f-fallback sub">Yukarıdaki düğmeyle ilgili sorun yaşıyorsanız aşağıdaki url'yi kopyalayıp web tarayıcınıza yapıştırın.</p>
                                   <p class="f-fallback sub">${Url}</p>
                                 </td>
                               </tr>
