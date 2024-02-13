@@ -26,9 +26,9 @@ export class Rules extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info' },
-      { Header: Literals.Columns.Status[Profile.Language], accessor: 'Status', disableProps: true, Subheader: true, Cell: col => this.statusCellhandler(col) },
+      { Header: Literals.Columns.Status[Profile.Language], accessor: row => this.statusCellhandler(row?.Status), disableProps: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
@@ -102,8 +102,8 @@ export class Rules extends Component {
         </React.Fragment>
     )
   }
-  statusCellhandler = (col) => {
-    return <Icon style={{ color: col.value === 1 ? 'green' : 'red' }} className="ml-2" name='circle' />
+  statusCellhandler = (value) => {
+    return <Icon style={{ color: value === 1 ? 'green' : 'red' }} className="ml-2" name='circle' />
   }
 }
 export default Rules

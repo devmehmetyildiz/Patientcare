@@ -8,14 +8,6 @@ import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pag
 import { getInitialconfig } from '../../Utils/Constants'
 
 export default class Medicines extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-      openDeactivate: false,
-      selectedrecord: {}
-    }
-  }
 
   componentDidMount() {
     const { GetStocks, GetStockdefines, GetDepartments, GetStockmovements, GetWarehouses } = this.props
@@ -26,9 +18,7 @@ export default class Medicines extends Component {
     GetWarehouses()
   }
 
-
   render() {
-
 
     const { Stocks, Profile, handleDeletemodal, handleSelectedStock, handleApprovemodal } = this.props
     const { isLoading, isDispatching } = Stocks
@@ -42,15 +32,15 @@ export default class Medicines extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Warehouse[Profile.Language], accessor: 'WarehouseID', Cell: col => this.warehouseCellhandler(col) },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockdefineID', Firstheader: true, Cell: col => this.stockdefineCellhandler(col) },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', Subheader: true, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Skt[Profile.Language], accessor: 'Skt', Cell: col => this.dateCellhandler(col) },
+      { Header: Literals.Columns.Warehouse[Profile.Language], accessor: row => this.warehouseCellhandler(row?.WarehouseID), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: row => this.stockdefineCellhandler(row?.StockdefineID), Title: true },
+      { Header: Literals.Columns.Department[Profile.Language], accessor: row => this.departmentCellhandler(row?.DepartmentID) },
+      { Header: Literals.Columns.Skt[Profile.Language], accessor: row => this.dateCellhandler(row?.Skt) },
       { Header: Literals.Columns.Barcodeno[Profile.Language], accessor: 'Barcodeno' },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', Finalheader: true, Cell: col => this.amountCellhandler(col) },
+      { Header: Literals.Columns.Amount[Profile.Language], accessor: row => this.amountCellhandler(row), Subtitle: true, Withtext: true },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info' },
-      { Header: Literals.Columns.Isredprescription[Profile.Language], accessor: 'Isredprescription', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Isredprescription[Profile.Language], accessor: row => this.boolCellhandler(row?.Isredprescription) },
+      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -122,38 +112,38 @@ export default class Medicines extends Component {
     )
   }
 
-  stockdefineCellhandler = (col) => {
+  stockdefineCellhandler = (value) => {
     const { Stockdefines } = this.props
     if (Stockdefines.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Stockdefines.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Stockdefines.list || []).find(u => u.Uuid === value)?.Name
     }
   }
-  warehouseCellhandler = (col) => {
+  warehouseCellhandler = (value) => {
     const { Warehouses } = this.props
     if (Warehouses.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Warehouses.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Warehouses.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  departmentCellhandler = (col) => {
+  departmentCellhandler = (value) => {
     const { Departments } = this.props
     if (Departments.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Departments.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Departments.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  amountCellhandler = (col) => {
+  amountCellhandler = (row) => {
     const { Stockmovements, Stocks } = this.props
     if (Stockmovements.isLoading || Stocks.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const selectedStock = (Stocks.list || []).find(u => u.Id === col?.row?.original?.Id)
+      const selectedStock = (Stocks.list || []).find(u => u.Id === row?.Id)
       let amount = 0.0;
       let movements = (Stockmovements.list || []).filter(u => u.StockID === selectedStock?.Uuid && u.Isactive && u.Isapproved)
       movements.forEach(movement => {
@@ -163,15 +153,15 @@ export default class Medicines extends Component {
     }
   }
 
-  dateCellhandler = (col) => {
-    if (col.value) {
-      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+  dateCellhandler = (value) => {
+    if (value) {
+      return value.split('T').length > 0 ? value.split('T')[0] : value
     }
     return null
   }
 
-  boolCellhandler = (col) => {
+  boolCellhandler = (value) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 }

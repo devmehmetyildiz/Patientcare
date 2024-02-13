@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
+import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import SupportplanlistsDelete from '../../Containers/Supportplanlists/SupportplanlistsDelete'
@@ -23,7 +23,7 @@ export default class Supportplanlists extends Component {
     }
 
     render() {
-        const { Supportplanlists, Departments, Supportplans, Profile, handleDeletemodal, handleSelectedSupportplanlist } = this.props
+        const { Supportplanlists, Profile, handleDeletemodal, handleSelectedSupportplanlist } = this.props
         const { isLoading, isDispatching } = Supportplanlists
 
         const colProps = {
@@ -35,9 +35,9 @@ export default class Supportplanlists extends Component {
         const Columns = [
             { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
             { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
-            { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-            { Header: Literals.Columns.Supportplans[Profile.Language], accessor: 'Supportplanstxt', Subheader: true, Cell: col => this.supportplanCellhandler(col) },
-            { Header: Literals.Columns.Department[Profile.Language], accessor: 'Department', Finalheader: true },
+            { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+            { Header: Literals.Columns.Supportplans[Profile.Language], accessor: (row, freeze) => this.supportplanCellhandler(row, freeze), },
+            { Header: Literals.Columns.Department[Profile.Language], accessor: row => this.departmentCellhandler(row?.DepartmentID), Subtitle: true, Withtext: true },
             { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
             { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
             { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
@@ -50,13 +50,8 @@ export default class Supportplanlists extends Component {
         let initialConfig = getInitialconfig(Profile, metaKey)
 
         const list = (Supportplanlists.list || []).map(item => {
-            var text = (item.Supportplanuuids || []).map(u => {
-                return (Supportplans.list || []).find(plan => plan.Uuid === u.PlanID)?.Name
-            }).join(", ")
             return {
                 ...item,
-                Supportplanstxt: text,
-                Department: (Departments.list || []).find(u => u.Uuid === item.DepartmentID)?.Name,
                 edit: <Link to={`/Supportplanlists/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
                 delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
                     handleSelectedSupportplanlist(item)
@@ -121,22 +116,28 @@ export default class Supportplanlists extends Component {
         }
     }
 
-    supportplanCellhandler = (col) => {
-        const { Supportplans, Profile } = this.props
-        if (col.value) {
-            if (!col.cell?.isGrouped && !Profile.Ismobile) {
-                const itemId = col?.row?.original?.Id
-                const itemSupportplans = (col.row.original.Supportplanuuids || []).map(u => { return (Supportplans.list || []).find(plan => plan.Uuid === u.PlanID) })
-                return col.value.length - 35 > 20 ?
-                    (
-                        !this.state.supportplanStatus.includes(itemId) ?
-                            [col.value.slice(0, 35) + ' ...(' + itemSupportplans.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandSupportplans(itemId)}> ...Daha Fazla Göster</Link>] :
-                            [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkSupportplans(itemId)}> ...Daha Az Göster</Link>]
-                    ) : col.value
-            }
-            return col.value
+    supportplanCellhandler = (row, freeze) => {
+        const { Supportplans } = this.props
+        const itemId = row?.Id
+        const itemSupportplans = (row?.Supportplanuuids || []).map(u => { return (Supportplans.list || []).find(plan => plan.Uuid === u.PlanID) })
+        const itemSupportplanstxt = itemSupportplans.map(u => u?.Name).join(',')
+        if (freeze === true) {
+            return itemSupportplanstxt
         }
-        return null
+        return itemSupportplanstxt.length - 35 > 20 ?
+            (
+                !this.state.supportplanStatus.includes(itemId) ?
+                    [itemSupportplanstxt.slice(0, 35) + ' ...(' + itemSupportplans.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandSupportplans(itemId)}> ...Daha Fazla Göster</Link>] :
+                    [itemSupportplanstxt, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkSupportplans(itemId)}> ...Daha Az Göster</Link>]
+            ) : itemSupportplanstxt
     }
 
+    departmentCellhandler = (value) => {
+        const { Departments } = this.props
+        if (Departments.isLoading) {
+            return <Loader size='small' active inline='centered' ></Loader>
+        } else {
+            return (Departments.list || []).find(u => u.Uuid === value)?.Name
+        }
+    }
 }

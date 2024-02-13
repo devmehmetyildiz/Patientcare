@@ -12,23 +12,10 @@ import {
 
 export default function DepartmentsCreate(props) {
 
-  const { GetStations, Departments, AddDepartments, history, fillDepartmentnotification, Stations, Profile, closeModal } = props
+  const {  Departments, AddDepartments, history, fillDepartmentnotification, Profile, closeModal } = props
 
   const PAGE_NAME = "DepartmentsCreate"
   const context = useContext(FormContext)
-  const [stationoptions, setStationoptions] = useState([])
-
-  useEffect(() => {
-    GetStations()
-  }, [])
-
-
-  useEffect(() => {
-    const Stationoptions = (Stations.list || []).filter(u => u.Isactive).map(station => {
-      return { key: station.Uuid, text: station.Name, value: station.Uuid }
-    })
-    setStationoptions(Stationoptions)
-  }, [Stations])
 
 
   const handleSubmit = (e) => {
@@ -36,9 +23,6 @@ export default function DepartmentsCreate(props) {
 
     const data = context.getForm(PAGE_NAME)
     data.Isdefaultpatientdepartment = data.Ishavepatients ? true : false
-    data.Stations = (data.Stations || []).map(id => {
-      return (Stations.list || []).find(u => u.Uuid === id)
-    }) || []
 
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -70,7 +54,6 @@ export default function DepartmentsCreate(props) {
         <Contentwrapper>
           <Form>
             <FormInput page={PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-            <FormInput page={PAGE_NAME} placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={stationoptions} formtype="dropdown" modal={StationsCreate} />
             <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Ishavepatients[Profile.Language]} name="Ishavepatients" formtype="checkbox" />
             {context.formstates[`${PAGE_NAME}/Ishavepatients`] ?
               <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Isdefaultpatientdepartment[Profile.Language]} name="Isdefaultpatientdepartment" formtype="checkbox" /> : null}

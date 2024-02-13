@@ -21,18 +21,14 @@ export default class UsersCreate extends Component {
   }
 
   componentDidMount() {
-    const { GetStations, GetRoles, GetDepartments } = this.props
-    GetStations()
+    const { GetRoles, GetDepartments } = this.props
     GetRoles()
     GetDepartments()
   }
 
   render() {
-    const { Departments, Users, Stations, Roles, Profile, history, closeModal } = this.props
+    const { Departments, Users, Roles, Profile, history, closeModal } = this.props
 
-    const Stationoptions = (Stations.list || []).filter(u => u.Isactive).map(station => {
-      return { key: station.Uuid, text: station.Name, value: station.Uuid }
-    })
     const Roleoptions = (Roles.list || []).filter(u => u.Isactive).map(roles => {
       return { key: roles.Uuid, text: roles.Name, value: roles.Uuid }
     })
@@ -77,7 +73,6 @@ export default class UsersCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stations[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype='dropdown' modal={StationsCreate} />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departments[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Roles[Profile.Language]} name="Roles" multiple options={Roleoptions} formtype='dropdown' modal={RolesCreate} />
               </Form.Group>
@@ -102,12 +97,9 @@ export default class UsersCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddUsers, history, fillUsernotification, Roles, Departments, Stations, Profile, closeModal } = this.props
+    const { AddUsers, history, fillUsernotification, Roles, Departments, Profile, closeModal } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
     data.UserID = parseInt(data.UserID, 10)
-    data.Stations = data.Stations.map(id => {
-      return (Stations.list || []).find(u => u.Uuid === id)
-    })
     data.Roles = data.Roles.map(id => {
       return (Roles.list || []).find(u => u.Uuid === id)
     })
@@ -130,9 +122,6 @@ export default class UsersCreate extends Component {
     }
     if (!validator.isString(data.Email)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.EmailRequired[Profile.Language] })
-    }
-    if (!validator.isArray(data.Stations)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StationsRequired[Profile.Language] })
     }
     if (!validator.isArray(data.Departments)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentsRequired[Profile.Language] })

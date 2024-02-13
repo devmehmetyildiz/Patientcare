@@ -27,9 +27,9 @@ export default class Companycashmovements extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Movementtype[Profile.Language], accessor: 'Movementtype', Cell: col => this.typeCellhandler(col) },
-      { Header: Literals.Columns.Movementvalue[Profile.Language], accessor: 'Movementvalue', Cell: col => this.cashCellhandler(col) },
-      { Header: Literals.Columns.Report[Profile.Language], accessor: 'ReportID' },
+      { Header: Literals.Columns.Movementtype[Profile.Language], accessor: row => this.typeCellhandler(row?.Movementtype), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Movementvalue[Profile.Language], accessor: row => this.cashCellhandler(row?.Movementvalue), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Report[Profile.Language], accessor: 'ReportID', Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -103,12 +103,12 @@ export default class Companycashmovements extends Component {
     )
   }
 
-  typeCellhandler = (col) => {
-    return CASHYPES.find(u => u.value === col.value) ? CASHYPES.find(u => u.value === col.value).Name : col.value
+  typeCellhandler = (value) => {
+    return CASHYPES.find(u => u.value === value) ? CASHYPES.find(u => u.value === value).Name : value
   }
 
-  cashCellhandler = (col) => {
-    return col.value + ' TL'
+  cashCellhandler = (value) => {
+    return value + ' TL'
   }
 
 }

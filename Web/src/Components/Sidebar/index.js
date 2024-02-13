@@ -135,7 +135,6 @@ export function Sidebar(props) {
             items: [
                 { id: 1, subtitle: Literals.Roles.Page.Pageheader[Profile.Language], url: "/Roles", permission: checkAuth('rulescreen') },
                 { id: 2, subtitle: Literals.Departments.Page.Pageheader[Profile.Language], url: "/Departments", permission: checkAuth('departmentscreen') },
-                { id: 3, subtitle: Literals.Stations.Page.Pageheader[Profile.Language], url: "/Stations", permission: checkAuth('stationscreen') },
                 { id: 4, subtitle: Literals.Shifts.Page.Pageheader[Profile.Language], url: "/Shifts", permission: checkAuth('shiftscreen') },
                 { id: 5, subtitle: Literals.Users.Page.Pageheader[Profile.Language], url: "/Users", permission: checkAuth('userscreen') },
                 { id: 6, subtitle: Literals.Cases.Page.Pageheader[Profile.Language], url: "/Cases", permission: checkAuth('casescreen') },

@@ -18,11 +18,6 @@ export default class Floors extends Component {
     const { Floors, Profile, handleDeletemodal, handleSelectedFloor, handleFastcreatemodal } = this.props
     const { isLoading, isDispatching } = Floors
 
-    const Genderoptions = [
-      { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
-      { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
-    ]
-
     const colProps = {
       sortable: true,
       canGroupBy: true,
@@ -32,8 +27,8 @@ export default class Floors extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-      { Header: Literals.Columns.Gender[Profile.Language], accessor: 'Gender', Firstheader: true, Cell: col => this.genderCellhandler(col, Genderoptions) },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.Gender[Profile.Language], accessor: row => this.genderCellhandler(row?.Gender), Lowtitle: true, Withtext: true, },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -100,7 +95,12 @@ export default class Floors extends Component {
     )
   }
 
-  genderCellhandler = (col, genderOption) => {
-    return genderOption.find(u => u.value === col.value)?.text || 'Tanımsız'
+  genderCellhandler = (value) => {
+    const { Profile } = this.props
+    const Genderoptions = [
+      { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
+      { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
+    ]
+    return Genderoptions.find(u => u.value === value)?.text || 'Tanımsız'
   }
 }

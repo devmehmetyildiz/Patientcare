@@ -29,12 +29,12 @@ export default class Periods extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name' },
-      { Header: Literals.Columns.Surname[Profile.Language], accessor: 'Surname' },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.Surname[Profile.Language], accessor: 'Surname', Subtitle: true },
       { Header: Literals.Columns.CountryID[Profile.Language], accessor: 'CountryID' },
-      { Header: Literals.Columns.Professions[Profile.Language], accessor: 'Professions', Cell: col => this.professionCellhandler(col) },
-      { Header: Literals.Columns.Workstarttime[Profile.Language], accessor: 'Workstarttime', Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Gender[Profile.Language], accessor: 'Gender', Cell: col => this.genderCellhandler(col) },
+      { Header: Literals.Columns.Professions[Profile.Language], accessor: row => this.professionCellhandler(row?.Professions), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Workstarttime[Profile.Language], accessor: row => this.dateCellhandler(row?.Workstarttime) },
+      { Header: Literals.Columns.Gender[Profile.Language], accessor: row => this.genderCellhandler(row?.Gender) },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
@@ -132,23 +132,23 @@ export default class Periods extends Component {
     )
   }
 
-  dateCellhandler = (col) => {
-    if (col.value) {
-      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+  dateCellhandler = (value) => {
+    if (value) {
+      return value.split('T').length > 0 ? value.split('T')[0] : value
     }
     return null
   }
 
-  genderCellhandler = (col) => {
+  genderCellhandler = (value) => {
     const { Profile } = this.props
     const Genderoptions = [
       { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
       { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
     ]
-    return Genderoptions.find(u => u.value === col.value)?.text
+    return Genderoptions.find(u => u.value === value)?.text
   }
 
-  professionCellhandler = (col) => {
+  professionCellhandler = (value) => {
     const { Profile } = this.props
     const Professionoptions = [
       { key: 0, text: Literals.Options.Professionoptions.value0[Profile.Language], value: "0" },
@@ -157,7 +157,7 @@ export default class Periods extends Component {
       { key: 3, text: Literals.Options.Professionoptions.value3[Profile.Language], value: "3" },
       { key: 4, text: Literals.Options.Professionoptions.value4[Profile.Language], value: "4" },
     ]
-    return Professionoptions.find(u => u.value === col.value)?.text
+    return Professionoptions.find(u => u.value === value)?.text
   }
 
   isTimeInRange = (startTime, endTime) => {

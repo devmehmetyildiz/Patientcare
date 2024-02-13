@@ -30,20 +30,12 @@ export default class Warehouses extends Component {
     }
 
     const Columns = [
-      {
-        Header: () => null,
-        id: 'expander', accessor: 'expander', disableProps: true, newWidht: '10px',
-        Cell: ({ row }) => (
-          !Profile.Ismobile && <span {...row.getToggleRowExpandedProps()}>
-            {row.isExpanded ? <Icon name='triangle down' /> : <Icon name='triangle right' />}
-          </span>
-        ),
-      },
+      { Header: '', id: 'expander', accessor: 'expander', Cell: col => this.expandCellhandler(col), disableProps: true, disableMobile: true },
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', },
-      { Header: Literals.Columns.Ismedicine[Profile.Language], accessor: 'Ismedicine', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Ismedicine[Profile.Language], accessor: row => this.boolCellhandler(row?.Ismedicine) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
@@ -118,8 +110,15 @@ export default class Warehouses extends Component {
     )
   }
 
-  boolCellhandler = (col) => {
+  boolCellhandler = (value) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+  }
+
+  expandCellhandler = (col) => {
+    const { Profile } = this.props
+    return (!Profile.Ismobile && col?.row) && <span {...col?.row?.getToggleRowExpandedProps()}>
+      {col?.row?.isExpanded ? <Icon name='triangle down' /> : <Icon name='triangle right' />}
+    </span>
   }
 }

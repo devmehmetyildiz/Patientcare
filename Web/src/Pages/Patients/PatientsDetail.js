@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Form, Grid, GridColumn, Header, Icon, Label, Loader, Popup } from 'semantic-ui-react'
+import { Breadcrumb, Button, Divider, Form, Grid, GridColumn, Header, Icon, Label, Loader, Popup, Transition } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
@@ -11,7 +11,7 @@ import PatientsIn from '../../Containers/Patients/PatientsIn'
 import PatientsEditplace from '../../Containers/Patients/PatientsEditplace'
 import {
   DataTable, Contentwrapper,
-  Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper
+  Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, MobileTable
 } from '../../Components'
 export default class PatientsDetail extends Component {
 
@@ -103,7 +103,7 @@ export default class PatientsDetail extends Component {
     const {
       Patients, Patientdefines, Cases, Costumertypes, Patienttypes,
       Floors, Rooms, Beds, Patientstocks, Stockdefines, Units, Patientstockmovements,
-      Patientmovements, Files, Profile, history, match, PatientID, handleSelectedPatient,
+      Patientmovements, Files, Profile, history, match, PatientID,
       Todos, Patientcashmovements, handlePlacemodal, Patientcashregisters, Usagetypes
     } = this.props
 
@@ -155,18 +155,18 @@ export default class PatientsDetail extends Component {
     }
 
     const stocksColumns = [
-      { Header: Literals.Details.Stockname[Profile.Language], accessor: 'Stockname' },
-      { Header: Literals.Details.Amount[Profile.Language], accessor: 'Amount' },
-      { Header: Literals.Details.Unitname[Profile.Language], accessor: 'Unitname' },
-      { Header: Literals.Details.Movementdate[Profile.Language], accessor: 'Movementdate', Cell: col => this.dateCellhandler(col) }
+      { Header: Literals.Details.Stockname[Profile.Language], accessor: 'Stockname', Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.Amount[Profile.Language], accessor: 'Amount', Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.Unitname[Profile.Language], accessor: 'Unitname', Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.Movementdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Movementdate), Lowtitle: true, Withtext: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const todoColumns = [
-      { Header: Literals.Details.Tododefine[Profile.Language], accessor: 'TododefineID', Cell: col => this.tododefineCellhandler(col) },
-      { Header: Literals.Details.Occuredtime[Profile.Language], accessor: 'Occuredtime' },
-      { Header: Literals.Details.Checktime[Profile.Language], accessor: 'Checktime' },
-      { Header: Literals.Details.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Details.IsComplated[Profile.Language], accessor: 'IsCompleted', Cell: col => this.boolCellhandler(col) }
+      { Header: Literals.Details.Tododefine[Profile.Language], accessor: row => this.tododefineCellhandler(row?.TododefineID), Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.Occuredtime[Profile.Language], accessor: 'Occuredtime', Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.Checktime[Profile.Language], accessor: 'Checktime', Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.Isapproved[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved), Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.IsComplated[Profile.Language], accessor: row => this.boolCellhandler(row?.IsCompleted), Lowtitle: true, Withtext: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const stockandmedicineColumns = [
@@ -176,15 +176,15 @@ export default class PatientsDetail extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const movementColumns = [
-      { Header: Literals.Details.Patientmovementype[Profile.Language], accessor: 'Patientmovementtype', Cell: col => this.patientmovementCellhandler(col) },
-      { Header: Literals.Details.Movementdate[Profile.Language], accessor: 'Movementdate', Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Details.IsComplated[Profile.Language], accessor: 'IsComplated', Cell: col => this.boolCellhandler(col) }
+      { Header: Literals.Details.Patientmovementype[Profile.Language], accessor: row => this.patientmovementCellhandler(row?.Patientmovementtype), Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.Movementdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Movementdate), Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.IsComplated[Profile.Language], accessor: row => this.boolCellhandler(row?.IsComplated), Lowtitle: true, Withtext: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const fileColumns = [
-      { Header: Literals.Details.Filename[Profile.Language], accessor: 'Filename' },
-      { Header: Literals.Details.Filetype[Profile.Language], accessor: 'Filetype' },
-      { Header: Literals.Details.Usagetype[Profile.Language], accessor: 'Usagetype' },
+      { Header: Literals.Details.Filename[Profile.Language], accessor: 'Filename', Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.Filetype[Profile.Language], accessor: 'Filetype', Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.Usagetype[Profile.Language], accessor: 'Usagetype', Lowtitle: true, Withtext: true },
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const lastincomestocks = (Patientstockmovements.list || []).filter(u => u.Movementtype === 1 && u.Isapproved).sort((a, b) => { return b.Id - a.Id }).slice(0, 5).map(movement => {
@@ -273,8 +273,8 @@ export default class PatientsDetail extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper additionalStyle="max-h-[calc(91vh-59px-2rem)]">
-            <div className='w-full justify-between items-start flex flex-col md:flex-row lg:flex-row gap-4'>
-              <div className='flex flex-col justify-center items-center min-w-[250px] gap-5 md:border-r-2'>
+            <div className='w-full justify-between items-center md:items-start flex flex-col md:flex-row lg:flex-row gap-4'>
+              <div className='flex flex-col justify-center items-center min-w-[250px] gap-5 md:border-r-2 '>
                 <div className='flex justify-center items-center flex-col gap-1'>
                   <div className='flex justify-start items-center '>
                     <Header as='h3'>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}`}</Header>
@@ -286,10 +286,10 @@ export default class PatientsDetail extends Component {
                     : <Header as='h2' icon textAlign='center'><Icon name='users' circular /></Header>}
                   <Label size='huge' style={{ backgroundColor: casedata?.Casecolor }} horizontal>{casedata?.Name}</Label>
                 </div>
-                <div className='flex justify-start flex-col items-start gap-1'>
+                <div className='flex justify-center items-center md:justify-start flex-col md:items-start gap-1'>
                   <Popup
                     trigger={
-                      <Label size='large' as='a' color='blue' image ribbon>
+                      <Label size='large' as='a' color='blue' image ribbon={!Profile.Ismobile}>
                         {Literals.Details.Wallet[Profile.Language]}:
                         <Label.Detail>{integerPart}.{decimalPart}₺</Label.Detail>
                       </Label>
@@ -309,23 +309,23 @@ export default class PatientsDetail extends Component {
                       })}
                     </div>
                   </Popup>
-                  <Label size='large' as='a' color='blue' image ribbon>
+                  <Label size='large' as='a' color='blue' image ribbon={!Profile.Ismobile}>
                     {Literals.Details.Costumertype[Profile.Language]}
                     <Label.Detail>{costumertype?.Name}</Label.Detail>
                   </Label>
-                  <Label size='large' as='a' color='blue' image ribbon>
+                  <Label size='large' as='a' color='blue' image ribbon={!Profile.Ismobile}>
                     {Literals.Details.Patienttype[Profile.Language]}
                     <Label.Detail>{patienttype?.Name}</Label.Detail>
                   </Label>
-                  <Label size='large' as='a' color='blue' image ribbon>
+                  <Label size='large' as='a' color='blue' image ribbon={!Profile.Ismobile}>
                     {Literals.Details.Floor[Profile.Language]}
                     <Label.Detail>{floor?.Name}</Label.Detail>
                   </Label>
-                  <Label size='large' as='a' color='blue' image ribbon>
+                  <Label size='large' as='a' color='blue' image ribbon={!Profile.Ismobile}>
                     {Literals.Details.Room[Profile.Language]}
                     <Label.Detail>{room?.Name}</Label.Detail>
                   </Label>
-                  <Label size='large' as='a' color='blue' image ribbon>
+                  <Label size='large' as='a' color='blue' image ribbon={!Profile.Ismobile}>
                     {Literals.Details.Bed[Profile.Language]}
                     <Label.Detail>{bed?.Name}</Label.Detail>
                   </Label>
@@ -348,66 +348,60 @@ export default class PatientsDetail extends Component {
               <div className=' w-full flex flex-col justify-start items-start gap-4'>
                 <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
                   <div className='w-full'>
-                    <Label color='blue' basic>{Literals.Details.Last5incomemovement[Profile.Language]}</Label>
-                    <DataTable
-                      Columns={stocksColumns}
-                      Data={lastincomestocks}
-                    />
+                    <Label color='blue'>{Literals.Details.Last5incomemovement[Profile.Language]}</Label>
+                    <Transition >
+                      {Profile.Ismobile ?
+                        <MobileTable Columns={stocksColumns} Data={lastincomestocks} Profile={Profile} /> :
+                        <DataTable Columns={stocksColumns} Data={lastincomestocks} />}
+                    </Transition>
                   </div>
                   <div className='w-full'>
-                    <Label color='blue' basic>{Literals.Details.Last5outcomemovement[Profile.Language]}</Label>
-                    <DataTable
-                      Columns={stocksColumns}
-                      Data={lastoutcomestocks}
-                    />
-                  </div>
-                </div>
-                <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
-                  <div className='w-full'>
-                    <Label color='blue' basic>{Literals.Details.Last5movement[Profile.Language]}</Label>
-                    <DataTable
-                      Columns={movementColumns}
-                      Data={lastmovements}
-                    />
-                  </div>
-                  <div className='w-full'>
-                    <Label color='blue' basic>{Literals.Details.Last5File[Profile.Language]}</Label>
-                    <DataTable
-                      Columns={fileColumns}
-                      Data={lastfiles}
-                    />
+                    <Label color='blue' >{Literals.Details.Last5outcomemovement[Profile.Language]}</Label>
+                    {Profile.Ismobile ?
+                      <MobileTable Columns={stocksColumns} Data={lastoutcomestocks} Profile={Profile} /> :
+                      <DataTable Columns={stocksColumns} Data={lastoutcomestocks} />}
                   </div>
                 </div>
                 <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
                   <div className='w-full'>
-                    <Label color='blue' basic>{Literals.Details.PatientStocks[Profile.Language]}</Label>
-                    <DataTable
-                      Columns={stockandmedicineColumns}
-                      Data={patientstocks}
-                    />
+                    <Label color='blue' >{Literals.Details.Last5movement[Profile.Language]}</Label>
+                    {Profile.Ismobile ?
+                      <MobileTable Columns={movementColumns} Data={lastmovements} Profile={Profile} /> :
+                      <DataTable Columns={movementColumns} Data={lastmovements} />}
                   </div>
                   <div className='w-full'>
-                    <Label color='blue' basic>{Literals.Details.Patientmedicines[Profile.Language]}</Label>
-                    <DataTable
-                      Columns={stockandmedicineColumns}
-                      Data={patientmedicines}
-                    />
+                    <Label color='blue' >{Literals.Details.Last5File[Profile.Language]}</Label>
+                    {Profile.Ismobile ?
+                      <MobileTable Columns={fileColumns} Data={lastfiles} Profile={Profile} /> :
+                      <DataTable Columns={fileColumns} Data={lastfiles} />}
                   </div>
                 </div>
                 <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
                   <div className='w-full'>
-                    <Label color='blue' basic>{Literals.Details.Completedtodos[Profile.Language]}</Label>
-                    <DataTable
-                      Columns={todoColumns}
-                      Data={completedTodos}
-                    />
+                    <Label color='blue' >{Literals.Details.PatientStocks[Profile.Language]}</Label>
+                    {Profile.Ismobile ?
+                      <MobileTable Columns={stockandmedicineColumns} Data={patientstocks} Profile={Profile} /> :
+                      <DataTable Columns={stockandmedicineColumns} Data={patientstocks} />}
                   </div>
                   <div className='w-full'>
-                    <Label color='blue' basic>{Literals.Details.Noncompletedtodos[Profile.Language]}</Label>
-                    <DataTable
-                      Columns={todoColumns}
-                      Data={waitingTodos}
-                    />
+                    <Label color='blue' >{Literals.Details.Patientmedicines[Profile.Language]}</Label>
+                    {Profile.Ismobile ?
+                      <MobileTable Columns={stockandmedicineColumns} Data={patientmedicines} Profile={Profile} /> :
+                      <DataTable Columns={stockandmedicineColumns} Data={patientmedicines} />}
+                  </div>
+                </div>
+                <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
+                  <div className='w-full'>
+                    <Label color='blue' >{Literals.Details.Completedtodos[Profile.Language]}</Label>
+                    {Profile.Ismobile ?
+                      <MobileTable Columns={todoColumns} Data={completedTodos} Profile={Profile} /> :
+                      <DataTable Columns={todoColumns} Data={completedTodos} />}
+                  </div>
+                  <div className='w-full'>
+                    <Label color='blue' >{Literals.Details.Noncompletedtodos[Profile.Language]}</Label>
+                    {Profile.Ismobile ?
+                      <MobileTable Columns={todoColumns} Data={waitingTodos} Profile={Profile} /> :
+                      <DataTable Columns={todoColumns} Data={waitingTodos} />}
                   </div>
                 </div>
               </div>
@@ -420,29 +414,29 @@ export default class PatientsDetail extends Component {
     )
   }
 
-  dateCellhandler = (col) => {
-    if (col.value) {
-      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+  dateCellhandler = (value) => {
+    if (value) {
+      return value.split('T').length > 0 ? value.split('T')[0] : value
     }
     return null
   }
 
-  tododefineCellhandler = (col) => {
+  tododefineCellhandler = (value) => {
     const { Tododefines } = this.props
     if (Tododefines.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Tododefines.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Tododefines.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  patientmovementCellhandler = (col) => {
-    return PATIENTMOVEMENTTYPE.find(u => u.value === col.value) ? PATIENTMOVEMENTTYPE.find(u => u.value === col.value).Name : col.value
+  patientmovementCellhandler = (value) => {
+    return PATIENTMOVEMENTTYPE.find(u => u.value === value) ? PATIENTMOVEMENTTYPE.find(u => u.value === value).Name : value
   }
 
-  boolCellhandler = (col) => {
+  boolCellhandler = (value) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 
 }

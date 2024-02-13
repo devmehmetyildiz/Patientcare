@@ -38,8 +38,8 @@ export default class Equipmentgroups extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', Subheader: true, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.Department[Profile.Language], accessor: row => this.departmentCellhandler(row?.DepartmentID) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -105,12 +105,12 @@ export default class Equipmentgroups extends Component {
     )
   }
 
-  departmentCellhandler = (col) => {
+  departmentCellhandler = (value) => {
     const { Departments } = this.props
     if (Departments.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Departments.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Departments.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 }

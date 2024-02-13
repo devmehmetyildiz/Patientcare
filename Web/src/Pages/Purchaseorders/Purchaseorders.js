@@ -43,25 +43,17 @@ export default class Purchaseorders extends Component {
     }
 
     const Columns = [
-      {
-        Header: () => null, id: 'expander', accessor: 'expander', disableProps: true,
-        Cell: ({ row }) => (
-          !Profile.Ismobile && <span {...row.getToggleRowExpandedProps()}>
-            {row.isExpanded ? <Icon name='triangle down' /> : <Icon name='triangle right' />}
-          </span>
-        ),
-
-      },
+      { Header: '', id: 'expander', accessor: 'expander', Cell: col => this.expandCellhandler(col), disableProps: true, disableMobile: true },
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Warehouse[Profile.Language], accessor: 'WarehouseID', Cell: col => this.warehouseCellhandler(col) },
-      { Header: Literals.Columns.Company[Profile.Language], accessor: 'Company', Subheader: true },
-      { Header: Literals.Columns.Purchasenumber[Profile.Language], accessor: 'Purchasenumber', Firstheader: true },
-      { Header: Literals.Columns.RecievedUserID[Profile.Language], accessor: 'RecievedUserID', Cell: col => this.userCellhandler(col) },
+      { Header: Literals.Columns.Warehouse[Profile.Language], accessor: row => this.warehouseCellhandler(row?.WarehouseID) },
+      { Header: Literals.Columns.Company[Profile.Language], accessor: 'Company', Subtitle: true },
+      { Header: Literals.Columns.Purchasenumber[Profile.Language], accessor: 'Purchasenumber', Title: true },
+      { Header: Literals.Columns.RecievedUserID[Profile.Language], accessor: row => this.userCellhandler(row?.RecievedUserID) },
       { Header: Literals.Columns.Companypersonelname[Profile.Language], accessor: 'Companypersonelname', },
       { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username' },
-      { Header: Literals.Columns.Purchasedate[Profile.Language], accessor: 'Purchasedate', Finalheader: true, Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.CaseName[Profile.Language], accessor: 'CaseID', Cell: col => this.caseCellhandler(col) },
+      { Header: Literals.Columns.Purchasedate[Profile.Language], accessor: row => this.dateCellhandler(row?.Purchasedate), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.CaseName[Profile.Language], accessor: row => this.caseCellhandler(row?.CaseID), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -142,46 +134,46 @@ export default class Purchaseorders extends Component {
     )
   }
 
-  handleChangeModal = (value) => {
-    this.setState({ modal: value })
-  }
 
-  handleRowExpender = (newvalue) => {
-    this.setState({ expandedRow: newvalue })
-  }
-
-  caseCellhandler = (col) => {
+  caseCellhandler = (value) => {
     const { Cases } = this.props
     if (Cases.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Cases.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Cases.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  userCellhandler = (col) => {
+  userCellhandler = (value) => {
     const { Users } = this.props
     if (Users.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const user = (Users.list || []).find(u => u.Uuid === col.value)
+      const user = (Users.list || []).find(u => u.Uuid === value)
       return `${user?.Name} ${user?.Surname} (${user?.Username})`
     }
   }
 
-  warehouseCellhandler = (col) => {
+  warehouseCellhandler = (value) => {
     const { Warehouses } = this.props
     if (Warehouses.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Warehouses.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Warehouses.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  dateCellhandler = (col) => {
-    if (col.value) {
-      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+  dateCellhandler = (value) => {
+    if (value) {
+      return value.split('T').length > 0 ? value.split('T')[0] : value
     }
     return null
+  }
+
+  expandCellhandler = (col) => {
+    const { Profile } = this.props
+    return (!Profile.Ismobile && col?.row) && <span {...col?.row?.getToggleRowExpandedProps()}>
+      {col?.row?.isExpanded ? <Icon name='triangle down' /> : <Icon name='triangle right' />}
+    </span>
   }
 }

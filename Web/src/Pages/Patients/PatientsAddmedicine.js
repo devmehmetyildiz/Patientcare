@@ -6,7 +6,7 @@ import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
 import {
   FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper,
-  LoadingPage, Pagedivider, Pagewrapper, Submitbutton, DataTable, NoDataScreen
+  LoadingPage, Pagedivider, Pagewrapper, Submitbutton, DataTable, NoDataScreen, MobileTable
 } from '../../Components'
 export default class PatientsAddmedicine extends Component {
 
@@ -111,9 +111,9 @@ export default class PatientsAddmedicine extends Component {
 
     const Columns = [
       { Header: Literals.AddMedicine.Id[Profile.Language], accessor: 'Id' },
-      { Header: Literals.AddMedicine.Medicinename[Profile.Language], accessor: 'StockdefineID', Cell: col => this.stockdefineCellhandler(col) },
-      { Header: Literals.AddMedicine.Skt[Profile.Language], accessor: 'Skt', Cell: col => this.columndateCellhandler(col) },
-      { Header: Literals.AddMedicine.Amount[Profile.Language], accessor: 'Amount', Cell: col => this.amountCellhandler(col) },
+      { Header: Literals.AddMedicine.Medicinename[Profile.Language], accessor: row => this.stockdefineCellhandler(row?.StockdefineID), Lowtitle: true, Withtext: true },
+      { Header: Literals.AddMedicine.Skt[Profile.Language], accessor: row => this.columndateCellhandler(row?.Skt), Lowtitle: true, Withtext: true },
+      { Header: Literals.AddMedicine.Amount[Profile.Language], accessor: row => this.amountCellhandler(row), Lowtitle: true, Withtext: true },
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
@@ -148,7 +148,9 @@ export default class PatientsAddmedicine extends Component {
                         key: warehouse.key,
                         content: stocks.length > 0 ?
                           <div className='w-full mx-auto '>
-                            <DataTable Columns={Columns} Data={stocks} />
+                            {Profile.Ismobile ?
+                              <MobileTable Columns={Columns} Data={stocks} Profile={Profile} /> :
+                              <DataTable Columns={Columns} Data={stocks} />}
                           </div> : <NoDataScreen message={Literals.Messages.Nomedicinefind[Profile.Language]} style={{ height: 'auto' }} />
                       }
                     }
@@ -211,21 +213,21 @@ export default class PatientsAddmedicine extends Component {
     }
   }
 
-  stockdefineCellhandler = (col) => {
+  stockdefineCellhandler = (value) => {
     const { Stockdefines } = this.props
     if (Stockdefines.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Stockdefines.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Stockdefines.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  amountCellhandler = (col) => {
+  amountCellhandler = (row) => {
     const { Stockmovements, Stocks } = this.props
     if (Stockmovements.isLoading || Stocks.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const selectedStock = (Stocks.list || []).find(u => u.Id === col?.row?.original?.Id)
+      const selectedStock = (Stocks.list || []).find(u => u.Id === row?.Id)
       let amount = 0.0;
       let movements = (Stockmovements.list || []).filter(u => u.StockID === selectedStock.Uuid && u.Isactive && u.Isapproved)
       movements.forEach(movement => {
@@ -242,9 +244,9 @@ export default class PatientsAddmedicine extends Component {
     return null
   }
 
-  columndateCellhandler = (col) => {
-    if (col.value) {
-      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+  columndateCellhandler = (value) => {
+    if (value) {
+      return value.split('T').length > 0 ? value.split('T')[0] : value
     }
     return null
   }

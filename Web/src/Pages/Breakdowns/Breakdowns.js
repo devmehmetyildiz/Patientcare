@@ -30,13 +30,13 @@ export default class Breakdowns extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Starttime[Profile.Language], accessor: 'Starttime', Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Endtime[Profile.Language], accessor: 'Endtime', Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.EquipmentID[Profile.Language], accessor: 'EquipmentID', Cell: col => this.equipmentCellhandler(col) },
-      { Header: Literals.Columns.ResponsibleuserID[Profile.Language], accessor: 'ResponsibleuserID', Cell: col => this.personelCellhandler(col) },
+      { Header: Literals.Columns.Starttime[Profile.Language], accessor: row => this.dateCellhandler(row?.Starttime), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Endtime[Profile.Language], accessor: row => this.dateCellhandler(row?.Endtime), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.EquipmentID[Profile.Language], accessor: row => this.equipmentCellhandler(row?.EquipmentID), Title: true },
+      { Header: Literals.Columns.ResponsibleuserID[Profile.Language], accessor: row => this.personelCellhandler(row?.ResponsibleuserID), Subtitle: true, Withtext: true, },
       { Header: Literals.Columns.Openinfo[Profile.Language], accessor: 'Openinfo' },
       { Header: Literals.Columns.Closeinfo[Profile.Language], accessor: 'Closeinfo' },
-      { Header: Literals.Columns.Iscompleted[Profile.Language], accessor: 'Iscompleted', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Iscompleted[Profile.Language], accessor: row => this.boolCellhandler(row?.Iscompleted), disableProps: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -106,29 +106,29 @@ export default class Breakdowns extends Component {
     )
   }
 
-  personelCellhandler = (col) => {
+  personelCellhandler = (value) => {
     const { Personels } = this.props
     if (Personels.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const personel = (Personels.list || []).find(u => u.Uuid === col.value)
+      const personel = (Personels.list || []).find(u => u.Uuid === value)
       return personel ? `${personel?.Name} ${personel?.Surname}` : 'Tanımsız'
     }
   }
 
-  equipmentCellhandler = (col) => {
+  equipmentCellhandler = (value) => {
     const { Equipments } = this.props
     if (Equipments.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Equipments.list || []).find(u => u.Uuid === col.value)?.Name || 'Tanımsız'
+      return (Equipments.list || []).find(u => u.Uuid === value)?.Name || 'Tanımsız'
     }
   }
 
 
-  dateCellhandler = (col) => {
-    const date = new Date(col.value)
-    if (col.value && validator.isISODate(date)) {
+  dateCellhandler = (value) => {
+    const date = new Date(value)
+    if (value && validator.isISODate(date)) {
 
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -139,12 +139,12 @@ export default class Breakdowns extends Component {
 
       return formattedDate
     } else {
-      return col.value
+      return value
     }
   }
 
-  boolCellhandler = (col) => {
-    return col.value !== null && (col.value
+  boolCellhandler = (value) => {
+    return value !== null && (value
       ? <div className='w-full flex justify-center items-center'><Icon className='cursor-pointer' color='green' name='checkmark' /></div>
       : <div className='w-full flex justify-center items-center'><Icon className='cursor-pointer' color='red' name='times circle' /></div>)
   }

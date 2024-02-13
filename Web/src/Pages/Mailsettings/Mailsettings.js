@@ -7,20 +7,12 @@ import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pag
 import { getInitialconfig } from '../../Utils/Constants'
 export default class Mailsettings extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-    }
-  }
-
   componentDidMount() {
     const { GetMailsettings } = this.props
     GetMailsettings()
   }
 
   render() {
-
 
     const { Mailsettings, Profile, handleSelectedMailsetting, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Mailsettings
@@ -34,13 +26,13 @@ export default class Mailsettings extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-      { Header: Literals.Columns.User[Profile.Language], accessor: 'User', Finalheader: true },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.User[Profile.Language], accessor: 'User' },
       { Header: Literals.Columns.Smtphost[Profile.Language], accessor: 'Smtphost' },
       { Header: Literals.Columns.Smtpport[Profile.Language], accessor: 'Smtpport' },
-      { Header: Literals.Columns.Mailaddress[Profile.Language], accessor: 'Mailaddress', Subheader: true },
-      { Header: Literals.Columns.Isbodyhtml[Profile.Language], accessor: 'Isbodyhtml', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Issettingactive[Profile.Language], accessor: 'Issettingactive', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Mailaddress[Profile.Language], accessor: 'Mailaddress', Subtitle: true },
+      { Header: Literals.Columns.Isbodyhtml[Profile.Language], accessor: row => this.boolCellhandler(row?.Isbodyhtml) },
+      { Header: Literals.Columns.Issettingactive[Profile.Language], accessor: row => this.boolCellhandler(row.Issettingactive) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -104,12 +96,8 @@ export default class Mailsettings extends Component {
     )
   }
 
-  handleChangeModal = (value) => {
-    this.setState({ modal: value })
-  }
-
-  boolCellhandler = (col) => {
+  boolCellhandler = (value) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 }
