@@ -46,18 +46,12 @@ export default function MobileTable(props) {
         return col?.Withtext ? `${col?.Header} ${getCellvalue(row, col)}` : getCellvalue(row, col)
     }
     const getFinalheader = (row) => {
-        const colcount = (Columns || []).filter(u => u.Lowtitle)
-        if (colcount <= 1) {
-            const col = (Columns || []).find(u => u.Lowtitle)
-            return col?.Withtext ? <Label color='blue' basic image>{col?.Header}<LabelDetail>{getCellvalue(row, col)}</LabelDetail></Label> : <Label>{getCellvalue(row, col)}</Label>
-        } else {
-            const cols = (Columns || []).filter(u => u.Lowtitle)
-            return <>
-                {cols.map(col => {
-                    return col?.Withtext ? <Label color='blue' basic image>{col?.Header}<LabelDetail>{getCellvalue(row, col)}</LabelDetail></Label> : <Label>{getCellvalue(row, col)}</Label>
-                })}
-            </>
-        }
+        const cols = (Columns || []).filter(u => u.Lowtitle)
+        return <>
+            {cols.map(col => {
+                return col?.Withtext ? <Label color='blue' basic image>{col?.Header}<LabelDetail>{getCellvalue(row, col)}</LabelDetail></Label> : <Label>{getCellvalue(row, col)}</Label>
+            })}
+        </>
     }
 
     const getTrigger = (row, index) => {
@@ -81,7 +75,7 @@ export default function MobileTable(props) {
                 {(Data || []).map((rowData, index) => {
                     let columns = [];
                     (Columns || []).forEach(u => {
-                        if (!(Config.hiddenColumns || []).includes(validator.isString(u.accessor) ? u.accessor : u.accessorvalue)) {
+                        if (!(Config?.hiddenColumns || []).includes(validator.isString(u.accessor) ? u.accessor : u.accessorvalue)) {
                             columns.push(u)
                         }
                     })
@@ -97,7 +91,7 @@ export default function MobileTable(props) {
                         <Modal.Content image>
                             <div className='overflow-y-auto overflow-x-hidden max-h-[80vh]'>
                                 <div className='p-8 flex flex-col justify-start items-start gap-4'>
-                                    {(columns || []).map(u => {
+                                    {(columns || []).filter(u => !(u?.disableMobile === true)).map(u => {
                                         return u?.disableProps
                                             ? <div className='w-full' key={Math.random()}>
                                                 <Label className='w-full !flex flex-row justify-between items-center' basic color='blue'>

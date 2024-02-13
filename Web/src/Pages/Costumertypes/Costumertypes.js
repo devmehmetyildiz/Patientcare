@@ -34,8 +34,8 @@ export default class Costumertypes extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-      { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: 'Departmentstxt', Subheader: true, Cell: col => this.departmentCellhandler(col) },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: row => this.departmentCellhandler(row), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -119,24 +119,18 @@ export default class Costumertypes extends Component {
     }
   }
 
-  departmentCellhandler = (col) => {
+  departmentCellhandler = (row) => {
 
     const { Departments, Profile } = this.props
 
-    if (col.value) {
-      if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        const itemId = col?.row?.original?.Id
-        const itemDepartments = (col.row.original.Departmentuuids || []).map(u => { return (Departments.list || []).find(department => department.Uuid === u.DepartmentID) })
-        return col.value.length - 35 > 20 ?
-          (
-            !this.state.departmentStatus.includes(itemId) ?
-              [col.value.slice(0, 35) + ' ...(' + itemDepartments.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandDepartments(itemId)}> ...Daha Fazla Göster</Link>] :
-              [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkDepartments(itemId)}> ...Daha Az Göster</Link>]
-          ) : col.value
-      }
-      return col.value
-    }
-    return col.value
+    const itemId = row?.Id
+    const itemDepartments = (row.Departmentuuids || []).map(u => { return (Departments.list || []).find(department => department.Uuid === u.DepartmentID) })
+    const itemDepartmentstxt = itemDepartments.map(u => u?.Name).join(',')
+    return itemDepartmentstxt.length - 35 > 20 ?
+      (
+        !this.state.departmentStatus.includes(itemId) ?
+          [itemDepartmentstxt.slice(0, 35) + ' ...(' + itemDepartments.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandDepartments(itemId)}> ...Daha Fazla Göster</Link>] :
+          [itemDepartmentstxt, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkDepartments(itemId)}> ...Daha Az Göster</Link>]
+      ) : itemDepartmentstxt
   }
-
 }

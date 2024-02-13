@@ -28,9 +28,9 @@ export default class Beds extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name' },
-      { Header: Literals.Columns.RoomID[Profile.Language], accessor: 'RoomID', Cell: col => this.roomCellhandler(col) },
-      { Header: Literals.Columns.Isoccupied[Profile.Language], accessor: 'Isoccupied', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.RoomID[Profile.Language], accessor: row => this.roomCellhandler(row?.RoomID), Subtitle: true, Withtext: true },
+      { Header: Literals.Columns.Isoccupied[Profile.Language], accessor: row => this.boolCellhandler(row?.Isoccupied), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -94,19 +94,19 @@ export default class Beds extends Component {
     )
   }
 
-  roomCellhandler = (col) => {
+  roomCellhandler = (value) => {
     const { Rooms, Floors } = this.props
     if (Rooms.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const room = (Rooms.list || []).find(u => u.Uuid === col.value || col)
+      const room = (Rooms.list || []).find(u => u.Uuid === value)
       const floor = (Floors.list || []).find(u => u.Uuid === room?.FloorID)
       return `${room?.Name} (${floor?.Name})`
     }
   }
 
-  boolCellhandler = (col) => {
+  boolCellhandler = (value) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Filled[Profile.Language] : Literals.Messages.Empty[Profile.Language])
+    return value !== null && (value ? Literals.Messages.Filled[Profile.Language] : Literals.Messages.Empty[Profile.Language])
   }
 }

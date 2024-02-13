@@ -21,7 +21,7 @@ export default class Tododefines extends Component {
   }
 
   render() {
-    const { Tododefines, Profile, handleDeletemodal, handleSelectedTododefine, Periods } = this.props
+    const { Tododefines, Profile, handleDeletemodal, handleSelectedTododefine } = this.props
     const { isLoading, isDispatching } = Tododefines
 
     const colProps = {
@@ -33,12 +33,12 @@ export default class Tododefines extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-      { Header: Literals.Columns.IsRequired[Profile.Language], accessor: 'IsRequired', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.IsNeedactivation[Profile.Language], accessor: 'IsNeedactivation', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.IsRequired[Profile.Language], accessor: row => this.boolCellhandler(row?.IsRequired), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.IsNeedactivation[Profile.Language], accessor: row => this.boolCellhandler(row?.IsNeedactivation), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Dayperiod[Profile.Language], accessor: 'Dayperiod' },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info' },
-      { Header: Literals.Columns.Periods[Profile.Language], accessor: 'Periodtxt', Subheader: true, Cell: col => this.PeriodCellhandler(col) },
+      { Header: Literals.Columns.Periods[Profile.Language], accessor: (row, freeze) => this.periodCellhandler(row, freeze) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -51,12 +51,8 @@ export default class Tododefines extends Component {
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Tododefines.list || []).map(item => {
-      var text = (item.Perioduuids || []).map(u => {
-        return (Periods.list || []).find(period => period.Uuid === u.PeriodID)?.Name
-      }).join(", ")
       return {
         ...item,
-        Periodtxt: text,
         edit: <Link to={`/Tododefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedTododefine(item)
@@ -125,29 +121,25 @@ export default class Tododefines extends Component {
     }
   }
 
-  PeriodCellhandler = (col) => {
-
-    const { Periods, Profile } = this.props
-
-    if (col.value) {
-      if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        const itemId = col?.row?.original?.Id
-        const itemPeriods = (col.row.original.Perioduuids || []).map(u => { return (Periods.list || []).find(period => period.Uuid === u.PeriodID) })
-        return col.value.length - 35 > 20 ?
-          (
-            !this.state.periodStatus.includes(itemId) ?
-              [col.value.slice(0, 35) + ' ...(' + itemPeriods.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandPeriods(itemId)}> ...Daha Fazla Göster</Link>] :
-              [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkPeriods(itemId)}> ...Daha Az Göster</Link>]
-          ) : col.value
-      }
-      return col.value
+  periodCellhandler = (row, freeze) => {
+    const { Periods } = this.props
+    const itemId = row?.Id
+    const itemPeriods = (row?.Perioduuids || []).map(u => { return (Periods.list || []).find(period => period.Uuid === u.PeriodID) })
+    const itemPeriodstxt = itemPeriods.map(u => u?.Name).join(',')
+    if (freeze) {
+      return itemPeriodstxt
     }
-    return col.value
+    return itemPeriodstxt.length - 35 > 20 ?
+      (
+        !this.state.periodStatus.includes(itemId) ?
+          [itemPeriodstxt.slice(0, 35) + ' ...(' + itemPeriods.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandPeriods(itemId)}> ...Daha Fazla Göster</Link>] :
+          [itemPeriodstxt, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkPeriods(itemId)}> ...Daha Az Göster</Link>]
+      ) : itemPeriodstxt
   }
 
-  boolCellhandler = (col) => {
+  boolCellhandler = (value) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 }
 

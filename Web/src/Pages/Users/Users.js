@@ -12,22 +12,20 @@ export default class Users extends Component {
     this.state = {
       open: false,
       selectedrecord: {},
-      stationsStatus: [],
       rolesStatus: [],
       departmentsStatus: [],
     }
   }
 
   componentDidMount() {
-    const { GetUsers, GetRoles, GetStations, GetDepartments } = this.props
+    const { GetUsers, GetRoles, GetDepartments } = this.props
     GetUsers()
     GetRoles()
-    GetStations()
     GetDepartments()
   }
 
   render() {
-    const { Users, Profile, handleDeletemodal, handleSelectedUser, Departments, Stations, Roles } = this.props
+    const { Users, Profile, handleDeletemodal, handleSelectedUser, } = this.props
     const { isLoading, isDispatching } = Users
 
     const colProps = {
@@ -39,9 +37,9 @@ export default class Users extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
-      { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', Firstheader: true },
+      { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', Title: true },
       { Header: Literals.Columns.NormalizedUsername[Profile.Language], accessor: 'NormalizedUsername', },
-      { Header: Literals.Columns.Email[Profile.Language], accessor: 'Email', Subheader: true },
+      { Header: Literals.Columns.Email[Profile.Language], accessor: 'Email', Subheader: true, Subtitle: true },
       { Header: Literals.Columns.EmailConfirmed[Profile.Language], accessor: 'EmailConfirmed', },
       { Header: Literals.Columns.AccessFailedCount[Profile.Language], accessor: 'AccessFailedCount', },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', },
@@ -53,10 +51,9 @@ export default class Users extends Component {
       { Header: Literals.Columns.Address[Profile.Language], accessor: 'Address', },
       { Header: Literals.Columns.Language[Profile.Language], accessor: 'Language', },
       { Header: Literals.Columns.UserID[Profile.Language], accessor: 'UserID', },
-      { Header: Literals.Columns.Defaultdepartment[Profile.Language], accessor: 'Defaultdepartment', Finalheader: true },
-      { Header: Literals.Columns.Stations[Profile.Language], accessor: 'Stationstxt', isOpen: false, Cell: col => this.stationCellhandler(col) },
-      { Header: Literals.Columns.Departments[Profile.Language], accessor: 'Departmentstxt', isOpen: false, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Roles[Profile.Language], accessor: 'Rolestxt', isOpen: false, Cell: col => this.rolesCellhandler(col) },
+      { Header: Literals.Columns.Defaultdepartment[Profile.Language], accessor: 'Defaultdepartment', },
+      { Header: Literals.Columns.Departments[Profile.Language], accessor: row => this.departmentCellhandler(row), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Roles[Profile.Language], accessor: row => this.rolesCellhandler(row) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
@@ -69,20 +66,8 @@ export default class Users extends Component {
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Users.list || []).map(item => {
-      var rolestext = (item.Roleuuids || []).map(u => {
-        return (Roles.list || []).find(role => role.Uuid === u.RoleID)?.Name
-      }).join(", ")
-      var stationtext = (item.Stationuuids || []).map(u => {
-        return (Stations.list || []).find(station => station.Uuid === u.StationID)?.Name
-      }).join(", ")
-      var departmentext = (item.Departmentuuids || []).map(u => {
-        return (Departments.list || []).find(department => department.Uuid === u.DepartmentID)?.Name
-      }).join(", ")
       return {
         ...item,
-        Stationstxt: stationtext,
-        Rolestxt: rolestext,
-        Departmentstxt: departmentext,
         edit: <Link to={`/Users/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedUser(item)
@@ -132,20 +117,7 @@ export default class Users extends Component {
     )
   }
 
-  expandStations = (rowid) => {
-    const prevData = this.state.stationsStatus
-    prevData.push(rowid)
-    this.setState({ stationsStatus: [...prevData] })
-  }
 
-  shrinkStations = (rowid) => {
-    const index = this.state.stationsStatus.indexOf(rowid)
-    const prevData = this.state.stationsStatus
-    if (index > -1) {
-      prevData.splice(index, 1)
-      this.setState({ stationsStatus: [...prevData] })
-    }
-  }
   expandRoles = (rowid) => {
     const prevData = this.state.rolesStatus
     prevData.push(rowid)
@@ -175,62 +147,32 @@ export default class Users extends Component {
     }
   }
 
-  rolesCellhandler = (col) => {
+  rolesCellhandler = (row) => {
 
-    const { Profile, Roles } = this.props
+    const { Roles } = this.props
 
-    if (col.value) {
-      if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        const itemId = col?.row?.original?.Id
-        const itemRoles = (col.row.original.Roleuuids || []).map(u => { return (Roles.list || []).find(role => role.Uuid === u.RoleID) })
-        return col.value.length - 35 > 20 ?
-          (
-            !this.state.rolesStatus.includes(itemId) ?
-              [col.value.slice(0, 35) + ' ...(' + itemRoles.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandRoles(itemId)}> ...Daha Fazla Göster</Link>] :
-              [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkRoles(itemId)}> ...Daha Az Göster</Link>]
-          ) : col.value
-      }
-      return col.value
-    }
-    return col.value
+    const itemId = row?.Id
+    const itemRoles = (row.Roleuuids || []).map(u => { return (Roles.list || []).find(role => role.Uuid === u.RoleID) })
+    const itemRolestxt = itemRoles.map(u => u?.Name).join(',')
+    return itemRolestxt.length - 35 > 20 ?
+      (
+        !this.state.rolesStatus.includes(itemId) ?
+          [itemRolestxt.slice(0, 35) + ' ...(' + itemRoles.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandRoles(itemId)}> ...Daha Fazla Göster</Link>] :
+          [itemRolestxt, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkRoles(itemId)}> ...Daha Az Göster</Link>]
+      ) : itemRolestxt
   }
 
-  departmentCellhandler = (col) => {
-    const { Profile, Departments } = this.props
+  departmentCellhandler = (row) => {
+    const { Departments } = this.props
 
-    if (col.value) {
-      if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        const itemId = col?.row?.original?.Id
-        const itemDepartments = (col.row.original.Departmentuuids || []).map(u => { return (Departments.list || []).find(department => department.Uuid === u.DepartmentID) })
-        return col.value.length - 35 > 20 ?
-          (
-            !this.state.departmentsStatus.includes(itemId) ?
-              [col.value.slice(0, 35) + ' ...(' + itemDepartments.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandDepartments(itemId)}> ...Daha Fazla Göster</Link>] :
-              [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkDepartments(itemId)}> ...Daha Az Göster</Link>]
-          ) : col.value
-      }
-      return col.value
-    }
-    return col.value
+    const itemId = row?.Id
+    const itemDepartments = (row.Departmentuuids || []).map(u => { return (Departments.list || []).find(department => department.Uuid === u.DepartmentID) })
+    const itemDepartmentstxt = itemDepartments.map(u => u?.Name).join(',')
+    return itemDepartmentstxt.length - 35 > 20 ?
+      (
+        !this.state.departmentsStatus.includes(itemId) ?
+          [itemDepartmentstxt.slice(0, 35) + ' ...(' + itemDepartments.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandDepartments(itemId)}> ...Daha Fazla Göster</Link>] :
+          [itemDepartmentstxt, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkDepartments(itemId)}> ...Daha Az Göster</Link>]
+      ) : itemDepartmentstxt
   }
-
-  stationCellhandler = (col) => {
-    const { Profile, Stations } = this.props
-
-    if (col.value) {
-      if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        const itemId = col?.row?.original?.Id
-        const itemStations = (col.row.original.Stationuuids || []).map(u => { return (Stations.list || []).find(station => station.Uuid === u.DepartmentID) })
-        return col.value.length - 35 > 20 ?
-          (
-            !this.state.stationsStatus.includes(itemId) ?
-              [col.value.slice(0, 35) + ' ...(' + itemStations.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandStations(itemId)}> ...Daha Fazla Göster</Link>] :
-              [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkStations(itemId)}> ...Daha Az Göster</Link>]
-          ) : col.value
-      }
-      return col.value
-    }
-    return col.value
-  }
-
 }

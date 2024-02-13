@@ -33,8 +33,8 @@ export class Roles extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-      { Header: Literals.Columns.Privilegestxt[Profile.Language], accessor: 'Privileges', isOpen: false, Cell: col => this.authoryCellhandler(col) },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.Privilegestxt[Profile.Language], accessor: (row, freeze) => this.authoryCellhandler(row, freeze) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -47,12 +47,8 @@ export class Roles extends Component {
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Roles.list || []).filter(u => u.Isactive).map(item => {
-      var text = item.Privileges.map((privilege) => {
-        return privilege.text;
-      }).join(", ")
       return {
         ...item,
-        Privileges: text,
         edit: <Link to={`/Roles/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedRole(item)
@@ -117,25 +113,19 @@ export class Roles extends Component {
     }
   }
 
-  authoryCellhandler = (col) => {
-
-    const { Profile } = this.props
-
-    if (col.value) {
-      if (!col.cell?.isGrouped && !Profile.Ismobile) {
-        const itemId = col?.row?.original?.Id
-        const itemPrivileges = (col.row.original.Privileges || '').split(',')
-        return col.value.length - 35 > 20 ?
-          (
-            !this.state.privilegesStatus.includes(itemId) ?
-              [col.value.slice(0, 35) + ' ...(' + (itemPrivileges || []).length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandAuthory(itemId)}> ...Daha Fazla Göster</Link>] :
-              [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkAuthory(itemId)}> ...Daha Az Göster</Link>]
-          ) : col.value
-      }
-      return col.value
+  authoryCellhandler = (row, freeze) => {
+    const itemId = row?.Id
+    const itemPrivileges = (row?.Privileges || []).map(u => u.text)
+    const itemPrivilegestxt = itemPrivileges.join(',')
+    if (freeze === true) {
+      return itemPrivilegestxt
     }
-    return col.value
+    return itemPrivilegestxt.length - 35 > 20 ?
+      (
+        !this.state.privilegesStatus.includes(itemId) ?
+          [itemPrivilegestxt.slice(0, 35) + ' ...(' + (itemPrivileges || []).length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandAuthory(itemId)}> ...Daha Fazla Göster</Link>] :
+          [itemPrivilegestxt, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkAuthory(itemId)}> ...Daha Az Göster</Link>]
+      ) : itemPrivilegestxt
   }
-
 }
 export default Roles

@@ -28,13 +28,13 @@ export default class Stockdefines extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
       { Header: Literals.Columns.Description[Profile.Language], accessor: 'Description' },
-      { Header: Literals.Columns.Unit[Profile.Language], accessor: 'UnitID', Cell: col => this.unitCellhandler(col) },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: 'DepartmentID', Finalheader: true, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Issupply[Profile.Language], accessor: 'Issupply', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Ismedicine[Profile.Language], accessor: 'Ismedicine', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Isredprescription[Profile.Language], accessor: 'Isredprescription', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Unit[Profile.Language], accessor: row => this.unitCellhandler(row?.UnitID), Subtitle: true, Withtext: true },
+      { Header: Literals.Columns.Department[Profile.Language], accessor: row => this.departmentCellhandler(row?.DepartmentID), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Issupply[Profile.Language], accessor: row => this.boolCellhandler(row?.Issupply) },
+      { Header: Literals.Columns.Ismedicine[Profile.Language], accessor: row => this.boolCellhandler(row?.Ismedicine) },
+      { Header: Literals.Columns.Isredprescription[Profile.Language], accessor: row => this.boolCellhandler(row?.Isredprescription) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -98,26 +98,26 @@ export default class Stockdefines extends Component {
     )
   }
 
-  departmentCellhandler = (col) => {
+  departmentCellhandler = (value) => {
     const { Departments } = this.props
     if (Departments.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Departments.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Departments.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  unitCellhandler = (col) => {
+  unitCellhandler = (value) => {
     const { Units } = this.props
     if (Units.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Units.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Units.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  boolCellhandler = (col) => {
+  boolCellhandler = (value) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 }

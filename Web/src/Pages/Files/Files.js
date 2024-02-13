@@ -1,24 +1,17 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Grid, GridColumn, Icon } from 'semantic-ui-react'
+import { Breadcrumb, Grid, GridColumn, Icon, Loader } from 'semantic-ui-react'
 import FilesDelete from '../../Containers/Files/FilesDelete'
 import Literals from './Literals'
 import { getInitialconfig } from '../../Utils/Constants'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 export class Files extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-    }
-  }
-
   componentDidMount() {
-    const { GetFiles } = this.props
+    const { GetFiles, GetUsagetypes } = this.props
     GetFiles()
+    GetUsagetypes()
   }
-
 
   render() {
 
@@ -35,12 +28,12 @@ export class Files extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
       { Header: Literals.Columns.ParentID[Profile.Language], accessor: 'ParentID' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
       { Header: Literals.Columns.Filename[Profile.Language], accessor: 'Filename' },
       { Header: Literals.Columns.Filefolder[Profile.Language], accessor: 'Filefolder' },
       { Header: Literals.Columns.Filepath[Profile.Language], accessor: 'Filepath' },
-      { Header: Literals.Columns.Filetype[Profile.Language], accessor: 'Filetype', Subheader: true },
-      { Header: Literals.Columns.Usagetype[Profile.Language], accessor: 'Usagetype', Finalheader: true },
+      { Header: Literals.Columns.Filetype[Profile.Language], accessor: 'Filetype', Subtitle: true },
+      { Header: Literals.Columns.Usagetype[Profile.Language], accessor: row => this.usagetypeCellhandler(row?.Usagetype), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -101,6 +94,15 @@ export class Files extends Component {
           <FilesDelete />
         </React.Fragment>
     )
+  }
+
+  usagetypeCellhandler = (value) => {
+    const { Usagetypes } = this.props
+    if (Usagetypes.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (value || '').split(',').map(type => (Usagetypes.list || []).find(u => u.Uuid === type)?.Name).join(',')
+    }
   }
 }
 export default Files

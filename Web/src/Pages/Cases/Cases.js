@@ -29,30 +29,9 @@ export default class Cases extends Component {
   render() {
 
 
-    const { Cases, Profile, Departments, handleSelectedCase, handleDeletemodal } = this.props
+    const { Cases, Profile, handleSelectedCase, handleDeletemodal } = this.props
     const { isLoading, isDispatching } = Cases
-    const casestatusOption = [
-      {
-        key: '-1',
-        text: Literals.Options.caseStatusoption.value0[Profile.Language],
-        value: -1,
-      },
-      {
-        key: '0',
-        text: Literals.Options.caseStatusoption.value1[Profile.Language],
-        value: 0,
-      },
-      {
-        key: '1',
-        text: Literals.Options.caseStatusoption.value2[Profile.Language],
-        value: 1,
-      },
-      {
-        key: '2',
-        text: Literals.Options.caseStatusoption.value3[Profile.Language],
-        value: 2,
-      },
-    ]
+
 
     const colProps = {
       sortable: true,
@@ -63,14 +42,14 @@ export default class Cases extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-      { Header: Literals.Columns.Shortname[Profile.Language], accessor: 'Shortname', Finalheader: true },
-      { Header: Literals.Columns.CaseStatus[Profile.Language], accessor: 'CaseStatus', Cell: col => this.casesstatusCellhandler(col, casestatusOption) },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.Shortname[Profile.Language], accessor: 'Shortname', Subtitle: true },
+      { Header: Literals.Columns.CaseStatus[Profile.Language], accessor: row => this.casesstatusCellhandler(row?.CaseStatus) },
       { Header: Literals.Columns.Casecolor[Profile.Language], accessor: 'Casecolor', Cell: col => this.casecolorCellhandler(col) },
-      { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: 'Departmentstxt', Subheader: true, Cell: col => this.departmentCellhandler(col) },
-      { Header: Literals.Columns.Patientstatus[Profile.Language], accessor: 'Patientstatus', Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.Iscalculateprice[Profile.Language], accessor: 'Iscalculateprice', Cell: col => this.boolCellhandler(col) },
-      { Header: Literals.Columns.Isroutinework[Profile.Language], accessor: 'Isroutinework', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Departmentstxt[Profile.Language], accessor: (row, freeze) => this.departmentCellhandler(row, freeze), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Patientstatus[Profile.Language], accessor: row => this.movementCellhandler(row?.Patientstatus) },
+      { Header: Literals.Columns.Iscalculateprice[Profile.Language], accessor: row => this.boolCellhandler(row?.Iscalculateprice) },
+      { Header: Literals.Columns.Isroutinework[Profile.Language], accessor: row => this.boolCellhandler(row?.Isroutinework) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -83,13 +62,8 @@ export default class Cases extends Component {
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Cases.list || []).map(item => {
-
-      var text = (item.Departmentuuids || []).map(u => {
-        return (Departments.list || []).find(department => department.Uuid === u.DepartmentID)?.Name
-      }).join(", ")
       return {
         ...item,
-        Departmentstxt: text,
         edit: <Link to={`/Cases/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedCase(item)
@@ -154,8 +128,32 @@ export default class Cases extends Component {
     }
   }
 
-  casesstatusCellhandler = (col, casestatusOption) => {
-    return casestatusOption.find(u => u.value === col.value) ? casestatusOption.find(u => u.value === col.value).text : ''
+  casesstatusCellhandler = (value) => {
+    const { Profile } = this.props
+    const casestatusOption = [
+      {
+        key: '-1',
+        text: Literals.Options.caseStatusoption.value0[Profile.Language],
+        value: -1,
+      },
+      {
+        key: '0',
+        text: Literals.Options.caseStatusoption.value1[Profile.Language],
+        value: 0,
+      },
+      {
+        key: '1',
+        text: Literals.Options.caseStatusoption.value2[Profile.Language],
+        value: 1,
+      },
+      {
+        key: '2',
+        text: Literals.Options.caseStatusoption.value3[Profile.Language],
+        value: 2,
+      },
+    ]
+
+    return casestatusOption.find(u => u.value === value) ? casestatusOption.find(u => u.value === value).text : ''
   }
 
   casecolorCellhandler = (col) => {
@@ -165,32 +163,29 @@ export default class Cases extends Component {
     return null
   }
 
-  departmentCellhandler = (col) => {
+  departmentCellhandler = (row, freeze) => {
 
-    const { Departments, Profile } = this.props
-
-    if (col.value && !Profile.Ismobile) {
-      if (!col?.cell.isGrouped) {
-        const itemId = col?.row?.original?.Id
-        const itemDepartments = (col.row.original.Departmentuuids || []).map(u => { return (Departments.list || []).find(department => department.Uuid === u.DepartmentID) })
-        return col.value.length - 35 > 20 ?
-          (
-            !this.state.departmentStatus.includes(itemId) ?
-              [col.value.slice(0, 35) + ' ...(' + itemDepartments.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandDepartments(itemId)}> ...Daha Fazla Göster</Link>] :
-              [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkDepartments(itemId)}> ...Daha Az Göster</Link>]
-          ) : col.value
-      }
-      return col.value
+    const { Departments } = this.props
+    const itemId = row?.Id
+    const itemDepartments = (row.Departmentuuids || []).map(u => { return (Departments.list || []).find(department => department.Uuid === u.DepartmentID) })
+    const itemDepartmentstxt = (itemDepartments || []).map(u => u?.Name).join(',')
+    if (freeze === true) {
+      return itemDepartmentstxt
     }
-    return col.value
+    return itemDepartmentstxt.length - 35 > 20 ?
+      (
+        !this.state.departmentStatus.includes(itemId) ?
+          [itemDepartmentstxt.slice(0, 35) + ' ...(' + itemDepartments.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandDepartments(itemId)}> ...Daha Fazla Göster</Link>] :
+          [itemDepartmentstxt, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkDepartments(itemId)}> ...Daha Az Göster</Link>]
+      ) : itemDepartmentstxt
   }
 
-  boolCellhandler = (col) => {
+  boolCellhandler = (value) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 
-  movementCellhandler = (col) => {
-    return PATIENTMOVEMENTTYPE.find(u => u.value === col.value) ? PATIENTMOVEMENTTYPE.find(u => u.value === col.value).Name : col.value
+  movementCellhandler = (value) => {
+    return PATIENTMOVEMENTTYPE.find(u => u.value === value) ? PATIENTMOVEMENTTYPE.find(u => u.value === value).Name : value
   }
 }

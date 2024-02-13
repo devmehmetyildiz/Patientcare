@@ -13,11 +13,10 @@ import {
 export default function DepartmentsEdit(props) {
 
   const { GetDepartment, match, history, GetStations, DepartmentID, Departments,
-    Stations, Profile, EditDepartments, fillDepartmentnotification, handleSelectedDepartment } = props
+    Profile, EditDepartments, fillDepartmentnotification, handleSelectedDepartment } = props
 
   const PAGE_NAME = "DepartmentsEdit"
   const [isDatafetched, setisDatafetched] = useState(false)
-  const [stationoptions, setStationoptions] = useState([])
   const context = useContext(FormContext)
 
 
@@ -25,7 +24,6 @@ export default function DepartmentsEdit(props) {
     let Id = DepartmentID || match?.params?.DepartmentID
     if (validator.isUUID(Id)) {
       GetDepartment(Id)
-      GetStations()
     } else {
       history.push("/Departments")
     }
@@ -33,28 +31,18 @@ export default function DepartmentsEdit(props) {
 
   useEffect(() => {
     const { selected_record, isLoading } = Departments
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !Stations.isLoading && !isLoading && !isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !isDatafetched) {
       setisDatafetched(true)
       handleSelectedDepartment({})
-      context.setForm(PAGE_NAME, { ...selected_record, Stations: selected_record.Stationuuids.map(u => { return u.StationID }) })
+      context.setForm(PAGE_NAME, selected_record)
     }
-  }, [Departments, Stations])
-
-  useEffect(() => {
-    const Stationoptions = (Stations.list || []).filter(u => u.Isactive).map(station => {
-      return { key: station.Uuid, text: station.Name, value: station.Uuid }
-    })
-    setStationoptions(Stationoptions)
-  }, [Stations])
+  }, [Departments])
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
     const data = context.getForm(PAGE_NAME)
     data.Isdefaultpatientdepartment = data.Ishavepatients ? true : false
-    data.Stations = data.Stations.map(id => {
-      return (Stations.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
-    }).filter(u => u)
 
     let errors = []
     if (!validator.isString(data.Name)) {
@@ -85,7 +73,6 @@ export default function DepartmentsEdit(props) {
         <Contentwrapper>
           <Form>
             <FormInput page={PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-            <FormInput page={PAGE_NAME} placeholder={Literals.Columns.stationstxt[Profile.Language]} name="Stations" multiple options={stationoptions} formtype="dropdown" modal={StationsCreate} />
             <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Ishavepatients[Profile.Language]} name="Ishavepatients" formtype="checkbox" />
             {context.formstates[`${PAGE_NAME}/Ishavepatients`] ?
               <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Isdefaultpatientdepartment[Profile.Language]} name="Isdefaultpatientdepartment" formtype="checkbox" /> : null}

@@ -30,13 +30,13 @@ export default class Stockmovements extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: 'StockID', Firstheader: true, Cell: col => this.stockCellhandler(col) },
-      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: 'Movementdate', Subheader: true, Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Movementtype[Profile.Language], accessor: 'Movementtype', Cell: col => this.movementCellhandler(col) },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: 'Amount', Finalheader: true, Cell: col => this.amountCellhandler(col) },
-      { Header: Literals.Columns.Prevvalue[Profile.Language], accessor: 'Prevvalue', Cell: col => this.amountCellhandler(col) },
-      { Header: Literals.Columns.Newvalue[Profile.Language], accessor: 'Newvalue', Cell: col => this.amountCellhandler(col) },
-      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: 'Isapproved', Cell: col => this.boolCellhandler(col) },
+      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: row => this.stockCellhandler(row?.StockID), Title: true },
+      { Header: Literals.Columns.Movementdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Movementdate), Subtitle: true },
+      { Header: Literals.Columns.Movementtype[Profile.Language], accessor: row => this.movementCellhandler(row?.Movementtype), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Amount[Profile.Language], accessor: row => this.amountCellhandler(row), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Prevvalue[Profile.Language], accessor: row => this.prevamountCellhandler(row) },
+      { Header: Literals.Columns.Newvalue[Profile.Language], accessor: row => this.newamountCellhandler(row) },
+      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
@@ -108,46 +108,69 @@ export default class Stockmovements extends Component {
     )
   }
 
-  amountCellhandler = (col) => {
+  amountCellhandler = (row) => {
     const { Stockmovements, Stocks, Stockdefines, Units } = this.props
     if (Stocks.isLoading || Stockdefines.isLoading || Units.isLoading || Stockmovements.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const stockmovement = (Stockmovements.list || []).find(u => u.Id === col?.row?.original?.Id)
+      const stockmovement = (Stockmovements.list || []).find(u => u.Id === row?.Id)
       const stock = (Stocks.list || []).find(u => u.Uuid === stockmovement?.StockID)
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
       const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
-      return <p>{`${col.value || ''}  ${unit?.Name || ''}`}</p>
+      return <p>{`${row.Amount || ''}  ${unit?.Name || ''}`}</p>
     }
-
+  }
+  prevamountCellhandler = (row) => {
+    const { Stockmovements, Stocks, Stockdefines, Units } = this.props
+    if (Stocks.isLoading || Stockdefines.isLoading || Units.isLoading || Stockmovements.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const stockmovement = (Stockmovements.list || []).find(u => u.Id === row?.Id)
+      const stock = (Stocks.list || []).find(u => u.Uuid === stockmovement?.StockID)
+      const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
+      const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
+      return <p>{`${row?.Prevvalue || ''}  ${unit?.Name || ''}`}</p>
+    }
+  }
+  newamountCellhandler = (row) => {
+    const { Stockmovements, Stocks, Stockdefines, Units } = this.props
+    if (Stocks.isLoading || Stockdefines.isLoading || Units.isLoading || Stockmovements.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const stockmovement = (Stockmovements.list || []).find(u => u.Id === row?.Id)
+      const stock = (Stocks.list || []).find(u => u.Uuid === stockmovement?.StockID)
+      const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
+      const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
+      return <p>{`${row?.Newvalue || ''}  ${unit?.Name || ''}`}</p>
+    }
   }
 
-  stockCellhandler = (col) => {
+  stockCellhandler = (value) => {
     const { Stocks, Stockdefines } = this.props
     if (Stocks.isLoading || Stockdefines.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const stock = (Stocks.list || []).find(u => u.Uuid === col.value)
+      const stock = (Stocks.list || []).find(u => u.Uuid === value)
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
       return stockdefine?.Name
     }
 
   }
 
-  dateCellhandler = (col) => {
-    if (col.value) {
-      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
+  dateCellhandler = (value) => {
+    if (value) {
+      return value.split('T').length > 0 ? value.split('T')[0] : value
     }
     return null
   }
 
-  movementCellhandler = (col) => {
-    return MOVEMENTTYPES.find(u => u.value === col.value) ? MOVEMENTTYPES.find(u => u.value === col.value).Name : col.value
+  movementCellhandler = (value) => {
+    return MOVEMENTTYPES.find(u => u.value === value) ? MOVEMENTTYPES.find(u => u.value === value).Name : value
   }
 
-  boolCellhandler = (col) => {
+  boolCellhandler = (value) => {
     const { Profile } = this.props
-    return col.value !== null && (col.value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 
 }

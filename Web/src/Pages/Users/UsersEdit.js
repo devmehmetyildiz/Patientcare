@@ -21,11 +21,10 @@ export default class UsersEdit extends Component {
   }
 
   componentDidMount() {
-    const { UserID, GetUser, GetStations, GetRoles, GetDepartments, match, history } = this.props
+    const { UserID, GetUser, GetRoles, GetDepartments, match, history } = this.props
     let Id = UserID || match?.params?.UserID
     if (validator.isUUID(Id)) {
       GetUser(match.params.UserID)
-      GetStations()
       GetRoles()
       GetDepartments()
     } else {
@@ -34,11 +33,11 @@ export default class UsersEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Roles, Stations, Users } = this.props
+    const { Departments, Roles, Users } = this.props
     const { selected_record, isLoading } = Users
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
-      Departments.list.length > 0 && !Departments.isLoading && Roles.list.length > 0 && !Roles.isLoading &&
-      Stations.list.length > 0 && !Stations.isLoading && !isLoading && !this.state.isDatafetched) {
+      !Departments.isLoading && !Roles.isLoading &&
+      !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
       })
@@ -47,7 +46,6 @@ export default class UsersEdit extends Component {
           ...selected_record,
           Departments: selected_record.Departmentuuids.map(u => { return u.DepartmentID }),
           Roles: selected_record.Roleuuids.map(u => { return u.RoleID }),
-          Stations: selected_record.Stationuuids.map(u => { return u.StationID }),
         })
     }
   }
@@ -55,11 +53,9 @@ export default class UsersEdit extends Component {
 
   render() {
 
-    const { Departments, Users, Stations, Roles, Profile, history } = this.props
+    const { Departments, Users, Roles, Profile, history } = this.props
 
-    const Stationoptions = (Stations.list || []).filter(u => u.Isactive).map(station => {
-      return { key: station.Uuid, text: station.Name, value: station.Uuid }
-    })
+
     const Roleoptions = (Roles.list || []).filter(u => u.Isactive).map(roles => {
       return { key: roles.Uuid, text: roles.Name, value: roles.Uuid }
     })
@@ -101,7 +97,6 @@ export default class UsersEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stations[Profile.Language]} name="Stations" multiple options={Stationoptions} formtype='dropdown' modal={StationsCreate} />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departments[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Roles[Profile.Language]} name="Roles" multiple options={Roleoptions} formtype='dropdown' modal={RolesCreate} />
               </Form.Group>
@@ -125,12 +120,9 @@ export default class UsersEdit extends Component {
   }
   handleSubmit = (e) => {
     e.preventDefault()
-    const { EditUsers, history, fillUsernotification, Roles, Departments, Stations, Users, Profile } = this.props
+    const { EditUsers, history, fillUsernotification, Roles, Departments, Users, Profile } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
     data.UserID = parseInt(data.UserID, 10)
-    data.Stations = data.Stations.map(id => {
-      return (Stations.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
-    }).filter(u => u)
     data.Roles = data.Roles.map(id => {
       return (Roles.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
     }).filter(u => u)
@@ -150,9 +142,6 @@ export default class UsersEdit extends Component {
     }
     if (!validator.isString(data.Email)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.EmailRequired[Profile.Language] })
-    }
-    if (!validator.isArray(data.Stations)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StationsRequired[Profile.Language] })
     }
     if (!validator.isArray(data.Departments)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentsRequired[Profile.Language] })

@@ -28,9 +28,9 @@ export default class Personelshifts extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Startdate[Profile.Language], accessor: 'Startdate', Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Enddate[Profile.Language], accessor: 'Enddate', Cell: col => this.dateCellhandler(col) },
-      { Header: Literals.Columns.Period[Profile.Language], accessor: 'Period' },
+      { Header: Literals.Columns.Startdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Startdate), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Enddate[Profile.Language], accessor: row => this.dateCellhandler(row?.Enddate), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Period[Profile.Language], accessor: 'Period', Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
@@ -98,9 +98,9 @@ export default class Personelshifts extends Component {
     )
   }
 
-  dateCellhandler = (col) => {
-    const date = new Date(col.value)
-    if (col.value && validator.isISODate(date)) {
+  dateCellhandler = (value) => {
+    const date = new Date(value)
+    if (value && validator.isISODate(date)) {
 
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -109,7 +109,7 @@ export default class Personelshifts extends Component {
 
       return formattedDate
     } else {
-      return col.value
+      return value
     }
   }
 

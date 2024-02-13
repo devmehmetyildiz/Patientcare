@@ -36,12 +36,12 @@ export default class Equipments extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-      { Header: Literals.Columns.Equipmentgroup[Profile.Language], accessor: 'EquipmentgroupID', Subheader: true, Cell: col => this.equipmentgroupCellhandler(col) },
-      { Header: Literals.Columns.Floor[Profile.Language], accessor: 'FloorID', Cell: col => this.floorCellhandler(col) },
-      { Header: Literals.Columns.Room[Profile.Language], accessor: 'RoomID', Cell: col => this.roomCellhandler(col) },
-      { Header: Literals.Columns.Floor[Profile.Language], accessor: 'BedID', Cell: col => this.bedCellhandler(col) },
-      { Header: Literals.Columns.User[Profile.Language], accessor: 'UserID', Cell: col => this.userCellhandler(col) },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.Equipmentgroup[Profile.Language], accessor: row => this.equipmentgroupCellhandler(row?.EquipmentgroupID), Subtitle: true, Withtext: true },
+      { Header: Literals.Columns.Floor[Profile.Language], accessor: row => this.floorCellhandler(row?.FloorID) },
+      { Header: Literals.Columns.Room[Profile.Language], accessor: row => this.roomCellhandler(row?.RoomID) },
+      { Header: Literals.Columns.Bed[Profile.Language], accessor: row => this.bedCellhandler(row?.BedID) },
+      { Header: Literals.Columns.User[Profile.Language], accessor: row => this.userCellhandler(row?.UserID) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -106,48 +106,48 @@ export default class Equipments extends Component {
     )
   }
 
-  equipmentgroupCellhandler = (col) => {
+  equipmentgroupCellhandler = (value) => {
     const { Equipmentgroups } = this.props
     if (Equipmentgroups.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Equipmentgroups.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Equipmentgroups.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  floorCellhandler = (col) => {
+  floorCellhandler = (value) => {
     const { Floors } = this.props
     if (Floors.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Floors.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Floors.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  roomCellhandler = (col) => {
+  roomCellhandler = (value) => {
     const { Rooms } = this.props
     if (Rooms.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Rooms.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Rooms.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  bedCellhandler = (col) => {
+  bedCellhandler = (value) => {
     const { Beds } = this.props
     if (Beds.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Beds.list || []).find(u => u.Uuid === col.value)?.Name
+      return (Beds.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 
-  userCellhandler = (col) => {
+  userCellhandler = (value) => {
     const { Users } = this.props
     if (Users.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Users.list || []).find(u => u.Uuid === col.value)?.Username
+      return (Users.list || []).find(u => u.Uuid === value)?.Username
     }
   }
 

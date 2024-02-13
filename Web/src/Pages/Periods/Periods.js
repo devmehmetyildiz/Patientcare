@@ -8,12 +8,6 @@ import PeriodsFastcreate from '../../Containers/Periods/PeriodsFastcreate'
 import { getInitialconfig } from '../../Utils/Constants'
 export default class Periods extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-    }
-  }
 
   componentDidMount() {
     const { GetPeriods } = this.props
@@ -34,9 +28,9 @@ export default class Periods extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-      { Header: Literals.Columns.Occuredtime[Profile.Language], accessor: 'Occuredtime', Subheader: true },
-      { Header: Literals.Columns.Checktime[Profile.Language], accessor: 'Checktime', Finalheader: true },
+      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.Occuredtime[Profile.Language], accessor: 'Occuredtime', Subtitle: true, Withtext: true },
+      { Header: Literals.Columns.Checktime[Profile.Language], accessor: 'Checktime', Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -102,10 +96,6 @@ export default class Periods extends Component {
           <PeriodsFastcreate />
         </React.Fragment>
     )
-  }
-
-  handleChangeModal = (value) => {
-    this.setState({ modal: value })
   }
 
 }

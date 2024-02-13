@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
+import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import TodogroupdefinesDelete from '../../Containers/Todogroupdefines/TodogroupdefinesDelete'
@@ -22,7 +22,7 @@ export default class Todogroupdefines extends Component {
     }
 
     render() {
-        const { Todogroupdefines, Departments, Tododefines, Profile, handleDeletemodal, handleSelectedTodogroupdefine } = this.props
+        const { Todogroupdefines, Profile, handleDeletemodal, handleSelectedTodogroupdefine } = this.props
         const { isLoading, isDispatching } = Todogroupdefines
 
         const colProps = {
@@ -34,9 +34,9 @@ export default class Todogroupdefines extends Component {
         const Columns = [
             { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
             { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
-            { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Firstheader: true },
-            { Header: Literals.Columns.Tododefines[Profile.Language], accessor: 'Tododefinestxt', Subheader: true, Cell: col => this.tododefineCellhandler(col) },
-            { Header: Literals.Columns.Department[Profile.Language], accessor: 'Department', Finalheader: true },
+            { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+            { Header: Literals.Columns.Tododefines[Profile.Language], accessor: (row, freeze) => this.tododefineCellhandler(row, freeze) },
+            { Header: Literals.Columns.Department[Profile.Language], accessor: row => this.departmentCellhandler(row?.DepartmentID), Subtitle: true, Withtext: true },
             { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
             { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
             { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
@@ -49,13 +49,8 @@ export default class Todogroupdefines extends Component {
         let initialConfig = getInitialconfig(Profile, metaKey)
 
         const list = (Todogroupdefines.list || []).map(item => {
-            var text = (item.Tododefineuuids || []).map(u => {
-                return (Tododefines.list || []).find(tododefine => tododefine.Uuid === u.TodoID)?.Name
-            }).join(", ")
             return {
                 ...item,
-                Tododefinestxt: text,
-                Department: (Departments.list || []).find(u => u.Uuid === item.DepartmentID)?.Name,
                 edit: <Link to={`/Todogroupdefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
                 delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
                     handleSelectedTodogroupdefine(item)
@@ -120,22 +115,28 @@ export default class Todogroupdefines extends Component {
         }
     }
 
-    tododefineCellhandler = (col) => {
-        const { Tododefines, Profile } = this.props
-        if (col.value) {
-            if (!col.cell?.isGrouped && !Profile.Ismobile) {
-                const itemId = col?.row?.original?.Id
-                const itemTodos = (col.row.original.Tododefineuuids || []).map(u => { return (Tododefines.list || []).find(tododefine => tododefine.Uuid === u.TodoID) })
-                return col.value.length - 35 > 20 ?
-                    (
-                        !this.state.tododefineStatus.includes(itemId) ?
-                            [col.value.slice(0, 35) + ' ...(' + itemTodos.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandTodos(itemId)}> ...Daha Fazla Göster</Link>] :
-                            [col.value, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkTodos(itemId)}> ...Daha Az Göster</Link>]
-                    ) : col.value
-            }
-            return col.value
+    tododefineCellhandler = (row, freeze) => {
+        const { Tododefines } = this.props
+        const itemId = row?.Id
+        const itemTodos = (row?.Tododefineuuids || []).map(u => { return (Tododefines.list || []).find(tododefine => tododefine.Uuid === u.TodoID) })
+        const itemTodostxt = itemTodos.map(u => u?.Name).join(',')
+        if (freeze === true) {
+            return itemTodostxt
         }
-        return null
+        return itemTodostxt.length - 35 > 20 ?
+            (
+                !this.state.tododefineStatus.includes(itemId) ?
+                    [itemTodostxt.slice(0, 35) + ' ...(' + itemTodos.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandTodos(itemId)}> ...Daha Fazla Göster</Link>] :
+                    [itemTodostxt, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkTodos(itemId)}> ...Daha Az Göster</Link>]
+            ) : itemTodostxt
     }
 
+    departmentCellhandler = (value) => {
+        const { Departments } = this.props
+        if (Departments.isLoading) {
+            return <Loader size='small' active inline='centered' ></Loader>
+        } else {
+            return (Departments.list || []).find(u => u.Uuid === value)?.Name
+        }
+    }
 }
