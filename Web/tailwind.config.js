@@ -13,6 +13,8 @@ module.exports = {
         'Contentfg': '#191c24',
         'NavHoverbg': '#0f1015',
         'TextColor': '#6c7293',
+        'appPrimary': '#6c7293',
+        'appSecondary': '#6c7293',
       },
       fontFamily: {
         'poppins': ['Poppins', 'sans-serif'],
@@ -25,11 +27,9 @@ module.exports = {
       },
       keyframes: {
         moveupdown: {
-             '0%': { rotate: '0deg' },
-             '50%': { rotate: '90deg' },
-             '100%': { rotate: '0deg' },
-         /*  '0%, 100%': { transform: 'translate(0%)' },
-          '50%': { transform: 'translate(100%)' }, */
+          '0%': { rotate: '0deg' },
+          '50%': { rotate: '90deg' },
+          '100%': { rotate: '0deg' },
         }
       }
     },

@@ -17,6 +17,12 @@ const Routes = [
     { method: 'put', path: '/Patients', controller: 'Patient', action: 'UpdatePatient' },
     { method: 'delete', path: '/Patients/:patientId', controller: 'Patient', action: 'DeletePatient' },
 
+    { method: 'get', path: '/Careplans/:careplanId', controller: 'Careplan', action: 'GetCareplan' },
+    { method: 'get', path: '/Careplans', controller: 'Careplan', action: 'GetCareplans' },
+    { method: 'post', path: '/Careplans', controller: 'Careplan', action: 'AddCareplan' },
+    { method: 'put', path: '/Careplans', controller: 'Careplan', action: 'UpdateCareplan' },
+    { method: 'delete', path: '/Careplans/:careplanId', controller: 'Careplan', action: 'DeleteCareplan' },
+  
     { method: 'get', path: '/Patientdefines/:patientdefineId', controller: 'Patientdefine', action: 'GetPatientdefine' },
     { method: 'get', path: '/Patientdefines', controller: 'Patientdefine', action: 'GetPatientdefines' },
     { method: 'post', path: '/Patientdefines', controller: 'Patientdefine', action: 'AddPatientdefine' },

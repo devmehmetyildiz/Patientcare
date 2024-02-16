@@ -289,7 +289,7 @@ export default class PatientsDetail extends Component {
                 <div className='flex justify-center items-center md:justify-start flex-col md:items-start gap-1'>
                   <Popup
                     trigger={
-                      <Label size='large' as='a'  className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
+                      <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
                         {Literals.Details.Wallet[Profile.Language]}:
                         <Label.Detail>{integerPart}.{decimalPart}₺</Label.Detail>
                       </Label>
@@ -388,20 +388,6 @@ export default class PatientsDetail extends Component {
                     {Profile.Ismobile ?
                       <MobileTable Columns={stockandmedicineColumns} Data={patientmedicines} Profile={Profile} /> :
                       <DataTable Columns={stockandmedicineColumns} Data={patientmedicines} />}
-                  </div>
-                </div>
-                <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
-                  <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.Completedtodos[Profile.Language]}</Label>
-                    {Profile.Ismobile ?
-                      <MobileTable Columns={todoColumns} Data={completedTodos} Profile={Profile} /> :
-                      <DataTable Columns={todoColumns} Data={completedTodos} />}
-                  </div>
-                  <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.Noncompletedtodos[Profile.Language]}</Label>
-                    {Profile.Ismobile ?
-                      <MobileTable Columns={todoColumns} Data={waitingTodos} Profile={Profile} /> :
-                      <DataTable Columns={todoColumns} Data={waitingTodos} />}
                   </div>
                 </div>
               </div>
