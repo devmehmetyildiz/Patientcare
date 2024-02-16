@@ -230,6 +230,10 @@ const Patientusestocks = lazy(() => import('./Containers/Patientusestocks/Patien
 const Patientusesupplies = lazy(() => import('./Containers/Patientusesupplies/Patientusesupplies'));
 const Patientusemedicines = lazy(() => import('./Containers/Patientusemedicines/Patientusemedicines'));
 
+const Careplans = lazy(() => import('./Containers/Careplans/Careplans'));
+const CareplansCreate = lazy(() => import('./Containers/Careplans/CareplansCreate'));
+const CareplansEdit = lazy(() => import('./Containers/Careplans/CareplansEdit'));
+
 const Supportplans = lazy(() => import('./Containers/Supportplans/Supportplans'));
 const SupportplansCreate = lazy(() => import('./Containers/Supportplans/SupportplansCreate'));
 const SupportplansEdit = lazy(() => import('./Containers/Supportplans/SupportplansEdit'));
@@ -412,6 +416,9 @@ class Routes extends Component {
       { exact: true, path: "/Supportplanlists", auth: true, component: Supportplanlists, permission: 'supportplanlistscreen' },
       { exact: true, path: "/Supportplanlists/Create", auth: true, component: SupportplanlistsCreate, permission: 'supportplanlistscreen' },
       { exact: true, path: "/Supportplanlists/:SupportplanlistID/Edit", auth: true, component: SupportplanlistsEdit, permission: 'supportplanlistscreen' },
+      { exact: true, path: "/Careplans", auth: true, component: Careplans, permission: 'careplanscreen' },
+      { exact: true, path: "/Careplans/Create", auth: true, component: CareplansCreate, permission: 'careplanscreen' },
+      { exact: true, path: "/Careplans/:CareplanID/Edit", auth: true, component: CareplansEdit, permission: 'careplanscreen' },
       { exact: true, path: "/Usagetypes", auth: true, component: Usagetypes, permission: 'usagetypescreen' },
       { exact: true, path: "/Usagetypes/Create", auth: true, component: UsagetypesCreate, permission: 'usagetypescreen' },
       { exact: true, path: "/Usagetypes/:UsagetypeID/Edit", auth: true, component: UsagetypesEdit, permission: 'usagetypescreen' },

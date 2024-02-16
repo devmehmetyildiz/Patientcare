@@ -55,6 +55,7 @@ import Patientusesupplies from "../Pages/Patientusesupplies/Literals"
 import Usagetypes from "../Pages/Usagetypes/Literals"
 import Supportplans from "../Pages/Supportplans/Literals"
 import Supportplanlists from "../Pages/Supportplanlists/Literals"
+import Careplans from "../Pages/Careplans/Literals"
 
 const Literals = {
     Cases,
@@ -114,6 +115,7 @@ const Literals = {
     Usagetypes,
     Supportplans,
     Supportplanlists,
+    Careplans,
 }
 
 export default Literals

@@ -46,6 +46,7 @@ import ReportSlice from "./ReportSlice";
 import UsagetypeSlice from "./UsagetypeSlice";
 import SupportplanSlice from "./SupportplanSlice";
 import SupportplanlistSlice from "./SupportplanlistSlice";
+import CareplanSlice from "./CareplanSlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -95,6 +96,7 @@ const Slices = combineReducers({
     Usagetypes: UsagetypeSlice,
     Supportplans: SupportplanSlice,
     Supportplanlists: SupportplanlistSlice,
+    Careplans: CareplanSlice,
 });
 
 export default Slices;

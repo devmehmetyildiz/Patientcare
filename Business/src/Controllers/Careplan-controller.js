@@ -9,6 +9,9 @@ const uuid = require('uuid').v4
 async function GetCareplans(req, res, next) {
     try {
         const careplans = await db.careplanModel.findAll()
+        for (const careplan of careplans) {
+            careplan.Careplanservices = await db.careplanserviceModel.findAll({ where: { CareplanID: careplan?.Uuid, Isactive: true } })
+        }
         res.status(200).json(careplans)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -30,6 +33,7 @@ async function GetCareplan(req, res, next) {
 
     try {
         const careplan = await db.careplanModel.findOne({ where: { Uuid: req.params.careplanId } });
+        careplan.Careplanservices = await db.careplanserviceModel.findAll({ where: { CareplanID: careplan?.Uuid, Isactive: true } })
         res.status(200).json(careplan)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

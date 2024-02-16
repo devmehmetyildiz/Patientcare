@@ -17,6 +17,7 @@ export const ROUTES = {
     COMPANYCASHMOVEMENT: 'Companycashmovements',
     PATIENTCASHMOVEMENT: 'Patientcashmovements',
     PATIENTCASHREGISTER: 'Patientcashregisters',
+    CAREPLAN: 'Careplans',
 
     COSTUMERTYPE: 'Costumertypes',
     CASE: 'Cases',

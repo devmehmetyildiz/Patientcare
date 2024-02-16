@@ -16,6 +16,9 @@ module.exports = sequelize.define('careplanModel', {
     PatientID: {
         type: Sequelize.STRING
     },
+    Needapprove: {
+        type: Sequelize.BOOLEAN
+    },
     Isapproved: {
         type: Sequelize.BOOLEAN
     },
