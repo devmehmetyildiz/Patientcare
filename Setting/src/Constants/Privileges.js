@@ -362,6 +362,14 @@ const Priveleges = [
     { code: 'supportplanmanageview', text: 'Supportplans Manage View', group: ['Supportplans'], required: [] },
     { code: 'supportplangetreport', text: 'Supportplans Get Report', group: ['Supportplans'], required: [] },
 
+    { code: 'careplanscreen', text: 'Careplans Screen', group: ['Careplans'], required: [] },
+    { code: 'careplanview', text: 'Careplans View', group: ['Careplans'], required: [] },
+    { code: 'careplanadd', text: 'Careplans Add', group: ['Careplans'], required: [] },
+    { code: 'careplanupdate', text: 'Careplans Update', group: ['Careplans'], required: [] },
+    { code: 'careplandelete', text: 'Careplans Delete', group: ['Careplans'], required: [] },
+    { code: 'careplanmanageview', text: 'Careplans Manage View', group: ['Careplans'], required: [] },
+    { code: 'careplangetreport', text: 'Careplans Get Report', group: ['Careplans'], required: [] },
+
 ]
 
 module.exports = Priveleges
