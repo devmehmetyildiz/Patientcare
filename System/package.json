@@ -5,11 +5,12 @@
   "main": "src/App.js",
   "scripts": {
     "start": "nodemon src/App.js",
-    "build": "esbuild src/App.js --bundle --minify --platform=node --outfile=dist/bundle.js"
+    "build": "cpy .env src dist && cpy 'src/**/*' dist && esbuild src/App.js --bundle --minify --platform=node --outfile=dist/bundle.js"
   },
   "author": "mehmetyildiz",
   "license": "ISC",
   "devDependencies": {
+    "cpy-cli": "^5.0.0",
     "esbuild": "^0.17.15",
     "express": "^4.18.2",
     "nodemon": "^2.0.22"
