@@ -3,23 +3,25 @@ import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import CareplansDelete from '../../Containers/Careplans/CareplansDelete'
+import CareplansApprove from '../../Containers/Careplans/CareplansApprove'
 import { getInitialconfig } from '../../Utils/Constants'
 import {
   DataTable, Headerwrapper, LoadingPage,
   MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings
 } from '../../Components'
 
-export default class Cases extends Component {
+export default class Careplans extends Component {
 
   componentDidMount() {
-    const { GetCareplans } = this.props
+    const { GetCareplans, GetPatients, GetPatientdefines } = this.props
     GetCareplans()
+    GetPatients()
+    GetPatientdefines()
   }
 
   render() {
-    const { Careplans, Profile, handleSelectedCareplan, handleDeletemodal } = this.props
-    const { isLoading, isDispatching } = Cases
-
+    const { Careplans, Profile, handleSelectedCareplan, handleDeletemodal, handleApprovemodal } = this.props
+    const { isLoading, isDispatching } = Careplans
 
     const colProps = {
       sortable: true,
@@ -30,15 +32,17 @@ export default class Cases extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
+      { Header: Literals.Columns.Createdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Createdate) },
       { Header: Literals.Columns.Startdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Startdate) },
       { Header: Literals.Columns.Enddate[Profile.Language], accessor: row => this.dateCellhandler(row?.Enddate) },
       { Header: Literals.Columns.PatientID[Profile.Language], accessor: row => this.patientCellhandler(row?.PatientID), Title: true },
+      { Header: Literals.Columns.Needapprove[Profile.Language], accessor: row => this.boolCellhandler(row?.Needapprove), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Isapproved[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Needapprove[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
+      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', disableProps: true },
       { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
@@ -49,6 +53,15 @@ export default class Cases extends Component {
     const list = (Careplans.list || []).map(item => {
       return {
         ...item,
+        approve: item.Needapprove === true || item.Needapprove === 1
+          ? item.Isapproved === true || item.Isapproved === 1
+            ? <Icon size='large' color='black' name='minus' />
+            : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+              handleSelectedCareplan(item)
+              handleApprovemodal(true)
+            }}
+            />
+          : <Icon size='large' color='black' name='minus' />,
         edit: <Link to={`/Careplans/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedCareplan(item)
@@ -94,6 +107,7 @@ export default class Cases extends Component {
             }
           </Pagewrapper>
           <CareplansDelete />
+          <CareplansApprove />
         </React.Fragment >
     )
   }

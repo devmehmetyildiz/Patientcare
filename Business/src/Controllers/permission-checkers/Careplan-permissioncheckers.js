@@ -33,6 +33,14 @@ async function UpdateCareplan(req, res, next) {
     }
 }
 
+async function ApproveCareplan(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('careplanupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Careplans Update', req.language, { en: 'Careplans Update', tr: 'Careplans Update' }))
+    }
+}
+
 async function DeleteCareplan(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('careplandelete')) || permissionchecker(req)) {
         next()
@@ -45,6 +53,7 @@ module.exports = {
     GetCareplans,
     GetCareplan,
     AddCareplan,
+    ApproveCareplan,
     UpdateCareplan,
     DeleteCareplan,
 }

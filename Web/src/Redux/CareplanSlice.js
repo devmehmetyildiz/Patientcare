@@ -29,6 +29,10 @@ const Literals = {
         en: 'Care plan Deleted successfully',
         tr: 'Bakım planı Başarı ile Silindi'
     },
+    approvedescription: {
+        en: 'Care Plan approved successfully',
+        tr: 'Bakım PLanı Başarı ile Onaylandı'
+    },
 }
 
 export const GetCareplans = createAsyncThunk(
@@ -107,6 +111,30 @@ export const EditCareplans = createAsyncThunk(
     }
 );
 
+
+export const ApproveCareplans = createAsyncThunk(
+    'Careplans/ApproveCareplans',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Business, `${ROUTES.CAREPLAN}/Approve/${data.Uuid}`);
+            dispatch(fillCareplannotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.approvedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCareplannotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+
 export const DeleteCareplans = createAsyncThunk(
     'Careplans/DeleteCareplans',
     async (data, { dispatch, getState }) => {
@@ -140,6 +168,7 @@ export const CareplansSlice = createSlice({
         isDispatching: false,
         isDeletemodalopen: false,
         isCompletemodalopen: false,
+        isApprovemodalopen: false
     },
     reducers: {
         handleSelectedCareplan: (state, action) => {
@@ -158,6 +187,9 @@ export const CareplansSlice = createSlice({
         },
         handleCompletemodal: (state, action) => {
             state.isCompletemodalopen = action.payload
+        },
+        handleApprovemodal: (state, action) => {
+            state.isApprovemodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -210,6 +242,17 @@ export const CareplansSlice = createSlice({
                 state.isDispatching = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(ApproveCareplans.pending, (state) => {
+                state.isDispatching = true;
+            })
+            .addCase(ApproveCareplans.fulfilled, (state, action) => {
+                state.isDispatching = false;
+                state.list = action.payload;
+            })
+            .addCase(ApproveCareplans.rejected, (state, action) => {
+                state.isDispatching = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(DeleteCareplans.pending, (state) => {
                 state.isDispatching = true;
             })
@@ -229,7 +272,8 @@ export const {
     fillCareplannotification,
     removeCareplannotification,
     handleDeletemodal,
-    handleCompletemodal
+    handleCompletemodal,
+    handleApprovemodal,
 } = CareplansSlice.actions;
 
 export default CareplansSlice.reducer;

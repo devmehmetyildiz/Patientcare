@@ -16,6 +16,10 @@ const Literals = {
             tr: 'Bitiş Tarihi',
             en: 'End Date'
         },
+        Createdate: {
+            tr: 'Form Tarihi',
+            en: 'Form Create Date'
+        },
         PatientID: {
             tr: 'Hasta Adı',
             en: 'Patient Name'
@@ -84,6 +88,10 @@ const Literals = {
             tr: 'Güncelleme Tarihi',
             en: 'Update Time'
         },
+        approve: {
+            tr: 'Onayla',
+            en: 'Approve'
+        },
         edit: {
             tr: 'Güncelle',
             en: 'Edit'
@@ -109,7 +117,11 @@ const Literals = {
         Pagedeleteheader: {
             tr: "Bakım Planı Silme",
             en: "Delete Care Plan"
-        }
+        },
+        Pageapproveheader: {
+            tr: "Bireysel Bakım PLanı Onaylama",
+            en: "Approve Care Plan"
+        },
     },
     Button: {
         Create: {
@@ -128,6 +140,10 @@ const Literals = {
             tr: "Vazgeç",
             en: "Give up"
         },
+        Approve: {
+            tr: "Onayla",
+            en: "Approve"
+        },
         Goback: {
             tr: "Geri Dön",
             en: "Go Back"
@@ -142,9 +158,41 @@ const Literals = {
             tr: "bakım planını silmek istediğinize emin misiniz?",
             en: "care plan will delete, are you sure?"
         },
-        Shortnamerequired: {
-            tr: "Durum Rengi Gerekli",
-            en: "Case color Required"
+        Startdaterequired: {
+            tr: "Başlangıç Tarihi Gerekli",
+            en: "Start date Required"
+        },
+        Enddaterequired: {
+            tr: "Bitiş Tarihi Gerekli",
+            en: "End date Required"
+        },
+        Createdaterequired: {
+            tr: "Oluşturma Tarihi Gerekli",
+            en: "Create date Required"
+        },
+        Patientrequired: {
+            tr: "Hasta Gerekli",
+            en: "Patient Required"
+        },
+        Helpstatusrequired: {
+            tr: "Bakıma İhtiyaç Durumu Gerekli",
+            en: "Help Status Required"
+        },
+        Makingtyperequired: {
+            tr: "Hizmet Verilme Şekli Gerekli",
+            en: "Making Type Required"
+        },
+        Ratingrequired: {
+            tr: "Değerlendirme Gerekli",
+            en: "Rating Required"
+        },
+        Requiredperiodrequired: {
+            tr: "Hizmet Sunulma Sıklığı Gerekli",
+            en: "Required Period Required"
+        },
+        Approvecheck: {
+            tr: "bakım planını onaylamak istediğinize emin misiniz?",
+            en: "care plan will approve, are you sure?"
         },
         Yes: {
             tr: "EVET",

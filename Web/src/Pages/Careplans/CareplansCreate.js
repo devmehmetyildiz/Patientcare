@@ -10,6 +10,7 @@ import {
   Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
 } from '../../Components'
 import config from '../../Config'
+import Formatdate from '../../Utils/Formatdate'
 export default class CareplansCreate extends Component {
 
   PAGE_NAME = 'CareplansCreate'
@@ -18,12 +19,13 @@ export default class CareplansCreate extends Component {
     super(props)
     this.state = {
       PatientID: '',
-      Supportplans: []
+      Supportplans: [],
+      isDatafetched: false
     }
   }
 
   componentDidMount() {
-    const { GetSupportplans, GetSupportplanlists,
+    const { GetSupportplans, GetSupportplanlists, GetHelpstatus, GetMakingtypes, GetRatings, GetRequiredperiods,
       GetPatients, GetPatientdefines, GetFiles, GetUsagetypes } = this.props
     GetSupportplans()
     GetSupportplanlists()
@@ -31,16 +33,40 @@ export default class CareplansCreate extends Component {
     GetPatientdefines()
     GetFiles()
     GetUsagetypes()
+    GetHelpstatus()
+    GetMakingtypes()
+    GetRatings()
+    GetRequiredperiods()
+
   }
 
   componentDidUpdate() {
-    const { Supportplans, Patients } = this.props
+    const { Supportplans, Supportplanlists, Files, Usagetypes, Helpstatus, Makingtypes, Ratings, Requiredperiods, Patientdefines, Patients } = this.props
     const selectedPatient = this.context.formstates[`${this.PAGE_NAME}/PatientID`]
+
+    const isloadingStatus =
+      Supportplans.isLoading ||
+      Supportplanlists.isLoading ||
+      Patients.isLoading ||
+      Files.isLoading ||
+      Usagetypes.isLoading ||
+      Helpstatus.isLoading ||
+      Makingtypes.isLoading ||
+      Ratings.isLoading ||
+      Requiredperiods.isLoading ||
+      Patientdefines.isLoading;
+
+    if (!isloadingStatus && !this.state.isDatafetched) {
+      this.context.setForm(this.PAGE_NAME, { ... this.context.formstates, [`Createdate`]: Formatdate(), [`Startdate`]: Formatdate() })
+      this.setState({ isDatafetched: true })
+    }
 
     if (this.state.PatientID !== selectedPatient) {
       const plans = ((Patients.list || []).find(u => u.Uuid === selectedPatient)?.Supportplanuuids || []).map(u => {
+        const supportplan = (Supportplans.list || []).find(plan => plan?.Uuid === u?.PlanID)
         return {
-          SupportplanID: (Supportplans.list || []).find(plan => plan?.Uuid === u?.PlanID)?.Name,
+          SupportplanID: supportplan?.Uuid,
+          Supportplanname: supportplan?.Name,
           Helpstatus: '',
           Requiredperiod: '',
           Makingtype: '',
@@ -52,8 +78,9 @@ export default class CareplansCreate extends Component {
     }
   }
   render() {
-    const { Careplans, Supportplans, Supportplanlists, Files, Patients, Patientdefines, Usagetypes, Profile, history, closeModal } = this.props
-    console.log("this.state", this.state)
+    const {
+      Careplans, Supportplans, Supportplanlists, Files, Patients, Helpstatus, Makingtypes, Ratings, Requiredperiods,
+      Patientdefines, Usagetypes, Profile, history, closeModal } = this.props
     const Patientoptions = (Patients.list || []).filter(u => u.Isactive).map(patient => {
       const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient.PatientdefineID)
       return { key: patient.Uuid, text: `${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`, value: patient.Uuid }
@@ -65,6 +92,10 @@ export default class CareplansCreate extends Component {
       Patients.isLoading ||
       Files.isLoading ||
       Usagetypes.isLoading ||
+      Helpstatus.isLoading ||
+      Makingtypes.isLoading ||
+      Ratings.isLoading ||
+      Requiredperiods.isLoading ||
       Patientdefines.isLoading;
 
     const selectedPatient = this.context.formstates[`${this.PAGE_NAME}/PatientID`]
@@ -74,26 +105,22 @@ export default class CareplansCreate extends Component {
     let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
     const patientPP = (Files.list || []).find(u => u.ParentID === selectedPatient && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
-    const Helpstatusoption = [
-      { key: 'VAR', value: 'VAR', text: 'VAR' },
-      { key: 'YOK', value: 'YOK', text: 'YOK' },
-      { key: 'KISMEN VAR', value: 'KISMEN VAR', text: 'KISMEN VAR' },
-    ]
+    const Helpstatusoption = (Helpstatus.list || []).filter(u => u.Isactive).map(helpstatu => {
+      return { key: helpstatu.Uuid, text: helpstatu.Name, value: helpstatu.Uuid }
+    })
 
-    const Requiredperiodoption = [
-      { key: '4 Günde 1', value: '4 Günde 1', text: '4 Günde 1' },
-      { key: 'İhtiyaç duyuldukça', value: 'İhtiyaç duyuldukça', text: 'İhtiyaç duyuldukça' },
-      { key: 'Her Sabah', value: 'Her Sabah', text: 'Her Sabah' },
-    ]
+    const Requiredperiodoption = (Requiredperiods.list || []).filter(u => u.Isactive).map(period => {
+      return { key: period.Uuid, text: period.Name, value: period.Uuid }
+    })
 
-    const Makingtypeoptions = [
-      { key: 'Kendi İhtiyacını Giderebilir', value: 'Kendi İhtiyacını Giderebilir', text: 'Kendi İhtiyacını Giderebilir' },
-    ]
+    const Makingtypeoptions = (Makingtypes.list || []).filter(u => u.Isactive).map(makingtype => {
+      return { key: makingtype.Uuid, text: makingtype.Name, value: makingtype.Uuid }
+    })
 
-    const Ratingoptions = [
-      { key: 'Olumlu Değerlendirilmiştir', value: 'Olumlu Değerlendirilmiştir', text: 'Olumlu Değerlendirilmiştir' },
+    const Ratingoptions = (Ratings.list || []).filter(u => u.Isactive).map(rating => {
+      return { key: rating.Uuid, text: rating.Name, value: rating.Uuid }
+    })
 
-    ]
     return (
       isloadingStatus ? <LoadingPage /> :
         <Pagewrapper>
@@ -110,6 +137,13 @@ export default class CareplansCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form>
+              <Form.Group widths='equal'>
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Startdate[Profile.Language]} name="Startdate" type="date" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Enddate[Profile.Language]} name="Enddate" type="date" />
+              </Form.Group>
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Createdate[Profile.Language]} name="Createdate" type="date" />
+              </Form.Group>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.PatientID[Profile.Language]} name="PatientID" options={Patientoptions} formtype='dropdown' />
               </Form.Group>
@@ -217,7 +251,7 @@ export default class CareplansCreate extends Component {
                     {this.state.Supportplans.map((plan, index) => {
                       return <Table.Row key={plan.key}>
                         <Table.Cell>
-                          <Label>{plan.SupportplanID}</Label>
+                          <Label>{plan.Supportplanname}</Label>
                         </Table.Cell>
                         <Table.Cell>
                           <Dropdown
@@ -292,6 +326,59 @@ export default class CareplansCreate extends Component {
           </Footerwrapper>
         </Pagewrapper >
     )
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    const { AddCareplans, history, fillCareplannotification, Profile, closeModal, Supportplans } = this.props
+    const data = this.context.getForm(this.PAGE_NAME)
+    data.Careplanservices = this.state.Supportplans
+
+    let errors = []
+    if (!validator.isISODate(data.Startdate)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Startdaterequired[Profile.Language] })
+    }
+    if (!validator.isISODate(data.Enddate)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Enddaterequired[Profile.Language] })
+    }
+    if (!validator.isISODate(data.Createdate)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Createdaterequired[Profile.Language] })
+    }
+    if (!validator.isUUID(data.PatientID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Patientrequired[Profile.Language] })
+    }
+    data.Careplanservices.forEach((service => {
+      if (!validator.isUUID(service.Helpstatus)) {
+        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Helpstatusrequired[Profile.Language] })
+      }
+      if (!validator.isUUID(service.Requiredperiod)) {
+        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Requiredperiodrequired[Profile.Language] })
+      }
+      if (!validator.isUUID(service.Makingtype)) {
+        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Makingtyperequired[Profile.Language] })
+      }
+      if (!validator.isUUID(service.Rating)) {
+        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Ratingrequired[Profile.Language] })
+      }
+    }))
+    if (errors.length > 0) {
+      errors.forEach(error => {
+        fillCareplannotification(error)
+      })
+    } else {
+
+      let willapprove = (data.Careplanservices || []).map(u => {
+        return (Supportplans.list || []).find(plan => plan.Uuid === u?.SupportplanID)?.IsRequired
+      }).filter(u => u === true || u === 1).length > 0
+      
+      let isRequired = (data.Careplanservices || []).map(u => {
+        return (Supportplans.list || []).find(plan => plan.Uuid === u?.SupportplanID)?.IsNeedactivation
+      }).filter(u => u === true || u === 1).length > 0
+      
+      console.log('isRequired: ', isRequired);
+      console.log('willapprove: ', willapprove);
+      AddCareplans({ data: { ...data, Needapprove: willapprove || isRequired, Isapproved: false }, history, closeModal })
+    }
   }
 
   dateCellhandler = (value) => {

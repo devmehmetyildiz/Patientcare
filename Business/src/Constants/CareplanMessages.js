@@ -12,6 +12,12 @@ const messages = {
                 tr: 'Bakım planı aktif değil',
             }
         },
+        CAREPLAN_DONTNEEDAPPROVE: {
+            code: 'CAREPLAN_DONTNEEDAPPROVE', description: {
+                en: 'care plan dont need to approve',
+                tr: 'Bakım planını onaylamaya gerek yok',
+            }
+        },
 
     },
     VALIDATION_ERROR: {

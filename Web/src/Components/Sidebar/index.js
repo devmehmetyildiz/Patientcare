@@ -8,6 +8,7 @@ import Literals from "../../Utils/Literalregistrar"
 import { Popup } from "semantic-ui-react"
 import config from '../../Config';
 import { Link } from 'react-router-dom';
+import Pagedivider from '../Pagedivider';
 
 export function Sidebar(props) {
 
@@ -154,6 +155,10 @@ export function Sidebar(props) {
                 { id: 19, subtitle: Literals.Usagetypes.Page.Pageheader[Profile.Language], url: "/Usagetypes", permission: checkAuth('usagetypescreen') },
                 { id: 20, subtitle: Literals.Supportplans.Page.Pageheader[Profile.Language], url: "/Supportplans", permission: checkAuth('supportplanscreen') },
                 { id: 21, subtitle: Literals.Supportplanlists.Page.Pageheader[Profile.Language], url: "/Supportplanlists", permission: checkAuth('supportplanlistscreen') },
+                { id: 22, subtitle: Literals.Helpstatus.Page.Pageheader[Profile.Language], url: "/Helpstatus", permission: checkAuth('helpstatuscreen') },
+                { id: 23, subtitle: Literals.Makingtypes.Page.Pageheader[Profile.Language], url: "/Makingtypes", permission: checkAuth('makingtypescreen') },
+                { id: 24, subtitle: Literals.Ratings.Page.Pageheader[Profile.Language], url: "/Ratings", permission: checkAuth('ratingscreen') },
+                { id: 25, subtitle: Literals.Requiredperiods.Page.Pageheader[Profile.Language], url: "/Requiredperiods", permission: checkAuth('requiredperiodscreen') },
             ]
         },
     ]
@@ -256,7 +261,8 @@ export function Sidebar(props) {
                 </div> : null
             })}
             {!hideMobile && <div className='h-full mt-auto mb-2 w-full mx-auto flex justify-center items-end'>
-                <div className='w-full flex flex-row justify-center items-center cursor-pointer group'>
+                <div className='w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <Pagedivider />
                     <Link to="/About">
                         {!iconOnly ?
                             <div className='

@@ -11,7 +11,7 @@ module.exports = sequelize.define('careplanserviceModel', {
         type: Sequelize.STRING
     },
     SupportplanID: {
-        type: Sequelize.FLOAT
+        type: Sequelize.STRING
     },
     Helpstatus: {
         type: Sequelize.STRING

@@ -31,6 +31,10 @@ export const ROUTES = {
     USAGETYPE: 'Usagetypes',
     FLOOR: 'Floors',
     SHIFT: 'Shifts',
+    HELPSTATU: 'Helpstatus',
+    MAKINGTYPE: 'Makingtypes',
+    RATING: 'Ratings',
+    REQUIREDPERIOD: 'Requiredperiods',
 
     PURCHASEORDER: 'Purchaseorders',
     PURCHASEORDERSTOCK: 'Purchaseorderstocks',

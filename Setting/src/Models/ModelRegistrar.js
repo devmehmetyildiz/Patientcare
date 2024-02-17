@@ -21,7 +21,10 @@ const usagetypeModel = require('./UsagetypeModel')
 const supportplanModel = require('./SupportplanModel')
 const supportplanlistModel = require('./SupportplanlistModel')
 const supportplanlistsupportplanModel = require('./SupportplanlistsupportplanModel')
-
+const helpstatuModel = require('./HelpstatuModel')
+const makingtypeModel = require('./MakingtypeModel')
+const ratingModel = require('./RatingModel')
+const requiredperiodModel = require('./RequiredperiodModel')
 
 module.exports = {
     floorModel,
@@ -47,4 +50,8 @@ module.exports = {
     supportplanModel,
     supportplanlistModel,
     supportplanlistsupportplanModel,
+    helpstatuModel,
+    makingtypeModel,
+    ratingModel,
+    requiredperiodModel
 }

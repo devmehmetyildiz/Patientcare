@@ -370,6 +370,38 @@ const Priveleges = [
     { code: 'careplanmanageview', text: 'Careplans Manage View', group: ['Careplans'], required: [] },
     { code: 'careplangetreport', text: 'Careplans Get Report', group: ['Careplans'], required: [] },
 
+    { code: 'helpstatuscreen', text: 'Helpstatus Screen', group: ['Helpstatus'], required: [] },
+    { code: 'helpstatuview', text: 'Helpstatus View', group: ['Helpstatus'], required: [] },
+    { code: 'helpstatuadd', text: 'Helpstatus Add', group: ['Helpstatus'], required: [] },
+    { code: 'helpstatuupdate', text: 'Helpstatus Update', group: ['Helpstatus'], required: [] },
+    { code: 'helpstatudelete', text: 'Helpstatus Delete', group: ['Helpstatus'], required: [] },
+    { code: 'helpstatumanageview', text: 'Helpstatus Manage View', group: ['Helpstatus'], required: [] },
+    { code: 'helpstatugetreport', text: 'Helpstatus Get Report', group: ['Helpstatus'], required: [] },
+
+    { code: 'makingtypescreen', text: 'Makingtypes Screen', group: ['Makingtypes'], required: [] },
+    { code: 'makingtypeview', text: 'Makingtypes View', group: ['Makingtypes'], required: [] },
+    { code: 'makingtypeadd', text: 'Makingtypes Add', group: ['Makingtypes'], required: [] },
+    { code: 'makingtypeupdate', text: 'Makingtypes Update', group: ['Makingtypes'], required: [] },
+    { code: 'makingtypedelete', text: 'Makingtypes Delete', group: ['Makingtypes'], required: [] },
+    { code: 'makingtypemanageview', text: 'Makingtypes Manage View', group: ['Makingtypes'], required: [] },
+    { code: 'makingtypegetreport', text: 'Makingtypes Get Report', group: ['Makingtypes'], required: [] },
+
+    { code: 'ratingscreen', text: 'Ratings Screen', group: ['Ratings'], required: [] },
+    { code: 'ratingview', text: 'Ratings View', group: ['Ratings'], required: [] },
+    { code: 'ratingadd', text: 'Ratings Add', group: ['Ratings'], required: [] },
+    { code: 'ratingupdate', text: 'Ratings Update', group: ['Ratings'], required: [] },
+    { code: 'ratingdelete', text: 'Ratings Delete', group: ['Ratings'], required: [] },
+    { code: 'ratingmanageview', text: 'Ratings Manage View', group: ['Ratings'], required: [] },
+    { code: 'ratinggetreport', text: 'Ratings Get Report', group: ['Ratings'], required: [] },
+
+    { code: 'requiredperiodscreen', text: 'Requiredperiods Screen', group: ['Requiredperiods'], required: [] },
+    { code: 'requiredperiodview', text: 'Requiredperiods View', group: ['Requiredperiods'], required: [] },
+    { code: 'requiredperiodadd', text: 'Requiredperiods Add', group: ['Requiredperiods'], required: [] },
+    { code: 'requiredperiodupdate', text: 'Requiredperiods Update', group: ['Requiredperiods'], required: [] },
+    { code: 'requiredperioddelete', text: 'Requiredperiods Delete', group: ['Requiredperiods'], required: [] },
+    { code: 'requiredperiodmanageview', text: 'Requiredperiods Manage View', group: ['Requiredperiods'], required: [] },
+    { code: 'requiredperiodgetreport', text: 'Requiredperiods Get Report', group: ['Requiredperiods'], required: [] },
+
 ]
 
 module.exports = Priveleges

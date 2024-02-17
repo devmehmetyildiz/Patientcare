@@ -242,6 +242,22 @@ const Supportplanlists = lazy(() => import('./Containers/Supportplanlists/Suppor
 const SupportplanlistsCreate = lazy(() => import('./Containers/Supportplanlists/SupportplanlistsCreate'));
 const SupportplanlistsEdit = lazy(() => import('./Containers/Supportplanlists/SupportplanlistsEdit'));
 
+const Helpstatus = lazy(() => import('./Containers/Helpstatus/Helpstatus'));
+const HelpstatusCreate = lazy(() => import('./Containers/Helpstatus/HelpstatusCreate'));
+const HelpstatusEdit = lazy(() => import('./Containers/Helpstatus/HelpstatusEdit'));
+
+const Makingtypes = lazy(() => import('./Containers/Makingtypes/Makingtypes'));
+const MakingtypesCreate = lazy(() => import('./Containers/Makingtypes/MakingtypesCreate'));
+const MakingtypesEdit = lazy(() => import('./Containers/Makingtypes/MakingtypesEdit'));
+
+const Ratings = lazy(() => import('./Containers/Ratings/Ratings'));
+const RatingsCreate = lazy(() => import('./Containers/Ratings/RatingsCreate'));
+const RatingsEdit = lazy(() => import('./Containers/Ratings/RatingsEdit'));
+
+const Requiredperiods = lazy(() => import('./Containers/Requiredperiods/Requiredperiods'));
+const RequiredperiodsCreate = lazy(() => import('./Containers/Requiredperiods/RequiredperiodsCreate'));
+const RequiredperiodsEdit = lazy(() => import('./Containers/Requiredperiods/RequiredperiodsEdit'));
+
 const Home = lazy(() => import('./Pages/Home'));
 const Notfoundpage = lazy(() => import('./Components/Notfoundpage'));
 
@@ -422,6 +438,18 @@ class Routes extends Component {
       { exact: true, path: "/Usagetypes", auth: true, component: Usagetypes, permission: 'usagetypescreen' },
       { exact: true, path: "/Usagetypes/Create", auth: true, component: UsagetypesCreate, permission: 'usagetypescreen' },
       { exact: true, path: "/Usagetypes/:UsagetypeID/Edit", auth: true, component: UsagetypesEdit, permission: 'usagetypescreen' },
+      { exact: true, path: "/Helpstatus", auth: true, component: Helpstatus, permission: 'helpstatuscreen' },
+      { exact: true, path: "/Helpstatus/Create", auth: true, component: HelpstatusCreate, permission: 'helpstatuscreen' },
+      { exact: true, path: "/Helpstatus/:HelpstatuID/Edit", auth: true, component: HelpstatusEdit, permission: 'helpstatuscreen' },
+      { exact: true, path: "/Makingtypes", auth: true, component: Makingtypes, permission: 'makingtypescreen' },
+      { exact: true, path: "/Makingtypes/Create", auth: true, component: MakingtypesCreate, permission: 'makingtypescreen' },
+      { exact: true, path: "/Makingtypes/:MakingtypeID/Edit", auth: true, component: MakingtypesEdit, permission: 'makingtypescreen' },
+      { exact: true, path: "/Ratings", auth: true, component: Ratings, permission: 'ratingscreen' },
+      { exact: true, path: "/Ratings/Create", auth: true, component: RatingsCreate, permission: 'ratingscreen' },
+      { exact: true, path: "/Ratings/:RatingID/Edit", auth: true, component: RatingsEdit, permission: 'ratingscreen' },
+      { exact: true, path: "/Requiredperiods", auth: true, component: Requiredperiods, permission: 'requiredperiodscreen' },
+      { exact: true, path: "/Requiredperiods/Create", auth: true, component: RequiredperiodsCreate, permission: 'requiredperiodscreen' },
+      { exact: true, path: "/Requiredperiods/:RequiredperiodID/Edit", auth: true, component: RequiredperiodsEdit, permission: 'requiredperiodscreen' },
       { exact: true, path: "/Appreports", auth: true, component: Appreports, permission: 'appreports' },
       { exact: true, path: "/Patientusestocks", auth: true, component: Patientusestocks, permission: 'patientscreen' },
       { exact: true, path: "/Patientusesupplies", auth: true, component: Patientusesupplies, permission: 'patientscreen' },

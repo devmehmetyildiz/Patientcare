@@ -56,6 +56,10 @@ import Usagetypes from "../Pages/Usagetypes/Literals"
 import Supportplans from "../Pages/Supportplans/Literals"
 import Supportplanlists from "../Pages/Supportplanlists/Literals"
 import Careplans from "../Pages/Careplans/Literals"
+import Helpstatus from "../Pages/Helpstatus/Literals"
+import Makingtypes from "../Pages/Makingtypes/Literals"
+import Ratings from "../Pages/Ratings/Literals"
+import Requiredperiods from "../Pages/Requiredperiods/Literals"
 
 const Literals = {
     Cases,
@@ -116,6 +120,10 @@ const Literals = {
     Supportplans,
     Supportplanlists,
     Careplans,
+    Helpstatus,
+    Makingtypes,
+    Ratings,
+    Requiredperiods,
 }
 
 export default Literals
