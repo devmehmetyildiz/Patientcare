@@ -104,7 +104,7 @@ export default class PatientsDetail extends Component {
       Patients, Patientdefines, Cases, Costumertypes, Patienttypes,
       Floors, Rooms, Beds, Patientstocks, Stockdefines, Units, Patientstockmovements,
       Patientmovements, Files, Profile, history, match, PatientID,
-      Todos, Patientcashmovements, handlePlacemodal, Patientcashregisters, Usagetypes
+      Patientcashmovements, handlePlacemodal, Patientcashregisters, Usagetypes
     } = this.props
 
 
@@ -145,9 +145,6 @@ export default class PatientsDetail extends Component {
     let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
     const files = (Files.list || []).find(u => u.ParentID === selected_record?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
-    const completedTodos = (Todos.list || []).filter(u => u.IsCompleted)
-    const waitingTodos = (Todos.list || []).filter(u => !u.IsCompleted)
-
     const colProps = {
       sortable: true,
       canGroupBy: true,
@@ -159,14 +156,6 @@ export default class PatientsDetail extends Component {
       { Header: Literals.Details.Amount[Profile.Language], accessor: 'Amount', Lowtitle: true, Withtext: true },
       { Header: Literals.Details.Unitname[Profile.Language], accessor: 'Unitname', Lowtitle: true, Withtext: true },
       { Header: Literals.Details.Movementdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Movementdate), Lowtitle: true, Withtext: true }
-    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
-
-    const todoColumns = [
-      { Header: Literals.Details.Tododefine[Profile.Language], accessor: row => this.tododefineCellhandler(row?.TododefineID), Lowtitle: true, Withtext: true },
-      { Header: Literals.Details.Occuredtime[Profile.Language], accessor: 'Occuredtime', Lowtitle: true, Withtext: true },
-      { Header: Literals.Details.Checktime[Profile.Language], accessor: 'Checktime', Lowtitle: true, Withtext: true },
-      { Header: Literals.Details.Isapproved[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved), Lowtitle: true, Withtext: true },
-      { Header: Literals.Details.IsComplated[Profile.Language], accessor: row => this.boolCellhandler(row?.IsCompleted), Lowtitle: true, Withtext: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const stockandmedicineColumns = [
@@ -184,7 +173,7 @@ export default class PatientsDetail extends Component {
     const fileColumns = [
       { Header: Literals.Details.Filename[Profile.Language], accessor: 'Filename', Lowtitle: true, Withtext: true },
       { Header: Literals.Details.Filetype[Profile.Language], accessor: 'Filetype', Lowtitle: true, Withtext: true },
-      { Header: Literals.Details.Usagetype[Profile.Language], accessor: 'Usagetype', Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.Usagetype[Profile.Language], accessor: row => this.usagetypeCellhandler(row?.Usagetype), Lowtitle: true, Withtext: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const lastincomestocks = (Patientstockmovements.list || []).filter(u => u.Movementtype === 1 && u.Isapproved).sort((a, b) => { return b.Id - a.Id }).slice(0, 5).map(movement => {
@@ -346,45 +335,46 @@ export default class PatientsDetail extends Component {
                 </div>
               </div>
               <div className=' w-full flex flex-col justify-start items-start gap-4'>
-                <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
+                <div className='w-full flex flex-col  justify-center items-center gap-8 overflow-x-auto'>
                   <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white'>{Literals.Details.Last5incomemovement[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white !mb-2'>{Literals.Details.Last5incomemovement[Profile.Language]}</Label>
                     <Transition >
                       {Profile.Ismobile ?
                         <MobileTable Columns={stocksColumns} Data={lastincomestocks} Profile={Profile} /> :
                         <DataTable Columns={stocksColumns} Data={lastincomestocks} />}
                     </Transition>
                   </div>
+                  <Pagedivider />
                   <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.Last5outcomemovement[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white !mb-2' >{Literals.Details.Last5outcomemovement[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={stocksColumns} Data={lastoutcomestocks} Profile={Profile} /> :
                       <DataTable Columns={stocksColumns} Data={lastoutcomestocks} />}
                   </div>
-                </div>
-                <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
+                  <Pagedivider />
                   <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.Last5movement[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white !mb-2' >{Literals.Details.Last5movement[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={movementColumns} Data={lastmovements} Profile={Profile} /> :
                       <DataTable Columns={movementColumns} Data={lastmovements} />}
                   </div>
+                  <Pagedivider />
                   <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.Last5File[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white !mb-2' >{Literals.Details.Last5File[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={fileColumns} Data={lastfiles} Profile={Profile} /> :
                       <DataTable Columns={fileColumns} Data={lastfiles} />}
                   </div>
-                </div>
-                <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-8 overflow-x-auto'>
+                  <Pagedivider />
                   <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.PatientStocks[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white !mb-2' >{Literals.Details.PatientStocks[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={stockandmedicineColumns} Data={patientstocks} Profile={Profile} /> :
                       <DataTable Columns={stockandmedicineColumns} Data={patientstocks} />}
                   </div>
+                  <Pagedivider />
                   <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white' >{Literals.Details.Patientmedicines[Profile.Language]}</Label>
+                    <Label className='!bg-[#2355a0] !text-white !mb-2' >{Literals.Details.Patientmedicines[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={stockandmedicineColumns} Data={patientmedicines} Profile={Profile} /> :
                       <DataTable Columns={stockandmedicineColumns} Data={patientmedicines} />}
@@ -413,6 +403,19 @@ export default class PatientsDetail extends Component {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
       return (Tododefines.list || []).find(u => u.Uuid === value)?.Name
+    }
+  }
+
+  usagetypeCellhandler = (value) => {
+    const { Usagetypes } = this.props
+    if (Usagetypes.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const usagetypetxt = ((value || '').split(',') || []).map(typeuuid => {
+        const type = (Usagetypes.list || []).find(u => u.Uuid === typeuuid)
+        return type?.Name
+      }).join(',')
+      return usagetypetxt
     }
   }
 

@@ -102,6 +102,10 @@ const Literals = {
             tr: "kullanım türünü silmek istediğinize emin misiniz?",
             en: "Usage types will delete, are you sure?"
         },
+        Newvaluecheck: {
+            tr: "Farklı Bir değer girmek için tıklayınız",
+            en: "If you wanna enter differant value, click "
+        },
         Namerequired: {
             tr: "Kullanım Tür Adı Gerekli",
             en: "Usage type required"

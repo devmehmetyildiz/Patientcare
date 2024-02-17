@@ -29,7 +29,7 @@ module.exports = sequelize.define('fileModel', {
         type: Sequelize.STRING
     },
     Usagetype: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
     },
     Canteditfile: {
         type: Sequelize.BOOLEAN
