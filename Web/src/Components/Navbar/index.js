@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { FaUserAlt } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-import { Button, Dropdown, Header, Icon, Modal } from 'semantic-ui-react'
-import { ROUTES } from '../../Utils/Constants'
+import { Button, Dropdown, Header, Icon, Modal, Search } from 'semantic-ui-react'
+import { ROUTES, getSidebarroutes } from '../../Utils/Constants'
 import config from '../../Config'
 import Notifications from '../../Containers/Notifications/Notifications'
 const navbarLiterals = {
@@ -36,7 +36,7 @@ const navbarLiterals = {
   }
 }
 export class Navbar extends Component {
-  state = { open: false }
+  state = { open: false, searchWord: '' }
 
 
   handleOpen = () => this.setState({ open: true })
@@ -44,8 +44,14 @@ export class Navbar extends Component {
   handleClose = () => this.setState({ open: false })
 
   render() {
-    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, handleViewmodal, Usagetypes } = this.props
+    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, Usagetypes, history } = this.props
     const ishavePP = (Profile?.meta?.Files || []).find(u => (u.Usagetype.split(',') || []).map(uuids => { return (Usagetypes.list || []).find(type => type.Uuid === uuids)?.Value || '' }).includes('PP'))
+
+    const sidebarRoutes = (getSidebarroutes(Profile) || []).flatMap(section => {
+      return section.items.filter(u => u.permission)
+    })
+
+
 
     const trigger = (
       <div className='flex flex-row justify-center items-center select-none'>
@@ -76,6 +82,23 @@ export class Navbar extends Component {
             </div>
           </div >
           <div className='flex flex-row justify-center items-center gap-4'>
+            <Search
+              input={{ icon: 'search', iconPosition: 'left' }}
+              placeholder='Sayfa Arama'
+              className='menusearch'
+              noResultsMessage='Sonuç Bulunmadı'
+              onResultSelect={(e, data) => {
+                this.setState({ searchWord: '' })
+                history.push(data.result.url)
+              }}
+              onSearchChange={(e, data) => {
+                this.setState({ searchWord: data.value })
+              }}
+              results={sidebarRoutes.filter(u => (u.subtitle || '').toLowerCase().includes(this.state.searchWord.toLowerCase())).map(u => {
+                return { title: u.subtitle, url: u.url }
+              })}
+              value={this.state.searchWord}
+            />
             <Notifications />
             <div className='flex flex-row justify-center items-center h-full'>
               <Dropdown icon={null} trigger={trigger} basic className="h-full block">
@@ -86,8 +109,7 @@ export class Navbar extends Component {
                   <Dropdown.Item>
                     <Link to='/profile/change-password' className='text-[#3d3d3d] hover:text-[#3d3d3d]'> <Icon className='lock' />{navbarLiterals.changePassword[Profile.Language]}</Link>
                   </Dropdown.Item>
-                  <Dropdown.Item className='layout-menu-item logout'
-                  >
+                  <Dropdown.Item className='layout-menu-item logout' >
                     <Modal
                       open={this.state.open}
                       trigger={<Button>{navbarLiterals.exit[Profile.Language]}</Button>}

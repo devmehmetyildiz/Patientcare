@@ -484,6 +484,145 @@ code {
   }
 }
 
-.notificationpopup.ui.bottom.right.popup:before{
+.notificationpopup.ui.bottom.right.popup:before {
   right: 5px;
+}
+
+.menusearch > .results.transition.visible {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+
+
+.newborder {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  color: #fff;
+  background: transparent;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 49, 49, 0.5);
+  border-right: 1px solid rgba(0, 255, 255, 0.5);
+  border-bottom: 1px solid rgba(57, 255, 20, 0.5);
+  border-left: 1px solid rgba(255, 255, 113, 0.5);
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1em;
+}
+
+
+
+
+.topborder {
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 5px;
+  background: linear-gradient(90deg, transparent 50%, rgba(255, 49, 49, 0.5), rgb(255, 49, 49));
+}
+
+.bottomborder {
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  background: linear-gradient(90deg, rgb(57, 255, 20), rgba(57, 255, 20, 0.5), transparent 50%);
+}
+
+.rightborder {
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 0;
+  background: linear-gradient(180deg, transparent 30%, rgba(0, 255, 255, 0.5), rgb(0, 255, 255));
+}
+
+.leftborder {
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  height: 0;
+  background: linear-gradient(180deg, rgb(255, 255, 113), rgba(255, 255, 113, 0.5), transparent 70%);
+}
+
+.topborder {
+  animation: animateTop 3s ease-in-out infinite;
+}
+
+.bottomborder {
+  animation: animateBottom 3s ease-in-out infinite;
+}
+
+.rightborder {
+  animation: animateRight 3s ease-in-out infinite;
+}
+
+.leftborder {
+  animation: animateLeft 3s ease-in-out infinite;
+}
+
+@keyframes animateTop {
+  25% {
+    width: 100%;
+    opacity: 1;
+  }
+
+  30%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes animateBottom {
+  0%,
+  50% {
+    opacity: 0;
+    width: 0;
+  }
+
+  75% {
+    opacity: 1;
+    width: 100%;
+  }
+
+  76%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes animateRight {
+  0%,
+  25% {
+    opacity: 0;
+    height: 0;
+  }
+
+  50% {
+    opacity: 1;
+    height: 100%;
+  }
+
+  55%,
+  100% {
+    height: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes animateLeft {
+  0%,
+  75% {
+    opacity: 0;
+    bottom: 0;
+    height: 0;
+  }
+
+  100% {
+    opacity: 1;
+    height: 100%;
+  }
 }

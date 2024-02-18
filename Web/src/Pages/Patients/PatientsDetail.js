@@ -335,9 +335,10 @@ export default class PatientsDetail extends Component {
                 </div>
               </div>
               <div className=' w-full flex flex-col justify-start items-start gap-4'>
+                <Pagedivider />
                 <div className='w-full flex flex-col  justify-center items-center gap-8 overflow-x-auto'>
                   <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white !mb-2'>{Literals.Details.Last5incomemovement[Profile.Language]}</Label>
+                    <Label className='!bg-[#ebf5f8] !text-[#333] !mb-2'>{Literals.Details.Last5incomemovement[Profile.Language]}</Label>
                     <Transition >
                       {Profile.Ismobile ?
                         <MobileTable Columns={stocksColumns} Data={lastincomestocks} Profile={Profile} /> :
@@ -346,35 +347,35 @@ export default class PatientsDetail extends Component {
                   </div>
                   <Pagedivider />
                   <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white !mb-2' >{Literals.Details.Last5outcomemovement[Profile.Language]}</Label>
+                    <Label className='!bg-[#ebf5f8] !text-[#333] !mb-2' >{Literals.Details.Last5outcomemovement[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={stocksColumns} Data={lastoutcomestocks} Profile={Profile} /> :
                       <DataTable Columns={stocksColumns} Data={lastoutcomestocks} />}
                   </div>
                   <Pagedivider />
                   <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white !mb-2' >{Literals.Details.Last5movement[Profile.Language]}</Label>
+                    <Label className='!bg-[#ebf5f8] !text-[#333] !mb-2' >{Literals.Details.Last5movement[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={movementColumns} Data={lastmovements} Profile={Profile} /> :
                       <DataTable Columns={movementColumns} Data={lastmovements} />}
                   </div>
                   <Pagedivider />
                   <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white !mb-2' >{Literals.Details.Last5File[Profile.Language]}</Label>
+                    <Label className='!bg-[#ebf5f8] !text-[#333] !mb-2' >{Literals.Details.Last5File[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={fileColumns} Data={lastfiles} Profile={Profile} /> :
                       <DataTable Columns={fileColumns} Data={lastfiles} />}
                   </div>
                   <Pagedivider />
                   <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white !mb-2' >{Literals.Details.PatientStocks[Profile.Language]}</Label>
+                    <Label className='!bg-[#ebf5f8] !text-[#333] !mb-2' >{Literals.Details.PatientStocks[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={stockandmedicineColumns} Data={patientstocks} Profile={Profile} /> :
                       <DataTable Columns={stockandmedicineColumns} Data={patientstocks} />}
                   </div>
                   <Pagedivider />
                   <div className='w-full'>
-                    <Label className='!bg-[#2355a0] !text-white !mb-2' >{Literals.Details.Patientmedicines[Profile.Language]}</Label>
+                    <Label className='!bg-[#ebf5f8] !text-[#333] !mb-2' >{Literals.Details.Patientmedicines[Profile.Language]}</Label>
                     {Profile.Ismobile ?
                       <MobileTable Columns={stockandmedicineColumns} Data={patientmedicines} Profile={Profile} /> :
                       <DataTable Columns={stockandmedicineColumns} Data={patientmedicines} />}

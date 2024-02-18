@@ -72,6 +72,7 @@ export default class Layout extends Component {
             sethideMobile={sethideMobile}
             hideMobile={hideMobile}
             handleViewmodal={handleViewmodal}
+            history={history}
           />
           <div className='flex flex-row justify-start items-start '>
             <Sidebar
