@@ -11,11 +11,39 @@ const Literals = {
             tr: "Tüm Yataklar",
             en: "All Places"
         },
+        PatientID: {
+            tr: "Hasta",
+            en: "Patient"
+        },
+        Floor: {
+            tr: "Kat",
+            en: "Floor"
+        },
+        Room: {
+            tr: "Oda",
+            en: "Room"
+        },
+        Bed: {
+            tr: "Yatak",
+            en: "Bed"
+        },
+        OtherPatientID: {
+            tr: "Diğer Hasta",
+            en: "Other Patient"
+        },
+        All: {
+            tr: "Tüm Yataklar",
+            en: "All Places"
+        },
     },
     Page: {
         Pageheader: {
             tr: "Hasta Yerleşimleri",
             en: "Patient Placies"
+        },
+        Pagetransferheader: {
+            tr: "Transfer Et",
+            en: "Transfer"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -57,6 +85,10 @@ const Literals = {
         Nodatafind: {
             tr: "Tanımlı Yerleşim Yok",
             en: "There is no Personel found"
+        },
+        Patientrequired: {
+            tr: "Hasta Gerekli",
+            en: "Patient Required"
         },
 
 

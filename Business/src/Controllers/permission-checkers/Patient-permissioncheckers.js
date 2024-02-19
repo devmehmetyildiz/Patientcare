@@ -96,6 +96,14 @@ async function UpdatePatientplace(req, res, next) {
     }
 }
 
+async function TransferPatientplace(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
+    }
+}
+
 async function UpdatePatienttododefines(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
         next()
@@ -153,5 +161,6 @@ module.exports = {
     UpdatePatientplace,
     AddPatientReturnPatient,
     Createfromtemplate,
-    UpdatePatientsupportplans
+    UpdatePatientsupportplans,
+    TransferPatientplace
 }

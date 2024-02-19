@@ -198,6 +198,7 @@ const UnapprovedStocks = lazy(() => import('./Containers/Unapproveds/UnapprovedS
 const UnapprovedTodos = lazy(() => import('./Containers/Unapproveds/UnapprovedTodos'));
 
 const Placeviews = lazy(() => import('./Containers/Placeviews/Placeviews'));
+const PlaceviewsTransfer = lazy(() => import('./Containers/Placeviews/PlaceviewsTransfer'));
 
 const Personelshifts = lazy(() => import('./Containers/Personelshifts/Personelshifts'));
 const PersonelshiftsCreate = lazy(() => import('./Containers/Personelshifts/PersonelshiftsCreate'));
@@ -414,6 +415,7 @@ class Routes extends Component {
       { exact: true, path: "/UnapprovedStocks", auth: true, component: UnapprovedStocks, permission: 'stockscreen' },
       { exact: true, path: "/UnapprovedTodos", auth: true, component: UnapprovedTodos, permission: 'todoscreen' },
       { exact: true, path: "/Placeviews", auth: true, component: Placeviews, permission: 'patientscreen' },
+      { exact: true, path: "/Placeviews/Transfer", auth: true, component: PlaceviewsTransfer, permission: 'patientscreen' },
       { exact: true, path: "/Personelshifts", auth: true, component: Personelshifts, permission: 'shiftscreen' },
       { exact: true, path: "/Personelshifts/Create", auth: true, component: PersonelshiftsCreate, permission: 'shiftscreen' },
       { exact: true, path: "/Personelshifts/:ShiftID", auth: true, component: PersonelshiftsDetail, permission: 'shiftscreen' },

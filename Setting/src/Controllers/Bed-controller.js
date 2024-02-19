@@ -131,7 +131,8 @@ async function ChangeBedstatus(req, res, next) {
     let validationErrors = []
     const {
         OldUuid,
-        NewUuid
+        NewUuid,
+        Status
     } = req.body
 
     if (!NewUuid) {
@@ -162,7 +163,7 @@ async function ChangeBedstatus(req, res, next) {
                 Updatetime: new Date(),
             }, { where: { Uuid: OldUuid } }, { transaction: t })
         }
-        const newBed = db.bedModel.findOne({ where: { Uuid: NewUuid } })
+        const newBed = await db.bedModel.findOne({ where: { Uuid: NewUuid } })
         if (!newBed) {
             return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
         }
@@ -172,7 +173,7 @@ async function ChangeBedstatus(req, res, next) {
 
         await db.bedModel.update({
             ...newBed,
-            Isoccupied: true,
+            Isoccupied: validator.isBoolean(Status) ? Status : true,
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: NewUuid } }, { transaction: t })

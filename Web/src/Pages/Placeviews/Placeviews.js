@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Card, Grid, GridColumn, Loader, Tab } from 'semantic-ui-react'
+import { Breadcrumb, Card, Grid, GridColumn, Icon, Loader, Tab } from 'semantic-ui-react'
 import Literals from './Literals'
-import { Contentwrapper, Headerwrapper, LoadingPage, NoDataScreen, Pagedivider, Pagewrapper } from '../../Components'
+import { Contentwrapper, Headerwrapper, LoadingPage, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
+import { ROUTES } from '../../Utils/Constants'
+import config from '../../Config'
 
 export default function Placeviews(props) {
-    const { GetPatients, GetPatientdefines, GetFloors, GetRooms, GetBeds, GetCases,
-        Patients, Floors, Rooms, Beds, Profile, Patientdefines, Cases } = props
-
-    const [onlyFilled, setonlyFilled] = useState(false)
+    const { GetPatients, GetPatientdefines, GetFloors, GetRooms, GetBeds, GetCases, GetFiles, GetUsagetypes,
+        Files, Usagetypes, Patients, Floors, Rooms, Beds, Profile, Patientdefines, Cases } = props
 
     useEffect(() => {
         GetPatients()
@@ -17,89 +17,65 @@ export default function Placeviews(props) {
         GetRooms()
         GetBeds()
         GetCases()
+        GetFiles()
+        GetUsagetypes()
     }, [])
 
-    const nameCellhandler = (FloorID, RoomID, BedID) => {
-        if (Patientdefines.isLoading || Patients.isLoading) {
-            return <Loader size='small' active inline='centered' ></Loader>
-        } else {
-            const patient = (Patients.list || []).find(u =>
-                u.FloorID === FloorID &&
-                u.RoomID === RoomID &&
-                u.BedID === BedID)
-            const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
-            return patient ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}-${patientdefine?.CountryID}` : null
-        }
-    }
-
-    const caseCellhandler = (FloorID, RoomID, BedID) => {
-        if (Cases.isLoading || Patients.isLoading) {
-            return <Loader size='small' active inline='centered' ></Loader>
-        } else {
-            const patient = (Patients.list || []).find(u =>
-                u.FloorID === FloorID &&
-                u.RoomID === RoomID &&
-                u.BedID === BedID)
-            const cases = (Cases.list || []).find(u => u.Uuid === patient?.CaseID)
-            return cases?.Name
-        }
-    }
-
-    const casecolorCellhandler = (FloorID, RoomID, BedID) => {
-        if (Cases.isLoading || Patients.isLoading) {
-            return <Loader size='small' active inline='centered' ></Loader>
-        } else {
-            const patient = (Patients.list || []).find(u =>
-                u.FloorID === FloorID &&
-                u.RoomID === RoomID &&
-                u.BedID === BedID)
-            const cases = (Cases.list || []).find(u => u.Uuid === patient?.CaseID)
-            return cases?.Casecolor
-        }
-    }
 
     const list = (Beds.list || []).filter(u => u.Isactive).map(bed => {
         const room = (Rooms.list || []).find(u => u.Uuid === bed?.RoomID)
         const floor = (Floors.list || []).find(u => u.Uuid === room?.FloorID)
-        return {
-            header: <div className='w-full flex flex-col justify-start items-start'>
-                <div className='font-bold'>{floor?.Name}</div>
-                <div>{`${room?.Name} ${bed?.Name}`}</div>
-            </div>,
-            meta: <div>{bed.Isoccupied ? nameCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''}</div>,
-            description: <div>{bed.Isoccupied ? caseCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''}</div>,
-            color: bed.Isoccupied ? casecolorCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''
-        }
-    })
 
-    const filledlist = (Beds.list || []).filter(u => u.Isactive && u.Isoccupied).map(bed => {
-        const room = (Rooms.list || []).find(u => u.Uuid === bed?.RoomID)
-        const floor = (Floors.list || []).find(u => u.Uuid === room?.FloorID)
+        const patient = (Patients.list || []).find(u =>
+            u.FloorID === floor?.Uuid &&
+            u.RoomID === room?.Uuid &&
+            u.BedID === bed?.Uuid)
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        const cases = (Cases.list || []).find(u => u.Uuid === patient?.CaseID)
+        let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
+        const patientPP = (Files.list || []).find(u => u.ParentID === patient?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
+
         return {
-            header: <div className='w-full flex flex-col justify-start items-start'>
-                <div className='font-bold'>{floor?.Name}</div>
-                <div>{`${room?.Name} ${bed?.Name}`}</div>
+            header: <div className='w-full flex flex-row justify-between items-start'>
+                <div className='flex flex-col justify-start items-start'>
+                    <div className='font-bold'>{floor?.Name}</div>
+                    <div>{`${room?.Name} ${bed?.Name}`}</div>
+                </div>
+                {patientPP
+                    ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPP?.Uuid}`} className="rounded-full" style={{ width: '30px', height: '30px' }} />
+                    : <Icon name='users' circular />}
             </div>,
-            meta: <div>{bed.Isoccupied ? nameCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''}</div>,
-            description: <div>{bed.Isoccupied ? caseCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''}</div>,
-            color: bed.Isoccupied ? casecolorCellhandler(floor?.Uuid, room?.Uuid, bed?.Uuid) : ''
+            meta: bed.Isoccupied ? <div>{`${patientdefine?.Firstname || ''} ${patientdefine?.Lastname || ''}-${patientdefine?.CountryID || ''}`}</div> : null,
+            description: bed.Isoccupied ? <div className='w-full flex flex-row flex-nowrap justify-between items-center'>
+                <div className='font-bold'>{cases?.Name}</div>
+                <Link to={`/Patients/${patient?.Uuid}`}>
+                    <Icon name='magnify' color='black' circular />
+                </Link>
+            </div> : null,
+            color: bed.Isoccupied ? cases?.Casecolor : '',
+            filled: bed.Isoccupied
         }
     })
 
     const panes = [
         {
             menuItem: Literals.Columns.Onlyfilled[Profile.Language], render: () => <Tab.Pane>
-                {filledlist.length > 0
+                {(list || []).filter(u => u.filled).length > 0
                     ? <div className='w-full mx-auto '>
-                        <Card.Group>
-                            {(filledlist || []).map((card, index) => {
-                                return <Card key={index} style={{ backgroundColor: card.color }} >
-                                    <Card.Content className='!p-1 !m-0' header={card.header} />
-                                    <Card.Content className=' !p-1 !m-0' header={card.meta} />
-                                    <Card.Content className=' !p-1 !m-0' header={card.description} />
-                                </Card>
+                        <div className='flex flex-row justify-start items-start flex-wrap w-full'>
+                            {(((list || []).filter(u => u.filled) || []) || []).map((card, index) => {
+                                return <div
+                                    key={index}
+                                    style={{ backgroundColor: card.color }}
+                                    className='border-2 p-2 rounded-lg m-2  w-[300px] h-[160px] flex flex-col justify-start items-start'>
+                                    {card.header && card.header}
+                                    <Pagedivider />
+                                    {card.meta && <div>{card.meta}</div>}
+                                    <Pagedivider />
+                                    {card.description && card.description}
+                                </div>
                             })}
-                        </Card.Group>
+                        </div>
                     </div>
                     : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
                 }
@@ -109,15 +85,20 @@ export default function Placeviews(props) {
             menuItem: Literals.Columns.All[Profile.Language], render: () => <Tab.Pane>
                 {list.length > 0
                     ? <div className='w-full mx-auto '>
-                        <Card.Group>
+                        <div className='flex flex-row justify-start items-start flex-wrap w-full'>
                             {(list || []).map((card, index) => {
-                                return <Card key={index} style={{ backgroundColor: card.color }} >
-                                    <Card.Content className='!p-1 !m-0' header={card.header} />
-                                    <Card.Content className=' !p-1 !m-0' header={card.meta} />
-                                    <Card.Content className=' !p-1 !m-0' header={card.description} />
-                                </Card>
+                                return <div
+                                    key={index}
+                                    style={{ backgroundColor: card.color }}
+                                    className='border-2 p-2 rounded-lg m-2  w-[300px] h-[160px] flex flex-col justify-start items-start'>
+                                    {card.header && card.header}
+                                    <Pagedivider />
+                                    {card.meta && <div>{card.meta}</div>}
+                                    <Pagedivider />
+                                    {card.description && card.description}
+                                </div>
                             })}
-                        </Card.Group>
+                        </div>
                     </div>
                     : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
                 }
@@ -133,11 +114,17 @@ export default function Placeviews(props) {
                         <Grid columns='2' >
                             <GridColumn width={8}>
                                 <Breadcrumb size='big'>
-                                    <Link to={"/Patients"}>
+                                    <Link to={"/Placeviews"}>
                                         <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                                     </Link>
                                 </Breadcrumb>
                             </GridColumn>
+                            <Settings
+                                Profile={Profile}
+                                Pagecreateheader={Literals.Page.Pagetransferheader[Profile.Language]}
+                                Pagecreatelink={"/Placeviews/Transfer"}
+                                Showcreatebutton
+                            />
                         </Grid>
                     </Headerwrapper>
                     <Pagedivider />

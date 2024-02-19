@@ -283,6 +283,27 @@ export const Editpatientplace = createAsyncThunk(
         }
     }
 );
+export const Transferpatientplace = createAsyncThunk(
+    'Patients/Transferpatientplace',
+    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/TransferPatientplace", data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
 export const UpdatePatienttododefines = createAsyncThunk(
     'Patients/UpdatePatienttododefines',
     async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
@@ -633,6 +654,17 @@ export const PatientsSlice = createSlice({
                 state.selected_record = action.payload
             })
             .addCase(Editpatientplace.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(Transferpatientplace.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(Transferpatientplace.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selected_record = action.payload
+            })
+            .addCase(Transferpatientplace.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

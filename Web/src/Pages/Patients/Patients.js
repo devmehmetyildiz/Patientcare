@@ -176,7 +176,7 @@ export default class Patients extends Component {
     if (Floors.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return `${(Floors.list || []).find(u => u.Uuid === value)?.Name}`
+      return `${(Floors.list || []).find(u => u.Uuid === value)?.Name || ''}`
     }
   }
 
@@ -185,7 +185,7 @@ export default class Patients extends Component {
     if (Rooms.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return `${(Rooms.list || []).find(u => u.Uuid === value)?.Name}`
+      return `${(Rooms.list || []).find(u => u.Uuid === value)?.Name || ''}`
     }
   }
 
@@ -194,7 +194,7 @@ export default class Patients extends Component {
     if (Beds.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return `${(Beds.list || []).find(u => u.Uuid === value)?.Name}`
+      return `${(Beds.list || []).find(u => u.Uuid === value)?.Name || ''}`
     }
   }
 
@@ -203,7 +203,7 @@ export default class Patients extends Component {
     if (Cases.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return `${(Cases.list || []).find(u => u.Uuid === value)?.Name}`
+      return `${(Cases.list || []).find(u => u.Uuid === value)?.Name || ''}`
     }
   }
 

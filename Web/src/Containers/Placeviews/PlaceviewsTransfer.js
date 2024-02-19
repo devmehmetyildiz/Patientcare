@@ -1,13 +1,11 @@
 import { connect } from 'react-redux'
-import Placeviews from "../../Pages/Placeviews/Placeviews"
-import { GetPatients } from "../../Redux/PatientSlice"
+import PlaceviewsTransfer from "../../Pages/Placeviews/PlaceviewsTransfer"
+import { GetPatients, Transferpatientplace, fillPatientnotification } from "../../Redux/PatientSlice"
 import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
 import { GetFloors } from "../../Redux/FloorSlice"
 import { GetRooms } from "../../Redux/RoomSlice"
 import { GetBeds } from "../../Redux/BedSlice"
 import { GetCases } from "../../Redux/CaseSlice"
-import { GetFiles } from "../../Redux/FileSlice"
-import { GetUsagetypes } from "../../Redux/UsagetypeSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -16,11 +14,9 @@ const mapStateToProps = (state) => ({
     Rooms: state.Rooms,
     Beds: state.Beds,
     Cases: state.Cases,
-    Files: state.Files,
-    Usagetypes: state.Usagetypes,
     Profile: state.Profile
 })
 
-const mapDispatchToProps = { GetFiles, GetUsagetypes, GetCases, GetPatientdefines, GetPatients, GetFloors, GetRooms, GetBeds }
+const mapDispatchToProps = { Transferpatientplace, GetCases, GetPatientdefines, GetPatients, GetFloors, GetRooms, GetBeds, fillPatientnotification }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Placeviews)
+export default connect(mapStateToProps, mapDispatchToProps)(PlaceviewsTransfer)

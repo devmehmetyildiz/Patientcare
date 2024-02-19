@@ -638,6 +638,155 @@ async function UpdatePatientplace(req, res, next) {
     GetPatient(req, res, next)
 }
 
+async function TransferPatientplace(req, res, next) {
+
+    let validationErrors = []
+    const {
+        PatientID,
+        FloorID,
+        RoomID,
+        BedID,
+        OtherPatientID,
+        OtherFloorID,
+        OtherRoomID,
+        OtherBedID,
+    } = req.body
+
+    if (!validator.isUUID(PatientID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    try {
+        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
+        if (!patient) {
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
+        }
+        if (patient.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+        }
+
+        const otherpatient = await db.patientModel.findOne({ where: { Uuid: OtherPatientID || '' } })
+
+        try {
+            if (!validator.isUUID(otherpatient?.Uuid) && validator.isUUID(patient?.BedID)) {
+                await axios({
+                    method: 'PUT',
+                    url: config.services.Setting + "Beds/ChangeBedstatus",
+                    headers: {
+                        session_key: config.session.secret
+                    },
+                    data: {
+                        NewUuid: patient.BedID,
+                        Status: false
+                    }
+                })
+            }
+            if (!validator.isUUID(otherpatient?.Uuid) && validator.isUUID(BedID)) {
+                await axios({
+                    method: 'PUT',
+                    url: config.services.Setting + "Beds/ChangeBedstatus",
+                    headers: {
+                        session_key: config.session.secret
+                    },
+                    data: {
+                        NewUuid: BedID,
+                        Status: true
+                    }
+                })
+            }
+        } catch (error) {
+            return next(requestErrorCatcher(error, 'Setting'))
+        }
+
+        await db.patientModel.update({
+            ...patient,
+            FloorID: FloorID || '',
+            BedID: BedID || '',
+            RoomID: RoomID || '',
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { Uuid: PatientID } }, { transaction: t })
+
+
+        const lastpatientmovement = await db.patientmovementModel.findOne({
+            order: [['Id', 'DESC']],
+            where: {
+                PatientID: patient?.Uuid
+            }
+        });
+
+        let patientmovementuuid = uuid()
+
+        await db.patientmovementModel.create({
+            ...req.body,
+            Uuid: patientmovementuuid,
+            OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
+            Patientmovementtype: 7,
+            NewPatientmovementtype: 7,
+            Createduser: "System",
+            Createtime: new Date(),
+            PatientID: patient.Uuid,
+            Movementdate: new Date(),
+            IsDeactive: false,
+            IsTodoneed: false,
+            IsTodocompleted: false,
+            IsComplated: true,
+            Iswaitingactivation: false,
+            Isactive: true
+        }, { transaction: t })
+
+
+        if (validator.isUUID(OtherPatientID)) {
+            await db.patientModel.update({
+                ...otherpatient,
+                FloorID: OtherFloorID,
+                BedID: OtherBedID,
+                RoomID: OtherRoomID,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { Uuid: OtherPatientID } }, { transaction: t })
+
+            const Otherlastpatientmovement = await db.patientmovementModel.findOne({
+                order: [['Id', 'DESC']],
+                where: {
+                    PatientID: patient?.Uuid
+                }
+            });
+
+            let otherpatientmovementuuid = uuid()
+
+            await db.patientmovementModel.create({
+                ...req.body,
+                Uuid: otherpatientmovementuuid,
+                OldPatientmovementtype: Otherlastpatientmovement?.Patientmovementtype || 0,
+                Patientmovementtype: 7,
+                NewPatientmovementtype: 7,
+                Createduser: "System",
+                Createtime: new Date(),
+                PatientID: patient.Uuid,
+                Movementdate: new Date(),
+                IsDeactive: false,
+                IsTodoneed: false,
+                IsTodocompleted: false,
+                IsComplated: true,
+                Iswaitingactivation: false,
+                Isactive: true
+            }, { transaction: t })
+        }
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    req.params.patientId = PatientID
+    GetPatient(req, res, next)
+}
+
 async function UpdatePatienttododefines(req, res, next) {
 
     let validationErrors = []
@@ -1037,5 +1186,6 @@ module.exports = {
     InPatient,
     AddPatientReturnPatient,
     Createfromtemplate,
-    UpdatePatientsupportplans
+    UpdatePatientsupportplans,
+    TransferPatientplace
 }
