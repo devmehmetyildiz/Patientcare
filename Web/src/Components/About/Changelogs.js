@@ -395,7 +395,7 @@ const version1_0_0_13 = {
     version: "1.0.0.13",
     changes: [
         {
-            title: "Common", commits: [
+            title: "Genel", commits: [
                 "Bütün Ekranların mobil görünümleri ve filtre değerleri ayarlandı",
             ]
         },
@@ -406,8 +406,65 @@ const version1_0_0_14 = {
     version: "1.0.0.14",
     changes: [
         {
-            title: "Common", commits: [
+            title: "Genel", commits: [
                 "Renk Palet Düzenlemesi",
+            ]
+        },
+    ],
+}
+const version1_0_0_15 = {
+    version: "1.0.0.15",
+    features: [
+        {
+            title: "Genel", commits: [
+                "Sayfalar arası geçişler için üst bara arama seçeneği eklendi, sayfa adı yazılarak arama yapılabilir",
+            ]
+        },
+        {
+            title: "Sistem", commits: [
+                "Mikroservisler için build güncellemeleri ve iis servislerine taşınma işlemleri",
+            ]
+        },
+        {
+            title: "Hastalar", commits: [
+                "Hasta Bakım planları eklendi",
+            ]
+        },
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Hasta Yerleşimleri sayfasına transfer et ekranı eklendi bu sayede hastalar birbirleri arasında, yeni bir yatağa, veya boş konuma geçirilebilecek",
+            ]
+        },
+        {
+            title: "Ayarlar", commits: [
+                "Hasta Bakım planlarında kullanmak için Bakıma ihtiyaç durumları sayfası eklendi",
+                "Hasta Bakım planlarında kullanmak için Değerlendirmeler sayfası eklendi",
+                "Hasta Bakım planlarında kullanmak için Hizmetin Verilme şekilleri sayfası eklendi",
+                "Hasta Bakım planlarında kullanmak için Hizmet sunulma sıklıkları sayfası eklendi",
+            ]
+        },
+    ],
+    changes: [
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Hasta yerleşimleri sayfası renk ve tasarım düzenlemesi",
+            ]
+        },
+        {
+            title: "Hastalar", commits: [
+                "Detay Ekranı renk düzenlemesi ve tasarım düzenlemesi",
+            ]
+        },
+    ],
+    bugs: [
+        {
+            title: "Dosyalar", commits: [
+                "Kullanım türlerinin çok secilmesi durumunda hataya düşme durumu düzeltildi",
+            ]
+        },
+        {
+            title: "Hastalar", commits: [
+                "Hastalar ekranındaki yataksız durumların undefined olma durumu düzeltildi",
             ]
         },
     ],
@@ -429,4 +486,5 @@ export {
     version1_0_0_12,
     version1_0_0_13,
     version1_0_0_14,
+    version1_0_0_15,
 }
