@@ -470,6 +470,44 @@ const version1_0_0_15 = {
     ],
 }
 
+const version1_0_0_16 = {
+    version: "1.0.0.16",
+    changes: [
+        {
+            title: "Dosya Sistemi", commits: [
+                "Dosya indirme durumunda loading bar çıkacak",
+            ]
+        },
+        {
+            title: "Hastalar", commits: [
+                "Detay Ekranı renk düzenlemesi ve tasarım düzenlemesi",
+            ]
+        },
+    ],
+    bugs: [
+        {
+            title: "Dosya Sistemi", commits: [
+                "Türkçe karakterli dosya isimleri indirme sorunu düzeltildi",
+            ]
+        },
+        {
+            title: "Servisler", commits: [
+                "Servislerin iis kurulumları için düzenleme",
+            ]
+        },
+        {
+            title: "Genel", commits: [
+                "Navigation search işlemi mobil görünümde kapandı"
+            ]
+        },
+        {
+            title: "Hastalar", commits: [
+                "Hastalar grid ekranında isimlerin hizlaması düzenlendi"
+            ]
+        },
+    ],
+}
+
 export {
     version1_0_0_0,
     version1_0_0_1,
@@ -487,4 +525,5 @@ export {
     version1_0_0_13,
     version1_0_0_14,
     version1_0_0_15,
+    version1_0_0_16,
 }
