@@ -58,7 +58,7 @@ require("./Middlewares/Databaseconnector")()
     if (config.env === 'development' || config.env === 'production') {
       const http = require('http')
       const httpServer = http.createServer(app)
-      httpServer.listen(config.port, () => {
+      httpServer.listen(config.env === 'development' ? config.port : process.env.PORT, () => {
         if (config.env === 'development') {
           console.log(`${config.session.name} service is running at http://localhost:${httpServer.address().port} for public usage`)
           db.applog_fileModel.create({
