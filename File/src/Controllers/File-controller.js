@@ -103,7 +103,8 @@ async function Downloadfile(req, res, next) {
         if (file.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.FILE_NOT_ACTIVE], req.language))
         }
-        res.setHeader("Content-Disposition", `attachment; filename=${file.Filename}`);
+        const encodedFileName = encodeURIComponent(file.Filename);
+        res.setHeader("Content-Disposition", `attachment; filename="${encodedFileName}"`);
         res.setHeader("Content-Type", file.Filetype);
         const fileStream = new stream.Writable({
             write(chunk, encoding, callback) {
