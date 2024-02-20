@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Dropdown, Form, Header, Icon, Label, Table } from 'semantic-ui-react'
+import { Breadcrumb, Button, Dimmer, Dropdown, Form, Header, Icon, Label, Loader, Table } from 'semantic-ui-react'
 import { ROUTES } from '../../Utils/Constants'
 import config from '../../Config'
 import Literals from './Literals'
@@ -13,6 +13,7 @@ export default function PatientsFiles(props) {
     const [patient, setPatient] = useState({})
     const [isDatafetched, setisDatafetched] = useState(false)
     const [selectedFiles, setselectedFiles] = useState([])
+    const [fileDownloading, setfileDownloading] = useState(false)
 
     useEffect(() => {
         const { GetPatient, match, history, GetFiles, GetPatientdefines, PatientID, GetUsagetypes } = props
@@ -204,25 +205,30 @@ export default function PatientsFiles(props) {
     }, [patient]);
 
     const downloadFile = (fileID, fileName) => {
+        const { fillFilenotification } = props
+        setfileDownloading(true)
         axios.get(`${config.services.File}${ROUTES.FILE}/Downloadfile/${fileID}`, {
             responseType: 'blob'
         }).then((res) => {
+            setfileDownloading(false)
             const fileType = res.headers['content-type']
             const blob = new Blob([res.data], {
                 type: fileType
             });
             const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
             if (fileType.includes('pdf')) {
                 window.open(url)
                 a.href = null;
                 window.URL.revokeObjectURL(url);
             }
-            const a = document.createElement('a');
             a.href = url;
             a.download = fileName;
             a.click();
             window.URL.revokeObjectURL(url);
         }).catch((err) => {
+            setfileDownloading(false)
+            fillFilenotification([{ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: err.message }])
             console.log(err.message)
         });
     }
@@ -241,6 +247,9 @@ export default function PatientsFiles(props) {
     return (
         Files.isLoading || Files.isDispatching || isLoading || isDispatching ? <LoadingPage /> :
             <Pagewrapper>
+                <Dimmer active={fileDownloading}>
+                    <Loader />
+                </Dimmer>
                 <Headerwrapper>
                     <Headerbredcrump>
                         <Link to={"/Patients"}>
