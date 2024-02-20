@@ -180,7 +180,7 @@ export default class Preregistrations extends Component {
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
     let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
     let file = (Files.list || []).filter(u => u.ParentID === patient?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
-    return <div className='flex justify-center items-center flex-row flex-nowrap whitespace-nowrap'>
+    return <div className='flex justify-start items-center flex-row flex-nowrap whitespace-nowrap'>
       {file
         ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file?.Uuid}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
         : null}

@@ -82,7 +82,7 @@ export class Navbar extends Component {
             </div>
           </div >
           <div className='flex flex-row justify-center items-center gap-4'>
-            <Search
+            {!this.props.isMobile && <Search
               input={{ icon: 'search', iconPosition: 'left' }}
               placeholder='Sayfa Arama'
               className='menusearch'
@@ -98,7 +98,7 @@ export class Navbar extends Component {
                 return { title: u.subtitle, url: u.url }
               })}
               value={this.state.searchWord}
-            />
+            />}
             <Notifications />
             <div className='flex flex-row justify-center items-center h-full'>
               <Dropdown icon={null} trigger={trigger} basic className="h-full block">
