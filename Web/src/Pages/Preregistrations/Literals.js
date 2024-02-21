@@ -245,7 +245,7 @@ const Literals = {
             en: 'Patient Type'
         },
         Registerdate: {
-            tr: 'Kayıt Tarihi',
+            tr: 'Kabul Tarihi',
             en: 'Register Date'
         },
         Happensdate: {
@@ -432,7 +432,7 @@ const Literals = {
             en: "Patient Id didint catch please refresh page"
         },
         Registerdaterequired: {
-            tr: "Kayıt Tarihi Gerekli",
+            tr: "Kabul Tarihi Gerekli",
             en: "Register date Required"
         },
         Approvaldaterequired: {

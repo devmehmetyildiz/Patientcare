@@ -91,7 +91,7 @@ const Literals = {
             en: 'Hasta'
         },
         Registerdate: {
-            tr: 'Kayıt Tarihi',
+            tr: 'Kabul Tarihi',
             en: 'Register Date'
         },
         Approvaldate: {
@@ -873,7 +873,7 @@ const Literals = {
                 en: 'Patient Type'
             },
             Registerdate: {
-                tr: 'Kayıt Tarihi',
+                tr: 'Kabul Tarihi',
                 en: 'Register Date'
             },
             Happensdate: {
@@ -1053,7 +1053,7 @@ const Literals = {
                 en: 'Departemnt Required'
             },
             Registerdaterequired: {
-                tr: 'Kayıt Tarihi Gerekli',
+                tr: 'Kabul Tarihi Gerekli',
                 en: 'Register Date Required'
             },
             Patientdefinerequired: {
