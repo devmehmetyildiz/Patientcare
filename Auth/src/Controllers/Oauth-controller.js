@@ -124,6 +124,7 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
         refreshToken: uuid(),
         ExpiresAt: new Date(new Date().getTime() + 59 * 60000),
         RefreshtokenexpiresAt: new Date(new Date().getTime() + 59 * 60000),
+        redirect: user.Defaultpage
     }
 
     try {

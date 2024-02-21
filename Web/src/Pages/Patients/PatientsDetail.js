@@ -25,6 +25,10 @@ export default class PatientsDetail extends Component {
   }
 
   componentDidMount() {
+    this.fetchdata()
+  }
+
+  fetchdata = () => {
     const {
       GetPatient, match, history, PatientID,
       GetPatientdefines, GetCases, GetCostumertypes,
@@ -59,7 +63,7 @@ export default class PatientsDetail extends Component {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevprops) {
     const {
       Patients, Tododefines,
       Patientdefines, Cases, Patientstockmovements,
@@ -67,7 +71,13 @@ export default class PatientsDetail extends Component {
       Floors, Rooms, Beds,
       Patientstocks, Stockdefines, Units,
       Patientcashmovements, Usagetypes,
-      Patientmovements, Files, Todos, Patientcashregisters } = this.props
+      Patientmovements, Files, Todos, Patientcashregisters, PatientID, match } = this.props
+
+    let Id = PatientID || match?.params?.PatientID
+    let prevId = prevprops?.PatientID || prevprops?.match?.params?.PatientID
+    if (Id !== prevId) {
+      this.fetchdata()
+    }
 
     const { selected_record } = Patients
 

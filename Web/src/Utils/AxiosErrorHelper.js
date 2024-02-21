@@ -63,7 +63,14 @@ function handle401Error(error) {
     const localcookies = new Cookies();
     localcookies.remove("patientcare")
     if (window.location.pathname !== "/Login") {
-        window.location = `/Login?redirecturl=${window.location.pathname}`
+        const params = new URLSearchParams(window.location.search);
+        const redirecturl = params.get('redirecturl');
+        if (redirecturl) {
+            params.set('redirecturl', window.location.pathname)
+        } else {
+            params.append('redirecturl', window.location.pathname)
+        }
+        window.location = `/Login?${params.toString().replace(/%2F/g, '/')}`
     }
     if (window.location.pathname === "/Login") {
         return { type: 'Error', code: error.code, description: 'Kullanıcı Adı veya şifre Hatalı' }

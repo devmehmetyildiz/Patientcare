@@ -4,7 +4,7 @@ import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import UsersDelete from '../../Containers/Users/UsersDelete'
-import { getInitialconfig } from '../../Utils/Constants'
+import { getInitialconfig, getSidebarroutes } from '../../Utils/Constants'
 export default class Users extends Component {
 
   constructor(props) {
@@ -38,22 +38,17 @@ export default class Users extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
       { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', Title: true },
-      { Header: Literals.Columns.NormalizedUsername[Profile.Language], accessor: 'NormalizedUsername', },
       { Header: Literals.Columns.Email[Profile.Language], accessor: 'Email', Subheader: true, Subtitle: true },
       { Header: Literals.Columns.EmailConfirmed[Profile.Language], accessor: 'EmailConfirmed', },
       { Header: Literals.Columns.AccessFailedCount[Profile.Language], accessor: 'AccessFailedCount', },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', },
       { Header: Literals.Columns.Surname[Profile.Language], accessor: 'Surname', },
-      { Header: Literals.Columns.PhoneNumber[Profile.Language], accessor: 'PhoneNumber', },
-      { Header: Literals.Columns.PhoneNumberConfirmed[Profile.Language], accessor: 'PhoneNumberConfirmed', },
-      { Header: Literals.Columns.City[Profile.Language], accessor: 'City', },
-      { Header: Literals.Columns.Town[Profile.Language], accessor: 'Town', },
-      { Header: Literals.Columns.Address[Profile.Language], accessor: 'Address', },
       { Header: Literals.Columns.Language[Profile.Language], accessor: 'Language', },
       { Header: Literals.Columns.UserID[Profile.Language], accessor: 'UserID', },
       { Header: Literals.Columns.Defaultdepartment[Profile.Language], accessor: 'Defaultdepartment', },
       { Header: Literals.Columns.Departments[Profile.Language], accessor: row => this.departmentCellhandler(row), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Roles[Profile.Language], accessor: row => this.rolesCellhandler(row) },
+      { Header: Literals.Columns.Defaultpage[Profile.Language], accessor: row => this.pageCellhandler(row?.Defaultpage) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
@@ -160,6 +155,16 @@ export default class Users extends Component {
           [itemRolestxt.slice(0, 35) + ' ...(' + itemRoles.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandRoles(itemId)}> ...Daha Fazla Göster</Link>] :
           [itemRolestxt, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkRoles(itemId)}> ...Daha Az Göster</Link>]
       ) : itemRolestxt
+  }
+
+  pageCellhandler = (value) => {
+    const { Profile } = this.props
+    const Sidebaroption = (getSidebarroutes(Profile) || []).flatMap(section => {
+      return section.items.filter(u => u.permission)
+    }).map(item => {
+      return { text: item.subtitle, value: item.url, key: item.subtitle }
+    })
+    return (Sidebaroption || []).find(u => u?.value === value)?.text || ''
   }
 
   departmentCellhandler = (row) => {

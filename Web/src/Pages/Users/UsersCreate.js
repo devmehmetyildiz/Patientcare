@@ -8,6 +8,7 @@ import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump
 import StationsCreate from '../../Containers/Stations/StationsCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import RolesCreate from '../../Containers/Roles/RolesCreate'
+import { getSidebarroutes } from '../../Utils/Constants'
 
 export default class UsersCreate extends Component {
 
@@ -41,6 +42,12 @@ export default class UsersCreate extends Component {
       { key: 2, text: 'TR', value: 'tr' },
     ]
 
+    const Sidebaroption = (getSidebarroutes(Profile) || []).flatMap(section => {
+      return section.items.filter(u => u.permission)
+    }).map(item => {
+      return { text: item.subtitle, value: item.url, key: item.subtitle }
+    })
+
     return (
       Users.isLoading ? <LoadingPage /> :
         <Pagewrapper>
@@ -68,13 +75,9 @@ export default class UsersCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.UserID[Profile.Language]} name="UserID" type='Number' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.City[Profile.Language]} name="City" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Town[Profile.Language]} name="Town" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Address[Profile.Language]} name="Address" />
-              </Form.Group>
-              <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departments[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Roles[Profile.Language]} name="Roles" multiple options={Roleoptions} formtype='dropdown' modal={RolesCreate} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Defaultpage[Profile.Language]} name="Defaultpage" options={Sidebaroption} formtype='dropdown' />
               </Form.Group>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Language[Profile.Language]} name="Language" options={Languageoptions} formtype='dropdown' />
             </Form>

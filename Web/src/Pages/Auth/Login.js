@@ -46,16 +46,13 @@ class Login extends Component {
             </div>
         )
     }
-    
+
     LoginHandler = (event) => {
         event.preventDefault()
-        const { history, logIn, Profile, fillnotification } = this.props
+        const { history, location, logIn, Profile, fillnotification } = this.props
 
-        let redirectUrl = null
-        const paths = history.location.search?.split('=')
-        if (Array.isArray(paths) && paths.length > 0) {
-            paths[0] === "?redirecturl" && (redirectUrl = paths[1])
-        }
+        const params = new URLSearchParams(location.search);
+        const redirecturl = params.get('redirecturl');
 
         if (Profile.isLogging) {
             return false
@@ -63,7 +60,7 @@ class Login extends Component {
         const data = formToObject(event.target)
         if (data.Username && data.Password) {
             data.grant_type = "password"
-            logIn({ data, history, redirectUrl })
+            logIn({ data, history, redirecturl })
         } else {
             fillnotification({ type: 'Error', code: 'USERNAME_PASSWORD_REQUIRED', description: 'Lütfen Kullanıcı ve ya şifre giriniz' })
         }

@@ -80,6 +80,20 @@ export const GetPatients = createAsyncThunk(
     }
 );
 
+export const GetPatientforsearch = createAsyncThunk(
+    'Patients/GetPatientforsearch',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Business, ROUTES.PATIENT);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const GetPatient = createAsyncThunk(
     'Patients/GetPatient',
     async (guid, { dispatch }) => {
@@ -462,6 +476,7 @@ export const PatientsSlice = createSlice({
     name: 'Patients',
     initialState: {
         list: [],
+        listsearch: [],
         selected_record: {},
         errMsg: null,
         notifications: [],
@@ -519,6 +534,19 @@ export const PatientsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(GetPatients.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetPatientforsearch.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.listsearch = [];
+            })
+            .addCase(GetPatientforsearch.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.listsearch = action.payload;
+            })
+            .addCase(GetPatientforsearch.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

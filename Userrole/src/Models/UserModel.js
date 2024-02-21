@@ -11,9 +11,6 @@ module.exports = sequelize.define('userModel', {
     Username: {
         type: Sequelize.STRING
     },
-    NormalizedUsername: {
-        type: Sequelize.STRING
-    },
     Name: {
         type: Sequelize.STRING
     },
@@ -26,26 +23,11 @@ module.exports = sequelize.define('userModel', {
     EmailConfirmed: {
         type: Sequelize.BOOLEAN
     },
-    PhoneNumber: {
-        type: Sequelize.STRING
-    },
-    PhoneNumberConfirmed: {
-        type: Sequelize.BOOLEAN
-    },
     PasswordHash: {
         type: Sequelize.STRING
     },
     AccessFailedCount: {
         type: Sequelize.INTEGER
-    },
-    Town: {
-        type: Sequelize.STRING
-    },
-    City: {
-        type: Sequelize.STRING
-    },
-    Address: {
-        type: Sequelize.STRING
     },
     Language: {
         type: Sequelize.STRING
@@ -57,6 +39,9 @@ module.exports = sequelize.define('userModel', {
         type: Sequelize.TEXT
     },
     Defaultdepartment: {
+        type: Sequelize.STRING
+    },
+    Defaultpage: {
         type: Sequelize.STRING
     },
     Createduser: {

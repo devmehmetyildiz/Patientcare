@@ -97,13 +97,6 @@ export default class ProfileEdit extends Component {
                                         <Form.Input label="Soyisim" placeholder="Soyisim" name="Surname" fluid defaultValue={meta.Surname} />
                                     </Form.Group>
                                     <Form.Group widths={'equal'}>
-                                        <Form.Input label="Kayıtlı Şehir" placeholder="Kayıtlı Şehir" name="City" fluid defaultValue={meta.City} />
-                                        <Form.Input label="Kayıtlı İlçe" placeholder="Kayıtlı İlçe" name="Town" fluid defaultValue={meta.Town} />
-                                    </Form.Group>
-                                    <Form.Group widths={'equal'}>
-                                        <Form.Input label="Adres" placeholder="Adres" name="Address" fluid defaultValue={meta.Address} />
-                                    </Form.Group>
-                                    <Form.Group widths={'equal'}>
                                         <Form.Field>
                                             <label className='text-[#000000de]'>Dil</label>
                                             <Dropdown value={this.state.selectedLanguage} clearable selection fluid options={Languageoptions} onChange={(e, { value }) => { this.setState({ selectedLanguage: value }) }} />

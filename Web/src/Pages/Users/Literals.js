@@ -86,6 +86,10 @@ const Literals = {
             tr: 'Roller',
             en: 'Roles'
         },
+        Defaultpage: {
+            tr: 'Varsayılan Sayfa',
+            en: 'Default Page'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'

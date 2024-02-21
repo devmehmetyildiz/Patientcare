@@ -185,36 +185,36 @@ export const UsersSlice = createSlice({
                 state.errMsg = action.error.message;
             })
             .addCase(AddUsers.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(AddUsers.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(AddUsers.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(EditUsers.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(EditUsers.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(EditUsers.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(DeleteUsers.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(DeleteUsers.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(DeleteUsers.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             });
     },
