@@ -481,6 +481,7 @@ export const PatientsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
+        isLoadingsearch: false,
         isDispatching: false,
         isCheckperiodloading: false,
         isTodogroupdefineloading: false,
@@ -538,16 +539,16 @@ export const PatientsSlice = createSlice({
                 state.errMsg = action.error.message;
             })
             .addCase(GetPatientforsearch.pending, (state) => {
-                state.isLoading = true;
+                state.isLoadingsearch = true;
                 state.errMsg = null;
                 state.listsearch = [];
             })
             .addCase(GetPatientforsearch.fulfilled, (state, action) => {
-                state.isLoading = false;
+                state.isLoadingsearch = false;
                 state.listsearch = action.payload;
             })
             .addCase(GetPatientforsearch.rejected, (state, action) => {
-                state.isLoading = false;
+                state.isLoadingsearch = false;
                 state.errMsg = action.error.message;
             })
             .addCase(Getpreregistrations.pending, (state) => {

@@ -1,7 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useMemo } from 'react'
-import { useColumnOrder, useExpanded, useFilters, useGroupBy, usePagination, useRowSelect, useSortBy, useTable } from "react-table"
-import { Icon, Pagination, Select, Popup, } from 'semantic-ui-react'
+import {
+    useColumnOrder, useExpanded, useFilters, useGroupBy, usePagination,
+    useRowSelect, useSortBy, useTable, useGlobalFilter, useAsyncDebounce,
+} from "react-table"
+import { Icon, Pagination, Select, Popup, Input, } from 'semantic-ui-react'
 import "./index.css"
 
 function DefaultColumnFilter({ column }) {
@@ -31,6 +34,33 @@ function DefaultColumnFilter({ column }) {
     )
 }
 
+const TWO_HUNDRED_MS = 200;
+
+function GlobalFilter({
+    preGlobalFilteredRows,
+    globalFilter,
+    setGlobalFilter,
+}) {
+    const [value, setValue] = useState(globalFilter);
+    const onChange = useAsyncDebounce(value => {
+        setGlobalFilter(value || undefined)
+    }, TWO_HUNDRED_MS);
+
+    return (
+        <div className='w-full flex justify-start items-center my-2'>
+            <Input
+                icon='search'
+                iconPosition='left'
+                placeholder='Arama...'
+                onChange={e => {
+                    setValue(e.target.value);
+                    onChange(e.target.value);
+                }}
+                value={value || ""}
+            />
+        </div>
+    )
+}
 
 export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
     const columns = useMemo(() => {
@@ -64,7 +94,9 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
         headerGroups,
         prepareRow,
         page,
+        globalFilter,
         canPreviousPage,
+        setGlobalFilter,
         canNextPage,
         pageOptions,
         pageCount,
@@ -72,6 +104,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
         visibleColumns,
         setPageSize,
         setAllFilters,
+        preGlobalFilteredRows,
         setHiddenColumns,
         setColumnOrder,
         state: {
@@ -91,10 +124,11 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
         useFilters,
         useColumnOrder,
         useGroupBy,
+        useGlobalFilter,
         useSortBy,
         useExpanded,
         usePagination,
-        useRowSelect
+        useRowSelect,
     )
 
 
@@ -131,159 +165,167 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
     }, [Config?.columnOrder])
 
     return (
-        <div className='react-table-container'>
-            <div className='react-table-box max-h[calc(100vh-13.4rem)]'>
-                {
-                    filters.length > 0 ?
-                        <div className='react-table-filter'>
-                            <span className='header'><Icon name='filter' /> Filters</span>
-                            <React.Fragment>
-                                {filters.filter(filter => ((Array.isArray(filter.value) && filter.value.length > 0) || filter.value)).map(filter => (
-                                    Array.isArray(filter.value) && filter.value.length > 0 ?
-                                        filter.value.map((subItem, index) => (
-                                            <span key={`${filter.id}-${index}`} className='item'>
+        <React.Fragment>
+            <GlobalFilter
+                preGlobalFilteredRows={preGlobalFilteredRows}
+                globalFilter={globalFilter}
+                setGlobalFilter={setGlobalFilter}
+            />
+            <div className='react-table-container'>
+
+                <div className='react-table-box max-h[calc(100vh-13.4rem)]'>
+                    {
+                        filters.length > 0 ?
+                            <div className='react-table-filter'>
+                                <span className='header'><Icon name='filter' /> Filters</span>
+                                <React.Fragment>
+                                    {filters.filter(filter => ((Array.isArray(filter.value) && filter.value.length > 0) || filter.value)).map(filter => (
+                                        Array.isArray(filter.value) && filter.value.length > 0 ?
+                                            filter.value.map((subItem, index) => (
+                                                <span key={`${filter.id}-${index}`} className='item'>
+                                                    <span>{columns.find(column => column.accessor === filter.id) ? columns.find(column => column.accessor === filter.id).Header : filter.id}:</span>
+                                                    {subItem}
+                                                    <Icon name='times circle'
+                                                        onClick={() => {
+                                                            let decoratedFilters = Object.assign([], filters)
+                                                            let findFilter = decoratedFilters.find(innerFilter => innerFilter.id === filter.id)
+                                                            if (findFilter) {
+                                                                findFilter.value = findFilter.value.filter(innerFilter => innerFilter !== subItem)
+                                                                decoratedFilters = findFilter.value.length > 0 ? decoratedFilters : decoratedFilters.filter(innerFilter => innerFilter.id !== filter.id)
+                                                                setAllFilters(decoratedFilters)
+                                                            }
+                                                        }} className='remove-item' />
+                                                </span>))
+                                            :
+                                            <span key={filter.id} className='item'>
                                                 <span>{columns.find(column => column.accessor === filter.id) ? columns.find(column => column.accessor === filter.id).Header : filter.id}:</span>
-                                                {subItem}
+                                                {filter.value}
                                                 <Icon name='times circle'
-                                                    onClick={() => {
-                                                        let decoratedFilters = Object.assign([], filters)
-                                                        let findFilter = decoratedFilters.find(innerFilter => innerFilter.id === filter.id)
-                                                        if (findFilter) {
-                                                            findFilter.value = findFilter.value.filter(innerFilter => innerFilter !== subItem)
-                                                            decoratedFilters = findFilter.value.length > 0 ? decoratedFilters : decoratedFilters.filter(innerFilter => innerFilter.id !== filter.id)
-                                                            setAllFilters(decoratedFilters)
-                                                        }
-                                                    }} className='remove-item' />
-                                            </span>))
-                                        :
-                                        <span key={filter.id} className='item'>
-                                            <span>{columns.find(column => column.accessor === filter.id) ? columns.find(column => column.accessor === filter.id).Header : filter.id}:</span>
-                                            {filter.value}
-                                            <Icon name='times circle'
-                                                onClick={() => { setAllFilters(filters.filter(innerFilter => innerFilter.id !== filter.id)) }} className='remove-item' />
-                                        </span>
+                                                    onClick={() => { setAllFilters(filters.filter(innerFilter => innerFilter.id !== filter.id)) }} className='remove-item' />
+                                            </span>
+                                    ))}
+                                    <span onClick={() => setAllFilters([])} className='clear-all-filters'>Temizle</span>
+                                </React.Fragment>
+                            </div>
+                            : null
+                    }
+                    <div className='react-table-inner'>
+                        <table className='react-table' {...getTableProps()}>
+                            <thead>
+                                {headerGroups.map(headerGroup => (
+                                    <tr {...headerGroup.getHeaderGroupProps()}>
+                                        {headerGroup.headers.map(column => {
+                                            const foundedColumn = columns.find(u => u.accessor === column.id || u.Header === column.id);
+                                            let style = {}
+                                            column.newWidht && (style.width = column.newWidht)
+                                            column.disableProps && (style.width = '10px')
+                                            return <th {...column.getHeaderProps()} style={style}>
+                                                <div className='react-table-header-column'>
+                                                    {
+                                                        foundedColumn?.sortable ?
+                                                            <div className='react-table-header-sort' {...column.getSortByToggleProps()} title={column.isSorted ? column.isSortedDesc ? "Azalan" : "Artan" : "Sırala"}>
+                                                                {column.render('Header')}
+                                                                {column.isSorted
+                                                                    ? column.isSortedDesc
+                                                                        ? <Icon name='sort down' />
+                                                                        : <Icon name='sort up' />
+                                                                    : <Icon name='sort' />}
+                                                            </div>
+                                                            : column.render('Header')
+                                                    }
+                                                    {foundedColumn?.canGroupBy ? <div className='react-table-header-group-by'>
+                                                        <span {...column.getGroupByToggleProps()}>
+                                                            {column.isGrouped ? <Icon name='thumbtack' className='active' /> : <Icon name='thumbtack' />}
+                                                        </span>
+                                                    </div> : null}
+                                                    {!column.filterDisable ? (foundedColumn?.canFilter) ? <div className='react-table-header-filter'>{column.render('Filter')}</div> : null : null}
+                                                </div>
+                                            </th>
+                                        }
+                                        )}
+                                    </tr>
                                 ))}
-                                <span onClick={() => setAllFilters([])} className='clear-all-filters'>Temizle</span>
-                            </React.Fragment>
-                        </div>
-                        : null
-                }
-                <div className='react-table-inner'>
-                    <table className='react-table' {...getTableProps()}>
-                        <thead>
-                            {headerGroups.map(headerGroup => (
-                                <tr {...headerGroup.getHeaderGroupProps()}>
-                                    {headerGroup.headers.map(column => {
-                                        const foundedColumn = columns.find(u => u.accessor === column.id || u.Header === column.id);
-                                        let style = {}
-                                        column.newWidht && (style.width = column.newWidht)
-                                        column.disableProps && (style.width = '10px')
-                                        return <th {...column.getHeaderProps()} style={style}>
-                                            <div className='react-table-header-column'>
-                                                {
-                                                    foundedColumn?.sortable ?
-                                                        <div className='react-table-header-sort' {...column.getSortByToggleProps()} title={column.isSorted ? column.isSortedDesc ? "Azalan" : "Artan" : "Sırala"}>
-                                                            {column.render('Header')}
-                                                            {column.isSorted
-                                                                ? column.isSortedDesc
-                                                                    ? <Icon name='sort down' />
-                                                                    : <Icon name='sort up' />
-                                                                : <Icon name='sort' />}
-                                                        </div>
-                                                        : column.render('Header')
-                                                }
-                                                {foundedColumn?.canGroupBy ? <div className='react-table-header-group-by'>
-                                                    <span {...column.getGroupByToggleProps()}>
-                                                        {column.isGrouped ? <Icon name='thumbtack' className='active' /> : <Icon name='thumbtack' />}
-                                                    </span>
-                                                </div> : null}
-                                                {!column.filterDisable ? (foundedColumn?.canFilter) ? <div className='react-table-header-filter'>{column.render('Filter')}</div> : null : null}
-                                            </div>
-                                        </th>
-                                    }
-                                    )}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody {...getTableBodyProps()}>
-                            {page.map(row => {
-                                prepareRow(row)
-                                return (
-                                    <React.Fragment key={`rw-${row.id}`}>
-                                        <tr {...row.getRowProps()} style={{ backgroundColor: row.original?.Case ? row.original.Case?.Casecolor : null }} >
-                                            {row.cells.map(cell => {
-                                                const Isicon = cell?.column?.disableProps
-                                                return (
-                                                    <td  {...cell.getCellProps({ className: cell.column.className })} >
-                                                        {cell.isGrouped ? (
-                                                            // If it's a grouped cell, add an expander and row count
-                                                            <React.Fragment>
-                                                                <span {...row.getToggleRowExpandedProps()}>
-                                                                    {row.isExpanded ? <Icon className='text-info' name='minus' /> : <Icon className='text-info' name='plus' />}
-                                                                </span>{' '}
-                                                                {Isicon ?
+                            </thead>
+                            <tbody {...getTableBodyProps()}>
+                                {page.map(row => {
+                                    prepareRow(row)
+                                    return (
+                                        <React.Fragment key={`rw-${row.id}`}>
+                                            <tr {...row.getRowProps()} style={{ backgroundColor: row.original?.Case ? row.original.Case?.Casecolor : null }} >
+                                                {row.cells.map(cell => {
+                                                    const Isicon = cell?.column?.disableProps
+                                                    return (
+                                                        <td  {...cell.getCellProps({ className: cell.column.className })} >
+                                                            {cell.isGrouped ? (
+                                                                // If it's a grouped cell, add an expander and row count
+                                                                <React.Fragment>
+                                                                    <span {...row.getToggleRowExpandedProps()}>
+                                                                        {row.isExpanded ? <Icon className='text-info' name='minus' /> : <Icon className='text-info' name='plus' />}
+                                                                    </span>{' '}
+                                                                    {Isicon ?
+                                                                        <div className='flex w-full justify-center items-center '>
+                                                                            {cell.render('Cell', { editable: false })}
+                                                                        </div>
+                                                                        : cell.render('Cell', { editable: false })} (
+                                                                    {row.subRows.length})
+                                                                </React.Fragment>
+                                                            ) : cell.isAggregated ? (
+                                                                cell.render('Aggregated')
+                                                            ) : cell.isPlaceholder ? null : (
+                                                                Isicon ?
                                                                     <div className='flex w-full justify-center items-center '>
                                                                         {cell.render('Cell', { editable: false })}
                                                                     </div>
-                                                                    : cell.render('Cell', { editable: false })} (
-                                                                {row.subRows.length})
-                                                            </React.Fragment>
-                                                        ) : cell.isAggregated ? (
-                                                            cell.render('Aggregated')
-                                                        ) : cell.isPlaceholder ? null : (
-                                                            Isicon ?
-                                                                <div className='flex w-full justify-center items-center '>
-                                                                    {cell.render('Cell', { editable: false })}
-                                                                </div>
-                                                                : cell.render('Cell', { editable: false })
-                                                        )}
-                                                    </td>
-                                                )
-                                            })}
-                                        </tr>
-                                        {row.isExpanded && renderRowSubComponent ? (
-                                            <tr>
-                                                <td colSpan={visibleColumns.length}>
-                                                    {renderRowSubComponent({ row })}
-                                                </td>
+                                                                    : cell.render('Cell', { editable: false })
+                                                            )}
+                                                        </td>
+                                                    )
+                                                })}
                                             </tr>
-                                        ) : null}
-                                    </React.Fragment>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            {
-                (pageOptions.length > 1 || pageSize !== 15) ?
-                    <div className='flex flex-row justify-between items-center w-full p-2'>
-                        <Select className='ml-2' placeholder='Set Page Size' value={pageSize} onChange={(e, data) => { setPageSize(data.value) }} options={pageSizes} />
-                        <div className="pagination">
-                            <Pagination
-                                className='row-pagination'
-                                activePage={pageIndex + 1}
-                                boundaryRange={2}
-                                onPageChange={(e, { activePage }) => { gotoPage(activePage - 1) }}
-                                siblingRange={2}
-                                totalPages={pageCount}
-                                ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
-                                firstItem={canPreviousPage ? { content: <Icon name='angle double left' />, icon: true } : null}
-                                lastItem={canNextPage ? { content: <Icon name='angle double right' />, icon: true } : null}
-                                prevItem={canPreviousPage ? { content: <Icon name='angle left' />, icon: true } : null}
-                                nextItem={canNextPage ? { content: <Icon name='angle right' />, icon: true } : null}
-                                size='small'
-                                pointing
-                                secondary
-                            />
-                        </div>
-                        <div className='mr-2'>
-                            <p>Page {pageIndex + 1} of {pageOptions.length}</p>
-                        </div>
+                                            {row.isExpanded && renderRowSubComponent ? (
+                                                <tr>
+                                                    <td colSpan={visibleColumns.length}>
+                                                        {renderRowSubComponent({ row })}
+                                                    </td>
+                                                </tr>
+                                            ) : null}
+                                        </React.Fragment>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
                     </div>
-                    : null
-            }
-        </div >
+                </div>
+                {
+                    (pageOptions.length > 1 || pageSize !== 15) ?
+                        <div className='flex flex-row justify-between items-center w-full p-2'>
+                            <Select className='ml-2' placeholder='Set Page Size' value={pageSize} onChange={(e, data) => { setPageSize(data.value) }} options={pageSizes} />
+                            <div className="pagination">
+                                <Pagination
+                                    className='row-pagination'
+                                    activePage={pageIndex + 1}
+                                    boundaryRange={2}
+                                    onPageChange={(e, { activePage }) => { gotoPage(activePage - 1) }}
+                                    siblingRange={2}
+                                    totalPages={pageCount}
+                                    ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
+                                    firstItem={canPreviousPage ? { content: <Icon name='angle double left' />, icon: true } : null}
+                                    lastItem={canNextPage ? { content: <Icon name='angle double right' />, icon: true } : null}
+                                    prevItem={canPreviousPage ? { content: <Icon name='angle left' />, icon: true } : null}
+                                    nextItem={canNextPage ? { content: <Icon name='angle right' />, icon: true } : null}
+                                    size='small'
+                                    pointing
+                                    secondary
+                                />
+                            </div>
+                            <div className='mr-2'>
+                                <p>Page {pageIndex + 1} of {pageOptions.length}</p>
+                            </div>
+                        </div>
+                        : null
+                }
+            </div >
+        </React.Fragment>
     )
 }
 export default DataTable

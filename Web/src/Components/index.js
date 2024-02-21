@@ -19,9 +19,11 @@ import Settings from './Settings'
 import Sidebar from './Sidebar'
 import Spinner from './Spinner'
 import Submitbutton from './Submitbutton'
+import Textsearch from './Textsearch'
+import Search from './Search'
 
 export {
     About, AddModal, Contentwrapper, DataTable, Footerwrapper, FormInput, Gobackbutton,
     Headerbredcrump, Headerwrapper, LoadingPage, MobileTable, Navbar, NoDataScreen, Notfoundpage,
-    Pagedivider, ProtectedRoute, Settings, Sidebar, Spinner, Submitbutton, Pagewrapper
+    Pagedivider, ProtectedRoute, Settings, Sidebar, Spinner, Submitbutton, Pagewrapper, Textsearch, Search
 }
