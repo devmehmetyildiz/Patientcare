@@ -4,7 +4,7 @@ const config = require('./Config');
 
 require("./Middlewares/Databaseconnector")()
   .then(() => {
-    
+
     const cors = require('cors');
     const bodyParser = require('body-parser')
     const session = require('express-session')
@@ -51,7 +51,7 @@ require("./Middlewares/Databaseconnector")()
     app.use(requestloghelper)
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/permission-checkers/`, controllerFileSuffix: '-permissioncheckers.js', logRoutesList: false })
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/`, controllerFileSuffix: '-controller.js', logRoutesList: false })
-    
+
     errorHandlers.init(app)
 
     if (config.env === 'development' || config.env === 'production') {
@@ -60,12 +60,10 @@ require("./Middlewares/Databaseconnector")()
       httpServer.listen(config.env === 'development' ? config.port : process.env.PORT, () => {
         if (config.env === 'development') {
           console.log(`${config.session.name} service is running at http://localhost:${httpServer.address().port} for public usage`)
-          db.applog_userroleModel.create({
-            Event: "App opened at: " + new Date()
-          }).catch(() => {
-
-          })
         }
+        db.applog_userroleModel.create({
+          Event: "App opened at: " + new Date()
+        }).catch(() => { })
       })
     }
 
