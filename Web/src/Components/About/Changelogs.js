@@ -508,6 +508,42 @@ const version1_0_0_16 = {
     ],
 }
 
+const version1_0_0_17 = {
+    version: "1.0.0.17",
+    features: [
+        {
+            title: "Genel", commits: [
+                "Grid tablolara genel arama eklendi",
+                "Navigasyonda yer alan sayfa search kısmına hasta searchde eklendi tc ve isime görede arama yapılabilecek",
+                "Varsayılan ekranı ayarlanan kullanıcılar elder care'e tıklarak varsayılan ekrana gidebilir",
+                "Varsayılan ekranı ayarlanan kullanıcılar ilk açılışta varsayılan ekrana yönlendirilecek",
+            ]
+        },
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Hasta yerleşimleri transfer ekranına kat ve oda eklendi",
+            ]
+        },
+        {
+            title: "Kullanıcı", commits: [
+                "Kullanıcılar ekranında varsayılan sayfa eklendi",
+            ]
+        },
+    ],
+    changes: [
+        {
+            title: "Hastalar", commits: [
+                "Kayıt tarihi kabul tarihi olarak değiştirildi",
+            ]
+        },
+        {
+            title: "Services", commits: [
+                "Servislerin loglama durumu düzeltildi",
+            ]
+        },
+    ],
+}
+
 export {
     version1_0_0_0,
     version1_0_0_1,
@@ -526,4 +562,5 @@ export {
     version1_0_0_14,
     version1_0_0_15,
     version1_0_0_16,
+    version1_0_0_17,
 }
