@@ -19,7 +19,7 @@ class App extends Component {
     script1.async = true;
     document.body.appendChild(script1);
     this.mediaQuery = window.matchMedia('(max-width: 768px)'); // Change the breakpoint value as per your requirements
-    const isFullPageLayout = false
+    const isFullPageLayout = true
     const iconstate = false
     this.state = { iconstate, isFullPageLayout, isMobile: false, hideMobile: false }
   }

@@ -544,6 +544,17 @@ const version1_0_0_17 = {
     ],
 }
 
+const version1_0_0_18 = {
+    version: "1.0.0.18",
+    bugs: [
+        {
+            title: "Kullanıcı işlemleri", commits: [
+                "Parola sıfırlama sistemi düzeltildi",
+            ]
+        },
+    ],
+}
+
 export {
     version1_0_0_0,
     version1_0_0_1,
@@ -563,4 +574,5 @@ export {
     version1_0_0_15,
     version1_0_0_16,
     version1_0_0_17,
+    version1_0_0_18,
 }

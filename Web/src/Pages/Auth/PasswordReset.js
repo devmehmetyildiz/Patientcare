@@ -31,7 +31,7 @@ export default class PasswordReset extends Component {
         return (
             isLoading || isDispatching ? <LoadingPage /> :
                 <div className='bg-white dark:bg-Contentbg ' >
-                    <Navbar Profile={Profile} withoutControl={true} />
+                    <Navbar Profile={Profile} withoutControl={true} onlyTitle/>
                     <div className='flex flex-row justify-start items-start '>
                         <div className={`mt-[58.61px] p-4 w-full min-w-[0px] contentWrapper`}>
                             <Pagewrapper>
