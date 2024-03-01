@@ -14,6 +14,7 @@ import {
     version1_0_0_16,
     version1_0_0_17,
     version1_0_0_18,
+    version1_0_0_19,
     version1_0_0_2,
     version1_0_0_3,
     version1_0_0_4,
@@ -37,6 +38,7 @@ export default class About extends Component {
 
     render() {
         const Changelogs = [
+            version1_0_0_19,
             version1_0_0_18,
             version1_0_0_17,
             version1_0_0_16,
@@ -57,7 +59,6 @@ export default class About extends Component {
             version1_0_0_1,
             version1_0_0_0
         ]
-        console.log('this.state.activeIssue: ', this.state.activeIssue);
 
         return (
             <Pagewrapper>
@@ -107,10 +108,10 @@ export default class About extends Component {
                                                         <div className='time-line-item-content'>
                                                             {
                                                                 [
-                                                                    this.getReleaseDetailDecoration(item.version + 'feature', 'feature', `Features`, (item?.features || [])),
-                                                                    this.getReleaseDetailDecoration(item.version + 'change', 'change', `Changes`, (item?.changes || [])),
-                                                                    this.getReleaseDetailDecoration(item.version + 'bug', 'bug', 'Bug Fixes', (item?.bugs || [])),
-                                                                    this.getReleaseDetailDecoration(item.version + 'no-issue', 'no-issue', 'No issue', (item?.withoutIssues || [])),
+                                                                    this.getReleaseDetailDecoration(item.version + 'feature', 'feature', `Yenilikler`, (item?.features || [])),
+                                                                    this.getReleaseDetailDecoration(item.version + 'change', 'change', `Değişiklikler`, (item?.changes || [])),
+                                                                    this.getReleaseDetailDecoration(item.version + 'bug', 'bug', 'Hata Çözümleri', (item?.bugs || [])),
+                                                                    this.getReleaseDetailDecoration(item.version + 'no-issue', 'no-issue', 'Genel', (item?.withoutIssues || [])),
                                                                 ]
                                                             }
                                                         </div>

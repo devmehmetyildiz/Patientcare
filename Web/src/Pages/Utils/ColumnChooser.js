@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Icon, Button, Modal, Table, Label, Checkbox, Form } from 'semantic-ui-react'
+import { Icon, Button, Modal, Table, Label, Checkbox, Form, Dropdown } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from './../../Utils/Validator';
 
@@ -20,16 +20,16 @@ class ColumnChooser extends Component {
       const metaColumns = JSON.parse(tableMeta.Config)
       const decoratedColumns = metaColumns.length === columns.length ?
         metaColumns.map((item, index) => {
-          return { order: index, isVisible: item.isVisible, name: columns.find(u => this.getAccessor(u) === item.key)?.Header, key: item.key, isGroup: item.isGroup }
+          return { order: index, isVisible: item.isVisible, name: columns.find(u => this.getAccessor(u) === item.key)?.Header, key: item.key, isGroup: item.isGroup, sorting: item.sorting }
         }) :
         columns.map((item, index) => {
-          return { order: index, isVisible: true, name: item.Header, key: this.getAccessor(item), isGroup: false }
+          return { order: index, isVisible: true, name: item.Header, key: this.getAccessor(item), isGroup: false, sorting: 'None' }
         })
       this.setState({ decoratedColumns: decoratedColumns })
     } else {
       const defaultHiddens = ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
       const decoratedColumns = columns.map((item, index) => {
-        return { order: index, isVisible: defaultHiddens.includes(this.getAccessor(item)) ? false : true, name: item.Header, key: this.getAccessor(item), isGroup: false }
+        return { order: index, isVisible: defaultHiddens.includes(this.getAccessor(item)) ? false : true, name: item.Header, key: this.getAccessor(item), isGroup: false, sorting: 'None' }
       })
       this.setState({ decoratedColumns: decoratedColumns })
     }
@@ -43,16 +43,16 @@ class ColumnChooser extends Component {
         const metaColumns = JSON.parse(tableMeta.Config)
         const decoratedColumns = metaColumns.length === columns.length ?
           metaColumns.map((item, index) => {
-            return { order: index, isVisible: item.isVisible, name: columns.find(u => this.getAccessor(item) === item.key)?.Header, key: item.key, isGroup: item.isGroup }
+            return { order: index, isVisible: item.isVisible, name: columns.find(u => this.getAccessor(item) === item.key)?.Header, key: item.key, isGroup: item.isGroup, sorting: item.sorting }
           }) :
           columns.map((item, index) => {
-            return { order: index, isVisible: true, name: item.Header, key: this.getAccessor(item), isGroup: false }
+            return { order: index, isVisible: true, name: item.Header, key: this.getAccessor(item), isGroup: false, sorting: 'None' }
           })
         this.setState({ decoratedColumns: decoratedColumns })
       } else {
         const defaultHiddens = ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
         const decoratedColumns = columns.map((item, index) => {
-          return { order: index, isVisible: defaultHiddens.includes(this.getAccessor(item)) ? false : true, name: item.Header, key: this.getAccessor(item), isGroup: false }
+          return { order: index, isVisible: defaultHiddens.includes(this.getAccessor(item)) ? false : true, name: item.Header, key: this.getAccessor(item), isGroup: false, sorting: 'None' }
         })
         this.setState({ decoratedColumns: decoratedColumns })
       }
@@ -75,6 +75,12 @@ class ColumnChooser extends Component {
     const { Profile } = this.props
     const { decoratedColumns } = this.state
 
+    const Sortingoption = [
+      { key: Literals.Options.Sortasc[Profile.Language], text: Literals.Options.Sortasc[Profile.Language], value: 'Asc' },
+      { key: Literals.Options.Sortdesc[Profile.Language], text: Literals.Options.Sortdesc[Profile.Language], value: 'Desc' },
+      { key: Literals.Options.Sortnone[Profile.Language], text: Literals.Options.Sortnone[Profile.Language], value: 'None' },
+    ]
+
     return <React.Fragment>
       <Button className='!bg-[#2355a0] !text-white' floated='right' onClick={() => { this.setState({ opened: !this.state.opened }) }} >{Literals.Columns.Visible[Profile.Language]}</Button>
       <Modal
@@ -91,6 +97,7 @@ class ColumnChooser extends Component {
                   <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
                   <Table.HeaderCell width={2}>{Literals.Columns.Visible[Profile.Language]}</Table.HeaderCell>
                   <Table.HeaderCell width={1}>{Literals.Columns.Group[Profile.Language]}</Table.HeaderCell>
+                  <Table.HeaderCell width={2}>{Literals.Columns.Sorting[Profile.Language]}</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>}
             <Table.Body>
@@ -110,6 +117,17 @@ class ColumnChooser extends Component {
                   </Table.Cell>
                   <Table.Cell>
                     {this.Cellwrapper(<Checkbox disabled={!column.isVisible} readOnly={!column.isVisible} toggle className='m-2' checked={column.isGroup} onClick={(e) => { column.isVisible && this.groupChanged(column.key) }} />, Literals.Columns.Group[Profile.Language])}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {this.Cellwrapper(<Dropdown
+                      value={column.sorting}
+                      search
+                      fluid
+                      options={Sortingoption}
+                      selection
+                      onChange={(e, data) => {
+                        this.sortingChanged(column.key, data.value)
+                      }} />, Literals.Columns.Sorting[Profile.Language])}
                   </Table.Cell>
                 </Table.Row>
               })}
@@ -175,6 +193,13 @@ class ColumnChooser extends Component {
     const Columns = this.state.decoratedColumns
     const index = Columns.findIndex(column => column.key === property)
     Columns[index].isGroup = !Columns[index].isGroup
+    this.setState({ decoratedColumns: Columns })
+  }
+
+  sortingChanged = (property, data) => {
+    const Columns = this.state.decoratedColumns
+    const index = Columns.findIndex(column => column.key === property)
+    Columns[index].sorting = data
     this.setState({ decoratedColumns: Columns })
   }
 

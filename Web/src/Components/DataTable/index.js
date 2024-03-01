@@ -34,6 +34,8 @@ function DefaultColumnFilter({ column }) {
     )
 }
 
+
+
 const TWO_HUNDRED_MS = 200;
 
 function GlobalFilter({
@@ -88,6 +90,13 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
         []
     )
 
+    const turkishSort = (rowA, rowB, columnId) => {
+        const valueA = rowA?.values[columnId];
+        const valueB = rowB?.values[columnId];
+
+        return valueA?.localeCompare(valueB, 'tr', { sensitivity: 'base' });
+    };
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -120,6 +129,18 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
             data,
             initialState: { ...Config, pageSize: 15 },
             defaultColumn,
+            sortTypes: {
+                alphanumeric: (rowA, rowB, columnId) => {
+                    const valueA = parseFloat(rowA.values[columnId]);
+                    const valueB = parseFloat(rowB.values[columnId]);
+
+                    if (isNaN(valueA) || isNaN(valueB)) {
+                        return rowA.values[columnId]?.localeCompare(rowB.values[columnId], 'tr', { sensitivity: 'base' });
+                    }
+
+                    return valueA - valueB;
+                }
+            }
         },
         useFilters,
         useColumnOrder,

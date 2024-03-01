@@ -6,7 +6,7 @@ const isObject = function (value) {
 }
 
 const isNumber = function (value) {
-  return (/[-+]?\d*\.?\d*$/.test(value) && typeof (value) === 'number')
+  return (/[-+]?\d*\.?\d*$/.test(value) && typeof value === 'number' && !isNaN(value));
 }
 
 const isPositiveInteger = function (value) {

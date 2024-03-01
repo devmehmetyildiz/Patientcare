@@ -529,14 +529,7 @@ async function DeleteUser(req, res, next) {
         }
         const t = await db.sequelize.transaction();
 
-        //await db.userModel.destroy({ where: { uuid: Uuid }, transaction: t });
-        //await db.usersaltModel.destroy({ where: { Userid: Uuid }, transaction: t });
-        //await db.userroleModel.destroy({ where: { UserID: Uuid }, transaction: t });
-        await db.userModel.update({
-            Updateduser: "System",
-            Updatetime: new Date(),
-            Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        await db.userModel.destroy({ where: { uuid: Uuid }, transaction: t });
         await t.commit();
     } catch (error) {
         await t.rollback();

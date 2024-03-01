@@ -104,6 +104,9 @@ export const getInitialconfig = (Profile, metaKey) => {
         groupBy: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isGroup === true).map(item => {
             return item.key
         }) : [],
+        sortBy: [...(tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible && u.sorting && u.sorting !== 'None').map(u => {
+            return u?.sorting === 'Asc' ? { id: u.key, desc: false } : { id: u.key, desc: true }
+        }) : [])]
     };
     return initialConfig
 }

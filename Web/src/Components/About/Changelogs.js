@@ -555,6 +555,44 @@ const version1_0_0_18 = {
     ],
 }
 
+const version1_0_0_19 = {
+    version: "1.0.0.19",
+    changes: [
+        {
+            title: "Kullanıcı işlemleri", commits: [
+                "Kullanıcı sistemden tamamen silinebilecek ve tekrar açılabilecek",
+            ]
+        },
+        {
+            title: "Hastalar", commits: [
+                "Hasta para girişlerinde Tahsilat no talebi kaldırıldı",
+                "Hasta para girişlerinde kuruş girme özelliği açıldı",
+                "Hasta detay ekranında dosya indirme seçeneği eklendi",
+                "Hastalar ve Önkayıtlarda gruplandırmada yaşanan undefined problemleri düzeltildi",
+            ]
+        },
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Kurum para girişlerinde kuruş girme özelliği açıldı",
+            ]
+        },
+    ],
+    bugs: [
+        {
+            title: "Genel", commits: [
+                "Tablolardaki Türkçe karakterli sıralama düzeltildi",
+            ]
+        },
+    ],
+    features: [
+        {
+            title: "Genel", commits: [
+                "Kolon Görünümü ayarlamada varsaılan olarak sıralama özelliği eklendi",
+            ]
+        },
+    ],
+}
+
 export {
     version1_0_0_0,
     version1_0_0_1,
@@ -575,4 +613,5 @@ export {
     version1_0_0_16,
     version1_0_0_17,
     version1_0_0_18,
+    version1_0_0_19,
 }

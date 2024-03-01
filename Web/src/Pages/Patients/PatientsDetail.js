@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Divider, Form, Grid, GridColumn, Header, Icon, Label, Loader, Popup, Transition } from 'semantic-ui-react'
+import { Breadcrumb, Button, Dimmer, Header, Icon, Label, Loader, Popup, Transition } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
@@ -13,6 +13,7 @@ import {
   DataTable, Contentwrapper,
   Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, MobileTable
 } from '../../Components'
+import axios from 'axios'
 export default class PatientsDetail extends Component {
 
   PAGE_NAME = 'PatientsDetail'
@@ -21,6 +22,7 @@ export default class PatientsDetail extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
+      fileDownloading: false
     }
   }
 
@@ -181,7 +183,7 @@ export default class PatientsDetail extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const fileColumns = [
-      { Header: Literals.Details.Filename[Profile.Language], accessor: 'Filename', Lowtitle: true, Withtext: true },
+      { Header: Literals.Details.Filename[Profile.Language], accessor: 'Filename', Lowtitle: true, Withtext: true, Cell: (col, row) => this.filenameCellhandler(col, row), },
       { Header: Literals.Details.Filetype[Profile.Language], accessor: 'Filetype', Lowtitle: true, Withtext: true },
       { Header: Literals.Details.Usagetype[Profile.Language], accessor: row => this.usagetypeCellhandler(row?.Usagetype), Lowtitle: true, Withtext: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
@@ -254,9 +256,14 @@ export default class PatientsDetail extends Component {
       }
     });
 
+
+
     return (
       isLoadingstatus ? <LoadingPage /> :
         < Pagewrapper >
+          <Dimmer active={this.state.fileDownloading}>
+            <Loader />
+          </Dimmer>
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Patients"}>
@@ -316,7 +323,7 @@ export default class PatientsDetail extends Component {
                     {Literals.Details.Patienttype[Profile.Language]}
                     <Label.Detail>{patienttype?.Name}</Label.Detail>
                   </Label>
-                  <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
+                  <Label size='large' as='a' className='!bg-[#2355a0] !text-white'  image ribbon={!Profile.Ismobile}>
                     {Literals.Details.Floor[Profile.Language]}
                     <Label.Detail>{floor?.Name}</Label.Detail>
                   </Label>
@@ -437,6 +444,49 @@ export default class PatientsDetail extends Component {
   boolCellhandler = (value) => {
     const { Profile } = this.props
     return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+  }
+
+  filenameCellhandler = (col) => {
+    let rowUuid = col?.row?.original?.Uuid
+
+    return (<div className='flex flex-row items-center'>
+      {col.value}
+      {
+        validator.isUUID(rowUuid) &&
+        <div className='cursor-pointer' onClick={() => { this.downloadFile(rowUuid, col.value) }}>
+          <Icon color='blue' name='download' />
+        </div>
+      }
+    </div>)
+  }
+
+  downloadFile = (fileID, fileName) => {
+    const { fillPatientnotification, Profile } = this.props
+    this.setState({ fileDownloading: true })
+    axios.get(`${config.services.File}${ROUTES.FILE}/Downloadfile/${fileID}`, {
+      responseType: 'blob'
+    }).then((res) => {
+      this.setState({ fileDownloading: false })
+      const fileType = res.headers['content-type']
+      const blob = new Blob([res.data], {
+        type: fileType
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      if (fileType.includes('pdf')) {
+        window.open(url)
+        a.href = null;
+        window.URL.revokeObjectURL(url);
+      }
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }).catch((err) => {
+      this.setState({ fileDownloading: false })
+      fillPatientnotification([{ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: err.message }])
+      console.log(err.message)
+    });
   }
 
 }

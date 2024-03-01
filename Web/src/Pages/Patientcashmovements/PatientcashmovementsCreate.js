@@ -90,10 +90,9 @@ export default class PatientcashmovementsCreate extends Component {
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementvalue[Profile.Language]} name="Movementvalue" type='number' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementvalue[Profile.Language]} name="Movementvalue" type='number' step='0.01'/>
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Report[Profile.Language]} name="ReportID" />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
             </Form>
@@ -120,6 +119,7 @@ export default class PatientcashmovementsCreate extends Component {
     const { AddPatientcashmovements, history, fillPatientcashmovementnotification, Profile, closeModal, location } = this.props
 
     const data = this.context.getForm(this.PAGE_NAME)
+    !validator.isNumber(data.Movementvalue) && (data.Movementvalue = 0)
     let errors = []
     if (!validator.isUUID(data.PatientID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Patientrequired[Profile.Language] })
@@ -132,9 +132,6 @@ export default class PatientcashmovementsCreate extends Component {
     }
     if (!validator.isNumber(data.Movementvalue)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Valuerequired[Profile.Language] })
-    }
-    if (!validator.isString(data.ReportID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Reportnorequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

@@ -45,7 +45,6 @@ async function AddPatientcashmovement(req, res, next) {
         RegisterID,
         Movementtype,
         Movementvalue,
-        ReportID,
     } = req.body
 
 
@@ -61,10 +60,6 @@ async function AddPatientcashmovement(req, res, next) {
     if (!validator.isNumber(Movementvalue)) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTVALUE_REQUIRED)
     }
-    if (!validator.isString(ReportID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.REPORTID_REQUIRED)
-    }
-
 
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -89,7 +84,6 @@ async function AddPatientcashmovement(req, res, next) {
             await db.companycashmovementModel.create({
                 Movementtype: (Movementtype * -1),
                 Movementvalue: Movementvalue,
-                ReportID: ReportID,
                 Info: '',
                 Uuid: companyuuid,
                 Createduser: "System",
@@ -122,7 +116,6 @@ async function UpdatePatientcashmovement(req, res, next) {
         RegisterID,
         Movementtype,
         Movementvalue,
-        ReportID,
         Uuid
     } = req.body
 
@@ -137,9 +130,6 @@ async function UpdatePatientcashmovement(req, res, next) {
     }
     if (!validator.isNumber(Movementvalue)) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTVALUE_REQUIRED)
-    }
-    if (!validator.isString(ReportID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.REPORTID_REQUIRED)
     }
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTID_REQUIRED)

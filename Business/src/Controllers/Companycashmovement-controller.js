@@ -43,16 +43,12 @@ async function AddCompanycashmovement(req, res, next) {
     let validationErrors = []
     const {
         Movementtype,
-        Movementvalue,
         ReportID,
     } = req.body
 
 
     if (!validator.isNumber(Movementtype)) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED)
-    }
-    if (!validator.isNumber(Movementvalue)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTVALUE_REQUIRED)
     }
     if (!validator.isString(ReportID)) {
         validationErrors.push(messages.VALIDATION_ERROR.REPORTID_REQUIRED)
@@ -97,9 +93,6 @@ async function UpdateCompanycashmovement(req, res, next) {
 
     if (!validator.isNumber(Movementtype)) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED)
-    }
-    if (!validator.isNumber(Movementvalue)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTVALUE_REQUIRED)
     }
     if (!validator.isString(ReportID)) {
         validationErrors.push(messages.VALIDATION_ERROR.REPORTID_REQUIRED)

@@ -35,7 +35,6 @@ export default class Patientcashmovements extends Component {
       { Header: Literals.Columns.Register[Profile.Language], accessor: row => this.registerCellhandler(row?.RegisterID), Subtitle: true },
       { Header: Literals.Columns.Movementtype[Profile.Language], accessor: row => this.typeCellhandler(row?.Movementtype), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Movementvalue[Profile.Language], accessor: row => this.cashCellhandler(row?.Movementvalue), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Report[Profile.Language], accessor: 'ReportID' },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },

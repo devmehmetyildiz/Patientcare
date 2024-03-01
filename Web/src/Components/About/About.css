@@ -21,8 +21,9 @@
 }
 
 .about-page-bottom-segment {
-    padding: 1rem;
-    margin-top: 2rem!important;
+    padding: 0.5rem;
+    height: 82vh;
+    margin-top: 0rem!important;
     border-radius: 1rem!important;
     -webkit-transition: max-width 0.7s;
     box-shadow: 0 5px 10px 0 rgb(34 36 38 / 15%);
@@ -123,7 +124,7 @@
     padding: 1rem;
     overflow: auto;
     overflow-y: auto;
-    max-height:62vh;
+    max-height:68vh;
 }
 
 .time-line-item-marker-text {

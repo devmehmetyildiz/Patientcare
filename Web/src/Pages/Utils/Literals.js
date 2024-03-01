@@ -1,5 +1,17 @@
 const Literals = {
     Options: {
+        Sortasc: {
+            tr: 'Artan',
+            en: 'Ascending'
+        },
+        Sortdesc: {
+            tr: 'Azalan',
+            en: 'descending'
+        },
+        Sortnone: {
+            tr: 'Yok',
+            en: 'None'
+        },
     },
     Columns: {
         Id: {
@@ -17,6 +29,10 @@ const Literals = {
         Group: {
             tr: 'Gruplama',
             en: 'Group By'
+        },
+        Sorting: {
+            tr: 'Sıralama',
+            en: 'Sorting'
         },
         Excelimport: {
             tr: 'Excel Ekle',

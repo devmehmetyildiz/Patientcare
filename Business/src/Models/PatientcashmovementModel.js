@@ -22,9 +22,6 @@ module.exports = sequelize.define('patientcashmovementModel', {
     Movementdate: {
         type: Sequelize.DATE
     },
-    ReportID: {
-        type: Sequelize.STRING
-    },
     Info: {
         type: Sequelize.STRING
     },

@@ -68,7 +68,7 @@ export default class CompanycashmovementsEdit extends Component {
             <Form>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementvalue[Profile.Language]} name="Movementvalue" type='number' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementvalue[Profile.Language]} name="Movementvalue" type='number' step='0.01'/>
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Report[Profile.Language]} name="ReportID" />
@@ -97,12 +97,12 @@ export default class CompanycashmovementsEdit extends Component {
 
     const { EditCompanycashmovements, history, fillCompanycashmovementnotification, Companycashmovements, Profile } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
+    console.log('data: ', data);
+    console.log('validator.isNumber(data.Movementvalue): ', validator.isNumber(data.Movementvalue));
+    !validator.isNumber(data.Movementvalue) && (data.Movementvalue = 0)
     let errors = []
     if (!validator.isNumber(data.Movementtype)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Typerequired[Profile.Language] })
-    }
-    if (!validator.isNumber(data.Movementvalue)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Valuerequired[Profile.Language] })
     }
     if (!validator.isString(data.ReportID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Reportnorequired[Profile.Language] })
