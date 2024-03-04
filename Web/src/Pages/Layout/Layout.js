@@ -1,9 +1,18 @@
 import React, { Component } from 'react'
 import Cookies from 'universal-cookie'
 import Routes from '../../Routes'
-import { Sidebar, LoadingPage, Navbar } from '../../Components'
+import { Sidebar as Sidebarcomponent, LoadingPage, Navbar } from '../../Components'
 import cookies from 'universal-cookie';
+import { Icon, Menu, Segment, SidebarPushable, SidebarPusher, Sidebar, Label } from 'semantic-ui-react';
+import Usernotifications from '../../Containers/Usernotifications/Usernotifications';
 export default class Layout extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      visible: false
+    }
+  }
 
   componentDidMount() {
     window.addEventListener("focus", this.onFocus)
@@ -55,41 +64,48 @@ export default class Layout extends Component {
   }
 
   render() {
-    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal, Istokenchecking, Usagetypes } = this.props
+    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal, Istokenchecking, Usagetypes, handleOpen } = this.props
     return (
       Istokenchecking || Profile.isLogging || Profile.isFetching ?
         <LoadingPage />
         :
-        <div className='bg-white dark:bg-Contentbg overflow-hidden' >
-          <Navbar
-            iconOnly={isMobile ? true : iconOnly}
-            seticonOnly={seticonOnly}
-            Profile={Profile}
-            logOut={logOut}
-            isMobile={isMobile}
-            Files={Files}
-            Usagetypes={Usagetypes}
-            sethideMobile={sethideMobile}
-            hideMobile={hideMobile}
-            handleViewmodal={handleViewmodal}
-            history={history}
-          />
-          <div className='flex flex-row justify-start items-start '>
-            <Sidebar
-              history={history}
-              iconOnly={isMobile ? true : iconOnly}
-              seticonOnly={seticonOnly}
-              Profile={Profile}
-              isMobile={isMobile}
-              hideMobile={hideMobile}
-            />
-            <div className={`mt-[58.61px] p-4 w-full min-w-[0px] contentWrapper`}>
-              <div className='w-full '>
-                <Routes Profile={Profile} />
+        <SidebarPushable className='!-m-2' as={Segment}>
+          <SidebarPusher >
+            <div className=' dark:bg-Contentbg overflow-hidden bg-white' >
+              <Navbar
+                iconOnly={isMobile ? true : iconOnly}
+                seticonOnly={seticonOnly}
+                Profile={Profile}
+                logOut={logOut}
+                isMobile={isMobile}
+                Files={Files}
+                Usagetypes={Usagetypes}
+                sethideMobile={sethideMobile}
+                hideMobile={hideMobile}
+                handleViewmodal={handleViewmodal}
+                history={history}
+                handleNotification={handleOpen}
+                setVisible={() => { this.setState({ visible: !this.state.visible }) }}
+              />
+              <div className='flex flex-row justify-start items-start '>
+                <Sidebarcomponent
+                  history={history}
+                  iconOnly={isMobile ? true : iconOnly}
+                  seticonOnly={seticonOnly}
+                  Profile={Profile}
+                  isMobile={isMobile}
+                  hideMobile={hideMobile}
+                />
+                <div className={`mt-[58.61px] p-4 w-full min-w-[0px] contentWrapper`}>
+                  <div className='w-full '>
+                    <Routes Profile={Profile} />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </SidebarPusher>
+          <Usernotifications />
+        </SidebarPushable >
     )
   }
 

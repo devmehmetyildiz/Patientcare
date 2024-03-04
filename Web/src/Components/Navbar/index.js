@@ -53,7 +53,7 @@ export class Navbar extends Component {
   }
 
   render() {
-    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, Usagetypes, history, onlyTitle } = this.props
+    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, Usagetypes, history, onlyTitle,  handleNotification } = this.props
     const ishavePP = (Profile?.meta?.Files || []).find(u => (u.Usagetype.split(',') || []).map(uuids => { return (Usagetypes.list || []).find(type => type.Uuid === uuids)?.Value || '' }).includes('PP'))
 
     const trigger = (
@@ -71,7 +71,7 @@ export class Navbar extends Component {
     return (
       onlyTitle ?
         <nav className={`w-[100%] h-[58.61px] bg-[#2355a0] dark:bg-Contentfg mx-auto flex flex-row justify-between items-center fixed top-0 ${Profile.Ismobile ? 'pl-[12px]' : 'pl-[20px]'} z-50`}>
-          <div   className={`${!Profile.Ismobile && 'absolute inset-0'} flex flex-row justify-center items-center group cursor-pointer`}>
+          <div className={`${!Profile.Ismobile && 'absolute inset-0'} flex flex-row justify-center items-center group cursor-pointer`}>
             <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-white dark:text-TextColor'>ELDER</p>
             <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-[#7eabc5] dark:text-TextColor'>CAMP</p>
           </div>
@@ -86,15 +86,23 @@ export class Navbar extends Component {
             <div className='h-[2px] group-hover:bg-[#747474] bg-white dark:bg-[#3d3d3d]  w-[20px]' />
           </div>
           <div
-            className={`${!Profile.Ismobile && 'absolute inset-0'} flex flex-row justify-center items-center group cursor-pointer`}
-            onClick={this.handleOpendefaultpage}
+            className={`${Profile.Ismobile && 'absolute inset-0'} flex flex-row justify-center items-center group cursor-pointer`}
           >
-            <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-white dark:text-TextColor'>ELDER</p>
-            <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-[#7eabc5] dark:text-TextColor'>CAMP</p>
+            <div onClick={this.handleOpendefaultpage} className='flex flex-row justify-center items-center group cursor-pointer'>
+              <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-white dark:text-TextColor'>ELDER</p>
+              <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-[#7eabc5] dark:text-TextColor'>CAMP</p>
+            </div>
           </div>
           <div className='flex flex-row justify-center items-center gap-4'>
             <Search history={history} />
-            <Notifications />
+            <div
+              className='cursor-pointer group'
+              onClick={() => {
+                handleNotification(true)
+              }}
+            >
+              <Icon name='bell' className='text-white group-hover:text-gray-300 transition-all duration-500' />
+            </div>
             <div className='flex flex-row justify-center items-center h-full'>
               <Dropdown icon={null} trigger={trigger} basic className="h-full block">
                 <Dropdown.Menu className='!right-[1%] !left-auto '>

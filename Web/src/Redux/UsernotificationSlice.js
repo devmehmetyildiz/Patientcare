@@ -200,6 +200,7 @@ export const DeleteUsernotificationbyid = createAsyncThunk(
 export const UsernotificationsSlice = createSlice({
     name: 'Usernotifications',
     initialState: {
+        open: false,
         list: [],
         selected_record: {},
         errMsg: null,
@@ -210,6 +211,9 @@ export const UsernotificationsSlice = createSlice({
         isViewmodalopen: false,
     },
     reducers: {
+        handleOpen: (state, action) => {
+            state.open = action.payload;
+        },
         handleSelectedUsernotification: (state, action) => {
             state.selected_record = action.payload;
         },
@@ -331,6 +335,7 @@ export const {
     removeUsernotificationnotification,
     handleDeletemodal,
     handleViewmodal,
+    handleOpen
 } = UsernotificationsSlice.actions;
 
 export default UsernotificationsSlice.reducer;
