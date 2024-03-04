@@ -63,6 +63,48 @@ async function GetUsernotificationsbyUserid(req, res, next) {
     }
 }
 
+async function AddUsernotificationbyrole(req, res, next) {
+
+    const { Privilege, Message } = req.body
+
+    const t = await db.sequelize.transaction();
+    try {
+        const users = await db.userModel.findAll({ where: { Isactive: true } })
+
+        for (const user of users) {
+            let notificationSended = false
+            const roles = await db.userroleModel.findAll({ where: { UserID: user?.Uuid } })
+            for (const role of roles) {
+                const privileges = await roleModel.findAll({ where: { RoleID: role?.Uuid } })
+                const willCreatenotification = (privileges || []).includes('Admin') || (privileges || []).includes(Privilege)
+                if (willCreatenotification) {
+
+                    let notificationuuid = uuid()
+                    await db.usernotificationModel.create({
+                        ...Message,
+                        UserID: user?.Uuid,
+                        Uuid: notificationuuid,
+                        Createduser: "System",
+                        Createtime: new Date(),
+                        Isactive: true
+                    }, { transaction: t })
+                    notificationSended = true
+                }
+
+                if (notificationSended) {
+                    break;
+                }
+            }
+        }
+
+        await t.commit()
+    } catch (err) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(err))
+    }
+    res.status(200).json({ message: 'NotificationCreated' })
+}
+
 async function AddUsernotification(req, res, next) {
 
     let notificationuuid = uuid()
@@ -246,5 +288,6 @@ module.exports = {
     GetUsernotificationsbyUserid,
     UpdateUsernotifications,
     DeleteUsernotificationbyid,
-    DeleteUsernotificationbyidreaded
+    DeleteUsernotificationbyidreaded,
+    AddUsernotificationbyrole
 }

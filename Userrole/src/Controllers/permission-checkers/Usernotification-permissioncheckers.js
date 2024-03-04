@@ -31,6 +31,13 @@ async function AddUsernotification(req, res, next) {
         next(createAccessDenied('Usernotifications Add', req.language, { en: 'Usernotifications Add', tr: 'Usernotifications Add' }))
     }
 }
+async function AddUsernotificationbyrole(req, res, next) {
+    if ((req.identity.privileges && req.identity.privileges.includes('usernotificationadd')) || permissionchecker(req)) {
+        next()
+    } else {
+        next(createAccessDenied('Usernotifications Add', req.language, { en: 'Usernotifications Add', tr: 'Usernotifications Add' }))
+    }
+}
 
 async function UpdateUsernotification(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('usernotificationupdate')) || permissionchecker(req)) {
@@ -81,5 +88,6 @@ module.exports = {
     GetUsernotificationsbyUserid,
     UpdateUsernotifications,
     DeleteUsernotificationbyid,
-    DeleteUsernotificationbyidreaded
+    DeleteUsernotificationbyidreaded,
+    AddUsernotificationbyrole
 }
