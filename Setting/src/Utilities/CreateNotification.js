@@ -12,7 +12,7 @@ module.exports = async (type, service, role, message, pushurl) => {
 
         const notificationMessage = {
             Notificationtype: 'Information',
-            Notificationtime: Date.now.toString(),
+            Notificationtime: new Date(),
             Subject: `${service} - ${type}`,
             Message: message,
             Pushurl: pushurl,

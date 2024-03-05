@@ -76,7 +76,7 @@ async function AddUsernotificationbyrole(req, res, next) {
             const roles = await db.userroleModel.findAll({ where: { UserID: user?.Uuid } })
             for (const role of roles) {
                 const privileges = await db.roleprivilegeModel.findAll({ where: { RoleID: role?.RoleID || '' } })
-                const willCreatenotification = (privileges || []).includes('Admin') || (privileges || []).includes(Privilege)
+                const willCreatenotification = ((privileges || []).map(u => u.PrivilegeID) || []).includes('admin') || ((privileges || []).map(u => u.PrivilegeID) || []).includes(Privilege)
                 if (willCreatenotification) {
 
                     let notificationuuid = uuid()

@@ -87,6 +87,7 @@ async function AddDepartment(req, res, next) {
 }
 
 async function UpdateDepartment(req, res, next) {
+    console.log('req: ', req);
 
     let validationErrors = []
     const {
@@ -112,6 +113,7 @@ async function UpdateDepartment(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
     try {
         const department = db.departmentModel.findOne({ where: { Uuid: Uuid } })
         if (!department) {
@@ -123,17 +125,17 @@ async function UpdateDepartment(req, res, next) {
 
         await db.departmentModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
-        await CreateNotification(
-            'Güncelleme',
-            'Departmanlar',
-            'departmentnotification',
-            `${Name} departmanı oluşturuldu`,
-            '/Departments'
-        )
+        await CreateNotification({
+            type: 'Güncelleme',
+            service: 'Departmanlar',
+            role: 'departmentnotification',
+            message: `${Name} departmanı ${username} tarafından oluşturuldu`,
+            pushurl: '/Departments'
+        })
 
         await t.commit()
     } catch (error) {
