@@ -1,4 +1,5 @@
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -9,14 +10,6 @@ const uuid = require('uuid').v4
 async function GetDepartments(req, res, next) {
     try {
         const departments = await db.departmentModel.findAll({ where: { Isactive: true } })
-        for (const department of departments) {
-            department.Stationuuids = await db.departmentstationModel.findAll({
-                where: {
-                    DepartmentID: department.Uuid,
-                },
-                attributes: ['StationID']
-            });
-        }
         res.status(200).json(departments)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -44,12 +37,6 @@ async function GetDepartment(req, res, next) {
         if (!department.Isactive) {
             return createNotfounderror([messages.ERROR.DEPARTMENT_NOT_ACTIVE])
         }
-        department.Stationuuids = await db.departmentstationModel.findAll({
-            where: {
-                DepartmentID: department.Uuid,
-            },
-            attributes: ['StationID']
-        });
         res.status(200).json(department)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -62,7 +49,6 @@ async function AddDepartment(req, res, next) {
     const {
         Name,
         Ishavepatients,
-        Stations,
     } = req.body
 
     if (!validator.isString(Name)) {
@@ -91,15 +77,6 @@ async function AddDepartment(req, res, next) {
             Isactive: true
         }, { transaction: t })
 
-        for (const station of (Stations || [])) {
-            if (!station.Uuid || !validator.isUUID(station.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_STATIONID, req.language))
-            }
-            await db.departmentstationModel.create({
-                DepartmentID: departmentuuid,
-                StationID: station.Uuid
-            }, { transaction: t });
-        }
 
         await t.commit()
     } catch (err) {
@@ -115,7 +92,6 @@ async function UpdateDepartment(req, res, next) {
     const {
         Name,
         Ishavepatients,
-        Stations,
         Uuid
     } = req.body
 
@@ -151,16 +127,14 @@ async function UpdateDepartment(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
-        await db.departmentstationModel.destroy({ where: { DepartmentID: Uuid }, transaction: t });
-        for (const station of (Stations || [])) {
-            if (!station.Uuid || !validator.isUUID(station.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_STATIONID, req.language))
-            }
-            await db.departmentstationModel.create({
-                DepartmentID: Uuid,
-                StationID: station.Uuid
-            }, { transaction: t });
-        }
+        await CreateNotification(
+            'Güncelleme',
+            'Departmanlar',
+            'departmentnotification',
+            `${Name} departmanı oluşturuldu`,
+            '/Departments'
+        )
+
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

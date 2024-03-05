@@ -41,6 +41,7 @@ const Priveleges = [
     { code: 'departmentdelete', text: 'Departments Delete', group: ['Departments'], required: [] },
     { code: 'departmentmanageview', text: 'Departments Manage View', group: ['Departments'], required: [] },
     { code: 'departmentgetreport', text: 'Departments Get Report', group: ['Departments'], required: [] },
+    { code: 'departmentnotification', text: 'Departments Notification', group: ['Departments'], required: [] },
 
     { code: 'floorscreen', text: 'Floors Screen', group: ['Floors'], required: [] },
     { code: 'floorview', text: 'Floors View', group: ['Floors'], required: [] },
