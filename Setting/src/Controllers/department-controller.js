@@ -87,7 +87,6 @@ async function AddDepartment(req, res, next) {
 }
 
 async function UpdateDepartment(req, res, next) {
-    console.log('req: ', req);
 
     let validationErrors = []
     const {
@@ -133,7 +132,7 @@ async function UpdateDepartment(req, res, next) {
             type: 'Güncelleme',
             service: 'Departmanlar',
             role: 'departmentnotification',
-            message: `${Name} departmanı ${username} tarafından oluşturuldu`,
+            message: `${Name} departmanı ${username} tarafından güncellendi`,
             pushurl: '/Departments'
         })
 

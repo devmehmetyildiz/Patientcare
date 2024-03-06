@@ -25,8 +25,14 @@ module.exports = sequelize.define('usernotificationModel', {
     Isshowed: {
         type: Sequelize.BOOLEAN
     },
+    Showedtime: {
+        type: Sequelize.DATE
+    },
     Isreaded: {
         type: Sequelize.BOOLEAN
+    },
+    Readtime: {
+        type: Sequelize.DATE
     },
     Pushurl: {
         type: Sequelize.STRING

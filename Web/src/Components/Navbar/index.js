@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 import { Button, Dropdown, Header, Icon, Modal } from 'semantic-ui-react'
 import { ROUTES } from '../../Utils/Constants'
 import config from '../../Config'
-import Notifications from '../../Containers/Notifications/Notifications'
 import Search from '../Search'
+
 const navbarLiterals = {
   editProfile: {
     en: "Edit Profile",
@@ -53,7 +53,7 @@ export class Navbar extends Component {
   }
 
   render() {
-    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, Usagetypes, history, onlyTitle,  handleNotification } = this.props
+    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, Usagetypes, history, onlyTitle, handleNotification } = this.props
     const ishavePP = (Profile?.meta?.Files || []).find(u => (u.Usagetype.split(',') || []).map(uuids => { return (Usagetypes.list || []).find(type => type.Uuid === uuids)?.Value || '' }).includes('PP'))
 
     const trigger = (
@@ -76,7 +76,7 @@ export class Navbar extends Component {
             <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-[#7eabc5] dark:text-TextColor'>CAMP</p>
           </div>
         </nav >
-        : <nav className={`w-[100%] h-[58.61px] bg-[#2355a0] dark:bg-Contentfg mx-auto flex flex-row justify-between items-center fixed top-0 ${Profile.Ismobile ? 'pl-[12px]' : 'pl-[20px]'} z-50`}>
+        : <nav className={`w-[100%] h-[58.61px] bg-[#2355a0] dark:bg-Contentfg mx-auto flex flex-row justify-between items-center fixed top-0 ${Profile.Ismobile ? 'pl-[12px]' : 'pl-[20px]'} z-50 pt-[8px]`}>
           <div className={`${Profile.Ismobile ? '' : 'hidden'}`} onClick={() => { sethideMobile(hideMobile) }}>
             <Icon size='large' className='text-white' name={hideMobile ? 'angle double right' : 'angle double left'} />
           </div>
@@ -85,15 +85,13 @@ export class Navbar extends Component {
             <div className='h-[2px] group-hover:bg-[#747474] bg-white dark:bg-[#3d3d3d] my-[3px] w-[20px]' />
             <div className='h-[2px] group-hover:bg-[#747474] bg-white dark:bg-[#3d3d3d]  w-[20px]' />
           </div>
-          <div
-            className={`${Profile.Ismobile && 'absolute inset-0'} flex flex-row justify-center items-center group cursor-pointer`}
-          >
+          <div className={`${Profile.Ismobile && 'absolute inset-0'} flex flex-row justify-center items-center group cursor-pointer`}   >
             <div onClick={this.handleOpendefaultpage} className='flex flex-row justify-center items-center group cursor-pointer'>
               <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-white dark:text-TextColor'>ELDER</p>
               <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-[#7eabc5] dark:text-TextColor'>CAMP</p>
             </div>
           </div>
-          <div className='flex flex-row justify-center items-center gap-4'>
+          <div className=' flex flex-row justify-center items-center gap-4'>
             <Search history={history} />
             <div
               className='cursor-pointer group'

@@ -7,7 +7,7 @@ const { requestErrorCatcher } = require('./Error')
 // role will be role 
 // message will be created name or something
 
-module.exports = async (type, service, role, message, pushurl) => {
+module.exports = async ({ type, service, role, message, pushurl }) => {
     try {
 
         const notificationMessage = {

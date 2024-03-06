@@ -69,7 +69,8 @@ export default class Layout extends Component {
       Istokenchecking || Profile.isLogging || Profile.isFetching ?
         <LoadingPage />
         :
-        <SidebarPushable className='!-m-2' as={Segment}>
+        <SidebarPushable  className='!-m-2' as={Segment} style={{ overflow: 'hidden' }}>
+          <Usernotifications />
           <SidebarPusher >
             <div className=' dark:bg-Contentbg overflow-hidden bg-white' >
               <Navbar
@@ -104,8 +105,7 @@ export default class Layout extends Component {
               </div>
             </div>
           </SidebarPusher>
-          <Usernotifications />
-        </SidebarPushable >
+        </SidebarPushable>
     )
   }
 

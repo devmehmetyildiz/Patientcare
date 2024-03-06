@@ -3,6 +3,7 @@ import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
+import validator from '../Utils/Validator';
 
 const Literals = {
     addcode: {
@@ -98,6 +99,7 @@ export const EditUsernotifications = createAsyncThunk(
             clearForm && clearForm('UsernotificationsUpdate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Usernotifications');
+
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -122,6 +124,11 @@ export const EditRecordUsernotifications = createAsyncThunk(
             clearForm && clearForm('UsernotificationsUpdate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Usernotifications');
+            const userId = state.Profile?.meta?.Uuid
+            if (validator.isUUID(userId)) {
+                const notificaitonResponse = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetUsernotificationsbyUserid/' + userId);
+                return notificaitonResponse.data
+            }
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -144,6 +151,11 @@ export const DeleteUsernotifications = createAsyncThunk(
                 code: Literals.deletecode[Language],
                 description: Literals.deletedescription[Language],
             }));
+            const userId = state.Profile?.meta?.Uuid
+            if (validator.isUUID(userId)) {
+                const notificaitonResponse = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetUsernotificationsbyUserid/' + userId);
+                return notificaitonResponse.data
+            }
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

@@ -11,6 +11,7 @@ const mapStateToProps = (state) => ({
     Users: state.Users,
     Files: state.Files,
     Usagetypes: state.Usagetypes,
+    Usernotifications: state.Usernotifications,
 })
 
 const mapDispatchToProps = {

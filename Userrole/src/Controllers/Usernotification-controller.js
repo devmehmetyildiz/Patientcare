@@ -53,7 +53,7 @@ async function GetUsernotificationsbyUserid(req, res, next) {
         if (validationErrors.length > 0) {
             return next(createValidationError(validationErrors, req.language))
         }
-        const notifications = await db.usernotificationModel.findAll({ where: { UserID: req.params.userId } })
+        const notifications = await db.usernotificationModel.findAll({ where: { UserID: req.params.userId, Isactive: true } })
         if (!notifications) {
             return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_FOUND], req.language))
         }
@@ -211,6 +211,7 @@ async function DeleteUsernotification(req, res, next) {
             Updatetime: new Date(),
             Isactive: false
         }, { where: { Uuid: Uuid } }, { transaction: t })
+        req.params.userId = notification?.UserID
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -276,6 +277,7 @@ async function DeleteUsernotificationbyidreaded(req, res, next) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
+
     GetUsernotifications(req, res, next)
 }
 

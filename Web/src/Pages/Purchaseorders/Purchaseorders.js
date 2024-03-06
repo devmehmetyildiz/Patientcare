@@ -81,7 +81,10 @@ export default class Purchaseorders extends Component {
         }} />
       }
     })
-
+//TODO Satın alma siparişlerinde alt kalemler yok ise göstermeyecek
+//TODO Tamamlama ifadesi onay bekleyen stok var ise gerçekleşmeyecek
+//TODO Güncelleme hata veriyor 
+//TODO Miktarlara ait adetler her yerde gösterilecek
     return (
       isLoading || isDispatching ? <LoadingPage /> :
         <React.Fragment>
