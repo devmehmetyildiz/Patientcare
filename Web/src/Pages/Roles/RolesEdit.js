@@ -45,8 +45,8 @@ export default class RolesEdit extends Component {
         const { privileges, privilegegroups, isLoading, isDispatching } = Roles
 
         const decoratedgroups = (privilegegroups || []).map(group => {
-            const foundedPrivileges = (privileges || []).filter(u => u.group.includes(group) && (u.text.toLowerCase()).includes(this.state.searchParam.toLowerCase()))
-            return foundedPrivileges.length > 0 ? { name: group, privileges: foundedPrivileges } : null
+            const foundedPrivileges = (privileges || []).filter(u => u.group[Profile.Language] === group[Profile.Language] && (u.text[Profile.Language].toLowerCase()).includes(this.state.searchParam.toLowerCase()))
+            return foundedPrivileges.length > 0 ? { name: group[Profile.Language], privileges: foundedPrivileges } : null
         }).filter(u => u)
 
         return (
@@ -91,7 +91,7 @@ export default class RolesEdit extends Component {
                                                     onClick={(e) => { this.handleClickprivilege(e) }}
                                                     id={privilege.code}
                                                     key={index}
-                                                    label={privilege.text} />
+                                                    label={privilege.text[Profile.Language]} />
                                             })}
                                         </div>
                                     </div>
@@ -120,17 +120,6 @@ export default class RolesEdit extends Component {
         )
     }
 
-
-    Checkprivilegesgroup = (group) => {
-        const selectedlist = (this.state.selectedPrivileges || []).filter(u => u.group.includes(group))
-        const list = (this.props.Roles.privileges || []).filter(u => u.group.includes(group))
-        if ((list.length === selectedlist.length) && list.length !== 0 && selectedlist.length !== 0) {
-            return true
-        } else {
-            return false
-        }
-    }
-
     handleSubmit = (e) => {
         e.preventDefault()
 
@@ -154,10 +143,22 @@ export default class RolesEdit extends Component {
 
     }
 
+    Checkprivilegesgroup = (group) => {
+        const { Profile } = this.props
+        const selectedlist = (this.state.selectedPrivileges || []).filter(u => u.group[Profile.Language] === group)
+        const list = (this.props.Roles.privileges || []).filter(u => u.group[Profile.Language] === group)
+        if ((list.length === selectedlist.length) && list.length !== 0 && selectedlist.length !== 0) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     handleAddgroup = (e) => {
+        const { Profile } = this.props
         e.target.checked
-            ? this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return !el.group.includes(e.target.id) }).concat(this.props.Roles.privileges.filter(u => u.group.includes(e.target.id)) || []) })
-            : this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return !el.group.includes(e.target.id) }) })
+            ? this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return (el.group[Profile.Language] !== e.target.id) }).concat(this.props.Roles.privileges.filter(u => u.group[Profile.Language] === e.target.id) || []) })
+            : this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return (el.group[Profile.Language] !== e.target.id) }) })
     }
 
     handleClickprivilege = (e) => {

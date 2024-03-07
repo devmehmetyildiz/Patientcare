@@ -28,8 +28,8 @@ export default class RolesCreate extends Component {
         const { privileges, privilegegroups, isLoading, isDispatching } = Roles
 
         const decoratedgroups = (privilegegroups || []).map(group => {
-            const foundedPrivileges = (privileges || []).filter(u => u.group.includes(group) && (u.text.toLowerCase()).includes(this.state.searchParam.toLowerCase()))
-            return foundedPrivileges.length > 0 ? { name: group, privileges: foundedPrivileges } : null
+            const foundedPrivileges = (privileges || []).filter(u => u.group[Profile.Language] === group[Profile.Language] && (u.text[Profile.Language].toLowerCase()).includes(this.state.searchParam.toLowerCase()))
+            return foundedPrivileges.length > 0 ? { name: group[Profile.Language], privileges: foundedPrivileges } : null
         }).filter(u => u)
 
         return (
@@ -57,8 +57,8 @@ export default class RolesCreate extends Component {
                                 />
                             </div>
                             <div className={`mb-4 outline outline-[1px] rounded-md outline-gray-200 p-4 overflow-y-auto max-h-[calc(100vh-${Profile.Ismobile ? '27' : '30'}.2rem)]`}>
-                                {(decoratedgroups || []).map(privilegegroup => {
-                                    return <div key={privilegegroup?.name} className="mb-8">
+                                {(decoratedgroups || []).map((privilegegroup, index) => {
+                                    return <div key={index} className="mb-8">
                                         <div className='flex flex-row justify-start items-center'>
                                             <label className='text-[#000000de] font-bold'>{privilegegroup?.name}</label>
                                             <Checkbox toggle className='ml-4'
@@ -75,7 +75,7 @@ export default class RolesCreate extends Component {
                                                     onClick={(e) => { this.handleClickprivilege(e) }}
                                                     id={privilege.code}
                                                     key={index}
-                                                    label={privilege.text} />
+                                                    label={privilege.text[Profile.Language]} />
                                             })}
                                         </div>
                                     </div>
@@ -130,8 +130,9 @@ export default class RolesCreate extends Component {
     }
 
     Checkprivilegesgroup = (group) => {
-        const selectedlist = (this.state.selectedPrivileges || []).filter(u => u.group.includes(group))
-        const list = (this.props.Roles.privileges || []).filter(u => u.group.includes(group))
+        const { Profile } = this.props
+        const selectedlist = (this.state.selectedPrivileges || []).filter(u => u.group[Profile.Language] === group)
+        const list = (this.props.Roles.privileges || []).filter(u => u.group[Profile.Language] === group)
         if ((list.length === selectedlist.length) && list.length !== 0 && selectedlist.length !== 0) {
             return true
         } else {
@@ -140,9 +141,10 @@ export default class RolesCreate extends Component {
     }
 
     handleAddgroup = (e) => {
+        const { Profile } = this.props
         e.target.checked
-            ? this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return !el.group.includes(e.target.id) }).concat(this.props.Roles.privileges.filter(u => u.group.includes(e.target.id)) || []) })
-            : this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return !el.group.includes(e.target.id) }) })
+            ? this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return (el.group[Profile.Language] !== e.target.id) }).concat(this.props.Roles.privileges.filter(u => u.group[Profile.Language] === e.target.id) || []) })
+            : this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return (el.group[Profile.Language] !== e.target.id) }) })
     }
 
     handleClickprivilege = (e) => {

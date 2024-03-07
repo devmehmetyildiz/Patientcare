@@ -1,7 +1,5 @@
 const Priveleges = [
-    { code: 'basic', text: 'Basic', group: ['BaseGroup'], required: [] },
-    { code: 'admin', text: 'Admin', group: ['BaseGroup'], required: [] },
-    { code: 'admin',       text: { en: 'Admin', tr: 'Admin' },  group: { en: 'Base', tr: 'Temel' } },
+    { code: 'admin', text: { en: 'Admin', tr: 'Admin' },  group: { en: 'Base', tr: 'Temel' } },
 
     { code: 'bedscreen',       text: { en: 'Beds Screen',      tr: 'Yataklar Veri' },             group: { en: 'Beds', tr: 'Yataklar' } },
     { code: 'bedview',         text: { en: 'Beds View',        tr: 'Yataklar Görüntüleme' },      group: { en: 'Beds', tr: 'Yataklar' } },
@@ -415,7 +413,7 @@ const Priveleges = [
     { code: 'careplandelete',     text: { en: 'Careplans Delete',      tr: 'Bireysel Bakım Planları Silme' },            group: { en: 'Careplans', tr: 'Bireysel Bakım Planları' } },
     { code: 'careplanmanageview', text: { en: 'Careplans Manage View', tr: 'Bireysel Bakım Planları Görünüm Ayarlama' }, group: { en: 'Careplans', tr: 'Bireysel Bakım Planları' } },
     { code: 'careplangetreport',  text: { en: 'Careplans Get Report',  tr: 'Bireysel Bakım Planları Rapor Alma' },       group: { en: 'Careplans', tr: 'Bireysel Bakım Planları' } },
-    { code: 'bednotification',    text: { en: 'Careplans Notification',tr: 'Bireysel Bakım Planları Bildirim Alma' },    group: { en: 'Careplans', tr: 'Bireysel Bakım Planları' } },
+    { code: 'careplannotification',    text: { en: 'Careplans Notification',tr: 'Bireysel Bakım Planları Bildirim Alma' },    group: { en: 'Careplans', tr: 'Bireysel Bakım Planları' } },
 
     { code: 'helpstatuscreen',     text: { en: 'Helpstatus Screen',       tr: 'Bakıma İhtiyaç Durumları Veri' },             group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
     { code: 'helpstatuview',       text: { en: 'Helpstatus View',         tr: 'Bakıma İhtiyaç Durumları Görüntüleme' },      group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
@@ -424,7 +422,7 @@ const Priveleges = [
     { code: 'helpstatudelete',     text: { en: 'Helpstatus Delete',       tr: 'Bakıma İhtiyaç Durumları Silme' },            group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
     { code: 'helpstatumanageview', text: { en: 'Helpstatus Manage View',  tr: 'Bakıma İhtiyaç Durumları Görünüm Ayarlama' }, group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
     { code: 'helpstatugetreport',  text: { en: 'Helpstatus Get Report',   tr: 'Bakıma İhtiyaç Durumları Rapor Alma' },       group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
-    { code: 'bednotification',     text: { en: 'Helpstatus Notification', tr: 'Bakıma İhtiyaç Durumları Bildirim Alma' },    group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
+    { code: 'helpstatunotification',     text: { en: 'Helpstatus Notification', tr: 'Bakıma İhtiyaç Durumları Bildirim Alma' },    group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
 
     { code: 'makingtypescreen',     text: { en: 'Makingtypes Screen',       tr: 'Hizmet Verilme Şekilleri Screen' },           group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
     { code: 'makingtypeview',       text: { en: 'Makingtypes View',         tr: 'Hizmet Verilme Şekilleri View' },             group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
@@ -433,7 +431,7 @@ const Priveleges = [
     { code: 'makingtypedelete',     text: { en: 'Makingtypes Delete',       tr: 'Hizmet Verilme Şekilleri Silme' },            group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
     { code: 'makingtypemanageview', text: { en: 'Makingtypes Manage View',  tr: 'Hizmet Verilme Şekilleri Görünüm Ayarlama' }, group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
     { code: 'makingtypegetreport',  text: { en: 'Makingtypes Get Report',   tr: 'Hizmet Verilme Şekilleri Rapor Alma' },       group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
-    { code: 'bednotification',      text: { en: 'Makingtypes Notification', tr: 'Hizmet Verilme Şekilleri Bildirim Alma' },    group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
+    { code: 'makingtypenotification',      text: { en: 'Makingtypes Notification', tr: 'Hizmet Verilme Şekilleri Bildirim Alma' },    group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
 
     { code: 'ratingscreen',      text: { en: 'Ratings Screen',      tr: 'Değerlendirmeler Veri' },             group: { en: 'Ratings', tr: 'Değerlendirmeler' } },
     { code: 'ratingview',        text: { en: 'Ratings View',        tr: 'Değerlendirmeler Görüntüleme' },      group: { en: 'Ratings', tr: 'Değerlendirmeler' } },

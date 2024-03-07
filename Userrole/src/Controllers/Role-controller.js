@@ -78,9 +78,12 @@ async function Getprivileges(req, res, next) {
 async function Getprivilegegroups(req, res, next) {
     let groups = []
     Priveleges.forEach(element => {
-        groups = groups.concat(element.group)
+        let foundedValue = groups.find(u => u.en === element.group.en && u.tr === element.group.tr)
+        if (!foundedValue) {
+            groups.push(element.group)
+        }
     })
-    res.status(200).json([...new Set(groups)])
+    res.status(200).json(groups)
 }
 
 async function Getprivilegesbyuserid(req, res, next) {
