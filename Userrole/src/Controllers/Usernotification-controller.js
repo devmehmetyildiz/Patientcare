@@ -53,7 +53,15 @@ async function GetUsernotificationsbyUserid(req, res, next) {
         if (validationErrors.length > 0) {
             return next(createValidationError(validationErrors, req.language))
         }
-        const notifications = await db.usernotificationModel.findAll({ where: { UserID: req.params.userId, Isactive: true } })
+        const notifications = await db.usernotificationModel.findAll({
+            where: {
+                UserID: req.params.userId,
+                Isactive: true,
+            },
+            order: [
+                ['Createtime', 'DESC'],
+            ],
+        })
         if (!notifications) {
             return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_FOUND], req.language))
         }
