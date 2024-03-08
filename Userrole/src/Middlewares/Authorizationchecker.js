@@ -73,7 +73,6 @@ async function authorizationChecker(req, res, next) {
                                 return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
                             }
                             let departments = []
-                            let stations = []
                             try {
                                 const departmentsresponse = await axios({
                                     method: 'GET',
@@ -82,15 +81,7 @@ async function authorizationChecker(req, res, next) {
                                         session_key: config.session.secret
                                     }
                                 })
-                                const stationsresponse = await axios({
-                                    method: 'GET',
-                                    url: config.services.Setting + `Stations`,
-                                    headers: {
-                                        session_key: config.session.secret
-                                    }
-                                })
                                 departments = departmentsresponse.data
-                                stations = stationsresponse.data
                             } catch (error) {
                                 return next(requestErrorCatcher(error, 'Setting'))
                             }
@@ -116,11 +107,6 @@ async function authorizationChecker(req, res, next) {
                                     UserID: user.Uuid
                                 }
                             })
-                            let stationuuids = await db.userstationModel.findAll({
-                                where: {
-                                    UserID: user.Uuid
-                                }
-                            })
                             user.Roles = await db.roleModel.findAll({
                                 where: {
                                     Uuid: rolesuuids.map(u => { return u.RoleID })
@@ -132,13 +118,6 @@ async function authorizationChecker(req, res, next) {
                                     return data
                                 }
                             })
-                            user.Stations = stationuuids.map(userstation => {
-                                let data = stations.find(u => u.Uuid === userstation.StationID)
-                                if (data) {
-                                    return data
-                                }
-                            })
-
                             user.PasswordHash && delete user.PasswordHash
                             req.identity.user = user
                             const userroles = await db.userroleModel.findAll({ where: { UserID: user.Uuid } })

@@ -6,6 +6,8 @@ const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const jobs = require('../Jobs')
+const CreateNotification = require("../Utilities/CreateNotification")
+const { types } = require("../Constants/Defines")
 
 async function GetRules(req, res, next) {
     try {
@@ -115,15 +117,25 @@ async function AddRule(req, res, next) {
     let ruleuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.ruleModel.create({
             ...req.body,
             Uuid: ruleuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Kurallar',
+            role: 'rulenotification',
+            message: `${Name} kuralı ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Rules'
+        })
+
         await t.commit()
 
         await jobs.CroneJobs()
@@ -162,6 +174,8 @@ async function UpdateRule(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const rule = await db.ruleModel.findOne({ where: { Uuid: Uuid } })
         if (!rule) {
@@ -171,12 +185,20 @@ async function UpdateRule(req, res, next) {
             return next(createAccessDenied([messages.ERROR.RULE_NOT_ACTIVE], req.language))
         }
         await jobs.stopChildProcess(Uuid)
-        
+
         await db.ruleModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Kurallar',
+            role: 'rulenotification',
+            message: `${Name} kuralı ${username} tarafından Güncellendi.`,
+            pushurl: '/Rules'
+        })
 
         await t.commit()
 
@@ -204,6 +226,8 @@ async function DeleteRule(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const rule = await db.ruleModel.findOne({ where: { Uuid: Uuid } })
         if (!rule) {
@@ -214,6 +238,15 @@ async function DeleteRule(req, res, next) {
         }
 
         await db.ruleModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Kurallar',
+            role: 'rulenotification',
+            message: `${rule?.Name} kuralı ${username} tarafından Silindi.`,
+            pushurl: '/Rules'
+        })
+
         await t.commit();
         await jobs.stopChildProcess(Uuid)
     } catch (error) {
@@ -239,6 +272,8 @@ async function StopRule(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const rule = await db.ruleModel.findOne({ where: { Uuid: Uuid } })
         if (!rule) {
@@ -251,10 +286,17 @@ async function StopRule(req, res, next) {
         await db.ruleModel.update({
             ...req.body,
             Status: 0,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Update,
+            service: 'Kurallar',
+            role: 'rulenotification',
+            message: `${rule?.Name} kuralı ${username} tarafından Durduruldu.`,
+            pushurl: '/Rules'
+        })
         await t.commit();
         await jobs.stopChildProcess(Uuid)
     } catch (error) {

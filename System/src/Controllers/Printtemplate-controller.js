@@ -1,3 +1,4 @@
+const { types } = require("../Constants/Defines")
 const config = require("../Config")
 const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
@@ -6,6 +7,7 @@ const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const axios = require('axios')
+const CreateNotification = require("../Utilities/CreateNotification")
 
 async function GetPrinttemplates(req, res, next) {
     try {
@@ -65,16 +67,24 @@ async function AddPrinttemplate(req, res, next) {
     let printtemplateuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.printtemplateModel.create({
             ...req.body,
             Uuid: printtemplateuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Yazdırma Taslakları',
+            role: 'printtemplatenotification',
+            message: `${Name} yazdırma taslağı ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Printtemplates'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -110,6 +120,8 @@ async function UpdatePrinttemplate(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const printtemplate = await db.printtemplateModel.findOne({ where: { Uuid: Uuid } })
         if (!printtemplate) {
@@ -121,10 +133,17 @@ async function UpdatePrinttemplate(req, res, next) {
 
         await db.printtemplateModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Update,
+            service: 'Yazdırma Taslakları',
+            role: 'printtemplatenotification',
+            message: `${Name} yazdırma taslağı ${username} tarafından Güncellendi.`,
+            pushurl: '/Printtemplates'
+        })
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -149,6 +168,8 @@ async function DeletePrinttemplate(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const printtemplate = await db.printtemplateModel.findOne({ where: { Uuid: Uuid } })
         if (!printtemplate) {
@@ -159,6 +180,14 @@ async function DeletePrinttemplate(req, res, next) {
         }
 
         await db.printtemplateModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Yazdırma Taslakları',
+            role: 'printtemplatenotification',
+            message: `${Name} yazdırma taslağı ${username} tarafından Silindi.`,
+            pushurl: '/Printtemplates'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

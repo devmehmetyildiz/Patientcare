@@ -1,3 +1,5 @@
+const { types } = require("../Constants/Defines")
+const CreateNotification = require("../Utilities/CreateNotification")
 const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
@@ -95,16 +97,24 @@ async function AddMailsetting(req, res, next) {
     let mailsettinguuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.mailsettingModel.create({
             ...req.body,
             Uuid: mailsettinguuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Mail Ayarları',
+            role: 'mailsettingnotification',
+            message: `${Name} mail ayarı ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Mailsettings'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -156,6 +166,8 @@ async function UpdateMailsetting(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const mailsetting = await db.mailsettingModel.findOne({ where: { Uuid: Uuid } })
         if (!mailsetting) {
@@ -167,10 +179,17 @@ async function UpdateMailsetting(req, res, next) {
 
         await db.mailsettingModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Update,
+            service: 'Mail Ayarları',
+            role: 'mailsettingnotification',
+            message: `${Name} mail ayarı ${username} tarafından Güncellendi.`,
+            pushurl: '/Mailsettings'
+        })
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -195,6 +214,8 @@ async function DeleteMailsetting(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const mailsetting = await db.mailsettingModel.findOne({ where: { Uuid: Uuid } })
         if (!mailsetting) {
@@ -205,6 +226,14 @@ async function DeleteMailsetting(req, res, next) {
         }
 
         await db.mailsettingModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Mail Ayarları',
+            role: 'mailsettingnotification',
+            message: `${mailsetting?.Name} mail ayarı ${username} tarafından Silindi.`,
+            pushurl: '/Mailsettings'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();
