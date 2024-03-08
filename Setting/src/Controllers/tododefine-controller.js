@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -84,12 +86,13 @@ async function AddTododefine(req, res, next) {
     let tododefineuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.tododefineModel.create({
             ...req.body,
             Uuid: tododefineuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
@@ -104,6 +107,13 @@ async function AddTododefine(req, res, next) {
             }, { transaction: t });
         }
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Rutinler',
+            role: 'tododefinenotification',
+            message: `${Name} rutini ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Tododefines'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -150,6 +160,8 @@ async function UpdateTododefine(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const tododefine = db.tododefineModel.findOne({ where: { Uuid: Uuid } })
         if (!tododefine) {
@@ -161,7 +173,7 @@ async function UpdateTododefine(req, res, next) {
 
         await db.tododefineModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
@@ -175,6 +187,14 @@ async function UpdateTododefine(req, res, next) {
                 PeriodID: period.Uuid
             }, { transaction: t });
         }
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Rutinler',
+            role: 'tododefinenotification',
+            message: `${Name} rutini ${username} tarafından Güncellendi.`,
+            pushurl: '/Tododefines'
+        })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -198,6 +218,8 @@ async function DeleteTododefine(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const tododefine = db.tododefineModel.findOne({ where: { Uuid: Uuid } })
         if (!tododefine) {
@@ -209,6 +231,14 @@ async function DeleteTododefine(req, res, next) {
 
         await db.tododefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await db.tododefineperiodModel.destroy({ where: { TododefineID: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Rutinler',
+            role: 'tododefinenotification',
+            message: `${tododefine?.Name} rutini ${username} tarafından Silindi.`,
+            pushurl: '/Tododefines'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

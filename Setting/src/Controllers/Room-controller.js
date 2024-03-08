@@ -1,3 +1,4 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
@@ -59,15 +60,24 @@ async function AddRoom(req, res, next) {
     let roomuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.roomModel.create({
             ...req.body,
             Uuid: roomuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Odalar',
+            role: 'roomnotification',
+            message: `${Name} odası ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Rooms'
+        })
 
         await t.commit()
     } catch (err) {
@@ -103,6 +113,8 @@ async function UpdateRoom(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const room = db.roomModel.findOne({ where: { Uuid: Uuid } })
         if (!room) {
@@ -114,9 +126,17 @@ async function UpdateRoom(req, res, next) {
 
         await db.roomModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Odalar',
+            role: 'roomnotification',
+            message: `${Name} odası ${username} tarafından Güncellendi.`,
+            pushurl: '/Rooms'
+        })
 
         await t.commit()
     } catch (error) {
@@ -140,6 +160,8 @@ async function DeleteRoom(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
     try {
         const room = db.roomModel.findOne({ where: { Uuid: Uuid } })
         if (!room) {
@@ -148,9 +170,17 @@ async function DeleteRoom(req, res, next) {
         if (room.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.BED_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.roomModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Odalar',
+            role: 'roomnotification',
+            message: `${Name} odası ${username} tarafından Silindi.`,
+            pushurl: '/Rooms'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

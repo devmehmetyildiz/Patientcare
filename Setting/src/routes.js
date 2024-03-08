@@ -32,12 +32,6 @@ const Routes = [
   { method: 'put', path: '/Periods', controller: 'Period', action: 'UpdatePeriod' },
   { method: 'delete', path: '/Periods/:periodId', controller: 'Period', action: 'DeletePeriod' },
 
-  { method: 'get', path: '/Stations/:stationId', controller: 'Station', action: 'GetStation' },
-  { method: 'get', path: '/Stations', controller: 'Station', action: 'GetStations' },
-  { method: 'post', path: '/Stations', controller: 'Station', action: 'AddStation' },
-  { method: 'put', path: '/Stations', controller: 'Station', action: 'UpdateStation' },
-  { method: 'delete', path: '/Stations/:stationId', controller: 'Station', action: 'DeleteStation' },
-
   { method: 'get', path: '/Tododefines/:tododefineId', controller: 'Tododefine', action: 'GetTododefine' },
   { method: 'get', path: '/Tododefines', controller: 'Tododefine', action: 'GetTododefines' },
   { method: 'post', path: '/Tododefines', controller: 'Tododefine', action: 'AddTododefine' },

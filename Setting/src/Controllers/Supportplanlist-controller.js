@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -82,12 +84,13 @@ async function AddSupportplanlist(req, res, next) {
     let supportplanlistuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.supportplanlistModel.create({
             ...req.body,
             Uuid: supportplanlistuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
@@ -102,6 +105,13 @@ async function AddSupportplanlist(req, res, next) {
             }, { transaction: t });
         }
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Destek Plan Listeleri',
+            role: 'supportplanlistnotification',
+            message: `${Name} destek plan listesi ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Supportplanlists'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -139,6 +149,8 @@ async function UpdateSupportplanlist(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const supportplanlist = await db.supportplanlistModel.findOne({ where: { Uuid: Uuid } });
         if (!supportplanlist) {
@@ -151,7 +163,7 @@ async function UpdateSupportplanlist(req, res, next) {
 
         await db.supportplanlistModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
@@ -165,6 +177,15 @@ async function UpdateSupportplanlist(req, res, next) {
                 PlanID: supportplan.Uuid
             }, { transaction: t });
         }
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Destek Plan Listeleri',
+            role: 'supportplanlistnotification',
+            message: `${Name} destek plan listesi ${username} tarafından Güncellendi.`,
+            pushurl: '/Supportplanlists'
+        })
+
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -189,6 +210,8 @@ async function DeleteSupportplanlist(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const supportplanlist = await db.supportplanlistModel.findOne({ where: { Uuid: Uuid } });
         if (!supportplanlist) {
@@ -200,6 +223,15 @@ async function DeleteSupportplanlist(req, res, next) {
 
         await db.supportplanlistsupportplanModel.destroy({ where: { ListID: Uuid }, transaction: t });
         await db.supportplanlistModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Destek Plan Listeleri',
+            role: 'supportplanlistnotification',
+            message: `${supportplanlist?.Name} destek plan listesi ${username} tarafından Silindi.`,
+            pushurl: '/Supportplanlists'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

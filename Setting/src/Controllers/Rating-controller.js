@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/RatingMessages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -59,16 +61,24 @@ async function AddRating(req, res, next) {
     let ratinguuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.ratingModel.create({
             ...req.body,
             Uuid: ratinguuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Değerlendirmeler',
+            role: 'ratingnotification',
+            message: `${Name} değerlendirmesi ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Ratings'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -99,6 +109,8 @@ async function UpdateRating(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const rating = db.ratingModel.findOne({ where: { Uuid: Uuid } })
         if (!rating) {
@@ -110,10 +122,17 @@ async function UpdateRating(req, res, next) {
 
         await db.ratingModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Update,
+            service: 'Değerlendirmeler',
+            role: 'ratingnotification',
+            message: `${Name} değerlendirmesi ${username} tarafından Güncellendi.`,
+            pushurl: '/Ratings'
+        })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -136,6 +155,8 @@ async function DeleteRating(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
     try {
         const rating = db.ratingModel.findOne({ where: { Uuid: Uuid } })
         if (!rating) {
@@ -144,9 +165,16 @@ async function DeleteRating(req, res, next) {
         if (rating.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.RATING_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.ratingModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Değerlendirmeler',
+            role: 'ratingnotification',
+            message: `${rating?.Name} değerlendirmesi ${username} tarafından Silindi.`,
+            pushurl: '/Ratings'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

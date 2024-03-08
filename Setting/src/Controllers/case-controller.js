@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -136,12 +138,13 @@ async function AddCase(req, res, next) {
     let caseuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.caseModel.create({
             ...req.body,
             Uuid: caseuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
@@ -156,6 +159,13 @@ async function AddCase(req, res, next) {
             }, { transaction: t });
         }
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Durumlar',
+            role: 'casenotification',
+            message: `${Name} durumu ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Cases'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -202,6 +212,8 @@ async function UpdateCase(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const casedata = db.caseModel.findOne({ where: { Uuid: Uuid } })
         if (!casedata) {
@@ -213,7 +225,7 @@ async function UpdateCase(req, res, next) {
 
         await db.caseModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
@@ -227,6 +239,14 @@ async function UpdateCase(req, res, next) {
                 DepartmentID: department.Uuid
             }, { transaction: t });
         }
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Durumlar',
+            role: 'casenotification',
+            message: `${Name} durumu ${username} tarafından Güncellendi.`,
+            pushurl: '/Cases'
+        })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -250,6 +270,8 @@ async function DeleteCase(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const casedata = db.caseModel.findOne({ where: { Uuid: Uuid } })
         if (!casedata) {
@@ -261,6 +283,14 @@ async function DeleteCase(req, res, next) {
 
         await db.casedepartmentModel.destroy({ where: { CaseID: Uuid }, transaction: t });
         await db.caseModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Durumlar',
+            role: 'casenotification',
+            message: `${casedata?.Name} durumu ${username} tarafından Silindi.`,
+            pushurl: '/Cases'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

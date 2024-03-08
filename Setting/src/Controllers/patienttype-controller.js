@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -55,15 +57,24 @@ async function AddPatienttype(req, res, next) {
     let patienttypeuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.patienttypeModel.create({
             ...req.body,
             Uuid: patienttypeuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Hasta Türleri',
+            role: 'patienttypenotification',
+            message: `${Name} hasta türü ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Patienttypes'
+        })
 
         await t.commit()
     } catch (err) {
@@ -95,6 +106,8 @@ async function UpdatePatienttype(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patienttype = db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
         if (!patienttype) {
@@ -106,9 +119,17 @@ async function UpdatePatienttype(req, res, next) {
 
         await db.patienttypeModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hasta Türleri',
+            role: 'patienttypenotification',
+            message: `${Name} hasta türü ${username} tarafından Güncellendi.`,
+            pushurl: '/Patienttypes'
+        })
 
         await t.commit()
     } catch (error) {
@@ -133,6 +154,8 @@ async function DeletePatienttype(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patienttype = db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
         if (!patienttype) {
@@ -143,6 +166,15 @@ async function DeletePatienttype(req, res, next) {
         }
 
         await db.patienttypeModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Hasta Türleri',
+            role: 'patienttypenotification',
+            message: `${patienttype?.Name} hasta türü ${username} tarafından Silindi.`,
+            pushurl: '/Patienttypes'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

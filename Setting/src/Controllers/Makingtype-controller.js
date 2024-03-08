@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/MakingtypeMessages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -59,15 +61,24 @@ async function AddMakingtype(req, res, next) {
     let makingtypeuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.makingtypeModel.create({
             ...req.body,
             Uuid: makingtypeuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Hizmetin verilme şekilleri',
+            role: 'makingtypenotification',
+            message: `${Name} hizmet verilme şekli ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Makingtypes'
+        })
 
         await t.commit()
     } catch (err) {
@@ -99,6 +110,8 @@ async function UpdateMakingtype(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const makingtype = db.makingtypeModel.findOne({ where: { Uuid: Uuid } })
         if (!makingtype) {
@@ -110,9 +123,17 @@ async function UpdateMakingtype(req, res, next) {
 
         await db.makingtypeModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hizmetin verilme şekilleri',
+            role: 'makingtypenotification',
+            message: `${Name} hizmet verilme şekli ${username} tarafından Güncellendi.`,
+            pushurl: '/Makingtypes'
+        })
 
         await t.commit()
     } catch (error) {
@@ -136,6 +157,8 @@ async function DeleteMakingtype(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
     try {
         const makingtype = db.makingtypeModel.findOne({ where: { Uuid: Uuid } })
         if (!makingtype) {
@@ -144,9 +167,16 @@ async function DeleteMakingtype(req, res, next) {
         if (makingtype.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.MAKINGTYPE_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.makingtypeModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Hizmetin verilme şekilleri',
+            role: 'makingtypenotification',
+            message: `${makingtype?.Name} hizmet verilme şekli ${username} tarafından Silindi.`,
+            pushurl: '/Makingtypes'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

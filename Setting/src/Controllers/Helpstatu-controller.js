@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/HelpstatuMessages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -59,15 +61,23 @@ async function AddHelpstatu(req, res, next) {
     let helpstatuuuid = uuid()
 
     const t = await db.sequelize.transaction();
-
+    const username = req?.identity?.user?.Username || 'System'
     try {
         await db.helpstatuModel.create({
             ...req.body,
             Uuid: helpstatuuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Bakıma İhtiyaç durumları',
+            role: 'helpstatunotification',
+            message: `${Name} bakıma ihtiyaç durumu ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Helpstatus'
+        })
 
         await t.commit()
     } catch (err) {
@@ -99,6 +109,7 @@ async function UpdateHelpstatu(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
     try {
         const helpstatu = db.helpstatuModel.findOne({ where: { Uuid: Uuid } })
         if (!helpstatu) {
@@ -110,9 +121,17 @@ async function UpdateHelpstatu(req, res, next) {
 
         await db.helpstatuModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Katlar',
+            role: 'helpstatunotification',
+            message: `${Name} bakıma ihtiyaç durumu ${username} tarafından Güncellendi.`,
+            pushurl: '/Helpstatus'
+        })
 
         await t.commit()
     } catch (error) {
@@ -136,6 +155,8 @@ async function DeleteHelpstatu(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
     try {
         const helpstatu = db.helpstatuModel.findOne({ where: { Uuid: Uuid } })
         if (!helpstatu) {
@@ -144,7 +165,14 @@ async function DeleteHelpstatu(req, res, next) {
         if (helpstatu.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.HELPSTATU_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Katlar',
+            role: 'helpstatunotification',
+            message: `${helpstatu?.Name} bakıma ihtiyaç durumu ${username} tarafından Silindi.`,
+            pushurl: '/Helpstatus'
+        })
 
         await db.helpstatuModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await t.commit();

@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/RequiredperiodMessages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -59,16 +61,24 @@ async function AddRequiredperiod(req, res, next) {
     let requiredperioduuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.requiredperiodModel.create({
             ...req.body,
             Uuid: requiredperioduuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Hizmet Sunulma Sıklıkları',
+            role: 'requiredperiodnotification',
+            message: `${Name} hizmet sunulma sıklığı ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Requiredperiods'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -99,6 +109,8 @@ async function UpdateRequiredperiod(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const requiredperiod = db.requiredperiodModel.findOne({ where: { Uuid: Uuid } })
         if (!requiredperiod) {
@@ -110,10 +122,17 @@ async function UpdateRequiredperiod(req, res, next) {
 
         await db.requiredperiodModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hizmet Sunulma Sıklıkları',
+            role: 'requiredperiodnotification',
+            message: `${Name} hizmet sunulma sıklığı ${username} tarafından Güncellendi.`,
+            pushurl: '/Requiredperiods'
+        })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -136,6 +155,8 @@ async function DeleteRequiredperiod(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
     try {
         const requiredperiod = db.requiredperiodModel.findOne({ where: { Uuid: Uuid } })
         if (!requiredperiod) {
@@ -144,9 +165,17 @@ async function DeleteRequiredperiod(req, res, next) {
         if (requiredperiod.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.REQUIREDPERIOD_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
+
 
         await db.requiredperiodModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hizmet Sunulma Sıklıkları',
+            role: 'requiredperiodnotification',
+            message: `${requiredperiod?.Name} hizmet sunulma sıklığı ${username} tarafından Silindi.`,
+            pushurl: '/Requiredperiods'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

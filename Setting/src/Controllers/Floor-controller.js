@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -59,7 +61,7 @@ async function AddFloor(req, res, next) {
     let flooruuid = uuid()
 
     const t = await db.sequelize.transaction();
-
+    const username = req?.identity?.user?.Username || 'System'
     try {
         await db.floorModel.create({
             ...req.body,
@@ -69,6 +71,13 @@ async function AddFloor(req, res, next) {
             Isactive: true
         }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Katlar',
+            role: 'floornotification',
+            message: `${Name} yatağı ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Floors'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -138,6 +147,7 @@ async function FastcreateFloor(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
     try {
 
         let currentfloorstart = floorstartnumber
@@ -147,7 +157,7 @@ async function FastcreateFloor(req, res, next) {
                 Name: `${Formatfloorstringstart || ''}${currentfloorstart}${Formatfloorstringend || ''}`,
                 Uuid: flooruuid,
                 Gender: Gender,
-                Createduser: "System",
+                Createduser: username,
                 Createtime: new Date(),
                 Isactive: true
             }, { transaction: t })
@@ -159,7 +169,7 @@ async function FastcreateFloor(req, res, next) {
                     Name: `${Formatroomstringstart || ''}${currentroomstart}${Formatroomstringend || ''}`,
                     Uuid: roomuuid,
                     FloorID: flooruuid,
-                    Createduser: "System",
+                    Createduser: username,
                     Createtime: new Date(),
                     Isactive: true
                 }, { transaction: t })
@@ -172,7 +182,7 @@ async function FastcreateFloor(req, res, next) {
                         Uuid: beduuid,
                         RoomID: roomuuid,
                         Isoccupied: false,
-                        Createduser: "System",
+                        Createduser: username,
                         Createtime: new Date(),
                         Isactive: true
                     }, { transaction: t })
@@ -182,6 +192,14 @@ async function FastcreateFloor(req, res, next) {
             }
             currentfloorstart++;
         }
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Katlar',
+            role: 'floornotification',
+            message: `Hızlı kat özelliği ile katlar oluşturuldu`,
+            pushurl: '/Floors'
+        })
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -217,6 +235,7 @@ async function UpdateFloor(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
     try {
         const floor = db.floorModel.findOne({ where: { Uuid: Uuid } })
         if (!floor) {
@@ -228,9 +247,17 @@ async function UpdateFloor(req, res, next) {
 
         await db.floorModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Katlar',
+            role: 'floornotification',
+            message: `${floor?.Name} katı ${username} tarafından Güncellendi.`,
+            pushurl: '/Floors'
+        })
 
         await t.commit()
     } catch (error) {
@@ -254,6 +281,8 @@ async function DeleteFloor(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
     try {
         const floor = db.floorModel.findOne({ where: { Uuid: Uuid } })
         if (!floor) {
@@ -262,9 +291,16 @@ async function DeleteFloor(req, res, next) {
         if (floor.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.FLOOR_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
-
         await db.floorModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Katlar',
+            role: 'floornotification',
+            message: `${floor?.Name} katı ${username} tarafından Silindi.`,
+            pushurl: '/Floors'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

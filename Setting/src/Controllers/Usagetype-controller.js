@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -60,6 +62,7 @@ async function AddUsagetype(req, res, next) {
     let usagetypeuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.usagetypeModel.create({
@@ -70,6 +73,13 @@ async function AddUsagetype(req, res, next) {
             Isactive: true
         }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Kullanım Türleri',
+            role: 'usagetypenotification',
+            message: `${Name} kullanım türü ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Usagetypes'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -97,6 +107,8 @@ async function UpdateUsagetype(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const usagetype = db.usagetypeModel.findOne({ where: { Uuid: Uuid } })
         if (!usagetype) {
@@ -108,10 +120,17 @@ async function UpdateUsagetype(req, res, next) {
 
         await db.usagetypeModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Update,
+            service: 'Kullanım Türleri',
+            role: 'usagetypenotification',
+            message: `${Name} kullanım türü ${username} tarafından Güncellendi.`,
+            pushurl: '/Usagetypes'
+        })
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -137,6 +156,8 @@ async function DeleteUsagetype(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const usagetype = db.usagetypeModel.findOne({ where: { Uuid: Uuid } })
         if (!usagetype) {
@@ -147,6 +168,14 @@ async function DeleteUsagetype(req, res, next) {
         }
 
         await db.usagetypeModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Kullanım Türleri',
+            role: 'usagetypenotification',
+            message: `${usagetype?.Name} kullanım türü ${username} tarafından Silindi.`,
+            pushurl: '/Usagetypes'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

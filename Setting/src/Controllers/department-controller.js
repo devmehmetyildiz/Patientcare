@@ -1,3 +1,4 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
@@ -67,16 +68,23 @@ async function AddDepartment(req, res, next) {
     let departmentuuid = uuid()
 
     const t = await db.sequelize.transaction();
-
+    const username = req?.identity?.user?.Username || 'System'
     try {
         await db.departmentModel.create({
             ...req.body,
             Uuid: departmentuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Departmanlar',
+            role: 'departmentnotification',
+            message: `${Name} departmanı ${username} tarafından oluşturuldu.`,
+            pushurl: '/Departments'
+        })
 
         await t.commit()
     } catch (err) {
@@ -129,10 +137,10 @@ async function UpdateDepartment(req, res, next) {
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
-            type: 'Güncelleme',
+            type: types.Update,
             service: 'Departmanlar',
             role: 'departmentnotification',
-            message: `${Name} departmanı ${username} tarafından güncellendi`,
+            message: `${Name} departmanı ${username} tarafından güncellendi.`,
             pushurl: '/Departments'
         })
 
@@ -157,9 +165,9 @@ async function DeleteDepartment(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-
+    const username = req?.identity?.user?.Username || 'System'
     try {
-        const department = db.departmentModel.findOne({ where: { Uuid: Uuid } })
+        const department = await db.departmentModel.findOne({ where: { Uuid: Uuid } })
         if (!department) {
             return next(createNotfounderror([messages.ERROR.DEPARTMENT_NOT_FOUND], req.language))
         }
@@ -167,9 +175,16 @@ async function DeleteDepartment(req, res, next) {
             return next(createAccessDenied([messages.ERROR.DEPARTMENT_NOT_ACTIVE], req.language))
         }
         const t = await db.sequelize.transaction();
-
-        await db.departmentstationModel.destroy({ where: { DepartmentID: Uuid }, transaction: t });
         await db.departmentModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Departmanlar',
+            role: 'departmentnotification',
+            message: `${department?.Name} departmanı ${username} tarafından Silindi.`,
+            pushurl: '/Departments'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

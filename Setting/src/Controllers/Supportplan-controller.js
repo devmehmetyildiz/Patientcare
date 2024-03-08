@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -54,15 +56,24 @@ async function AddSupportplan(req, res, next) {
     let supportplanuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.supportplanModel.create({
             ...req.body,
             Uuid: supportplanuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Destek Planları',
+            role: 'supportplannotification',
+            message: `${Name} destek planı ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Supportplans'
+        })
 
         await t.commit()
     } catch (err) {
@@ -94,6 +105,8 @@ async function UpdateSupportplan(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const supportplan = db.supportplanModel.findOne({ where: { Uuid: Uuid } })
         if (!supportplan) {
@@ -105,9 +118,17 @@ async function UpdateSupportplan(req, res, next) {
 
         await db.supportplanModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Destek Planları',
+            role: 'supportplannotification',
+            message: `${Name} destek planı ${username} tarafından Güncellendi.`,
+            pushurl: '/Supportplans'
+        })
 
         await t.commit()
     } catch (error) {
@@ -132,6 +153,8 @@ async function DeleteSupportplan(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const supportplan = db.supportplanModel.findOne({ where: { Uuid: Uuid } })
         if (!supportplan) {
@@ -142,6 +165,15 @@ async function DeleteSupportplan(req, res, next) {
         }
 
         await db.supportplanModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Destek Planları',
+            role: 'supportplannotification',
+            message: `${supportplan?.Name} destek planı ${username} tarafından Güncellendi.`,
+            pushurl: '/Supportplans'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

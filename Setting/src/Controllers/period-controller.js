@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -62,16 +64,24 @@ async function AddPeriod(req, res, next) {
     let perioduuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.periodModel.create({
             ...req.body,
             Uuid: perioduuid,
-            Createduser: "System",
+            Createduser:username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Periyotlar',
+            role: 'periodnotification',
+            message: `${Name} periyodu ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Periods'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -112,6 +122,8 @@ async function FastcreatePeriod(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const parseTime = (timeStr) => {
             const [hours, minutes] = timeStr.split(':').map(Number);
@@ -137,13 +149,21 @@ async function FastcreatePeriod(req, res, next) {
                 Occuredtime: formattedTime,
                 Checktime: Checktime,
                 Uuid: perioduuid,
-                Createduser: "System",
+                Createduser: username,
                 Createtime: new Date(),
                 Isactive: true
             }, { transaction: t })
             const nextTime = new Date(currentTime.getTime() + period * 60000);
             currentTime = nextTime <= endTime ? nextTime : endTime;
         }
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Periyotlar',
+            role: 'periodnotification',
+            message: `Periyotlar ${username} tarafından hızlı şekilde Oluşturuldu.`,
+            pushurl: '/Periods'
+        })
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -183,6 +203,8 @@ async function UpdatePeriod(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const period = db.periodModel.findOne({ where: { Uuid: Uuid } })
         if (!period) {
@@ -194,9 +216,17 @@ async function UpdatePeriod(req, res, next) {
 
         await db.periodModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Periyotlar',
+            role: 'periodnotification',
+            message: `${Name} periyodu ${username} tarafından Güncellendi.`,
+            pushurl: '/Periods'
+        })
 
         await t.commit()
     } catch (error) {
@@ -220,6 +250,9 @@ async function DeletePeriod(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const period = db.periodModel.findOne({ where: { Uuid: Uuid } })
         if (!period) {
@@ -228,9 +261,16 @@ async function DeletePeriod(req, res, next) {
         if (period.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.PERIOD_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.periodModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Periyotlar',
+            role: 'periodnotification',
+            message: `${period?.Name} periyodu ${username} tarafından Silindi.`,
+            pushurl: '/Periods'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -82,12 +84,13 @@ async function AddUnit(req, res, next) {
     let unituuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.unitModel.create({
             ...req.body,
             Uuid: unituuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
@@ -102,6 +105,13 @@ async function AddUnit(req, res, next) {
             }, { transaction: t });
         }
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Birimler',
+            role: 'unitnotification',
+            message: `${Name} birimi ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Units'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -140,6 +150,8 @@ async function UpdateUnit(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const unit = db.unitModel.findOne({ where: { Uuid: Uuid } })
         if (!unit) {
@@ -151,7 +163,7 @@ async function UpdateUnit(req, res, next) {
 
         await db.unitModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
@@ -165,6 +177,14 @@ async function UpdateUnit(req, res, next) {
                 DepartmentID: department.Uuid
             }, { transaction: t });
         }
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Birimler',
+            role: 'unitnotification',
+            message: `${Name} birimi ${username} tarafından Güncellendi.`,
+            pushurl: '/Units'
+        })
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -190,6 +210,8 @@ async function DeleteUnit(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const unit = db.unitModel.findOne({ where: { Uuid: Uuid } })
         if (!unit) {
@@ -201,6 +223,14 @@ async function DeleteUnit(req, res, next) {
 
         await db.unitdepartmentModel.destroy({ where: { UnitID: Uuid }, transaction: t });
         await db.unitModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Birimler',
+            role: 'unitnotification',
+            message: `${unit?.Name} birimi ${username} tarafından Silindi.`,
+            pushurl: '/Units'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

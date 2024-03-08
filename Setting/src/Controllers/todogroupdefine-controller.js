@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -82,12 +84,13 @@ async function AddTodogroupdefine(req, res, next) {
     let todogroupdefineuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.todogroupdefineModel.create({
             ...req.body,
             Uuid: todogroupdefineuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
@@ -102,6 +105,13 @@ async function AddTodogroupdefine(req, res, next) {
             }, { transaction: t });
         }
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Rutinler',
+            role: 'todogroupdefinenotification',
+            message: `${Name} rutin listesi ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Todogroupdefines'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -139,6 +149,8 @@ async function UpdateTodogroupdefine(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const todogroupdefine = db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!todogroupdefine) {
@@ -151,7 +163,7 @@ async function UpdateTodogroupdefine(req, res, next) {
 
         await db.todogroupdefineModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
@@ -165,6 +177,14 @@ async function UpdateTodogroupdefine(req, res, next) {
                 TodoID: tododefine.Uuid
             }, { transaction: t });
         }
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Rutinler',
+            role: 'todogroupdefinenotification',
+            message: `${Name} rutin listesi ${username} tarafından Güncellendi.`,
+            pushurl: '/Todogroupdefines'
+        })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -189,6 +209,8 @@ async function DeleteTodogroupdefine(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const todogroupdefine = db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!todogroupdefine) {
@@ -200,6 +222,14 @@ async function DeleteTodogroupdefine(req, res, next) {
 
         await db.todogroupdefinetododefineModel.destroy({ where: { GroupID: Uuid }, transaction: t });
         await db.todogroupdefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Rutinler',
+            role: 'todogroupdefinenotification',
+            message: `${todogroupdefine?.Name} rutin listesi ${username} tarafından Silindi.`,
+            pushurl: '/Todogroupdefines'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();
