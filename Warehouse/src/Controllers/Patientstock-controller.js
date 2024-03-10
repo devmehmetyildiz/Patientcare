@@ -1,5 +1,8 @@
 const config = require("../Config")
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
+const DoGet = require("../Utilities/DoGet")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -30,6 +33,8 @@ async function Transferpatientstock(req, res, next) {
 
     const patient = req.body
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patientstocks = await db.patientstockModel.findAll({ where: { PatientID: patient.Uuid } });
         for (const patientstock of patientstocks) {
@@ -58,7 +63,7 @@ async function Transferpatientstock(req, res, next) {
                 await db.stockModel.create({
                     ...patientstock,
                     Uuid: newstockUuid,
-                    CreatedUser: 'System',
+                    CreatedUser: username,
                     CreateTime: new Date(),
                     Isapproved: false,
                     IsActive: true,
@@ -72,7 +77,7 @@ async function Transferpatientstock(req, res, next) {
                     Prevvalue: 0,
                     Newvalue: amount,
                     Isapproved: true,
-                    CreatedUser: 'System',
+                    CreatedUser: username,
                     CreateTime: new Date(),
                     IsActive: true
                 }, { transaction: t })
@@ -91,7 +96,7 @@ async function Transferpatientstock(req, res, next) {
                     Prevvalue: previousamount,
                     Newvalue: previousamount + amount,
                     Isapproved: true,
-                    CreatedUser: 'System',
+                    CreatedUser: username,
                     CreateTime: new Date(),
                     IsActive: true
                 }, { transaction: t })
@@ -99,6 +104,18 @@ async function Transferpatientstock(req, res, next) {
 
             await db.patientstockModel.destroy({ where: { Uuid: patientstock.Uuid } }, { transaction: t })
         }
+
+        const warehouse = await db.warehouseModel.findOne({ where: { Uuid: WarehouseID } });
+        const patientdefine = await DoGet(config.services.Business, `Patientdefines/${patient?.PatientdefineID}`)
+
+        await CreateNotification({
+            type: types.Transfer,
+            service: 'Hasta Stokları',
+            role: 'patientstocknotification',
+            message: `${warehouse?.Name} ambarına ${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasının stokları ${username} tarafından transfer edildi.`,
+            pushurl: '/Warehouses'
+        })
+
         t.commit()
     } catch (error) {
         t.rollback()
@@ -178,11 +195,13 @@ async function AddPatientstock(req, res, next) {
     let stockuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         await db.patientstockModel.create({
             ...req.body,
             Uuid: stockuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true,
             Isapproved: false
@@ -196,11 +215,25 @@ async function AddPatientstock(req, res, next) {
             Movementtype: 1,
             Prevvalue: 0,
             Newvalue: req.body.Amount,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isapproved: true,
             Isactive: true
         }, { transaction: t })
+
+        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: StockdefineID } });
+        const unit = await DoGet(config.services.Setting, `Units/${stockdefine?.UnitID}`)
+        const patient = await DoGet(config.services.Business, `Patients/${PatientID}`)
+        const patientdefine = await DoGet(config.services.Business, `Patientdefines/${patient?.PatientdefineID}`)
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Hasta Stokları',
+            role: 'patientstocknotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ${req.body.Amount} ${unit?.Name} ${stockdefine?.Name} ${username} tarafından eklendi.`,
+            pushurl: '/Patientstocks'
+        })
+
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -248,6 +281,8 @@ async function UpdatePatientstock(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const stock = db.patientstockModel.findOne({ where: { Uuid: Uuid } })
         if (!stock) {
@@ -259,10 +294,21 @@ async function UpdatePatientstock(req, res, next) {
 
         await db.patientstockModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: StockdefineID } });
+        const patient = await DoGet(config.services.Business, `Patients/${PatientID}`)
+        const patientdefine = await DoGet(config.services.Business, `Patientdefines/${patient?.PatientdefineID}`)
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hasta Stokları',
+            role: 'patientstocknotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait ${stockdefine?.Name} ${username} tarafından güncellendi.`,
+            pushurl: '/Patientstocks'
+        })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -276,6 +322,8 @@ async function UpdatePatientstocklist(req, res, next) {
 
     const stocklist = req.body
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         for (const stockitem of stocklist) {
             const {
@@ -327,7 +375,7 @@ async function UpdatePatientstocklist(req, res, next) {
                 } else {
                     await db.patientstockModel.update({
                         ...stockitem,
-                        Updateduser: "System",
+                        Updateduser: username,
                         Updatetime: new Date(),
                     }, { where: { Uuid: Uuid } }, { transaction: t })
                 }
@@ -336,7 +384,7 @@ async function UpdatePatientstocklist(req, res, next) {
                 await db.patientstockModel.create({
                     ...stockitem,
                     Uuid: stockuuid,
-                    Createduser: "System",
+                    Createduser: username,
                     Createtime: new Date(),
                     Isapproved: false,
                     Isactive: true
@@ -351,12 +399,20 @@ async function UpdatePatientstocklist(req, res, next) {
                     Prevvalue: 0,
                     Isapproved: true,
                     Newvalue: stockitem.Amount,
-                    Createduser: "System",
+                    Createduser: username,
                     Createtime: new Date(),
                     Isactive: true
                 }, { transaction: t })
             }
         }
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hasta Stokları',
+            role: 'patientstocknotification',
+            message: `Hasta stok listesi ${username} tarafından güncellendi.`,
+            pushurl: '/Patientstocks'
+        })
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -384,6 +440,8 @@ async function ApprovePatientstock(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patientstock = await db.patientstockModel.findOne({ where: { Uuid: Uuid } })
         if (!patientstock) {
@@ -396,9 +454,22 @@ async function ApprovePatientstock(req, res, next) {
         await db.patientstockModel.update({
             ...patientstock,
             Isapproved: true,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        const stock = await db.patientstockModel.findOne({ where: { Uuid: req.params.stockId } });
+        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock?.StockdefineID } });
+        const patient = await DoGet(config.services.Business, `Patients/${PatientID}`)
+        const patientdefine = await DoGet(config.services.Business, `Patientdefines/${patient?.PatientdefineID}`)
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hasta Stokları',
+            role: 'patientstocknotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait ${stockdefine?.Name} ${username} tarafından onaylandı.`,
+            pushurl: '/Patientstocks'
+        })
 
         await t.commit()
     } catch (error) {
@@ -414,6 +485,7 @@ async function ApprovePatientstocks(req, res, next) {
     const body = req.body
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
     try {
         for (const data of (body || [])) {
             if (!data) {
@@ -437,10 +509,19 @@ async function ApprovePatientstocks(req, res, next) {
             await db.patientstockModel.update({
                 ...patientstock,
                 Isapproved: true,
-                Updateduser: "System",
+                Updateduser: username,
                 Updatetime: new Date(),
             }, { where: { Uuid: data } }, { transaction: t })
         }
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hasta Stokları',
+            role: 'patientstocknotification',
+            message: `${username} tarafından toplu stok onaylaması yapıldı.`,
+            pushurl: '/Patientstocks'
+        })
+
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -466,6 +547,8 @@ async function DeletePatientstock(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patientstock = await db.patientstockModel.findOne({ where: { Uuid: req.params.stockId } });
         if (!patientstock) {
@@ -477,37 +560,21 @@ async function DeletePatientstock(req, res, next) {
 
         await db.patientstockmovementModel.destroy({ where: { StockID: Uuid } })
         await db.patientstockModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Hasta Stokları',
+            role: 'patientstocknotification',
+            message: `${Uuid} stok ${username} tarafından silindi.`,
+            pushurl: '/Patientstocks'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
     GetPatientstocks(req, res, next)
-}
-
-function DataCleaner(data) {
-    if (data.Id !== undefined) {
-        delete data.Id;
-    }
-    if (data.Createduser !== undefined) {
-        delete data.Createduser;
-    }
-    if (data.Createtime !== undefined) {
-        delete data.Createtime;
-    }
-    if (data.Updateduser !== undefined) {
-        delete data.Updateduser;
-    }
-    if (data.Updatetime !== undefined) {
-        delete data.Updatetime;
-    }
-    if (data.Deleteduser !== undefined) {
-        delete data.Deleteduser;
-    }
-    if (data.Deletetime !== undefined) {
-        delete data.Deletetime;
-    }
-    return data
 }
 
 module.exports = {

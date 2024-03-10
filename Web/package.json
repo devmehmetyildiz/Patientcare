@@ -19,6 +19,7 @@
     "eslint-plugin-react": "^7.33.2",
     "file-saver": "^2.0.5",
     "form-to-object": "^6.0.0",
+    "framer-motion": "^11.0.8",
     "generate-pdf-from-react-html": "^1.0.5",
     "highcharts": "^11.2.0",
     "highcharts-react-official": "^3.2.1",

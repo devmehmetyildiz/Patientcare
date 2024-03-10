@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Button, Confirm, Grid, GridColumn, Icon, Label, LabelDetail, Menu, Modal, Sidebar, Transition, TransitionGroup } from 'semantic-ui-react'
+import { Breadcrumb, Button, Confirm, Grid, GridColumn, Icon, Label, Menu, Modal, Sidebar, Transition, TransitionGroup } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { Headerwrapper, LoadingPage, Pagedivider, Pagewrapper } from '../../Components'
 import Literals from './Literals'
 import { Formatfulldate } from '../../Utils/Formatdate'
 import { useHistory } from 'react-router-dom'
+import { motion, AnimatePresence } from "framer-motion"
 
 export default function Usernotifications(props) {
+
     const [viewopen, setViewopen] = useState(false)
     const [record, setRecord] = useState(null)
+    const [utils, setUtils] = useState(false)
     const history = useHistory()
-    const { GetUsernotifications, EditRecordUsernotifications, DeleteUsernotifications, handleOpen, Usernotifications, Profile } = props
+    const {
+        GetUsernotifications,
+        EditRecordUsernotifications,
+        DeleteUsernotifications,
+        DeleteUsernotificationbyidreaded,
+        DeleteUsernotificationbyid,
+        handleOpen,
+        Usernotifications,
+        Profile
+    } = props
     const { open, isLoading, list } = Usernotifications
     const { meta } = Profile
 
@@ -44,7 +56,7 @@ export default function Usernotifications(props) {
     return (
         <Sidebar
             as={Menu}
-            animation='overlay'
+            animation='scale down'
             icon='labeled'
             vertical
             direction='right'
@@ -56,9 +68,13 @@ export default function Usernotifications(props) {
                     <Headerwrapper>
                         <Grid columns='2' className='relative' >
                             <GridColumn width={8}>
-                                <Breadcrumb size='big'>
-                                    <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-                                </Breadcrumb>
+                                <div className='cursor-pointer' onClick={() => {
+                                    setUtils(!utils)
+                                }}>
+                                    <Breadcrumb size='big'>
+                                        <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                                    </Breadcrumb>
+                                </div>
                             </GridColumn>
                             <GridColumn width={8}>
                                 <div
@@ -72,7 +88,20 @@ export default function Usernotifications(props) {
                         </Grid>
                     </Headerwrapper>
                     <Pagedivider />
-                    <TransitionGroup animation='slide right' duration={500}>
+                    <Transition visible={utils} animation='fade down' duration={500}>
+                        <div className='px-4 flex flex-row w-full justify-between items-center'>
+                            <Deleteallnotification
+                                Profile={Profile}
+                                DeleteUsernotificationbyid={DeleteUsernotificationbyid}
+                            />
+                            <Deletereadednotification
+                                Profile={Profile}
+                                DeleteUsernotificationbyidreaded={DeleteUsernotificationbyidreaded}
+                            />
+                        </div>
+                    </Transition>
+                    {utils && <Pagedivider />}
+                    <AnimatePresence>
                         {(list || []).map((notification, index) => {
                             return <Notification
                                 notification={notification}
@@ -82,7 +111,7 @@ export default function Usernotifications(props) {
                                 DeleteUsernotifications={DeleteUsernotifications}
                             />
                         })}
-                    </TransitionGroup>
+                    </AnimatePresence>
                     <Viewnotification
                         open={viewopen}
                         setOpen={setViewopen}
@@ -100,8 +129,6 @@ export default function Usernotifications(props) {
 }
 
 
-
-
 function Notification({ notification, setOpen, setRecord, DeleteUsernotifications }) {
 
     const [confirmopen, setConfirmopen] = useState(false)
@@ -117,48 +144,49 @@ function Notification({ notification, setOpen, setRecord, DeleteUsernotification
         setConfirmopen(false)
     }
 
-    return (
-        <Transition visible={notification ? true : false} animation='slide right' duration={500} >
-            <div className='w-full flex justify-center items-center '  >
-                <div className='cursor-pointer w-[300px] flex flex-row items-center justify-between shadow-md h-16  m-4 p-2 rounded-lg shadow-[#DDDD] border-[#DDDD] hover:border-[#2355a0] border-[1px]  transition-all ease-in-out duration-300  border-b-[#2355a0] border-b-4 hover:border-b-4'>
-                    <div className='flex flex-row justify-center items-center'
-                        onClick={() => {
-                            setRecord(notification)
-                            setOpen(true)
-                        }}>
-                        {notification.Isreaded
-                            ? <Icon name='checkmark' className='text-[#2355a0]' />
-                            : <Icon name='attention' className='text-[#2355a0]' />
-                        }
-                        <div className=' flex flex-col justify-start items-start'>
-                            <div className='font-bold'>{notification?.Subject}</div>
-                            <div className='text-[#868686dd] text-sm'>{Formatfulldate(notification?.Createtime)}</div>
-                        </div>
-                    </div>
-                    <div className='flex flex-row justify-center items-center'>
-                        <div onClick={() => {
-                            setRecord(notification)
-                            setConfirmopen(true)
-                        }}>
-                            <Icon name='delete' className='text-[#2355a0]' />
-                        </div>
-                    </div>
+    return (<motion.div
+        initial={{ x: 400 }}
+        animate={{ x: 0 }}
+        exit={{ x: 400 }}
+        transition={{ duration: 1 }}
+        className='w-full flex justify-center items-center'
+    >
+        <div className='cursor-pointer w-[300px] flex flex-row items-center justify-between shadow-md h-16  m-4 p-2 rounded-lg shadow-[#DDDD] border-[#DDDD] hover:border-[#2355a0] border-[1px]  transition-all ease-in-out duration-300  border-b-[#2355a0] border-b-4 hover:border-b-4'>
+            <div className='flex flex-row justify-center items-center'
+                onClick={() => {
+                    setRecord(notification)
+                    setOpen(true)
+                }}>
+                {notification.Isreaded
+                    ? <Icon name='checkmark' className='text-[#2355a0]' />
+                    : <Icon name='attention' className='text-[#2355a0]' />
+                }
+                <div className=' text-left flex flex-col justify-start items-start'>
+                    <div className='font-bold'>{notification?.Subject}</div>
+                    <div className='text-[#868686dd] text-sm'>{Formatfulldate(notification?.Createtime)}</div>
                 </div>
-                <Confirm
-                    open={confirmopen}
-                    content="Bildirimi silmek istediğinize eminmisiniz?"
-                    header="Bildirimi silme"
-                    cancelButton="Vazgeç"
-                    confirmButton="Sil"
-                    onCancel={() => { onCancel() }}
-                    onConfirm={() => { onConfirm() }}
-                />
             </div>
-        </Transition>
+            <div className='flex flex-row justify-center items-center'>
+                <div onClick={() => {
+                    setRecord(notification)
+                    setConfirmopen(true)
+                }}>
+                    <Icon name='delete' className='text-[#2355a0]' />
+                </div>
+            </div>
+        </div>
+        <Confirm
+            open={confirmopen}
+            content="Bildirimi silmek istediğinize eminmisiniz?"
+            header="Bildirimi silme"
+            cancelButton="Vazgeç"
+            confirmButton="Sil"
+            onCancel={() => { onCancel() }}
+            onConfirm={() => { onConfirm() }}
+        />
+    </motion.div>
     )
 }
-
-
 
 function Viewnotification({ open, notification, setOpen, Profile, history, setRecord, handleSidebaropen, EditRecordUsernotifications }) {
 
@@ -232,5 +260,69 @@ function Viewnotification({ open, notification, setOpen, Profile, history, setRe
                 </Modal.Actions>
             }
         </Modal>
+    )
+}
+
+function Deleteallnotification({ Profile, DeleteUsernotificationbyid }) {
+
+    const [open, setOpen] = useState(false)
+
+    const onConfirm = () => {
+
+        const { meta } = Profile
+        if (validator.isUUID(meta?.Uuid)) {
+            DeleteUsernotificationbyid(meta?.Uuid)
+            setOpen(false)
+        }
+    }
+
+
+    return (
+        <>
+            <Button onClick={() => { setOpen(true) }} className='!bg-[#2355a0] !text-white ' floated='left'>
+                {Literals.Button.Deleteall[Profile.Language]}
+            </Button>
+            <Confirm
+                open={open}
+                content="Tüm Bildirimleri silmek istediğinize eminmisiniz?"
+                header="Bildirim silme"
+                cancelButton="Vazgeç"
+                confirmButton="Sil"
+                onCancel={() => { setOpen(false) }}
+                onConfirm={() => { onConfirm() }}
+            />
+        </>
+    )
+}
+
+function Deletereadednotification({ Profile, DeleteUsernotificationbyidreaded }) {
+
+    const [open, setOpen] = useState(false)
+
+    const onConfirm = () => {
+
+        const { meta } = Profile
+        if (validator.isUUID(meta?.Uuid)) {
+            DeleteUsernotificationbyidreaded(meta?.Uuid)
+            setOpen(false)
+        }
+    }
+
+
+    return (
+        <>
+            <Button onClick={() => { setOpen(true) }} className='!bg-[#2355a0] !text-white ' floated='left'>
+                {Literals.Button.Deletereaded[Profile.Language]}
+            </Button>
+            <Confirm
+                open={open}
+                content="Sadece Okunan Bildirimleri silmek istediğinize emin misiniz?"
+                header="Bildirim silme"
+                cancelButton="Vazgeç"
+                confirmButton="Sil"
+                onCancel={() => { setOpen(false) }}
+                onConfirm={() => { onConfirm() }}
+            />
+        </>
     )
 }

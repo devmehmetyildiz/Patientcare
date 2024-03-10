@@ -185,7 +185,7 @@ async function DeletePrinttemplate(req, res, next) {
             type: types.Delete,
             service: 'Yazdırma Taslakları',
             role: 'printtemplatenotification',
-            message: `${Name} yazdırma taslağı ${username} tarafından Silindi.`,
+            message: `${printtemplate?.Name} yazdırma taslağı ${username} tarafından Silindi.`,
             pushurl: '/Printtemplates'
         })
         await t.commit();

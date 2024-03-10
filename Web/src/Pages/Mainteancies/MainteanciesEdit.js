@@ -18,10 +18,10 @@ export default class MainteanciesEdit extends Component {
   }
 
   componentDidMount() {
-    const { MainteanceID, GetMainteance, GetEquipments, GetEquipmentgroups, GetPersonels, match, history } = this.props
+    const { MainteanceID, GetMaineance, GetEquipments, GetEquipmentgroups, GetPersonels, match, history } = this.props
     let Id = MainteanceID || match?.params?.MainteanceID
     if (validator.isUUID(Id)) {
-      GetMainteance(Id)
+      GetMaineance(Id)
       GetEquipments()
       GetEquipmentgroups()
       GetPersonels()

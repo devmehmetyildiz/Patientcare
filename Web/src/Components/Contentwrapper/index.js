@@ -9,7 +9,7 @@ export default function Contentwrapper({ children, additionalStyle, isfullscreen
         setIsOverflowing(overflow);
     };
     useEffect(() => {
-        checkOverflow(); // Run on initial render
+        //checkOverflow(); // Run on initial render
     });
 
     let style = {}

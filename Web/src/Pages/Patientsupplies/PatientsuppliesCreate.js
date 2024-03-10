@@ -34,7 +34,6 @@ export default class PatientsuppliesCreate extends Component {
       return { key: patient.Uuid, text: `${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`, value: patient.Uuid }
     })
 
-
     return (
       Patientstocks.isLoading ? <LoadingPage /> :
         <Pagewrapper>

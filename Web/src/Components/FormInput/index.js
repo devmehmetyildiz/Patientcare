@@ -60,10 +60,15 @@ export default function FormInput(props) {
 
         switch (formType) {
             case 'dropdown':
-                return <Dropdown value={formdata[name] !== undefined ? formdata[name] : (props.multiple ? [] : '')} {...contextProp} clearable search={props.search ? props.search : true} fluid selection
+                return <Dropdown
+                    {...contextProp}
+                    value={formdata[name] !== undefined ? formdata[name] : (props.multiple ? [] : '')}
+                    clearable
+                    search={props.search ? props.search : true}
+                    fluid
+                    selection
                     onChange={(e, data) => {
                         context.setFormstates({ ...formdata, [name]: data.value })
-
                     }} />
             case 'checkbox':
                 return <Checkbox toggle className='m-2'

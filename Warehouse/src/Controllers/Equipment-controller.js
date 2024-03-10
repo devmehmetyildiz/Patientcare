@@ -1,4 +1,6 @@
+const CreateNotification = require("../../../System/src/Utilities/CreateNotification")
 const config = require("../Config")
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
@@ -84,12 +86,13 @@ async function AddEquipment(req, res, next) {
     let equipmentuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.equipmentModel.create({
             ...req.body,
             Uuid: equipmentuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
@@ -100,6 +103,14 @@ async function AddEquipment(req, res, next) {
                 EquipmentID: equipmentuuid,
             }, { transaction: t });
         }
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Ekipmanlar',
+            role: 'equipmentnotification',
+            message: `${Name} ekipmanı ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Equipments'
+        })
 
         await t.commit()
     } catch (err) {
@@ -140,6 +151,8 @@ async function UpdateEquipment(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const equipment = db.equipmentModel.findOne({ where: { Uuid: Uuid } })
         if (!equipment) {
@@ -151,7 +164,7 @@ async function UpdateEquipment(req, res, next) {
 
         await db.equipmentModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
         await db.equipmentpropertyModel.destroy({ where: { EquipmentID: Uuid }, transaction: t });
@@ -162,6 +175,13 @@ async function UpdateEquipment(req, res, next) {
             }, { transaction: t });
         }
 
+        await CreateNotification({
+            type: types.Update,
+            service: 'Ekipmanlar',
+            role: 'equipmentnotification',
+            message: `${Name} ekipmanı ${username} tarafından Güncellendi.`,
+            pushurl: '/Equipments'
+        })
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -186,8 +206,10 @@ async function DeleteEquipment(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const equipment = db.equipmentModel.findOne({ where: { Uuid: Uuid } })
+        const equipment = await db.equipmentModel.findOne({ where: { Uuid: Uuid } })
         if (!equipment) {
             return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
         }
@@ -197,6 +219,14 @@ async function DeleteEquipment(req, res, next) {
 
         await db.equipmentModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await db.equipmentpropertyModel.destroy({ where: { EquipmentID: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Ekipmanlar',
+            role: 'equipmentnotification',
+            message: `${equipment?.Name} ekipmanı ${username} tarafından Silindi.`,
+            pushurl: '/Equipments'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

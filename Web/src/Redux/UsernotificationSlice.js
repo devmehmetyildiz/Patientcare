@@ -178,6 +178,11 @@ export const DeleteUsernotificationbyidreaded = createAsyncThunk(
                 code: Literals.deletecode[Language],
                 description: Literals.deletedescription[Language],
             }));
+            const userId = state.Profile?.meta?.Uuid
+            if (validator.isUUID(userId)) {
+                const notificaitonResponse = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetUsernotificationsbyUserid/' + userId);
+                return notificaitonResponse.data
+            }
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -200,6 +205,11 @@ export const DeleteUsernotificationbyid = createAsyncThunk(
                 code: Literals.deletecode[Language],
                 description: Literals.deletedescription[Language],
             }));
+            const userId = state.Profile?.meta?.Uuid
+            if (validator.isUUID(userId)) {
+                const notificaitonResponse = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetUsernotificationsbyUserid/' + userId);
+                return notificaitonResponse.data
+            }
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

@@ -242,58 +242,58 @@ export const PatientstocksSlice = createSlice({
                 state.errMsg = action.error.message;
             })
             .addCase(AddPatientstocks.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(AddPatientstocks.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(AddPatientstocks.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(EditPatientstocks.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(EditPatientstocks.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(EditPatientstocks.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(ApprovePatientstocks.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(ApprovePatientstocks.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(ApprovePatientstocks.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(ApprovemultiplePatientstocks.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(ApprovemultiplePatientstocks.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(ApprovemultiplePatientstocks.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(DeletePatientstocks.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(DeletePatientstocks.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(DeletePatientstocks.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             });
     },

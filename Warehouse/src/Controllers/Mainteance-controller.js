@@ -1,5 +1,8 @@
 const config = require("../Config")
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const { formatDate } = require("../Utilities/Convert")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -66,16 +69,27 @@ async function AddMainteance(req, res, next) {
     let mainteanceuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
+        const startDate = new Date()
+
         await db.mainteanceModel.create({
             ...req.body,
             Uuid: mainteanceuuid,
-            Starttime: new Date(),
-            Createduser: "System",
-            Createtime: new Date(),
+            Starttime: startDate,
+            Createduser: username,
+            Createtime: startDate,
             Isactive: true
         }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Bakım Talepleri',
+            role: 'mainteancenotification',
+            message: `${formatDate(startDate)} tarihli bakım talebi ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Mainteancies'
+        })
 
         await t.commit()
     } catch (err) {
@@ -111,6 +125,8 @@ async function UpdateMainteance(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const mainteance = db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
         if (!mainteance) {
@@ -122,9 +138,17 @@ async function UpdateMainteance(req, res, next) {
 
         await db.mainteanceModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Bakım Talepleri',
+            role: 'mainteancenotification',
+            message: `${formatDate(mainteance?.Starttime)} tarihli bakım talebi ${username} tarafından Güncellendi.`,
+            pushurl: '/Mainteancies'
+        })
 
         await t.commit()
     } catch (error) {
@@ -152,6 +176,8 @@ async function CompleteMainteance(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const mainteance = db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
         if (!mainteance) {
@@ -165,9 +191,17 @@ async function CompleteMainteance(req, res, next) {
             ...req.body,
             Iscompleted: true,
             Endtime: new Date(),
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Bakım Talepleri',
+            role: 'mainteancenotification',
+            message: `${formatDate(mainteance?.Starttime)} tarihli bakım talebi ${username} tarafından Tamamlandı.`,
+            pushurl: '/Mainteancies'
+        })
 
         await t.commit()
     } catch (error) {
@@ -193,6 +227,8 @@ async function DeleteMainteance(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const mainteance = db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
         if (!mainteance) {
@@ -203,6 +239,15 @@ async function DeleteMainteance(req, res, next) {
         }
 
         await db.mainteanceModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Bakım Talepleri',
+            role: 'mainteancenotification',
+            message: `${formatDate(mainteance?.Starttime)} tarihli bakım talebi ${username} tarafından Silindi.`,
+            pushurl: '/Mainteancies'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

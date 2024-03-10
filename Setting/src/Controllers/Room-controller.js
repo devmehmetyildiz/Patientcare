@@ -5,7 +5,7 @@ const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-
+const CreateNotification = require("../Utilities/CreateNotification")
 
 async function GetRooms(req, res, next) {
     try {
@@ -177,7 +177,7 @@ async function DeleteRoom(req, res, next) {
             type: types.Delete,
             service: 'Odalar',
             role: 'roomnotification',
-            message: `${Name} odası ${username} tarafından Silindi.`,
+            message: `${room?.Name} odası ${username} tarafından Silindi.`,
             pushurl: '/Rooms'
         })
 

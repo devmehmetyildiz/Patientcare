@@ -127,7 +127,7 @@ async function UpdateHelpstatu(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Katlar',
+            service: 'Bakıma İhtiyaç durumları',
             role: 'helpstatunotification',
             message: `${Name} bakıma ihtiyaç durumu ${username} tarafından Güncellendi.`,
             pushurl: '/Helpstatus'
@@ -168,7 +168,7 @@ async function DeleteHelpstatu(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Katlar',
+            service: 'Bakıma İhtiyaç durumları',
             role: 'helpstatunotification',
             message: `${helpstatu?.Name} bakıma ihtiyaç durumu ${username} tarafından Silindi.`,
             pushurl: '/Helpstatus'

@@ -63,6 +63,14 @@ const Literals = {
             tr: "Detaya Git",
             en: "Go to Detail"
         },
+        Deleteall: {
+            tr: "Tümünü Sil",
+            en: "Delete All"
+        },
+        Deletereaded: {
+            tr: "Sadece Okunanları Sil",
+            en: "Delete All Readed"
+        },
 
     },
     Messages: {

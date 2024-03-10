@@ -1,3 +1,5 @@
+const { types } = require("../Constants/Defines")
+const CreateNotification = require("../../../System/src/Utilities/CreateNotification")
 const config = require("../Config")
 const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
@@ -6,6 +8,7 @@ const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const axios = require('axios')
+const { formatDate } = require("../Utilities/Convert")
 
 async function GetBreakdowns(req, res, next) {
     try {
@@ -65,17 +68,27 @@ async function AddBreakdown(req, res, next) {
     let breakdownuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
+        const startDate = new Date()
+
         await db.breakdownModel.create({
             ...req.body,
             Uuid: breakdownuuid,
-            Starttime: new Date(),
-            Createduser: "System",
-            Createtime: new Date(),
+            Starttime: startDate,
+            Createduser: username,
+            Createtime: startDate,
             Isactive: true
         }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Arıza Talepleri',
+            role: 'breakdownnotification',
+            message: `${formatDate(startDate)} tarihli arıza bildirimi ${username} tarafından başlatıldı.`,
+            pushurl: '/Breakdowns'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -111,6 +124,8 @@ async function UpdateBreakdown(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const breakdown = db.breakdownModel.findOne({ where: { Uuid: Uuid } })
         if (!breakdown) {
@@ -122,10 +137,17 @@ async function UpdateBreakdown(req, res, next) {
 
         await db.breakdownModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Update,
+            service: 'Arıza Talepleri',
+            role: 'breakdownnotification',
+            message: `${formatDate(breakdown?.Starttime)} tarihli arıza bildirimi ${username} tarafından güncellendi.`,
+            pushurl: '/Breakdowns'
+        })
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -153,6 +175,8 @@ async function CompleteBreakdown(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const breakdown = db.breakdownModel.findOne({ where: { Uuid: Uuid } })
         if (!breakdown) {
@@ -166,9 +190,17 @@ async function CompleteBreakdown(req, res, next) {
             ...req.body,
             Iscompleted: true,
             Endtime: new Date(),
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Arıza Talepleri',
+            role: 'breakdownnotification',
+            message: `${formatDate(breakdown?.Starttime)} tarihli arıza bildirimi ${username} tarafından tamamlandı.`,
+            pushurl: '/Breakdowns'
+        })
 
         await t.commit()
     } catch (error) {
@@ -194,6 +226,8 @@ async function DeleteBreakdown(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const breakdown = db.breakdownModel.findOne({ where: { Uuid: Uuid } })
         if (!breakdown) {
@@ -204,6 +238,15 @@ async function DeleteBreakdown(req, res, next) {
         }
 
         await db.breakdownModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Arıza Talepleri',
+            role: 'breakdownnotification',
+            message: `${formatDate(breakdown?.Starttime)} tarihli arıza bildirimi ${username} tarafından Silindi.`,
+            pushurl: '/Breakdowns'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

@@ -107,7 +107,7 @@ async function AddTodogroupdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Rutinler',
+            service: 'Rutin Listeleri',
             role: 'todogroupdefinenotification',
             message: `${Name} rutin listesi ${username} tarafından Oluşturuldu.`,
             pushurl: '/Todogroupdefines'
@@ -180,7 +180,7 @@ async function UpdateTodogroupdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Rutinler',
+            service: 'Rutin Listeleri',
             role: 'todogroupdefinenotification',
             message: `${Name} rutin listesi ${username} tarafından Güncellendi.`,
             pushurl: '/Todogroupdefines'
@@ -225,7 +225,7 @@ async function DeleteTodogroupdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Rutinler',
+            service: 'Rutin Listeleri',
             role: 'todogroupdefinenotification',
             message: `${todogroupdefine?.Name} rutin listesi ${username} tarafından Silindi.`,
             pushurl: '/Todogroupdefines'

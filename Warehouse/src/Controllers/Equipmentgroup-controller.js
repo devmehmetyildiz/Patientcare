@@ -1,3 +1,4 @@
+const CreateNotification = require("../Utilities/CreateNotification")
 const config = require("../Config")
 const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
@@ -6,6 +7,7 @@ const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const axios = require('axios')
+const { types } = require("../Constants/Defines")
 
 async function GetEquipmentgroups(req, res, next) {
     try {
@@ -48,7 +50,7 @@ async function GetEquipmentgroup(req, res, next) {
             where: {
                 EquipmentgroupID: equipmentgroup.Uuid,
             }
-            
+
         });
         res.status(200).json(equipmentgroup)
     } catch (error) {
@@ -78,15 +80,24 @@ async function AddEquipmentgroup(req, res, next) {
     let equipmentgroupuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.equipmentgroupModel.create({
             ...req.body,
             Uuid: equipmentgroupuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Ekipman Grupları',
+            role: 'equipmentgroupnotification',
+            message: `${Name} ekipmanı grubu ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Equipmentgroups'
+        })
 
         await t.commit()
     } catch (err) {
@@ -122,6 +133,8 @@ async function UpdateEquipmentgroup(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const equipmentgroup = db.equipmentgroupModel.findOne({ where: { Uuid: Uuid } })
         if (!equipmentgroup) {
@@ -133,9 +146,17 @@ async function UpdateEquipmentgroup(req, res, next) {
 
         await db.equipmentgroupModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Ekipman Grupları',
+            role: 'equipmentgroupnotification',
+            message: `${Name} ekipmanı grubu ${username} tarafından Güncellendi.`,
+            pushurl: '/Equipmentgroups'
+        })
 
         await t.commit()
     } catch (error) {
@@ -161,8 +182,10 @@ async function DeleteEquipmentgroup(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const equipmentgroup = db.equipmentgroupModel.findOne({ where: { Uuid: Uuid } })
+        const equipmentgroup = await db.equipmentgroupModel.findOne({ where: { Uuid: Uuid } })
         if (!equipmentgroup) {
             return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
         }
@@ -171,6 +194,15 @@ async function DeleteEquipmentgroup(req, res, next) {
         }
 
         await db.equipmentgroupModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Ekipman Grupları',
+            role: 'equipmentgroupnotification',
+            message: `${equipmentgroup?.Name} ekipmanı grubu ${username} tarafından Silindi.`,
+            pushurl: '/Equipmentgroups'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

@@ -1,7 +1,8 @@
 const types = {
     Create: 'Oluşturma',
     Update: 'Güncelleme',
-    Delete: 'Silme'
+    Delete: 'Silme',
+    Transfer: 'Transfer',
 }
 
 module.exports = { types }
