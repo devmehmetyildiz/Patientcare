@@ -1,5 +1,7 @@
 const config = require("../Config")
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -49,7 +51,6 @@ async function AddStockdefine(req, res, next) {
     let validationErrors = []
     const {
         Name,
-        Description,
         UnitID,
         DepartmentID,
     } = req.body
@@ -71,15 +72,24 @@ async function AddStockdefine(req, res, next) {
     let stockdefineuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.stockdefineModel.create({
             ...req.body,
             Uuid: stockdefineuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Stok Tanımları',
+            role: 'stockdefinenotification',
+            message: `${Name} ürün tanımı  ${username} tarafından Oluşturuldu.`,
+            pushurl: `/Stockdefines`
+        })
 
         await t.commit()
     } catch (err) {
@@ -119,8 +129,10 @@ async function UpdateStockdefine(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const stockdefine = db.stockdefineModel.findOne({ where: { Uuid: Uuid } })
+        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!stockdefine) {
             return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_FOUND], req.language))
         }
@@ -130,9 +142,17 @@ async function UpdateStockdefine(req, res, next) {
 
         await db.stockdefineModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Stok Tanımları',
+            role: 'stockdefinenotification',
+            message: `${Name} ürün tanımı  ${username} tarafından Güncellendi.`,
+            pushurl: `/Stockdefines`
+        })
 
         await t.commit()
     } catch (error) {
@@ -158,8 +178,10 @@ async function DeleteStockdefine(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const stockdefine = db.stockdefineModel.findOne({ where: { Uuid: Uuid } })
+        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!stockdefine) {
             return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_FOUND], req.language))
         }
@@ -168,6 +190,15 @@ async function DeleteStockdefine(req, res, next) {
         }
 
         await db.stockdefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Stok Tanımları',
+            role: 'stockdefinenotification',
+            message: `${stockdefine?.Name} ürün tanımı  ${username} tarafından Silindi.`,
+            pushurl: `/Stockdefines`
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

@@ -34,7 +34,7 @@ const version1_0_0_1 = {
         {
             title: "Ekran Hataları", commits: [
                 "Departman Güncelleme ekranında verilerin gelmeme problemi düzeltildi",
-                "Hasta Hareketlerinden Kurumda hareketi yanlış yazılmış düzeltildi"
+                "Hasta Hareketlerinden Kurumda hareketi yanlış yazılmış düzeltildi",
             ],
         },
         {
@@ -593,6 +593,61 @@ const version1_0_0_19 = {
     ],
 }
 
+const version1_0_1_0 = {
+    version: "1.0.1.0",
+    changes: [
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Arıza bildirimlerinde personeller değil kullanıcılar seçilecek.",
+                "Bakım bildirimlerinde personeller değil kullanıcılar seçilecek.",
+                "Personeller ekranı, kullanıcılardan meslek grubu seçilenleri getirecek ve meslek gruplarına göre ayrırabilecek.",
+            ]
+        },
+        {
+            title: "Kullanıcılar", commits: [
+                "Personel tanımları kullanıcılarda yapılacak.",
+            ]
+        },
+        {
+            title: "Tasarım", commits: [
+                "Hasta Detay ekranı tasarımı güncellendi.",
+                "Mobil ekranı tasarımı güncellendi.",
+            ]
+        },
+    ],
+    bugs: [
+        {
+            title: "Hastalar", commits: [
+                "Mobil ekranda hastalar ve önkayıtların hataya düşmesi giderildi.",
+                "Hasta Tanımları tablolarında düzenleme",
+            ]
+        },
+        {
+            title: "Genel", commits: [
+                "Menü iconu çalışır duruma getirildi.",
+            ]
+        },
+    ],
+    features: [
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Hasta İş Akış ekranı eklenecek.",
+                "Genel Hasta Durum Güncelleme Ekranı Eklendi.",
+                "Personel izin durumları vb. girilecek eklenecek.",
+                "Hastalara toplu para girişi Eklenecek.",
+                "Genel Hasta Takip Ekranı Eklendi.",
+            ],
+        },
+        {
+            title: "Genel", commits: [
+                "Bildirimler menüleri eklendi ve yenilendi.",
+                "Her işlem ile alakalı rollerde yeni bildirim alma yetkileri eklendi.",
+                "Roller yenilendi, türkçeleştirildi, sayısında artış oldu.",
+            ],
+        },
+    ],
+}
+
 export {
     version1_0_0_0,
     version1_0_0_1,
@@ -614,4 +669,5 @@ export {
     version1_0_0_17,
     version1_0_0_18,
     version1_0_0_19,
+    version1_0_1_0,
 }

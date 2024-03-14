@@ -11,9 +11,9 @@ import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pag
 export default class Mainteancies extends Component {
 
   componentDidMount() {
-    const { GetMainteancies, GetPersonels, GetEquipments } = this.props
+    const { GetMainteancies, GetUsers, GetEquipments } = this.props
     GetMainteancies()
-    GetPersonels()
+    GetUsers()
     GetEquipments()
   }
 
@@ -33,7 +33,7 @@ export default class Mainteancies extends Component {
       { Header: Literals.Columns.Starttime[Profile.Language], accessor: row => this.dateCellhandler(row?.Starttime), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Endtime[Profile.Language], accessor: row => this.dateCellhandler(row?.Endtime), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.EquipmentID[Profile.Language], accessor: row => this.equipmentCellhandler(row?.EquipmentID), Title: true },
-      { Header: Literals.Columns.ResponsibleuserID[Profile.Language], accessor: row => this.personelCellhandler(row?.ResponsibleuserID), Subtitle: true, Withtext: true, },
+      { Header: Literals.Columns.ResponsibleuserID[Profile.Language], accessor: row => this.userCellhandler(row?.ResponsibleuserID), Subtitle: true, Withtext: true, },
       { Header: Literals.Columns.Openinfo[Profile.Language], accessor: 'Openinfo' },
       { Header: Literals.Columns.Closeinfo[Profile.Language], accessor: 'Closeinfo' },
       { Header: Literals.Columns.Iscompleted[Profile.Language], accessor: row => this.boolCellhandler(row?.Iscompleted), disableProps: true },
@@ -106,12 +106,12 @@ export default class Mainteancies extends Component {
     )
   }
 
-  personelCellhandler = (value) => {
-    const { Personels } = this.props
-    if (Personels.isLoading) {
+  userCellhandler = (value) => {
+    const { Users } = this.props
+    if (Users.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const personel = (Personels.list || []).find(u => u.Uuid === value)
+      const personel = (Users.list || []).find(u => u.Uuid === value)
       return personel ? `${personel?.Name} ${personel?.Surname}` : 'Tanımsız'
     }
   }

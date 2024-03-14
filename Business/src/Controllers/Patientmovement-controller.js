@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -79,6 +81,7 @@ async function AddPatientmovement(req, res, next) {
     let patientmovementuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.patientmovementModel.create({
@@ -86,11 +89,20 @@ async function AddPatientmovement(req, res, next) {
             Uuid: patientmovementuuid,
             OldPatientmovementtype: 0,
             NewPatientmovementtype: Patientmovementtype,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: PatientID } })
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Hasta Hareketleri',
+            role: 'patientmovementnotification',
+            message: `${patientdefine?.CountryID} TC kimlik numaralı hasta hareketi ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Patientmovements'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -142,8 +154,10 @@ async function UpdatePatientmovement(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const patientmovement = db.patientmovementModel.findOne({ where: { Uuid: Uuid } })
+        const patientmovement = await db.patientmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!patientmovement) {
             return next(createNotfounderror([messages.ERROR.PATIENTMOVEMENT_NOT_FOUND], req.language))
         }
@@ -155,10 +169,19 @@ async function UpdatePatientmovement(req, res, next) {
             ...req.body,
             OldPatientmovementtype: patientmovement.Patientmovementtype,
             NewPatientmovementtype: Patientmovementtype,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: PatientID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hasta Hareketleri',
+            role: 'patientmovementnotification',
+            message: `${patientdefine?.CountryID} TC kimlik numaralı hasta hareketi ${username} tarafından Güncellendi.`,
+            pushurl: '/Patientmovements'
+        })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -183,8 +206,10 @@ async function DeletePatientmovement(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const patientmovement = db.patientmovementModel.findOne({ where: { Uuid: Uuid } })
+        const patientmovement = await db.patientmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!patientmovement) {
             return next(createNotfounderror([messages.ERROR.PATIENTMOVEMENT_NOT_FOUND], req.language))
         }
@@ -193,6 +218,16 @@ async function DeletePatientmovement(req, res, next) {
         }
 
         await db.patientmovementModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patientmovement?.PatientID } })
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Hasta Hareketleri',
+            role: 'patientmovementnotification',
+            message: `${patientdefine?.CountryID} TC kimlik numaralı hasta hareketi ${username} tarafından Silindi.`,
+            pushurl: '/Patientmovements'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

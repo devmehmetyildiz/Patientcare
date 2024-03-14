@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Dimmer, Header, Icon, Label, Loader, Popup, Transition } from 'semantic-ui-react'
+import { Breadcrumb, Button, Dimmer, Header, Icon, Label, Loader, Modal, Popup, Transition } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
@@ -22,7 +22,9 @@ export default class PatientsDetail extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
-      fileDownloading: false
+      fileDownloading: false,
+      detailModalopen: false,
+      functionModalopen: false,
     }
   }
 
@@ -256,7 +258,14 @@ export default class PatientsDetail extends Component {
       }
     });
 
-
+    const options = {
+      en: 'Manage',
+      tr: 'İşlemler'
+    }
+    const details = {
+      en: 'Patient Detail',
+      tr: 'Hasta Künyesi'
+    }
 
     return (
       isLoadingstatus ? <LoadingPage /> :
@@ -278,10 +287,10 @@ export default class PatientsDetail extends Component {
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
-          <Contentwrapper additionalStyle="max-h-[calc(91vh-59px-2rem)]">
-            <div className='w-full justify-between items-center md:items-start flex flex-col md:flex-row lg:flex-row gap-4'>
-              <div className='flex flex-col justify-center items-center min-w-[250px] gap-5 md:border-r-2 '>
-                <div className='flex justify-center items-center flex-col gap-1'>
+          <Contentwrapper >
+            <div className='w-full justify-between items-center md:items-start flex flex-col  gap-4'>
+              <div className='w-full flex flex-col md:flex-row lg:flex-row mt-4 justify-between items-start  gap-5 md:border-r-2 '>
+                <div className='flex justify-start items-center flex-col gap-1 w-full'>
                   <div className='flex justify-start items-center '>
                     <Header as='h3'>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}`}</Header>
                   </div>
@@ -292,64 +301,166 @@ export default class PatientsDetail extends Component {
                     : <Header as='h2' icon textAlign='center'><Icon name='users' circular /></Header>}
                   <Label size='huge' style={{ backgroundColor: casedata?.Casecolor }} horizontal>{casedata?.Name}</Label>
                 </div>
-                <div className='flex justify-center items-center md:justify-start flex-col md:items-start gap-1'>
-                  <Popup
-                    trigger={
-                      <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
-                        {Literals.Details.Wallet[Profile.Language]}:
-                        <Label.Detail>{integerPart}.{decimalPart}₺</Label.Detail>
-                      </Label>
-                    }
-                    on='hover'
-                    basic
-                    onOpen={() => {
+                {!Profile.Ismobile ?
+                  <div className='flex justify-center items-center md:justify-start md:items-start  flex-col  gap-1 w-full' >
+                    <Popup
+                      trigger={
+                        <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
+                          {Literals.Details.Wallet[Profile.Language]}:
+                          <Label.Detail>{integerPart}.{decimalPart}₺</Label.Detail>
+                        </Label>
+                      }
+                      on='hover'
+                      basic
+                      onOpen={() => {
 
-                    }}
-                    position='bottom center'
-                    style={{ height: 'auto', width: 'auto' }
-                    } >
-                    <div>
-                      {fixedpatientCashdetail.map(cash => {
-                        const [integerPart, decimalPart] = cash?.value.toFixed(2).split('.')
-                        return <Label key={Math.random()} basic>{cash?.label} : {integerPart}.{decimalPart}₺</Label>
-                      })}
-                    </div>
-                  </Popup>
-                  <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
-                    {Literals.Details.Costumertype[Profile.Language]}
-                    <Label.Detail>{costumertype?.Name}</Label.Detail>
-                  </Label>
-                  <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
-                    {Literals.Details.Patienttype[Profile.Language]}
-                    <Label.Detail>{patienttype?.Name}</Label.Detail>
-                  </Label>
-                  <Label size='large' as='a' className='!bg-[#2355a0] !text-white'  image ribbon={!Profile.Ismobile}>
-                    {Literals.Details.Floor[Profile.Language]}
-                    <Label.Detail>{floor?.Name}</Label.Detail>
-                  </Label>
-                  <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
-                    {Literals.Details.Room[Profile.Language]}
-                    <Label.Detail>{room?.Name}</Label.Detail>
-                  </Label>
-                  <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
-                    {Literals.Details.Bed[Profile.Language]}
-                    <Label.Detail>{bed?.Name}</Label.Detail>
-                  </Label>
-                </div>
-                <Pagedivider />
-                <div className='w-full flex flex-col justify-center items-center gap-3 px-4'>
-                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Addmedicine`) }}>{Literals.Button.Givemedicine[Profile.Language]}</Button>
-                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Removemedicine`) }}>{Literals.Button.Takemedicine[Profile.Language]}</Button>
-                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
-                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
-                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
-                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editcash`) }}>{Literals.Button.Editcash[Profile.Language]}</Button>
-                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { handlePlacemodal(true) }}>{Literals.Button.Changeplace[Profile.Language]}</Button>
-                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Editroutine[Profile.Language]}</Button>
-                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editsupportplan`) }}>{Literals.Button.Editsupportplan[Profile.Language]}</Button>
-                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>
-                  <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`, { redirectUrl: "/Patients/" + Id }) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>
-                </div>
+                      }}
+                      position='bottom center'
+                      style={{ height: 'auto', width: 'auto' }
+                      } >
+                      <div>
+                        {fixedpatientCashdetail.map(cash => {
+                          const [integerPart, decimalPart] = cash?.value.toFixed(2).split('.')
+                          return <Label key={Math.random()} basic>{cash?.label} : {integerPart}.{decimalPart}₺</Label>
+                        })}
+                      </div>
+                    </Popup>
+                    <Label size='large' as='a' className='!bg-[#2355a0] !text-white !w-full' image ribbon={!Profile.Ismobile}>
+                      {Literals.Details.Costumertype[Profile.Language]}
+                      <Label.Detail>{costumertype?.Name}</Label.Detail>
+                    </Label>
+                    <Label size='large' as='a' className='!bg-[#2355a0] !text-white !w-full' image ribbon={!Profile.Ismobile}>
+                      {Literals.Details.Patienttype[Profile.Language]}
+                      <Label.Detail>{patienttype?.Name}</Label.Detail>
+                    </Label>
+                    <Label size='large' as='a' className='!bg-[#2355a0] !text-white !w-full' image ribbon={!Profile.Ismobile}>
+                      {Literals.Details.Floor[Profile.Language]}
+                      <Label.Detail>{floor?.Name}</Label.Detail>
+                    </Label>
+                    <Label size='large' as='a' className='!bg-[#2355a0] !text-white !w-full' image ribbon={!Profile.Ismobile}>
+                      {Literals.Details.Room[Profile.Language]}
+                      <Label.Detail>{room?.Name}</Label.Detail>
+                    </Label>
+                    <Label size='large' as='a' className='!bg-[#2355a0] !text-white !w-[100%]' image ribbon={!Profile.Ismobile}>
+                      {Literals.Details.Bed[Profile.Language]}
+                      <Label.Detail>{bed?.Name}</Label.Detail>
+                    </Label>
+                  </div>
+                  : <Modal
+                    open={this.state.detailModalopen}
+                    onClose={() => { this.setState({ detailModalopen: false }) }}
+                    onOpen={() => { this.setState({ detailModalopen: true }) }}
+                    basic
+                    size='tiny'
+                    trigger={<Button onClick={(e) => { e.preventDefault() }} className=' h-fit !m-auto !bg-[#2355a0] !text-white' floated='right'>{details[Profile.Language]}</Button>
+                    }>
+                    <Modal.Content>
+                      <Contentwrapper>
+                        <div className='flex justify-center items-center md:justify-start md:items-start  flex-col  gap-1 w-full' >
+                          <Popup
+                            trigger={
+                              <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
+                                {Literals.Details.Wallet[Profile.Language]}:
+                                <Label.Detail>{integerPart}.{decimalPart}₺</Label.Detail>
+                              </Label>
+                            }
+                            on='hover'
+                            basic
+                            onOpen={() => {
+
+                            }}
+                            position='bottom center'
+                            style={{ height: 'auto', width: 'auto' }
+                            } >
+                            <div>
+                              {fixedpatientCashdetail.map(cash => {
+                                const [integerPart, decimalPart] = cash?.value.toFixed(2).split('.')
+                                return <Label key={Math.random()} basic>{cash?.label} : {integerPart}.{decimalPart}₺</Label>
+                              })}
+                            </div>
+                          </Popup>
+                          <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
+                            {Literals.Details.Costumertype[Profile.Language]}
+                            <Label.Detail>{costumertype?.Name}</Label.Detail>
+                          </Label>
+                          <Label size='large' as='a' className='!bg-[#2355a0] !text-white' image ribbon={!Profile.Ismobile}>
+                            {Literals.Details.Patienttype[Profile.Language]}
+                            <Label.Detail>{patienttype?.Name}</Label.Detail>
+                          </Label>
+                          <Label size='large' as='a' className='!bg-[#2355a0] !text-white ' image ribbon={!Profile.Ismobile}>
+                            {Literals.Details.Floor[Profile.Language]}
+                            <Label.Detail>{floor?.Name}</Label.Detail>
+                          </Label>
+                          <Label size='large' as='a' className='!bg-[#2355a0] !text-white ' image ribbon={!Profile.Ismobile}>
+                            {Literals.Details.Room[Profile.Language]}
+                            <Label.Detail>{room?.Name}</Label.Detail>
+                          </Label>
+                          <Label size='large' as='a' className='!bg-[#2355a0] !text-white ' image ribbon={!Profile.Ismobile}>
+                            {Literals.Details.Bed[Profile.Language]}
+                            <Label.Detail>{bed?.Name}</Label.Detail>
+                          </Label>
+                        </div>
+                      </Contentwrapper>
+                    </Modal.Content>
+                    <Modal.Actions>
+                      <Button color='black' onClick={() => {
+                        this.setState({ detailModalopen: false })
+                      }}>
+                        {Literals.Button.Close[Profile.Language]}
+                      </Button>
+                    </Modal.Actions>
+                  </Modal>
+                }
+                {!Profile.Ismobile ? <React.Fragment>
+                  <div className='w-full flex flex-col justify-start items-center gap-3 px-2 md:border-l-2'>
+                    <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Addmedicine`) }}>{Literals.Button.Givemedicine[Profile.Language]}</Button>
+                    <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Removemedicine`) }}>{Literals.Button.Takemedicine[Profile.Language]}</Button>
+                    <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
+                    <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
+                    <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
+                  </div>
+                  <div className='w-full flex flex-col justify-start items-center gap-3 px-2'>
+                    <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editcash`) }}>{Literals.Button.Editcash[Profile.Language]}</Button>
+                    <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { handlePlacemodal(true) }}>{Literals.Button.Changeplace[Profile.Language]}</Button>
+                    <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Editroutine[Profile.Language]}</Button>
+                    <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editsupportplan`) }}>{Literals.Button.Editsupportplan[Profile.Language]}</Button>
+                    <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>
+                    <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`, { redirectUrl: "/Patients/" + Id }) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>
+                  </div>
+                </React.Fragment>
+                  : <Modal
+                    open={this.state.functionModalopen}
+                    onClose={() => { this.setState({ functionModalopen: false }) }}
+                    onOpen={() => { this.setState({ functionModalopen: true }) }}
+                    basic
+                    size='tiny'
+                    trigger={<Button onClick={(e) => { e.preventDefault() }} className=' h-fit !m-auto !bg-[#2355a0] !text-white' floated='right'>{options[Profile.Language]}</Button>
+                    }
+                  >
+                    <Modal.Content>
+                      <div className='w-full flex flex-col justify-start items-center gap-3 px-2 md:border-l-2'>
+                        <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Addmedicine`) }}>{Literals.Button.Givemedicine[Profile.Language]}</Button>
+                        <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Removemedicine`) }}>{Literals.Button.Takemedicine[Profile.Language]}</Button>
+                        <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
+                        <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
+                        <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
+                        <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editcash`) }}>{Literals.Button.Editcash[Profile.Language]}</Button>
+                        <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { handlePlacemodal(true) }}>{Literals.Button.Changeplace[Profile.Language]}</Button>
+                        <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editroutine`) }}>{Literals.Button.Editroutine[Profile.Language]}</Button>
+                        <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editsupportplan`) }}>{Literals.Button.Editsupportplan[Profile.Language]}</Button>
+                        <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>
+                        <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`, { redirectUrl: "/Patients/" + Id }) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>
+                      </div>
+                    </Modal.Content>
+                    <Modal.Actions>
+                      <Button color='black' onClick={() => {
+                        this.setState({ functionModalopen: false })
+                      }}>
+                        {Literals.Button.Close[Profile.Language]}
+                      </Button>
+                    </Modal.Actions>
+                  </Modal>
+                }
               </div>
               <div className=' w-full flex flex-col justify-start items-start gap-4'>
                 <Pagedivider />

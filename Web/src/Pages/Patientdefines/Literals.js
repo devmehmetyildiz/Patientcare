@@ -165,8 +165,8 @@ const Literals = {
             en: 'Contact Name 1'
         },
         Contactname2: {
-            tr: 'İletişim Adı 1',
-            en: 'Contact Name 1'
+            tr: 'İletişim Adı 2',
+            en: 'Contact Name 2'
         },
         CostumertypeName: {
             tr: 'Müşteri Türü',

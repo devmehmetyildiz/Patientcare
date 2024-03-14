@@ -1,5 +1,7 @@
 const config = require("../Config")
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -58,15 +60,24 @@ async function AddPatientdefine(req, res, next) {
     let patientdefineuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.patientdefineModel.create({
             ...req.body,
             Uuid: patientdefineuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Hasta Tanımları',
+            role: 'patientdefinenotification',
+            message: `${CountryID} TC kimlik numaralı hasta  ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Patientdefines'
+        })
 
         await t.commit()
     } catch (err) {
@@ -100,8 +111,10 @@ async function UpdatePatientdefine(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const patientdefine = db.patientdefineModel.findOne({ where: { Uuid: Uuid } })
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!patientdefine) {
             return next(createNotfounderror([messages.ERROR.PATIENTDEFINE_NOT_FOUND], req.language))
         }
@@ -111,10 +124,17 @@ async function UpdatePatientdefine(req, res, next) {
 
         await db.patientdefineModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hasta Tanımları',
+            role: 'patientdefinenotification',
+            message: `${CountryID} TC kimlik numaralı hasta  ${username} tarafından Güncellendi.`,
+            pushurl: '/Patientdefines'
+        })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -139,8 +159,10 @@ async function DeletePatientdefine(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const patientdefine = db.patientdefineModel.findOne({ where: { Uuid: Uuid } })
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!patientdefine) {
             return next(createNotfounderror([messages.ERROR.PATIENTDEFINE_NOT_FOUND], req.language))
         }
@@ -149,6 +171,14 @@ async function DeletePatientdefine(req, res, next) {
         }
 
         await db.patientdefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Hasta Tanımları',
+            role: 'patientdefinenotification',
+            message: `${patientdefine?.CountryID} TC kimlik numaralı hasta  ${username} tarafından Silindi.`,
+            pushurl: '/Patientdefines'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

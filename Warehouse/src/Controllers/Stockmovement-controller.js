@@ -1,5 +1,7 @@
 const config = require("../Config")
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -81,6 +83,8 @@ async function AddStockmovement(req, res, next) {
     let stockmovementuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         let amount = 0.0;
         let movements = await db.stockmovementModel.findAll({ where: { StockID: StockID } })
@@ -93,10 +97,24 @@ async function AddStockmovement(req, res, next) {
             Newvalue: Amount + amount,
             Uuid: stockmovementuuid,
             Isapproved: false,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+
+        const stock = await db.stockModel.findOne({ where: { Uuid: StockID } });
+        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock?.StockdefineID } });
+        const unit = await DoGet(config.services.Setting, `Units/${stockdefine?.UnitID}`)
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Stok Hareketleri',
+            role: 'stockmovementnotification',
+            message: `${Amount} ${unit?.Name} ${stockdefine?.Name} ürünü  ${username} tarafından eklendi.`,
+            pushurl: `/Stockmovements`
+        })
+
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -146,7 +164,10 @@ async function UpdateStockmovement(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
+
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const stockmovement = await db.stockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!stockmovement) {
@@ -158,9 +179,21 @@ async function UpdateStockmovement(req, res, next) {
 
         await db.stockmovementModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        const stock = await db.stockModel.findOne({ where: { Uuid: StockID } });
+        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock?.StockdefineID } });
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Stok Hareketleri',
+            role: 'stockmovementnotification',
+            message: `${stockdefine?.Name} ürüne ait hareket  ${username} tarafından Güncellendi.`,
+            pushurl: `/Stockmovements`
+        })
+
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -184,6 +217,8 @@ async function ApproveStockmovement(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const stockmovement = await db.stockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!stockmovement) {
@@ -196,9 +231,21 @@ async function ApproveStockmovement(req, res, next) {
         await db.stockmovementModel.update({
             ...stockmovement,
             Isapproved: true,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        const stock = await db.stockModel.findOne({ where: { Uuid: stockmovement?.StockID } });
+        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock?.StockdefineID } });
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Stok Hareketleri',
+            role: 'stockmovementnotification',
+            message: `${stockdefine?.Name} ürününe ait hareket ${username} tarafından onaylandı.`,
+            pushurl: `/Stockmovements`
+        })
+
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -212,6 +259,8 @@ async function ApproveStockmovements(req, res, next) {
     const body = req.body
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         for (const data of (body || [])) {
             if (!data) {
@@ -234,10 +283,18 @@ async function ApproveStockmovements(req, res, next) {
             await db.stockmovementModel.update({
                 ...stockmovement,
                 Isapproved: true,
-                Updateduser: "System",
+                Updateduser: username,
                 Updatetime: new Date(),
             }, { where: { Uuid: data } }, { transaction: t })
         }
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Stok Hareketleri',
+            role: 'stockmovementnotification',
+            message: `Toplu Stok hareketi  ${username} tarafından onaylandı.`,
+            pushurl: `/Stockmovements`
+        })
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -262,6 +319,8 @@ async function DeleteStockmovement(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const stockmovement = await db.stockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!stockmovement) {
@@ -271,6 +330,18 @@ async function DeleteStockmovement(req, res, next) {
             return next(createAccessDenied([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
         }
         await db.stockmovementModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        const stock = await db.stockModel.findOne({ where: { Uuid: stockmovement?.StockID } });
+        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock?.StockdefineID } });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Stok Hareketleri',
+            role: 'stockmovementnotification',
+            message: `${stockdefine?.Name} ürününe ait hareket  ${username} tarafından silindif.`,
+            pushurl: `/Stockmovements`
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

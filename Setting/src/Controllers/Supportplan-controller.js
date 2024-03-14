@@ -108,7 +108,7 @@ async function UpdateSupportplan(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const supportplan = db.supportplanModel.findOne({ where: { Uuid: Uuid } })
+        const supportplan =await db.supportplanModel.findOne({ where: { Uuid: Uuid } })
         if (!supportplan) {
             return next(createNotfounderror([messages.ERROR.SUPPORTPLAN_NOT_FOUND], req.language))
         }
@@ -156,7 +156,7 @@ async function DeleteSupportplan(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const supportplan = db.supportplanModel.findOne({ where: { Uuid: Uuid } })
+        const supportplan =await db.supportplanModel.findOne({ where: { Uuid: Uuid } })
         if (!supportplan) {
             return next(createNotfounderror([messages.ERROR.SUPPORTPLAN_NOT_FOUND], req.language))
         }

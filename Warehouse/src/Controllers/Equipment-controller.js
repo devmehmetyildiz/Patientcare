@@ -154,7 +154,7 @@ async function UpdateEquipment(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const equipment = db.equipmentModel.findOne({ where: { Uuid: Uuid } })
+        const equipment =await db.equipmentModel.findOne({ where: { Uuid: Uuid } })
         if (!equipment) {
             return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
         }

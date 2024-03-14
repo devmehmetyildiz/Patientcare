@@ -58,16 +58,17 @@ export default function MobileTable(props) {
         let headerData = getHeader(row)
         let subheaderData = getSubheader(row)
         let finalheaderData = getFinalheader(row)
-        return <div
-            key={index}
-            className='gap-2 hover:shadow-gray-700 transition-all ease-in-out duration-200 cursor-pointer flex flex-col justify-start items-start rounded-xl  m-2 px-4 py-2 shadow-xl shadow-gray-500 w-full bg-white'>
-            <div className='flex w-full flex-row justify-between items-center'>
-                <div className='font-bold'>{headerData && headerData}</div>
-                <div>{subheaderData && subheaderData}</div>
+        return (<div className='w-full flex justify-center items-center'>
+            <div className='bg-white cursor-pointer w-full flex flex-col items-start gap-4 justify-between shadow-md  m-4 p-2 rounded-lg shadow-[#DDDD] border-[#DDDD] hover:border-[#2355a0] border-[1px]  transition-all ease-in-out duration-300  border-b-[#2355a0] border-b-4 hover:border-b-4'>
+                <div className='flex w-full flex-row justify-between items-center'>
+                    <div className='font-bold'>{headerData && headerData}</div>
+                    <div>{subheaderData && subheaderData}</div>
+                </div>
+                {finalheaderData && finalheaderData}
             </div>
-            {finalheaderData && finalheaderData}
-        </div>
+        </div>)
     }
+
 
     return (
         <React.Fragment>
@@ -94,17 +95,17 @@ export default function MobileTable(props) {
                                     {(columns || []).filter(u => !(u?.disableMobile === true)).map(u => {
                                         return u?.disableProps
                                             ? <div className='w-full' key={Math.random()}>
-                                                <Label className='w-full !flex flex-row justify-between items-center' basic color='blue'>
-                                                    <span>{u.Header}:</span>
-                                                    <Label.Detail className='!opacity-100'>
-                                                        <Button basic color='blue'>{getCellvalue(rowData, u)}</Button>
+                                                <Label as='a' basic className='!font-bold !border-[1px] !border-[#2355a0] !border-solid w-full !flex flex-row justify-between items-center  !text-[#2355a0]' image>
+                                                    <span className='!font-bold'>{u.Header}:</span>
+                                                    <Label.Detail className=' !opacity-100 !bg-white !text-white'>
+                                                        <Button className='!border-none !shadow-none !bg-white'  >{getCellvalue(rowData, u)}</Button>
                                                     </Label.Detail>
                                                 </Label>
                                             </div>
                                             : <div className='w-full' key={Math.random()} >
-                                                <Label className='w-full !flex flex-row justify-between items-center' basic color='blue'>
-                                                    <span>{u.Header}:</span>
-                                                    <Label.Detail className='!opacity-100'>
+                                                <Label as='a' basic className='!font-bold !border-[1px] !border-[#2355a0] !border-solid w-full !flex flex-row justify-between items-center !text-[#2355a0]' image>
+                                                    <span className='!font-bold'>{u.Header}:</span>
+                                                    <Label.Detail className='!rounded-none !opacity-100 !bg-[#2355a0] !text-white'>
                                                         {getCellvalue(rowData, u)}
                                                     </Label.Detail>
                                                 </Label>

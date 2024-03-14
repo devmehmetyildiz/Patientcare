@@ -159,10 +159,10 @@ export default class Patients extends Component {
 
   imageCellhandler = (col, row) => {
     const { Files, Patientdefines, Usagetypes, Profile } = this.props
-    if (!col.cell?.isGrouped && !Profile.Ismobile) {
+    if (!col?.cell?.isGrouped && !Profile.Ismobile) {
       const patient = col?.row?.original || row
       if (!patient?.Uuid) {
-        return col.value
+        return col?.value
       }
       const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
       let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
@@ -174,7 +174,12 @@ export default class Patients extends Component {
         {patientdefine?.Firstname ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}` : `${patientdefine?.CountryID}`}
       </div>
     } else {
-      return col.value
+      const patient = col?.row?.original || row
+      if (patient?.Uuid) {
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        return patientdefine?.Firstname ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}` : `${patientdefine?.CountryID}`
+      }
+      return col?.value
     }
   }
 

@@ -1,4 +1,6 @@
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -55,16 +57,24 @@ async function AddPatientcashregister(req, res, next) {
     let cashregisteruuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.patientcashregisterModel.create({
             ...req.body,
             Uuid: cashregisteruuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Hasta Para Türleri',
+            role: 'patientcashregisternotification',
+            message: `${Name} hasta para türü ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Patientcashregisters'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -92,8 +102,10 @@ async function UpdatePatientcashregister(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const patientcashregister = db.patientcashregisterModel.findOne({ where: { Uuid: Uuid } })
+        const patientcashregister =await db.patientcashregisterModel.findOne({ where: { Uuid: Uuid } })
         if (!patientcashregister) {
             return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_FOUND], req.language))
         }
@@ -103,10 +115,17 @@ async function UpdatePatientcashregister(req, res, next) {
 
         await db.patientcashregisterModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hasta Para Türleri',
+            role: 'patientcashregisternotification',
+            message: `${Name} hasta para türü ${username} tarafından Güncellendi.`,
+            pushurl: '/Patientcashregisters'
+        })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -131,8 +150,10 @@ async function DeletePatientcashregister(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const patientcashregister = db.patientcashregisterModel.findOne({ where: { Uuid: Uuid } })
+        const patientcashregister =await db.patientcashregisterModel.findOne({ where: { Uuid: Uuid } })
         if (!patientcashregister) {
             return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_FOUND], req.language))
         }
@@ -141,6 +162,14 @@ async function DeletePatientcashregister(req, res, next) {
         }
 
         await db.patientcashregisterModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Hasta Para Türleri',
+            role: 'patientcashregisternotification',
+            message: `${patientcashregister?.Name} hasta para türü ${username} tarafından Silindi.`,
+            pushurl: '/Patientcashregisters'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();

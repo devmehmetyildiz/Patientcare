@@ -276,6 +276,28 @@ export const Editpatientcase = createAsyncThunk(
     }
 );
 
+export const Editpatientscase = createAsyncThunk(
+    'Patients/Editpatientscase',
+    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientscase", data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const Editpatientplace = createAsyncThunk(
     'Patients/Editpatientplace',
     async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
@@ -672,6 +694,16 @@ export const PatientsSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(Editpatientcase.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(Editpatientscase.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(Editpatientscase.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(Editpatientscase.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

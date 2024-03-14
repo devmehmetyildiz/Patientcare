@@ -97,7 +97,6 @@ async function AddRecordPersonel(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        console.log('req.body: ', req.body);
         for (const data of req.body) {
             const {
                 Name,

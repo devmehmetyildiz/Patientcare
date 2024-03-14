@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
+import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import UsersDelete from '../../Containers/Users/UsersDelete'
 import { getInitialconfig, getSidebarroutes } from '../../Utils/Constants'
+import validator from '../../Utils/Validator'
 export default class Users extends Component {
 
   constructor(props) {
@@ -18,10 +19,11 @@ export default class Users extends Component {
   }
 
   componentDidMount() {
-    const { GetUsers, GetRoles, GetDepartments } = this.props
+    const { GetUsers, GetRoles, GetDepartments, GetProfessions } = this.props
     GetUsers()
     GetRoles()
     GetDepartments()
+    GetProfessions()
   }
 
   render() {
@@ -48,7 +50,15 @@ export default class Users extends Component {
       { Header: Literals.Columns.Defaultdepartment[Profile.Language], accessor: 'Defaultdepartment', },
       { Header: Literals.Columns.Departments[Profile.Language], accessor: row => this.departmentCellhandler(row), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Roles[Profile.Language], accessor: row => this.rolesCellhandler(row) },
+      { Header: Literals.Columns.Profession[Profile.Language], accessor: row => this.professionCellhandler(row?.ProfessionID) },
+      { Header: Literals.Columns.Includeshift[Profile.Language], accessor: row => this.boolCellhandler(row?.Includeshift) },
       { Header: Literals.Columns.Defaultpage[Profile.Language], accessor: row => this.pageCellhandler(row?.Defaultpage) },
+      { Header: Literals.Columns.CountryID[Profile.Language], accessor: 'CountryID' },
+      { Header: Literals.Columns.Workstarttime[Profile.Language], accessor: row => this.dateCellhandler(row?.Workstarttime) },
+      { Header: Literals.Columns.Workendtime[Profile.Language], accessor: row => this.dateCellhandler(row?.Workendtime) },
+      { Header: Literals.Columns.Gender[Profile.Language], accessor: row => this.genderCellhandler(row?.Gender) },
+      { Header: Literals.Columns.Phonenumber[Profile.Language], accessor: 'Phonenumber', },
+      { Header: Literals.Columns.Adress[Profile.Language], accessor: 'Adress', },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
@@ -179,5 +189,36 @@ export default class Users extends Component {
           [itemDepartmentstxt.slice(0, 35) + ' ...(' + itemDepartments.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandDepartments(itemId)}> ...Daha Fazla Göster</Link>] :
           [itemDepartmentstxt, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkDepartments(itemId)}> ...Daha Az Göster</Link>]
       ) : itemDepartmentstxt
+  }
+
+  professionCellhandler = (value) => {
+    const { Professions } = this.props
+    if (Professions.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Professions.list || []).find(u => u.Uuid === value)?.Name
+    }
+  }
+
+  boolCellhandler = (value) => {
+    const { Profile } = this.props
+    return validator.isBoolean(value) ? (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language]) : Literals.Messages.No[Profile.Language]
+  }
+
+  dateCellhandler = (value) => {
+    console.log('value: ', value);
+    if (value) {
+      return value.split('T').length > 0 ? value.split('T')[0] : value
+    }
+    return null
+  }
+
+  genderCellhandler = (value) => {
+    const { Profile } = this.props
+    const Genderoptions = [
+      { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
+      { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
+    ]
+    return Genderoptions.find(u => u.value === value)?.text || value
   }
 }

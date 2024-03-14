@@ -150,7 +150,7 @@ async function UpdatePurchaseorderstockmovement(req, res, next) {
     const t = await db.sequelize.transaction();
 
     try {
-        const purchaseorderstockmovement = db.purchaseorderstockmovementModel.findOne({ where: { Uuid: Uuid } })
+        const purchaseorderstockmovement =await db.purchaseorderstockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!purchaseorderstockmovement) {
             return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
         }
@@ -266,7 +266,7 @@ async function DeletePurchaseorderstockmovement(req, res, next) {
 
     const t = await db.sequelize.transaction();
     try {
-        const purchaseorderstockmovement = db.purchaseorderstockmovementModel.findOne({ where: { Uuid: Uuid } })
+        const purchaseorderstockmovement =await db.purchaseorderstockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!purchaseorderstockmovement) {
             return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
         }

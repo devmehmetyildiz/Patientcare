@@ -122,7 +122,7 @@ async function UpdateDepartment(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const department = db.departmentModel.findOne({ where: { Uuid: Uuid } })
+        const department =await db.departmentModel.findOne({ where: { Uuid: Uuid } })
         if (!department) {
             return next(createNotfounderror([messages.ERROR.DEPARTMENT_NOT_FOUND], req.language))
         }
@@ -165,6 +165,7 @@ async function DeleteDepartment(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
+    const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
         const department = await db.departmentModel.findOne({ where: { Uuid: Uuid } })
@@ -174,7 +175,6 @@ async function DeleteDepartment(req, res, next) {
         if (department.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.DEPARTMENT_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
         await db.departmentModel.destroy({ where: { Uuid: Uuid }, transaction: t });
 
         await CreateNotification({

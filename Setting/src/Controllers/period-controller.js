@@ -206,7 +206,7 @@ async function UpdatePeriod(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const period = db.periodModel.findOne({ where: { Uuid: Uuid } })
+        const period =await db.periodModel.findOne({ where: { Uuid: Uuid } })
         if (!period) {
             return next(createNotfounderror([messages.ERROR.PERIOD_NOT_FOUND], req.language))
         }
@@ -254,7 +254,7 @@ async function DeletePeriod(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const period = db.periodModel.findOne({ where: { Uuid: Uuid } })
+        const period =await db.periodModel.findOne({ where: { Uuid: Uuid } })
         if (!period) {
             return next(createNotfounderror([messages.ERROR.PERIOD_NOT_FOUND], req.language))
         }

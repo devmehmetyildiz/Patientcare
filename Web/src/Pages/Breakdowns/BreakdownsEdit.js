@@ -18,23 +18,23 @@ export default class BreakdownsEdit extends Component {
   }
 
   componentDidMount() {
-    const { BreakdownID, GetBreakdown, GetEquipments, GetEquipmentgroups, GetPersonels, match, history } = this.props
+    const { BreakdownID, GetBreakdown, GetEquipments, GetEquipmentgroups, GetUsers, match, history } = this.props
     let Id = BreakdownID || match?.params?.BreakdownID
     if (validator.isUUID(Id)) {
       GetBreakdown(Id)
       GetEquipments()
       GetEquipmentgroups()
-      GetPersonels()
+      GetUsers()
     } else {
       history.push("/Breakdowns")
     }
   }
 
   componentDidUpdate() {
-    const { Breakdowns, Equipmentgroups, Personels, Equipments } = this.props
+    const { Breakdowns, Equipmentgroups, Users, Equipments } = this.props
     const { selected_record, isLoading } = Breakdowns
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
-      && !Equipmentgroups.isLoading && !Personels.isLoading && !Equipments.isLoading
+      && !Equipmentgroups.isLoading && !Users.isLoading && !Equipments.isLoading
       && !isLoading && !this.state.isDatafetched) {
       const equipment = (Equipments.list || []).find(u => u.Uuid === selected_record?.EquipmentID)
       const equipmentgroup = (Equipmentgroups.list || []).find(u => u.Uuid === equipment?.EquipmentgroupID)
@@ -46,10 +46,10 @@ export default class BreakdownsEdit extends Component {
   }
 
   render() {
-    const { Breakdowns, Equipments, Personels, Equipmentgroups, Profile, history } = this.props
+    const { Breakdowns, Equipments, Users, Equipmentgroups, Profile, history } = this.props
 
-    const Personeloptions = (Personels.list || []).filter(u => u.Isactive).map(personel => {
-      return { key: personel.Uuid, text: personel?.Name, value: personel.Uuid }
+    const Useroptions = (Users.list || []).filter(u => u.Isactive).map(personel => {
+      return { key: personel.Uuid, text: `${personel?.Name} ${personel?.Surname}`, value: personel.Uuid }
     })
 
     const Equipmentgroupoptions = (Equipmentgroups.list || []).filter(u => u.Isactive).map(group => {
@@ -80,7 +80,7 @@ export default class BreakdownsEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.EquipmentID[Profile.Language]} name="EquipmentID" options={Equipmentoptions} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.ResponsibleuserID[Profile.Language]} name="ResponsibleuserID" options={Personeloptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.ResponsibleuserID[Profile.Language]} name="ResponsibleuserID" options={Useroptions} formtype='dropdown' />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Openinfo[Profile.Language]} name="Openinfo" />
               </Form.Group>
             </Form>

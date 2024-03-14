@@ -221,7 +221,7 @@ async function DeleteTododefine(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const tododefine = db.tododefineModel.findOne({ where: { Uuid: Uuid } })
+        const tododefine =await db.tododefineModel.findOne({ where: { Uuid: Uuid } })
         if (!tododefine) {
             return next(createNotfounderror([messages.ERROR.TODODEFINE_NOT_FOUND], req.language))
         }

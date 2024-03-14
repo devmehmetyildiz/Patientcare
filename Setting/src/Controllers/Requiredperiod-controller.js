@@ -112,7 +112,7 @@ async function UpdateRequiredperiod(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const requiredperiod = db.requiredperiodModel.findOne({ where: { Uuid: Uuid } })
+        const requiredperiod =await db.requiredperiodModel.findOne({ where: { Uuid: Uuid } })
         if (!requiredperiod) {
             return next(createNotfounderror([messages.ERROR.REQUIREDPERIOD_NOT_FOUND], req.language))
         }
@@ -158,7 +158,7 @@ async function DeleteRequiredperiod(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const requiredperiod = db.requiredperiodModel.findOne({ where: { Uuid: Uuid } })
+        const requiredperiod =await db.requiredperiodModel.findOne({ where: { Uuid: Uuid } })
         if (!requiredperiod) {
             return next(createNotfounderror([messages.ERROR.REQUIREDPERIOD_NOT_FOUND], req.language))
         }

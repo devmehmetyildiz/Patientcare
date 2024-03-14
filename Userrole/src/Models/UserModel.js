@@ -44,6 +44,30 @@ module.exports = sequelize.define('userModel', {
     Defaultpage: {
         type: Sequelize.STRING
     },
+    ProfessionID: {
+        type: Sequelize.STRING
+    },
+    Includeshift: {
+        type: Sequelize.BOOLEAN
+    },
+    CountryID: {
+        type: Sequelize.STRING
+    },
+    Workstarttime: {
+        type: Sequelize.DATE
+    },
+    Workendtime: {
+        type: Sequelize.DATE
+    },
+    Gender: {
+        type: Sequelize.STRING
+    },
+    Adress: {
+        type: Sequelize.TEXT
+    },
+    Phonenumber: {
+        type: Sequelize.STRING
+    },
     Createduser: {
         type: Sequelize.STRING
     },

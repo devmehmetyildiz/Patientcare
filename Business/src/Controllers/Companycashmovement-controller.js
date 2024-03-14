@@ -1,5 +1,7 @@
 const config = require("../Config")
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -43,6 +45,7 @@ async function AddCompanycashmovement(req, res, next) {
     let validationErrors = []
     const {
         Movementtype,
+        Movementvalue,
         ReportID,
     } = req.body
 
@@ -62,16 +65,24 @@ async function AddCompanycashmovement(req, res, next) {
     let movementuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.companycashmovementModel.create({
             ...req.body,
             Uuid: movementuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Kurum Kasası',
+            role: 'companycashmovementnotification',
+            message: `${Movementvalue || 0} TL hasta kasasına ${username} tarafından Eklendi.`,
+            pushurl: '/Companycashmovements'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -108,8 +119,10 @@ async function UpdateCompanycashmovement(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const companycashmovement = db.companycashmovementModel.findOne({ where: { Uuid: Uuid } })
+        const companycashmovement =await db.companycashmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!companycashmovement) {
             return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
         }
@@ -119,10 +132,17 @@ async function UpdateCompanycashmovement(req, res, next) {
 
         await db.companycashmovementModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Update,
+            service: 'Kurum Kasası',
+            role: 'companycashmovementnotification',
+            message: `Kurum kasasındaki ${companycashmovement?.Movementvalue} TL ,  ${Movementvalue || 0} TL olarak ${username} tarafından Güncellendi.`,
+            pushurl: '/Companycashmovements'
+        })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -147,8 +167,10 @@ async function DeleteCompanycashmovement(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const companycashmovement = db.companycashmovementModel.findOne({ where: { Uuid: Uuid } })
+        const companycashmovement =await db.companycashmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!companycashmovement) {
             return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
         }
@@ -157,6 +179,15 @@ async function DeleteCompanycashmovement(req, res, next) {
         }
 
         await db.companycashmovementModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Kurum Kasası',
+            role: 'companycashmovementnotification',
+            message: `Kurum kasasındaki ${companycashmovement?.Movementvalue} TL ${username} tarafından Silindi.`,
+            pushurl: '/Companycashmovements'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

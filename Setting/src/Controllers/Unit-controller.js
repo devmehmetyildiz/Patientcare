@@ -153,7 +153,7 @@ async function UpdateUnit(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const unit = db.unitModel.findOne({ where: { Uuid: Uuid } })
+        const unit =await db.unitModel.findOne({ where: { Uuid: Uuid } })
         if (!unit) {
             return next(createNotfounderror([messages.ERROR.UNIT_NOT_FOUND], req.language))
         }
@@ -213,7 +213,7 @@ async function DeleteUnit(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const unit = db.unitModel.findOne({ where: { Uuid: Uuid } })
+        const unit =await db.unitModel.findOne({ where: { Uuid: Uuid } })
         if (!unit) {
             return next(createNotfounderror([messages.ERROR.UNIT_NOT_FOUND], req.language))
         }

@@ -215,7 +215,7 @@ async function UpdateCase(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const casedata = db.caseModel.findOne({ where: { Uuid: Uuid } })
+        const casedata =await db.caseModel.findOne({ where: { Uuid: Uuid } })
         if (!casedata) {
             return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
         }
@@ -273,7 +273,7 @@ async function DeleteCase(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const casedata = db.caseModel.findOne({ where: { Uuid: Uuid } })
+        const casedata =await db.caseModel.findOne({ where: { Uuid: Uuid } })
         if (!casedata) {
             return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
         }

@@ -1,5 +1,15 @@
 const Literals = {
     Options: {
+        Genderoptions: {
+            value0: {
+                tr: "Erkek",
+                en: "Men"
+            },
+            value1: {
+                tr: "Kadın",
+                en: "Women"
+            },
+        },
     },
     Columns: {
         Id: {
@@ -86,9 +96,41 @@ const Literals = {
             tr: 'Roller',
             en: 'Roles'
         },
+        Profession: {
+            tr: 'Meslek',
+            en: 'Profession'
+        },
+        Includeshift: {
+            tr: 'Vardiyaya dahil Mi?',
+            en: 'Is included Shift?'
+        },
         Defaultpage: {
             tr: 'Varsayılan Sayfa',
             en: 'Default Page'
+        },
+        CountryID: {
+            tr: 'TC',
+            en: 'Country ID'
+        },
+        Workstarttime: {
+            tr: 'İşe Başlama Tarihi',
+            en: 'Work Start Time'
+        },
+        Workendtime: {
+            tr: 'İşten Ayrılma Tarihi',
+            en: 'Work End Time'
+        },
+        Gender: {
+            tr: 'Cinsiyet',
+            en: 'Gender'
+        },
+        Adress: {
+            tr: 'Adres',
+            en: 'Address'
+        },
+        Phonenumber: {
+            tr: 'Telefon',
+            en: 'Phone'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',

@@ -1,5 +1,7 @@
 const config = require("../Config")
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -55,7 +57,7 @@ async function GetPatient(req, res, next) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
     }
     if (!validator.isUUID(req.params.patientId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTDEFINEID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -118,6 +120,7 @@ async function AddPatient(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         if (!validator.isUUID(Patientdefine.Uuid)) {
@@ -125,7 +128,7 @@ async function AddPatient(req, res, next) {
             await db.patientdefineModel.create({
                 ...Patientdefine,
                 Uuid: patientdefineuuid,
-                Createduser: "System",
+                Createduser: username,
                 Createtime: new Date(),
                 Isactive: true
             }, { transaction: t })
@@ -135,7 +138,7 @@ async function AddPatient(req, res, next) {
         await db.patientModel.create({
             ...req.body,
             Uuid: patientuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
@@ -147,7 +150,7 @@ async function AddPatient(req, res, next) {
             OldPatientmovementtype: 0,
             Patientmovementtype: 2,
             NewPatientmovementtype: 2,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             PatientID: patientuuid,
             Movementdate: new Date(),
@@ -158,6 +161,16 @@ async function AddPatient(req, res, next) {
             Iswaitingactivation: false,
             Isactive: true
         }, { transaction: t })
+
+        const patientdefine = validator.isUUID(PatientdefineID) ? await db.patientdefineModel.findOne({ where: { Uuid: PatientdefineID } }) : null;
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine ? `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastası` : ` ${Patientdefine?.CountryID} TC kimlik numaralı hasta`} ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Preregistrations'
+        })
 
         await t.commit()
     } catch (err) {
@@ -208,7 +221,7 @@ async function AddPatientReturnPatient(req, res, next) {
     try {
         const caseresponse = await axios({
             method: 'GET',
-            url: config.services.Setting + `Cases/` + CaseID,
+            url: config.services.Setting + `Cases / ` + CaseID,
             headers: {
                 session_key: config.session.secret
             }
@@ -219,6 +232,7 @@ async function AddPatientReturnPatient(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         if (!validator.isUUID(Patientdefine.Uuid)) {
@@ -226,7 +240,7 @@ async function AddPatientReturnPatient(req, res, next) {
             await db.patientdefineModel.create({
                 ...Patientdefine,
                 Uuid: patientdefineuuid,
-                Createduser: "System",
+                Createduser: username,
                 Createtime: new Date(),
                 Isactive: true
             }, { transaction: t })
@@ -236,7 +250,7 @@ async function AddPatientReturnPatient(req, res, next) {
         await db.patientModel.create({
             ...req.body,
             Uuid: patientuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
@@ -248,7 +262,7 @@ async function AddPatientReturnPatient(req, res, next) {
             OldPatientmovementtype: 0,
             Patientmovementtype: casedata?.Patientstatus || 2,
             NewPatientmovementtype: casedata?.Patientstatus || 2,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             PatientID: patientuuid,
             Movementdate: new Date(),
@@ -259,6 +273,16 @@ async function AddPatientReturnPatient(req, res, next) {
             Iswaitingactivation: false,
             Isactive: true
         }, { transaction: t })
+
+        const patientdefine = validator.isUUID(PatientdefineID) ? await db.patientdefineModel.findOne({ where: { Uuid: PatientdefineID } }) : null;
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine ? `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastası` : ` ${Patientdefine?.CountryID} TC kimlik numaralı hasta`} ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Patients'
+        })
 
         await t.commit()
         req.params.patientId = patientuuid
@@ -307,7 +331,7 @@ async function Completeprepatient(req, res, next) {
         if (Iswilltransfer === true) {
             await axios({
                 method: 'PUT',
-                url: config.services.Warehouse + `Patientstocks/Transferpatientstock`,
+                url: config.services.Warehouse + `Patientstocks / Transferpatientstock`,
                 data: patient,
                 headers: {
                     session_key: config.session.secret
@@ -319,11 +343,13 @@ async function Completeprepatient(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         await db.patientModel.update({
             ...patient,
             Iswaitingactivation: false,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
             Isactive: true
         }, { where: { Uuid: patient.Uuid } }, { transaction: t })
@@ -358,7 +384,7 @@ async function Completeprepatient(req, res, next) {
             OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
             Patientmovementtype: 1,
             NewPatientmovementtype: 1,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             PatientID: patient.Uuid,
             Movementdate: new Date(),
@@ -369,6 +395,16 @@ async function Completeprepatient(req, res, next) {
             Iswaitingactivation: false,
             Isactive: true
         }, { transaction: t })
+
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastası ${username} tarafından Kuruma alındı.`,
+            pushurl: '/Patients'
+        })
 
         await t.commit()
     } catch (err) {
@@ -434,6 +470,8 @@ async function UpdatePatient(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: Uuid } })
         if (!patient) {
@@ -445,9 +483,19 @@ async function UpdatePatient(req, res, next) {
 
         await db.patientModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastası ${username} tarafından güncellendi.`,
+            pushurl: '/Patients'
+        })
 
         await t.commit()
     } catch (error) {
@@ -476,6 +524,8 @@ async function UpdatePatientcase(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
         if (!patient) {
@@ -503,7 +553,7 @@ async function UpdatePatientcase(req, res, next) {
         await db.patientModel.update({
             ...patient,
             CaseID: CaseID,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: PatientID } }, { transaction: t })
 
@@ -522,7 +572,7 @@ async function UpdatePatientcase(req, res, next) {
             OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
             Patientmovementtype: casedata.Patientstatus,
             NewPatientmovementtype: casedata.Patientstatus,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             PatientID: patient.Uuid,
             Movementdate: new Date(),
@@ -534,10 +584,122 @@ async function UpdatePatientcase(req, res, next) {
             Isactive: true
         }, { transaction: t })
 
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasının durumu ${username} tarafından güncellendi.`,
+            pushurl: '/Patients'
+        })
+
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
+    GetPatients(req, res, next)
+}
+
+async function UpdatePatientscase(req, res, next) {
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        for (const data of req.body) {
+            let validationErrors = []
+
+            const {
+                PatientID,
+                CaseID,
+            } = data
+
+            if (!validator.isUUID(PatientID)) {
+                validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+            }
+            if (!validator.isUUID(CaseID)) {
+                validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+            }
+
+            if (validationErrors.length > 0) {
+                return next(createValidationError(validationErrors, req.language))
+            }
+
+            const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
+            if (!patient) {
+                return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
+            }
+            if (patient.Isactive === false) {
+                return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            }
+
+            if (patient?.CaseID !== CaseID) {
+                let casedata = null
+                try {
+                    const caseresponse = await axios({
+                        method: 'GET',
+                        url: config.services.Setting + "Cases/" + CaseID,
+                        headers: {
+                            session_key: config.session.secret
+                        }
+                    })
+                    casedata = caseresponse?.data
+                } catch (error) {
+                    return next(requestErrorCatcher(error, 'Setting'))
+                }
+
+
+                await db.patientModel.update({
+                    ...patient,
+                    CaseID: CaseID,
+                    Updateduser: username,
+                    Updatetime: new Date(),
+                }, { where: { Uuid: PatientID } }, { transaction: t })
+
+                const lastpatientmovement = await db.patientmovementModel.findOne({
+                    order: [['Id', 'DESC']],
+                    where: {
+                        PatientID: patient?.Uuid
+                    }
+                });
+
+                let patientmovementuuid = uuid()
+
+                await db.patientmovementModel.create({
+                    ...req.body,
+                    Uuid: patientmovementuuid,
+                    OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
+                    Patientmovementtype: casedata.Patientstatus,
+                    NewPatientmovementtype: casedata.Patientstatus,
+                    Createduser: username,
+                    Createtime: new Date(),
+                    PatientID: patient.Uuid,
+                    Movementdate: new Date(),
+                    IsDeactive: false,
+                    IsTodoneed: false,
+                    IsTodocompleted: false,
+                    IsComplated: true,
+                    Iswaitingactivation: false,
+                    Isactive: true
+                }, { transaction: t })
+            }
+        }
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `Hasta durumları ${username} tarafından güncellendi.`,
+            pushurl: '/Patients'
+        })
+
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+
     GetPatients(req, res, next)
 }
 
@@ -569,6 +731,8 @@ async function UpdatePatientplace(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
         if (!patient) {
@@ -599,7 +763,7 @@ async function UpdatePatientplace(req, res, next) {
             FloorID: FloorID,
             BedID: BedID,
             RoomID: RoomID,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: PatientID } }, { transaction: t })
 
@@ -618,7 +782,7 @@ async function UpdatePatientplace(req, res, next) {
             OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
             Patientmovementtype: 7,
             NewPatientmovementtype: 7,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             PatientID: patient.Uuid,
             Movementdate: new Date(),
@@ -629,6 +793,16 @@ async function UpdatePatientplace(req, res, next) {
             Iswaitingactivation: false,
             Isactive: true
         }, { transaction: t })
+
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasının konumu ${username} tarafından güncellendi.`,
+            pushurl: '/Patients'
+        })
 
         await t.commit()
     } catch (error) {
@@ -661,6 +835,8 @@ async function TransferPatientplace(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
         if (!patient) {
@@ -708,7 +884,7 @@ async function TransferPatientplace(req, res, next) {
             FloorID: FloorID || '',
             BedID: BedID || '',
             RoomID: RoomID || '',
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: PatientID } }, { transaction: t })
 
@@ -728,7 +904,7 @@ async function TransferPatientplace(req, res, next) {
             OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
             Patientmovementtype: 7,
             NewPatientmovementtype: 7,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             PatientID: patient.Uuid,
             Movementdate: new Date(),
@@ -747,7 +923,7 @@ async function TransferPatientplace(req, res, next) {
                 FloorID: OtherFloorID,
                 BedID: OtherBedID,
                 RoomID: OtherRoomID,
-                Updateduser: "System",
+                Updateduser: username,
                 Updatetime: new Date(),
             }, { where: { Uuid: OtherPatientID } }, { transaction: t })
 
@@ -766,7 +942,7 @@ async function TransferPatientplace(req, res, next) {
                 OldPatientmovementtype: Otherlastpatientmovement?.Patientmovementtype || 0,
                 Patientmovementtype: 7,
                 NewPatientmovementtype: 7,
-                Createduser: "System",
+                Createduser: username,
                 Createtime: new Date(),
                 PatientID: patient.Uuid,
                 Movementdate: new Date(),
@@ -778,6 +954,16 @@ async function TransferPatientplace(req, res, next) {
                 Isactive: true
             }, { transaction: t })
         }
+
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasının konumu ${username} tarafından güncellendi.`,
+            pushurl: '/Patients'
+        })
 
         await t.commit()
     } catch (error) {
@@ -807,6 +993,8 @@ async function UpdatePatienttododefines(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
         if (!patient) {
@@ -826,6 +1014,16 @@ async function UpdatePatienttododefines(req, res, next) {
                 TododefineID: tododefine.Uuid
             }, { transaction: t });
         }
+
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasının rutinleri ${username} tarafından güncellendi.`,
+            pushurl: '/Patients'
+        })
 
         await t.commit()
     } catch (error) {
@@ -854,6 +1052,8 @@ async function UpdatePatientsupportplans(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
         if (!patient) {
@@ -873,6 +1073,16 @@ async function UpdatePatientsupportplans(req, res, next) {
                 PlanID: supportplan.Uuid
             }, { transaction: t });
         }
+
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasının destek planları ${username} tarafından güncellendi.`,
+            pushurl: '/Patients'
+        })
 
         await t.commit()
     } catch (error) {
@@ -897,6 +1107,8 @@ async function DeletePatient(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: Uuid } })
         if (!patient) {
@@ -907,6 +1119,16 @@ async function DeletePatient(req, res, next) {
         }
 
         await db.patientModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastası ${username} tarafından silindi.`,
+            pushurl: '/Patients'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -931,6 +1153,8 @@ async function OutPatient(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: Uuid } })
         if (!patient) {
@@ -962,7 +1186,7 @@ async function OutPatient(req, res, next) {
         await db.patientModel.update({
             ...patient,
             CaseID: outCase.Uuid,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
@@ -981,7 +1205,7 @@ async function OutPatient(req, res, next) {
             OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
             Patientmovementtype: 3,
             NewPatientmovementtype: 3,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             PatientID: Uuid,
             Movementdate: new Date(),
@@ -1017,6 +1241,8 @@ async function InPatient(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: Uuid } })
         if (!patient) {
@@ -1048,7 +1274,7 @@ async function InPatient(req, res, next) {
         await db.patientModel.update({
             ...patient,
             CaseID: inCase.Uuid,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
@@ -1067,7 +1293,7 @@ async function InPatient(req, res, next) {
             OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
             Patientmovementtype: 1,
             NewPatientmovementtype: 1,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             PatientID: Uuid,
             Movementdate: new Date(),
@@ -1091,6 +1317,7 @@ async function Createfromtemplate(req, res, next) {
 
     const body = req.body
     const t = await db.sequelize.transaction();
+
     try {
 
         for (const patientdata of body) {
@@ -1187,5 +1414,6 @@ module.exports = {
     AddPatientReturnPatient,
     Createfromtemplate,
     UpdatePatientsupportplans,
-    TransferPatientplace
+    TransferPatientplace,
+    UpdatePatientscase
 }

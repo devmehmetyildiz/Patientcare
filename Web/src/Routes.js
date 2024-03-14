@@ -259,6 +259,13 @@ const Requiredperiods = lazy(() => import('./Containers/Requiredperiods/Required
 const RequiredperiodsCreate = lazy(() => import('./Containers/Requiredperiods/RequiredperiodsCreate'));
 const RequiredperiodsEdit = lazy(() => import('./Containers/Requiredperiods/RequiredperiodsEdit'));
 
+const Professions = lazy(() => import('./Containers/Professions/Professions'));
+const ProfessionsCreate = lazy(() => import('./Containers/Professions/ProfessionsCreate'));
+const ProfessionsEdit = lazy(() => import('./Containers/Professions/ProfessionsEdit'));
+
+const Patientscases = lazy(() => import('./Containers/Patientscases/Patientscases'));
+const Patientfollowup = lazy(() => import('./Containers/Patientfollowup/Patientfollowup'));
+
 const Home = lazy(() => import('./Pages/Home'));
 const Notfoundpage = lazy(() => import('./Components/Notfoundpage'));
 
@@ -449,6 +456,9 @@ class Routes extends Component {
       { exact: true, path: "/Ratings", auth: true, component: Ratings, permission: 'ratingscreen' },
       { exact: true, path: "/Ratings/Create", auth: true, component: RatingsCreate, permission: 'ratingscreen' },
       { exact: true, path: "/Ratings/:RatingID/Edit", auth: true, component: RatingsEdit, permission: 'ratingscreen' },
+      { exact: true, path: "/Professions", auth: true, component: Professions, permission: 'professionscreen' },
+      { exact: true, path: "/Professions/Create", auth: true, component: ProfessionsCreate, permission: 'professionscreen' },
+      { exact: true, path: "/Professions/:ProfessionID/Edit", auth: true, component: ProfessionsEdit, permission: 'professionscreen' },
       { exact: true, path: "/Requiredperiods", auth: true, component: Requiredperiods, permission: 'requiredperiodscreen' },
       { exact: true, path: "/Requiredperiods/Create", auth: true, component: RequiredperiodsCreate, permission: 'requiredperiodscreen' },
       { exact: true, path: "/Requiredperiods/:RequiredperiodID/Edit", auth: true, component: RequiredperiodsEdit, permission: 'requiredperiodscreen' },
@@ -462,6 +472,8 @@ class Routes extends Component {
       { exact: true, path: "/Preregistrations/:PatientID/Editfile", auth: true, component: PreregistrationsEditfile, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/:PatientID/Editstock", auth: true, component: PreregistrationsEditstock, permission: 'patientscreen' },
       { exact: true, path: "/Preregistrations/:PatientID/Complete", auth: true, component: PreregistrationsComplete, permission: 'patientscreen' },
+      { exact: true, path: "/Patientscases", auth: true, component: Patientscases, permission: 'patientscreen' },
+      { exact: true, path: "/Patientfollowup", auth: true, component: Patientfollowup, permission: 'patientscreen' },
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit, permission: 'userscreen' },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange, permission: 'userscreen' },
       { exact: true, path: "/About", auth: true, component: About },

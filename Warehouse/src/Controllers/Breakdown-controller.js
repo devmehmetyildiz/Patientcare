@@ -127,7 +127,7 @@ async function UpdateBreakdown(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const breakdown = db.breakdownModel.findOne({ where: { Uuid: Uuid } })
+        const breakdown =await db.breakdownModel.findOne({ where: { Uuid: Uuid } })
         if (!breakdown) {
             return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
         }
@@ -178,7 +178,7 @@ async function CompleteBreakdown(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const breakdown = db.breakdownModel.findOne({ where: { Uuid: Uuid } })
+        const breakdown =await db.breakdownModel.findOne({ where: { Uuid: Uuid } })
         if (!breakdown) {
             return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
         }
@@ -229,7 +229,7 @@ async function DeleteBreakdown(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const breakdown = db.breakdownModel.findOne({ where: { Uuid: Uuid } })
+        const breakdown =await db.breakdownModel.findOne({ where: { Uuid: Uuid } })
         if (!breakdown) {
             return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
         }

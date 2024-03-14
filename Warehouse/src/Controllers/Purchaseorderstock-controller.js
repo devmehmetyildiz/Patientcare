@@ -159,7 +159,7 @@ async function UpdatePurchaseorderstock(req, res, next) {
     }
     const t = await db.sequelize.transaction();
     try {
-        const purchaseorderstock = db.purchaseorderstockModel.findOne({ where: { Uuid: Uuid } })
+        const purchaseorderstock =await db.purchaseorderstockModel.findOne({ where: { Uuid: Uuid } })
         if (!purchaseorderstock) {
             return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
         }

@@ -112,7 +112,7 @@ async function UpdateRating(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const rating = db.ratingModel.findOne({ where: { Uuid: Uuid } })
+        const rating =await db.ratingModel.findOne({ where: { Uuid: Uuid } })
         if (!rating) {
             return next(createNotfounderror([messages.ERROR.RATING_NOT_FOUND], req.language))
         }
@@ -158,7 +158,7 @@ async function DeleteRating(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const rating = db.ratingModel.findOne({ where: { Uuid: Uuid } })
+        const rating =await db.ratingModel.findOne({ where: { Uuid: Uuid } })
         if (!rating) {
             return next(createNotfounderror([messages.ERROR.RATING_NOT_FOUND], req.language))
         }

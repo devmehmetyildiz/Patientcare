@@ -144,7 +144,7 @@ async function UpdateCostumertype(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const costumertype = db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
+        const costumertype =await db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
         if (!costumertype) {
             return next(createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND], req.language))
         }
@@ -201,7 +201,7 @@ async function DeleteCostumertype(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const costumertype = db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
+        const costumertype =await db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
         if (!costumertype) {
             return next(createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND], req.language))
         }

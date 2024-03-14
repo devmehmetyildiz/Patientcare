@@ -52,6 +52,7 @@ import { removeHelpstatunotification } from "../Redux/HelpstatuSlice"
 import { removeMakingtypenotification } from "../Redux/MakingtypeSlice"
 import { removeRatingnotification } from "../Redux/RatingSlice"
 import { removeRequiredperiodnotification } from "../Redux/RequiredperiodSlice"
+import { removeProfessionnotification } from "../Redux/ProfessionSlice"
 import Notificationwrapper from './Notification'
 
 export function NotificationHandler(props) {
@@ -76,7 +77,7 @@ export function NotificationHandler(props) {
             removePersonelshiftnotification, removeCompanycashmovementnotification, removePatientcashmovementnotification,
             removePatientcashregisternotification, removeUsernotificationnotification, removeReportnotification, removeUsagetypenotification,
             removeSupportplannotification, removeSupportplanlistnotification, removeCareplannotification, removeHelpstatunotification,
-            removeMakingtypenotification, removeRatingnotification, removeRequiredperiodnotification
+            removeMakingtypenotification, removeRatingnotification, removeRequiredperiodnotification, removeProfessionnotification
         } = props
 
         const {
@@ -89,7 +90,7 @@ export function NotificationHandler(props) {
             Floors, Files, Departments, Costumertypes, Breakdowns, Mainteancies,
             Periods, Cases, Beds, Shifts, Equipmentgroups, Equipments, Personels,
             Personelshifts, Companycashmovements, Patientcashmovements,
-            Patientcashregisters, Usernotifications, Reports, Usagetypes,
+            Patientcashregisters, Usernotifications, Reports, Usagetypes, Professions,
             Supportplanlists, Supportplans, Careplans, Helpstatus, Makingtypes, Ratings, Requiredperiods
         } = props.states
 
@@ -145,6 +146,7 @@ export function NotificationHandler(props) {
         Notification(Makingtypes.notifications, removeMakingtypenotification)
         Notification(Ratings.notifications, removeRatingnotification)
         Notification(Requiredperiods.notifications, removeRequiredperiodnotification)
+        Notification(Professions.notifications, removeProfessionnotification)
     })
 
     return null
@@ -169,7 +171,7 @@ const mapDispatchToProps = {
     removeMainteancenotification, removePersonelshiftnotification, removeCompanycashmovementnotification, removePatientcashmovementnotification,
     removePatientcashregisternotification, removeUsernotificationnotification, removeReportnotification, removeUsagetypenotification,
     removeSupportplanlistnotification, removeSupportplannotification, removeCareplannotification, removeHelpstatunotification, removeRequiredperiodnotification,
-    removeRatingnotification, removeMakingtypenotification
+    removeRatingnotification, removeMakingtypenotification, removeProfessionnotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationHandler)

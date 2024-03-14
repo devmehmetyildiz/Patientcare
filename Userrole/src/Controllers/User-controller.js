@@ -7,6 +7,8 @@ const uuid = require('uuid').v4
 const bcrypt = require('bcrypt')
 const axios = require('axios')
 const config = require("../Config")
+const CreateNotification = require("../Utilities/CreateNotification")
+const { types } = require("../Constants/Defines")
 
 async function Register(req, res, next) {
 
@@ -46,6 +48,7 @@ async function Register(req, res, next) {
         let adminRoleuuid = uuid()
 
         const t = await db.sequelize.transaction();
+
         try {
             const createadminRolePromise = db.roleModel.create({
                 Uuid: adminRoleuuid,
@@ -385,6 +388,7 @@ async function AddUser(req, res, next) {
     let useruuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.userModel.create({
@@ -394,7 +398,7 @@ async function AddUser(req, res, next) {
             AccessFailedCount: 0,
             Defaultdepartment: "",
             PasswordHash: hash,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true,
             ...req.body,
@@ -422,6 +426,14 @@ async function AddUser(req, res, next) {
                 RoleID: role.Uuid
             }, { transaction: t });
         }
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Kullanıcılar',
+            role: 'usernotification',
+            message: `${Username} kullanıcısı ${username} tarafından Oluşturuldu.`,
+            pushurl: '/Users'
+        })
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -462,6 +474,8 @@ async function UpdateUser(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const user = await db.userModel.findOne({ where: { Uuid: Uuid } })
         if (!user) {
@@ -473,7 +487,7 @@ async function UpdateUser(req, res, next) {
 
         await db.userModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
         await db.userdepartmentModel.destroy({ where: { UserID: Uuid }, transaction: t });
@@ -496,6 +510,14 @@ async function UpdateUser(req, res, next) {
                 RoleID: role.Uuid
             }, { transaction: t });
         }
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Kullanıcılar',
+            role: 'usernotification',
+            message: `${Username} kullanıcısı ${username} tarafından Güncellendi.`,
+            pushurl: '/Users'
+        })
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -519,6 +541,9 @@ async function DeleteUser(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const user = await db.userModel.findOne({ where: { Uuid: Uuid } })
         if (!user) {
@@ -527,9 +552,16 @@ async function DeleteUser(req, res, next) {
         if (!user.Isactive) {
             return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
 
         await db.userModel.destroy({ where: { uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Kullanıcılar',
+            role: 'usernotification',
+            message: `${user?.Username} kullanıcısı ${username} tarafından Silindi.`,
+            pushurl: '/Users'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -606,18 +638,21 @@ async function Changepassword(req, res, next) {
         return next(sequelizeErrorCatcher(error))
     }
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const hash = await bcrypt.hash(Newpassword, newSalt)
         await db.userModel.update({
             ...req.identity?.user,
             PasswordHash: hash,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: req.identity?.user?.Uuid } }, { transaction: t })
         await db.usersaltModel.update({
             ...usersalt,
             Salt: newSalt,
         }, { where: { UserID: req.identity?.user?.Uuid } }, { transaction: t })
+
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -646,6 +681,8 @@ async function UpdateUsermeta(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const user = await db.userModel.findOne({ where: { Uuid: Uuid } })
         if (!user) {
@@ -657,7 +694,7 @@ async function UpdateUsermeta(req, res, next) {
 
         await db.userModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser:username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 

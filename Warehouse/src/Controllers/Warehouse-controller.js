@@ -1,5 +1,7 @@
 const config = require("../Config")
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -13,15 +15,6 @@ async function GetWarehouses(req, res, next) {
         res.status(200).json(warehouses)
     }
     catch (error) {
-        return next(sequelizeErrorCatcher(error))
-    }
-}
-
-async function GetWarehousescount(req, res, next) {
-    try {
-        const warehouses = await db.warehouseModel.count()
-        res.status(200).json(warehouses)
-    } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
 }
@@ -70,15 +63,24 @@ async function AddWarehouse(req, res, next) {
     let warehouseuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.warehouseModel.create({
             ...req.body,
             Uuid: warehouseuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Ambarlar',
+            role: 'warehousenotification',
+            message: `${Name} ambarı  ${username} tarafından oluşturuldu.`,
+            pushurl: `/Warehouses`
+        })
 
         await t.commit()
     } catch (err) {
@@ -109,6 +111,8 @@ async function UpdateWarehouse(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const warehouse = await db.warehouseModel.findOne({ where: { Uuid: Uuid } })
         if (!warehouse) {
@@ -120,9 +124,17 @@ async function UpdateWarehouse(req, res, next) {
 
         await db.warehouseModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Ambarlar',
+            role: 'warehousenotification',
+            message: `${Name} ambarı  ${username} tarafından Güncellendi.`,
+            pushurl: `/Warehouses`
+        })
 
         await t.commit()
     } catch (error) {
@@ -148,6 +160,8 @@ async function DeleteWarehouse(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const warehouse = await db.warehouseModel.findOne({ where: { Uuid: Uuid } })
         if (!warehouse) {
@@ -158,10 +172,19 @@ async function DeleteWarehouse(req, res, next) {
         }
 
         await db.warehouseModel.update({
-            Deleteduser: "System",
+            Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false,
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Ambarlar',
+            role: 'warehousenotification',
+            message: `${warehouse?.Name} ambarı  ${username} tarafından silindi.`,
+            pushurl: `/Warehouses`
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

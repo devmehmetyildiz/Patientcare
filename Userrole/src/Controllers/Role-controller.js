@@ -5,6 +5,8 @@ const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const Priveleges = require("../Constants/Privileges")
+const { types } = require("../Constants/Defines")
+const CreateNotification = require("../Utilities/CreateNotification")
 
 async function GetRoles(req, res, next) {
     try {
@@ -159,12 +161,13 @@ async function AddRole(req, res, next) {
     let roleuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.roleModel.create({
             Name: Name,
             Uuid: roleuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
@@ -175,6 +178,14 @@ async function AddRole(req, res, next) {
                 PrivilegeID: privilege
             }, { transaction: t });
         }
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Roller',
+            role: 'rolenotification',
+            message: `${Name} rolü ${username} tarafından oluşturuldu.`,
+            pushurl: '/Roles'
+        })
 
         await t.commit()
     } catch (err) {
@@ -210,6 +221,8 @@ async function UpdateRole(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const role = await db.roleModel.findOne({ where: { Uuid: Uuid } })
         if (!role) {
@@ -221,7 +234,7 @@ async function UpdateRole(req, res, next) {
 
         await db.roleModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
@@ -232,6 +245,14 @@ async function UpdateRole(req, res, next) {
                 PrivilegeID: privilege
             }, { transaction: t })
         }
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Roller',
+            role: 'rolenotification',
+            message: `${Name} rolü ${username} tarafından Güncellendi.`,
+            pushurl: '/Roles'
+        })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -255,6 +276,8 @@ async function DeleteRole(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const role = await db.roleModel.findOne({ where: { Uuid: Uuid } })
         if (!role) {
@@ -264,13 +287,17 @@ async function DeleteRole(req, res, next) {
             return next(createNotfounderror([messages.ERROR.ROLE_NOT_ACTIVE], req.language))
         }
 
-        //await db.roleprivilegeModel.destroy({ where: { RoleID: Uuid }, transaction: t });
-        //await db.roleModel.destroy({ where: { Uuid: Uuid }, transaction: t });
-        await db.roleModel.update({
-            Updateduser: "System",
-            Updatetime: new Date(),
-            Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        await db.roleprivilegeModel.destroy({ where: { RoleID: Uuid }, transaction: t });
+        await db.roleModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Roller',
+            role: 'rolenotification',
+            message: `${role?.Name} rolü ${username} tarafından Silindi.`,
+            pushurl: '/Roles'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

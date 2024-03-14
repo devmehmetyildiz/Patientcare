@@ -116,7 +116,7 @@ async function UpdateBed(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const bed = db.bedModel.findOne({ where: { Uuid: Uuid } })
+        const bed = await db.bedModel.findOne({ where: { Uuid: Uuid } })
         if (!bed) {
             return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
         }
@@ -168,7 +168,7 @@ async function ChangeBedstatus(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
     try {
         if (OldUuid && validator.isUUID(OldUuid)) {
-            const oldbed = db.bedModel.findOne({ where: { Uuid: OldUuid } })
+            const oldbed =await db.bedModel.findOne({ where: { Uuid: OldUuid } })
             if (!oldbed) {
                 return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
             }
@@ -202,7 +202,7 @@ async function ChangeBedstatus(req, res, next) {
             type: types.Update,
             service: 'Yataklar',
             role: 'bednotification',
-            message: `${bed?.Name} yatağı ${username} tarafından Güncellendi.`,
+            message: `${newBed?.Name} yatağı ${username} tarafından Güncellendi.`,
             pushurl: '/Beds'
         })
 
@@ -227,6 +227,8 @@ async function DeleteBed(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
+    
+    const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
         const bed = await db.bedModel.findOne({ where: { Uuid: Uuid } })
@@ -236,7 +238,6 @@ async function DeleteBed(req, res, next) {
         if (bed.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.BED_NOT_ACTIVE], req.language))
         }
-        const t = await db.sequelize.transaction();
         await db.bedModel.destroy({ where: { Uuid: Uuid }, transaction: t });
 
         await CreateNotification({

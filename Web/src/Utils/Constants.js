@@ -22,6 +22,7 @@ export const ROUTES = {
     PATIENTCASHMOVEMENT: 'Patientcashmovements',
     PATIENTCASHREGISTER: 'Patientcashregisters',
     CAREPLAN: 'Careplans',
+    PROFESSION: 'Professions',
 
     COSTUMERTYPE: 'Costumertypes',
     CASE: 'Cases',
@@ -166,6 +167,8 @@ export const getSidebarroutes = (Profile) => {
                 { id: 6, subtitle: Literals.Personelshifts.Page.Pageheader[Profile.Language], url: "/Personelshifts", permission: checkAuth('shiftscreen') },
                 { id: 7, subtitle: Literals.Placeviews.Page.Pageheader[Profile.Language], url: "/Placeviews", permission: checkAuth('patientscreen') },
                 { id: 8, subtitle: Literals.Companycashmovements.Page.Pageheader[Profile.Language], url: "/Companycashmovements", permission: checkAuth('companycashmovementscreen') },
+                { id: 9, subtitle: Literals.Patientscases.Page.Pageheader[Profile.Language], url: "/Patientscases", permission: checkAuth('patientscreen') },
+                { id: 10, subtitle: Literals.Patientfollowup.Page.Pageheader[Profile.Language], url: "/Patientfollowup", permission: checkAuth('patientscreen') },
             ]
         },
         {
@@ -259,6 +262,7 @@ export const getSidebarroutes = (Profile) => {
                 { id: 23, subtitle: Literals.Makingtypes.Page.Pageheader[Profile.Language], url: "/Makingtypes", permission: checkAuth('makingtypescreen') },
                 { id: 24, subtitle: Literals.Ratings.Page.Pageheader[Profile.Language], url: "/Ratings", permission: checkAuth('ratingscreen') },
                 { id: 25, subtitle: Literals.Requiredperiods.Page.Pageheader[Profile.Language], url: "/Requiredperiods", permission: checkAuth('requiredperiodscreen') },
+                { id: 26, subtitle: Literals.Professions.Page.Pageheader[Profile.Language], url: "/Professions", permission: checkAuth('professionscreen') },
             ]
         },
     ]

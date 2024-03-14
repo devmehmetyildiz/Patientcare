@@ -116,7 +116,7 @@ async function UpdateRoom(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const room = db.roomModel.findOne({ where: { Uuid: Uuid } })
+        const room =await db.roomModel.findOne({ where: { Uuid: Uuid } })
         if (!room) {
             return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
         }
@@ -163,7 +163,7 @@ async function DeleteRoom(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const room = db.roomModel.findOne({ where: { Uuid: Uuid } })
+        const room =await db.roomModel.findOne({ where: { Uuid: Uuid } })
         if (!room) {
             return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
         }

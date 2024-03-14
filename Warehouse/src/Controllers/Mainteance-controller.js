@@ -128,7 +128,7 @@ async function UpdateMainteance(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const mainteance = db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
+        const mainteance =await db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
         if (!mainteance) {
             return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
         }
@@ -179,7 +179,7 @@ async function CompleteMainteance(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const mainteance = db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
+        const mainteance =await db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
         if (!mainteance) {
             return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
         }
@@ -230,7 +230,7 @@ async function DeleteMainteance(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const mainteance = db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
+        const mainteance =await db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
         if (!mainteance) {
             return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
         }

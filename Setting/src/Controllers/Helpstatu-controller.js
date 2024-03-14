@@ -111,7 +111,7 @@ async function UpdateHelpstatu(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const helpstatu = db.helpstatuModel.findOne({ where: { Uuid: Uuid } })
+        const helpstatu =await db.helpstatuModel.findOne({ where: { Uuid: Uuid } })
         if (!helpstatu) {
             return next(createNotfounderror([messages.ERROR.HELPSTATU_NOT_FOUND], req.language))
         }
@@ -158,7 +158,7 @@ async function DeleteHelpstatu(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const helpstatu = db.helpstatuModel.findOne({ where: { Uuid: Uuid } })
+        const helpstatu =await db.helpstatuModel.findOne({ where: { Uuid: Uuid } })
         if (!helpstatu) {
             return next(createNotfounderror([messages.ERROR.HELPSTATU_NOT_FOUND], req.language))
         }

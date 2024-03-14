@@ -110,7 +110,7 @@ async function UpdateUsagetype(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const usagetype = db.usagetypeModel.findOne({ where: { Uuid: Uuid } })
+        const usagetype =await db.usagetypeModel.findOne({ where: { Uuid: Uuid } })
         if (!usagetype) {
             return next(createNotfounderror([messages.ERROR.USAGETYPE_NOT_FOUND], req.language))
         }
@@ -159,7 +159,7 @@ async function DeleteUsagetype(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const usagetype = db.usagetypeModel.findOne({ where: { Uuid: Uuid } })
+        const usagetype =await db.usagetypeModel.findOne({ where: { Uuid: Uuid } })
         if (!usagetype) {
             return next(createNotfounderror([messages.ERROR.USAGETYPE_NOT_FOUND], req.language))
         }

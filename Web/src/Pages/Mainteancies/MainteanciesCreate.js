@@ -17,17 +17,17 @@ export default class MainteanciesCreate extends Component {
   }
 
   componentDidMount() {
-    const { GetEquipments, GetEquipmentgroups, GetPersonels } = this.props
+    const { GetEquipments, GetEquipmentgroups, GetUsers } = this.props
     GetEquipments()
     GetEquipmentgroups()
-    GetPersonels()
+    GetUsers()
   }
 
 
   render() {
-    const { Mainteancies, Equipments, Personels, Equipmentgroups, Profile, history, closeModal } = this.props
+    const { Mainteancies, Equipments, Users, Equipmentgroups, Profile, history, closeModal } = this.props
 
-    const Personeloptions = (Personels.list || []).filter(u => u.Isactive).map(personel => {
+    const Useroptions = (Users.list || []).filter(u => u.Isactive).map(personel => {
       return { key: personel.Uuid, text: `${personel?.Name} ${personel?.Surname}`, value: personel.Uuid }
     })
 
@@ -60,7 +60,7 @@ export default class MainteanciesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.EquipmentID[Profile.Language]} name="EquipmentID" options={Equipmentoptions} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.ResponsibleuserID[Profile.Language]} name="ResponsibleuserID" options={Personeloptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.ResponsibleuserID[Profile.Language]} name="ResponsibleuserID" options={Useroptions} formtype='dropdown' />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Openinfo[Profile.Language]} name="Openinfo" />
               </Form.Group>
             </Form>

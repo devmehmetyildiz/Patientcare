@@ -237,7 +237,7 @@ async function UpdateFloor(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const floor = db.floorModel.findOne({ where: { Uuid: Uuid } })
+        const floor =await db.floorModel.findOne({ where: { Uuid: Uuid } })
         if (!floor) {
             return next(createNotfounderror([messages.ERROR.FLOOR_NOT_FOUND], req.language))
         }
@@ -284,7 +284,7 @@ async function DeleteFloor(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const floor = db.floorModel.findOne({ where: { Uuid: Uuid } })
+        const floor =await db.floorModel.findOne({ where: { Uuid: Uuid } })
         if (!floor) {
             return next(createNotfounderror([messages.ERROR.FLOOR_NOT_FOUND], req.language))
         }

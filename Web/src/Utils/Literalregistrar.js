@@ -60,6 +60,9 @@ import Helpstatus from "../Pages/Helpstatus/Literals"
 import Makingtypes from "../Pages/Makingtypes/Literals"
 import Ratings from "../Pages/Ratings/Literals"
 import Requiredperiods from "../Pages/Requiredperiods/Literals"
+import Professions from "../Pages/Professions/Literals"
+import Patientscases from "../Pages/Patientscases/Literals"
+import Patientfollowup from "../Pages/Patientfollowup/Literals"
 
 const Literals = {
     Cases,
@@ -124,6 +127,9 @@ const Literals = {
     Makingtypes,
     Ratings,
     Requiredperiods,
+    Professions,
+    Patientscases,
+    Patientfollowup,
 }
 
 export default Literals

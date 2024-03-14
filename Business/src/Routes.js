@@ -11,6 +11,7 @@ const Routes = [
     { method: 'put', path: '/Patients/InPatient/:patientId', controller: 'Patient', action: 'InPatient' },
     { method: 'put', path: '/Patients/Preregistrations/Complete', controller: 'Patient', action: 'Completeprepatient' },
     { method: 'put', path: '/Patients/UpdatePatientcase', controller: 'Patient', action: 'UpdatePatientcase' },
+    { method: 'put', path: '/Patients/UpdatePatientscase', controller: 'Patient', action: 'UpdatePatientscase' },
     { method: 'put', path: '/Patients/UpdatePatientplace', controller: 'Patient', action: 'UpdatePatientplace' },
     { method: 'put', path: '/Patients/TransferPatientplace', controller: 'Patient', action: 'TransferPatientplace' },
     { method: 'put', path: '/Patients/UpdatePatienttododefines', controller: 'Patient', action: 'UpdatePatienttododefines' },
@@ -24,7 +25,13 @@ const Routes = [
     { method: 'put', path: '/Careplans/Approve/:careplanId', controller: 'Careplan', action: 'ApproveCareplan' },
     { method: 'put', path: '/Careplans', controller: 'Careplan', action: 'UpdateCareplan' },
     { method: 'delete', path: '/Careplans/:careplanId', controller: 'Careplan', action: 'DeleteCareplan' },
-  
+
+    { method: 'get', path: '/Professions/:professionId', controller: 'Profession', action: 'GetProfession' },
+    { method: 'get', path: '/Professions', controller: 'Profession', action: 'GetProfessions' },
+    { method: 'post', path: '/Professions', controller: 'Profession', action: 'AddProfession' },
+    { method: 'put', path: '/Professions', controller: 'Profession', action: 'UpdateProfession' },
+    { method: 'delete', path: '/Professions/:professionId', controller: 'Profession', action: 'DeleteProfession' },
+
     { method: 'get', path: '/Patientdefines/:patientdefineId', controller: 'Patientdefine', action: 'GetPatientdefine' },
     { method: 'get', path: '/Patientdefines', controller: 'Patientdefine', action: 'GetPatientdefines' },
     { method: 'post', path: '/Patientdefines', controller: 'Patientdefine', action: 'AddPatientdefine' },

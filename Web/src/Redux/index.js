@@ -51,6 +51,7 @@ import HelpstatuSlice from "./HelpstatuSlice";
 import MakingtypeSlice from "./MakingtypeSlice";
 import RequiredperiodSlice from "./RequiredperiodSlice";
 import RatingSlice from "./RatingSlice";
+import ProfessionSlice from "./ProfessionSlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -105,6 +106,7 @@ const Slices = combineReducers({
     Makingtypes: MakingtypeSlice,
     Ratings: RatingSlice,
     Requiredperiods: RequiredperiodSlice,
+    Professions: ProfessionSlice,
     
 });
 

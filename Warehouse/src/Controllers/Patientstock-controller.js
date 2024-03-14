@@ -110,7 +110,7 @@ async function Transferpatientstock(req, res, next) {
 
         await CreateNotification({
             type: types.Transfer,
-            service: 'Hasta Stokları',
+            service: 'Hastalar',
             role: 'patientstocknotification',
             message: `${warehouse?.Name} ambarına ${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasının stokları ${username} tarafından transfer edildi.`,
             pushurl: '/Warehouses'
@@ -169,7 +169,8 @@ async function AddPatientstock(req, res, next) {
         DepartmentID,
         Skt,
         Barcodeno,
-        Ismedicine
+        Ismedicine,
+        Issupply
     } = req.body
 
     if (!validator.isUUID(PatientID)) {
@@ -181,10 +182,10 @@ async function AddPatientstock(req, res, next) {
     if (!validator.isUUID(DepartmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
-    if (Ismedicine && !validator.isISODate(Skt)) {
+    if ((Ismedicine || Issupply) && !validator.isISODate(Skt)) {
         validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
     }
-    if (Ismedicine && !validator.isString(Barcodeno)) {
+    if ((Ismedicine || Issupply) && !validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
     }
 
@@ -228,10 +229,10 @@ async function AddPatientstock(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Hasta Stokları',
+            service: Issupply ? 'Hasta Sarf Malzemeleri' : Ismedicine ? 'Hasta İlaçları' : 'Hasta Stokları',
             role: 'patientstocknotification',
             message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ${req.body.Amount} ${unit?.Name} ${stockdefine?.Name} ${username} tarafından eklendi.`,
-            pushurl: '/Patientstocks'
+            pushurl: Issupply ? '/Patientsupplies' : Ismedicine ? '/Patientmedicines' : '/Patientstocks'
         })
 
         await t.commit()
@@ -252,7 +253,8 @@ async function UpdatePatientstock(req, res, next) {
         Skt,
         Barcodeno,
         Uuid,
-        Ismedicine
+        Ismedicine,
+        Issupply
     } = req.body
 
     if (!validator.isUUID(PatientID)) {
@@ -264,10 +266,10 @@ async function UpdatePatientstock(req, res, next) {
     if (!validator.isUUID(DepartmentID)) {
         validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
-    if (Ismedicine && !validator.isISODate(Skt)) {
+    if ((Ismedicine || Issupply) && !validator.isISODate(Skt)) {
         validationErrors.push(messages.VALIDATION_ERROR.SKT_REQUIRED)
     }
-    if (Ismedicine && !validator.isString(Barcodeno)) {
+    if ((Ismedicine || Issupply) && !validator.isString(Barcodeno)) {
         validationErrors.push(messages.VALIDATION_ERROR.BARCODENO_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
@@ -284,7 +286,7 @@ async function UpdatePatientstock(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const stock = db.patientstockModel.findOne({ where: { Uuid: Uuid } })
+        const stock = await db.patientstockModel.findOne({ where: { Uuid: Uuid } })
         if (!stock) {
             return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
         }
@@ -304,10 +306,10 @@ async function UpdatePatientstock(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hasta Stokları',
+            service: Issupply ? 'Hasta Sarf Malzemeleri' : Ismedicine ? 'Hasta İlaçları' : 'Hasta Stokları',
             role: 'patientstocknotification',
             message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait ${stockdefine?.Name} ${username} tarafından güncellendi.`,
-            pushurl: '/Patientstocks'
+            pushurl: Issupply ? '/Patientsupplies' : Ismedicine ? '/Patientmedicines' : '/Patientstocks'
         })
         await t.commit()
     } catch (error) {
@@ -362,7 +364,7 @@ async function UpdatePatientstocklist(req, res, next) {
             }
 
             if (Uuid && validator.isUUID(Uuid)) {
-                const stock = db.patientstockModel.findOne({ where: { Uuid: Uuid } })
+                const stock = await db.patientstockModel.findOne({ where: { Uuid: Uuid } })
                 if (!stock) {
                     return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
                 }
@@ -408,10 +410,9 @@ async function UpdatePatientstocklist(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hasta Stokları',
+            service: 'Hastalar',
             role: 'patientstocknotification',
             message: `Hasta stok listesi ${username} tarafından güncellendi.`,
-            pushurl: '/Patientstocks'
         })
         await t.commit()
     } catch (error) {
@@ -465,10 +466,11 @@ async function ApprovePatientstock(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hasta Stokları',
+            service: stock?.Issupply ? 'Hasta Sarf Malzemeleri' : stock?.Ismedicine ? 'Hasta İlaçları' : 'Hasta Stokları',
             role: 'patientstocknotification',
             message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait ${stockdefine?.Name} ${username} tarafından onaylandı.`,
-            pushurl: '/Patientstocks'
+            pushurl: stock?.Issupply ? '/Patientsupplies' : stock?.Ismedicine ? '/Patientmedicines' : '/Patientstocks'
+
         })
 
         await t.commit()
@@ -519,7 +521,6 @@ async function ApprovePatientstocks(req, res, next) {
             service: 'Hasta Stokları',
             role: 'patientstocknotification',
             message: `${username} tarafından toplu stok onaylaması yapıldı.`,
-            pushurl: '/Patientstocks'
         })
 
         await t.commit()
@@ -561,12 +562,14 @@ async function DeletePatientstock(req, res, next) {
         await db.patientstockmovementModel.destroy({ where: { StockID: Uuid } })
         await db.patientstockModel.destroy({ where: { Uuid: Uuid }, transaction: t });
 
+        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock?.StockdefineID } });
+
         await CreateNotification({
             type: types.Delete,
-            service: 'Hasta Stokları',
+            service: patientstock?.Issupply ? 'Hasta Sarf Malzemeleri' : patientstock?.Ismedicine ? 'Hasta İlaçları' : 'Hasta Stokları',
             role: 'patientstocknotification',
-            message: `${Uuid} stok ${username} tarafından silindi.`,
-            pushurl: '/Patientstocks'
+            message: `${stockdefine?.Name}  ${username} tarafından silindi.`,
+            pushurl: patientstock?.Issupply ? '/Patientsupplies' : patientstock?.Ismedicine ? '/Patientmedicines' : '/Patientstocks'
         })
 
         await t.commit();

@@ -451,6 +451,15 @@ const Priveleges = [
     { code: 'requiredperiodgetreport',    text: { en: 'Requiredperiods Get Report',  tr: 'Hizmet Sunulma Sıklıkları Rapor Alma' },       group: { en: 'Requiredperiods', tr: 'Hizmet Sunulma Sıklıkları' } },
     { code: 'requiredperiodnotification', text: { en: 'Requiredperiods Notification',tr: 'Hizmet Sunulma Sıklıkları Bildirim Alma' },    group: { en: 'Requiredperiods', tr: 'Hizmet Sunulma Sıklıkları' } },
 
+    { code: 'professionscreen',       text: { en: 'Professions Screen',      tr: 'Meslekler Veri' },             group: { en: 'Professions', tr: 'Meslekler' } },
+    { code: 'professionview',         text: { en: 'Professions View',        tr: 'Meslekler Görüntüleme' },      group: { en: 'Professions', tr: 'Meslekler' } },
+    { code: 'professionadd',          text: { en: 'Professions Add',         tr: 'Meslekler Oluşturma' },        group: { en: 'Professions', tr: 'Meslekler' } },
+    { code: 'professionupdate',       text: { en: 'Professions Update',      tr: 'Meslekler Güncelleme' },       group: { en: 'Professions', tr: 'Meslekler' } },
+    { code: 'professiondelete',       text: { en: 'Professions Delete',      tr: 'Meslekler Silme' },            group: { en: 'Professions', tr: 'Meslekler' } },
+    { code: 'professionmanageview',   text: { en: 'Professions Manage View', tr: 'Meslekler Görünüm Ayarlama' }, group: { en: 'Professions', tr: 'Meslekler' } },
+    { code: 'professiongetreport',    text: { en: 'Professions Get Report',  tr: 'Meslekler Rapor Alma' },       group: { en: 'Professions', tr: 'Meslekler' } },
+    { code: 'professionnotification', text: { en: 'Professions Notification',tr: 'Meslekler Bildirim Alma' },    group: { en: 'Professions', tr: 'Meslekler' } },
+
 ]
 
 module.exports = Priveleges

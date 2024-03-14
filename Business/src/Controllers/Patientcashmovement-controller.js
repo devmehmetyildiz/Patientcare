@@ -1,5 +1,7 @@
 const config = require("../Config")
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -68,6 +70,7 @@ async function AddPatientcashmovement(req, res, next) {
     let movementuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
 
@@ -99,6 +102,17 @@ async function AddPatientcashmovement(req, res, next) {
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } });
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Hasta Cüzdanları',
+            role: 'patientcashmovementnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ${Movementvalue || 0} TL ${username} tarafından Eklendi.`,
+            pushurl: '/Patientcashmovements'
+        })
 
         await t.commit()
     } catch (err) {
@@ -142,8 +156,10 @@ async function UpdatePatientcashmovement(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const patientcashmovement = db.patientcashmovementModel.findOne({ where: { Uuid: Uuid } })
+        const patientcashmovement = await db.patientcashmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!patientcashmovement) {
             return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
         }
@@ -156,6 +172,17 @@ async function UpdatePatientcashmovement(req, res, next) {
             Updateduser: "System",
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } });
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hasta Cüzdanları',
+            role: 'patientcashmovementnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasının ${patientcashmovement?.Movementvalue} TL ücreti ,  ${Movementvalue || 0} TL olarak ${username} tarafından Güncellendi.`,
+            pushurl: '/Patientcashmovements'
+        })
 
         await t.commit()
     } catch (error) {
@@ -181,8 +208,10 @@ async function DeletePatientcashmovement(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const patientcashmovement = db.patientcashmovementModel.findOne({ where: { Uuid: Uuid } })
+        const patientcashmovement = await db.patientcashmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!patientcashmovement) {
             return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
         }
@@ -191,6 +220,18 @@ async function DeletePatientcashmovement(req, res, next) {
         }
 
         await db.patientcashmovementModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: patientcashmovement?.PatientID } });
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Hasta Cüzdanları',
+            role: 'patientcashmovementnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasının ${patientcashmovement?.Movementvalue} TL ücreti ${username} tarafından Silindi.`,
+            pushurl: '/Patientcashmovements'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

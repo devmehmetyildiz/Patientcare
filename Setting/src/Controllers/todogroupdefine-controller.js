@@ -152,7 +152,7 @@ async function UpdateTodogroupdefine(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const todogroupdefine = db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
+        const todogroupdefine =await db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!todogroupdefine) {
             return next(createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language))
         }
@@ -212,7 +212,7 @@ async function DeleteTodogroupdefine(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const todogroupdefine = db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
+        const todogroupdefine =await db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!todogroupdefine) {
             return next(createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language))
         }

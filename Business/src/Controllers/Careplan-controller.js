@@ -1,5 +1,7 @@
 const config = require("../Config")
 const messages = require("../Constants/CareplanMessages")
+const { types } = require("../Constants/Defines")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -94,12 +96,13 @@ async function AddCareplan(req, res, next) {
     let careplanuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
 
     try {
         await db.careplanModel.create({
             ...req.body,
             Uuid: careplanuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
@@ -112,12 +115,22 @@ async function AddCareplan(req, res, next) {
                 ...careplanservice,
                 Uuid: careplanserviceuuid,
                 CareplanID: careplanuuid,
-                Createduser: "System",
+                Createduser: username,
                 Createtime: new Date(),
                 Isactive: true
             }, { transaction: t })
         }
 
+        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } });
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Bireysel Bakım Planları',
+            role: 'careplannotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Eklendi.`,
+            pushurl: '/Careplans'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -137,7 +150,7 @@ async function UpdateCareplan(req, res, next) {
         Careplanservices,
         Uuid
     } = req.body
-    
+
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.CAREPLANID_REQUIRED)
     }
@@ -188,8 +201,10 @@ async function UpdateCareplan(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const careplan = db.careplanModel.findOne({ where: { Uuid: Uuid } })
+        const careplan =await db.careplanModel.findOne({ where: { Uuid: Uuid } })
         if (!careplan) {
             return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
         }
@@ -199,17 +214,28 @@ async function UpdateCareplan(req, res, next) {
 
         await db.careplanModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
         for (const careplanservice of Careplanservices) {
             await db.careplanserviceModel.update({
                 ...careplanservice,
-                Updateduser: "System",
+                Updateduser: username,
                 Updatetime: new Date(),
             }, { where: { Uuid: careplanservice?.Uuid } }, { transaction: t })
         }
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } });
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Bireysel Bakım Planları',
+            role: 'careplannotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Güncellendi.`,
+            pushurl: '/Careplans'
+        })
 
         await t.commit()
     } catch (error) {
@@ -235,8 +261,10 @@ async function ApproveCareplan(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const careplan= await db.careplanModel.findOne({ where: { Uuid: Uuid } })
+        const careplan = await db.careplanModel.findOne({ where: { Uuid: Uuid } })
         if (!careplan) {
             return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_FOUND], req.language))
         }
@@ -250,9 +278,21 @@ async function ApproveCareplan(req, res, next) {
         await db.careplanModel.update({
             ...careplan,
             Isapproved: true,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: careplan?.PatientID } });
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Bireysel Bakım Planları',
+            role: 'careplannotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Onaylandı.`,
+            pushurl: '/Careplans'
+        })
+
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -277,8 +317,10 @@ async function DeleteCareplan(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
-        const careplan = db.careplanModel.findOne({ where: { Uuid: Uuid } })
+        const careplan =await db.careplanModel.findOne({ where: { Uuid: Uuid } })
         if (!careplan) {
             return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_FOUND], req.language))
         }
@@ -288,6 +330,18 @@ async function DeleteCareplan(req, res, next) {
 
         await db.careplanModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await db.careplanserviceModel.destroy({ where: { CareplanID: Uuid }, transaction: t });
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: careplan?.PatientID } });
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Bireysel Bakım Planları',
+            role: 'careplannotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Silindi.`,
+            pushurl: '/Careplans'
+        })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

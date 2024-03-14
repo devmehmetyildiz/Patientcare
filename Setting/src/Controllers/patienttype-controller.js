@@ -109,7 +109,7 @@ async function UpdatePatienttype(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const patienttype = db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
+        const patienttype =await db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
         if (!patienttype) {
             return next(createNotfounderror([messages.ERROR.PATIENTTYPE_NOT_FOUND], req.language))
         }
@@ -157,7 +157,7 @@ async function DeletePatienttype(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const patienttype = db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
+        const patienttype =await db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
         if (!patienttype) {
             return next(createNotfounderror([messages.ERROR.PATIENTTYPE_NOT_FOUND], req.language))
         }
