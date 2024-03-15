@@ -214,7 +214,6 @@ export const RulesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false,
         isDeletemodalopen: false,
         isLogmodalopen: false,
     },
@@ -289,59 +288,59 @@ export const RulesSlice = createSlice({
                 state.errMsg = action.error.message;
             })
             .addCase(AddRules.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(AddRules.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(AddRules.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(EditRules.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(EditRules.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(EditRules.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(StopRules.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(StopRules.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(StopRules.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(DeleteRules.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(DeleteRules.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(DeleteRules.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(ClearRulelogs.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
                 state.loglist = [];
             })
             .addCase(ClearRulelogs.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.loglist = action.payload;
             })
             .addCase(ClearRulelogs.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             });
     },

@@ -161,7 +161,6 @@ export const UnitsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false,
         isDeletemodalopen: false
     },
     reducers: {
@@ -209,47 +208,47 @@ export const UnitsSlice = createSlice({
                 state.errMsg = action.error.message;
             })
             .addCase(AddUnits.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(AddUnits.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(AddUnits.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(AddRecordUnits.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(AddRecordUnits.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(AddRecordUnits.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(EditUnits.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(EditUnits.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(EditUnits.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(DeleteUnits.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(DeleteUnits.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(DeleteUnits.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             });
     },

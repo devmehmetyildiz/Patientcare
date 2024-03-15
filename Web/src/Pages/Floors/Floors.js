@@ -16,7 +16,7 @@ export default class Floors extends Component {
 
   render() {
     const { Floors, Profile, handleDeletemodal, handleSelectedFloor, handleFastcreatemodal } = this.props
-    const { isLoading, isDispatching } = Floors
+    const { isLoading } = Floors
 
     const colProps = {
       sortable: true,
@@ -52,7 +52,7 @@ export default class Floors extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

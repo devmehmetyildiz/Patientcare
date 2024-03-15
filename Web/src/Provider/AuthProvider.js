@@ -1,12 +1,10 @@
 
 import React, { useState } from "react"
-import Cookies from "universal-cookie";
 
 export const AuthContext = React.createContext()
 
 const AuthProvider = ({ children }) => {
-  const localcookies = new Cookies();
-  const [token, setToken] = useState(localcookies.get('patientcare'))
+  const [token, setToken] = useState(localStorage.getItem('patientcare'))
   return (
     <AuthContext.Provider value={{ token, setToken }}>
       {children}

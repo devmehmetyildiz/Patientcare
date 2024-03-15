@@ -19,7 +19,7 @@ export default class Breakdowns extends Component {
 
   render() {
     const { Breakdowns, Profile, handleDeletemodal, handleSelectedBreakdown, handleCompletemodal } = this.props
-    const { isLoading, isDispatching } = Breakdowns
+    const { isLoading } = Breakdowns
 
     const colProps = {
       sortable: true,
@@ -65,7 +65,7 @@ export default class Breakdowns extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

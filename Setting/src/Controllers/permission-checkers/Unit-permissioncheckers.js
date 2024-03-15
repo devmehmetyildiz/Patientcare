@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetUnits(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('unitview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('unitscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Units View', req.language, { en: 'View Units', tr: 'View Units' }))
+        next(createAccessDenied('Units screen', req.language, { en: 'screen Units', tr: 'screen Units' }))
     }
 }
 
 async function GetUnit(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('unitview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('unitscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Units View', req.language, { en: 'View Units', tr: 'View Units' }))
+        next(createAccessDenied('Units screen', req.language, { en: 'screen Units', tr: 'screen Units' }))
     }
 }
 

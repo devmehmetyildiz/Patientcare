@@ -190,7 +190,6 @@ export const PatientstocksSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false,
         isDeletemodalopen: false,
         isApprovemodalopen: false
     },

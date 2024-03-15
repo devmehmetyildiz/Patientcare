@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import Cookies from 'universal-cookie'
 import Routes from '../../Routes'
 import { Sidebar as Sidebarcomponent, LoadingPage, Navbar } from '../../Components'
-import cookies from 'universal-cookie';
 import { Icon, Menu, Segment, SidebarPushable, SidebarPusher, Sidebar, Label } from 'semantic-ui-react';
 import Usernotifications from '../../Containers/Usernotifications/Usernotifications';
 export default class Layout extends Component {
@@ -32,14 +30,14 @@ export default class Layout extends Component {
     const currentPath = window.location.pathname;
 
     if (!routes.some(route => currentPath.toLowerCase().startsWith(route.toLowerCase()))) {
-      const localcookies = new cookies();
+      const token = localStorage.getItem('patientcare')
       GetActiveUser()
       GetUserRoles()
       GetTableMeta()
       GetUsagetypes()
       GetUserMeta()
       Checktoken({
-        token: localcookies.get('patientcare')
+        token: token || ''
       })
     }
   }
@@ -69,7 +67,7 @@ export default class Layout extends Component {
       Istokenchecking || Profile.isLogging || Profile.isFetching ?
         <LoadingPage />
         :
-        <SidebarPushable  className='!-m-2' as={Segment} style={{ overflow: 'hidden' }}>
+        <SidebarPushable className='!-m-2' as={Segment} style={{ overflow: 'hidden' }}>
           <Usernotifications />
           <SidebarPusher >
             <div className=' dark:bg-Contentbg overflow-hidden bg-white' >
@@ -112,8 +110,7 @@ export default class Layout extends Component {
   handleLanguage = () => {
     const { Profile } = this.props
     if (Profile && Profile.meta && Profile.meta.Language) {
-      const localcookies = new Cookies();
-      localcookies.set('Language', Profile.meta.Language, { path: '/' })
+      localStorage.setItem('Language', Profile.meta.Language)
     }
   }
 }

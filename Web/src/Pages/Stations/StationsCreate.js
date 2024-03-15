@@ -14,10 +14,10 @@ export default class StationsCreate extends Component {
 
     const { Stations, Profile, history, closeModal } = this.props
 
-    const { isLoading, isDispatching } = Stations
+    const { isLoading } = Stations
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

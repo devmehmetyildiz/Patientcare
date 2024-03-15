@@ -3,16 +3,14 @@ import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
-import Cookies from 'universal-cookie';
 
 export const logIn = createAsyncThunk(
     'Profile/logIn',
     async ({ data, history, redirectUrl }, { dispatch }) => {
         try {
             const response = await instanse.post(config.services.Auth, `Oauth/Login`, data);
-            const localcookies = new Cookies();
-            localcookies.set('patientcare', response.data.accessToken, { path: '/' })
-            localcookies.set('patientcareRefresh', response.data.refreshToken, { path: '/' })
+            localStorage.setItem('patientcare', response.data.accessToken)
+            localStorage.setItem('patientcareRefresh', response.data.refreshToken)
             dispatch(fillnotification({
                 type: 'Success',
                 code: 'Elder Camp',
@@ -238,7 +236,6 @@ export const ProfileSlice = createSlice({
         isFetching: false,
         user: null,
         errMsg: null,
-        isDispatching: false,
         notifications: [],
         meta: {},
         username: "",
@@ -275,8 +272,9 @@ export const ProfileSlice = createSlice({
             state.isFocusedpage = action.payload
         },
         logOut: () => {
-            const localcookies = new Cookies();
-            localcookies.remove('patientcare')
+            localStorage.removeItem('patientcare')
+            localStorage.removeItem('patientcareRefresh')
+            localStorage.removeItem('language')
             window.location = '/Login'
         }
     },

@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
-import Cookies from 'universal-cookie';
 import config from "../Config";
 import axios from 'axios'
 import validator from '../Utils/Validator';
@@ -172,11 +171,10 @@ export const AddPatientReturnPatient = createAsyncThunk(
                         });
                     })
 
-                    const localcookies = new Cookies();
                     await axios({
                         method: `put`,
                         url: config.services.File + `${ROUTES.FILE}`,
-                        headers: { Authorization: "Bearer  " + localcookies.get('patientcare'), contentType: 'mime/form-data' },
+                        headers: { Authorization: "Bearer  " +localStorage.getItem('patientcare'), contentType: 'mime/form-data' },
                         data: formData
                     })
                     dispatch(fillPatientnotification({
@@ -504,7 +502,6 @@ export const PatientsSlice = createSlice({
         notifications: [],
         isLoading: false,
         isLoadingsearch: false,
-        isDispatching: false,
         isCheckperiodloading: false,
         isTodogroupdefineloading: false,
         selected_patient: {},

@@ -1,14 +1,16 @@
 import axios from 'axios';
-import cookies from 'universal-cookie';
+
+
 
 function getRequest(service, url) {
     return new Promise((resolve, reject) => {
-        const localcookies = new cookies();
+        const token = localStorage.getItem('patientcare')
+        const language = localStorage.getItem('Language')
         axios.get(service + url,
             {
                 headers: {
-                    Authorization: "Bearer " + localcookies.get('patientcare'),
-                    Language: localcookies.get('Language')
+                    Authorization: "Bearer " + token,
+                    Language: language
                 }
             })
             .then(response => resolve(response))
@@ -18,12 +20,13 @@ function getRequest(service, url) {
 
 function postRequest(service, url, data) {
     return new Promise((resolve, reject) => {
-        const localcookies = new cookies();
+        const token = localStorage.getItem('patientcare')
+        const language = localStorage.getItem('Language')
         axios.post(service + url, data,
             {
                 headers: {
-                    Authorization: "Bearer " + localcookies.get('patientcare'),
-                    Language: localcookies.get('Language')
+                    Authorization: "Bearer " + token,
+                    Language: language
                 }
             })
             .then(response => resolve(response))
@@ -33,12 +36,13 @@ function postRequest(service, url, data) {
 
 function putRequest(service, url, data) {
     return new Promise((resolve, reject) => {
-        const localcookies = new cookies();
+        const token = localStorage.getItem('patientcare')
+        const language = localStorage.getItem('Language')
         axios.put(service + url, data,
             {
                 headers: {
-                    Authorization: "Bearer " + localcookies.get('patientcare'),
-                    Language: localcookies.get('Language')
+                    Authorization: "Bearer " + token,
+                    Language: language
                 }
             })
             .then(response => resolve(response))
@@ -48,12 +52,13 @@ function putRequest(service, url, data) {
 
 function deleteRequest(service, url, data) {
     return new Promise((resolve, reject) => {
-        const localcookies = new cookies();
+        const token = localStorage.getItem('patientcare')
+        const language = localStorage.getItem('Language')
         axios.delete(service + url,
             {
                 headers: {
-                    Authorization: "Bearer " + localcookies.get('patientcare'),
-                    Language: localcookies.get('Language')
+                    Authorization: "Bearer " + token,
+                    Language: language
                 }
             })
             .then(response => resolve(response))

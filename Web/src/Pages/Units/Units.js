@@ -28,7 +28,7 @@ export default class Units extends Component {
 
 
     const { Units, Profile, handleDeletemodal, handleSelectedUnit } = this.props
-    const { isLoading, isDispatching } = Units
+    const { isLoading } = Units
 
     const colProps = {
       sortable: true,
@@ -65,7 +65,7 @@ export default class Units extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetRooms(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roomview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('roomscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Rooms View', req.language, { en: 'View Rooms', tr: 'View Rooms' }))
+        next(createAccessDenied('Rooms screen', req.language, { en: 'screen Rooms', tr: 'screen Rooms' }))
     }
 }
 
 async function GetRoom(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roomview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('roomscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Rooms View', req.language, { en: 'View Rooms', tr: 'View Rooms' }))
+        next(createAccessDenied('Rooms screen', req.language, { en: 'screen Rooms', tr: 'screen Rooms' }))
     }
 }
 

@@ -15,7 +15,7 @@ export default class Professions extends Component {
 
   render() {
     const { Professions, Profile, handleDeletemodal, handleSelectedProfession} = this.props
-    const { isLoading, isDispatching } = Professions
+    const { isLoading } = Professions
 
     const colProps = {
       sortable: true,
@@ -50,7 +50,7 @@ export default class Professions extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

@@ -41,10 +41,10 @@ export default class MailsettingsEdit extends Component {
   render() {
 
     const { Mailsettings, Profile, history } = this.props
-    const { isLoading, isDispatching } = Mailsettings
+    const { isLoading } = Mailsettings
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

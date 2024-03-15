@@ -228,7 +228,7 @@ export const UsernotificationsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false,
+        isEditLoading: false,
         isDeletemodalopen: false,
         isViewmodalopen: false,
     },
@@ -283,69 +283,69 @@ export const UsernotificationsSlice = createSlice({
                 state.errMsg = action.error.message;
             })
             .addCase(AddUsernotifications.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(AddUsernotifications.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(AddUsernotifications.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(EditUsernotifications.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(EditUsernotifications.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(EditUsernotifications.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(EditRecordUsernotifications.pending, (state) => {
-                state.isDispatching = true;
+                state.isEditLoading = true;
             })
             .addCase(EditRecordUsernotifications.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isEditLoading = false;
                 state.list = action.payload;
             })
             .addCase(EditRecordUsernotifications.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isEditLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(DeleteUsernotifications.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(DeleteUsernotifications.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(DeleteUsernotifications.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(DeleteUsernotificationbyidreaded.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(DeleteUsernotificationbyidreaded.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(DeleteUsernotificationbyidreaded.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(DeleteUsernotificationbyid.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(DeleteUsernotificationbyid.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(DeleteUsernotificationbyid.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             });
     },

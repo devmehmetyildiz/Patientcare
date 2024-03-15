@@ -18,7 +18,7 @@ export default class Todos extends Component {
 
   render() {
     const { Todos, Profile, handleApprovemodal, handleSelectedTodo } = this.props
-    const { isLoading, isDispatching, } = Todos
+    const { isLoading } = Todos
 
     const colProps = {
       sortable: true,
@@ -58,7 +58,7 @@ export default class Todos extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

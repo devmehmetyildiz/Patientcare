@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetTododefines(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('tododefineview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('tododefinescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Tododefines View', req.language, { en: 'View Tododefines', tr: 'View Tododefines' }))
+        next(createAccessDenied('Tododefines screen', req.language, { en: 'screen Tododefines', tr: 'screen Tododefines' }))
     }
 }
 
 async function GetTododefine(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('tododefineview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('tododefinescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Tododefines View', req.language, { en: 'View Tododefines', tr: 'View Tododefines' }))
+        next(createAccessDenied('Tododefines screen', req.language, { en: 'screen Tododefines', tr: 'screen Tododefines' }))
     }
 }
 

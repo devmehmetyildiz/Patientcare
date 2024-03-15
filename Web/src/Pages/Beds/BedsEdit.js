@@ -52,7 +52,7 @@ export default class BedsEdit extends Component {
     })
 
     return (
-      Rooms.isLoading || Rooms.isDispatching || Beds.isLoading || Beds.isDispatching ? <LoadingPage /> :
+      Rooms.isLoading  || Beds.isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

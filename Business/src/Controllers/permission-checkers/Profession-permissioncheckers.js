@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetProfessions(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('professionview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('professionscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Professions View', req.language, { en: 'Professions View', tr: 'Professions View' }))
+        next(createAccessDenied('Professions screen', req.language, { en: 'Professions screen', tr: 'Professions screen' }))
     }
 }
 
 async function GetProfession(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('professionview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('professionscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Professions View', req.language, { en: 'Professions View', tr: 'Professions View' }))
+        next(createAccessDenied('Professions screen', req.language, { en: 'Professions screen', tr: 'Professions screen' }))
     }
 }
 

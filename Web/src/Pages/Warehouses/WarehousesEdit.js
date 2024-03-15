@@ -40,10 +40,10 @@ export default class WarehousesEdit extends Component {
   render() {
 
     const { Warehouses, Profile, history } = this.props
-    const { isLoading, isDispatching } = Warehouses
+    const { isLoading } = Warehouses
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

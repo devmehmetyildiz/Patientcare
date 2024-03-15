@@ -30,8 +30,7 @@ module.exports = async (req) => {
                 Data: data
             }
         })
-    } catch (error) {
-        console.log(requestErrorCatcher(error, 'Log'))
+    } catch {
     }
 }
 

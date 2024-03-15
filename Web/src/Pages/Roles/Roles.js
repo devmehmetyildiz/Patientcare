@@ -22,7 +22,7 @@ export class Roles extends Component {
 
   render() {
     const { Roles, Profile, handleDeletemodal, handleSelectedRole } = this.props
-    const { isLoading, isDispatching } = Roles
+    const { isLoading } = Roles
 
     const colProps = {
       sortable: true,
@@ -58,7 +58,7 @@ export class Roles extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

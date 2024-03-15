@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
-import RequiredperiodsDelete  from '../../Containers/Requiredperiods/RequiredperiodsDelete'
+import RequiredperiodsDelete from '../../Containers/Requiredperiods/RequiredperiodsDelete'
 import { getInitialconfig } from '../../Utils/Constants'
 
 export default class Requiredperiods extends Component {
@@ -15,7 +15,7 @@ export default class Requiredperiods extends Component {
 
   render() {
     const { Requiredperiods, Profile, handleDeletemodal, handleSelectedRequiredperiod } = this.props
-    const { isLoading, isDispatching } = Requiredperiods
+    const { isLoading } = Requiredperiods
 
     const colProps = {
       sortable: true,
@@ -50,7 +50,7 @@ export default class Requiredperiods extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

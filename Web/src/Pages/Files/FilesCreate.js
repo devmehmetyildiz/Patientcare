@@ -15,10 +15,10 @@ export class FilesCreate extends Component {
   render() {
 
     const { Files, Profile, history, closeModal } = this.props
-    const { isLoading, isDispatching } = Files
+    const { isLoading } = Files
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

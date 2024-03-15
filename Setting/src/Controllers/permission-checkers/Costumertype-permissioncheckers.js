@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetCostumertypes(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('costumertypeview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('costumertypescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Costumertypes View', req.language, { en: 'View Costumertypes', tr: 'View Costumertypes' }))
+        next(createAccessDenied('Costumertypes screen', req.language, { en: 'screen Costumertypes', tr: 'screen Costumertypes' }))
     }
 }
 
 async function GetCostumertype(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('costumertypeview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('costumertypescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Costumertypes View', req.language, { en: 'View Costumertypes', tr: 'View Costumertypes' }))
+        next(createAccessDenied('Costumertypes screen', req.language, { en: 'screen Costumertypes', tr: 'screen Costumertypes' }))
     }
 }
 

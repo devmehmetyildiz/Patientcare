@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetBreakdowns(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('breakdownview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('breakdownscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Breakdowns View', req.language, { en: 'Breakdowns View', tr: 'Breakdowns View' }))
+        next(createAccessDenied('Breakdowns screen', req.language, { en: 'Breakdowns screen', tr: 'Breakdowns screen' }))
     }
 }
 
 async function GetBreakdown(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('breakdownview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('breakdownscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Breakdowns View', req.language, { en: 'Breakdowns View', tr: 'Breakdowns View' }))
+        next(createAccessDenied('Breakdowns screen', req.language, { en: 'Breakdowns screen', tr: 'Breakdowns screen' }))
     }
 }
 

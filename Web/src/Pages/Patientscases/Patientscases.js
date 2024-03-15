@@ -33,7 +33,8 @@ export default class Patientscases extends Component {
         const isLoading = !Patients.isLoading && !Departments.isLoading && !Patienttypes.isLoading && !Patientdefines.isLoading && !Cases.isLoading && !this.state.isDatafetched;
 
         if (isLoading && (Patients.list || []).length > 0) {
-            const list = (Patients.list || []).filter(u => u.Isactive && !u.Iswaitingactivation).map(patient => {
+            const disbandCases = (Cases.list || []).filter(u => u.Patientstatus === 4 || u.Patientstatus === 6).map(u => u.Uuid);
+            const list = (Patients.list || []).filter(u => u.Isactive && !u.Iswaitingactivation).filter(u => !(disbandCases || []).includes(u.CaseID)).map(patient => {
                 const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID);
                 return {
                     Patient: `${patientdefine?.Firstname} ${patientdefine?.Lastname} - (${patientdefine?.CountryID})`,
@@ -54,7 +55,7 @@ export default class Patientscases extends Component {
 
         const isLoading = Patients.isLoading || Patientdefines.isLoading || Cases.isLoading || Departments.isLoading || Patienttypes.isLoading
 
-        const Casesoptions = (Cases.list || []).filter(u => u.Isactive).map(cases => {
+        const Casesoptions = (Cases.list || []).filter(u => u.Patientstatus !== 4 && u.Patientstatus !== 6).filter(u => u.Isactive).map(cases => {
             let departments = (cases.Departmentuuids || [])
                 .map(u => {
                     const department = (Departments.list || []).find(department => department.Uuid === u.DepartmentID)

@@ -56,7 +56,7 @@ export default function Usernotifications(props) {
     return (
         <Sidebar
             as={Menu}
-            animation='scale down'
+            animation={Profile.Ismobile ? 'overlay' : 'scale down' }
             icon='labeled'
             vertical
             direction='right'

@@ -43,14 +43,14 @@ export default class TododefinesEdit extends Component {
   render() {
 
     const { Tododefines, Periods, Profile, history } = this.props
-    const { isLoading, isDispatching } = Tododefines
+    const { isLoading } = Tododefines
 
     const Periodsoptions = (Periods.list || []).filter(u => u.Isactive).map(period => {
       return { key: period.Uuid, text: period.Name, value: period.Uuid }
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

@@ -3,18 +3,18 @@ const permissionchecker = require("../../Utilities/Permissionchecker")
 
 
 async function GetPatientstockmovements(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientstockmovementview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientstockmovementscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Patientstockmovements View', req.language, { en: 'Patientstockmovements View', tr: 'Patientstockmovements View' }))
+        next(createAccessDenied('Patientstockmovements screen', req.language, { en: 'Patientstockmovements screen', tr: 'Patientstockmovements screen' }))
     }
 }
 
 async function GetPatientstockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientstockmovementview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientstockmovementscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Patientstockmovements View', req.language, { en: 'Patientstockmovements View', tr: 'Patientstockmovements View' }))
+        next(createAccessDenied('Patientstockmovements screen', req.language, { en: 'Patientstockmovements screen', tr: 'Patientstockmovements screen' }))
     }
 }
 

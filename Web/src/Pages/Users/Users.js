@@ -28,7 +28,7 @@ export default class Users extends Component {
 
   render() {
     const { Users, Profile, handleDeletemodal, handleSelectedUser, } = this.props
-    const { isLoading, isDispatching } = Users
+    const { isLoading } = Users
 
     const colProps = {
       sortable: true,
@@ -82,7 +82,7 @@ export default class Users extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

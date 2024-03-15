@@ -2,34 +2,34 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetRules(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('ruleview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('rulescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Rules View', req.language, { en: 'View Rules', tr: 'View Rules' }))
+        next(createAccessDenied('Rules screen', req.language, { en: 'screen Rules', tr: 'screen Rules' }))
     }
 }
 
 async function GetRulelogs(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('ruleview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('rulescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Rules View', req.language, { en: 'View Rules', tr: 'View Rules' }))
+        next(createAccessDenied('Rules screen', req.language, { en: 'screen Rules', tr: 'screen Rules' }))
     }
 }
 
 async function ClearRulelogs(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('ruleview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('rulescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Rules View', req.language, { en: 'View Rules', tr: 'View Rules' }))
+        next(createAccessDenied('Rules screen', req.language, { en: 'screen Rules', tr: 'screen Rules' }))
     }
 }
 
 async function GetRule(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('ruleview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('rulescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Rules View', req.language, { en: 'View Rules', tr: 'View Rules' }))
+        next(createAccessDenied('Rules screen', req.language, { en: 'screen Rules', tr: 'screen Rules' }))
     }
 }
 
@@ -58,10 +58,10 @@ async function DeleteRule(req, res, next) {
 }
 
 async function StopRule(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('ruleview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('rulescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Rules View', req.language, { en: 'View Rules', tr: 'View Rules' }))
+        next(createAccessDenied('Rules screen', req.language, { en: 'screen Rules', tr: 'screen Rules' }))
     }
 }
 

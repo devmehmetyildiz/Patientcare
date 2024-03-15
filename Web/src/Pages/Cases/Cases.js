@@ -30,7 +30,7 @@ export default class Cases extends Component {
 
 
     const { Cases, Profile, handleSelectedCase, handleDeletemodal } = this.props
-    const { isLoading, isDispatching } = Cases
+    const { isLoading} = Cases
 
 
     const colProps = {
@@ -73,7 +73,7 @@ export default class Cases extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

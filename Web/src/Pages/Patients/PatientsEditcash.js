@@ -39,12 +39,12 @@ export default class PatientsEditcash extends Component {
         const { selected_record } = Patients
 
         const isLoadingstatus =
-            Patients.isLoading &&
-            Patientdefines.isLoading &&
-            Patientcashmovements.isLoading &&
+            Patients.isLoading ||
+            Patientdefines.isLoading ||
+            Patientcashmovements.isLoading ||
             Patientcashregisters.isLoading
 
-        if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && isLoadingstatus && !this.state.isDatafetched) {
+        if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoadingstatus && !this.state.isDatafetched) {
             this.setState({ isDatafetched: true })
             this.context.setForm(this.PAGE_NAME, selected_record)
         }
@@ -58,9 +58,9 @@ export default class PatientsEditcash extends Component {
         const Id = match?.params?.PatientID || PatientID
 
         const isLoadingstatus =
-            Patients.isLoading &&
-            Patientdefines.isLoading &&
-            Patientcashmovements.isLoading &&
+            Patients.isLoading ||
+            Patientdefines.isLoading ||
+            Patientcashmovements.isLoading ||
             Patientcashregisters.isLoading
 
         const list = (Patientcashmovements.list || []).filter(u => u.PatientID === Id).map(item => {

@@ -24,7 +24,7 @@ export default class Stations extends Component {
   render() {
 
     const { Stations, Profile, handleDeletemodal, handleSelectedStation } = this.props
-    const { isLoading, isDispatching } = Stations
+    const { isLoading} = Stations
 
     const colProps = {
       sortable: true,
@@ -59,7 +59,7 @@ export default class Stations extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

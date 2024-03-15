@@ -13,10 +13,10 @@ export default class PatienttypesCreate extends Component {
   render() {
 
     const { Patienttypes, Profile, history, closeModal } = this.props
-    const { isLoading, isDispatching } = Patienttypes
+    const { isLoading } = Patienttypes
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

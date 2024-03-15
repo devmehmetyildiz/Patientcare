@@ -1,10 +1,9 @@
-import Cookies from "universal-cookie";
 import config from "../Config";
 import instanse from "../Redux/axios";
 import validator from "./Validator";
 import { fillnotification } from "../Redux/ProfileSlice";
 
-const TOKENINTERVAL = 1000 * 60 * 2
+const TOKENINTERVAL = 1000 * 60 * 1
 const NOTIFICATIONINTERVAL = 1000 * 60 * 5
 
 const tokenMiddleware = store => next => action => {
@@ -14,14 +13,14 @@ const tokenMiddleware = store => next => action => {
                 type: 'EXECUTED_TOKEN_TIMER'
             })
             try {
-                const localcookies = new Cookies();
-                let token = localcookies.get('patientcareRefresh')
+                let token = localStorage.getItem('patientcareRefresh')
                 const response = await instanse.post(config.services.Auth, `Oauth/Login`, {
                     grant_type: 'refresh_token',
                     refreshToken: token
                 });
-                localcookies.set('patientcare', response.data.accessToken, { path: '/' })
-                localcookies.set('patientcareRefresh', response.data.refreshToken, { path: '/' })
+                localStorage.setItem('patientcare', response.data.accessToken)
+                localStorage.setItem('patientcareRefresh', response.data.refreshToken)
+                console.log("executed timer at ", new Date())
             } catch (error) {
             }
 
@@ -66,11 +65,12 @@ const notificationMiddleware = store => next => action => {
                         console.log("error on Start timer middelware")
                     }
                     let unreadednotifications = (allnotifications || []).filter(u => !u.Isreaded && u.Isactive)
+                    let unshowednotifications = (allnotifications || []).filter(u => !u.Isshowed && u.Isactive)
                     if (unreadednotifications.length > 0) {
                         store.dispatch(fillnotification({
                             type: 'Information',
                             code: "Bildirimler",
-                            description: `Okunmamış ${unreadednotifications.length} adet bildiriminiz var`,
+                            description: `${unshowednotifications.length} adet yeni bildiriminiz var, okunmamış ${unreadednotifications.length} adet bildiriminiz var.`,
                         }))
                     }
                 }

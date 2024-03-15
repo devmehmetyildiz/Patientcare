@@ -26,7 +26,7 @@ const version1_0_0_1 = {
                 "Hastalar ekranındaki eylemler seçeneceği detay olarak değişti ve popup yerine düz icon yapıldı",
                 "Detay ekranındaki hareket tablosundan aktivasyon bilgisi kaldırıldı.",
                 "Ön Kayıtlar tamamlama ekranında kart bilgilerindeki alt bilgiler popup yapıldı.",
-                "Tanım düzenlemede müşteri türleri olarak sadece departman olarak sağlık seçilen türler gelecek"
+                "Tanım düzenlemede müşteri türleri olarak sadece departman olarak sağlık seçilen türler gelecek",
             ],
         }
     ],
@@ -40,7 +40,8 @@ const version1_0_0_1 = {
         {
             title: "Genel Hatalar", commits: [
                 "Parola değiştir ekranının açılmama problemi düzeltildi.",
-                "Parola Resetleme ekranın açılmama problemi düzeltildi"
+                "Parola Resetleme ekranın açılmama problemi düzeltildi",
+
             ],
         }
     ],
@@ -614,6 +615,20 @@ const version1_0_1_0 = {
                 "Mobil ekranı tasarımı güncellendi.",
             ]
         },
+        {
+            title: "Hastalar", commits: [
+                "Hasta Hareketleri takip ekranı sadeleştirildi.",
+                "Hasta Durum güncellemede ayrılma ve ölüm alanları ile alakalı kontroller eklendi",
+                "Hasta Durum güncellemede Ölüm tarihi girmeden ölüm durumu, ayrılma tarihi girilmeden, ayrılma durumuna çekilemez",
+                "Hastalar ve ön kayıtlardan vefat veya ayrılmış durumundaki hastalar kaldırıldı, artık görüntülenemeyecek",
+            ]
+        },
+        {
+            title: "Genel", commits: [
+                "Oturum açık kalma süresi, uygulama açıksa ve kullanımdaysa sınızsız olarak güncellendi.",
+                "Uygulamadan çıkış yapılmadan uygulama 5 dakika boyunca açık kalır.",
+            ]
+        },
     ],
     bugs: [
         {
@@ -625,6 +640,8 @@ const version1_0_1_0 = {
         {
             title: "Genel", commits: [
                 "Menü iconu çalışır duruma getirildi.",
+                "Yazı girme alanları ile alakalı sürekli sona atma hatası düzeltildi",
+                "Sayfaların yükleme ekranları ile alakalı güncelleme yapıldı",
             ]
         },
     ],

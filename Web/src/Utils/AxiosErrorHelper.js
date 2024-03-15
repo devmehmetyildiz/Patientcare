@@ -1,4 +1,3 @@
-import Cookies from "universal-cookie";
 import config from "../Config";
 
 export default function AxiosErrorHelper(error) {
@@ -60,8 +59,9 @@ export default function AxiosErrorHelper(error) {
 
 
 function handle401Error(error) {
-    const localcookies = new Cookies();
-    localcookies.remove("patientcare")
+    localStorage.removeItem("patientcare")
+    localStorage.removeItem("patientcareRefresh")
+    localStorage.removeItem("patientcarelanguage")
     if (window.location.pathname !== "/Login") {
         const params = new URLSearchParams(window.location.search);
         const redirecturl = params.get('redirecturl');

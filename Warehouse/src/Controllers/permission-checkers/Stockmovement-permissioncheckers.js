@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetStockmovements(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockmovementview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('stockmovementscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Stockmovements View', req.language, { en: 'Stockmovements View', tr: 'Stockmovements View' }))
+        next(createAccessDenied('Stockmovements screen', req.language, { en: 'Stockmovements screen', tr: 'Stockmovements screen' }))
     }
 }
 
 async function GetStockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockmovementview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('stockmovementscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Stockmovements View', req.language, { en: 'Stockmovements View', tr: 'Stockmovements View' }))
+        next(createAccessDenied('Stockmovements screen', req.language, { en: 'Stockmovements screen', tr: 'Stockmovements screen' }))
     }
 }
 

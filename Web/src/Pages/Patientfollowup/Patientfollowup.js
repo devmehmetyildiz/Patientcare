@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form, Breadcrumb, Button, Label, Dropdown, Tab, Grid, Table } from 'semantic-ui-react'
+import { Form, Breadcrumb, Button, Label, Dropdown, Tab, Grid, Table, Icon } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
@@ -29,7 +29,7 @@ export default class Patientfollowup extends Component {
             Patienttypes.isLoading
 
 
-        const disbandedCases = (Cases.list || []).filter(u => u.Patientstatus === 4 || u.Patientstatus === 5).map(u => u?.Uuid)
+        const disbandedCases = (Cases.list || []).filter(u => u.Patientstatus === 4 || u.Patientstatus === 6).map(u => u?.Uuid)
 
         const patients = (Patients.list || [])
             .filter(u => u.Isactive && !u.Iswaitingactivation)
@@ -142,6 +142,7 @@ function PatienttypeTab({ patients, patienttypes, Patientdefines, Profile }) {
         { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
         { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
@@ -150,7 +151,14 @@ function PatienttypeTab({ patients, patienttypes, Patientdefines, Profile }) {
             const decoratedpatients = patients.map(patient => {
                 const patientdefine = (Patientdefines.list || []).find(define => define?.Uuid === patient?.PatientdefineID)
                 return patientdefine?.PatienttypeID === patienttype?.Uuid ? patient : null
-            }).filter(u => u)
+            })
+                .filter(u => u)
+                .map(item => {
+                    return {
+                        ...item,
+                        actions: <Link to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
+                    }
+                });
 
             return decoratedpatients.length > 0 ? <div className='w-full gap-2'>
                 <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{patienttype?.Name}</Label>
@@ -197,6 +205,7 @@ function CostumertypeTab({ patients, costumertypes, Profile, Patientdefines }) {
         { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
         { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
@@ -205,7 +214,14 @@ function CostumertypeTab({ patients, costumertypes, Profile, Patientdefines }) {
             const decoratedpatients = patients.map(patient => {
                 const patientdefine = (Patientdefines.list || []).find(define => define?.Uuid === patient?.PatientdefineID)
                 return patientdefine?.CostumertypeID === costumertype?.Uuid ? patient : null
-            }).filter(u => u)
+            })
+                .filter(u => u)
+                .map(item => {
+                    return {
+                        ...item,
+                        actions: <Link to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
+                    }
+                });
 
             return decoratedpatients.length > 0 ? <div className='w-full gap-2'>
                 <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{costumertype?.Name}</Label>
@@ -224,8 +240,8 @@ function DisbandedTab({ patients, Cases, Patientdefines, Profile, Patienttypes }
 
     let cases = []
 
-    cases = cases.concat((Cases.list || []).filter(u => u.Isactive && u.Patientstatus == 6))
-    cases = cases.concat((Cases.list || []).filter(u => u.Isactive && u.Patientstatus == 4))
+    cases = cases.concat((Cases.list || []).filter(u => u.Isactive && u.Patientstatus === 6))
+    cases = cases.concat((Cases.list || []).filter(u => u.Isactive && u.Patientstatus === 4))
 
     const colProps = {
         sortable: true,
@@ -244,6 +260,11 @@ function DisbandedTab({ patients, Cases, Patientdefines, Profile, Patienttypes }
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
         return patientdefine?.CountryID
     }
+    const deathCellhandler = (row) => {
+        const patient = row
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        return patientdefine?.Dateofdeath
+    }
 
     const getAge = (dateOfBirth, dateToCalculate) => {
         const dob = new Date(dateOfBirth).getTime();
@@ -257,7 +278,15 @@ function DisbandedTab({ patients, Cases, Patientdefines, Profile, Patienttypes }
         const patient = row
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
         const birthdate = new Date(patientdefine?.Dateofbirth)
-        const deathdate = new Date(patientdefine?.Dateofdeath)
+        const deathdate = patientdefine?.Dateofdeath ? new Date(patientdefine?.Dateofdeath) : new Date()
+        return getAge(birthdate, deathdate)
+    }
+
+    const agewithdeathCellhandler = (row) => {
+        const patient = row
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        const birthdate = new Date(patientdefine?.Dateofbirth)
+        const deathdate = new Date()
         return getAge(birthdate, deathdate)
     }
 
@@ -275,22 +304,41 @@ function DisbandedTab({ patients, Cases, Patientdefines, Profile, Patienttypes }
         return null
     }
 
-    const Columns = [
+    const leaveColumns = [
         { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
         { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: Literals.Columns.Leavedate[Profile.Language], accessor: row => dateCellhandler(row?.Leavedate), },
         { Header: Literals.Columns.Age[Profile.Language], accessor: row => ageCellhandler(row), },
         { Header: Literals.Columns.Patienttype[Profile.Language], accessor: row => patienttypeCellhandler(row), },
+        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+
+    const deathColumns = [
+        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
+        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: Literals.Columns.Dateofdeath[Profile.Language], accessor: row => deathCellhandler(row), },
+        { Header: Literals.Columns.Age[Profile.Language], accessor: row => agewithdeathCellhandler(row), },
+        { Header: Literals.Columns.Patienttype[Profile.Language], accessor: row => patienttypeCellhandler(row), },
+        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     return (cases.map(casedata => {
-        const decoratedpatients = patients.filter(patient => patient?.CaseID === casedata?.Uuid)
+
+        const decoratedpatients = patients.filter(patient => patient?.CaseID === casedata?.Uuid).map(item => {
+            return {
+                ...item,
+                actions: <Link to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
+            }
+        })
+
         return <div className='flex flex-col w-full' >
             <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{casedata?.Name}</Label>
             <div className='w-full mx-auto '>
                 {Profile.Ismobile ?
-                    <MobileTable Columns={Columns} Data={decoratedpatients} Profile={Profile} /> :
-                    <DataTable Columns={Columns} Data={decoratedpatients} />}
+                    <MobileTable Columns={casedata?.Patientstatus === 6 ? leaveColumns : deathColumns} Data={decoratedpatients} Profile={Profile} /> :
+                    <DataTable Columns={casedata?.Patientstatus === 6 ? leaveColumns : deathColumns} Data={decoratedpatients} />}
             </div>
             <Pagedivider />
         </div>

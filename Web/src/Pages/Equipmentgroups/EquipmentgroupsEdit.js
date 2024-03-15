@@ -51,7 +51,7 @@ export default class EquipmentgroupsEdit extends Component {
     })
 
     return (
-      Equipmentgroups.isLoading || Equipmentgroups.isDispatching ? <LoadingPage /> :
+      Equipmentgroups.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetDepartments(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('departmentview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('departmentscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Departments View', req.language, { en: 'View Departments', tr: 'View Departments' }))
+        next(createAccessDenied('Departments screen', req.language, { en: 'screen Departments', tr: 'screen Departments' }))
     }
 }
 
 async function GetDepartment(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('departmentview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('departmentscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Departments View', req.language, { en: 'View Departments', tr: 'View Departments' }))
+        next(createAccessDenied('Departments screen', req.language, { en: 'screen Departments', tr: 'screen Departments' }))
     }
 }
 

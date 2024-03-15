@@ -25,7 +25,7 @@ export default class RolesCreate extends Component {
 
     render() {
         const { Roles, Profile, history, closeModal } = this.props
-        const { privileges, privilegegroups, isLoading, isDispatching } = Roles
+        const { privileges, privilegegroups, isLoading } = Roles
 
         const decoratedgroups = (privilegegroups || []).map(group => {
             const foundedPrivileges = (privileges || []).filter(u => u.group[Profile.Language] === group[Profile.Language] && (u.text[Profile.Language].toLowerCase()).includes(this.state.searchParam.toLowerCase()))
@@ -33,7 +33,7 @@ export default class RolesCreate extends Component {
         }).filter(u => u)
 
         return (
-            isLoading || isDispatching ? <LoadingPage /> :
+            isLoading ? <LoadingPage /> :
                 <Pagewrapper>
                     <Headerwrapper>
                         <Headerbredcrump>

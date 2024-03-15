@@ -22,7 +22,7 @@ export default class RulesCreate extends Component {
 
     render() {
         const { Rules, Profile, history, closeModal } = this.props
-        const { isLoading, isDispatching } = Rules
+        const { isLoading } = Rules
 
         const Templateoptions = [
             { key: 1, text: "Breakdown and Mainteancies Notification Rule", value: breakdownmainteanciesrule },
@@ -31,7 +31,7 @@ export default class RulesCreate extends Component {
         ]
 
         return (
-            isLoading || isDispatching ? <LoadingPage /> :
+            isLoading ? <LoadingPage /> :
                 <Pagewrapper>
                     <Headerwrapper>
                         <Headerbredcrump>

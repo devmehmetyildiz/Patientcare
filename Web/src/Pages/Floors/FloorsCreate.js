@@ -18,7 +18,7 @@ export default class FloorsCreate extends Component {
     ]
 
     return (
-      Floors.isLoading || Floors.isDispatching ? <LoadingPage /> :
+      Floors.isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

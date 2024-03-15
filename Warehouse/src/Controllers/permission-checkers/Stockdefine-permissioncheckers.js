@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetStockdefines(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockdefineview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('stockdefinescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Stockdefines View', req.language, { en: 'Stockdefines View', tr: 'Stockdefines View' }))
+        next(createAccessDenied('Stockdefines screen', req.language, { en: 'Stockdefines screen', tr: 'Stockdefines screen' }))
     }
 }
 
 async function GetStockdefine(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockdefineview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('stockdefinescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Stockdefines View', req.language, { en: 'Stockdefines View', tr: 'Stockdefines View' }))
+        next(createAccessDenied('Stockdefines screen', req.language, { en: 'Stockdefines screen', tr: 'Stockdefines screen' }))
     }
 }
 

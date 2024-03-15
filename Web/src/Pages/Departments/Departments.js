@@ -34,7 +34,7 @@ export default function Departments(props) {
     return value !== null && (value === 1 ? "EVET" : "HAYIR")
   }
 
-  const { isLoading, isDispatching } = Departments
+  const { isLoading } = Departments
 
   const colProps = {
     sortable: true,
@@ -59,7 +59,7 @@ export default function Departments(props) {
   const metaKey = "Departments"
   const initialConfig = getInitialconfig(Profile, metaKey)
   return (
-    isLoading || isDispatching ? <LoadingPage /> :
+    isLoading ? <LoadingPage /> :
       <React.Fragment>
         <Pagewrapper>
           <Headerwrapper>

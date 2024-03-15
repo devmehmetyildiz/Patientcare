@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetRatings(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('ratingview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('ratingscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Ratings View', req.language, { en: 'View Ratings', tr: 'View Ratings' }))
+        next(createAccessDenied('Ratings screen', req.language, { en: 'screen Ratings', tr: 'screen Ratings' }))
     }
 }
 
 async function GetRating(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('ratingview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('ratingscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Ratings View', req.language, { en: 'View Ratings', tr: 'View Ratings' }))
+        next(createAccessDenied('Ratings screen', req.language, { en: 'screen Ratings', tr: 'screen Ratings' }))
     }
 }
 

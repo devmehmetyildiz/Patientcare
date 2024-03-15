@@ -1,14 +1,16 @@
-import React from 'react'
 import { connect } from 'react-redux'
+import PatientsEdit from '../../Pages/Patients/PatientsEdit'
+import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
+import { EditPatients, GetPatient, fillPatientnotification } from "../../Redux/PatientSlice"
 
-export const PatientsEdit = (props) => {
-  return (
-    <div>PatientsEdit</div>
-  )
+const mapStateToProps = (state) => ({
+  Patients: state.Patients,
+  Patientdefines: state.Patientdefines,
+  Profile: state.Profile,
+})
+
+const mapDispatchToProps = {
+  GetPatientdefines, GetPatient, EditPatients, fillPatientnotification
 }
-
-const mapStateToProps = (state) => ({})
-
-const mapDispatchToProps = {}
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsEdit)

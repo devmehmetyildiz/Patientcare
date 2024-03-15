@@ -90,7 +90,7 @@ export default class CasesEdit extends Component {
     }).filter(u => u).length > 0
 
     return (
-      Cases.isLoading || Cases.isDispatching ? <LoadingPage /> :
+      Cases.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

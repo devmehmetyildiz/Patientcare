@@ -2,26 +2,26 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetUsernotifications(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('usernotificationview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('usernotificationscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Usernotifications View', req.language, { en: 'Usernotifications View', tr: 'Usernotifications View' }))
+        next(createAccessDenied('Usernotifications screen', req.language, { en: 'Usernotifications screen', tr: 'Usernotifications screen' }))
     }
 }
 
 async function GetUsernotification(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('usernotificationview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('usernotificationscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Usernotifications View', req.language, { en: 'Usernotifications View', tr: 'Usernotifications View' }))
+        next(createAccessDenied('Usernotifications screen', req.language, { en: 'Usernotifications screen', tr: 'Usernotifications screen' }))
     }
 }
 
 async function GetUsernotificationsbyUserid(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('usernotificationview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('usernotificationscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Usernotifications View', req.language, { en: 'Usernotifications View', tr: 'Usernotifications View' }))
+        next(createAccessDenied('Usernotifications screen', req.language, { en: 'Usernotifications screen', tr: 'Usernotifications screen' }))
     }
 }
 async function AddUsernotification(req, res, next) {

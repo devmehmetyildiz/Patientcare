@@ -23,7 +23,7 @@ export default class Todogroupdefines extends Component {
 
     render() {
         const { Todogroupdefines, Profile, handleDeletemodal, handleSelectedTodogroupdefine } = this.props
-        const { isLoading, isDispatching } = Todogroupdefines
+        const { isLoading} = Todogroupdefines
 
         const colProps = {
             sortable: true,
@@ -60,7 +60,7 @@ export default class Todogroupdefines extends Component {
         })
 
         return (
-            isLoading || isDispatching ? <LoadingPage /> :
+            isLoading  ? <LoadingPage /> :
                 <React.Fragment>
                     <Pagewrapper>
                         <Headerwrapper>

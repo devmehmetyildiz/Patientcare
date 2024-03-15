@@ -94,9 +94,17 @@ const Literals = {
             tr: 'Kabul Tarihi',
             en: 'Register Date'
         },
+        Happensdate: {
+            tr: 'Olur Tarihi',
+            en: 'Happens Date'
+        },
         Approvaldate: {
             tr: 'Giriş Tarihi',
             en: 'Approval Date'
+        },
+        Leavedate: {
+            tr: 'Ayrılma Tarihi',
+            en: 'Leave Date'
         },
         Floor: {
             tr: 'Kat',
@@ -557,6 +565,10 @@ const Literals = {
             tr: "Hasta Cüzdanı",
             en: "Edit Cash"
         },
+        Editdates: {
+            tr: "Tarihleri Güncelle",
+            en: "Edit Dates"
+        },
         Saveroutine: {
             tr: "Rutini Kaydet",
             en: "Save Routine"
@@ -654,6 +666,22 @@ const Literals = {
         BedRequired: {
             tr: "Yatak Gerekli",
             en: "Bed Required"
+        },
+        Registerdaterequired: {
+            tr: "Kabul Tarihi Gerekli",
+            en: "Register date Required"
+        },
+        Approvaldaterequired: {
+            tr: "Kuruma Giriş tarihi Gerekli",
+            en: "Approval date required"
+        },
+        Happensdaterequired: {
+            tr: "Olur tarihi Gerekli",
+            en: "Happens date required"
+        },
+        Leavedaterequired: {
+            tr: "Ayrılma tarihi Gerekli",
+            en: "Leave date required"
         },
         Yes: {
             tr: "EVET",

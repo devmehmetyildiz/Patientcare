@@ -122,8 +122,8 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
         token_type: 'bearer',
         accessToken: uuid(),
         refreshToken: uuid(),
-        ExpiresAt: new Date(new Date().getTime() + 59 * 60000),
-        RefreshtokenexpiresAt: new Date(new Date().getTime() + 59 * 60000),
+        ExpiresAt: new Date(new Date().getTime() + 5 * 60000),
+        RefreshtokenexpiresAt: new Date(new Date().getTime() + 5 * 60000),
         redirect: user.Defaultpage
     }
 
@@ -196,8 +196,8 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
         token_type: 'bearer',
         accessToken: uuid(),
         refreshToken: uuid(),
-        ExpiresAt: new Date(new Date().getTime() + 59 * 60000),
-        RefreshtokenexpiresAt: new Date(new Date().getTime() + 59 * 60000),
+        ExpiresAt: new Date(new Date().getTime() + 5 * 60000),
+        RefreshtokenexpiresAt: new Date(new Date().getTime() + 5 * 60000),
     }
 
     try {

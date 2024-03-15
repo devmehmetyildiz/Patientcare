@@ -48,7 +48,7 @@ export default class PersonelsEdit extends Component {
   render() {
 
     const { Personels, Profile, history } = this.props
-    const { isLoading, isDispatching } = Personels
+    const { isLoading } = Personels
 
     const Genderoptions = [
       { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
@@ -64,7 +64,7 @@ export default class PersonelsEdit extends Component {
     ]
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

@@ -40,11 +40,11 @@ export default class StationsEdit extends Component {
   render() {
 
     const { Stations, Profile, history } = this.props
-    const { isLoading, isDispatching } = Stations
+    const { isLoading } = Stations
 
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

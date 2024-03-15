@@ -4,8 +4,10 @@ import { Breadcrumb, Form } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, 
-    Headerwrapper, LoadingPage, Navbar, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import {
+    Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump,
+    Headerwrapper, LoadingPage, Navbar, Pagedivider, Pagewrapper, Submitbutton
+} from '../../Components'
 
 export default class PasswordReset extends Component {
 
@@ -26,12 +28,12 @@ export default class PasswordReset extends Component {
     render() {
 
         const { Profile } = this.props
-        const { isLoading, isDispatching, history } = Profile
+        const { isLoading, history } = Profile
 
         return (
-            isLoading || isDispatching ? <LoadingPage /> :
+            isLoading ? <LoadingPage /> :
                 <div className='bg-white dark:bg-Contentbg ' >
-                    <Navbar Profile={Profile} withoutControl={true} onlyTitle/>
+                    <Navbar Profile={Profile} withoutControl={true} onlyTitle />
                     <div className='flex flex-row justify-start items-start '>
                         <div className={`mt-[58.61px] p-4 w-full min-w-[0px] contentWrapper`}>
                             <Pagewrapper>

@@ -165,7 +165,6 @@ export const ProfessionsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false,
         isDeletemodalopen: false,
         isCompletemodalopen: false,
         isApprovemodalopen: false

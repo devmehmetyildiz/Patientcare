@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetCheckperiods(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('checkperiodview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('checkperiodscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Checkperiods View', req.language, { en: 'View Checkperiods', tr: 'View Checkperiods' }))
+        next(createAccessDenied('Checkperiods screen', req.language, { en: 'screen Checkperiods', tr: 'screen Checkperiods' }))
     }
 }
 
 async function GetCheckperiod(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('checkperiodview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('checkperiodscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Checkperiods View', req.language, { en: 'View Cases', tr: 'View Cases' }))
+        next(createAccessDenied('Checkperiods screen', req.language, { en: 'screen Cases', tr: 'screen Cases' }))
     }
 }
 

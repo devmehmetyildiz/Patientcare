@@ -41,10 +41,10 @@ export default class PatienttypesEdit extends Component {
   render() {
 
     const { Patienttypes, Profile, history } = this.props
-    const { isLoading, isDispatching } = Patienttypes
+    const { isLoading} = Patienttypes
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

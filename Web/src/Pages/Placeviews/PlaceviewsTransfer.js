@@ -83,7 +83,7 @@ export default class PlaceviewsTransfer extends Component {
             })
 
         return (
-            Patients.isLoading || Patients.isDispatching ? <LoadingPage /> :
+            Patients.isLoading  ? <LoadingPage /> :
                 <Pagewrapper>
                     <Headerwrapper>
                         <Headerbredcrump>

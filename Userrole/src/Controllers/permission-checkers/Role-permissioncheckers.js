@@ -2,58 +2,58 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetRoles(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roleview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('rolescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Roles View', req.language, { en: 'Roles View', tr: 'Roles View' }))
+        next(createAccessDenied('Roles screen', req.language, { en: 'Roles screen', tr: 'Roles screen' }))
     }
 }
 
 async function GetRolescount(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roleview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('rolescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Roles View', req.language, { en: 'Roles View', tr: 'Roles View' }))
+        next(createAccessDenied('Roles screen', req.language, { en: 'Roles screen', tr: 'Roles screen' }))
     }
 }
 
 async function GetRole(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roleview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('rolescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Roles View', req.language, { en: 'Roles View', tr: 'Roles View' }))
+        next(createAccessDenied('Roles screen', req.language, { en: 'Roles screen', tr: 'Roles screen' }))
     }
 }
 
 async function Getprivileges(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roleview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('rolescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Roles View', req.language, { en: 'Roles View', tr: 'Roles View' }))
+        next(createAccessDenied('Roles screen', req.language, { en: 'Roles screen', tr: 'Roles screen' }))
     }
 }
 
 async function Getprivilegegroups(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roleview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('rolescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Roles View', req.language, { en: 'Roles View', tr: 'Roles View' }))
+        next(createAccessDenied('Roles screen', req.language, { en: 'Roles screen', tr: 'Roles screen' }))
     }
 }
 
 async function Getprivilegesbyuserid(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roleview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('rolescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Roles View', req.language, { en: 'Roles View', tr: 'Roles View' }))
+        next(createAccessDenied('Roles screen', req.language, { en: 'Roles screen', tr: 'Roles screen' }))
     }
 }
 
 async function GetActiveuserprivileges(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roleview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('rolescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Roles View', req.language, { en: 'Roles View', tr: 'Roles View' }))
+        next(createAccessDenied('Roles screen', req.language, { en: 'Roles screen', tr: 'Roles screen' }))
     }
 }
 

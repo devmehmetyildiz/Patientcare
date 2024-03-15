@@ -2,41 +2,41 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetShifts(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('shiftscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Shift View', req.language, { en: 'View Shift', tr: 'View Shift' }))
+        next(createAccessDenied('Shift screen', req.language, { en: 'screen Shift', tr: 'screen Shift' }))
     }
 }
 async function GetShiftrequests(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('shiftscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Shift View', req.language, { en: 'View Shift', tr: 'View Shift' }))
+        next(createAccessDenied('Shift screen', req.language, { en: 'screen Shift', tr: 'screen Shift' }))
     }
 }
 
 async function GetShiftrequest(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('shiftscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Shift View', req.language, { en: 'View Shift', tr: 'View Shift' }))
+        next(createAccessDenied('Shift screen', req.language, { en: 'screen Shift', tr: 'screen Shift' }))
     }
 }
 
 async function GetPersonelshifts(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('shiftscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Shift View', req.language, { en: 'View Shift', tr: 'View Shift' }))
+        next(createAccessDenied('Shift screen', req.language, { en: 'screen Shift', tr: 'screen Shift' }))
     }
 }
 
 async function GetShift(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('shiftscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Shift View', req.language, { en: 'View Shift', tr: 'View Shift' }))
+        next(createAccessDenied('Shift screen', req.language, { en: 'screen Shift', tr: 'screen Shift' }))
     }
 }
 

@@ -147,6 +147,12 @@ const messages = {
     },
   },
   VALIDATION_ERROR: {
+    LEAVEDATE_REQUIRED: {
+      code: 'LEAVEDATE_REQUIRED', description: {
+        en: 'The leave date required',
+        tr: 'Bu işlem Tarih güncelle sayfasından ayrılma tarihini girmeniz gereklidir',
+      }
+    },
     STARTDATE_REQUIRED: {
       code: 'STARTDATE_REQUIRED', description: {
         en: 'The start date required',
@@ -283,6 +289,12 @@ const messages = {
       code: 'DATEOFDEATH_REQUIRED', description: {
         en: 'The Date of death required',
         tr: 'Bu işlem için ölüm tarihi gerekli',
+      }
+    },
+    DATEOFDEATH_REQUIRED_CASE: {
+      code: 'DATEOFDEATH_REQUIRED_CASE', description: {
+        en: 'The Date of death required for this update',
+        tr: 'Bu işlem için hasta tanım ekranından ölüm tarihini girmeniz gereklidir.',
       }
     },
     PLACEOFDEATH_REQUIRED: {

@@ -15,7 +15,7 @@ export class Rules extends Component {
 
   render() {
     const { Rules, Profile, handleDeletemodal, handleSelectedRule, handleLogmodal, GetRulelogs, StopRules } = this.props
-    const { isLoading, isDispatching } = Rules
+    const { isLoading } = Rules
 
     const colProps = {
       sortable: true,
@@ -62,7 +62,7 @@ export class Rules extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

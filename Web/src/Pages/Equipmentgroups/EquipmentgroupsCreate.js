@@ -27,7 +27,7 @@ export default class EquipmentgroupsCreate extends Component {
     })
 
     return (
-      Equipmentgroups.isLoading || Equipmentgroups.isDispatching ? <LoadingPage /> :
+      Equipmentgroups.isLoading? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

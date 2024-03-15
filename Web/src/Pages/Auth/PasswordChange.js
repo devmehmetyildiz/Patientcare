@@ -12,10 +12,10 @@ export default class PasswordChange extends Component {
   render() {
 
     const { Profile } = this.props
-    const { isLoading, isDispatching, username, history } = Profile
+    const { isLoading, username, history } = Profile
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <Pagewrapper Profile={Profile}>
           <Headerwrapper>
             <Headerbredcrump>

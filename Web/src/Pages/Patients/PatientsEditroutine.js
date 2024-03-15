@@ -46,11 +46,11 @@ export default class PatientsEditroutine extends Component {
         const { selected_record } = Patients
 
         const isLoadingstatus =
-            Patients.isLoading &&
-            Patientdefines.isLoading &&
-            Tododefines.isLoading &&
-            Departments.isLoading &&
-            Periods.isLoading &&
+            Patients.isLoading ||
+            Patientdefines.isLoading ||
+            Tododefines.isLoading ||
+            Departments.isLoading ||
+            Periods.isLoading ||
             Todogroupdefines.isLoading;
 
         if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoadingstatus && !this.state.isDatafetched) {
@@ -81,11 +81,12 @@ export default class PatientsEditroutine extends Component {
         const { selected_record } = Patients
 
         const isLoadingstatus =
-            Patients.isLoading &&
-            Patientdefines.isLoading &&
-            Periods.isLoading &&
-            Tododefines.isLoading &&
-            Todogroupdefines.isLoading
+            Patients.isLoading ||
+            Patientdefines.isLoading ||
+            Tododefines.isLoading ||
+            Departments.isLoading ||
+            Periods.isLoading ||
+            Todogroupdefines.isLoading;
 
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
 

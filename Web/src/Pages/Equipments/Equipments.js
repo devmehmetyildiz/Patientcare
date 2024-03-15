@@ -25,7 +25,7 @@ export default class Equipments extends Component {
   render() {
 
     const { Equipments, Profile, handleSelectedEquipment, handleDeletemodal } = this.props
-    const { isLoading, isDispatching } = Equipments
+    const { isLoading } = Equipments
 
     const colProps = {
       sortable: true,
@@ -66,7 +66,7 @@ export default class Equipments extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

@@ -53,7 +53,6 @@ export const ReportsSlice = createSlice({
         notifications: [],
         logs: [],
         isLoading: false,
-        isDispatching: false,
     },
     reducers: {
         fillReportnotification: (state, action) => {

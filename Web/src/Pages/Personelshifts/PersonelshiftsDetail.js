@@ -25,7 +25,7 @@ export default class PersonelshiftsDetail extends Component {
   render() {
 
     const { Personelshifts, Profile, Floors } = this.props
-    const { isLoading, isDispatching, selected_record } = Personelshifts
+    const { isLoading, selected_record } = Personelshifts
 
     const startdatestr = selected_record?.shiftrequests?.Startdate || null
     const enddatestr = selected_record?.shiftrequests?.Enddate || null
@@ -81,7 +81,7 @@ export default class PersonelshiftsDetail extends Component {
     const floors = (Floors.list || []).filter(u => u.Isactive)
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

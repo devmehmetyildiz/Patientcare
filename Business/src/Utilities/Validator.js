@@ -41,6 +41,9 @@ exports.isObjectId = function (value) {
 }
 
 exports.isISODate = function (value) {
+  if(!value){
+    return false
+  }
   const date = new Date(value);
   return !isNaN(date);
 }

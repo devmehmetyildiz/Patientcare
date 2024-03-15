@@ -239,7 +239,7 @@ export default function PreregistrationsEditfile(props) {
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, multiple: true, noClick: true });
 
     const { Files, Patients, Profile, history, Patientdefines, PatientID, match, Usagetypes } = props
-    const { isLoading, isDispatching } = Patients
+    const { isLoading } = Patients
 
     const patientDefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
     let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
@@ -250,7 +250,7 @@ export default function PreregistrationsEditfile(props) {
     })
 
     return (
-        Files.isLoading || Files.isDispatching || isLoading || isDispatching ? <LoadingPage /> :
+        Files.isLoading || isLoading ? <LoadingPage /> :
             <Pagewrapper>
                 <Dimmer active={fileDownloading}>
                     <Loader />

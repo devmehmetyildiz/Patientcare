@@ -22,7 +22,7 @@ export default class Tododefines extends Component {
 
   render() {
     const { Tododefines, Profile, handleDeletemodal, handleSelectedTododefine } = this.props
-    const { isLoading, isDispatching } = Tododefines
+    const { isLoading } = Tododefines
 
     const colProps = {
       sortable: true,
@@ -62,7 +62,7 @@ export default class Tododefines extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

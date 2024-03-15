@@ -16,7 +16,7 @@ export class Files extends Component {
   render() {
 
     const { Files, Profile, handleSelectedFile, handleDeletemodal } = this.props
-    const { isLoading, isDispatching } = Files
+    const { isLoading } = Files
 
     const colProps = {
       sortable: true,
@@ -57,7 +57,7 @@ export class Files extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

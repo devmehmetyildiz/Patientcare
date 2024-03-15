@@ -45,7 +45,7 @@ export default class UsagetypesEdit extends Component {
     const { Usagetypes, Profile, history } = this.props
 
     return (
-      Usagetypes.isLoading || Usagetypes.isDispatching ? <LoadingPage /> :
+      Usagetypes.isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

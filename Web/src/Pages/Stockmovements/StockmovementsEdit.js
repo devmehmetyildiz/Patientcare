@@ -60,7 +60,7 @@ export default class StockmovementsEdit extends Component {
     ]
 
     return (
-      Stocks.isLoading || Stocks.isDispatching || Stockmovements.isLoading || Stockmovements.isDispatching ? <LoadingPage /> :
+      Stocks.isLoading || Stockmovements.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

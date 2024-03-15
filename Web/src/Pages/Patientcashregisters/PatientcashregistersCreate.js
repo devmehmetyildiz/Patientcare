@@ -14,10 +14,10 @@ export default class PatientcashregistersCreate extends Component {
   render() {
 
     const { Patientcashregisters, Profile, history, closeModal } = this.props
-    const { isLoading, isDispatching } = Patientcashregisters
+    const { isLoading } = Patientcashregisters
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

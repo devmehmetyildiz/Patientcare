@@ -10,7 +10,6 @@ import thunk from 'redux-thunk'
 import 'semantic-ui-css/semantic.min.css'
 import AuthProvider from "./Provider/AuthProvider";
 import FormProvider from "./Provider/FormProvider";
-import Cookies from "universal-cookie";
 import { handleauth } from "./Redux/ProfileSlice";
 import { tokenMiddleware, notificationMiddleware } from './Utils/Middlewares'
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -20,8 +19,7 @@ store.dispatch({
   type: 'START_MIDDLEWARES'
 })
 
-const localcookies = new Cookies();
-let token = localcookies.get('patientcare')
+let token = localStorage.getItem('patientcare')
 if (token) {
   store.dispatch(handleauth())
 }

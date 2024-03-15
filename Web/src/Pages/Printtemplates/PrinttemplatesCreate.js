@@ -22,10 +22,10 @@ export default class PrinttemplatesCreate extends Component {
   render() {
 
     const { Printtemplates, Profile, history, closeModal } = this.props
-    const { isLoading, isDispatching } = Printtemplates
+    const { isLoading} = Printtemplates
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

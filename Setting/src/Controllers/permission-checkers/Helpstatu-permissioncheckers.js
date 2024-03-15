@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetHelpstatus(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('helpstatuview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('helpstatuscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Helpstatus View', req.language, { en: 'View Helpstatus', tr: 'View Helpstatus' }))
+        next(createAccessDenied('Helpstatus screen', req.language, { en: 'screen Helpstatus', tr: 'screen Helpstatus' }))
     }
 }
 
 async function GetHelpstatu(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('helpstatuview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('helpstatuscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Helpstatus View', req.language, { en: 'View Helpstatus', tr: 'View Helpstatus' }))
+        next(createAccessDenied('Helpstatus screen', req.language, { en: 'screen Helpstatus', tr: 'screen Helpstatus' }))
     }
 }
 

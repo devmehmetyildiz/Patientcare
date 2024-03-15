@@ -340,7 +340,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                                 />
                             </div>
                             <div className='mr-2'>
-                                <p>Page {pageIndex + 1} of {pageOptions.length}</p>
+                                <p>{`Toplam ${(Data || []).length} Kayıt`}</p>
                             </div>
                         </div>
                         : null

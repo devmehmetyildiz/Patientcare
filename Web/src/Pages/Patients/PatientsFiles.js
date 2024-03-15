@@ -236,7 +236,7 @@ export default function PatientsFiles(props) {
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, multiple: true, noClick: true });
 
     const { Files, Patients, Profile, history, Patientdefines, PatientID, match, Usagetypes } = props
-    const { isLoading, isDispatching } = Patients
+    const { isLoading } = Patients
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
     const patientPp = (Files.list || []).find(u => u.ParentID === patient?.Uuid && u.Usagetype === 'PP' && u.Isactive)
     const Id = match?.params?.PatientID || PatientID
@@ -245,7 +245,7 @@ export default function PatientsFiles(props) {
     })
 
     return (
-        Files.isLoading || Files.isDispatching || isLoading || isDispatching ? <LoadingPage /> :
+        Files.isLoading || isLoading ? <LoadingPage /> :
             <Pagewrapper>
                 <Dimmer active={fileDownloading}>
                     <Loader />

@@ -49,17 +49,17 @@ export default class PatientsAddmedicine extends Component {
     const { selected_record } = Patients
 
     const isLoadingstatus =
-      Patients.isLoading &&
-      Patientdefines.isLoading &&
-      Patientstocks.isLoading &&
-      Patientstockmovements.isLoading &&
-      Warehouses.isLoading &&
-      Stocks.isLoading &&
-      Stockmovements.isLoading &&
+      Patients.isLoading ||
+      Patientdefines.isLoading ||
+      Patientstocks.isLoading ||
+      Patientstockmovements.isLoading ||
+      Warehouses.isLoading ||
+      Stocks.isLoading ||
+      Stockmovements.isLoading ||
       Stockdefines.isLoading
 
 
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && isLoadingstatus && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoadingstatus && !this.state.isDatafetched) {
       this.setState({ isDatafetched: true })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
@@ -78,13 +78,13 @@ export default class PatientsAddmedicine extends Component {
     const { selected_record } = Patients
 
     const isLoadingstatus =
-      Patients.isLoading &&
-      Patientdefines.isLoading &&
-      Patientstocks.isLoading &&
-      Patientstockmovements.isLoading &&
-      Warehouses.isLoading &&
-      Stocks.isLoading &&
-      Stockmovements.isLoading &&
+      Patients.isLoading ||
+      Patientdefines.isLoading ||
+      Patientstocks.isLoading ||
+      Patientstockmovements.isLoading ||
+      Warehouses.isLoading ||
+      Stocks.isLoading ||
+      Stockmovements.isLoading ||
       Stockdefines.isLoading
 
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)

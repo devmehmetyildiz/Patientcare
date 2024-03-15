@@ -184,7 +184,6 @@ export const PurchaseorderstocksSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false,
         isDeletemodalopen: false,
         isApprovemodalopen: false
     },
@@ -236,58 +235,58 @@ export const PurchaseorderstocksSlice = createSlice({
                 state.errMsg = action.error.message;
             })
             .addCase(AddPurchaseorderstocks.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(AddPurchaseorderstocks.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(AddPurchaseorderstocks.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(ApprovePurchaseorderstocks.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(ApprovePurchaseorderstocks.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(ApprovePurchaseorderstocks.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(ApprovemultiplePurchaseorderstocks.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(ApprovemultiplePurchaseorderstocks.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(ApprovemultiplePurchaseorderstocks.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(EditPurchaseorderstocks.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(EditPurchaseorderstocks.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(EditPurchaseorderstocks.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(DeletePurchaseorderstocks.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(DeletePurchaseorderstocks.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(DeletePurchaseorderstocks.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             });
     },

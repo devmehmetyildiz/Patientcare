@@ -4,7 +4,7 @@ import { Form, Breadcrumb, Button } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import { FormInput,Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import PeriodsCreate from '../../Containers/Periods/PeriodsCreate'
 export default class TododefinesCreate extends Component {
 
@@ -18,14 +18,14 @@ export default class TododefinesCreate extends Component {
   render() {
 
     const { Tododefines, Periods, Profile, history, closeModal } = this.props
-    const { isLoading, isDispatching } = Tododefines
+    const { isLoading } = Tododefines
 
     const Periodsoptions = (Periods.list || []).filter(u => u.Isactive).map(period => {
       return { key: period.Uuid, text: period.Name, value: period.Uuid }
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

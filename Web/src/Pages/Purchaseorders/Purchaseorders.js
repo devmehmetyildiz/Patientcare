@@ -34,7 +34,7 @@ export default class Purchaseorders extends Component {
 
     const { Purchaseorders, Profile, handleCompletemodal, handleDeletemodal, handleSelectedPurchaseorder,
       Departments, Stockdefines, Purchaseorderstocks, Purchaseorderstockmovements } = this.props
-    const { isLoading, isDispatching } = Purchaseorders
+    const { isLoading } = Purchaseorders
 
     const colProps = {
       sortable: true,
@@ -86,7 +86,7 @@ export default class Purchaseorders extends Component {
 //TODO Güncelleme hata veriyor 
 //TODO Miktarlara ait adetler her yerde gösterilecek
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

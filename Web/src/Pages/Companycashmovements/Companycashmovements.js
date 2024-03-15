@@ -16,7 +16,7 @@ export default class Companycashmovements extends Component {
 
   render() {
     const { Companycashmovements, Profile, handleDeletemodal, handleSelectedCompanycashmovement } = this.props
-    const { isLoading, isDispatching } = Companycashmovements
+    const { isLoading } = Companycashmovements
 
     const colProps = {
       sortable: true,
@@ -59,7 +59,7 @@ export default class Companycashmovements extends Component {
     const [integerPart, decimalPart] = companyCash.toFixed(2).split('.')
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

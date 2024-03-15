@@ -15,7 +15,7 @@ export default class Ratings extends Component {
 
   render() {
     const { Ratings, Profile, handleDeletemodal, handleSelectedRating} = this.props
-    const { isLoading, isDispatching } = Ratings
+    const { isLoading } = Ratings
 
     const colProps = {
       sortable: true,
@@ -50,7 +50,7 @@ export default class Ratings extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

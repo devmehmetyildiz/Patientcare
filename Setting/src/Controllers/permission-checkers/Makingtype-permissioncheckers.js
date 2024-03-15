@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetMakingtypes(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('makingtypeview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('makingtypescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Makingtypes View', req.language, { en: 'View Makingtypes', tr: 'View Makingtypes' }))
+        next(createAccessDenied('Makingtypes screen', req.language, { en: 'screen Makingtypes', tr: 'screen Makingtypes' }))
     }
 }
 
 async function GetMakingtype(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('makingtypeview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('makingtypescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Makingtypes View', req.language, { en: 'View Makingtypes', tr: 'View Makingtypes' }))
+        next(createAccessDenied('Makingtypes screen', req.language, { en: 'screen Makingtypes', tr: 'screen Makingtypes' }))
     }
 }
 

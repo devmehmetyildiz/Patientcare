@@ -19,7 +19,7 @@ export default class Mainteancies extends Component {
 
   render() {
     const { Mainteancies, Profile, handleDeletemodal, handleSelectedMainteance, handleCompletemodal } = this.props
-    const { isLoading, isDispatching } = Mainteancies
+    const { isLoading } = Mainteancies
 
     const colProps = {
       sortable: true,
@@ -65,7 +65,7 @@ export default class Mainteancies extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

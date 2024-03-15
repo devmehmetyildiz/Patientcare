@@ -19,7 +19,7 @@ export default class Purchaseorderstockmovements extends Component {
 
   render() {
     const { Purchaseorderstockmovements, Profile, handleSelectedPurchaseorderstockmovement, handleApprovemodal } = this.props
-    const { isLoading, isDispatching } = Purchaseorderstockmovements
+    const { isLoading } = Purchaseorderstockmovements
 
     const colProps = {
       sortable: true,
@@ -67,7 +67,7 @@ export default class Purchaseorderstockmovements extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

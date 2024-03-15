@@ -1,4 +1,7 @@
 const Formatdate = (date) => {
+    if (!date) {
+        return ''
+    }
     const currentDate = date ? new Date(date || '') : new Date();
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
@@ -9,7 +12,7 @@ const Formatdate = (date) => {
 
 const Formatfulldate = (date) => {
     const currentDate = date ? new Date(date || '') : null;
-    if(!currentDate){
+    if (!currentDate) {
         return ''
     }
     const year = currentDate.getFullYear();
@@ -21,5 +24,5 @@ const Formatfulldate = (date) => {
     return formattedDate
 }
 
-export { Formatdate,Formatfulldate }
+export { Formatdate, Formatfulldate }
 export default Formatdate

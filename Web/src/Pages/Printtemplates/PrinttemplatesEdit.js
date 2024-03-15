@@ -44,11 +44,11 @@ export default class PrinttemplatesEdit extends Component {
   render() {
 
     const { Printtemplates, Profile, history } = this.props
-    const { isLoading, isDispatching } = Printtemplates
+    const { isLoading } = Printtemplates
 
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

@@ -6,58 +6,58 @@ async function Register(req, res, next) {
 }
 
 async function GetUsers(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('userview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('userscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Users View', req.language, { en: 'Users View', tr: 'Users View' }))
+        next(createAccessDenied('Users screen', req.language, { en: 'Users screen', tr: 'Users screen' }))
     }
 }
 
 async function GetUserscount(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('userview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('userscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Users View', req.language, { en: 'Users View', tr: 'Users View' }))
+        next(createAccessDenied('Users screen', req.language, { en: 'Users screen', tr: 'Users screen' }))
     }
 }
 
 async function GetUser(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('userview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('userscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Users View', req.language, { en: 'Users View', tr: 'Users View' }))
+        next(createAccessDenied('Users screen', req.language, { en: 'Users screen', tr: 'Users screen' }))
     }
 }
 
 async function Getbyusername(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('userview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('userscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Users View', req.language, { en: 'Users View', tr: 'Users View' }))
+        next(createAccessDenied('Users screen', req.language, { en: 'Users screen', tr: 'Users screen' }))
     }
 }
 
 async function Getbyemail(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('userview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('userscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Users View', req.language, { en: 'Users View', tr: 'Users View' }))
+        next(createAccessDenied('Users screen', req.language, { en: 'Users screen', tr: 'Users screen' }))
     }
 }
 
 async function Getusersalt(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('userview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('userscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Users View', req.language, { en: 'Users View', tr: 'Users View' }))
+        next(createAccessDenied('Users screen', req.language, { en: 'Users screen', tr: 'Users screen' }))
     }
 }
 
 async function Getusertablemetaconfig(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('userview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('userscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Users View', req.language, { en: 'Users View', tr: 'Users View' }))
+        next(createAccessDenied('Users screen', req.language, { en: 'Users screen', tr: 'Users screen' }))
     }
 }
 
@@ -94,18 +94,18 @@ async function DeleteUser(req, res, next) {
 }
 
 async function GetActiveUsername(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('userview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('userscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Users View', req.language, { en: 'Users View', tr: 'Users View' }))
+        next(createAccessDenied('Users screen', req.language, { en: 'Users screen', tr: 'Users screen' }))
     }
 }
 
 async function GetActiveUserMeta(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('userview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('userscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Users View', req.language, { en: 'Users View', tr: 'Users View' }))
+        next(createAccessDenied('Users screen', req.language, { en: 'Users screen', tr: 'Users screen' }))
     }
 }
 

@@ -2,26 +2,26 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetTodos(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('todoview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('todoscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Todos View', req.language, { en: 'Todos View', tr: 'Todos View' }))
+        next(createAccessDenied('Todos screen', req.language, { en: 'Todos screen', tr: 'Todos screen' }))
     }
 }
 
 async function GetTodosbyPatientID(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('todoview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('todoscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Todos View', req.language, { en: 'Todos View', tr: 'Todos View' }))
+        next(createAccessDenied('Todos screen', req.language, { en: 'Todos screen', tr: 'Todos screen' }))
     }
 }
 
 async function GetTodo(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('todoview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('todoscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Todos View', req.language, { en: 'Todos View', tr: 'Todos View' }))
+        next(createAccessDenied('Todos screen', req.language, { en: 'Todos screen', tr: 'Todos screen' }))
     }
 }
 

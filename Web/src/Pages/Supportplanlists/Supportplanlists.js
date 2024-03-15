@@ -24,7 +24,7 @@ export default class Supportplanlists extends Component {
 
     render() {
         const { Supportplanlists, Profile, handleDeletemodal, handleSelectedSupportplanlist } = this.props
-        const { isLoading, isDispatching } = Supportplanlists
+        const { isLoading } = Supportplanlists
 
         const colProps = {
             sortable: true,
@@ -61,7 +61,7 @@ export default class Supportplanlists extends Component {
         })
 
         return (
-            isLoading || isDispatching ? <LoadingPage /> :
+            isLoading  ? <LoadingPage /> :
                 <React.Fragment>
                     <Pagewrapper>
                         <Headerwrapper>

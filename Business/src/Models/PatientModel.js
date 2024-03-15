@@ -25,6 +25,9 @@ module.exports = sequelize.define('patientModel', {
     Happensdate: {
         type: Sequelize.DATE
     },
+    Leavedate: {
+        type: Sequelize.DATE
+    },
     RoomID: {
         type: Sequelize.STRING
     },

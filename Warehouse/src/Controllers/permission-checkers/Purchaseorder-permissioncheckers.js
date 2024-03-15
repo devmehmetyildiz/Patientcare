@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetPurchaseorders(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Purchaseorders View', req.language, { en: 'Purchaseorders View', tr: 'Purchaseorders View' }))
+        next(createAccessDenied('Purchaseorders screen', req.language, { en: 'Purchaseorders screen', tr: 'Purchaseorders screen' }))
     }
 }
 
 async function GetPurchaseorder(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Purchaseorders View', req.language, { en: 'Purchaseorders View', tr: 'Purchaseorders View' }))
+        next(createAccessDenied('Purchaseorders screen', req.language, { en: 'Purchaseorders screen', tr: 'Purchaseorders screen' }))
     }
 }
 

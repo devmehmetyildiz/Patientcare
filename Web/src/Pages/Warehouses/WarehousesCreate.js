@@ -13,10 +13,10 @@ export default class WarehousesCreate extends Component {
   render() {
 
     const { Warehouses, Profile, history, closeModal } = this.props
-    const { isLoading, isDispatching } = Warehouses
+    const { isLoading} = Warehouses
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

@@ -16,7 +16,7 @@ export default class Patientcashregisters extends Component {
 
   render() {
     const { Patientcashregisters, Profile, handleDeletemodal, handleSelectedPatientcashregister } = this.props
-    const { isLoading, isDispatching } = Patientcashregisters
+    const { isLoading } = Patientcashregisters
 
     const colProps = {
       sortable: true,
@@ -52,7 +52,7 @@ export default class Patientcashregisters extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

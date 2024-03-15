@@ -49,7 +49,7 @@ export default class ProfileEdit extends Component {
     render() {
 
         const { Profile } = this.props
-        const { meta, username, isLogging, isDispatching } = Profile
+        const { meta, username, isLogging } = Profile
 
         const Languageoptions = [
             { key: 1, text: 'EN', value: 'en' },
@@ -65,7 +65,7 @@ export default class ProfileEdit extends Component {
         const userConfig = this.state.userConfig || {}
 
         return (
-            isLogging || isDispatching ? < LoadingPage /> :
+            isLogging  ? < LoadingPage /> :
                 <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]'>
                     <div className='w-full mx-auto align-middle'>
                         <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >

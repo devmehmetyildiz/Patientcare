@@ -3,7 +3,6 @@ import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
-import Cookies from 'universal-cookie';
 import axios from 'axios';
 
 const Literals = {
@@ -63,15 +62,14 @@ export const GetFile = createAsyncThunk(
 
 export const AddFiles = createAsyncThunk(
     'Files/AddFiles',
-    async ({ data, history,url, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, url, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const localcookies = new Cookies();
             const response = await axios({
                 method: `post`,
                 url: config.services.File + `${ROUTES.FILE}`,
-                headers: { Authorization: "Bearer  " + localcookies.get('patientcare'), contentType: 'mime/form-data' },
+                headers: { Authorization: "Bearer  " + localStorage.getItem('patientcare'), contentType: 'mime/form-data' },
                 data: data
             })
             dispatch(fillFilenotification({
@@ -97,15 +95,14 @@ export const AddFiles = createAsyncThunk(
 
 export const EditFiles = createAsyncThunk(
     'Files/EditFiles',
-    async ({ data, history, redirectUrl, closeModal, clearForm,url }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, url }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const localcookies = new Cookies();
             const response = await axios({
                 method: `put`,
                 url: config.services.File + `${ROUTES.FILE}`,
-                headers: { Authorization: "Bearer  " + localcookies.get('patientcare'), contentType: 'mime/form-data' },
+                headers: { Authorization: "Bearer  " + localStorage.getItem('patientcare'), contentType: 'mime/form-data' },
                 data: data
             })
             dispatch(fillFilenotification({
@@ -158,7 +155,6 @@ export const FilesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDispatching: false,
         isDeletemodalopen: false
     },
     reducers: {
@@ -171,7 +167,7 @@ export const FilesSlice = createSlice({
             state.notifications = messages.concat(state.notifications || []);
         },
         removeFilenotification: (state) => {
-          state.notifications.splice(0, 1);
+            state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
@@ -206,36 +202,36 @@ export const FilesSlice = createSlice({
                 state.errMsg = action.error.message;
             })
             .addCase(AddFiles.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(AddFiles.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(AddFiles.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(EditFiles.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(EditFiles.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(EditFiles.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(DeleteFiles.pending, (state) => {
-                state.isDispatching = true;
+                state.isLoading = true;
             })
             .addCase(DeleteFiles.fulfilled, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(DeleteFiles.rejected, (state, action) => {
-                state.isDispatching = false;
+                state.isLoading = false;
                 state.errMsg = action.error.message;
             });
     },

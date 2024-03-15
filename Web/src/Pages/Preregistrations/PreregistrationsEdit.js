@@ -51,7 +51,7 @@ export default class PreregistrationsEdit extends Component {
   render() {
 
     const { Patientdefines, Patients, Departments, Cases, history, Profile } = this.props
-    const { isLoading, isDispatching } = Patients
+    const { isLoading } = Patients
 
     const Patientdefineoptions = (Patientdefines.list || []).filter(u => u.Isactive).map(define => {
       return { key: define.Uuid, text: `${define.Firstname} ${define.Lastname}-${define.CountryID}`, value: define.Uuid }
@@ -66,7 +66,7 @@ export default class PreregistrationsEdit extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

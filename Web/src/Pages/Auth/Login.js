@@ -52,7 +52,7 @@ class Login extends Component {
         const { history, location, logIn, Profile, fillnotification } = this.props
 
         const params = new URLSearchParams(location.search);
-        const redirecturl = params.get('redirecturl');
+        const redirecturl = localStorage.getItem('patientcare') ? params.get('redirecturl') : null;
 
         if (Profile.isLogging) {
             return false
@@ -60,7 +60,11 @@ class Login extends Component {
         const data = formToObject(event.target)
         if (data.Username && data.Password) {
             data.grant_type = "password"
-            logIn({ data, history, redirecturl })
+            let requrest = {
+                data, history
+            }
+            redirecturl && (requrest.redirectUrl = redirecturl)
+            logIn(requrest)
         } else {
             fillnotification({ type: 'Error', code: 'USERNAME_PASSWORD_REQUIRED', description: 'Lütfen Kullanıcı ve ya şifre giriniz' })
         }

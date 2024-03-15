@@ -55,7 +55,7 @@ export default class EquipmentsCreate extends Component {
     })
 
     return (
-      Equipments.isLoading || Equipments.isDispatching ? <LoadingPage /> :
+      Equipments.isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

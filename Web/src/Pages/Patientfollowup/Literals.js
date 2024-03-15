@@ -15,6 +15,14 @@ const Literals = {
             tr: 'Olur Tarihi',
             en: 'Happens Date'
         },
+        Dateofdeath: {
+            tr: 'Vefat Tarihi',
+            en: 'Death Date'
+        },
+        Leavedate: {
+            en: 'Leave Date',
+            tr: 'Ayrılma Tarihi'
+        },
         Age: {
             tr: 'Yaş',
             en: 'Age'
@@ -22,6 +30,10 @@ const Literals = {
         Patienttype: {
             tr: 'Hasta Türü',
             en: 'Patien Type'
+        },
+        actions: {
+            tr: 'Detay',
+            en: 'Detail'
         },
     },
     Page: {

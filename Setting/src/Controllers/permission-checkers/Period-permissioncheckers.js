@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetPeriods(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('periodview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('periodscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Periods View', req.language, { en: 'View Periods', tr: 'View Periods' }))
+        next(createAccessDenied('Periods screen', req.language, { en: 'screen Periods', tr: 'screen Periods' }))
     }
 }
 
 async function GetPeriod(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('periodview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('periodscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Periods View', req.language, { en: 'View Periods', tr: 'View Periods' }))
+        next(createAccessDenied('Periods screen', req.language, { en: 'screen Periods', tr: 'screen Periods' }))
     }
 }
 
@@ -45,7 +45,7 @@ async function DeletePeriod(req, res, next) {
     if ((req.identity.privileges && req.identity.privileges.includes('perioddelete')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Periods View', req.language, { en: 'Periods Delete', tr: 'Periods Delete' }))
+        next(createAccessDenied('Periods screen', req.language, { en: 'Periods Delete', tr: 'Periods Delete' }))
     }
 }
 

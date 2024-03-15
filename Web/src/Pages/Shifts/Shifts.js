@@ -15,7 +15,7 @@ export default class Shifts extends Component {
 
   render() {
     const { Shifts, Profile, handleDeletemodal, handleSelectedShift } = this.props
-    const { isLoading, isDispatching } = Shifts
+    const { isLoading } = Shifts
 
     const colProps = {
       sortable: true,
@@ -53,7 +53,7 @@ export default class Shifts extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

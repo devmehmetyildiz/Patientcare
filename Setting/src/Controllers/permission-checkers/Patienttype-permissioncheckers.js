@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetPatienttypes(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patienttypeview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patienttypescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Patienttypes View', req.language, { en: 'View Patienttypes', tr: 'View Patienttypes' }))
+        next(createAccessDenied('Patienttypes screen', req.language, { en: 'screen Patienttypes', tr: 'screen Patienttypes' }))
     }
 }
 
 async function GetPatienttype(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patienttypeview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patienttypescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Patienttypes View', req.language, { en: 'View Patienttypes', tr: 'View Patienttypes' }))
+        next(createAccessDenied('Patienttypes screen', req.language, { en: 'screen Patienttypes', tr: 'screen Patienttypes' }))
     }
 }
 

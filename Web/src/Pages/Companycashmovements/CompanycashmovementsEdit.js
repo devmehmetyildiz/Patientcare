@@ -42,7 +42,7 @@ export default class CompanycashmovementsEdit extends Component {
   render() {
 
     const { Companycashmovements, Profile, history, closeModal } = this.props
-    const { isLoading, isDispatching } = Companycashmovements
+    const { isLoading} = Companycashmovements
 
     const Movementoptions = [
       { key: CASHYPES[0]?.value, text: CASHYPES[0]?.Name, value: CASHYPES[0]?.value },
@@ -51,7 +51,7 @@ export default class CompanycashmovementsEdit extends Component {
     ]
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

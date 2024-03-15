@@ -16,7 +16,7 @@ export default class Rooms extends Component {
 
   render() {
     const { Rooms, Profile, handleDeletemodal, handleSelectedRoom } = this.props
-    const { isLoading, isDispatching } = Rooms
+    const { isLoading } = Rooms
 
     const colProps = {
       sortable: true,
@@ -53,7 +53,7 @@ export default class Rooms extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

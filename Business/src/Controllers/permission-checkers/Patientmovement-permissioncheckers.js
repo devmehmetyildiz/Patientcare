@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetPatientmovements(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientmovementview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientmovementscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Patientmovements View', req.language, { en: 'Patientmovements View', tr: 'Patientmovements View' }))
+        next(createAccessDenied('Patientmovements screen', req.language, { en: 'Patientmovements screen', tr: 'Patientmovements screen' }))
     }
 }
 
 async function GetPatientmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientmovementview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientmovementscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Patientmovements View', req.language, { en: 'Patientmovements View', tr: 'Patientmovements View' }))
+        next(createAccessDenied('Patientmovements screen', req.language, { en: 'Patientmovements screen', tr: 'Patientmovements screen' }))
     }
 }
 

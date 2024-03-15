@@ -2,6 +2,7 @@ const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
+const DoGet = require("../Utilities/DoGet")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -527,6 +528,7 @@ async function UpdatePatientcase(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
+
         const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
         if (!patient) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
@@ -535,20 +537,20 @@ async function UpdatePatientcase(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
-        let casedata = null
-        try {
-            const caseresponse = await axios({
-                method: 'GET',
-                url: config.services.Setting + "Cases/" + CaseID,
-                headers: {
-                    session_key: config.session.secret
-                }
-            })
-            casedata = caseresponse?.data
-        } catch (error) {
-            return next(requestErrorCatcher(error, 'Setting'))
+        const selectedCase = await DoGet(config.services.Setting, `Cases/${CaseID}`)
+
+        if (selectedCase?.Patientstatus === 4) { //Ölüm
+            const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
+            if (!validator.isISODate(patientdefine?.Dateofdeath)) {
+                return next(createValidationError([messages.VALIDATION_ERROR.DATEOFDEATH_REQUIRED_CASE], req.language))
+            }
         }
 
+        if (selectedCase?.Patientstatus === 6) { //Ayrılmış
+            if (!validator.isISODate(patient?.Leavedate)) {
+                return next(createValidationError([messages.VALIDATION_ERROR.LEAVEDATE_REQUIRED], req.language))
+            }
+        }
 
         await db.patientModel.update({
             ...patient,
@@ -570,8 +572,8 @@ async function UpdatePatientcase(req, res, next) {
             ...req.body,
             Uuid: patientmovementuuid,
             OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
-            Patientmovementtype: casedata.Patientstatus,
-            NewPatientmovementtype: casedata.Patientstatus,
+            Patientmovementtype: selectedCase.Patientstatus,
+            NewPatientmovementtype: selectedCase.Patientstatus,
             Createduser: username,
             Createtime: new Date(),
             PatientID: patient.Uuid,

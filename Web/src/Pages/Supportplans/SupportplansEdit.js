@@ -41,10 +41,10 @@ export default class SupportplansEdit extends Component {
   render() {
 
     const { Supportplans, Profile, history } = this.props
-    const { isLoading, isDispatching } = Supportplans
+    const { isLoading } = Supportplans
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

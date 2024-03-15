@@ -14,11 +14,11 @@ export default class PersonelshiftsCreate extends Component {
   render() {
 
     const { Personelshifts, Profile, history, closeModal } = this.props
-    const { isLoading, isDispatching } = Personelshifts
+    const { isLoading } = Personelshifts
 
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

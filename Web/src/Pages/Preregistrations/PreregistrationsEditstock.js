@@ -65,7 +65,7 @@ export default class PreregistrationsEditstock extends Component {
 
   render() {
     const { Patients, Stockdefines, Departments, Files, Patientdefines, Profile, history, Usagetypes } = this.props
-    const { selected_record, isLoading, isDispatching } = Patients
+    const { selected_record, isLoading} = Patients
 
     const Stockdefinesoption = (Stockdefines.list || []).filter(u => !u.Ismedicine && u.Isactive).map(stockdefine => {
       return { key: stockdefine.Uuid, text: stockdefine.Name, value: stockdefine.Uuid }
@@ -88,7 +88,7 @@ export default class PreregistrationsEditstock extends Component {
     const patientPP = (Files.list || []).find(u => u.ParentID === selected_record?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

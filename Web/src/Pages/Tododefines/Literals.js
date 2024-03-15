@@ -23,8 +23,8 @@ const Literals = {
             en: 'Is Need Activation'
         },
         Dayperiod: {
-            tr: 'Gerçekleşme Periyodu',
-            en: 'Occured Period'
+            tr: 'Gerçekleşme Periyodu (Gün)',
+            en: 'Occured Period (Day)'
         },
         Info: {
             tr: 'Açıklama',

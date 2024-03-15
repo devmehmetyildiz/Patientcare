@@ -23,7 +23,7 @@ export default class Costumertypes extends Component {
   render() {
 
     const { Costumertypes, Departments, Profile, handleSelectedCostumertype, handleDeletemodal } = this.props
-    const { isLoading, isDispatching } = Costumertypes
+    const { isLoading } = Costumertypes
 
     const colProps = {
       sortable: true,
@@ -64,7 +64,7 @@ export default class Costumertypes extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

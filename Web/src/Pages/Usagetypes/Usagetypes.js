@@ -16,7 +16,7 @@ export default class Usagetypes extends Component {
 
   render() {
     const { Usagetypes, Profile, handleDeletemodal, handleSelectedUsagetype } = this.props
-    const { isLoading, isDispatching } = Usagetypes
+    const { isLoading } = Usagetypes
 
     const colProps = {
       sortable: true,
@@ -53,7 +53,7 @@ export default class Usagetypes extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

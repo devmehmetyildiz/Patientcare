@@ -51,7 +51,7 @@ export default class PatientstockmovementsCreate extends Component {
     ]
 
     return (
-      Patientstockmovements.isLoading || Patientstockmovements.isDispatching ? <LoadingPage /> :
+      Patientstockmovements.isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

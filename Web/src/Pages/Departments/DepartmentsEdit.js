@@ -58,7 +58,7 @@ export default function DepartmentsEdit(props) {
   }
 
   return (
-    Departments.isLoading || Departments.isDispatching ? <LoadingPage /> :
+    Departments.isLoading  ? <LoadingPage /> :
       <Pagewrapper>
         <Headerwrapper>
           <Headerbredcrump>

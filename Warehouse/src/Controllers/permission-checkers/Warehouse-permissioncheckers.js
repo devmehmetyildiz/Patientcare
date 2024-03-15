@@ -2,26 +2,26 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetWarehouses(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('warehouseview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('warehousescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Warehouses View', req.language, { en: 'Warehouses View', tr: 'Warehouses View' }))
+        next(createAccessDenied('Warehouses screen', req.language, { en: 'Warehouses screen', tr: 'Warehouses screen' }))
     }
 }
 
 async function GetWarehousescount(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('warehouseview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('warehousescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Warehouses View', req.language, { en: 'Warehouses View', tr: 'Warehouses View' }))
+        next(createAccessDenied('Warehouses screen', req.language, { en: 'Warehouses screen', tr: 'Warehouses screen' }))
     }
 }
 
 async function GetWarehouse(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('warehouseview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('warehousescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Warehouses View', req.language, { en: 'Warehouses View', tr: 'Warehouses View' }))
+        next(createAccessDenied('Warehouses screen', req.language, { en: 'Warehouses screen', tr: 'Warehouses screen' }))
     }
 }
 

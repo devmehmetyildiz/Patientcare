@@ -43,10 +43,10 @@ export default class PeriodsEdit extends Component {
   render() {
 
     const { Periods, Profile, history } = this.props
-    const { isLoading, isDispatching } = Periods
+    const { isLoading } = Periods
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

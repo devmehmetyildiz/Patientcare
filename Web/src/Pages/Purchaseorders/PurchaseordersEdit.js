@@ -80,7 +80,7 @@ export default class PurchaseordersEdit extends Component {
   render() {
 
     const { Cases, Departments, Stockdefines, Warehouses, Purchaseorders, Profile, history, Users } = this.props
-    const { isLoading, isDispatching } = Purchaseorders
+    const { isLoading } = Purchaseorders
 
     const Stockdefinesoption = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(stockdefine => {
       return { key: stockdefine.Uuid, text: stockdefine.Name, value: stockdefine.Uuid }
@@ -137,7 +137,7 @@ export default class PurchaseordersEdit extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

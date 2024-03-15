@@ -86,27 +86,27 @@ export default class PatientsDetail extends Component {
     const { selected_record } = Patients
 
     const isLoadingstatus =
-      Patients.isLoading &&
-      Patientdefines.isLoading &&
-      Cases.isLoading &&
-      Patienttypes.isLoading &&
-      Costumertypes.isLoading &&
-      Floors.isLoading &&
-      Rooms.isLoading &&
-      Beds.isLoading &&
-      Patientstocks.isLoading &&
-      Stockdefines.isLoading &&
-      Units.isLoading &&
-      Patientmovements.isLoading &&
-      Patientstockmovements.isLoading &&
-      Files.isLoading &&
-      Todos.isLoading &&
-      Tododefines.isLoading &&
-      Patientcashregisters.isLoading &&
-      Usagetypes.isLoading &&
+      Patients.isLoading ||
+      Patientdefines.isLoading ||
+      Cases.isLoading ||
+      Patienttypes.isLoading||
+      Costumertypes.isLoading||
+      Floors.isLoading||
+      Rooms.isLoading ||
+      Beds.isLoading||
+      Patientstocks.isLoading ||
+      Stockdefines.isLoading ||
+      Units.isLoading||
+      Patientmovements.isLoading ||
+      Patientstockmovements.isLoading ||
+      Files.isLoading||
+      Todos.isLoading ||
+      Tododefines.isLoading ||
+      Patientcashregisters.isLoading ||
+      Usagetypes.isLoading ||
       Patientcashmovements.isLoading
 
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && isLoadingstatus && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoadingstatus && !this.state.isDatafetched) {
       this.setState({ isDatafetched: true })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
@@ -127,22 +127,22 @@ export default class PatientsDetail extends Component {
     const { selected_record } = Patients
 
     const isLoadingstatus =
-      Patients.isLoading &&
-      Patientdefines.isLoading &&
-      Cases.isLoading &&
-      Patienttypes.isLoading &&
-      Costumertypes.isLoading &&
-      Floors.isLoading &&
-      Rooms.isLoading &&
-      Beds.isLoading &&
-      Patientstocks.isLoading &&
-      Stockdefines.isLoading &&
-      Units.isLoading &&
-      Patientmovements.isLoading &&
-      Patientstockmovements.isLoading &&
-      Files.isLoading &&
-      Patientcashregisters.isLoading &&
-      Usagetypes.isLoading &&
+      Patients.isLoading ||
+      Patientdefines.isLoading ||
+      Cases.isLoading ||
+      Patienttypes.isLoading||
+      Costumertypes.isLoading||
+      Floors.isLoading||
+      Rooms.isLoading ||
+      Beds.isLoading||
+      Patientstocks.isLoading ||
+      Stockdefines.isLoading ||
+      Units.isLoading||
+      Patientmovements.isLoading ||
+      Patientstockmovements.isLoading ||
+      Files.isLoading||
+      Patientcashregisters.isLoading ||
+      Usagetypes.isLoading ||
       Patientcashmovements.isLoading
 
 
@@ -418,6 +418,7 @@ export default class PatientsDetail extends Component {
                     <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Addstock`) }}>{Literals.Button.GiveStock[Profile.Language]}</Button>
                     <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Removestock`) }}>{Literals.Button.TakeStock[Profile.Language]}</Button>
                     <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editcase`) }}>{Literals.Button.Changestatus[Profile.Language]}</Button>
+                    <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Edit`) }}>{Literals.Button.Editdates[Profile.Language]}</Button>
                   </div>
                   <div className='w-full flex flex-col justify-start items-center gap-3 px-2'>
                     <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editcash`) }}>{Literals.Button.Editcash[Profile.Language]}</Button>
@@ -450,6 +451,7 @@ export default class PatientsDetail extends Component {
                         <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editsupportplan`) }}>{Literals.Button.Editsupportplan[Profile.Language]}</Button>
                         <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Editfile`) }}>{Literals.Button.Editfiles[Profile.Language]}</Button>
                         <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patientdefines/${patientdefine.Uuid}/edit`, { redirectUrl: "/Patients/" + Id }) }}>{Literals.Button.Editdefine[Profile.Language]}</Button>
+                        <Button className='!bg-[#2355a0] !text-white' fluid onClick={() => { history.push(`/Patients/${Id}/Edit`) }}>{Literals.Button.Editdates[Profile.Language]}</Button>
                       </div>
                     </Modal.Content>
                     <Modal.Actions>

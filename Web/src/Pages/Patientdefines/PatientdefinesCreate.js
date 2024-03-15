@@ -77,7 +77,7 @@ export default class PatientdefinesCreate extends Component {
     ]
 
     return (
-      Patientdefines.isLoading || Patientdefines.isDispatching ? <LoadingPage /> :
+      Patientdefines.isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

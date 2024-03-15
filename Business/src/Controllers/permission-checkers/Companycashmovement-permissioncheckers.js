@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetCompanycashmovements(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('companycashmovementview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('companycashmovementscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Companycashmovements View', req.language, { en: 'Companycashmovements View', tr: 'Companycashmovements View' }))
+        next(createAccessDenied('Companycashmovements screen', req.language, { en: 'Companycashmovements screen', tr: 'Companycashmovements screen' }))
     }
 }
 
 async function GetCompanycashmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('companycashmovementview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('companycashmovementscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Companycashmovements View', req.language, { en: 'Companycashmovements View', tr: 'Companycashmovements View' }))
+        next(createAccessDenied('Companycashmovements screen', req.language, { en: 'Companycashmovements screen', tr: 'Companycashmovements screen' }))
     }
 }
 

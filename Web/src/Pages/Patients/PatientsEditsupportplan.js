@@ -47,10 +47,10 @@ export default class PatientsEditsupportplan extends Component {
         const { selected_record } = Patients
 
         const isLoadingstatus =
-            Patients.isLoading &&
-            Patientdefines.isLoading &&
-            Supportplanlists.isLoading &&
-            Departments.isLoading &&
+            Patients.isLoading ||
+            Patientdefines.isLoading ||
+            Supportplanlists.isLoading ||
+            Departments.isLoading ||
             Supportplans.isLoading
 
         if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoadingstatus && !this.state.isDatafetched) {
@@ -81,10 +81,11 @@ export default class PatientsEditsupportplan extends Component {
         const { selected_record } = Patients
 
         const isLoadingstatus =
-            Patients.isLoading &&
-            Patientdefines.isLoading &&
-            Supportplans.isLoading &&
-            Supportplanlists.isLoading
+            Patients.isLoading ||
+            Patientdefines.isLoading ||
+            Supportplanlists.isLoading ||
+            Departments.isLoading ||
+            Supportplans.isLoading
 
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === selected_record?.PatientdefineID)
 

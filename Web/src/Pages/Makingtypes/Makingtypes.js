@@ -15,7 +15,7 @@ export default class Makingtypes extends Component {
 
   render() {
     const { Makingtypes, Profile, handleDeletemodal, handleSelectedMakingtype } = this.props
-    const { isLoading, isDispatching } = Makingtypes
+    const { isLoading } = Makingtypes
 
     const colProps = {
       sortable: true,
@@ -50,7 +50,7 @@ export default class Makingtypes extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

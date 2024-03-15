@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetPrinttemplates(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('printtemplateview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('printtemplatescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Printtemplates View', req.language, { en: 'View Printtemplates', tr: 'View Printtemplates' }))
+        next(createAccessDenied('Printtemplates screen', req.language, { en: 'screen Printtemplates', tr: 'screen Printtemplates' }))
     }
 }
 
 async function GetPrinttemplate(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('printtemplateview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('printtemplatescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Printtemplates View', req.language, { en: 'View Printtemplates', tr: 'View Printtemplates' }))
+        next(createAccessDenied('Printtemplates screen', req.language, { en: 'screen Printtemplates', tr: 'screen Printtemplates' }))
     }
 }
 

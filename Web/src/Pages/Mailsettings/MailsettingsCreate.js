@@ -12,10 +12,10 @@ export default class MailsettingsCreate extends Component {
   render() {
 
     const { Mailsettings, Profile, history, closeModal } = this.props
-    const { isLoading, isDispatching } = Mailsettings
+    const { isLoading } = Mailsettings
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

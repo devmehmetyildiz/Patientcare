@@ -18,7 +18,7 @@ export default class Periods extends Component {
   render() {
 
     const { Personels, Profile, handleDeletemodal, handleSelectedPersonel, AddRecordPersonels, Shifts, Floors } = this.props
-    const { isLoading, isDispatching } = Personels
+    const { isLoading } = Personels
 
     const colProps = {
       sortable: true,
@@ -94,7 +94,7 @@ export default class Periods extends Component {
 
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

@@ -15,7 +15,7 @@ export default class Helpstatus extends Component {
 
   render() {
     const { Helpstatus, Profile, handleDeletemodal, handleSelectedHelpstatu } = this.props
-    const { isLoading, isDispatching } = Helpstatus
+    const { isLoading} = Helpstatus
 
     const colProps = {
       sortable: true,
@@ -50,7 +50,7 @@ export default class Helpstatus extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

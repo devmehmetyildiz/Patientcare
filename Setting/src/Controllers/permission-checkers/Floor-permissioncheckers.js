@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetFloors(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('floorview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('floorscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Floors View', req.language, { en: 'View Floors', tr: 'View Floors' }))
+        next(createAccessDenied('Floors screen', req.language, { en: 'screen Floors', tr: 'screen Floors' }))
     }
 }
 
 async function GetFloor(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('floorview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('floorscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Floors View', req.language, { en: 'View Floors', tr: 'View Floors' }))
+        next(createAccessDenied('Floors screen', req.language, { en: 'screen Floors', tr: 'screen Floors' }))
     }
 }
 

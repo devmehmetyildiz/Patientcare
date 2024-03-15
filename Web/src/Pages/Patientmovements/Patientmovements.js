@@ -5,6 +5,7 @@ import { PATIENTMOVEMENTTYPE, getInitialconfig } from '../../Utils/Constants'
 import Literals from './Literals'
 import PatientmovementsDelete from "../../Containers/Patientmovements/PatientmovementsDelete"
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
+import { Formatfulldate } from '../../Utils/Formatdate'
 export default class Patientmovements extends Component {
 
   componentDidMount() {
@@ -17,7 +18,7 @@ export default class Patientmovements extends Component {
   render() {
 
     const { Patientmovements, Profile, handleSelectedPatientmovement, handleDeletemodal } = this.props
-    const { isLoading, isDispatching } = Patientmovements
+    const { isLoading } = Patientmovements
 
     const colProps = {
       sortable: true,
@@ -30,13 +31,8 @@ export default class Patientmovements extends Component {
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
       { Header: Literals.Columns.PatientdefineFirstname[Profile.Language], accessor: row => this.nameCellhandler(row?.PatientID), Title: true },
       { Header: Literals.Columns.Patientmovementtype[Profile.Language], accessor: row => this.movementCellhandler(row?.Patientmovementtype), Subtitle: true, Withtext: true },
-      { Header: Literals.Columns.IsDeactive[Profile.Language], accessor: row => this.boolCellhandler(row?.IsDeactive) },
       { Header: Literals.Columns.OldPatientmovementtype[Profile.Language], accessor: row => this.movementCellhandler(row?.OldPatientmovementtype) },
       { Header: Literals.Columns.NewPatientmovementtype[Profile.Language], accessor: row => this.movementCellhandler(row?.NewPatientmovementtype) },
-      { Header: Literals.Columns.IsTodoneed[Profile.Language], accessor: row => this.boolCellhandler(row?.IsTodoneed) },
-      { Header: Literals.Columns.IsTodocompleted[Profile.Language], accessor: row => this.boolCellhandler(row?.IsTodocompleted) },
-      { Header: Literals.Columns.IsComplated[Profile.Language], accessor: row => this.boolCellhandler(row?.IsComplated), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Iswaitingactivation[Profile.Language], accessor: row => this.boolCellhandler(row?.Iswaitingactivation) },
       { Header: Literals.Columns.Movementdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Movementdate) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
@@ -59,7 +55,7 @@ export default class Patientmovements extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>
@@ -119,9 +115,9 @@ export default class Patientmovements extends Component {
 
   dateCellhandler = (value) => {
     if (value) {
-      return value.split('T').length > 0 ? value.split('T')[0] : value
+      return Formatfulldate(value)
     }
-    return null
+    return value
   }
 
 }

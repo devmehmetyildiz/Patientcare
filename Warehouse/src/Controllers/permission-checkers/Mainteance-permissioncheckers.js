@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetMainteancies(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mainteanceview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('mainteancescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Mainteancies View', req.language, { en: 'Mainteancies View', tr: 'Mainteancies View' }))
+        next(createAccessDenied('Mainteancies screen', req.language, { en: 'Mainteancies screen', tr: 'Mainteancies screen' }))
     }
 }
 
 async function GetMainteance(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mainteanceview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('mainteancescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Mainteancies View', req.language, { en: 'Mainteancies View', tr: 'Mainteancies View' }))
+        next(createAccessDenied('Mainteancies screen', req.language, { en: 'Mainteancies screen', tr: 'Mainteancies screen' }))
     }
 }
 

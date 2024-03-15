@@ -2,42 +2,42 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetFiles(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('fileview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('filescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Files View', req.language, { en: 'Files View ', tr: 'Files View' }))
+        next(createAccessDenied('Files screen', req.language, { en: 'Files screen ', tr: 'Files screen' }))
     }
 }
 
 async function GetbyparentID(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('fileview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('filescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Files View', req.language, { en: 'Files View ', tr: 'Files View' }))
+        next(createAccessDenied('Files screen', req.language, { en: 'Files screen ', tr: 'Files screen' }))
     }
 }
 
 async function GetbyorderfileID(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('fileview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('filescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Files View', req.language, { en: 'Files View ', tr: 'Files View' }))
+        next(createAccessDenied('Files screen', req.language, { en: 'Files screen ', tr: 'Files screen' }))
     }
 }
 
 async function GetFile(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('fileview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('filescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Files View', req.language, { en: 'Files View ', tr: 'Files View' }))
+        next(createAccessDenied('Files screen', req.language, { en: 'Files screen ', tr: 'Files screen' }))
     }
 }
 
 async function Downloadfile(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('fileview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('filescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Files View', req.language, { en: 'Files View ', tr: 'Files View' }))
+        next(createAccessDenied('Files screen', req.language, { en: 'Files screen ', tr: 'Files screen' }))
     }
 }
 

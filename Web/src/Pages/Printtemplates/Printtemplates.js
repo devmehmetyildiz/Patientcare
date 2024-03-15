@@ -21,7 +21,7 @@ export default class Printtemplates extends Component {
 
   render() {
     const { Printtemplates, Profile, handleDeletemodal, handleSelectedPrinttemplate } = this.props
-    const { isLoading, isDispatching } = Printtemplates
+    const { isLoading} = Printtemplates
 
     const colProps = {
       sortable: true,
@@ -56,7 +56,7 @@ export default class Printtemplates extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

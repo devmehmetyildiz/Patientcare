@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetCareplans(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('careplanview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('careplanscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Careplans View', req.language, { en: 'Careplans View', tr: 'Careplans View' }))
+        next(createAccessDenied('Careplans screen', req.language, { en: 'Careplans screen', tr: 'Careplans screen' }))
     }
 }
 
 async function GetCareplan(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('careplanview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('careplanscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Careplans View', req.language, { en: 'Careplans View', tr: 'Careplans View' }))
+        next(createAccessDenied('Careplans screen', req.language, { en: 'Careplans screen', tr: 'Careplans screen' }))
     }
 }
 

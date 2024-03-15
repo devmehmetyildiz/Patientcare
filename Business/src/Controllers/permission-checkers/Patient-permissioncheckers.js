@@ -2,34 +2,34 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetPatients(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Patients View', req.language, { en: 'Patients View', tr: 'Patients View' }))
+        next(createAccessDenied('Patients screen', req.language, { en: 'Patients screen', tr: 'Patients screen' }))
     }
 }
 
 async function GetPreregistrations(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Patients View', req.language, { en: 'Patients View', tr: 'Patients View' }))
+        next(createAccessDenied('Patients screen', req.language, { en: 'Patients screen', tr: 'Patients screen' }))
     }
 }
 
 async function GetFullpatients(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Patients View', req.language, { en: 'Patients View', tr: 'Patients View' }))
+        next(createAccessDenied('Patients screen', req.language, { en: 'Patients screen', tr: 'Patients screen' }))
     }
 }
 
 async function GetPatient(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Patients View', req.language, { en: 'Patients View', tr: 'Patients View' }))
+        next(createAccessDenied('Patients screen', req.language, { en: 'Patients screen', tr: 'Patients screen' }))
     }
 }
 

@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetPatientcashregisters(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientcashregisterview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientcashregisterscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Patientcashregisters View', req.language, { en: 'Patientcashregisters View', tr: 'Patientcashregisters View' }))
+        next(createAccessDenied('Patientcashregisters screen', req.language, { en: 'Patientcashregisters screen', tr: 'Patientcashregisters screen' }))
     }
 }
 
 async function GetPatientcashregister(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientcashregisterview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('patientcashregisterscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Patientcashregisters View', req.language, { en: 'Patientcashregisters View', tr: 'Patientcashregisters View' }))
+        next(createAccessDenied('Patientcashregisters screen', req.language, { en: 'Patientcashregisters screen', tr: 'Patientcashregisters screen' }))
     }
 }
 

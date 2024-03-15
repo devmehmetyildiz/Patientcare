@@ -3,25 +3,25 @@ const permissionchecker = require("../../Utilities/Permissionchecker")
 
 
 async function GetMailsettings(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mailsettingview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('mailsettingscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Mailsettings View', req.language, { en: 'View Mailsettings', tr: 'View Mailsettings' }))
+        next(createAccessDenied('Mailsettings screen', req.language, { en: 'screen Mailsettings', tr: 'screen Mailsettings' }))
     }
 }
 
 async function GetMailsetting(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mailsettingview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('mailsettingscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Mailsettings View', req.language, { en: 'View Mailsettings', tr: 'View Mailsettings' }))
+        next(createAccessDenied('Mailsettings screen', req.language, { en: 'screen Mailsettings', tr: 'screen Mailsettings' }))
     }
 }
 async function GetActiveMailsetting(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mailsettingview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('mailsettingscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Mailsettings View', req.language, { en: 'View Mailsettings', tr: 'View Mailsettings' }))
+        next(createAccessDenied('Mailsettings screen', req.language, { en: 'screen Mailsettings', tr: 'screen Mailsettings' }))
     }
 }
 

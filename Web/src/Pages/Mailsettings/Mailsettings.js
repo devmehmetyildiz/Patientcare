@@ -15,7 +15,7 @@ export default class Mailsettings extends Component {
   render() {
 
     const { Mailsettings, Profile, handleSelectedMailsetting, handleDeletemodal } = this.props
-    const { isLoading, isDispatching } = Mailsettings
+    const { isLoading } = Mailsettings
 
     const colProps = {
       sortable: true,
@@ -56,7 +56,7 @@ export default class Mailsettings extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

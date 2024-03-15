@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetEquipmentgroups(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('equipmentgroupview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('equipmentgroupscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Equipmentgroup View', req.language, { en: 'Equipmentgroup View', tr: 'Equipmentgroup View' }))
+        next(createAccessDenied('Equipmentgroup screen', req.language, { en: 'Equipmentgroup screen', tr: 'Equipmentgroup screen' }))
     }
 }
 
 async function GetEquipmentgroup(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('equipmentgroupview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('equipmentgroupscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Equipmentgroup View', req.language, { en: 'Equipmentgroup View', tr: 'Equipmentgroup View' }))
+        next(createAccessDenied('Equipmentgroup screen', req.language, { en: 'Equipmentgroup screen', tr: 'Equipmentgroup screen' }))
     }
 }
 

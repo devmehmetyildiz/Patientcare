@@ -40,8 +40,8 @@ export default class Preregistrations extends Component {
 
   render() {
 
-    const { Patients, Profile, handleSelectedPatient, Patientdefines, handleDeletemodal, history } = this.props
-    const { isLoading, isDispatching } = Patients
+    const { Patients, Profile, handleSelectedPatient, Patientdefines, handleDeletemodal, history, Cases } = this.props
+    const { isLoading } = Patients
 
     const colProps = {
       sortable: true,
@@ -70,7 +70,9 @@ export default class Preregistrations extends Component {
     const metaKey = "Preregistrations"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
-    const list = (Patients.list || []).filter(u => u.Isactive).filter(u => u.Iswaitingactivation).map(item => {
+    let passCaselist = (Cases.list || []).filter(u => u.Patientstatus !== 4 && u.Patientstatus !== 6).map(u => u.Uuid)
+
+    const list = (Patients.list || []).filter(u => u.Isactive).filter(u => u.Iswaitingactivation).filter(u => (passCaselist || []).includes(u?.CaseID)).map(item => {
       return {
         ...item,
         Filestxt: "",
@@ -98,7 +100,7 @@ export default class Preregistrations extends Component {
       }
     })
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

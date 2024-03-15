@@ -50,7 +50,7 @@ export default class PatientcashmovementsEdit extends Component {
   render() {
 
     const { Patientcashmovements, Profile, history, closeModal, Patients, Patientdefines, Patientcashregisters, location } = this.props
-    const { isLoading, isDispatching } = Patientcashmovements
+    const { isLoading } = Patientcashmovements
 
     const Patientoptions = (Patients.list || []).filter(u => u.Isactive).map(patient => {
       const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient.PatientdefineID)
@@ -76,7 +76,7 @@ export default class PatientcashmovementsEdit extends Component {
     ]
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading  ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

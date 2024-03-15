@@ -13,6 +13,7 @@ export default function FormInput(props) {
     const name = `${page}/${props.name}`
     const context = React.useContext(FormContext)
     const [formdata, setFormdata] = useState(context.formstates)
+    const [inputvalue, setInputvalue] = useState(formdata[name] ? formdata[name] : '')
     const [isvalidate, setIsvalidate] = useState(false)
     const reduxstore = store.getState()
     const language = reduxstore?.Profile?.Language || 'en'
@@ -20,6 +21,10 @@ export default function FormInput(props) {
         en: "This Area Required",
         tr: "Bu alan zorunludur"
     }
+
+    useEffect(() => {
+        setInputvalue(formdata[name] ? formdata[name] : '')
+    }, [formdata[name]])
 
     useEffect(() => {
 
@@ -122,7 +127,7 @@ export default function FormInput(props) {
                         return <Form.Input
                             {...contextProp}
                             icon={display ? true : false}
-                            value={formdata[name] ? formdata[name] : ''}
+                            value={inputvalue}
                             onChange={(e) => {
                                 e.preventDefault()
                                 if (disableOnchange) {
@@ -132,6 +137,7 @@ export default function FormInput(props) {
                                     const res = validationfunc(e.target.value)
                                     setIsvalidate(res)
                                 }
+                                setInputvalue(props.type === 'number' ? parseFloat(e.target.value) : e.target.value)
                                 context.setFormstates({ ...formdata, [name]: props.type === 'number' ? parseFloat(e.target.value) : e.target.value })
                             }}
                             onKeyPress={(e) => { handleKeyPress(e) }}

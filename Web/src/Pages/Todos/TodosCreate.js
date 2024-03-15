@@ -27,14 +27,14 @@ export default class TododefinesCreate extends Component {
   render() {
 
     const { Tododefines, Checkperiods, Profile, history, closeModal } = this.props
-    const { isLoading, isDispatching } = Tododefines
+    const { isLoading } = Tododefines
 
     const Checkperiodsoptions = (Checkperiods.list || []).filter(u => u.Isactive).map(checkperiod => {
       return { key: checkperiod.Uuid, text: checkperiod.Name, value: checkperiod.Uuid }
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

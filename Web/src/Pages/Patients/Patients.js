@@ -46,8 +46,8 @@ export default class Patients extends Component {
 
 
   render() {
-    const { Patients, Profile } = this.props
-    const { isLoading, isDispatching } = Patients
+    const { Patients, Profile, Cases } = this.props
+    const { isLoading } = Patients
 
     const colProps = {
       sortable: true,
@@ -77,7 +77,9 @@ export default class Patients extends Component {
     const metaKey = "Patients"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
-    const list = (Patients.list || []).filter(u => !u.Iswaitingactivation).map(item => {
+    let passCaselist = (Cases.list || []).filter(u => u.Patientstatus !== 4 && u.Patientstatus !== 6).map(u => u.Uuid)
+
+    const list = (Patients.list || []).filter(u => !u.Iswaitingactivation).filter(u => (passCaselist || []).includes(u?.CaseID)).map(item => {
       return {
         ...item,
         Filestxt: '',
@@ -87,7 +89,7 @@ export default class Patients extends Component {
     })
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

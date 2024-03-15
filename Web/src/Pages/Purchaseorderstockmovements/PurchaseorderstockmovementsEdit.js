@@ -59,7 +59,7 @@ export default class PurchaseorderstockmovementsEdit extends Component {
     ]
 
     return (
-      Purchaseorderstocks.isLoading || Purchaseorderstocks.isDispatching || Purchaseorderstockmovements.isLoading || Purchaseorderstockmovements.isDispatching ? <LoadingPage /> :
+      Purchaseorderstocks.isLoading || Purchaseorderstockmovements.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

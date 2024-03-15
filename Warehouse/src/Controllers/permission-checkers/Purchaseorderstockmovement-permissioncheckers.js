@@ -2,18 +2,18 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetPurchaseorderstockmovements(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockmovementview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockmovementscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Purchaseorderstockmovements View', req.language, { en: 'Purchaseorderstockmovements View', tr: 'Purchaseorderstockmovements View' }))
+        next(createAccessDenied('Purchaseorderstockmovements screen', req.language, { en: 'Purchaseorderstockmovements screen', tr: 'Purchaseorderstockmovements screen' }))
     }
 }
 
 async function GetPurchaseorderstockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockmovementview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockmovementscreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Purchaseorderstockmovements View', req.language, { en: 'Purchaseorderstockmovements View', tr: 'Purchaseorderstockmovements View' }))
+        next(createAccessDenied('Purchaseorderstockmovements screen', req.language, { en: 'Purchaseorderstockmovements screen', tr: 'Purchaseorderstockmovements screen' }))
     }
 }
 

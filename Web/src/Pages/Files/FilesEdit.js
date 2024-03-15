@@ -25,10 +25,10 @@ export class FilesEdit extends Component {
   render() {
 
     const { Files, history } = this.props
-    const { selected_record, isLoading, isDispatching } = Files
+    const { selected_record, isLoading } = Files
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <div className='w-full h-[calc(100vh-59px-2rem)] mx-auto flex flex-col  justify-start items-center pb-[2rem] px-[2rem]' >
           <div className='w-full mx-auto align-middle'>
             <Header style={{ backgroundColor: 'transparent', border: 'none', color: '#3d3d3d' }} as='h1' attached='top' >

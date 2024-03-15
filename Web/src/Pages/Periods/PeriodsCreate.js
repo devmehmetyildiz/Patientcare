@@ -13,10 +13,10 @@ export default class PeriodsCreate extends Component {
   render() {
 
     const { Periods, Profile, history, closeModal } = this.props
-    const { isLoading, isDispatching } = Periods
+    const { isLoading } = Periods
 
     return (
-      isLoading || isDispatching ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

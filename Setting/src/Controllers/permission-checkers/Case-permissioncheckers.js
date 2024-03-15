@@ -2,34 +2,34 @@ const createAccessDenied = require("../../Utilities/Error").createAccessDenied
 const permissionchecker = require("../../Utilities/Permissionchecker")
 
 async function GetCases(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('caseview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('casescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Cases View', req.language, { en: 'View Cases', tr: 'View Cases' }))
+        next(createAccessDenied('Cases screen', req.language, { en: 'screen Cases', tr: 'screen Cases' }))
     }
 }
 
 async function GetCompleteCase(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('caseview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('casescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Cases View', req.language, { en: 'View Cases', tr: 'View Cases' }))
+        next(createAccessDenied('Cases screen', req.language, { en: 'screen Cases', tr: 'screen Cases' }))
     }
 }
 
 async function GetDeactivateCase(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('caseview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('casescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Cases View', req.language, { en: 'View Cases', tr: 'View Cases' }))
+        next(createAccessDenied('Cases screen', req.language, { en: 'screen Cases', tr: 'screen Cases' }))
     }
 }
 
 async function GetCase(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('caseview')) || permissionchecker(req)) {
+    if ((req.identity.privileges && req.identity.privileges.includes('casescreen')) || permissionchecker(req)) {
         next()
     } else {
-        next(createAccessDenied('Cases View', req.language, { en: 'View Cases', tr: 'View Cases' }))
+        next(createAccessDenied('Cases screen', req.language, { en: 'screen Cases', tr: 'screen Cases' }))
     }
 }
 
