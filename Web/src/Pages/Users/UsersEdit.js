@@ -162,7 +162,12 @@ export default class UsersEdit extends Component {
       return (Departments.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
     }).filter(u => u)
     data.Includeshift = validator.isUUID(data.ProfessionID) ? validator.isBoolean(data?.Includeshift) ? data?.Includeshift : false : false
-
+    if (!validator.isISODate(data.Workstarttime)) {
+      data.Workstarttime = null
+    }
+    if (!validator.isISODate(data.Workendtime)) {
+      data.Workendtime = null
+    }
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })

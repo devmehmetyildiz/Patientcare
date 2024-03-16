@@ -27,6 +27,6 @@ module.exports = async ({ type, service, role, message, pushurl }) => {
             }
         })
     } catch (error) {
-        throw requestErrorCatcher(error, 'Userrole')
+        console.log(requestErrorCatcher(error, 'Userrole'))
     }
 }
