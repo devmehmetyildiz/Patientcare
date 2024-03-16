@@ -648,9 +648,7 @@ const version1_0_1_0 = {
     features: [
         {
             title: "Kurum Yönetimi", commits: [
-                "Hasta İş Akış ekranı eklenecek.",
                 "Genel Hasta Durum Güncelleme Ekranı Eklendi.",
-                "Personel izin durumları vb. girilecek eklenecek.",
                 "Hastalara toplu para girişi Eklenecek.",
                 "Genel Hasta Takip Ekranı Eklendi.",
             ],

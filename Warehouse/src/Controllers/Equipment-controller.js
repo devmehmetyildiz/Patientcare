@@ -1,4 +1,4 @@
-const CreateNotification = require("../../../System/src/Utilities/CreateNotification")
+const CreateNotification = require("../Utilities/CreateNotification")
 const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")

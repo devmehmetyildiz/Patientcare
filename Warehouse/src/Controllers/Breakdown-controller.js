@@ -1,5 +1,5 @@
 const { types } = require("../Constants/Defines")
-const CreateNotification = require("../../../System/src/Utilities/CreateNotification")
+const CreateNotification = require("../Utilities/CreateNotification")
 const config = require("../Config")
 const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
