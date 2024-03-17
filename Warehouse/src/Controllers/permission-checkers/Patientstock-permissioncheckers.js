@@ -1,76 +1,39 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function Transferpatientstock(req, res, next) {
-    if ((req.identity.privileges && (req.identity.privileges.includes('patientstockupdate') || req.identity.privileges.includes('patientmedicineupdate') || req.identity.privileges.includes('patientsupplyupdate'))) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientstocks Update', req.language, { en: 'Patientstocks Update', tr: 'Patientstocks Update' }))
-    }
+    PermissionHandler(req, next, 'patientscreen')
 }
 
 async function GetPatientstocks(req, res, next) {
-    if ((req.identity.privileges && (req.identity.privileges.includes('patientstockscreen') || req.identity.privileges.includes('patientmedicinescreen') || req.identity.privileges.includes('patientsupplyscreen'))) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientstocks screen', req.language, { en: 'Patientstocks screen', tr: 'Patientstocks screen' }))
-    }
+    PermissionHandler(req, next, 'patientstockscreen','patientmedicinescreen','patientsupplyscreen')
 }
 
 async function GetPatientstock(req, res, next) {
-    if ((req.identity.privileges && (req.identity.privileges.includes('patientstockscreen') || req.identity.privileges.includes('patientmedicinescreen') || req.identity.privileges.includes('patientsupplyscreen'))) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientstocks screen', req.language, { en: 'Patientstocks screen', tr: 'Patientstocks screen' }))
-    }
+    PermissionHandler(req, next, 'patientstockscreen','patientmedicinescreen','patientsupplyscreen')
 }
 
 async function AddPatientstock(req, res, next) {
-    if ((req.identity.privileges && (req.identity.privileges.includes('patientstockadd') || req.identity.privileges.includes('patientmedicineadd') || req.identity.privileges.includes('patientsupplyadd'))) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientstocks Add', req.language, { en: 'Patientstocks Add', tr: 'Patientstocks Add' }))
-    }
+    PermissionHandler(req, next, 'patientstockadd','patientstockadd','patientsupplyadd')
 }
 
 async function UpdatePatientstock(req, res, next) {
-    if ((req.identity.privileges && (req.identity.privileges.includes('patientstockupdate') || req.identity.privileges.includes('patientmedicineupdate') || req.identity.privileges.includes('patientsupplyupdate'))) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientstocks Update', req.language, { en: 'Patientstocks Update', tr: 'Patientstocks Update' }))
-    }
+    PermissionHandler(req, next, 'patientstockupdate','patientmedicineupdate','patientsupplyupdate')
 }
 
 async function UpdatePatientstocklist(req, res, next) {
-    if ((req.identity.privileges && (req.identity.privileges.includes('patientstockupdate') || req.identity.privileges.includes('patientmedicineupdate') || req.identity.privileges.includes('patientsupplyupdate'))) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientstocks Update', req.language, { en: 'Patientstocks Update', tr: 'Patientstocks Update' }))
-    }
+    PermissionHandler(req, next, 'patientstockupdate','patientmedicineupdate','patientsupplyupdate')
 }
 
 async function ApprovePatientstock(req, res, next) {
-    if ((req.identity.privileges && (req.identity.privileges.includes('patientstockupdate') || req.identity.privileges.includes('patientmedicineupdate') || req.identity.privileges.includes('patientsupplyupdate'))) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientstocks Update', req.language, { en: 'Patientstocks Update', tr: 'Patientstocks Update' }))
-    }
+    PermissionHandler(req, next, 'patientstockupdate','patientmedicineupdate','patientsupplyupdate')
 }
 
 async function ApprovePatientstocks(req, res, next) {
-    if ((req.identity.privileges && (req.identity.privileges.includes('patientstockupdate') || req.identity.privileges.includes('patientmedicineupdate') || req.identity.privileges.includes('patientsupplyupdate'))) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientstocks Update', req.language, { en: 'Patientstocks Update', tr: 'Patientstocks Update' }))
-    }
+    PermissionHandler(req, next, 'patientstockupdate','patientmedicineupdate','patientsupplyupdate')
 }
 
 async function DeletePatientstock(req, res, next) {
-    if ((req.identity.privileges && (req.identity.privileges.includes('patientstockdelete') || req.identity.privileges.includes('patientmedicinedelete') || req.identity.privileges.includes('patientsupplydelete'))) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientstocks Delete', req.language, { en: 'Patientstocks Delete', tr: 'Patientstocks Delete' }))
-    }
+    PermissionHandler(req, next, 'patientstockdelete','patientmedicinedelete','patientsupplydelete')
 }
 
 

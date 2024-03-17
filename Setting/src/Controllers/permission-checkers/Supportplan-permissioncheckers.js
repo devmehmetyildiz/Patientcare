@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetSupportplans(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('supportplanscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Supportplans screen', req.language, { en: 'screen Supportplans', tr: 'screen Supportplans' }))
-    }
+    PermissionHandler(req, next, 'supportplanscreen')
 }
 
 async function GetSupportplan(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('supportplanscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Supportplans screen', req.language, { en: 'screen Supportplans', tr: 'screen Supportplans' }))
-    }
+    PermissionHandler(req, next, 'supportplanscreen')
 }
 
 async function AddSupportplan(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('supportplanadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Supportplans Add', req.language, { en: 'Supportplans Add', tr: 'Supportplans Add' }))
-    }
+    PermissionHandler(req, next, 'supportplanadd')
 }
 
 async function UpdateSupportplan(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('supportplanupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Supportplans Update', req.language, { en: 'Supportplans Update', tr: 'Supportplans Update' }))
-    }
+    PermissionHandler(req, next, 'supportplanupdate')
 }
 
 async function DeleteSupportplan(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('supportplandelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Supportplans Delete', req.language, { en: 'Supportplans Delete', tr: 'Supportplans Delete' }))
-    }
+    PermissionHandler(req, next, 'supportplandelete')
 }
 
 module.exports = {

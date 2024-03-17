@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetDepartments(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('departmentscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Departments screen', req.language, { en: 'screen Departments', tr: 'screen Departments' }))
-    }
+    PermissionHandler(req, next, 'departmentscreen')
 }
 
 async function GetDepartment(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('departmentscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Departments screen', req.language, { en: 'screen Departments', tr: 'screen Departments' }))
-    }
+    PermissionHandler(req, next, 'departmentscreen')
 }
 
 async function AddDepartment(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('departmentadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Departments Add', req.language, { en: 'Departments Add', tr: 'Departments Add' }))
-    }
+    PermissionHandler(req, next, 'departmentadd')
 }
 
 async function UpdateDepartment(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('departmentupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Departments Update', req.language, { en: 'Departments Update', tr: 'Departments Update' }))
-    }
+    PermissionHandler(req, next, 'departmentupdate')
 }
 
 async function DeleteDepartment(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('departmentdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Departments Delete', req.language, { en: 'Departments Delete', tr: 'Departments Delete' }))
-    }
+    PermissionHandler(req, next, 'departmentdelete')
 }
 
 module.exports = {

@@ -1,53 +1,27 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetFloors(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('floorscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Floors screen', req.language, { en: 'screen Floors', tr: 'screen Floors' }))
-    }
+    PermissionHandler(req, next, 'floorscreen')
 }
 
 async function GetFloor(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('floorscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Floors screen', req.language, { en: 'screen Floors', tr: 'screen Floors' }))
-    }
+    PermissionHandler(req, next, 'floorscreen')
 }
 
-
 async function AddFloor(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('flooradd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Floors Add', req.language, { en: 'Floors Add', tr: 'Floors Add' }))
-    }
+    PermissionHandler(req, next, 'flooradd')
 }
 
 async function FastcreateFloor(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('flooradd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Floors Add', req.language, { en: 'Floors Add', tr: 'Floors Add' }))
-    }
+    PermissionHandler(req, next, 'flooradd')
 }
 
 async function UpdateFloor(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('floorupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Floors Update', req.language, { en: 'Floors Update', tr: 'Floors Update' }))
-    }
+    PermissionHandler(req, next, 'floorupdate')
 }
 
 async function DeleteFloor(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('floordelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Floors Delete', req.language, { en: 'Floors Delete', tr: 'Floors Delete' }))
-    }
+    PermissionHandler(req, next, 'floordelete')
 }
 
 module.exports = {

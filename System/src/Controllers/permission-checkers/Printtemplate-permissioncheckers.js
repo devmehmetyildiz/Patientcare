@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetPrinttemplates(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('printtemplatescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Printtemplates screen', req.language, { en: 'screen Printtemplates', tr: 'screen Printtemplates' }))
-    }
+    PermissionHandler(req, next, 'printtemplatescreen')
 }
 
 async function GetPrinttemplate(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('printtemplatescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Printtemplates screen', req.language, { en: 'screen Printtemplates', tr: 'screen Printtemplates' }))
-    }
+    PermissionHandler(req, next, 'printtemplatescreen')
 }
 
 async function AddPrinttemplate(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('printtemplateadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Printtemplates Add', req.language, { en: 'Printtemplates Add', tr: 'Printtemplates Add' }))
-    }
+    PermissionHandler(req, next, 'printtemplateadd')
 }
 
 async function UpdatePrinttemplate(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('printtemplateupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Printtemplates Update', req.language, { en: 'Printtemplates Update', tr: 'Printtemplates Update' }))
-    }
+    PermissionHandler(req, next, 'printtemplateupdate')
 }
 
 async function DeletePrinttemplate(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('printtemplatedelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Printtemplates Delete', req.language, { en: 'Printtemplates Delete', tr: 'Printtemplates Delete' }))
-    }
+    PermissionHandler(req, next, 'printtemplatedelete')
 }
 
 module.exports = {

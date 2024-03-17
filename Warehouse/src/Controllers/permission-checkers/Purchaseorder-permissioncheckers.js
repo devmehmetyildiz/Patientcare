@@ -1,60 +1,31 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetPurchaseorders(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorders screen', req.language, { en: 'Purchaseorders screen', tr: 'Purchaseorders screen' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderscreen')
 }
 
 async function GetPurchaseorder(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorders screen', req.language, { en: 'Purchaseorders screen', tr: 'Purchaseorders screen' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderscreen')
 }
 
 async function AddPurchaseorder(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorders Add', req.language, { en: 'Purchaseorders Add', tr: 'Purchaseorders Add' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderadd')
 }
 
 async function UpdatePurchaseorder(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorders Update', req.language, { en: 'Purchaseorders Update', tr: 'Purchaseorders Update' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderupdate')
 }
 
 async function CompletePurchaseorder(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorders Update', req.language, { en: 'Purchaseorders Update', tr: 'Purchaseorders Update' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderupdate')
 }
 
 async function DeactivePurchaseorder(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorders Update', req.language, { en: 'Purchaseorders Update', tr: 'Purchaseorders Update' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderupdate')
 }
 
 async function DeletePurchaseorder(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorders Delete', req.language, { en: 'Purchaseorders Delete', tr: 'Purchaseorders Delete' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderdelete')
 }
 
 module.exports = {

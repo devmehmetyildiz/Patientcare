@@ -5,6 +5,7 @@ import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, DataTable, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import Formatdate from '../../Utils/Formatdate'
 
 export default class Patientfollowup extends Component {
 
@@ -263,7 +264,7 @@ function DisbandedTab({ patients, Cases, Patientdefines, Profile, Patienttypes }
     const deathCellhandler = (row) => {
         const patient = row
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
-        return patientdefine?.Dateofdeath
+        return Formatdate(patientdefine?.Dateofdeath)
     }
 
     const getAge = (dateOfBirth, dateToCalculate) => {

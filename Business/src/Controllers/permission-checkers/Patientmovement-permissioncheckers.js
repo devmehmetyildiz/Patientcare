@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetPatientmovements(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientmovementscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientmovements screen', req.language, { en: 'Patientmovements screen', tr: 'Patientmovements screen' }))
-    }
+    PermissionHandler(req, next, 'patientmovementscreen')
 }
 
 async function GetPatientmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientmovementscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientmovements screen', req.language, { en: 'Patientmovements screen', tr: 'Patientmovements screen' }))
-    }
+    PermissionHandler(req, next, 'patientmovementscreen')
 }
 
 async function AddPatientmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientmovementadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientmovements Add', req.language, { en: 'Patientmovements Add', tr: 'Patientmovements Add' }))
-    }
+    PermissionHandler(req, next, 'patientmovementadd')
 }
 
 async function UpdatePatientmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientmovementupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientmovements Update', req.language, { en: 'Patientmovements Update', tr: 'Patientmovements Update' }))
-    }
+    PermissionHandler(req, next, 'patientmovementupdate')
 }
 
 async function DeletePatientmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientmovementdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patientmovements Delete', req.language, { en: 'Patientmovements Delete', tr: 'Patientmovements Delete' }))
-    }
+    PermissionHandler(req, next, 'patientmovementdelete')
 }
 
 module.exports = {

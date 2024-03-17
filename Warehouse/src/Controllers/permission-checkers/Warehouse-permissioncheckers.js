@@ -1,52 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetWarehouses(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('warehousescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Warehouses screen', req.language, { en: 'Warehouses screen', tr: 'Warehouses screen' }))
-    }
-}
-
-async function GetWarehousescount(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('warehousescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Warehouses screen', req.language, { en: 'Warehouses screen', tr: 'Warehouses screen' }))
-    }
+    PermissionHandler(req, next, 'warehousescreen')
 }
 
 async function GetWarehouse(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('warehousescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Warehouses screen', req.language, { en: 'Warehouses screen', tr: 'Warehouses screen' }))
-    }
+    PermissionHandler(req, next, 'warehousescreen')
 }
 
 async function AddWarehouse(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('warehouseadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Warehouses Add', req.language, { en: 'Warehouses Add', tr: 'Warehouses Add' }))
-    }
+    PermissionHandler(req, next, 'warehouseadd')
 }
 
 async function UpdateWarehouse(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('warehouseupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Warehouses Update', req.language, { en: 'Warehouses Update', tr: 'Warehouses Update' }))
-    }
+    PermissionHandler(req, next, 'warehouseupdate')
 }
 
 async function DeleteWarehouse(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('warehouseadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Warehouses Delete', req.language, { en: 'Warehouses Delete', tr: 'Warehouses Delete' }))
-    }
+    PermissionHandler(req, next, 'warehousedelete')
 }
 
 module.exports = {

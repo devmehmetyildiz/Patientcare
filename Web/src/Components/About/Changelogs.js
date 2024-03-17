@@ -635,6 +635,7 @@ const version1_0_1_0 = {
             title: "Hastalar", commits: [
                 "Mobil ekranda hastalar ve önkayıtların hataya düşmesi giderildi.",
                 "Hasta Tanımları tablolarında düzenleme",
+                "Hasta Tanımları tabloları güncellemede tarihlerin gözükmeme sorunu düzeltildi",
             ]
         },
         {

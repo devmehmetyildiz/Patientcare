@@ -102,7 +102,7 @@ function createNotfounderror(param, language) {
 }
 
 function createAccessDenied(privilege, language, descriptions) {
-  let code = privilege.replace('', '_').toUpperCase()
+  let code = privilege.replace(' ', '_').toUpperCase()
 
   let description = {
     en: `The ${descriptions[language]} access denied, you must have '${privilege}' privilege to do this operation`,

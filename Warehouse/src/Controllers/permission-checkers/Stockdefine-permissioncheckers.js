@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetStockdefines(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockdefinescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Stockdefines screen', req.language, { en: 'Stockdefines screen', tr: 'Stockdefines screen' }))
-    }
+    PermissionHandler(req, next, 'stockdefinescreen')
 }
 
 async function GetStockdefine(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockdefinescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Stockdefines screen', req.language, { en: 'Stockdefines screen', tr: 'Stockdefines screen' }))
-    }
+    PermissionHandler(req, next, 'stockdefinescreen')
 }
 
 async function AddStockdefine(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockdefineadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Stockdefines Add', req.language, { en: 'Stockdefines Add', tr: 'Stockdefines Add' }))
-    }
+    PermissionHandler(req, next, 'stockdefineadd')
 }
 
 async function UpdateStockdefine(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockdefineupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Stockdefines Update', req.language, { en: 'Stockdefines Update', tr: 'Stockdefines Update' }))
-    }
+    PermissionHandler(req, next, 'stockdefineupdate')
 }
 
 async function DeleteStockdefine(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockdefinedelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Stockdefines Delete', req.language, { en: 'Stockdefines Delete', tr: 'Stockdefines Delete' }))
-    }
+    PermissionHandler(req, next, 'stockdefinedelete')
 }
 
 module.exports = {

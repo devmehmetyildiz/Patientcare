@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetSupportplanlists(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('supportplanlistscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Supportplanlists screen', req.language, { en: 'screen Supportplanlists', tr: 'screen Supportplanlists' }))
-    }
+    PermissionHandler(req, next, 'supportplanlistscreen')
 }
 
 async function GetSupportplanlist(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('supportplanlistscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Supportplanlists screen', req.language, { en: 'screen Supportplanlists', tr: 'screen Supportplanlists' }))
-    }
+    PermissionHandler(req, next, 'supportplanlistscreen')
 }
 
 async function AddSupportplanlist(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('supportplanlistadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Supportplanlists Add', req.language, { en: 'Supportplanlists Add', tr: 'Supportplanlists Add' }))
-    }
+    PermissionHandler(req, next, 'supportplanlistadd')
 }
 
 async function UpdateSupportplanlist(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('supportplanlistupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Supportplanlists Update', req.language, { en: 'Supportplanlists Update', tr: 'Supportplanlists Update' }))
-    }
+    PermissionHandler(req, next, 'supportplanlistupdate')
 }
 
 async function DeleteSupportplanlist(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('supportplanlistdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Supportplanlists Delete', req.language, { en: 'Supportplanlists Delete', tr: 'Supportplanlists Delete' }))
-    }
+    PermissionHandler(req, next, 'supportplanlistdelete')
 }
 
 module.exports = {

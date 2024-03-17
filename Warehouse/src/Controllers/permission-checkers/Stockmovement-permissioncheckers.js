@@ -1,60 +1,31 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetStockmovements(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockmovementscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Stockmovements screen', req.language, { en: 'Stockmovements screen', tr: 'Stockmovements screen' }))
-    }
+    PermissionHandler(req, next, 'stockmovementscreen')
 }
 
 async function GetStockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockmovementscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Stockmovements screen', req.language, { en: 'Stockmovements screen', tr: 'Stockmovements screen' }))
-    }
+    PermissionHandler(req, next, 'stockmovementscreen')
 }
 
 async function AddStockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockmovementadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Stockmovements Add', req.language, { en: 'Stockmovements Add', tr: 'Stockmovements Add' }))
-    }
+    PermissionHandler(req, next, 'stockmovementadd')
 }
 
 async function UpdateStockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockmovementupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Stockmovements Update', req.language, { en: 'Stockmovements Update', tr: 'Stockmovements Update' }))
-    }
+    PermissionHandler(req, next, 'stockmovementupdate')
 }
 
 async function ApproveStockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockmovementupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Stockmovements Update', req.language, { en: 'Stockmovements Update', tr: 'Stockmovements Update' }))
-    }
+    PermissionHandler(req, next, 'stockmovementupdate')
 }
 
 async function ApproveStockmovements(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockmovementupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Stockmovements Update', req.language, { en: 'Stockmovements Update', tr: 'Stockmovements Update' }))
-    }
+    PermissionHandler(req, next, 'stockmovementupdate')
 }
 
 async function DeleteStockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('stockmovementdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Stockmovements Delete', req.language, { en: 'Stockmovements Delete', tr: 'Stockmovements Delete' }))
-    }
+    PermissionHandler(req, next, 'stockmovementdelete')
 }
 
 

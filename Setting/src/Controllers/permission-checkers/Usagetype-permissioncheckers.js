@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetUsagetypes(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('usagetypescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Usagetypes screen', req.language, { en: 'screen Usagetypes', tr: 'screen Usagetypes' }))
-    }
+    PermissionHandler(req, next, 'usagetypescreen')
 }
 
 async function GetUsagetype(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('usagetypescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Usagetypes screen', req.language, { en: 'screen Usagetypes', tr: 'screen Usagetypes' }))
-    }
+    PermissionHandler(req, next, 'usagetypescreen')
 }
 
 async function AddUsagetype(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('usagetypeadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Usagetypes Add', req.language, { en: 'Usagetypes Add', tr: 'Usagetypes Add' }))
-    }
+    PermissionHandler(req, next, 'usagetypeadd')
 }
 
 async function UpdateUsagetype(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('usagetypeupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Usagetypes Update', req.language, { en: 'Usagetypes Update', tr: 'Usagetypes Update' }))
-    }
+    PermissionHandler(req, next, 'usagetypeupdate')
 }
 
 async function DeleteUsagetype(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('usagetypedelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Usagetypes Delete', req.language, { en: 'Usagetypes Delete', tr: 'Usagetypes Delete' }))
-    }
+    PermissionHandler(req, next, 'usagetypedelete')
 }
 
 module.exports = {

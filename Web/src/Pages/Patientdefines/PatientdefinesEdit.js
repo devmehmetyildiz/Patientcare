@@ -7,6 +7,7 @@ import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import CostumertypesCreate from '../../Containers/Costumertypes/CostumertypesCreate'
 import PatienttypesCreate from '../../Containers/Patienttypes/PatienttypesCreate'
+import Formatdate from '../../Utils/Formatdate'
 export default class PatientdefinesEdit extends Component {
 
   PAGE_NAME = "PatientdefinesEdit"
@@ -43,7 +44,11 @@ export default class PatientdefinesEdit extends Component {
       this.setState({
         isDatafetched: true
       })
-      this.context.setForm(this.PAGE_NAME, selected_record)
+      this.context.setForm(this.PAGE_NAME, {
+        ...selected_record,
+        Dateofbirth: Formatdate(selected_record?.Dateofbirth),
+        Dateofdeath: Formatdate(selected_record?.Dateofdeath),
+      })
     }
   }
 
@@ -99,7 +104,7 @@ export default class PatientdefinesEdit extends Component {
     ]
 
     return (
-      Patientdefines.isLoading  ? <LoadingPage /> :
+      Patientdefines.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>

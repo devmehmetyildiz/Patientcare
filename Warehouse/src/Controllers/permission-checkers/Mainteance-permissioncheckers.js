@@ -1,52 +1,27 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetMainteancies(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mainteancescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Mainteancies screen', req.language, { en: 'Mainteancies screen', tr: 'Mainteancies screen' }))
-    }
+    PermissionHandler(req, next, 'mainteancescreen')
 }
 
 async function GetMainteance(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mainteancescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Mainteancies screen', req.language, { en: 'Mainteancies screen', tr: 'Mainteancies screen' }))
-    }
+    PermissionHandler(req, next, 'mainteancescreen')
 }
 
 async function AddMainteance(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mainteanceadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Mainteancies Add', req.language, { en: 'Mainteancies Add', tr: 'Mainteancies Add' }))
-    }
+    PermissionHandler(req, next, 'mainteanceadd')
 }
 
 async function UpdateMainteance(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mainteanceupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Mainteancies Update', req.language, { en: 'Mainteancies Update', tr: 'Mainteancies Update' }))
-    }
+    PermissionHandler(req, next, 'mainteanceupdate')
 }
 
 async function CompleteMainteance(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mainteanceupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Mainteancies Update', req.language, { en: 'Mainteancies Update', tr: 'Mainteancies Update' }))
-    }
+    PermissionHandler(req, next, 'mainteanceupdate')
 }
 
 async function DeleteMainteance(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mainteancedelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Mainteancies Delete', req.language, { en: 'Mainteancies Delete', tr: 'Mainteancies Delete' }))
-    }
+    PermissionHandler(req, next, 'mainteancedelete')
 }
 
 module.exports = {

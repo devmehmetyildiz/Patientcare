@@ -1,61 +1,31 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetCases(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('casescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Cases screen', req.language, { en: 'screen Cases', tr: 'screen Cases' }))
-    }
+    PermissionHandler(req, next, 'casescreen')
 }
 
 async function GetCompleteCase(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('casescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Cases screen', req.language, { en: 'screen Cases', tr: 'screen Cases' }))
-    }
+    PermissionHandler(req, next, 'casescreen')
 }
 
 async function GetDeactivateCase(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('casescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Cases screen', req.language, { en: 'screen Cases', tr: 'screen Cases' }))
-    }
+    PermissionHandler(req, next, 'casescreen')
 }
 
 async function GetCase(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('casescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Cases screen', req.language, { en: 'screen Cases', tr: 'screen Cases' }))
-    }
+    PermissionHandler(req, next, 'casescreen')
 }
 
-
 async function AddCase(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('caseadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Cases Add', req.language, { en: 'Cases Add', tr: 'Cases Add' }))
-    }
+    PermissionHandler(req, next, 'caseadd')
 }
 
 async function UpdateCase(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('caseupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Cases Update', req.language, { en: 'Cases Update', tr: 'Cases Update' }))
-    }
+    PermissionHandler(req, next, 'caseupdate')
 }
 
 async function DeleteCase(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('casedelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Cases Delete', req.language, { en: 'Cases Delete', tr: 'Cases Delete' }))
-    }
+    PermissionHandler(req, next, 'casedelete')
 }
 
 module.exports = {

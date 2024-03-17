@@ -1,52 +1,26 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
-
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetMailsettings(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mailsettingscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Mailsettings screen', req.language, { en: 'screen Mailsettings', tr: 'screen Mailsettings' }))
-    }
+    PermissionHandler(req, next, 'mailsettingscreen')
 }
 
 async function GetMailsetting(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mailsettingscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Mailsettings screen', req.language, { en: 'screen Mailsettings', tr: 'screen Mailsettings' }))
-    }
+    PermissionHandler(req, next, 'mailsettingscreen')
 }
 async function GetActiveMailsetting(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mailsettingscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Mailsettings screen', req.language, { en: 'screen Mailsettings', tr: 'screen Mailsettings' }))
-    }
+    PermissionHandler(req, next, 'mailsettingscreen')
 }
 
 async function AddMailsetting(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mailsettingadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Mailsettings Add', req.language, { en: 'Mailsettings Add', tr: 'Mailsettings Add' }))
-    }
+    PermissionHandler(req, next, 'mailsettingadd')
 }
 
 async function UpdateMailsetting(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mailsettingupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Mailsettings Update', req.language, { en: 'Mailsettings Update', tr: 'Mailsettings Update' }))
-    }
+    PermissionHandler(req, next, 'mailsettingupdate')
 }
 
 async function DeleteMailsetting(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('mailsettingdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Mailsettings Delete', req.language, { en: 'Mailsettings Delete', tr: 'Mailsettings Delete' }))
-    }
+    PermissionHandler(req, next, 'mailsettingdelete')
 }
 
 module.exports = {

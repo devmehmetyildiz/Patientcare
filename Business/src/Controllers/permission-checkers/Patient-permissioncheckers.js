@@ -1,154 +1,77 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetPatients(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients screen', req.language, { en: 'Patients screen', tr: 'Patients screen' }))
-    }
+    PermissionHandler(req, next, 'patientscreen')
 }
 
 async function GetPreregistrations(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients screen', req.language, { en: 'Patients screen', tr: 'Patients screen' }))
-    }
+    PermissionHandler(req, next, 'patientscreen')
 }
 
 async function GetFullpatients(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients screen', req.language, { en: 'Patients screen', tr: 'Patients screen' }))
-    }
+    PermissionHandler(req, next, 'patientscreen')
 }
 
 async function GetPatient(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients screen', req.language, { en: 'Patients screen', tr: 'Patients screen' }))
-    }
+    PermissionHandler(req, next, 'patientscreen')
 }
 
 async function AddPatient(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Add', req.language, { en: 'Patients Add', tr: 'Patients Add' }))
-    }
+    PermissionHandler(req, next, 'patientadd')
 }
 async function AddPatientReturnPatient(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Add', req.language, { en: 'Patients Add', tr: 'Patients Add' }))
-    }
+    PermissionHandler(req, next, 'patientadd')
 }
 
 async function Createfromtemplate(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Add', req.language, { en: 'Patients Add', tr: 'Patients Add' }))
-    }
+    PermissionHandler(req, next, 'patientadd')
 }
 
 async function Completeprepatient(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
-    }
+    PermissionHandler(req, next, 'patientupdate')
 }
 
 async function Editpatientstocks(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
-    }
+    PermissionHandler(req, next, 'patientupdate')
 }
 
 async function UpdatePatient(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
-    }
+    PermissionHandler(req, next, 'patientupdate')
 }
 
 async function UpdatePatientcase(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
-    }
+    PermissionHandler(req, next, 'patientupdate')
 }
 
 async function UpdatePatientscase(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
-    }
+    PermissionHandler(req, next, 'patientupdate')
 }
 
 async function UpdatePatientplace(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
-    }
+    PermissionHandler(req, next, 'patientupdate')
 }
 
 async function TransferPatientplace(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
-    }
+    PermissionHandler(req, next, 'patientupdate')
 }
 
 async function UpdatePatienttododefines(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
-    }
+    PermissionHandler(req, next, 'patientupdate')
 }
 async function UpdatePatientsupportplans(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
-    }
+    PermissionHandler(req, next, 'patientupdate')
 }
 
 async function DeletePatient(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Delete', req.language, { en: 'Patients Delete', tr: 'Patients Delete' }))
-    }
+    PermissionHandler(req, next, 'patientdelete')
 }
 
 async function OutPatient(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
-    }
+    PermissionHandler(req, next, 'patientupdate')
 }
 
 async function InPatient(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('patientupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Patients Update', req.language, { en: 'Patients Update', tr: 'Patients Update' }))
-    }
+    PermissionHandler(req, next, 'patientupdate')
 }
 
 

@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetRooms(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roomscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Rooms screen', req.language, { en: 'screen Rooms', tr: 'screen Rooms' }))
-    }
+    PermissionHandler(req, next, 'roomscreen')
 }
 
 async function GetRoom(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roomscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Rooms screen', req.language, { en: 'screen Rooms', tr: 'screen Rooms' }))
-    }
+    PermissionHandler(req, next, 'roomscreen')
 }
 
 async function AddRoom(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roomadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Rooms Add', req.language, { en: 'Rooms Add', tr: 'Rooms Add' }))
-    }
+    PermissionHandler(req, next, 'roomadd')
 }
 
 async function UpdateRoom(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roomupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Rooms Update', req.language, { en: 'Rooms Update', tr: 'Rooms Update' }))
-    }
+    PermissionHandler(req, next, 'roomupdate')
 }
 
 async function DeleteRoom(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('roomdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Rooms Delete', req.language, { en: 'Rooms Delete', tr: 'Rooms Delete' }))
-    }
+    PermissionHandler(req, next, 'roomdelete')
 }
 
 module.exports = {

@@ -1,52 +1,27 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetBreakdowns(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('breakdownscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Breakdowns screen', req.language, { en: 'Breakdowns screen', tr: 'Breakdowns screen' }))
-    }
+    PermissionHandler(req, next, 'breakdownscreen')
 }
 
 async function GetBreakdown(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('breakdownscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Breakdowns screen', req.language, { en: 'Breakdowns screen', tr: 'Breakdowns screen' }))
-    }
+    PermissionHandler(req, next, 'breakdownscreen')
 }
 
 async function AddBreakdown(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('breakdownadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Breakdowns Add', req.language, { en: 'Breakdowns Add', tr: 'Breakdowns Add' }))
-    }
+    PermissionHandler(req, next, 'breakdownadd')
 }
 
 async function UpdateBreakdown(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('breakdownupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Breakdowns Update', req.language, { en: 'Breakdowns Update', tr: 'Breakdowns Update' }))
-    }
+    PermissionHandler(req, next, 'breakdownupdate')
 }
 
 async function CompleteBreakdown(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('breakdownupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Breakdowns Update', req.language, { en: 'Breakdowns Update', tr: 'Breakdowns Update' }))
-    }
+    PermissionHandler(req, next, 'breakdownupdate')
 }
 
 async function DeleteBreakdown(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('breakdowndelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Breakdowns Delete', req.language, { en: 'Breakdowns Delete', tr: 'Breakdowns Delete' }))
-    }
+    PermissionHandler(req, next, 'breakdowndelete')
 }
 
 module.exports = {

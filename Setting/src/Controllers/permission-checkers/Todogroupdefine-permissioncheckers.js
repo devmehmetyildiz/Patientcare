@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetTodogroupdefines(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('todogroupdefinescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Todogroupdefines screen', req.language, { en: 'screen Todogroupdefines', tr: 'screen Todogroupdefines' }))
-    }
+    PermissionHandler(req, next, 'todogroupdefinescreen')
 }
 
 async function GetTodogroupdefine(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('todogroupdefinescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Todogroupdefines screen', req.language, { en: 'screen Todogroupdefines', tr: 'screen Todogroupdefines' }))
-    }
+    PermissionHandler(req, next, 'todogroupdefinescreen')
 }
 
 async function AddTodogroupdefine(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('todogroupdefineadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Todogroupdefines Add', req.language, { en: 'Todogroupdefines Add', tr: 'Todogroupdefines Add' }))
-    }
+    PermissionHandler(req, next, 'todogroupdefineadd')
 }
 
 async function UpdateTodogroupdefine(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('todogroupdefineupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Todogroupdefines Update', req.language, { en: 'Todogroupdefines Update', tr: 'Todogroupdefines Update' }))
-    }
+    PermissionHandler(req, next, 'todogroupdefineupdate')
 }
 
 async function DeleteTodogroupdefine(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('todogroupdefinedelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Todogroupdefines Delete', req.language, { en: 'Todogroupdefines Delete', tr: 'Todogroupdefines Delete' }))
-    }
+    PermissionHandler(req, next, 'todogroupdefinedelete')
 }
 
 module.exports = {

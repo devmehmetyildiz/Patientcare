@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetMakingtypes(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('makingtypescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Makingtypes screen', req.language, { en: 'screen Makingtypes', tr: 'screen Makingtypes' }))
-    }
+    PermissionHandler(req, next, 'makingtypescreen')
 }
 
 async function GetMakingtype(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('makingtypescreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Makingtypes screen', req.language, { en: 'screen Makingtypes', tr: 'screen Makingtypes' }))
-    }
+    PermissionHandler(req, next, 'makingtypescreen')
 }
 
 async function AddMakingtype(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('makingtypeadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Makingtypes Add', req.language, { en: 'Makingtypes Add', tr: 'Makingtypes Add' }))
-    }
+    PermissionHandler(req, next, 'makingtypeadd')
 }
 
 async function UpdateMakingtype(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('makingtypeupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Makingtypes Update', req.language, { en: 'Makingtypes Update', tr: 'Makingtypes Update' }))
-    }
+    PermissionHandler(req, next, 'makingtypeupdate')
 }
 
 async function DeleteMakingtype(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('makingtypedelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Makingtypes Delete', req.language, { en: 'Makingtypes Delete', tr: 'Makingtypes Delete' }))
-    }
+    PermissionHandler(req, next, 'makingtypedelete')
 }
 
 module.exports = {

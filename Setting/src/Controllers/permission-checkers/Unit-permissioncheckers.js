@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetUnits(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('unitscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Units screen', req.language, { en: 'screen Units', tr: 'screen Units' }))
-    }
+    PermissionHandler(req, next, 'unitscreen')
 }
 
 async function GetUnit(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('unitscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Units screen', req.language, { en: 'screen Units', tr: 'screen Units' }))
-    }
+    PermissionHandler(req, next, 'unitscreen')
 }
 
 async function AddUnit(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('unitadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Units Add', req.language, { en: 'Units Add', tr: 'Units Add' }))
-    }
+    PermissionHandler(req, next, 'unitadd')
 }
 
 async function UpdateUnit(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('unitupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Units Update', req.language, { en: 'Units Update', tr: 'Units Update' }))
-    }
+    PermissionHandler(req, next, 'unitupdate')
 }
 
 async function DeleteUnit(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('unitdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Units Delete', req.language, { en: 'Units Delete', tr: 'Units Delete' }))
-    }
+    PermissionHandler(req, next, 'unitdelete')
 }
 
 module.exports = {

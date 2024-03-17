@@ -1,60 +1,31 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetPurchaseorderstockmovements(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockmovementscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorderstockmovements screen', req.language, { en: 'Purchaseorderstockmovements screen', tr: 'Purchaseorderstockmovements screen' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderstockmovementscreen')
 }
 
 async function GetPurchaseorderstockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockmovementscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorderstockmovements screen', req.language, { en: 'Purchaseorderstockmovements screen', tr: 'Purchaseorderstockmovements screen' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderstockmovementscreen')
 }
 
 async function AddPurchaseorderstockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockmovementadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorderstockmovements Add', req.language, { en: 'Purchaseorderstockmovements Add', tr: 'Purchaseorderstockmovements Add' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderstockmovementadd')
 }
 
 async function UpdatePurchaseorderstockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockmovementupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorderstockmovements Update', req.language, { en: 'Purchaseorderstockmovements Update', tr: 'Purchaseorderstockmovements Update' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderstockmovementupdate')
 }
 
 async function ApprovePurchaseorderstockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockmovementupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorderstockmovements Update', req.language, { en: 'Purchaseorderstockmovements Update', tr: 'Purchaseorderstockmovements Update' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderstockmovementupdate')
 }
 
 async function ApprovePurchaseorderstockmovements(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockmovementupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorderstockmovements Update', req.language, { en: 'Purchaseorderstockmovements Update', tr: 'Purchaseorderstockmovements Update' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderstockmovementupdate')
 }
 
 async function DeletePurchaseorderstockmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('purchaseorderstockmovementdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Purchaseorderstockmovements Delete', req.language, { en: 'Purchaseorderstockmovements Delete', tr: 'Purchaseorderstockmovements Delete' }))
-    }
+    PermissionHandler(req, next, 'purchaseorderstockmovementdelete')
 }
 
 module.exports = {

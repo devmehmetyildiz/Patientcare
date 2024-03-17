@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetCompanycashmovements(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('companycashmovementscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Companycashmovements screen', req.language, { en: 'Companycashmovements screen', tr: 'Companycashmovements screen' }))
-    }
+    PermissionHandler(req, next, 'companycashmovementscreen')
 }
 
 async function GetCompanycashmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('companycashmovementscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Companycashmovements screen', req.language, { en: 'Companycashmovements screen', tr: 'Companycashmovements screen' }))
-    }
+    PermissionHandler(req, next, 'companycashmovementscreen')
 }
 
 async function AddCompanycashmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('companycashmovementadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Companycashmovements Add', req.language, { en: 'Companycashmovements Add', tr: 'Companycashmovements Add' }))
-    }
+    PermissionHandler(req, next, 'companycashmovementadd')
 }
 
 async function UpdateCompanycashmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('companycashmovementupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Companycashmovements Update', req.language, { en: 'Companycashmovements Update', tr: 'Companycashmovements Update' }))
-    }
+    PermissionHandler(req, next, 'companycashmovementupdate')
 }
 
 async function DeleteCompanycashmovement(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('companycashmovementdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Companycashmovements Delete', req.language, { en: 'Companycashmovements Delete', tr: 'Companycashmovements Delete' }))
-    }
+    PermissionHandler(req, next, 'companycashmovementdelete')
 }
 
 module.exports = {

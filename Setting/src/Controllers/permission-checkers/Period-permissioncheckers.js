@@ -1,52 +1,27 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetPeriods(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('periodscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Periods screen', req.language, { en: 'screen Periods', tr: 'screen Periods' }))
-    }
+    PermissionHandler(req, next, 'periodscreen')
 }
 
 async function GetPeriod(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('periodscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Periods screen', req.language, { en: 'screen Periods', tr: 'screen Periods' }))
-    }
+    PermissionHandler(req, next, 'periodscreen')
 }
 
 async function AddPeriod(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('periodadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Periods Add', req.language, { en: 'Periods Add', tr: 'Periods Add' }))
-    }
+    PermissionHandler(req, next, 'periodadd')
 }
 
 async function FastcreatePeriod(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('periodadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Periods Add', req.language, { en: 'Periods Add', tr: 'Periods Add' }))
-    }
+    PermissionHandler(req, next, 'periodadd')
 }
 
 async function UpdatePeriod(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('periodupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Periods Update', req.language, { en: 'Periods Update', tr: 'Periods Update' }))
-    }
+    PermissionHandler(req, next, 'periodupdate')
 }
 
 async function DeletePeriod(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('perioddelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Periods screen', req.language, { en: 'Periods Delete', tr: 'Periods Delete' }))
-    }
+    PermissionHandler(req, next, 'perioddelete')
 }
 
 module.exports = {

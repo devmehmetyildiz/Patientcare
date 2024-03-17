@@ -1,83 +1,42 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetShifts(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Shift screen', req.language, { en: 'screen Shift', tr: 'screen Shift' }))
-    }
+    PermissionHandler(req, next, 'shiftscreen')
 }
 async function GetShiftrequests(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Shift screen', req.language, { en: 'screen Shift', tr: 'screen Shift' }))
-    }
+    PermissionHandler(req, next, 'shiftscreen')
 }
 
 async function GetShiftrequest(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Shift screen', req.language, { en: 'screen Shift', tr: 'screen Shift' }))
-    }
+    PermissionHandler(req, next, 'shiftscreen')
 }
 
 async function GetPersonelshifts(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Shift screen', req.language, { en: 'screen Shift', tr: 'screen Shift' }))
-    }
+    PermissionHandler(req, next, 'shiftscreen')
 }
 
 async function GetShift(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Shift screen', req.language, { en: 'screen Shift', tr: 'screen Shift' }))
-    }
+    PermissionHandler(req, next, 'shiftscreen')
 }
 
 async function AddShift(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Shift Add', req.language, { en: 'Shift Add', tr: 'Shift Add' }))
-    }
+    PermissionHandler(req, next, 'shiftadd')
 }
 
 async function Addshiftperiod(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Shift Add', req.language, { en: 'Shift Add', tr: 'Shift Add' }))
-    }
+    PermissionHandler(req, next, 'shiftadd')
 }
 
 async function UpdateShift(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Shift Update', req.language, { en: 'Shift Update', tr: 'Shift Update' }))
-    }
+    PermissionHandler(req, next, 'shiftupdate')
 }
 
 async function DeleteShift(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Shift Delete', req.language, { en: 'Shift Delete', tr: 'Shift Delete' }))
-    }
+    PermissionHandler(req, next, 'shiftdelete')
 }
 
 async function DeleteShiftrequest(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('shiftdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Shift Delete', req.language, { en: 'Shift Delete', tr: 'Shift Delete' }))
-    }
+    PermissionHandler(req, next, 'shiftdelete')
 }
 
 module.exports = {

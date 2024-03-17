@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetHelpstatus(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('helpstatuscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Helpstatus screen', req.language, { en: 'screen Helpstatus', tr: 'screen Helpstatus' }))
-    }
+    PermissionHandler(req, next, 'helpstatuscreen')
 }
 
 async function GetHelpstatu(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('helpstatuscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Helpstatus screen', req.language, { en: 'screen Helpstatus', tr: 'screen Helpstatus' }))
-    }
+    PermissionHandler(req, next, 'helpstatuscreen')
 }
 
 async function AddHelpstatu(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('helpstatuadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Helpstatus Add', req.language, { en: 'Helpstatus Add', tr: 'Helpstatus Add' }))
-    }
+    PermissionHandler(req, next, 'helpstatuadd')
 }
 
 async function UpdateHelpstatu(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('helpstatuupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Helpstatus Update', req.language, { en: 'Helpstatus Update', tr: 'Helpstatus Update' }))
-    }
+    PermissionHandler(req, next, 'helpstatuupdate')
 }
 
 async function DeleteHelpstatu(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('helpstatudelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Helpstatus Delete', req.language, { en: 'Helpstatus Delete', tr: 'Helpstatus Delete' }))
-    }
+    PermissionHandler(req, next, 'helpstatudelete')
 }
 
 module.exports = {

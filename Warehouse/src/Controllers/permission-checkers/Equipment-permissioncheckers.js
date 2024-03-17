@@ -1,44 +1,23 @@
-const createAccessDenied = require("../../Utilities/Error").createAccessDenied
-const permissionchecker = require("../../Utilities/Permissionchecker")
+const PermissionHandler = require("../../Utilities/PermissionHandler")
 
 async function GetEquipments(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('equipmentscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Equipment screen', req.language, { en: 'Equipment screen', tr: 'Equipment screen' }))
-    }
+    PermissionHandler(req, next, 'equipmentscreen')
 }
 
 async function GetEquipment(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('equipmentscreen')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Equipment screen', req.language, { en: 'Equipment screen', tr: 'Equipment screen' }))
-    }
+    PermissionHandler(req, next, 'equipmentscreen')
 }
 
 async function AddEquipment(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('equipmentadd')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Equipment Add', req.language, { en: 'Equipment Add', tr: 'Equipment Add' }))
-    }
+    PermissionHandler(req, next, 'equipmentadd')
 }
 
 async function UpdateEquipment(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('equipmentupdate')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Equipment Update', req.language, { en: 'Equipment Update', tr: 'Equipment Update' }))
-    }
+    PermissionHandler(req, next, 'equipmentupdate')
 }
 
 async function DeleteEquipment(req, res, next) {
-    if ((req.identity.privileges && req.identity.privileges.includes('equipmentdelete')) || permissionchecker(req)) {
-        next()
-    } else {
-        next(createAccessDenied('Equipment Delete', req.language, { en: 'Equipment Delete', tr: 'Equipment Delete' }))
-    }
+    PermissionHandler(req, next, 'equipmentdelete')
 }
 
 module.exports = {
