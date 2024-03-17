@@ -11,7 +11,7 @@ module.exports = (req, next, permission, permission2, permission3) => {
 
     switch (permissionCount) {
         case 1:
-            if ((req.identity.privileges && (req.identity.privileges.includes(permission) || Permissionchecker(req)))) {
+            if ((req.identity.privileges && req.identity.privileges.includes(permission) || Permissionchecker(req))) {
                 next()
             } else {
                 let privilege = Privileges.find(u => u.code === permission)
@@ -19,7 +19,7 @@ module.exports = (req, next, permission, permission2, permission3) => {
             }
             break;
         case 2:
-            if ((req.identity.privileges && (req.identity.privileges.includes(permission) || req.identity.privileges.includes(permission2) || Permissionchecker(req)))) {
+            if ((req.identity.privileges && (req.identity.privileges.includes(permission) || req.identity.privileges.includes(permission2)) || Permissionchecker(req))) {
                 next()
             } else {
                 let privilege = Privileges.find(u => u.code === permission)
@@ -27,7 +27,7 @@ module.exports = (req, next, permission, permission2, permission3) => {
             }
             break;
         case 3:
-            if ((req.identity.privileges && (req.identity.privileges.includes(permission) || req.identity.privileges.includes(permission2) || req.identity.privileges.includes(permission3) || Permissionchecker(req)))) {
+            if ((req.identity.privileges && (req.identity.privileges.includes(permission) || req.identity.privileges.includes(permission2) || req.identity.privileges.includes(permission3)) || Permissionchecker(req))) {
                 next()
             } else {
                 let privilege = Privileges.find(u => u.code === permission)
@@ -36,7 +36,7 @@ module.exports = (req, next, permission, permission2, permission3) => {
             break;
 
         default:
-            if ((req.identity.privileges && (req.identity.privileges.includes(permission) || Permissionchecker(req)))) {
+            if ((req.identity.privileges && (req.identity.privileges.includes(permission)) || Permissionchecker(req))) {
                 next()
             } else {
                 let privilege = Privileges.find(u => u.code === permission)
