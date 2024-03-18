@@ -74,6 +74,18 @@ const Routes = [
     { method: 'post', path: '/Shifts', controller: 'Shift', action: 'AddShift' },
     { method: 'put', path: '/Shifts', controller: 'Shift', action: 'UpdateShift' },
     { method: 'delete', path: '/Shifts/:shiftId', controller: 'Shift', action: 'DeleteShift' },
+   
+    { method: 'get', path: '/Professionpresettings/:professionpresettingId', controller: 'Professionpresetting', action: 'GetProfessionpresetting' },
+    { method: 'get', path: '/Professionpresettings', controller: 'Professionpresetting', action: 'GetProfessionpresettings' },
+    { method: 'post', path: '/Professionpresettings', controller: 'Professionpresetting', action: 'AddProfessionpresetting' },
+    { method: 'put', path: '/Professionpresettings', controller: 'Professionpresetting', action: 'UpdateProfessionpresetting' },
+    { method: 'delete', path: '/Professionpresettings/:professionpresettingId', controller: 'Professionpresetting', action: 'DeleteProfessionpresetting' },
+   
+    { method: 'get', path: '/Personelpresettings/:personelpresettingId', controller: 'Personelpresetting', action: 'GetPersonelpresetting' },
+    { method: 'get', path: '/Personelpresettings', controller: 'Personelpresetting', action: 'GetPersonelpresettings' },
+    { method: 'post', path: '/Personelpresettings', controller: 'Personelpresetting', action: 'AddPersonelpresetting' },
+    { method: 'put', path: '/Personelpresettings', controller: 'Personelpresetting', action: 'UpdatePersonelpresetting' },
+    { method: 'delete', path: '/Personelpresettings/:personelpresettingId', controller: 'Personelpresetting', action: 'DeletePersonelpresetting' },
 
     { method: 'get', path: '/Todos/GetTodosbyPatientID/:patientId', controller: 'Todo', action: 'GetTodosbyPatientID' },
     { method: 'get', path: '/Todos/:todoId', controller: 'Todo', action: 'GetTodo' },

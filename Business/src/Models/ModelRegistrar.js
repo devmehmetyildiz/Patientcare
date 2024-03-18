@@ -12,6 +12,10 @@ const patientsupportplanModel = require('./PatientsupportplanModel')
 const careplanModel = require('./CareplanModel')
 const careplanserviceModel = require('./CareplanserviceModel')
 const professionModel = require('./ProfessionModel')
+const personelpresettingModel = require('./PersonelpresettingModel')
+const personelshiftdetailModel = require('./PersonelshiftdetailModel')
+const personelshiftModel = require('./PersonelshiftModel')
+const professionpresettingModel = require('./ProfessionpresettingModel')
 
 module.exports = {
     applog_businessModel,
@@ -28,4 +32,8 @@ module.exports = {
     careplanModel,
     careplanserviceModel,
     professionModel,
+    personelpresettingModel,
+    personelshiftdetailModel,
+    personelshiftModel,
+    professionpresettingModel,
 }

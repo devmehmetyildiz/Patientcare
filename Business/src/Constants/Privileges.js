@@ -513,6 +513,24 @@ const Priveleges = [
     { code: 'professiongetreport',    text: { en: 'Professions Get Report',  tr: 'Meslekler Rapor Alma' },       group: { en: 'Professions', tr: 'Meslekler' } },
     { code: 'professionnotification', text: { en: 'Professions Notification',tr: 'Meslekler Bildirim Alma' },    group: { en: 'Professions', tr: 'Meslekler' } },
 
+    { code: 'professionpresettingscreen',       text: { en: 'Profession pre settings Screen',      tr: 'Meslek Ön Ayarları Veri' },             group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
+    { code: 'professionpresettingview',         text: { en: 'Profession pre settings View',        tr: 'Meslek Ön Ayarları Görüntüleme' },      group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
+    { code: 'professionpresettingadd',          text: { en: 'Profession pre settings Add',         tr: 'Meslek Ön Ayarları Oluşturma' },        group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
+    { code: 'professionpresettingupdate',       text: { en: 'Profession pre settings Update',      tr: 'Meslek Ön Ayarları Güncelleme' },       group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
+    { code: 'professionpresettingdelete',       text: { en: 'Profession pre settings Delete',      tr: 'Meslek Ön Ayarları Silme' },            group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
+    { code: 'professionpresettingmanageview',   text: { en: 'Profession pre settings Manage View', tr: 'Meslek Ön Ayarları Görünüm Ayarlama' }, group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
+    { code: 'professionpresettinggetreport',    text: { en: 'Profession pre settings Get Report',  tr: 'Meslek Ön Ayarları Rapor Alma' },       group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
+    { code: 'professionpresettingnotification', text: { en: 'Profession pre settings Notification',tr: 'Meslek Ön Ayarları Bildirim Alma' },    group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
+
+    { code: 'personelpresettingscreen',       text: { en: 'Personel pre settings Screen',      tr: 'Personel Ön Ayarları Veri' },             group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
+    { code: 'personelpresettingview',         text: { en: 'Personel pre settings View',        tr: 'Personel Ön Ayarları Görüntüleme' },      group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
+    { code: 'personelpresettingadd',          text: { en: 'Personel pre settings Add',         tr: 'Personel Ön Ayarları Oluşturma' },        group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
+    { code: 'personelpresettingupdate',       text: { en: 'Personel pre settings Update',      tr: 'Personel Ön Ayarları Güncelleme' },       group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
+    { code: 'personelpresettingdelete',       text: { en: 'Personel pre settings Delete',      tr: 'Personel Ön Ayarları Silme' },            group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
+    { code: 'personelpresettingmanageview',   text: { en: 'Personel pre settings Manage View', tr: 'Personel Ön Ayarları Görünüm Ayarlama' }, group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
+    { code: 'personelpresettinggetreport',    text: { en: 'Personel pre settings Get Report',  tr: 'Personel Ön Ayarları Rapor Alma' },       group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
+    { code: 'personelpresettingnotification', text: { en: 'Personel pre settings Notification',tr: 'Personel Ön Ayarları Bildirim Alma' },    group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
+
 ]
 
 module.exports = Priveleges

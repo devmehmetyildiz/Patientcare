@@ -55,8 +55,46 @@ ilgili vardiyaya ait personellerin ön koşulları listelenecek
 önceki 3 vardiyası farklı olan kişiler bulunacak 
 
 
+1 - vardiya oluşturma ekranı eklenecek    Personelshifts
+
+   -- vardiya seçilecek
+   -- başlangıç bitiş tarihi seçilecek (min2-max2 olarak 5 adet tarih çıkacak dropdown olacak - 2 şer haftalık periyot olacak ocak 1 ocak 2 yazacak )
+   -- meslek seçilecek (eğer seçilmez ise bütün meslekler için vardiya hesaplanacak)
+   -- seçildikten sonra ön kurallar listelenecek
+   -- ön izlemeler çıkacak 
 
 
+2 - Vardiya Personel Ön Kuralları eklenecek   Personelpresettings
+
+  -- Sürekli olarak kalacak mı
+  -- Sürekli değil ise Gelecek vardiyalar seçilecek
+  -- personel seçilecek
+  -- çalışacağı kat seçilecek
+  -- çalışacağı vardiya seçilecek ( jokerde olabilir )
+  -- onaya düşecek
+  -- tarih geçmiş ise güncellenemez
 
 
+3 - Vardiya Meslek Ön Kuralları eklenecek   Professionspresettings
 
+  -- Sürekli olarak kalacak mı
+  -- Sürekli değil ise Gelecek vardiyalar seçilecek
+  -- Meslek seçilecek
+  -- Kat seçilecek
+  -- Bir önceki çalışanlar devam edilecekmi seçilecek
+  -- Minimum çalışan sayısı seçilecek
+  
+
+
+ 4 - Vardiya personelleri     Personelshiftdetail  
+
+   -- Vardiya id 
+   -- Personel id
+   -- Shift id
+   -- Day 
+   -- Isworking
+   -- Isonannual
+   -- Annualtype
+
+
+  5 - Meslekler hangi katlar için seçilecek, yoksa genel olacak
