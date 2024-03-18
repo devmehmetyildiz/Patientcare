@@ -1,7 +1,0 @@
-Content wrapper da botulandırma dropdown açılınca bozuluyor
-
-stok hareketleri için onay isteme eklenecek 
-
-edit list şeklindeki gridlerde tarihler bozuluyor
-
-purchaseorders sayfalarında redirect url yanlıs / eksik 

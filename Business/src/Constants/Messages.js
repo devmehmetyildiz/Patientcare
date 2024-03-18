@@ -225,12 +225,6 @@ const messages = {
         tr: 'Bu işlem için meslek grubu gerekli',
       }
     },
-    GENDER_REQUIRED: {
-      code: 'GENDER_REQUIRED', description: {
-        en: 'The gender required',
-        tr: 'Bu işlem için cinsiyet gerekli',
-      }
-    },
     FATHERNAME_REQUIRED: {
       code: 'FATHERNAME_REQUIRED', description: {
         en: 'The fathername required',

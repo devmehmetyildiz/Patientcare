@@ -4,10 +4,7 @@ const patientdefineModel = require('./PatientdefineModel')
 const patientmovementModel = require('./PatientmovementModel')
 const todoModel = require('./TodoModel')
 const patienttododefineModel = require('./PatienttododefineModel')
-const personelModel = require('./PersonelModel')
 const shiftModel = require('./ShiftModel')
-const shiftrequestModel = require('./ShiftrequestModel')
-const personelshiftModel = require('./PersonelshiftModel')
 const companycashmovementModel = require('./CompanycashmovementModel')
 const patientcashmovementModel = require('./PatientcashmovementModel')
 const patientcashregisterModel = require('./PatientcashregisterModel')
@@ -23,10 +20,7 @@ module.exports = {
     patientmovementModel,
     todoModel,
     patienttododefineModel,
-    personelModel,
     shiftModel,
-    shiftrequestModel,
-    personelshiftModel,
     companycashmovementModel,
     patientcashregisterModel,
     patientcashmovementModel,

@@ -1,0 +1,8 @@
+izinler tutulacak
+
+izin başlangıç tarihi- izin bitiş tarihi- izin türü 
+
+fazla mesai başlangıç tarihi - bitiş tarihi 
+
+
+

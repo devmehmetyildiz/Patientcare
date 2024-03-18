@@ -1,0 +1,62 @@
+
+1.işe  yeni başladıysa minimum 1 ay gündüz çalışacak   A-B-C-Joker diye gidecek  
+
+2. Personeller 2-2-1 şeklinde gruplandırılacak 
+
+3.personeller sürekli çalışacağı katlar seçilebilecek
+
+4.personellerin çalışacabileceği vardiyalarda seçilebilecek 
+
+5. ön koşul koydum, personel vardiya seçebilir, katta seçebilir, 
+
+A-B-C-Joker 
+
+A-A-A-B
+
+A-C-C-C-A-C
+
+son 3 vardiya kontrol edilecek, A-B-C için ne yoksa o verilecek, hepsi varsa son 3 te joker eleman olacak
+
+geçmiş vardiyalarda eklenebilecek 
+
+6
+3-2-1 
+5 2-2-1
+
+vardiyaların mesleklere göre minimum çalışma koşulu olacak 
+
+
+
+
+vardiya tanımlama olacak kullanıcı A,B,C vardiyasını tanımlayacak
+vardiya kural ekranı olacak, meslek meslek hangi vardiyada minimum çalışan sayıları falan olacak, vardiya meslek min calısan
+
+vardiya olusturulacak
+başlangıç tarihi ve bitiş tarihi seçilebilecek
+seçim value olarak başlangıç bitiş tarihi alacak
+ocak 1 ocak 2 şubat 1 şubat 2 diye ilerliyecek
+4 vardiya öncesi ve 4 vardiya sonrasına kadar olusturulabilecek
+vardiyalarda aktif pasif ifadesi olacak 
+geçerli ifadeleri olacak 
+
+
+vardiya olustururken öncelikle 
+
+vardiya oluşturma kuralı hazırlanacak
+
+otomatik olusturulacak vardiyalar seçilecek, meslekler seçilecek
+
+
+vardiya oluştruma tarihleri bulunacak
+mesleğe ait kullanıcılar bulunacak (vardiyaya dahil olacak olanlar)
+ilgili vardiyaya ait personellerin ön koşulları listelenecek
+
+öncelikle joker eleman tespit edilecek
+önceki 3 vardiyası farklı olan kişiler bulunacak 
+
+
+
+
+
+
+

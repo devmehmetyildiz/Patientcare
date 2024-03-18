@@ -1,0 +1,47 @@
+
+müşteri türlenine fatura edilecek eklenecek 
+
+hasta sayısı, bakıcı personel sayısı günlük
+
+
+------------------------------------
+hakediş devlet için 
+
+kurumda kaç devlet hastası var
+günlük ücret kaç tl o belirlenecek
+
+
+------------------------------------
+bhks  devlet için
+
+1 ay  içerisinde 1 gün yatan hasta sayısı
+aylık ücret tutarı parametrik 
+
+
+------------------------------------
+personel tesviği devlet için 
+
+mesleki personel için
+toplam hasta sayısını devletin söylediği 36 ya böldüm
+134 hasta için 3.72 cıktı 4 dedim ben ise 5 calıstırıoyum 1 tane ek istihdam olacak 
+
+1 tane ek mesleki için 853 tl aldım 
+
+sağlık için yine 134 hasta için 12 ye böldüm 
+1 tane ek kaldı onun için parametrik hesapladım 
+
+mesleki sağlık bakım temizlik , 
+
+
+
+------------------------------------
+kys teşviği  
+
+toplam hasta sayım (1 ay içerisinde en az 1 gün kurumda kalmıs devlet hastası) 
+
+hasta basına su kadar tl ( aylık )
+
+olur tarihlerine göre calısıyor 
+
+
+134 130 
