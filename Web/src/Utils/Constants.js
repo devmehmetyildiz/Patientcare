@@ -23,6 +23,10 @@ export const ROUTES = {
     PATIENTCASHREGISTER: 'Patientcashregisters',
     CAREPLAN: 'Careplans',
     PROFESSION: 'Professions',
+    PERSONELPRESETTING: 'Personelpresettings',
+    PROFESSIONPRESETTING: 'Professionpresettings',
+    PERSONELSHIFT: 'Personelshifts',
+    PERSONELSHIFTDETAIL: 'Personelshiftdetails',
 
     COSTUMERTYPE: 'Costumertypes',
     CASE: 'Cases',

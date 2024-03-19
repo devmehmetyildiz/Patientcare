@@ -10,112 +10,112 @@ const Literals = {
         tr: 'Veri Kaydetme'
     },
     adddescription: {
-        en: 'Personelshift added successfully',
-        tr: 'Personel Vardiyası Başarı ile eklendi'
+        en: 'Professionpresetting added successfully',
+        tr: 'Meslek Ön Ayarı Başarı ile eklendi'
     },
     updatecode: {
         en: 'Data Update',
         tr: 'Veri Güncelleme'
     },
     updatedescription: {
-        en: 'Personelshift updated successfully',
-        tr: 'Personel Vardiyası Başarı ile güncellendi'
+        en: 'Professionpresetting updated successfully',
+        tr: 'Meslek Ön Ayarı Başarı ile güncellendi'
     },
     deletecode: {
         en: 'Data Delete',
         tr: 'Veri Silme'
     },
     deletedescription: {
-        en: 'Personelshift Deleted successfully',
-        tr: 'Personel Vardiyası Başarı ile Silindi'
+        en: 'Professionpresetting Deleted successfully',
+        tr: 'Meslek Ön Ayarı Başarı ile Silindi'
     },
 }
 
-export const GetPersonelshifts = createAsyncThunk(
-    'Personelshifts/GetPersonelshifts',
+export const GetProfessionpresettings = createAsyncThunk(
+    'Professionpresettings/GetProfessionpresettings',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.PERSONELSHIFT);
+            const response = await instanse.get(config.services.Setting, ROUTES.PROFESSIONPRESETTING);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPersonelshiftnotification(errorPayload));
+            dispatch(fillProfessionpresettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetPersonelshift = createAsyncThunk(
-    'Personelshifts/GetPersonelshift',
+export const GetProfessionpresetting = createAsyncThunk(
+    'Professionpresettings/GetProfessionpresetting',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.PERSONELSHIFT}/${guid}`);
+            const response = await instanse.get(config.services.Setting, `${ROUTES.PROFESSIONPRESETTING}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPersonelshiftnotification(errorPayload));
+            dispatch(fillProfessionpresettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddPersonelshifts = createAsyncThunk(
-    'Personelshifts/AddPersonelshifts',
+export const AddProfessionpresettings = createAsyncThunk(
+    'Professionpresettings/AddProfessionpresettings',
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Setting, ROUTES.PERSONELSHIFT, data);
-            dispatch(fillPersonelshiftnotification({
+            const response = await instanse.post(config.services.Setting, ROUTES.PROFESSIONPRESETTING, data);
+            dispatch(fillProfessionpresettingnotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
-            clearForm && clearForm('PersonelshiftsCreate')
+            clearForm && clearForm('ProfessionpresettingsCreate')
             closeModal && closeModal()
-            history && history.push(redirectUrl ? redirectUrl : '/Personelshifts');
+            history && history.push(redirectUrl ? redirectUrl : '/Professionpresettings');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPersonelshiftnotification(errorPayload));
+            dispatch(fillProfessionpresettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditPersonelshifts = createAsyncThunk(
-    'Personelshifts/EditPersonelshifts',
+export const EditProfessionpresettings = createAsyncThunk(
+    'Professionpresettings/EditProfessionpresettings',
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Setting, ROUTES.PERSONELSHIFT, data);
-            dispatch(fillPersonelshiftnotification({
+            const response = await instanse.put(config.services.Setting, ROUTES.PROFESSIONPRESETTING, data);
+            dispatch(fillProfessionpresettingnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
             closeModal && closeModal()
-            clearForm && clearForm('PersonelshiftsUpdate')
-            history && history.push(redirectUrl ? redirectUrl : '/Personelshifts');
+            clearForm && clearForm('ProfessionpresettingsUpdate')
+            history && history.push(redirectUrl ? redirectUrl : '/Professionpresettings');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPersonelshiftnotification(errorPayload));
+            dispatch(fillProfessionpresettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeletePersonelshifts = createAsyncThunk(
-    'Personelshifts/DeletePersonelshifts',
+export const DeleteProfessionpresettings = createAsyncThunk(
+    'Professionpresettings/DeleteProfessionpresettings',
     async (data, { dispatch, getState }) => {
         try {
 
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.PERSONELSHIFT}/${data.Uuid}`);
-            dispatch(fillPersonelshiftnotification({
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.PROFESSIONPRESETTING}/${data.Uuid}`);
+            dispatch(fillProfessionpresettingnotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
                 description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
@@ -123,14 +123,14 @@ export const DeletePersonelshifts = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPersonelshiftnotification(errorPayload));
+            dispatch(fillProfessionpresettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const PersonelshiftsSlice = createSlice({
-    name: 'Personelshifts',
+export const ProfessionpresettingsSlice = createSlice({
+    name: 'Professionpresettings',
     initialState: {
         list: [],
         selected_record: {},
@@ -140,15 +140,15 @@ export const PersonelshiftsSlice = createSlice({
         isDeletemodalopen: false
     },
     reducers: {
-        handleSelectedPersonelshift: (state, action) => {
+        handleSelectedProfessionpresetting: (state, action) => {
             state.selected_record = action.payload;
         },
-        fillPersonelshiftnotification: (state, action) => {
+        fillProfessionpresettingnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removePersonelshiftnotification: (state) => {
+        removeProfessionpresettingnotification: (state) => {
             state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
@@ -157,62 +157,62 @@ export const PersonelshiftsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetPersonelshifts.pending, (state) => {
+            .addCase(GetProfessionpresettings.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetPersonelshifts.fulfilled, (state, action) => {
+            .addCase(GetProfessionpresettings.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetPersonelshifts.rejected, (state, action) => {
+            .addCase(GetProfessionpresettings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetPersonelshift.pending, (state) => {
+            .addCase(GetProfessionpresetting.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetPersonelshift.fulfilled, (state, action) => {
+            .addCase(GetProfessionpresetting.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetPersonelshift.rejected, (state, action) => {
+            .addCase(GetProfessionpresetting.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddPersonelshifts.pending, (state) => {
+            .addCase(AddProfessionpresettings.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(AddPersonelshifts.fulfilled, (state, action) => {
+            .addCase(AddProfessionpresettings.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(AddPersonelshifts.rejected, (state, action) => {
+            .addCase(AddProfessionpresettings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditPersonelshifts.pending, (state) => {
+            .addCase(EditProfessionpresettings.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(EditPersonelshifts.fulfilled, (state, action) => {
+            .addCase(EditProfessionpresettings.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(EditPersonelshifts.rejected, (state, action) => {
+            .addCase(EditProfessionpresettings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeletePersonelshifts.pending, (state) => {
+            .addCase(DeleteProfessionpresettings.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(DeletePersonelshifts.fulfilled, (state, action) => {
+            .addCase(DeleteProfessionpresettings.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(DeletePersonelshifts.rejected, (state, action) => {
+            .addCase(DeleteProfessionpresettings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             });
@@ -220,10 +220,10 @@ export const PersonelshiftsSlice = createSlice({
 });
 
 export const {
-    handleSelectedPersonelshift,
-    fillPersonelshiftnotification,
-    removePersonelshiftnotification,
+    handleSelectedProfessionpresetting,
+    fillProfessionpresettingnotification,
+    removeProfessionpresettingnotification,
     handleDeletemodal
-} = PersonelshiftsSlice.actions;
+} = ProfessionpresettingsSlice.actions;
 
-export default PersonelshiftsSlice.reducer;
+export default ProfessionpresettingsSlice.reducer;

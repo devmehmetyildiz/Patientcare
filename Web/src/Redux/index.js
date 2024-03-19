@@ -37,7 +37,6 @@ import EquipmentgroupSlice from "./EquipmentgroupSlice";
 import PersonelSlice from "./PersonelSlice";
 import BreakdownSlice from "./BreakdownSlice";
 import MainteanceSlice from "./MainteanceSlice";
-import PersonelshiftSlice from "./PersonelshiftSlice";
 import CompanycashmovementSlice from "./CompanycashmovementSlice";
 import PatientcashmovementSlice from "./PatientcashmovementSlice";
 import PatientcashregisterSlice from "./PatientcashregisterSlice";
@@ -52,6 +51,10 @@ import MakingtypeSlice from "./MakingtypeSlice";
 import RequiredperiodSlice from "./RequiredperiodSlice";
 import RatingSlice from "./RatingSlice";
 import ProfessionSlice from "./ProfessionSlice";
+import PersonelpresettingSlice from "./PersonelpresettingSlice";
+import PersonelshiftSlice from "./PersonelshiftSlice";
+import PersonelshiftdetailSlice from "./PersonelshiftdetailSlice";
+import ProfessionpresettingSlice from "./ProfessionpresettingSlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -92,7 +95,6 @@ const Slices = combineReducers({
     Personels: PersonelSlice,
     Breakdowns: BreakdownSlice,
     Mainteancies: MainteanceSlice,
-    Personelshifts: PersonelshiftSlice,
     Companycashmovements: CompanycashmovementSlice,
     Patientcashmovements: PatientcashmovementSlice,
     Patientcashregisters: PatientcashregisterSlice,
@@ -107,7 +109,10 @@ const Slices = combineReducers({
     Ratings: RatingSlice,
     Requiredperiods: RequiredperiodSlice,
     Professions: ProfessionSlice,
-    
+    Personelshifts: PersonelshiftSlice,
+    Personelshiftdetails: PersonelshiftdetailSlice,
+    Professionpresettings: ProfessionpresettingSlice,
+    Personelpresettings: PersonelpresettingSlice,
 });
 
 export default Slices;

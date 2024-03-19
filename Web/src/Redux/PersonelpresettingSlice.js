@@ -10,112 +10,112 @@ const Literals = {
         tr: 'Veri Kaydetme'
     },
     adddescription: {
-        en: 'Personelshift added successfully',
-        tr: 'Personel Vardiyası Başarı ile eklendi'
+        en: 'Personelpresetting added successfully',
+        tr: 'Personel Ön Ayarı Başarı ile eklendi'
     },
     updatecode: {
         en: 'Data Update',
         tr: 'Veri Güncelleme'
     },
     updatedescription: {
-        en: 'Personelshift updated successfully',
-        tr: 'Personel Vardiyası Başarı ile güncellendi'
+        en: 'Personelpresetting updated successfully',
+        tr: 'Personel Ön Ayarı Başarı ile güncellendi'
     },
     deletecode: {
         en: 'Data Delete',
         tr: 'Veri Silme'
     },
     deletedescription: {
-        en: 'Personelshift Deleted successfully',
-        tr: 'Personel Vardiyası Başarı ile Silindi'
+        en: 'Personelpresetting Deleted successfully',
+        tr: 'Personel Ön Ayarı Başarı ile Silindi'
     },
 }
 
-export const GetPersonelshifts = createAsyncThunk(
-    'Personelshifts/GetPersonelshifts',
+export const GetPersonelpresettings = createAsyncThunk(
+    'Personelpresettings/GetPersonelpresettings',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.PERSONELSHIFT);
+            const response = await instanse.get(config.services.Setting, ROUTES.PERSONELPRESETTING);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPersonelshiftnotification(errorPayload));
+            dispatch(fillPersonelpresettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetPersonelshift = createAsyncThunk(
-    'Personelshifts/GetPersonelshift',
+export const GetPersonelpresetting = createAsyncThunk(
+    'Personelpresettings/GetPersonelpresetting',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.PERSONELSHIFT}/${guid}`);
+            const response = await instanse.get(config.services.Setting, `${ROUTES.PERSONELPRESETTING}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPersonelshiftnotification(errorPayload));
+            dispatch(fillPersonelpresettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddPersonelshifts = createAsyncThunk(
-    'Personelshifts/AddPersonelshifts',
+export const AddPersonelpresettings = createAsyncThunk(
+    'Personelpresettings/AddPersonelpresettings',
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Setting, ROUTES.PERSONELSHIFT, data);
-            dispatch(fillPersonelshiftnotification({
+            const response = await instanse.post(config.services.Setting, ROUTES.PERSONELPRESETTING, data);
+            dispatch(fillPersonelpresettingnotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
-            clearForm && clearForm('PersonelshiftsCreate')
+            clearForm && clearForm('PersonelpresettingsCreate')
             closeModal && closeModal()
-            history && history.push(redirectUrl ? redirectUrl : '/Personelshifts');
+            history && history.push(redirectUrl ? redirectUrl : '/Personelpresettings');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPersonelshiftnotification(errorPayload));
+            dispatch(fillPersonelpresettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditPersonelshifts = createAsyncThunk(
-    'Personelshifts/EditPersonelshifts',
+export const EditPersonelpresettings = createAsyncThunk(
+    'Personelpresettings/EditPersonelpresettings',
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Setting, ROUTES.PERSONELSHIFT, data);
-            dispatch(fillPersonelshiftnotification({
+            const response = await instanse.put(config.services.Setting, ROUTES.PERSONELPRESETTING, data);
+            dispatch(fillPersonelpresettingnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
             closeModal && closeModal()
-            clearForm && clearForm('PersonelshiftsUpdate')
-            history && history.push(redirectUrl ? redirectUrl : '/Personelshifts');
+            clearForm && clearForm('PersonelpresettingsUpdate')
+            history && history.push(redirectUrl ? redirectUrl : '/Personelpresettings');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPersonelshiftnotification(errorPayload));
+            dispatch(fillPersonelpresettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeletePersonelshifts = createAsyncThunk(
-    'Personelshifts/DeletePersonelshifts',
+export const DeletePersonelpresettings = createAsyncThunk(
+    'Personelpresettings/DeletePersonelpresettings',
     async (data, { dispatch, getState }) => {
         try {
 
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.PERSONELSHIFT}/${data.Uuid}`);
-            dispatch(fillPersonelshiftnotification({
+            const response = await instanse.delete(config.services.Setting, `${ROUTES.PERSONELPRESETTING}/${data.Uuid}`);
+            dispatch(fillPersonelpresettingnotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
                 description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
@@ -123,14 +123,14 @@ export const DeletePersonelshifts = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPersonelshiftnotification(errorPayload));
+            dispatch(fillPersonelpresettingnotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const PersonelshiftsSlice = createSlice({
-    name: 'Personelshifts',
+export const PersonelpresettingsSlice = createSlice({
+    name: 'Personelpresettings',
     initialState: {
         list: [],
         selected_record: {},
@@ -140,15 +140,15 @@ export const PersonelshiftsSlice = createSlice({
         isDeletemodalopen: false
     },
     reducers: {
-        handleSelectedPersonelshift: (state, action) => {
+        handleSelectedPersonelpresetting: (state, action) => {
             state.selected_record = action.payload;
         },
-        fillPersonelshiftnotification: (state, action) => {
+        fillPersonelpresettingnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removePersonelshiftnotification: (state) => {
+        removePersonelpresettingnotification: (state) => {
             state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
@@ -157,62 +157,62 @@ export const PersonelshiftsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetPersonelshifts.pending, (state) => {
+            .addCase(GetPersonelpresettings.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetPersonelshifts.fulfilled, (state, action) => {
+            .addCase(GetPersonelpresettings.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetPersonelshifts.rejected, (state, action) => {
+            .addCase(GetPersonelpresettings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetPersonelshift.pending, (state) => {
+            .addCase(GetPersonelpresetting.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetPersonelshift.fulfilled, (state, action) => {
+            .addCase(GetPersonelpresetting.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetPersonelshift.rejected, (state, action) => {
+            .addCase(GetPersonelpresetting.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddPersonelshifts.pending, (state) => {
+            .addCase(AddPersonelpresettings.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(AddPersonelshifts.fulfilled, (state, action) => {
+            .addCase(AddPersonelpresettings.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(AddPersonelshifts.rejected, (state, action) => {
+            .addCase(AddPersonelpresettings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditPersonelshifts.pending, (state) => {
+            .addCase(EditPersonelpresettings.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(EditPersonelshifts.fulfilled, (state, action) => {
+            .addCase(EditPersonelpresettings.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(EditPersonelshifts.rejected, (state, action) => {
+            .addCase(EditPersonelpresettings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeletePersonelshifts.pending, (state) => {
+            .addCase(DeletePersonelpresettings.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(DeletePersonelshifts.fulfilled, (state, action) => {
+            .addCase(DeletePersonelpresettings.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(DeletePersonelshifts.rejected, (state, action) => {
+            .addCase(DeletePersonelpresettings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             });
@@ -220,10 +220,10 @@ export const PersonelshiftsSlice = createSlice({
 });
 
 export const {
-    handleSelectedPersonelshift,
-    fillPersonelshiftnotification,
-    removePersonelshiftnotification,
+    handleSelectedPersonelpresetting,
+    fillPersonelpresettingnotification,
+    removePersonelpresettingnotification,
     handleDeletemodal
-} = PersonelshiftsSlice.actions;
+} = PersonelpresettingsSlice.actions;
 
-export default PersonelshiftsSlice.reducer;
+export default PersonelpresettingsSlice.reducer;
