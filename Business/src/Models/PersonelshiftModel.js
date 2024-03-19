@@ -16,7 +16,7 @@ module.exports = sequelize.define('personelshiftModel', {
     ProfessionID: {
         type: Sequelize.STRING
     },
-    Isactive: {
+    Isworking: {
         type: Sequelize.BOOLEAN
     },
     Isdeactive: {

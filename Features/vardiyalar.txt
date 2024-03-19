@@ -55,7 +55,7 @@ ilgili vardiyaya ait personellerin ön koşulları listelenecek
 önceki 3 vardiyası farklı olan kişiler bulunacak 
 
 
-1 - vardiya oluşturma ekranı eklenecek    Personelshifts
+1 - vardiya oluşturma ekranı eklenecek  Personelshifts
 
    -- vardiya seçilecek
    -- başlangıç bitiş tarihi seçilecek (min2-max2 olarak 5 adet tarih çıkacak dropdown olacak - 2 şer haftalık periyot olacak ocak 1 ocak 2 yazacak )
@@ -64,7 +64,7 @@ ilgili vardiyaya ait personellerin ön koşulları listelenecek
    -- ön izlemeler çıkacak 
 
 
-2 - Vardiya Personel Ön Kuralları eklenecek   Personelpresettings
+2 - Vardiya Personel Ön Kuralları eklenecek   Personelpresettings ++
 
   -- Sürekli olarak kalacak mı
   -- Sürekli değil ise Gelecek vardiyalar seçilecek
@@ -75,7 +75,7 @@ ilgili vardiyaya ait personellerin ön koşulları listelenecek
   -- tarih geçmiş ise güncellenemez
 
 
-3 - Vardiya Meslek Ön Kuralları eklenecek   Professionspresettings
+3 - Vardiya Meslek Ön Kuralları eklenecek   Professionspresettings ++
 
   -- Sürekli olarak kalacak mı
   -- Sürekli değil ise Gelecek vardiyalar seçilecek

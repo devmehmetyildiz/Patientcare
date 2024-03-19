@@ -531,6 +531,24 @@ const Priveleges = [
     { code: 'personelpresettinggetreport',    text: { en: 'Personel pre settings Get Report',  tr: 'Personel Ön Ayarları Rapor Alma' },       group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
     { code: 'personelpresettingnotification', text: { en: 'Personel pre settings Notification',tr: 'Personel Ön Ayarları Bildirim Alma' },    group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
 
+    { code: 'personelshiftdetailscreen',       text: { en: 'Personel shift details Screen',      tr: 'Personel Vardiya Detayları Veri' },             group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
+    { code: 'personelshiftdetailview',         text: { en: 'Personel shift details View',        tr: 'Personel Vardiya Detayları Görüntüleme' },      group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
+    { code: 'personelshiftdetailadd',          text: { en: 'Personel shift details Add',         tr: 'Personel Vardiya Detayları Oluşturma' },        group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
+    { code: 'personelshiftdetailupdate',       text: { en: 'Personel shift details Update',      tr: 'Personel Vardiya Detayları Güncelleme' },       group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
+    { code: 'personelshiftdetaildelete',       text: { en: 'Personel shift details Delete',      tr: 'Personel Vardiya Detayları Silme' },            group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
+    { code: 'personelshiftdetailmanageview',   text: { en: 'Personel shift details Manage View', tr: 'Personel Vardiya Detayları Görünüm Ayarlama' }, group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
+    { code: 'personelshiftdetailgetreport',    text: { en: 'Personel shift details Get Report',  tr: 'Personel Vardiya Detayları Rapor Alma' },       group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
+    { code: 'personelshiftdetailnotification', text: { en: 'Personel shift details Notification',tr: 'Personel Vardiya Detayları Bildirim Alma' },    group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
+
+    { code: 'personelshiftscreen',       text: { en: 'Personel shifts Screen',      tr: 'Personel Vardiyaları Veri' },             group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
+    { code: 'personelshiftview',         text: { en: 'Personel shifts View',        tr: 'Personel Vardiyaları Görüntüleme' },      group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
+    { code: 'personelshiftadd',          text: { en: 'Personel shifts Add',         tr: 'Personel Vardiyaları Oluşturma' },        group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
+    { code: 'personelshiftupdate',       text: { en: 'Personel shifts Update',      tr: 'Personel Vardiyaları Güncelleme' },       group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
+    { code: 'personelshiftdelete',       text: { en: 'Personel shifts Delete',      tr: 'Personel Vardiyaları Silme' },            group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
+    { code: 'personelshiftmanageview',   text: { en: 'Personel shifts Manage View', tr: 'Personel Vardiyaları Görünüm Ayarlama' }, group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
+    { code: 'personelshiftgetreport',    text: { en: 'Personel shifts Get Report',  tr: 'Personel Vardiyaları Rapor Alma' },       group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
+    { code: 'personelshiftnotification', text: { en: 'Personel shifts Notification',tr: 'Personel Vardiyaları Bildirim Alma' },    group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
+
 ]
 
 module.exports = Priveleges

@@ -74,13 +74,25 @@ const Routes = [
     { method: 'post', path: '/Shifts', controller: 'Shift', action: 'AddShift' },
     { method: 'put', path: '/Shifts', controller: 'Shift', action: 'UpdateShift' },
     { method: 'delete', path: '/Shifts/:shiftId', controller: 'Shift', action: 'DeleteShift' },
-   
+
+    { method: 'get', path: '/Personelshifts/:personelshiftId', controller: 'Personelshift', action: 'GetPersonelshift' },
+    { method: 'get', path: '/Personelshifts', controller: 'Personelshift', action: 'GetPersonelshifts' },
+    { method: 'post', path: '/Personelshifts', controller: 'Personelshift', action: 'AddPersonelshift' },
+    { method: 'put', path: '/Personelshifts', controller: 'Personelshift', action: 'UpdatePersonelshift' },
+    { method: 'delete', path: '/Personelshifts/:personelshiftId', controller: 'Personelshift', action: 'DeletePersonelshift' },
+
+    { method: 'get', path: '/Personelshiftdetails/:personelshiftdetailId', controller: 'Personelshiftdetail', action: 'GetPersonelshiftdetail' },
+    { method: 'get', path: '/Personelshiftdetails', controller: 'Personelshiftdetail', action: 'GetPersonelshiftdetails' },
+    { method: 'post', path: '/Personelshiftdetails', controller: 'Personelshiftdetail', action: 'AddPersonelshiftdetail' },
+    { method: 'put', path: '/Personelshiftdetails', controller: 'Personelshiftdetail', action: 'UpdatePersonelshiftdetail' },
+    { method: 'delete', path: '/Personelshiftdetails/:personelshiftdetailId', controller: 'Personelshiftdetail', action: 'DeletePersonelshiftdetail' },
+
     { method: 'get', path: '/Professionpresettings/:professionpresettingId', controller: 'Professionpresetting', action: 'GetProfessionpresetting' },
     { method: 'get', path: '/Professionpresettings', controller: 'Professionpresetting', action: 'GetProfessionpresettings' },
     { method: 'post', path: '/Professionpresettings', controller: 'Professionpresetting', action: 'AddProfessionpresetting' },
     { method: 'put', path: '/Professionpresettings', controller: 'Professionpresetting', action: 'UpdateProfessionpresetting' },
     { method: 'delete', path: '/Professionpresettings/:professionpresettingId', controller: 'Professionpresetting', action: 'DeleteProfessionpresetting' },
-   
+
     { method: 'get', path: '/Personelpresettings/:personelpresettingId', controller: 'Personelpresetting', action: 'GetPersonelpresetting' },
     { method: 'get', path: '/Personelpresettings', controller: 'Personelpresetting', action: 'GetPersonelpresettings' },
     { method: 'post', path: '/Personelpresettings', controller: 'Personelpresetting', action: 'AddPersonelpresetting' },
