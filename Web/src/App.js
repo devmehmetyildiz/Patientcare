@@ -53,7 +53,7 @@ class App extends Component {
     window.scrollTo(0, 0);
     const fullPageLayoutRoutes = ['Login', 'login', 'Register', 'register', 'Forgetpassword', 'forgetpassword', 'Passwordreset'];
     const path = this.props.location.pathname.split('/').length > 0 ? this.props.location.pathname.split('/')[1] : this.props.location.pathname.replace('/', '')
-    document.title = fullPageLayoutRoutes.includes(path) ? "Star Note" : path
+    document.title = fullPageLayoutRoutes.includes(path) ? "Elder Camp" : "Elder Camp"//path
     for (let i = 0; i < fullPageLayoutRoutes.length; i++) {
       if (path === fullPageLayoutRoutes[i]) {
         this.setState({

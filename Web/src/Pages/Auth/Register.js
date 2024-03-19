@@ -20,7 +20,7 @@ export class Register extends Component {
                             </div>
                             <Header as='h3' textAlign='center'>
                                 <br />
-                                <p className='text-[#2355a0]' >Patient Care Hasta Bakım Uygulaması</p>
+                                <p className='text-[#2355a0]' >Elder Camp Hasta Bakım Uygulaması</p>
                             </Header>
                             <Form size='large' className='p-4' onSubmit={this.RegisterHandler}>
                                 <Form.Input transparent placeholder="Kullanıcı Adı" name="Username" fluid icon='user' iconPosition='left' />

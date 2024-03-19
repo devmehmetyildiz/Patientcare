@@ -44,13 +44,6 @@ const Routes = [
     { method: 'put', path: '/Patientmovements', controller: 'Patientmovement', action: 'UpdatePatientmovement' },
     { method: 'delete', path: '/Patientmovements/:patientmovementId', controller: 'Patientmovement', action: 'DeletePatientmovement' },
 
-    { method: 'get', path: '/Personels/:personelId', controller: 'Personel', action: 'GetPersonel' },
-    { method: 'get', path: '/Personels', controller: 'Personel', action: 'GetPersonels' },
-    { method: 'post', path: '/Personels/Addrecord', controller: 'Personel', action: 'AddRecordPersonel' },
-    { method: 'post', path: '/Personels', controller: 'Personel', action: 'AddPersonel' },
-    { method: 'put', path: '/Personels', controller: 'Personel', action: 'UpdatePersonel' },
-    { method: 'delete', path: '/Personels/:personelId', controller: 'Personel', action: 'DeletePersonel' },
-
     { method: 'get', path: '/Companycashmovements/:movementId', controller: 'Companycashmovement', action: 'GetCompanycashmovement' },
     { method: 'get', path: '/Companycashmovements', controller: 'Companycashmovement', action: 'GetCompanycashmovements' },
     { method: 'post', path: '/Companycashmovements', controller: 'Companycashmovement', action: 'AddCompanycashmovement' },

@@ -70,7 +70,7 @@ export default class About extends Component {
                             <Breadcrumb size='big'>
                                 <Headerbredcrump>
                                     <Link to={"/Cases"}>
-                                        <Breadcrumb.Section>Elder Care</Breadcrumb.Section>
+                                        <Breadcrumb.Section>Elder Camp</Breadcrumb.Section>
                                     </Link>
                                     <Breadcrumb.Divider icon='right chevron' />
                                     <Breadcrumb.Section>About</Breadcrumb.Section>

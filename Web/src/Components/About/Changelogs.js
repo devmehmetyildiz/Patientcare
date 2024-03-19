@@ -516,7 +516,7 @@ const version1_0_0_17 = {
             title: "Genel", commits: [
                 "Grid tablolara genel arama eklendi",
                 "Navigasyonda yer alan sayfa search kısmına hasta searchde eklendi tc ve isime görede arama yapılabilecek",
-                "Varsayılan ekranı ayarlanan kullanıcılar elder care'e tıklarak varsayılan ekrana gidebilir",
+                "Varsayılan ekranı ayarlanan kullanıcılar elder camp'e tıklarak varsayılan ekrana gidebilir",
                 "Varsayılan ekranı ayarlanan kullanıcılar ilk açılışta varsayılan ekrana yönlendirilecek",
             ]
         },

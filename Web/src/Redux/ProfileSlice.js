@@ -200,7 +200,7 @@ export const Createpasswordforget = createAsyncThunk(
             const response = await instanse.get(config.services.Auth, 'Password/Createrequest/' + email);
             dispatch(fillnotification({
                 type: 'Success',
-                code: 'Star Note',
+                code: 'Elder Camp',
                 description: 'Parola Sıfırlama Talebiniz alınmıştır. Lütfen mail adresinizi kontrol ediniz',
             }));
             return response.data;

@@ -448,7 +448,7 @@ function Createresettemplate(Username, Url) {
                 <tr>
                   <td class="email-masthead">
                     <a href="https://example.com" class="f-fallback email-masthead_name">
-                    ELDER CARE
+                    ELDER CAMP
                   </a>
                   </td>
                 </tr>
@@ -461,7 +461,7 @@ function Createresettemplate(Username, Url) {
                         <td class="content-cell">
                           <div class="f-fallback">
                             <h1>Merhaba ${Username},</h1>
-                            <p>Yakın zamanda Elder Care hesabınızın şifresini sıfırlama talebinde bulundunuz. Sıfırlamak için aşağıdaki düğmeyi kullanın. <strong>Bu şifre sıfırlama yalnızca önümüzdeki 24 saat için geçerlidir.</strong></p>
+                            <p>Yakın zamanda Elder Camp hesabınızın şifresini sıfırlama talebinde bulundunuz. Sıfırlamak için aşağıdaki düğmeyi kullanın. <strong>Bu şifre sıfırlama yalnızca önümüzdeki 24 saat için geçerlidir.</strong></p>
                             <!-- Action -->
                             <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                               <tr>
@@ -479,7 +479,7 @@ function Createresettemplate(Username, Url) {
                               </tr>
                             </table>
                             <p>Teşekkürler,
-                              <br>Elder Care Takımı</p>
+                              <br>Elder Camp Takımı</p>
                             <!-- Sub copy -->
                             <table class="body-sub" role="presentation">
                               <tr>

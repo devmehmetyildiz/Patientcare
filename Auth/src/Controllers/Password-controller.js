@@ -76,7 +76,7 @@ async function Createrequest(req, res, next) {
     await transporter.sendMail({
       from: emailsetting.Mailaddress, 
       to: user.Email, 
-      subject: "Star Note Parola Sıfırlama Talebiniz Alınmıştır", 
+      subject: "Elder Camp Parola Sıfırlama Talebiniz Alınmıştır", 
       text: "Bu mesaj uygulama tarafından gönderilmiştir",
       html: Createresettemplate(user.Username, passwordresetrequest.Reseturl),
     })

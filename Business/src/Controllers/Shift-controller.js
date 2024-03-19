@@ -1,5 +1,7 @@
 const config = require("../Config")
+const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
+const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -63,16 +65,25 @@ async function AddShift(req, res, next) {
     let shiftuuid = uuid()
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
 
     try {
         await db.shiftModel.create({
             ...req.body,
             Uuid: shiftuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Create,
+            service: 'Vardiyalar',
+            role: 'shiftnotification',
+            message: `${Name} vardiyası ${username} tarafından Eklendi.`,
+            pushurl: '/Shifts'
+        })
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -111,6 +122,8 @@ async function UpdateShift(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const shift = db.shiftModel.findOne({ where: { Uuid: Uuid } })
         if (!shift) {
@@ -122,10 +135,17 @@ async function UpdateShift(req, res, next) {
 
         await db.shiftModel.update({
             ...req.body,
-            Updateduser: "System",
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await CreateNotification({
+            type: types.Update,
+            service: 'Vardiyalar',
+            role: 'shiftnotification',
+            message: `${Name} vardiyası ${username} tarafından Güncellendi.`,
+            pushurl: '/Shifts'
+        })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -149,6 +169,8 @@ async function DeleteShift(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const shift = db.shiftModel.findOne({ where: { Uuid: Uuid } })
         if (!shift) {
@@ -159,6 +181,14 @@ async function DeleteShift(req, res, next) {
         }
 
         await db.shiftModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Vardiyalar',
+            role: 'shiftnotification',
+            message: `${shift?.Name} vardiyası ${username} tarafından Silindi.`,
+            pushurl: '/Shifts'
+        })
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -166,11 +196,6 @@ async function DeleteShift(req, res, next) {
     }
     GetShifts(req, res, next)
 }
-
-
-
-
-
 
 module.exports = {
     GetShifts,
