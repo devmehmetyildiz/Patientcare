@@ -1,7 +1,7 @@
 const Priveleges = [
     { code: 'admin', text: { en: 'Admin', tr: 'Admin' },  group: { en: 'Base', tr: 'Temel' } },
     { code: 'basic', text: { en: 'Basic', tr: 'Basit Ayarlar' },  group: { en: 'Base', tr: 'Temel' } },
-
+    
     { code: 'bedscreen',       text: { en: 'Beds Screen',      tr: 'Yataklar Veri' },             group: { en: 'Beds', tr: 'Yataklar' } },
     { code: 'bedview',         text: { en: 'Beds View',        tr: 'Yataklar Görüntüleme' },      group: { en: 'Beds', tr: 'Yataklar' } },
     { code: 'bedadd',          text: { en: 'Beds Add',         tr: 'Yataklar Oluşturma' },        group: { en: 'Beds', tr: 'Yataklar' } },
@@ -10,7 +10,7 @@ const Priveleges = [
     { code: 'bedmanageview',   text: { en: 'Beds Manage View', tr: 'Yataklar Görünüm Ayarlama' }, group: { en: 'Beds', tr: 'Yataklar' } },
     { code: 'bedgetreport',    text: { en: 'Beds Get Report',  tr: 'Yataklar Rapor Alma' },       group: { en: 'Beds', tr: 'Yataklar' } },
     { code: 'bednotification', text: { en: 'Beds Notification',tr: 'Yataklar Bildirim Alma' },    group: { en: 'Beds', tr: 'Yataklar' } },
-
+    
     { code: 'casescreen',       text: { en: 'Cases Screen',      tr: 'Durumlar Veri' },             group: { en: 'Cases', tr: 'Durumlar' } },
     { code: 'caseview',         text: { en: 'Cases View',        tr: 'Durumlar Görüntüleme' },      group: { en: 'Cases', tr: 'Durumlar' } },
     { code: 'caseadd',          text: { en: 'Cases Add',         tr: 'Durumlar Oluşturma' },        group: { en: 'Cases', tr: 'Durumlar' } },
@@ -19,7 +19,7 @@ const Priveleges = [
     { code: 'casemanageview',   text: { en: 'Cases Manage View', tr: 'Durumlar Görünüm Ayarlama' }, group: { en: 'Cases', tr: 'Durumlar' } },
     { code: 'casegetreport',    text: { en: 'Cases Get Report',  tr: 'Durumlar Rapor Alma' },       group: { en: 'Cases', tr: 'Durumlar' } },
     { code: 'casenotification', text: { en: 'Cases Notification',tr: 'Durumlar Bildirim Alma' },    group: { en: 'Cases', tr: 'Durumlar' } },
-
+    
     { code: 'costumertypescreen',       text: { en: 'Costumertypes Screen',      tr: 'Müşteri Türleri Veri' },             group: { en: 'Costumertypes', tr: 'Müşteri Türleri' } },
     { code: 'costumertypeview',         text: { en: 'Costumertypes View',        tr: 'Müşteri Türleri Görüntüleme' },      group: { en: 'Costumertypes', tr: 'Müşteri Türleri' } },
     { code: 'costumertypeadd',          text: { en: 'Costumertypes Add',         tr: 'Müşteri Türleri Oluşturma' },        group: { en: 'Costumertypes', tr: 'Müşteri Türleri' } },
@@ -28,7 +28,7 @@ const Priveleges = [
     { code: 'costumertypemanageview',   text: { en: 'Costumertypes Manage View', tr: 'Müşteri Türleri Görünüm Ayarlama' }, group: { en: 'Costumertypes', tr: 'Müşteri Türleri' } },
     { code: 'costumertypegetreport',    text: { en: 'Costumertypes Get Report',  tr: 'Müşteri Türleri Rapor Alma' },       group: { en: 'Costumertypes', tr: 'Müşteri Türleri' } },
     { code: 'costumertypenotification', text: { en: 'Costumertypes Notification',tr: 'Müşteri Türleri Bildirim Alma' },    group: { en: 'Costumertypes', tr: 'Müşteri Türleri' } },
-
+    
     { code: 'departmentscreen',       text: { en: 'Departments Screen',      tr: 'Departmanlar Veri' },             group: { en: 'Departments', tr: 'Departmanlar' } },
     { code: 'departmentview',         text: { en: 'Departments View',        tr: 'Departmanlar Görüntüleme' },      group: { en: 'Departments', tr: 'Departmanlar' } },
     { code: 'departmentadd',          text: { en: 'Departments Add',         tr: 'Departmanlar Oluşturma' },        group: { en: 'Departments', tr: 'Departmanlar' } },
@@ -37,7 +37,7 @@ const Priveleges = [
     { code: 'departmentmanageview',   text: { en: 'Departments Manage View', tr: 'Departmanlar Görünüm Ayarlama' }, group: { en: 'Departments', tr: 'Departmanlar' } },
     { code: 'departmentgetreport',    text: { en: 'Departments Get Report',  tr: 'Departmanlar Rapor Alma' },       group: { en: 'Departments', tr: 'Departmanlar' } },
     { code: 'departmentnotification', text: { en: 'Departments Notification',tr: 'Departmanlar Bildirim Alma' },    group: { en: 'Departments', tr: 'Departmanlar' } },
-
+    
     { code: 'floorscreen',       text: { en: 'Floors Screen',      tr: 'Katlar Veri' },             group: { en: 'Floors', tr: 'Katlar' } },
     { code: 'floorview',         text: { en: 'Floors View',        tr: 'Katlar Görüntüleme' },      group: { en: 'Floors', tr: 'Katlar' } },
     { code: 'flooradd',          text: { en: 'Floors Add',         tr: 'Katlar Oluşturma' },        group: { en: 'Floors', tr: 'Katlar' } },
@@ -46,7 +46,7 @@ const Priveleges = [
     { code: 'floormanageview',   text: { en: 'Floors Manage View', tr: 'Katlar Görünüm Ayarlama' }, group: { en: 'Floors', tr: 'Katlar' } },
     { code: 'floorgetreport',    text: { en: 'Floors Get Report',  tr: 'Katlar Rapor Alma' },       group: { en: 'Floors', tr: 'Katlar' } },
     { code: 'floornotification', text: { en: 'Floors Notification',tr: 'Katlar Bildirim Alma' },    group: { en: 'Floors', tr: 'Katlar' } },
-
+    
     { code: 'patienttypescreen',       text: { en: 'Patienttypes Screen',      tr: 'Hasta Türleri Veri' },             group: { en: 'Patienttypes', tr: 'Hasta Türleri' } },
     { code: 'patienttypeview',         text: { en: 'Patienttypes View',        tr: 'Hasta Türleri Görüntüleme' },      group: { en: 'Patienttypes', tr: 'Hasta Türleri' } },
     { code: 'patienttypeadd',          text: { en: 'Patienttypes Add',         tr: 'Hasta Türleri Oluşturma' },        group: { en: 'Patienttypes', tr: 'Hasta Türleri' } },
@@ -55,7 +55,7 @@ const Priveleges = [
     { code: 'patienttypemanageview',   text: { en: 'Patienttypes Manage View', tr: 'Hasta Türleri Görünüm Ayarlama' }, group: { en: 'Patienttypes', tr: 'Hasta Türleri' } },
     { code: 'patienttypegetreport',    text: { en: 'Patienttypes Get Report',  tr: 'Hasta Türleri Rapor Alma' },       group: { en: 'Patienttypes', tr: 'Hasta Türleri' } },
     { code: 'patienttypenotification', text: { en: 'Patienttypes Notification',tr: 'Hasta Türleri Bildirim Alma' },    group: { en: 'Patienttypes', tr: 'Hasta Türleri' } },
-
+    
     { code: 'periodscreen',       text: { en: 'Periods Screen',      tr: 'Periyotlar Veri' },             group: { en: 'Periods', tr: 'Periyotlar' } },
     { code: 'periodview',         text: { en: 'Periods View',        tr: 'Periyotlar Görüntüleme' },      group: { en: 'Periods', tr: 'Periyotlar' } },
     { code: 'periodadd',          text: { en: 'Periods Add',         tr: 'Periyotlar Oluşturma' },        group: { en: 'Periods', tr: 'Periyotlar' } },
@@ -64,7 +64,7 @@ const Priveleges = [
     { code: 'periodmanageview',   text: { en: 'Periods Manage View', tr: 'Periyotlar Görünüm Ayarlama' }, group: { en: 'Periods', tr: 'Periyotlar' } },
     { code: 'periodgetreport',    text: { en: 'Periods Get Report',  tr: 'Periyotlar Rapor Alma' },       group: { en: 'Periods', tr: 'Periyotlar' } },
     { code: 'periodnotification', text: { en: 'Periods Notification',tr: 'Periyotlar Bildirim Alma' },    group: { en: 'Periods', tr: 'Periyotlar' } },
-
+    
     { code: 'roomscreen',       text: { en: 'Rooms Screen',      tr: 'Odalar Veri' },             group: { en: 'Rooms', tr: 'Odalar' } },
     { code: 'roomview',         text: { en: 'Rooms View',        tr: 'Odalar Görüntüleme' },      group: { en: 'Rooms', tr: 'Odalar' } },
     { code: 'roomadd',          text: { en: 'Rooms Add',         tr: 'Odalar Oluşturma' },        group: { en: 'Rooms', tr: 'Odalar' } },
@@ -73,16 +73,16 @@ const Priveleges = [
     { code: 'roommanageview',   text: { en: 'Rooms Manage View', tr: 'Odalar Görünüm Ayarlama' }, group: { en: 'Rooms', tr: 'Odalar' } },
     { code: 'roomgetreport',    text: { en: 'Rooms Get Report',  tr: 'Odalar Rapor Alma' },       group: { en: 'Rooms', tr: 'Odalar' } },
     { code: 'roomnotification', text: { en: 'Rooms Notification',tr: 'Odalar Bildirim Alma' },    group: { en: 'Rooms', tr: 'Odalar' } },
-
-    { code: 'shiftscreen',       text: { en: 'Shifts Screen',      tr: 'Vardiyalar Veri' },             group: { en: 'Shifts', tr: 'Vardiyalar' } },
-    { code: 'shiftview',         text: { en: 'Shifts View',        tr: 'Vardiyalar Görüntüleme' },      group: { en: 'Shifts', tr: 'Vardiyalar' } },
-    { code: 'shiftadd',          text: { en: 'Shifts Add',         tr: 'Vardiyalar Oluşturma' },        group: { en: 'Shifts', tr: 'Vardiyalar' } },
-    { code: 'shiftupdate',       text: { en: 'Shifts Update',      tr: 'Vardiyalar Güncelleme' },       group: { en: 'Shifts', tr: 'Vardiyalar' } },
-    { code: 'shiftdelete',       text: { en: 'Shifts Delete',      tr: 'Vardiyalar Silme' },            group: { en: 'Shifts', tr: 'Vardiyalar' } },
-    { code: 'shiftmanageview',   text: { en: 'Shifts Manage View', tr: 'Vardiyalar Görünüm Ayarlama' }, group: { en: 'Shifts', tr: 'Vardiyalar' } },
-    { code: 'shiftgetreport',    text: { en: 'Shifts Get Report',  tr: 'Vardiyalar Rapor Alma' },       group: { en: 'Shifts', tr: 'Vardiyalar' } },
-    { code: 'shiftnotification', text: { en: 'Shifts Notification',tr: 'Vardiyalar Bildirim Alma' },    group: { en: 'Shifts', tr: 'Vardiyalar' } },
-
+    
+    { code: 'shiftdefinescreen',       text: { en: 'Shiftdefines Screen',      tr: 'Vardiya Tanımları Veri' },             group: { en: 'Shiftdefines', tr: 'Vardiya Tanımları' } },
+    { code: 'shiftdefineview',         text: { en: 'Shiftdefines View',        tr: 'Vardiya Tanımları Görüntüleme' },      group: { en: 'Shiftdefines', tr: 'Vardiya Tanımları' } },
+    { code: 'shiftdefineadd',          text: { en: 'Shiftdefines Add',         tr: 'Vardiya Tanımları Oluşturma' },        group: { en: 'Shiftdefines', tr: 'Vardiya Tanımları' } },
+    { code: 'shiftdefineupdate',       text: { en: 'Shiftdefines Update',      tr: 'Vardiya Tanımları Güncelleme' },       group: { en: 'Shiftdefines', tr: 'Vardiya Tanımları' } },
+    { code: 'shiftdefinedelete',       text: { en: 'Shiftdefines Delete',      tr: 'Vardiya Tanımları Silme' },            group: { en: 'Shiftdefines', tr: 'Vardiya Tanımları' } },
+    { code: 'shiftdefinemanageview',   text: { en: 'Shiftdefines Manage View', tr: 'Vardiya Tanımları Görünüm Ayarlama' }, group: { en: 'Shiftdefines', tr: 'Vardiya Tanımları' } },
+    { code: 'shiftdefinegetreport',    text: { en: 'Shiftdefines Get Report',  tr: 'Vardiya Tanımları Rapor Alma' },       group: { en: 'Shiftdefines', tr: 'Vardiya Tanımları' } },
+    { code: 'shiftdefinenotification', text: { en: 'Shiftdefines Notification',tr: 'Vardiya Tanımları Bildirim Alma' },    group: { en: 'Shiftdefines', tr: 'Vardiya Tanımları' } },
+    
     { code: 'tododefinescreen',       text: { en: 'Routines Screen',      tr: 'Rutinler Veri' },             group: { en: 'Routines', tr: 'Rutinler' } },
     { code: 'tododefineview',         text: { en: 'Routines View',        tr: 'Rutinler Görüntüleme' },      group: { en: 'Routines', tr: 'Rutinler' } },
     { code: 'tododefineadd',          text: { en: 'Routines Add',         tr: 'Rutinler Oluşturma' },        group: { en: 'Routines', tr: 'Rutinler' } },
@@ -100,7 +100,7 @@ const Priveleges = [
     { code: 'todogroupdefinemanageview',   text: { en: 'Routine Lists Manage View', tr: 'Rutin Listeleri Görünüm Ayarlama' }, group: { en: 'Routine Lists', tr: 'Rutin Listeleri' } },
     { code: 'todogroupdefinegetreport',    text: { en: 'Routine Lists Get Report',  tr: 'Rutin Listeleri Rapor Alma' },       group: { en: 'Routine Lists', tr: 'Rutin Listeleri' } },
     { code: 'todogroupdefinenotification', text: { en: 'Routine Lists Notification',tr: 'Rutin Listeleri Bildirim Alma' },    group: { en: 'Routine Lists', tr: 'Rutin Listeleri' } },
-
+    
     { code: 'unitscreen',       text: { en: 'Units Screen',      tr: 'Birimler Veri' },             group: { en: 'Units', tr: 'Birimler' } },
     { code: 'unitview',         text: { en: 'Units View',        tr: 'Birimler Görüntüleme' },      group: { en: 'Units', tr: 'Birimler' } },
     { code: 'unitadd',          text: { en: 'Units Add',         tr: 'Birimler Oluşturma' },        group: { en: 'Units', tr: 'Birimler' } },
@@ -109,7 +109,7 @@ const Priveleges = [
     { code: 'unitmanageview',   text: { en: 'Units Manage View', tr: 'Birimler Görünüm Ayarlama' }, group: { en: 'Units', tr: 'Birimler' } },
     { code: 'unitgetreport',    text: { en: 'Units Get Report',  tr: 'Birimler Rapor Alma' },       group: { en: 'Units', tr: 'Birimler' } },
     { code: 'unitnotification', text: { en: 'Units Notification',tr: 'Birimler Bildirim Alma' },    group: { en: 'Units', tr: 'Birimler' } },
-
+    
     { code: 'mailsettingscreen',       text: { en: 'Mailsettings Screen',      tr: 'Mail Ayarları Veri' },             group: { en: 'Mailsettings', tr: 'Mail Ayarları' } },
     { code: 'mailsettingview',         text: { en: 'Mailsettings View',        tr: 'Mail Ayarları Görüntüleme' },      group: { en: 'Mailsettings', tr: 'Mail Ayarları' } },
     { code: 'mailsettingadd',          text: { en: 'Mailsettings Add',         tr: 'Mail Ayarları Oluşturma' },        group: { en: 'Mailsettings', tr: 'Mail Ayarları' } },
@@ -118,7 +118,7 @@ const Priveleges = [
     { code: 'mailsettingmanageview',   text: { en: 'Mailsettings Manage View', tr: 'Mail Ayarları Görünüm Ayarlama' }, group: { en: 'Mailsettings', tr: 'Mail Ayarları' } },
     { code: 'mailsettinggetreport',    text: { en: 'Mailsettings Get Report',  tr: 'Mail Ayarları Rapor Alma' },       group: { en: 'Mailsettings', tr: 'Mail Ayarları' } },
     { code: 'mailsettingnotification', text: { en: 'Mailsettings Notification',tr: 'Mail Ayarları Bildirim Alma' },    group: { en: 'Mailsettings', tr: 'Mail Ayarları' } },
-
+    
     { code: 'printtemplatescreen',       text: { en: 'Printtemplates Screen',      tr: 'Yazdırma Taslakları Veri' },             group: { en: 'Printtemplates', tr: 'Yazdırma Taslakları' } },
     { code: 'printtemplateview',         text: { en: 'Printtemplates View',        tr: 'Yazdırma Taslakları Görüntüleme' },      group: { en: 'Printtemplates', tr: 'Yazdırma Taslakları' } },
     { code: 'printtemplateadd',          text: { en: 'Printtemplates Add',         tr: 'Yazdırma Taslakları Oluşturma' },        group: { en: 'Printtemplates', tr: 'Yazdırma Taslakları' } },
@@ -127,7 +127,7 @@ const Priveleges = [
     { code: 'printtemplatemanageview',   text: { en: 'Printtemplates Manage View', tr: 'Yazdırma Taslakları Görünüm Ayarlama' }, group: { en: 'Printtemplates', tr: 'Yazdırma Taslakları' } },
     { code: 'printtemplategetreport',    text: { en: 'Printtemplates Get Report',  tr: 'Yazdırma Taslakları Rapor Alma' },       group: { en: 'Printtemplates', tr: 'Yazdırma Taslakları' } },
     { code: 'printtemplatenotification', text: { en: 'Printtemplates Notification',tr: 'Yazdırma Taslakları Bildirim Alma' },    group: { en: 'Printtemplates', tr: 'Yazdırma Taslakları' } },
-
+    
     { code: 'rulescreen',       text: { en: 'Rules Screen',      tr: 'Kurallar Veri' },             group: { en: 'Rules', tr: 'Kurallar' } },
     { code: 'ruleview',         text: { en: 'Rules View',        tr: 'Kurallar Görüntüleme' },      group: { en: 'Rules', tr: 'Kurallar' } },
     { code: 'ruleadd',          text: { en: 'Rules Add',         tr: 'Kurallar Oluşturma' },        group: { en: 'Rules', tr: 'Kurallar' } },
@@ -136,7 +136,7 @@ const Priveleges = [
     { code: 'rulemanageview',   text: { en: 'Rules Manage View', tr: 'Kurallar Görünüm Ayarlama' }, group: { en: 'Rules', tr: 'Kurallar' } },
     { code: 'rulegetreport',    text: { en: 'Rules Get Report',  tr: 'Kurallar Rapor Alma' },       group: { en: 'Rules', tr: 'Kurallar' } },
     { code: 'rulenotification', text: { en: 'Rules Notification',tr: 'Kurallar Bildirim Alma' },    group: { en: 'Rules', tr: 'Kurallar' } },
-
+    
     { code: 'patientstockscreen',       text: { en: 'Patientstocks Screen',      tr: 'Hasta Stokları Veri' },             group: { en: 'Patientstocks', tr: 'Hasta Stokları' } },
     { code: 'patientstockview',         text: { en: 'Patientstocks View',        tr: 'Hasta Stokları Görüntüleme' },      group: { en: 'Patientstocks', tr: 'Hasta Stokları' } },
     { code: 'patientstockadd',          text: { en: 'Patientstocks Add',         tr: 'Hasta Stokları Oluşturma' },        group: { en: 'Patientstocks', tr: 'Hasta Stokları' } },
@@ -145,7 +145,7 @@ const Priveleges = [
     { code: 'patientstockmanageview',   text: { en: 'Patientstocks Manage View', tr: 'Hasta Stokları Görünüm Ayarlama' }, group: { en: 'Patientstocks', tr: 'Hasta Stokları' } },
     { code: 'patientstockgetreport',    text: { en: 'Patientstocks Get Report',  tr: 'Hasta Stokları Rapor Alma' },       group: { en: 'Patientstocks', tr: 'Hasta Stokları' } },
     { code: 'patientstocknotification', text: { en: 'Patientstocks Notification',tr: 'Hasta Stokları Bildirim Alma' },    group: { en: 'Patientstocks', tr: 'Hasta Stokları' } },
-
+    
     { code: 'patientmedicinescreen',       text: { en: 'Patientmedicines Screen',      tr: 'Hasta İlaçları Veri' },             group: { en: 'Patientmedicines', tr: 'Hasta İlaçları' } },
     { code: 'patientmedicineview',         text: { en: 'Patientmedicines View',        tr: 'Hasta İlaçları Görüntüleme' },      group: { en: 'Patientmedicines', tr: 'Hasta İlaçları' } },
     { code: 'patientmedicineadd',          text: { en: 'Patientmedicines Add',         tr: 'Hasta İlaçları Oluşturma' },        group: { en: 'Patientmedicines', tr: 'Hasta İlaçları' } },
@@ -154,7 +154,7 @@ const Priveleges = [
     { code: 'patientmedicinemanageview',   text: { en: 'Patientmedicines Manage View', tr: 'Hasta İlaçları Görünüm Ayarlama' }, group: { en: 'Patientmedicines', tr: 'Hasta İlaçları' } },
     { code: 'patientmedicinegetreport',    text: { en: 'Patientmedicines Get Report',  tr: 'Hasta İlaçları Rapor Alma' },       group: { en: 'Patientmedicines', tr: 'Hasta İlaçları' } },
     { code: 'patientmedicinenotification', text: { en: 'Patientmedicines Notification',tr: 'Hasta İlaçları Bildirim Alma' },    group: { en: 'Patientmedicines', tr: 'Hasta İlaçları' } },
-
+    
     { code: 'patientsupplyscreen',       text: { en: 'Patientsupplies Screen',      tr: 'Hasta Sarf Malzemeleri Veri' },             group: { en: 'Patientsupplies', tr: 'Hasta Sarf Malzemeleri' } },
     { code: 'patientsupplyview',         text: { en: 'Patientsupplies View',        tr: 'Hasta Sarf Malzemeleri Görüntüleme' },      group: { en: 'Patientsupplies', tr: 'Hasta Sarf Malzemeleri' } },
     { code: 'patientsupplyadd',          text: { en: 'Patientsupplies Add',         tr: 'Hasta Sarf Malzemeleri Oluşturma' },        group: { en: 'Patientsupplies', tr: 'Hasta Sarf Malzemeleri' } },
@@ -163,7 +163,7 @@ const Priveleges = [
     { code: 'patientsupplymanageview',   text: { en: 'Patientsupplies Manage View', tr: 'Hasta Sarf Malzemeleri Görünüm Ayarlama' }, group: { en: 'Patientsupplies', tr: 'Hasta Sarf Malzemeleri' } },
     { code: 'patientsupplygetreport',    text: { en: 'Patientsupplies Get Report',  tr: 'Hasta Sarf Malzemeleri Rapor Alma' },       group: { en: 'Patientsupplies', tr: 'Hasta Sarf Malzemeleri' } },
     { code: 'patientsupplynotification', text: { en: 'Patientsupplies Notification',tr: 'Hasta Sarf Malzemeleri Bildirim Alma' },    group: { en: 'Patientsupplies', tr: 'Hasta Sarf Malzemeleri' } },
-
+    
     { code: 'patientstockmovementscreen',       text: { en: 'Patientstockmovements Screen',      tr: 'Hasta Stok Hareketleri Veri' },             group: { en: 'Patientstockmovements', tr: 'Hasta Stok Hareketleri' } },
     { code: 'patientstockmovementview',         text: { en: 'Patientstockmovements View',        tr: 'Hasta Stok Hareketleri Görüntüleme' },      group: { en: 'Patientstockmovements', tr: 'Hasta Stok Hareketleri' } },
     { code: 'patientstockmovementadd',          text: { en: 'Patientstockmovements Add',         tr: 'Hasta Stok Hareketleri Oluşturma' },        group: { en: 'Patientstockmovements', tr: 'Hasta Stok Hareketleri' } },
@@ -172,7 +172,7 @@ const Priveleges = [
     { code: 'patientstockmovementmanageview',   text: { en: 'Patientstockmovements Manage View', tr: 'Hasta Stok Hareketleri Görünüm Ayarlama' }, group: { en: 'Patientstockmovements', tr: 'Hasta Stok Hareketleri' } },
     { code: 'patientstockmovementgetreport',    text: { en: 'Patientstockmovements Get Report',  tr: 'Hasta Stok Hareketleri Rapor Alma' },       group: { en: 'Patientstockmovements', tr: 'Hasta Stok Hareketleri' } },
     { code: 'patientstockmovementnotification', text: { en: 'Patientstockmovements Notification',tr: 'Hasta Stok Hareketleri Bildirim Alma' },    group: { en: 'Patientstockmovements', tr: 'Hasta Stok Hareketleri' } },
-
+    
     { code: 'purchaseorderscreen',       text: { en: 'Purchaseorders Screen',      tr: 'Satın Almalar Veri' },             group: { en: 'Purchaseorders', tr: 'Satın Almalar' } },
     { code: 'purchaseorderview',         text: { en: 'Purchaseorders View',        tr: 'Satın Almalar Görüntüleme' },      group: { en: 'Purchaseorders', tr: 'Satın Almalar' } },
     { code: 'purchaseorderadd',          text: { en: 'Purchaseorders Add',         tr: 'Satın Almalar Oluşturma' },        group: { en: 'Purchaseorders', tr: 'Satın Almalar' } },
@@ -181,7 +181,7 @@ const Priveleges = [
     { code: 'purchaseordermanageview',   text: { en: 'Purchaseorders Manage View', tr: 'Satın Almalar Görünüm Ayarlama' }, group: { en: 'Purchaseorders', tr: 'Satın Almalar' } },
     { code: 'purchaseordergetreport',    text: { en: 'Purchaseorders Get Report',  tr: 'Satın Almalar Rapor Alma' },       group: { en: 'Purchaseorders', tr: 'Satın Almalar' } },
     { code: 'purchaseordernotification', text: { en: 'Purchaseorders Notification',tr: 'Satın Almalar Bildirim Alma' },    group: { en: 'Purchaseorders', tr: 'Satın Almalar' } },
-
+    
     { code: 'purchaseorderstockscreen',       text: { en: 'Purchaseorderstocks Screen',      tr: 'Satın Alma Stokları Veri' },             group: { en: 'Purchaseorderstocks', tr: 'Satın Alma Stokları' } },
     { code: 'purchaseorderstockview',         text: { en: 'Purchaseorderstocks View',        tr: 'Satın Alma Stokları Görüntüleme' },      group: { en: 'Purchaseorderstocks', tr: 'Satın Alma Stokları' } },
     { code: 'purchaseorderstockadd',          text: { en: 'Purchaseorderstocks Add',         tr: 'Satın Alma Stokları Oluşturma' },        group: { en: 'Purchaseorderstocks', tr: 'Satın Alma Stokları' } },
@@ -190,7 +190,7 @@ const Priveleges = [
     { code: 'purchaseorderstockmanageview',   text: { en: 'Purchaseorderstocks Manage View', tr: 'Satın Alma Stokları Görünüm Ayarlama' }, group: { en: 'Purchaseorderstocks', tr: 'Satın Alma Stokları' } },
     { code: 'purchaseorderstockgetreport',    text: { en: 'Purchaseorderstocks Get Report',  tr: 'Satın Alma Stokları Rapor Alma' },       group: { en: 'Purchaseorderstocks', tr: 'Satın Alma Stokları' } },
     { code: 'purchaseorderstocknotification', text: { en: 'Purchaseorderstocks Notification',tr: 'Satın Alma Stokları Bildirim Alma' },    group: { en: 'Purchaseorderstocks', tr: 'Satın Alma Stokları' } },
-
+    
     { code: 'purchaseordermedicinescreen',       text: { en: 'Purchaseordermedicines Screen',      tr: 'Satın Alma İlaçları Veri' },             group: { en: 'Purchaseordermedicines', tr: 'Satın Alma İlaçları' } },
     { code: 'purchaseordermedicineview',         text: { en: 'Purchaseordermedicines View',        tr: 'Satın Alma İlaçları Görüntüleme' },      group: { en: 'Purchaseordermedicines', tr: 'Satın Alma İlaçları' } },
     { code: 'purchaseordermedicineadd',          text: { en: 'Purchaseordermedicines Add',         tr: 'Satın Alma İlaçları Oluşturma' },        group: { en: 'Purchaseordermedicines', tr: 'Satın Alma İlaçları' } },
@@ -199,7 +199,7 @@ const Priveleges = [
     { code: 'purchaseordermedicinemanageview',   text: { en: 'Purchaseordermedicines Manage View', tr: 'Satın Alma İlaçları Görünüm Ayarlama' }, group: { en: 'Purchaseordermedicines', tr: 'Satın Alma İlaçları' } },
     { code: 'purchaseordermedicinegetreport',    text: { en: 'Purchaseordermedicines Get Report',  tr: 'Satın Alma İlaçları Rapor Alma' },       group: { en: 'Purchaseordermedicines', tr: 'Satın Alma İlaçları' } },
     { code: 'purchaseordermedicinenotification', text: { en: 'Purchaseordermedicines Notification',tr: 'Satın Alma İlaçları Bildirim Alma' },    group: { en: 'Purchaseordermedicines', tr: 'Satın Alma İlaçları' } },
-
+    
     { code: 'purchaseordersupplyscreen',       text: { en: 'Purchaseordersupplies Screen',      tr: 'Satın Alma Sarf Malzemeleri Veri' },             group: { en: 'Purchaseordersupplies', tr: 'Satın Alma Sarf Malzemeleri' } },
     { code: 'purchaseordersupplyview',         text: { en: 'Purchaseordersupplies View',        tr: 'Satın Alma Sarf Malzemeleri Görüntüleme' },      group: { en: 'Purchaseordersupplies', tr: 'Satın Alma Sarf Malzemeleri' } },
     { code: 'purchaseordersupplyadd',          text: { en: 'Purchaseordersupplies Add',         tr: 'Satın Alma Sarf Malzemeleri Oluşturma' },        group: { en: 'Purchaseordersupplies', tr: 'Satın Alma Sarf Malzemeleri' } },
@@ -208,7 +208,7 @@ const Priveleges = [
     { code: 'purchaseordersupplymanageview',   text: { en: 'Purchaseordersupplies Manage View', tr: 'Satın Alma Sarf Malzemeleri Görünüm Ayarlama' }, group: { en: 'Purchaseordersupplies', tr: 'Satın Alma Sarf Malzemeleri' } },
     { code: 'purchaseordersupplygetreport',    text: { en: 'Purchaseordersupplies Get Report',  tr: 'Satın Alma Sarf Malzemeleri Rapor Alma' },       group: { en: 'Purchaseordersupplies', tr: 'Satın Alma Sarf Malzemeleri' } },
     { code: 'purchaseordersupplynotification', text: { en: 'Purchaseordersupplies Notification',tr: 'Satın Alma Sarf Malzemeleri Bildirim Alma' },    group: { en: 'Purchaseordersupplies', tr: 'Satın Alma Sarf Malzemeleri' } },
-
+    
     { code: 'purchaseorderstockmovementscreen',       text: { en: 'Purchaseorderstockmovements Screen',      tr: 'Satın Alma Stok Hareketleri Veri' },             group: { en: 'Purchaseorderstockmovements', tr: 'Satın Alma Stok Hareketleri' } },
     { code: 'purchaseorderstockmovementview',         text: { en: 'Purchaseorderstockmovements View',        tr: 'Satın Alma Stok Hareketleri Görüntüleme' },      group: { en: 'Purchaseorderstockmovements', tr: 'Satın Alma Stok Hareketleri' } },
     { code: 'purchaseorderstockmovementadd',          text: { en: 'Purchaseorderstockmovements Add',         tr: 'Satın Alma Stok Hareketleri Oluşturma' },        group: { en: 'Purchaseorderstockmovements', tr: 'Satın Alma Stok Hareketleri' } },
@@ -217,7 +217,7 @@ const Priveleges = [
     { code: 'purchaseorderstockmovementmanageview',   text: { en: 'Purchaseorderstockmovements Manage View', tr: 'Satın Alma Stok Hareketleri Görünüm Ayarlama' }, group: { en: 'Purchaseorderstockmovements', tr: 'Satın Alma Stok Hareketleri' } },
     { code: 'purchaseorderstockmovementgetreport',    text: { en: 'Purchaseorderstockmovements Get Report',  tr: 'Satın Alma Stok Hareketleri Rapor Alma' },       group: { en: 'Purchaseorderstockmovements', tr: 'Satın Alma Stok Hareketleri' } },
     { code: 'purchaseorderstockmovementnotification', text: { en: 'Purchaseorderstockmovements Notification',tr: 'Satın Alma Stok Hareketleri Bildirim Alma' },    group: { en: 'Purchaseorderstockmovements', tr: 'Satın Alma Stok Hareketleri' } },
-
+    
     { code: 'stockscreen',       text: { en: 'Stocks Screen',      tr: 'Stoklar Veri' },             group: { en: 'Stocks', tr: 'Stoklar' } },
     { code: 'stockview',         text: { en: 'Stocks View',        tr: 'Stoklar Görüntüleme' },      group: { en: 'Stocks', tr: 'Stoklar' } },
     { code: 'stockadd',          text: { en: 'Stocks Add',         tr: 'Stoklar Oluşturma' },        group: { en: 'Stocks', tr: 'Stoklar' } },
@@ -226,7 +226,7 @@ const Priveleges = [
     { code: 'stockmanageview',   text: { en: 'Stocks Manage View', tr: 'Stoklar Görünüm Ayarlama' }, group: { en: 'Stocks', tr: 'Stoklar' } },
     { code: 'stockgetreport',    text: { en: 'Stocks Get Report',  tr: 'Stoklar Rapor Alma' },       group: { en: 'Stocks', tr: 'Stoklar' } },
     { code: 'stocknotification', text: { en: 'Stocks Notification',tr: 'Stoklar Bildirim Alma' },    group: { en: 'Stocks', tr: 'Stoklar' } },
-
+    
     { code: 'medicinescreen',       text: { en: 'Medicines Screen',      tr: 'İlaçlar Veri' },             group: { en: 'Medicines', tr: 'İlaçlar' } },
     { code: 'medicineview',         text: { en: 'Medicines View',        tr: 'İlaçlar Görüntüleme' },      group: { en: 'Medicines', tr: 'İlaçlar' } },
     { code: 'medicineadd',          text: { en: 'Medicines Add',         tr: 'İlaçlar Oluşturma' },        group: { en: 'Medicines', tr: 'İlaçlar' } },
@@ -235,7 +235,7 @@ const Priveleges = [
     { code: 'medicinemanageview',   text: { en: 'Medicines Manage View', tr: 'İlaçlar Görünüm Ayarlama' }, group: { en: 'Medicines', tr: 'İlaçlar' } },
     { code: 'medicinegetreport',    text: { en: 'Medicines Get Report',  tr: 'İlaçlar Rapor Alma' },       group: { en: 'Medicines', tr: 'İlaçlar' } },
     { code: 'medicinenotification', text: { en: 'Medicines Notification',tr: 'İlaçlar Bildirim Alma' },    group: { en: 'Medicines', tr: 'İlaçlar' } },
-
+    
     { code: 'supplyscreen',       text: { en: 'Supplies Screen',      tr: 'Sarf Malzemeleri Veri' },             group: { en: 'Supplies', tr: 'Sarf Malzemeleri' } },
     { code: 'supplyview',         text: { en: 'Supplies View',        tr: 'Sarf Malzemeleri Görüntüleme' },      group: { en: 'Supplies', tr: 'Sarf Malzemeleri' } },
     { code: 'supplyadd',          text: { en: 'Supplies Add',         tr: 'Sarf Malzemeleri Oluşturma' },        group: { en: 'Supplies', tr: 'Sarf Malzemeleri' } },
@@ -244,7 +244,7 @@ const Priveleges = [
     { code: 'supplymanageview',   text: { en: 'Supplies Manage View', tr: 'Sarf Malzemeleri Görünüm Ayarlama' }, group: { en: 'Supplies', tr: 'Sarf Malzemeleri' } },
     { code: 'supplygetreport',    text: { en: 'Supplies Get Report',  tr: 'Sarf Malzemeleri Rapor Alma' },       group: { en: 'Supplies', tr: 'Sarf Malzemeleri' } },
     { code: 'supplynotification', text: { en: 'Supplies Notification',tr: 'Sarf Malzemeleri Bildirim Alma' },    group: { en: 'Supplies', tr: 'Sarf Malzemeleri' } },
-
+    
     { code: 'stockdefinescreen',       text: { en: 'Stockdefines Screen',      tr: 'Stok Tanımları Veri' },             group: { en: 'Stockdefines', tr: 'Stok Tanımları' } },
     { code: 'stockdefineview',         text: { en: 'Stockdefines View',        tr: 'Stok Tanımları Görüntüleme' },      group: { en: 'Stockdefines', tr: 'Stok Tanımları' } },
     { code: 'stockdefineadd',          text: { en: 'Stockdefines Add',         tr: 'Stok Tanımları Oluşturma' },        group: { en: 'Stockdefines', tr: 'Stok Tanımları' } },
@@ -253,7 +253,7 @@ const Priveleges = [
     { code: 'stockdefinemanageview',   text: { en: 'Stockdefines Manage View', tr: 'Stok Tanımları Görünüm Ayarlama' }, group: { en: 'Stockdefines', tr: 'Stok Tanımları' } },
     { code: 'stockdefinegetreport',    text: { en: 'Stockdefines Get Report',  tr: 'Stok Tanımları Rapor Alma' },       group: { en: 'Stockdefines', tr: 'Stok Tanımları' } },
     { code: 'stockdefinenotification', text: { en: 'Stockdefines Notification',tr: 'Stok Tanımları Bildirim Alma' },    group: { en: 'Stockdefines', tr: 'Stok Tanımları' } },
-
+    
     { code: 'stockmovementscreen',       text: { en: 'Stockmovements Screen',      tr: 'Stok Hareketleri Veri' },             group: { en: 'Stockmovements', tr: 'Stok Hareketleri' } },
     { code: 'stockmovementview',         text: { en: 'Stockmovements View',        tr: 'Stok Hareketleri Görüntüleme' },      group: { en: 'Stockmovements', tr: 'Stok Hareketleri' } },
     { code: 'stockmovementadd',          text: { en: 'Stockmovements Add',         tr: 'Stok Hareketleri Oluşturma' },        group: { en: 'Stockmovements', tr: 'Stok Hareketleri' } },
@@ -262,7 +262,7 @@ const Priveleges = [
     { code: 'stockmovementmanageview',   text: { en: 'Stockmovements Manage View', tr: 'Stok Hareketleri Görünüm Ayarlama' }, group: { en: 'Stockmovements', tr: 'Stok Hareketleri' } },
     { code: 'stockmovementgetreport',    text: { en: 'Stockmovements Get Report',  tr: 'Stok Hareketleri Rapor Alma' },       group: { en: 'Stockmovements', tr: 'Stok Hareketleri' } },
     { code: 'stockmovementnotification', text: { en: 'Stockmovements Notification',tr: 'Stok Hareketleri Bildirim Alma' },    group: { en: 'Stockmovements', tr: 'Stok Hareketleri' } },
-
+    
     { code: 'warehousescreen',       text: { en: 'Warehouses Screen',      tr: 'Ambarlar Veri' },             group: { en: 'Warehouses', tr: 'Ambarlar' } },
     { code: 'warehouseview',         text: { en: 'Warehouses View',        tr: 'Ambarlar Görüntüleme' },      group: { en: 'Warehouses', tr: 'Ambarlar' } },
     { code: 'warehouseadd',          text: { en: 'Warehouses Add',         tr: 'Ambarlar Oluşturma' },        group: { en: 'Warehouses', tr: 'Ambarlar' } },
@@ -271,7 +271,7 @@ const Priveleges = [
     { code: 'warehousemanageview',   text: { en: 'Warehouses Manage View', tr: 'Ambarlar Görünüm Ayarlama' }, group: { en: 'Warehouses', tr: 'Ambarlar' } },
     { code: 'warehousegetreport',    text: { en: 'Warehouses Get Report',  tr: 'Ambarlar Rapor Alma' },       group: { en: 'Warehouses', tr: 'Ambarlar' } },
     { code: 'warehousenotification', text: { en: 'Warehouses Notification',tr: 'Ambarlar Bildirim Alma' },    group: { en: 'Warehouses', tr: 'Ambarlar' } },
-
+    
     { code: 'equipmentgroupscreen',       text: { en: 'Equipmentgroups Screen',      tr: 'Ekipman Grupları Veri' },             group: { en: 'Equipmentgroups', tr: 'Ekipman Grupları' } },
     { code: 'equipmentgroupview',         text: { en: 'Equipmentgroups View',        tr: 'Ekipman Grupları Görüntüleme' },      group: { en: 'Equipmentgroups', tr: 'Ekipman Grupları' } },
     { code: 'equipmentgroupadd',          text: { en: 'Equipmentgroups Add',         tr: 'Ekipman Grupları Oluşturma' },        group: { en: 'Equipmentgroups', tr: 'Ekipman Grupları' } },
@@ -280,7 +280,7 @@ const Priveleges = [
     { code: 'equipmentgroupmanageview',   text: { en: 'Equipmentgroups Manage View', tr: 'Ekipman Grupları Görünüm Ayarlama' }, group: { en: 'Equipmentgroups', tr: 'Ekipman Grupları' } },
     { code: 'equipmentgroupgetreport',    text: { en: 'Equipmentgroups Get Report',  tr: 'Ekipman Grupları Rapor Alma' },       group: { en: 'Equipmentgroups', tr: 'Ekipman Grupları' } },
     { code: 'equipmentgroupnotification', text: { en: 'Equipmentgroups Notification',tr: 'Ekipman Grupları Bildirim Alma' },    group: { en: 'Equipmentgroups', tr: 'Ekipman Grupları' } },
-
+    
     { code: 'equipmentscreen',       text: { en: 'Equipments Screen',      tr: 'Ekipmanlar Veri' },             group: { en: 'Equipments', tr: 'Ekipmanlar' } },
     { code: 'equipmentview',         text: { en: 'Equipments View',        tr: 'Ekipmanlar Görüntüleme' },      group: { en: 'Equipments', tr: 'Ekipmanlar' } },
     { code: 'equipmentadd',          text: { en: 'Equipments Add',         tr: 'Ekipmanlar Oluşturma' },        group: { en: 'Equipments', tr: 'Ekipmanlar' } },
@@ -289,7 +289,7 @@ const Priveleges = [
     { code: 'equipmentmanageview',   text: { en: 'Equipments Manage View', tr: 'Ekipmanlar Görünüm Ayarlama' }, group: { en: 'Equipments', tr: 'Ekipmanlar' } },
     { code: 'equipmentgetreport',    text: { en: 'Equipments Get Report',  tr: 'Ekipmanlar Rapor Alma' },       group: { en: 'Equipments', tr: 'Ekipmanlar' } },
     { code: 'equipmentnotification', text: { en: 'Equipments Notification',tr: 'Ekipmanlar Bildirim Alma' },    group: { en: 'Equipments', tr: 'Ekipmanlar' } },
-
+    
     { code: 'rolescreen',       text: { en: 'Roles Screen',      tr: 'Roller Veri' },             group: { en: 'Roles', tr: 'Roller' } },
     { code: 'roleview',         text: { en: 'Roles View',        tr: 'Roller Görüntüleme' },      group: { en: 'Roles', tr: 'Roller' } },
     { code: 'roleadd',          text: { en: 'Roles Add',         tr: 'Roller Oluşturma' },        group: { en: 'Roles', tr: 'Roller' } },
@@ -298,7 +298,7 @@ const Priveleges = [
     { code: 'rolemanageview',   text: { en: 'Roles Manage View', tr: 'Roller Görünüm Ayarlama' }, group: { en: 'Roles', tr: 'Roller' } },
     { code: 'rolegetreport',    text: { en: 'Roles Get Report',  tr: 'Roller Rapor Alma' },       group: { en: 'Roles', tr: 'Roller' } },
     { code: 'rolenotification', text: { en: 'Roles Notification',tr: 'Roller Bildirim Alma' },    group: { en: 'Roles', tr: 'Roller' } },
-
+    
     { code: 'userscreen',       text: { en: 'Users Screen',      tr: 'Kullanıcılar Veri' },             group: { en: 'Users', tr: 'Kullanıcılar' } },
     { code: 'userview',         text: { en: 'Users View',        tr: 'Kullanıcılar Görüntüleme' },      group: { en: 'Users', tr: 'Kullanıcılar' } },
     { code: 'useradd',          text: { en: 'Users Add',         tr: 'Kullanıcılar Oluşturma' },        group: { en: 'Users', tr: 'Kullanıcılar' } },
@@ -307,7 +307,7 @@ const Priveleges = [
     { code: 'usermanageview',   text: { en: 'Users Manage View', tr: 'Kullanıcılar Görünüm Ayarlama' }, group: { en: 'Users', tr: 'Kullanıcılar' } },
     { code: 'usergetreport',    text: { en: 'Users Get Report',  tr: 'Kullanıcılar Rapor Alma' },       group: { en: 'Users', tr: 'Kullanıcılar' } },
     { code: 'usernotification', text: { en: 'Users Notification',tr: 'Kullanıcılar Bildirim Alma' },    group: { en: 'Users', tr: 'Kullanıcılar' } },
-
+    
     { code: 'filescreen',       text: { en: 'Files Screen',      tr: 'Dosyalar Veri' },             group: { en: 'Files', tr: 'Dosyalar' } },
     { code: 'fileview',         text: { en: 'Files View',        tr: 'Dosyalar Görüntüleme' },      group: { en: 'Files', tr: 'Dosyalar' } },
     { code: 'fileadd',          text: { en: 'Files Add',         tr: 'Dosyalar Oluşturma' },        group: { en: 'Files', tr: 'Dosyalar' } },
@@ -316,7 +316,7 @@ const Priveleges = [
     { code: 'filemanageview',   text: { en: 'Files Manage View', tr: 'Dosyalar Görünüm Ayarlama' }, group: { en: 'Files', tr: 'Dosyalar' } },
     { code: 'filegetreport',    text: { en: 'Files Get Report',  tr: 'Dosyalar Rapor Alma' },       group: { en: 'Files', tr: 'Dosyalar' } },
     { code: 'filenotification', text: { en: 'Files Notification',tr: 'Dosyalar Bildirim Alma' },    group: { en: 'Files', tr: 'Dosyalar' } },
-
+    
     { code: 'usernotificationscreen',       text: { en: 'Usernotifications Screen',      tr: 'Kullanıcı Bildirimleri Veri' },             group: { en: 'Usernotifications', tr: 'Kullanıcı Bildirimleri' } },
     { code: 'usernotificationview',         text: { en: 'Usernotifications View',        tr: 'Kullanıcı Bildirimleri Görüntüleme' },      group: { en: 'Usernotifications', tr: 'Kullanıcı Bildirimleri' } },
     { code: 'usernotificationadd',          text: { en: 'Usernotifications Add',         tr: 'Kullanıcı Bildirimleri Oluşturma' },        group: { en: 'Usernotifications', tr: 'Kullanıcı Bildirimleri' } },
@@ -325,7 +325,7 @@ const Priveleges = [
     { code: 'usernotificationmanageview',   text: { en: 'Usernotifications Manage View', tr: 'Kullanıcı Bildirimleri Görünüm Ayarlama' }, group: { en: 'Usernotifications', tr: 'Kullanıcı Bildirimleri' } },
     { code: 'usernotificationgetreport',    text: { en: 'Usernotifications Get Report',  tr: 'Kullanıcı Bildirimleri Rapor Alma' },       group: { en: 'Usernotifications', tr: 'Kullanıcı Bildirimleri' } },
     { code: 'usernotificationnotification', text: { en: 'Usernotifications Notification',tr: 'Kullanıcı Bildirimleri Bildirim Alma' },    group: { en: 'Usernotifications', tr: 'Kullanıcı Bildirimleri' } },
-
+    
     { code: 'patientscreen',       text: { en: 'Patients Screen',      tr: 'Hastalar Veri' },             group: { en: 'Patients', tr: 'Hastalar' } },
     { code: 'patientview',         text: { en: 'Patients View',        tr: 'Hastalar Görüntüleme' },      group: { en: 'Patients', tr: 'Hastalar' } },
     { code: 'patientadd',          text: { en: 'Patients Add',         tr: 'Hastalar Oluşturma' },        group: { en: 'Patients', tr: 'Hastalar' } },
@@ -334,7 +334,7 @@ const Priveleges = [
     { code: 'patientmanageview',   text: { en: 'Patients Manage View', tr: 'Hastalar Görünüm Ayarlama' }, group: { en: 'Patients', tr: 'Hastalar' } },
     { code: 'patientgetreport',    text: { en: 'Patients Get Report',  tr: 'Hastalar Rapor Alma' },       group: { en: 'Patients', tr: 'Hastalar' } },
     { code: 'patientnotification', text: { en: 'Patients Notification',tr: 'Hastalar Bildirim Alma' },    group: { en: 'Patients', tr: 'Hastalar' } },
-
+    
     { code: 'preregistrationscreen',       text: { en: 'Preregistrations Screen',      tr: 'Ön Kayıtlar Veri' },             group: { en: 'Preregistrations', tr: 'Ön Kayıtlar' } },
     { code: 'preregistrationview',         text: { en: 'Preregistrations View',        tr: 'Ön Kayıtlar Görüntüleme' },      group: { en: 'Preregistrations', tr: 'Ön Kayıtlar' } },
     { code: 'preregistrationadd',          text: { en: 'Preregistrations Add',         tr: 'Ön Kayıtlar Oluşturma' },        group: { en: 'Preregistrations', tr: 'Ön Kayıtlar' } },
@@ -343,7 +343,7 @@ const Priveleges = [
     { code: 'preregistrationmanageview',   text: { en: 'Preregistrations Manage View', tr: 'Ön Kayıtlar Görünüm Ayarlama' }, group: { en: 'Preregistrations', tr: 'Ön Kayıtlar' } },
     { code: 'preregistrationgetreport',    text: { en: 'Preregistrations Get Report',  tr: 'Ön Kayıtlar Rapor Alma' },       group: { en: 'Preregistrations', tr: 'Ön Kayıtlar' } },
     { code: 'preregistrationnotification', text: { en: 'Preregistrations Notification',tr: 'Ön Kayıtlar Bildirim Alma' },    group: { en: 'Preregistrations', tr: 'Ön Kayıtlar' } },
-
+    
     { code: 'placeviewview',         text: { en: 'Placeviews View',        tr: 'Hasta Yerleşimleri Görüntüleme' },      group: { en: 'Placeviews', tr: 'Hasta Yerleşimleri' } },
     { code: 'placeviewtransfer',         text: { en: 'Placeviews Transfer',        tr: 'Hasta Yerleşimleri Transfer' },      group: { en: 'Placeviews', tr: 'Hasta Yerleşimleri' } },
     
@@ -355,7 +355,7 @@ const Priveleges = [
     { code: 'patientdefinemanageview',   text: { en: 'Patientdefines Manage View', tr: 'Hasta Tanımları Görünüm Ayarlama' }, group: { en: 'Patientdefines', tr: 'Hasta Tanımları' } },
     { code: 'patientdefinegetreport',    text: { en: 'Patientdefines Get Report',  tr: 'Hasta Tanımları Rapor Alma' },       group: { en: 'Patientdefines', tr: 'Hasta Tanımları' } },
     { code: 'patientdefinenotification', text: { en: 'Patientdefines Notification',tr: 'Hasta Tanımları Bildirim Alma' },    group: { en: 'Patientdefines', tr: 'Hasta Tanımları' } },
-
+    
     { code: 'patientmovementscreen',       text: { en: 'Patientmovements Screen',      tr: 'Hasta Hareketleri Veri' },             group: { en: 'Patientmovements', tr: 'Hasta Hareketleri' } },
     { code: 'patientmovementview',         text: { en: 'Patientmovements View',        tr: 'Hasta Hareketleri Görüntüleme' },      group: { en: 'Patientmovements', tr: 'Hasta Hareketleri' } },
     { code: 'patientmovementadd',          text: { en: 'Patientmovements Add',         tr: 'Hasta Hareketleri Oluşturma' },        group: { en: 'Patientmovements', tr: 'Hasta Hareketleri' } },
@@ -364,7 +364,7 @@ const Priveleges = [
     { code: 'patientmovementmanageview',   text: { en: 'Patientmovements Manage View', tr: 'Hasta Hareketleri Görünüm Ayarlama' }, group: { en: 'Patientmovements', tr: 'Hasta Hareketleri' } },
     { code: 'patientmovementgetreport',    text: { en: 'Patientmovements Get Report',  tr: 'Hasta Hareketleri Rapor Alma' },       group: { en: 'Patientmovements', tr: 'Hasta Hareketleri' } },
     { code: 'patientmovementnotification', text: { en: 'Patientmovements Notification',tr: 'Hasta Hareketleri Bildirim Alma' },    group: { en: 'Patientmovements', tr: 'Hasta Hareketleri' } },
-
+    
     { code: 'personelscreen',       text: { en: 'Personels Screen',      tr: 'Personeller Veri' },             group: { en: 'Personels', tr: 'Personeller' } },
     { code: 'personelview',         text: { en: 'Personels View',        tr: 'Personeller Görüntüleme' },      group: { en: 'Personels', tr: 'Personeller' } },
     { code: 'personeladd',          text: { en: 'Personels Add',         tr: 'Personeller Oluşturma' },        group: { en: 'Personels', tr: 'Personeller' } },
@@ -373,7 +373,7 @@ const Priveleges = [
     { code: 'personelmanageview',   text: { en: 'Personels Manage View', tr: 'Personeller Görünüm Ayarlama' }, group: { en: 'Personels', tr: 'Personeller' } },
     { code: 'personelgetreport',    text: { en: 'Personels Get Report',  tr: 'Personeller Rapor Alma' },       group: { en: 'Personels', tr: 'Personeller' } },
     { code: 'personelnotification', text: { en: 'Personels Notification',tr: 'Personeller Bildirim Alma' },    group: { en: 'Personels', tr: 'Personeller' } },
-
+    
     { code: 'breakdownscreen',       text: { en: 'Breakdowns Screen',      tr: 'Arıza Talepleri Veri' },             group: { en: 'Breakdowns', tr: 'Arıza Talepleri' } },
     { code: 'breakdownview',         text: { en: 'Breakdowns View',        tr: 'Arıza Talepleri Görüntüleme' },      group: { en: 'Breakdowns', tr: 'Arıza Talepleri' } },
     { code: 'breakdownadd',          text: { en: 'Breakdowns Add',         tr: 'Arıza Talepleri Oluşturma' },        group: { en: 'Breakdowns', tr: 'Arıza Talepleri' } },
@@ -386,7 +386,7 @@ const Priveleges = [
     { code: 'unapprovedmovementview', text: { en: 'Unapproved Movements View',tr: 'Onay Bekleyen Hareketler' },    group: { en: 'Unapproveds', tr: 'Onay Bekleyenler' } },
     { code: 'unapprovedstockview', text: { en: 'Unapproved Stocks View',tr: 'Onay Bekleyen Stoklar' },    group: { en: 'Unapproveds', tr: 'Onay Bekleyenler' } },
     { code: 'unapprovedtodoview', text: { en: 'Unapproved Todos View',tr: 'Onay Bekleyen Rutinler' },    group: { en: 'Unapproveds', tr: 'Onay Bekleyenler' } },
-
+    
     { code: 'mainteancescreen',       text: { en: 'Mainteances Screen',      tr: 'Bakım Talepleri Veri' },             group: { en: 'Mainteances', tr: 'Bakım Talepleri' } },
     { code: 'mainteanceview',         text: { en: 'Mainteances View',        tr: 'Bakım Talepleri Görüntüleme' },      group: { en: 'Mainteances', tr: 'Bakım Talepleri' } },
     { code: 'mainteanceadd',          text: { en: 'Mainteances Add',         tr: 'Bakım Talepleri Oluşturma' },        group: { en: 'Mainteances', tr: 'Bakım Talepleri' } },
@@ -395,7 +395,7 @@ const Priveleges = [
     { code: 'mainteancemanageview',   text: { en: 'Mainteances Manage View', tr: 'Bakım Talepleri Görünüm Ayarlama' }, group: { en: 'Mainteances', tr: 'Bakım Talepleri' } },
     { code: 'mainteancegetreport',    text: { en: 'Mainteances Get Report',  tr: 'Bakım Talepleri Rapor Alma' },       group: { en: 'Mainteances', tr: 'Bakım Talepleri' } },
     { code: 'mainteancenotification', text: { en: 'Mainteances Notification',tr: 'Bakım Talepleri Bildirim Alma' },    group: { en: 'Mainteances', tr: 'Bakım Talepleri' } },
-
+    
     { code: 'todoregisterscreen',       text: { en: 'Todos Screen',      tr: 'Aktif Rutinler Veri' },             group: { en: 'Todos', tr: 'Aktif Rutinler' } },
     { code: 'todoregisterview',         text: { en: 'Todos View',        tr: 'Aktif Rutinler Görüntüleme' },      group: { en: 'Todos', tr: 'Aktif Rutinler' } },
     { code: 'todoregisteradd',          text: { en: 'Todos Add',         tr: 'Aktif Rutinler Oluşturma' },        group: { en: 'Todos', tr: 'Aktif Rutinler' } },
@@ -404,7 +404,7 @@ const Priveleges = [
     { code: 'todoregistermanageview',   text: { en: 'Todos Manage View', tr: 'Aktif Rutinler Görünüm Ayarlama' }, group: { en: 'Todos', tr: 'Aktif Rutinler' } },
     { code: 'todoregistergetreport',    text: { en: 'Todos Get Report',  tr: 'Aktif Rutinler Rapor Alma' },       group: { en: 'Todos', tr: 'Aktif Rutinler' } },
     { code: 'todoregisternotification', text: { en: 'Todos Notification',tr: 'Aktif Rutinler Bildirim Alma' },    group: { en: 'Todos', tr: 'Aktif Rutinler' } },
-
+    
     { code: 'patientcashregisterscreen',       text: { en: 'Patientcashregisters Screen',      tr: 'Hasta Para Türleri Veri' },             group: { en: 'Patientcashregisters', tr: 'Hasta Para Türleri' } },
     { code: 'patientcashregisterview',         text: { en: 'Patientcashregisters View',        tr: 'Hasta Para Türleri Görüntüleme' },      group: { en: 'Patientcashregisters', tr: 'Hasta Para Türleri' } },
     { code: 'patientcashregisteradd',          text: { en: 'Patientcashregisters Add',         tr: 'Hasta Para Türleri Oluşturma' },        group: { en: 'Patientcashregisters', tr: 'Hasta Para Türleri' } },
@@ -413,7 +413,7 @@ const Priveleges = [
     { code: 'patientcashregistermanageview',   text: { en: 'Patientcashregisters Manage View', tr: 'Hasta Para Türleri Görünüm Ayarlama' }, group: { en: 'Patientcashregisters', tr: 'Hasta Para Türleri' } },
     { code: 'patientcashregistergetreport',    text: { en: 'Patientcashregisters Get Report',  tr: 'Hasta Para Türleri Rapor Alma' },       group: { en: 'Patientcashregisters', tr: 'Hasta Para Türleri' } },
     { code: 'patientcashregisternotification', text: { en: 'Patientcashregisters Notification',tr: 'Hasta Para Türleri Bildirim Alma' },    group: { en: 'Patientcashregisters', tr: 'Hasta Para Türleri' } },
-   
+    
     { code: 'patientcashmovementscreen',       text: { en: 'Patientcashmovements Screen',      tr: 'Hasta Cüzdanı Veri' },             group: { en: 'Patientcashmovements', tr: 'Hasta Cüzdanı' } },
     { code: 'patientcashmovementview',         text: { en: 'Patientcashmovements View',        tr: 'Hasta Cüzdanı Görüntüleme' },      group: { en: 'Patientcashmovements', tr: 'Hasta Cüzdanı' } },
     { code: 'patientcashmovementadd',          text: { en: 'Patientcashmovements Add',         tr: 'Hasta Cüzdanı Oluşturma' },        group: { en: 'Patientcashmovements', tr: 'Hasta Cüzdanı' } },
@@ -422,7 +422,7 @@ const Priveleges = [
     { code: 'patientcashmovementmanageview',   text: { en: 'Patientcashmovements Manage View', tr: 'Hasta Cüzdanı Görünüm Ayarlama' }, group: { en: 'Patientcashmovements', tr: 'Hasta Cüzdanı' } },
     { code: 'patientcashmovementgetreport',    text: { en: 'Patientcashmovements Get Report',  tr: 'Hasta Cüzdanı Rapor Alma' },       group: { en: 'Patientcashmovements', tr: 'Hasta Cüzdanı' } },
     { code: 'patientcashmovementnotification', text: { en: 'Patientcashmovements Notification',tr: 'Hasta Cüzdanı Bildirim Alma' },    group: { en: 'Patientcashmovements', tr: 'Hasta Cüzdanı' } },
-   
+    
     { code: 'companycashmovementscreen',       text: { en: 'Companycashmovements Screen',      tr: 'Kurum cüzdanı Veri' },             group: { en: 'Companycashmovements', tr: 'Kurum Cüzdanı' } },
     { code: 'companycashmovementview',         text: { en: 'Companycashmovements View',        tr: 'Kurum cüzdanı Görüntüleme' },      group: { en: 'Companycashmovements', tr: 'Kurum Cüzdanı' } },
     { code: 'companycashmovementadd',          text: { en: 'Companycashmovements Add',         tr: 'Kurum cüzdanı Oluşturma' },        group: { en: 'Companycashmovements', tr: 'Kurum Cüzdanı' } },
@@ -431,7 +431,7 @@ const Priveleges = [
     { code: 'companycashmovementmanageview',   text: { en: 'Companycashmovements Manage View', tr: 'Kurum cüzdanı Görünüm Ayarlama' }, group: { en: 'Companycashmovements', tr: 'Kurum Cüzdanı' } },
     { code: 'companycashmovementgetreport',    text: { en: 'Companycashmovements Get Report',  tr: 'Kurum cüzdanı Rapor Alma' },       group: { en: 'Companycashmovements', tr: 'Kurum Cüzdanı' } },
     { code: 'companycashmovementnotification', text: { en: 'Companycashmovements Notification',tr: 'Kurum cüzdanı Bildirim Alma' },    group: { en: 'Companycashmovements', tr: 'Kurum Cüzdanı' } },
-
+    
     { code: 'usagetypescreen',       text: { en: 'Usagetypes Screen',      tr: 'Kullanım Türleri Veri' },             group: { en: 'Usagetypes', tr: 'Kullanım Türleri' } },
     { code: 'usagetypeview',         text: { en: 'Usagetypes View',        tr: 'Kullanım Türleri Görüntüleme' },      group: { en: 'Usagetypes', tr: 'Kullanım Türleri' } },
     { code: 'usagetypeadd',          text: { en: 'Usagetypes Add',         tr: 'Kullanım Türleri Oluşturma' },        group: { en: 'Usagetypes', tr: 'Kullanım Türleri' } },
@@ -440,7 +440,7 @@ const Priveleges = [
     { code: 'usagetypemanageview',   text: { en: 'Usagetypes Manage View', tr: 'Kullanım Türleri Görünüm Ayarlama' }, group: { en: 'Usagetypes', tr: 'Kullanım Türleri' } },
     { code: 'usagetypegetreport',    text: { en: 'Usagetypes Get Report',  tr: 'Kullanım Türleri Rapor Alma' },       group: { en: 'Usagetypes', tr: 'Kullanım Türleri' } },
     { code: 'usagetypenotification', text: { en: 'Usagetypes Notification',tr: 'Kullanım Türleri Bildirim Alma' },    group: { en: 'Usagetypes', tr: 'Kullanım Türleri' } },
-
+    
     { code: 'supportplanlistscreen',       text: { en: 'Supportplanlists Screen',       tr: 'Destek Plan Listeleri Veri' },             group: { en: 'Supportplanlists', tr: 'Destek Plan Listeleri' } },
     { code: 'supportplanlistview',         text: { en: 'Supportplanlists View',         tr: 'Destek Plan Listeleri Görüntüleme' },      group: { en: 'Supportplanlists', tr: 'Destek Plan Listeleri' } },
     { code: 'supportplanlistadd',          text: { en: 'Supportplanlists Add',          tr: 'Destek Plan Listeleri Oluşturma' },        group: { en: 'Supportplanlists', tr: 'Destek Plan Listeleri' } },
@@ -449,7 +449,7 @@ const Priveleges = [
     { code: 'supportplanlistmanageview',   text: { en: 'Supportplanlists Manage View',  tr: 'Destek Plan Listeleri Görünüm Ayarlama' }, group: { en: 'Supportplanlists', tr: 'Destek Plan Listeleri' } },
     { code: 'supportplanlistgetreport',    text: { en: 'Supportplanlists Get Report',   tr: 'Destek Plan Listeleri Rapor Alma' },       group: { en: 'Supportplanlists', tr: 'Destek Plan Listeleri' } },
     { code: 'supportplanlistnotification', text: { en: 'Supportplanlists Notification', tr: 'Destek Plan Listeleri Bildirim Alma' },    group: { en: 'Supportplanlists', tr: 'Destek Plan Listeleri' } },
-
+    
     { code: 'supportplanscreen',       text: { en: 'Supportplans Screen',       tr: 'Destek Planları Veri' },             group: { en: 'Supportplans', tr: 'Destek Planları' } },
     { code: 'supportplanview',         text: { en: 'Supportplans View',         tr: 'Destek Planları Görüntüleme' },      group: { en: 'Supportplans', tr: 'Destek Planları' } },
     { code: 'supportplanadd',          text: { en: 'Supportplans Add',          tr: 'Destek Planları Oluşturma' },        group: { en: 'Supportplans', tr: 'Destek Planları' } },
@@ -458,7 +458,7 @@ const Priveleges = [
     { code: 'supportplanmanageview',   text: { en: 'Supportplans Manage View',  tr: 'Destek Planları Görünüm Ayarlama' }, group: { en: 'Supportplans', tr: 'Destek Planları' } },
     { code: 'supportplangetreport',    text: { en: 'Supportplans Get Report',   tr: 'Destek Planları Rapor Alma' },       group: { en: 'Supportplans', tr: 'Destek Planları' } },
     { code: 'supportplannotification', text: { en: 'Supportplans Notification', tr: 'Destek Planları Bildirim Alma' },    group: { en: 'Supportplans', tr: 'Destek Planları' } },
-
+    
     { code: 'careplanscreen',     text: { en: 'Careplans Screen',      tr: 'Bireysel Bakım Planları Veri' },             group: { en: 'Careplans', tr: 'Bireysel Bakım Planları' } },
     { code: 'careplanview',       text: { en: 'Careplans View',        tr: 'Bireysel Bakım Planları Görüntüleme' },      group: { en: 'Careplans', tr: 'Bireysel Bakım Planları' } },
     { code: 'careplanadd',        text: { en: 'Careplans Add',         tr: 'Bireysel Bakım Planları Oluşturma' },        group: { en: 'Careplans', tr: 'Bireysel Bakım Planları' } },
@@ -467,7 +467,7 @@ const Priveleges = [
     { code: 'careplanmanageview', text: { en: 'Careplans Manage View', tr: 'Bireysel Bakım Planları Görünüm Ayarlama' }, group: { en: 'Careplans', tr: 'Bireysel Bakım Planları' } },
     { code: 'careplangetreport',  text: { en: 'Careplans Get Report',  tr: 'Bireysel Bakım Planları Rapor Alma' },       group: { en: 'Careplans', tr: 'Bireysel Bakım Planları' } },
     { code: 'careplannotification',    text: { en: 'Careplans Notification',tr: 'Bireysel Bakım Planları Bildirim Alma' },    group: { en: 'Careplans', tr: 'Bireysel Bakım Planları' } },
-
+    
     { code: 'helpstatuscreen',     text: { en: 'Helpstatus Screen',       tr: 'Bakıma İhtiyaç Durumları Veri' },             group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
     { code: 'helpstatuview',       text: { en: 'Helpstatus View',         tr: 'Bakıma İhtiyaç Durumları Görüntüleme' },      group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
     { code: 'helpstatuadd',        text: { en: 'Helpstatus Add',          tr: 'Bakıma İhtiyaç Durumları Oluşturma' },        group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
@@ -476,7 +476,7 @@ const Priveleges = [
     { code: 'helpstatumanageview', text: { en: 'Helpstatus Manage View',  tr: 'Bakıma İhtiyaç Durumları Görünüm Ayarlama' }, group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
     { code: 'helpstatugetreport',  text: { en: 'Helpstatus Get Report',   tr: 'Bakıma İhtiyaç Durumları Rapor Alma' },       group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
     { code: 'helpstatunotification',     text: { en: 'Helpstatus Notification', tr: 'Bakıma İhtiyaç Durumları Bildirim Alma' },    group: { en: 'Helpstatus', tr: 'Bakıma İhtiyaç Durumları' } },
-
+    
     { code: 'makingtypescreen',     text: { en: 'Makingtypes Screen',       tr: 'Hizmet Verilme Şekilleri Screen' },           group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
     { code: 'makingtypeview',       text: { en: 'Makingtypes View',         tr: 'Hizmet Verilme Şekilleri View' },             group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
     { code: 'makingtypeadd',        text: { en: 'Makingtypes Add',          tr: 'Hizmet Verilme Şekilleri Oluşturma' },        group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
@@ -485,7 +485,7 @@ const Priveleges = [
     { code: 'makingtypemanageview', text: { en: 'Makingtypes Manage View',  tr: 'Hizmet Verilme Şekilleri Görünüm Ayarlama' }, group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
     { code: 'makingtypegetreport',  text: { en: 'Makingtypes Get Report',   tr: 'Hizmet Verilme Şekilleri Rapor Alma' },       group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
     { code: 'makingtypenotification',      text: { en: 'Makingtypes Notification', tr: 'Hizmet Verilme Şekilleri Bildirim Alma' },    group: { en: 'Makingtypes', tr: 'Hizmet Verilme Şekilleri' } },
-
+    
     { code: 'ratingscreen',      text: { en: 'Ratings Screen',      tr: 'Değerlendirmeler Veri' },             group: { en: 'Ratings', tr: 'Değerlendirmeler' } },
     { code: 'ratingview',        text: { en: 'Ratings View',        tr: 'Değerlendirmeler Görüntüleme' },      group: { en: 'Ratings', tr: 'Değerlendirmeler' } },
     { code: 'ratingadd',         text: { en: 'Ratings Add',         tr: 'Değerlendirmeler Oluşturma' },        group: { en: 'Ratings', tr: 'Değerlendirmeler' } },
@@ -494,7 +494,7 @@ const Priveleges = [
     { code: 'ratingmanageview',  text: { en: 'Ratings Manage View', tr: 'Değerlendirmeler Görünüm Ayarlama' }, group: { en: 'Ratings', tr: 'Değerlendirmeler' } },
     { code: 'ratinggetreport',   text: { en: 'Ratings Get Report',  tr: 'Değerlendirmeler Rapor Alma' },       group: { en: 'Ratings', tr: 'Değerlendirmeler' } },
     { code: 'ratingnotification',text: { en: 'Ratings Notification',tr: 'Değerlendirmeler Bildirim Alma' },    group: { en: 'Ratings', tr: 'Değerlendirmeler' } },
-
+    
     { code: 'requiredperiodscreen',       text: { en: 'Requiredperiods Screen',      tr: 'Hizmet Sunulma Sıklıkları Veri' },             group: { en: 'Requiredperiods', tr: 'Hizmet Sunulma Sıklıkları' } },
     { code: 'requiredperiodview',         text: { en: 'Requiredperiods View',        tr: 'Hizmet Sunulma Sıklıkları Görüntüleme' },      group: { en: 'Requiredperiods', tr: 'Hizmet Sunulma Sıklıkları' } },
     { code: 'requiredperiodadd',          text: { en: 'Requiredperiods Add',         tr: 'Hizmet Sunulma Sıklıkları Oluşturma' },        group: { en: 'Requiredperiods', tr: 'Hizmet Sunulma Sıklıkları' } },
@@ -503,7 +503,7 @@ const Priveleges = [
     { code: 'requiredperiodmanageview',   text: { en: 'Requiredperiods Manage View', tr: 'Hizmet Sunulma Sıklıkları Görünüm Ayarlama' }, group: { en: 'Requiredperiods', tr: 'Hizmet Sunulma Sıklıkları' } },
     { code: 'requiredperiodgetreport',    text: { en: 'Requiredperiods Get Report',  tr: 'Hizmet Sunulma Sıklıkları Rapor Alma' },       group: { en: 'Requiredperiods', tr: 'Hizmet Sunulma Sıklıkları' } },
     { code: 'requiredperiodnotification', text: { en: 'Requiredperiods Notification',tr: 'Hizmet Sunulma Sıklıkları Bildirim Alma' },    group: { en: 'Requiredperiods', tr: 'Hizmet Sunulma Sıklıkları' } },
-
+    
     { code: 'professionscreen',       text: { en: 'Professions Screen',      tr: 'Meslekler Veri' },             group: { en: 'Professions', tr: 'Meslekler' } },
     { code: 'professionview',         text: { en: 'Professions View',        tr: 'Meslekler Görüntüleme' },      group: { en: 'Professions', tr: 'Meslekler' } },
     { code: 'professionadd',          text: { en: 'Professions Add',         tr: 'Meslekler Oluşturma' },        group: { en: 'Professions', tr: 'Meslekler' } },
@@ -512,7 +512,7 @@ const Priveleges = [
     { code: 'professionmanageview',   text: { en: 'Professions Manage View', tr: 'Meslekler Görünüm Ayarlama' }, group: { en: 'Professions', tr: 'Meslekler' } },
     { code: 'professiongetreport',    text: { en: 'Professions Get Report',  tr: 'Meslekler Rapor Alma' },       group: { en: 'Professions', tr: 'Meslekler' } },
     { code: 'professionnotification', text: { en: 'Professions Notification',tr: 'Meslekler Bildirim Alma' },    group: { en: 'Professions', tr: 'Meslekler' } },
-
+    
     { code: 'professionpresettingscreen',       text: { en: 'Profession pre settings Screen',      tr: 'Meslek Ön Ayarları Veri' },             group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
     { code: 'professionpresettingview',         text: { en: 'Profession pre settings View',        tr: 'Meslek Ön Ayarları Görüntüleme' },      group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
     { code: 'professionpresettingadd',          text: { en: 'Profession pre settings Add',         tr: 'Meslek Ön Ayarları Oluşturma' },        group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
@@ -521,7 +521,7 @@ const Priveleges = [
     { code: 'professionpresettingmanageview',   text: { en: 'Profession pre settings Manage View', tr: 'Meslek Ön Ayarları Görünüm Ayarlama' }, group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
     { code: 'professionpresettinggetreport',    text: { en: 'Profession pre settings Get Report',  tr: 'Meslek Ön Ayarları Rapor Alma' },       group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
     { code: 'professionpresettingnotification', text: { en: 'Profession pre settings Notification',tr: 'Meslek Ön Ayarları Bildirim Alma' },    group: { en: 'Profession Pre Settings', tr: 'Meslek Ön Ayarları' } },
-
+    
     { code: 'personelpresettingscreen',       text: { en: 'Personel pre settings Screen',      tr: 'Personel Ön Ayarları Veri' },             group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
     { code: 'personelpresettingview',         text: { en: 'Personel pre settings View',        tr: 'Personel Ön Ayarları Görüntüleme' },      group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
     { code: 'personelpresettingadd',          text: { en: 'Personel pre settings Add',         tr: 'Personel Ön Ayarları Oluşturma' },        group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
@@ -530,7 +530,7 @@ const Priveleges = [
     { code: 'personelpresettingmanageview',   text: { en: 'Personel pre settings Manage View', tr: 'Personel Ön Ayarları Görünüm Ayarlama' }, group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
     { code: 'personelpresettinggetreport',    text: { en: 'Personel pre settings Get Report',  tr: 'Personel Ön Ayarları Rapor Alma' },       group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
     { code: 'personelpresettingnotification', text: { en: 'Personel pre settings Notification',tr: 'Personel Ön Ayarları Bildirim Alma' },    group: { en: 'Personel Pre Settings', tr: 'Personel Ön Ayarları' } },
-
+    
     { code: 'personelshiftdetailscreen',       text: { en: 'Personel shift details Screen',      tr: 'Personel Vardiya Detayları Veri' },             group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
     { code: 'personelshiftdetailview',         text: { en: 'Personel shift details View',        tr: 'Personel Vardiya Detayları Görüntüleme' },      group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
     { code: 'personelshiftdetailadd',          text: { en: 'Personel shift details Add',         tr: 'Personel Vardiya Detayları Oluşturma' },        group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
@@ -539,7 +539,7 @@ const Priveleges = [
     { code: 'personelshiftdetailmanageview',   text: { en: 'Personel shift details Manage View', tr: 'Personel Vardiya Detayları Görünüm Ayarlama' }, group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
     { code: 'personelshiftdetailgetreport',    text: { en: 'Personel shift details Get Report',  tr: 'Personel Vardiya Detayları Rapor Alma' },       group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
     { code: 'personelshiftdetailnotification', text: { en: 'Personel shift details Notification',tr: 'Personel Vardiya Detayları Bildirim Alma' },    group: { en: 'Personel Shift Details', tr: 'Personel Vardiya Detayları' } },
-
+    
     { code: 'personelshiftscreen',       text: { en: 'Personel shifts Screen',      tr: 'Personel Vardiyaları Veri' },             group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
     { code: 'personelshiftview',         text: { en: 'Personel shifts View',        tr: 'Personel Vardiyaları Görüntüleme' },      group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
     { code: 'personelshiftadd',          text: { en: 'Personel shifts Add',         tr: 'Personel Vardiyaları Oluşturma' },        group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
@@ -548,7 +548,7 @@ const Priveleges = [
     { code: 'personelshiftmanageview',   text: { en: 'Personel shifts Manage View', tr: 'Personel Vardiyaları Görünüm Ayarlama' }, group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
     { code: 'personelshiftgetreport',    text: { en: 'Personel shifts Get Report',  tr: 'Personel Vardiyaları Rapor Alma' },       group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
     { code: 'personelshiftnotification', text: { en: 'Personel shifts Notification',tr: 'Personel Vardiyaları Bildirim Alma' },    group: { en: 'Personel Shifts', tr: 'Personel Vardiyaları' } },
-
-]
-
-module.exports = Priveleges
+    
+    ]
+    
+    module.exports = Priveleges

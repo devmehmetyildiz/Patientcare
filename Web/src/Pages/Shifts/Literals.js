@@ -62,8 +62,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Vardiyalar",
-            en: "Shifts"
+            tr: "Vardiya Tanımları",
+            en: "Shift Defines"
         },
         Pagecreateheader: {
             tr: "Oluştur",

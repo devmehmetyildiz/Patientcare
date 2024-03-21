@@ -1,6 +1,6 @@
 const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
+const messages = require("../Constants/ShiftdefineMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
@@ -9,37 +9,37 @@ const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const axios = require('axios')
 
-async function GetShifts(req, res, next) {
+async function GetShiftdefines(req, res, next) {
     try {
-        const shifts = await db.shiftModel.findAll()
-        res.status(200).json(shifts)
+        const shiftdefines = await db.shiftdefineModel.findAll()
+        res.status(200).json(shiftdefines)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
 }
 
-async function GetShift(req, res, next) {
+async function GetShiftdefine(req, res, next) {
 
     let validationErrors = []
-    if (!req.params.shiftId) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHIFTID_REQUIRED)
+    if (!req.params.shiftdefineId) {
+        validationErrors.push(messages.VALIDATION_ERROR.SHIFTDEFINEID_REQUIRED)
     }
-    if (!validator.isUUID(req.params.shiftId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTID)
+    if (!validator.isUUID(req.params.shiftdefineId)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTDEFINEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const shift = await db.shiftModel.findOne({ where: { Uuid: req.params.shiftId } });
-        res.status(200).json(shift)
+        const shiftdefine = await db.shiftdefineModel.findOne({ where: { Uuid: req.params.shiftdefineId } });
+        res.status(200).json(shiftdefine)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
 }
 
-async function AddShift(req, res, next) {
+async function AddShiftdefine(req, res, next) {
 
     let validationErrors = []
     const {
@@ -63,7 +63,7 @@ async function AddShift(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
-    let shiftuuid = uuid()
+    let shiftdefineuuid = uuid()
 
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
@@ -71,14 +71,14 @@ async function AddShift(req, res, next) {
 
     try {
         if (Isjoker) {
-            await db.shiftModel.update({
+            await db.shiftdefineModel.update({
                 Isjoker: false
             }, { where: { Isactive: true } }, { transaction: t })
         }
 
-        await db.shiftModel.create({
+        await db.shiftdefineModel.create({
             ...req.body,
-            Uuid: shiftuuid,
+            Uuid: shiftdefineuuid,
             Createduser: username,
             Createtime: new Date(),
             Isactive: true
@@ -87,20 +87,20 @@ async function AddShift(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Vardiyalar',
-            role: 'shiftnotification',
-            message: `${Name} vardiyası ${username} tarafından Eklendi.`,
-            pushurl: '/Shifts'
+            service: 'Vardiya Tanımları',
+            role: 'shiftdefinenotification',
+            message: `${Name} vardiya tanımı ${username} tarafından Eklendi.`,
+            pushurl: '/Shiftdefines'
         })
         await t.commit()
     } catch (err) {
         await t.rollback()
         return next(sequelizeErrorCatcher(err))
     }
-    GetShifts(req, res, next)
+    GetShiftdefines(req, res, next)
 }
 
-async function UpdateShift(req, res, next) {
+async function UpdateShiftdefine(req, res, next) {
 
     let validationErrors = []
     const {
@@ -121,10 +121,10 @@ async function UpdateShift(req, res, next) {
         validationErrors.push(messages.VALIDATION_ERROR.ENDTIME_REQUIRED)
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHIFTID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.SHIFTDEFINEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTDEFINEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -134,21 +134,21 @@ async function UpdateShift(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const shift = db.shiftModel.findOne({ where: { Uuid: Uuid } })
-        if (!shift) {
-            return next(createNotfounderror([messages.ERROR.SHIFT_NOT_FOUND], req.language))
+        const shiftdefine = db.shiftdefineModel.findOne({ where: { Uuid: Uuid } })
+        if (!shiftdefine) {
+            return next(createNotfounderror([messages.ERROR.SHIFTDEFINE_NOT_FOUND], req.language))
         }
-        if (shift.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.SHIFT_NOT_ACTIVE], req.language))
+        if (shiftdefine.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.SHIFTDEFINE_NOT_ACTIVE], req.language))
         }
 
         if (Isjoker) {
-            await db.shiftModel.update({
+            await db.shiftdefineModel.update({
                 Isjoker: false
             }, { where: { Isactive: true } }, { transaction: t })
         }
 
-        await db.shiftModel.update({
+        await db.shiftdefineModel.update({
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
@@ -156,28 +156,28 @@ async function UpdateShift(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Vardiyalar',
-            role: 'shiftnotification',
-            message: `${Name} vardiyası ${username} tarafından Güncellendi.`,
-            pushurl: '/Shifts'
+            service: 'Vardiya Tanımları',
+            role: 'shiftdefinenotification',
+            message: `${Name} vardiya tanımı ${username} tarafından Güncellendi.`,
+            pushurl: '/Shiftdefines'
         })
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
-    GetShifts(req, res, next)
+    GetShiftdefines(req, res, next)
 }
 
-async function DeleteShift(req, res, next) {
+async function DeleteShiftdefine(req, res, next) {
 
     let validationErrors = []
-    const Uuid = req.params.shiftId
+    const Uuid = req.params.shiftdefineId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHIFTID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.SHIFTDEFINEID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTDEFINEID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -187,35 +187,35 @@ async function DeleteShift(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const shift = db.shiftModel.findOne({ where: { Uuid: Uuid } })
-        if (!shift) {
-            return next(createNotfounderror([messages.ERROR.SHIFT_NOT_FOUND], req.language))
+        const shiftdefine = db.shiftdefineModel.findOne({ where: { Uuid: Uuid } })
+        if (!shiftdefine) {
+            return next(createNotfounderror([messages.ERROR.SHIFTDEFINE_NOT_FOUND], req.language))
         }
-        if (shift.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.SHIFT_NOT_ACTIVE], req.language))
+        if (shiftdefine.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.SHIFTDEFINE_NOT_ACTIVE], req.language))
         }
 
-        await db.shiftModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.shiftdefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Vardiyalar',
-            role: 'shiftnotification',
-            message: `${shift?.Name} vardiyası ${username} tarafından Silindi.`,
-            pushurl: '/Shifts'
+            service: 'Vardiya Tanımları',
+            role: 'shiftdefinenotification',
+            message: `${shiftdefine?.Name} vardiyası ${username} tarafından Silindi.`,
+            pushurl: '/Shiftdefines'
         })
         await t.commit();
     } catch (error) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
-    GetShifts(req, res, next)
+    GetShiftdefines(req, res, next)
 }
 
 module.exports = {
-    GetShifts,
-    GetShift,
-    AddShift,
-    UpdateShift,
-    DeleteShift,
+    GetShiftdefines,
+    GetShiftdefine,
+    AddShiftdefine,
+    UpdateShiftdefine,
+    DeleteShiftdefine,
 }

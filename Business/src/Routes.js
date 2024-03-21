@@ -62,11 +62,11 @@ const Routes = [
     { method: 'put', path: '/Patientcashregisters', controller: 'Patientcashregister', action: 'UpdatePatientcashregister' },
     { method: 'delete', path: '/Patientcashregisters/:cashregisterId', controller: 'Patientcashregister', action: 'DeletePatientcashregister' },
 
-    { method: 'get', path: '/Shifts/:shiftId', controller: 'Shift', action: 'GetShift' },
-    { method: 'get', path: '/Shifts', controller: 'Shift', action: 'GetShifts' },
-    { method: 'post', path: '/Shifts', controller: 'Shift', action: 'AddShift' },
-    { method: 'put', path: '/Shifts', controller: 'Shift', action: 'UpdateShift' },
-    { method: 'delete', path: '/Shifts/:shiftId', controller: 'Shift', action: 'DeleteShift' },
+    { method: 'get', path: '/Shiftdefines/:shiftdefineId', controller: 'Shiftdefine', action: 'GetShiftdefine' },
+    { method: 'get', path: '/Shiftdefines', controller: 'Shiftdefine', action: 'GetShiftdefines' },
+    { method: 'post', path: '/Shiftdefines', controller: 'Shiftdefine', action: 'AddShiftdefine' },
+    { method: 'put', path: '/Shiftdefines', controller: 'Shiftdefine', action: 'UpdateShiftdefine' },
+    { method: 'delete', path: '/Shiftdefines/:shiftdefineId', controller: 'Shiftdefine', action: 'DeleteShiftdefine' },
 
     { method: 'get', path: '/Personelshifts/:personelshiftId', controller: 'Personelshift', action: 'GetPersonelshift' },
     { method: 'get', path: '/Personelshifts', controller: 'Personelshift', action: 'GetPersonelshifts' },
