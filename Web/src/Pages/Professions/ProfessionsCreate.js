@@ -10,11 +10,21 @@ export default class ProfessionsCreate extends Component {
 
   PAGE_NAME = "ProfessionsCreate"
 
+  componentDidMount() {
+    const { GetFloors } = this.props
+    GetFloors()
+  }
+
   render() {
-    const { Professions, history, Profile, closeModal } = this.props
+    const { Professions, Floors, history, Profile, closeModal } = this.props
+
+    const Floorsoptions = (Floors.list || []).filter(u => u.Isactive).map(Floor => {
+      return { key: Floor.Uuid, text: Floor.Name, value: Floor.Uuid }
+    })
+
 
     return (
-      Professions.isLoading ? <LoadingPage /> :
+      Professions.isLoading || Floors.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -30,6 +40,7 @@ export default class ProfessionsCreate extends Component {
           <Contentwrapper>
             <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Floors[Profile.Language]} name="Floors" formtype='dropdown' multiple options={Floorsoptions} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
@@ -54,6 +65,7 @@ export default class ProfessionsCreate extends Component {
 
     const { AddProfessions, history, fillProfessionnotification, Profile, closeModal } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
+    data.Floors = (data.Floors || []).join(',')
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })

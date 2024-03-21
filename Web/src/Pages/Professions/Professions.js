@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
+import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
-import ProfessionsDelete  from '../../Containers/Professions/ProfessionsDelete'
+import ProfessionsDelete from '../../Containers/Professions/ProfessionsDelete'
 import { getInitialconfig } from '../../Utils/Constants'
 
 export default class Professions extends Component {
@@ -14,7 +14,7 @@ export default class Professions extends Component {
   }
 
   render() {
-    const { Professions, Profile, handleDeletemodal, handleSelectedProfession} = this.props
+    const { Professions, Profile, handleDeletemodal, handleSelectedProfession } = this.props
     const { isLoading } = Professions
 
     const colProps = {
@@ -27,6 +27,7 @@ export default class Professions extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.Floors[Profile.Language], accessor: row => this.floorCellhandler(row?.Floors), },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -88,5 +89,18 @@ export default class Professions extends Component {
           <ProfessionsDelete />
         </React.Fragment>
     )
+  }
+
+  floorCellhandler = (value) => {
+    const { Floors } = this.props
+    if (Floors.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const floortxt = ((value || '').split(',') || []).map(flooruuid => {
+        const floor = (Floors.list || []).find(u => u.Uuid === flooruuid)
+        return floor?.Name
+      }).join(',')
+      return floortxt
+    }
   }
 }

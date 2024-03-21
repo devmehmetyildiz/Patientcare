@@ -19,32 +19,37 @@ export default class ProfessionsEdit extends Component {
 
 
   componentDidMount() {
-    const { GetProfession, match, history, ProfessionID } = this.props
+    const { GetProfession, match, history, ProfessionID, GetFloors } = this.props
     let Id = ProfessionID || match.params.ProfessionID
     if (validator.isUUID(Id)) {
       GetProfession(Id)
+      GetFloors()
     } else {
       history.push("/Professions")
     }
   }
 
   componentDidUpdate() {
-    const { Professions, } = this.props
+    const { Professions, Floors } = this.props
     const { selected_record, isLoading } = Professions
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isLoading && !Floors.isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
       })
-      this.context.setForm(this.PAGE_NAME, selected_record)
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, Floors: (selected_record?.Floors || '').split(',') })
     }
   }
 
   render() {
 
-    const { Professions, Profile, history } = this.props
+    const { Professions, Floors, Profile, history } = this.props
+
+    const Floorsoptions = (Floors.list || []).filter(u => u.Isactive).map(Floor => {
+      return { key: Floor.Uuid, text: Floor.Name, value: Floor.Uuid }
+    })
 
     return (
-      Professions.isLoading ? <LoadingPage /> :
+      Professions.isLoading || Floors.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -59,6 +64,7 @@ export default class ProfessionsEdit extends Component {
           <Contentwrapper>
             <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Floors[Profile.Language]} name="Floors" formtype='dropdown' multiple options={Floorsoptions} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
@@ -82,6 +88,7 @@ export default class ProfessionsEdit extends Component {
 
     const { EditProfessions, history, fillRatingnotification, Professions, Profile } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
+    data.Floors = (data.Floors || []).join(',')
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })

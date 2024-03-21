@@ -10,6 +10,9 @@ module.exports = sequelize.define('professionModel', {
     Name: {
         type: Sequelize.STRING
     },
+    Floors: {
+        type: Sequelize.TEXT
+    },
     Createtime: {
         type: Sequelize.DATE
     },

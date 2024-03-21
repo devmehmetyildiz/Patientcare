@@ -14,6 +14,10 @@ const Literals = {
             tr: 'Tanım',
             en: 'Define'
         },
+        Floors: {
+            tr: 'Katlar',
+            en: 'Floors'
+        },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'
