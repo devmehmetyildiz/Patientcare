@@ -3,19 +3,19 @@ import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
-import ShiftsDelete from '../../Containers/Shifts/ShiftsDelete'
+import ShiftdefinesDelete from '../../Containers/Shiftdefines/ShiftdefinesDelete'
 import { getInitialconfig } from '../../Utils/Constants'
 
-export default class Shifts extends Component {
+export default class Shiftdefines extends Component {
 
   componentDidMount() {
-    const { GetShifts } = this.props
-    GetShifts()
+    const { GetShiftdefines } = this.props
+    GetShiftdefines()
   }
 
   render() {
-    const { Shifts, Profile, handleDeletemodal, handleSelectedShift } = this.props
-    const { isLoading } = Shifts
+    const { Shiftdefines, Profile, handleDeletemodal, handleSelectedShiftdefine } = this.props
+    const { isLoading } = Shiftdefines
 
     const colProps = {
       sortable: true,
@@ -39,15 +39,15 @@ export default class Shifts extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Shifts"
+    const metaKey = "Shiftdefines"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
-    const list = (Shifts.list || []).filter(u => u.Isactive).map(item => {
+    const list = (Shiftdefines.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
-        edit: <Link to={`/Shifts/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        edit: <Link to={`/Shiftdefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
-          handleSelectedShift(item)
+          handleSelectedShiftdefine(item)
           handleDeletemodal(true)
         }} />
       }
@@ -61,7 +61,7 @@ export default class Shifts extends Component {
               <Grid columns='2' >
                 <GridColumn width={8}>
                   <Breadcrumb size='big'>
-                    <Link to={"/Shifts"}>
+                    <Link to={"/Shiftdefines"}>
                       <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
@@ -69,7 +69,7 @@ export default class Shifts extends Component {
                 <Settings
                   Profile={Profile}
                   Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
-                  Pagecreatelink={"/Shifts/Create"}
+                  Pagecreatelink={"/Shiftdefines/Create"}
                   Columns={Columns}
                   list={list}
                   initialConfig={initialConfig}
@@ -89,7 +89,7 @@ export default class Shifts extends Component {
               </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
             }
           </Pagewrapper>
-          <ShiftsDelete />
+          <ShiftdefinesDelete />
         </React.Fragment>
     )
   }

@@ -10,7 +10,7 @@ const Literals = {
         tr: 'Veri Kaydetme'
     },
     adddescription: {
-        en: 'Shift added successfully',
+        en: 'Shiftdefine added successfully',
         tr: 'Vardiya Başarı ile eklendi'
     },
     updatecode: {
@@ -18,7 +18,7 @@ const Literals = {
         tr: 'Veri Güncelleme'
     },
     updatedescription: {
-        en: 'Shift updated successfully',
+        en: 'Shiftdefine updated successfully',
         tr: 'Vardiya Başarı ile güncellendi'
     },
     deletecode: {
@@ -26,96 +26,96 @@ const Literals = {
         tr: 'Veri Silme'
     },
     deletedescription: {
-        en: 'Shift Deleted successfully',
+        en: 'Shiftdefine Deleted successfully',
         tr: 'Vardiya Başarı ile Silindi'
     },
 }
 
-export const GetShifts = createAsyncThunk(
-    'Shifts/GetShifts',
+export const GetShiftdefines = createAsyncThunk(
+    'Shiftdefines/GetShiftdefines',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Business, ROUTES.SHIFT);
+            const response = await instanse.get(config.services.Business, ROUTES.SHIFTDEFINE);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
+            dispatch(fillShiftdefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const GetShift = createAsyncThunk(
-    'Shifts/GetShift',
+export const GetShiftdefine = createAsyncThunk(
+    'Shiftdefines/GetShiftdefine',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Business, `${ROUTES.SHIFT}/${guid}`);
+            const response = await instanse.get(config.services.Business, `${ROUTES.SHIFTDEFINE}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
+            dispatch(fillShiftdefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const AddShifts = createAsyncThunk(
-    'Shifts/AddShifts',
+export const AddShiftdefines = createAsyncThunk(
+    'Shiftdefines/AddShiftdefines',
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Business, ROUTES.SHIFT, data);
-            dispatch(fillShiftnotification({
+            const response = await instanse.post(config.services.Business, ROUTES.SHIFTDEFINE, data);
+            dispatch(fillShiftdefinenotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
                 description: Literals.adddescription[Language] + ` : ${data?.Name}`,
             }));
-            clearForm && clearForm('ShiftsCreate')
+            clearForm && clearForm('ShiftdefinesCreate')
             closeModal && closeModal()
-            history && history.push(redirectUrl ? redirectUrl : '/Shifts');
+            history && history.push(redirectUrl ? redirectUrl : '/Shiftdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
+            dispatch(fillShiftdefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const EditShifts = createAsyncThunk(
-    'Shifts/EditShifts',
+export const EditShiftdefines = createAsyncThunk(
+    'Shiftdefines/EditShiftdefines',
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Business, ROUTES.SHIFT, data);
-            dispatch(fillShiftnotification({
+            const response = await instanse.put(config.services.Business, ROUTES.SHIFTDEFINE, data);
+            dispatch(fillShiftdefinenotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
             }));
-            clearForm && clearForm('ShiftsUpdate')
+            clearForm && clearForm('ShiftdefinesUpdate')
             closeModal && closeModal()
-            history && history.push(redirectUrl ? redirectUrl : '/Shifts');
+            history && history.push(redirectUrl ? redirectUrl : '/Shiftdefines');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
+            dispatch(fillShiftdefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const DeleteShifts = createAsyncThunk(
-    'Shifts/DeleteShifts',
+export const DeleteShiftdefines = createAsyncThunk(
+    'Shiftdefines/DeleteShiftdefines',
     async (data, { dispatch, getState }) => {
         try {
 
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.delete(config.services.Business, `${ROUTES.SHIFT}/${data.Uuid}`);
-            dispatch(fillShiftnotification({
+            const response = await instanse.delete(config.services.Business, `${ROUTES.SHIFTDEFINE}/${data.Uuid}`);
+            dispatch(fillShiftdefinenotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
                 description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
@@ -123,14 +123,14 @@ export const DeleteShifts = createAsyncThunk(
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillShiftnotification(errorPayload));
+            dispatch(fillShiftdefinenotification(errorPayload));
             throw errorPayload;
         }
     }
 );
 
-export const ShiftsSlice = createSlice({
-    name: 'Shifts',
+export const ShiftdefinesSlice = createSlice({
+    name: 'Shiftdefines',
     initialState: {
         list: [],
         selected_record: {},
@@ -140,15 +140,15 @@ export const ShiftsSlice = createSlice({
         isDeletemodalopen: false,
     },
     reducers: {
-        handleSelectedShift: (state, action) => {
+        handleSelectedShiftdefine: (state, action) => {
             state.selected_record = action.payload;
         },
-        fillShiftnotification: (state, action) => {
+        fillShiftdefinenotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
             state.notifications = messages.concat(state.notifications || []);
         },
-        removeShiftnotification: (state) => {
+        removeShiftdefinenotification: (state) => {
             state.notifications.splice(0, 1);
         },
         handleDeletemodal: (state, action) => {
@@ -157,62 +157,62 @@ export const ShiftsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(GetShifts.pending, (state) => {
+            .addCase(GetShiftdefines.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.list = [];
             })
-            .addCase(GetShifts.fulfilled, (state, action) => {
+            .addCase(GetShiftdefines.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(GetShifts.rejected, (state, action) => {
+            .addCase(GetShiftdefines.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetShift.pending, (state) => {
+            .addCase(GetShiftdefine.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
                 state.selected_record = {};
             })
-            .addCase(GetShift.fulfilled, (state, action) => {
+            .addCase(GetShiftdefine.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.selected_record = action.payload;
             })
-            .addCase(GetShift.rejected, (state, action) => {
+            .addCase(GetShiftdefine.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddShifts.pending, (state) => {
+            .addCase(AddShiftdefines.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(AddShifts.fulfilled, (state, action) => {
+            .addCase(AddShiftdefines.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(AddShifts.rejected, (state, action) => {
+            .addCase(AddShiftdefines.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditShifts.pending, (state) => {
+            .addCase(EditShiftdefines.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(EditShifts.fulfilled, (state, action) => {
+            .addCase(EditShiftdefines.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(EditShifts.rejected, (state, action) => {
+            .addCase(EditShiftdefines.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteShifts.pending, (state) => {
+            .addCase(DeleteShiftdefines.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(DeleteShifts.fulfilled, (state, action) => {
+            .addCase(DeleteShiftdefines.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(DeleteShifts.rejected, (state, action) => {
+            .addCase(DeleteShiftdefines.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
@@ -220,10 +220,10 @@ export const ShiftsSlice = createSlice({
 });
 
 export const {
-    handleSelectedShift,
-    fillShiftnotification,
-    removeShiftnotification,
+    handleSelectedShiftdefine,
+    fillShiftdefinenotification,
+    removeShiftdefinenotification,
     handleDeletemodal
-} = ShiftsSlice.actions;
+} = ShiftdefinesSlice.actions;
 
-export default ShiftsSlice.reducer;
+export default ShiftdefinesSlice.reducer;

@@ -20,12 +20,12 @@ export default class ProfessionpresettingsEdit extends Component {
   }
 
   componentDidMount() {
-    const { ProfessionpresettingID, GetProfessionpresetting, GetFloors, GetShifts, GetProfessions, match, history } = this.props
+    const { ProfessionpresettingID, GetProfessionpresetting, GetFloors, GetShiftdefines, GetProfessions, match, history } = this.props
     let Id = ProfessionpresettingID || match?.params?.ProfessionpresettingID
     if (validator.isUUID(Id)) {
       GetProfessionpresetting(Id)
       GetFloors()
-      GetShifts()
+      GetShiftdefines()
       GetProfessions()
     } else {
       history.push("/Professionpresetting")
@@ -33,10 +33,10 @@ export default class ProfessionpresettingsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Professionpresettings, Floors, Professions, Shifts } = this.props
+    const { Professionpresettings, Floors, Professions, Shiftdefines } = this.props
     const { selected_record, isLoading } = Professionpresettings
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
-      && !Floors.isLoading && !Professions.isLoading && !Shifts.isLoading
+      && !Floors.isLoading && !Professions.isLoading && !Shiftdefines.isLoading
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
@@ -57,14 +57,14 @@ export default class ProfessionpresettingsEdit extends Component {
   }
 
   render() {
-    const { Professionpresettings, Floors, Shifts, Professions, Profile, history } = this.props
+    const { Professionpresettings, Floors, Shiftdefines, Professions, Profile, history } = this.props
 
     const Flooroptions = (Floors.list || []).filter(u => u.Isactive).map(floor => {
       return { key: floor.Uuid, text: floor.Name, value: floor.Uuid }
     })
 
-    const Shiftoptions = (Shifts.list || []).filter(u => u.Isactive).map(shift => {
-      return { key: shift.Uuid, text: shift.Name, value: shift.Uuid }
+    const Shiftdefineoptions = (Shiftdefines.list || []).filter(u => u.Isactive).map(shiftdefine => {
+      return { key: shiftdefine.Uuid, text: shiftdefine.Name, value: shiftdefine.Uuid }
     })
 
     const Professionoptions = (Professions.list || []).filter(u => u.Isactive).map(profession => {
@@ -78,7 +78,7 @@ export default class ProfessionpresettingsEdit extends Component {
     const isLoadingstatus =
       Professionpresettings.isLoading ||
       Floors.isLoading ||
-      Shifts.isLoading ||
+      Shiftdefines.isLoading ||
       Professions.isLoading
 
     return (
@@ -101,7 +101,7 @@ export default class ProfessionpresettingsEdit extends Component {
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Profession[Profile.Language]} name="ProfessionID" formtype="dropdown" options={Professionoptions} />
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Floor[Profile.Language]} name="FloorID" formtype="dropdown" options={Flooroptions} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Shift[Profile.Language]} name="ShiftID" formtype="dropdown" options={Shiftoptions} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Shiftdefine[Profile.Language]} name="ShiftdefineID" formtype="dropdown" options={Shiftdefineoptions} />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Ispersonelstay[Profile.Language]} name="Ispersonelstay" formtype="checkbox" />
@@ -147,7 +147,7 @@ export default class ProfessionpresettingsEdit extends Component {
     if (!validator.isUUID(data.ProfessionID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Professionrequired[Profile.Language] })
     }
-    if (!validator.isUUID(data.ShiftID) && !validator.isUUID(data.FloorID)) {
+    if (!validator.isUUID(data.ShiftdefineID) && !validator.isUUID(data.FloorID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Floororshiftrequired[Profile.Language] })
     }
 

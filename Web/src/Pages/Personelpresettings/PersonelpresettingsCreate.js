@@ -15,9 +15,9 @@ export default class PersonelpresettingsCreate extends Component {
   PAGE_NAME = "PersonelpresettingsCreate"
 
   componentDidMount() {
-    const { GetFloors, GetShifts, GetUsers } = this.props
+    const { GetFloors, GetShiftdefines, GetUsers } = this.props
     GetFloors()
-    GetShifts()
+    GetShiftdefines()
     GetUsers()
   }
 
@@ -36,14 +36,14 @@ export default class PersonelpresettingsCreate extends Component {
 
   render() {
 
-    const { Personelpresettings, Floors, Shifts, Users, Profile, history, closeModal } = this.props
+    const { Personelpresettings, Floors, Shiftdefines, Users, Profile, history, closeModal } = this.props
 
     const Flooroptions = (Floors.list || []).filter(u => u.Isactive).map(floor => {
       return { key: floor.Uuid, text: floor.Name, value: floor.Uuid }
     })
 
-    const Shiftoptions = (Shifts.list || []).filter(u => u.Isactive).map(shift => {
-      return { key: shift.Uuid, text: shift.Name, value: shift.Uuid }
+    const Shiftdefineoptions = (Shiftdefines.list || []).filter(u => u.Isactive).map(shiftdefine => {
+      return { key: shiftdefine.Uuid, text: shiftdefine.Name, value: shiftdefine.Uuid }
     })
 
     const Useroptions = (Users.list || []).filter(u => u.Isactive).map(user => {
@@ -57,7 +57,7 @@ export default class PersonelpresettingsCreate extends Component {
     const isLoadingstatus =
       Personelpresettings.isLoading ||
       Floors.isLoading ||
-      Shifts.isLoading ||
+      Shiftdefines.isLoading ||
       Users.isLoading
 
     return (
@@ -81,7 +81,7 @@ export default class PersonelpresettingsCreate extends Component {
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Personel[Profile.Language]} name="PersonelID" formtype="dropdown" options={Useroptions} />
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Floor[Profile.Language]} name="FloorID" formtype="dropdown" options={Flooroptions} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Shift[Profile.Language]} name="ShiftID" formtype="dropdown" options={Shiftoptions} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Shiftdefine[Profile.Language]} name="ShiftdefineID" formtype="dropdown" options={Shiftdefineoptions} />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -122,7 +122,7 @@ export default class PersonelpresettingsCreate extends Component {
     if (!validator.isUUID(data.PersonelID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Personelrequired[Profile.Language] })
     }
-    if (!validator.isUUID(data.ShiftID) && !validator.isUUID(data.FloorID)) {
+    if (!validator.isUUID(data.ShiftdefineID) && !validator.isUUID(data.FloorID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Floororshiftrequired[Profile.Language] })
     }
 

@@ -5,19 +5,19 @@ import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
-export default class ShiftsCreate extends Component {
+export default class ShiftdefinesCreate extends Component {
 
-  PAGE_NAME = "ShiftsCreate"
+  PAGE_NAME = "ShiftdefinesCreate"
 
   render() {
-    const { Shifts, Profile, history, closeModal } = this.props
+    const { Shiftdefines, Profile, history, closeModal } = this.props
 
     return (
-      Shifts.isLoading ? <LoadingPage /> :
+      Shiftdefines.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
-              <Link to={"/Shifts"}>
+              <Link to={"/Shiftdefines"}>
                 <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
@@ -44,11 +44,11 @@ export default class ShiftsCreate extends Component {
           <Footerwrapper>
             <Gobackbutton
               history={history}
-              redirectUrl={"/Shifts"}
+              redirectUrl={"/Shiftdefines"}
               buttonText={Literals.Button.Goback[Profile.Language]}
             />
             <Submitbutton
-              isLoading={Shifts.isLoading}
+              isLoading={Shiftdefines.isLoading}
               buttonText={Literals.Button.Create[Profile.Language]}
               submitFunction={this.handleSubmit}
             />
@@ -60,7 +60,7 @@ export default class ShiftsCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddShifts, history, fillShiftnotification, Profile, closeModal } = this.props
+    const { AddShiftdefines, history, fillShiftdefinenotification, Profile, closeModal } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
 
     !validator.isBoolean(data?.Isjoker) && (data.Isjoker = false)
@@ -77,11 +77,11 @@ export default class ShiftsCreate extends Component {
     }
     if (errors.length > 0) {
       errors.forEach(error => {
-        fillShiftnotification(error)
+        fillShiftdefinenotification(error)
       })
     } else {
-      AddShifts({ data, history, closeModal })
+      AddShiftdefines({ data, history, closeModal })
     }
   }
 }
-ShiftsCreate.contextType = FormContext
+ShiftdefinesCreate.contextType = FormContext

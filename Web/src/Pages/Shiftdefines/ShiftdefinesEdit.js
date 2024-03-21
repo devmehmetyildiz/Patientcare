@@ -6,9 +6,9 @@ import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 
-export default class ShiftsEdit extends Component {
+export default class ShiftdefinesEdit extends Component {
 
-  PAGE_NAME = "ShiftsEdit"
+  PAGE_NAME = "ShiftdefinesEdit"
 
   constructor(props) {
     super(props)
@@ -18,18 +18,18 @@ export default class ShiftsEdit extends Component {
   }
 
   componentDidMount() {
-    const { ShiftID, GetShift, match, history } = this.props
-    let Id = ShiftID || match?.params?.ShiftID
+    const { ShiftdefineID, GetShiftdefine, match, history } = this.props
+    let Id = ShiftdefineID || match?.params?.ShiftdefineID
     if (validator.isUUID(Id)) {
-      GetShift(Id)
+      GetShiftdefine(Id)
     } else {
-      history.push("/Shifts")
+      history.push("/Shiftdefines")
     }
   }
 
   componentDidUpdate() {
-    const { Shifts } = this.props
-    const { selected_record, isLoading } = Shifts
+    const { Shiftdefines } = this.props
+    const { selected_record, isLoading } = Shiftdefines
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
       && !isLoading && !this.state.isDatafetched) {
       this.setState({
@@ -40,14 +40,14 @@ export default class ShiftsEdit extends Component {
   }
 
   render() {
-    const { Shifts, Profile, history } = this.props
+    const { Shiftdefines, Profile, history } = this.props
 
     return (
-      Shifts.isLoading ? <LoadingPage /> :
+      Shiftdefines.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
-              <Link to={"/Shifts"}>
+              <Link to={"/Shiftdefines"}>
                 <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
@@ -73,11 +73,11 @@ export default class ShiftsEdit extends Component {
           <Footerwrapper>
             <Gobackbutton
               history={history}
-              redirectUrl={"/Shifts"}
+              redirectUrl={"/Shiftdefines"}
               buttonText={Literals.Button.Goback[Profile.Language]}
             />
             <Submitbutton
-              isLoading={Shifts.isLoading}
+              isLoading={Shiftdefines.isLoading}
               buttonText={Literals.Button.Update[Profile.Language]}
               submitFunction={this.handleSubmit}
             />
@@ -89,7 +89,7 @@ export default class ShiftsEdit extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { EditShifts, history, fillShiftnotification, Profile, Shifts } = this.props
+    const { EditShiftdefines, history, fillShiftdefinenotification, Profile, Shiftdefines } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
 
     !validator.isBoolean(data?.Isjoker) && (data.Isjoker = false)
@@ -106,11 +106,11 @@ export default class ShiftsEdit extends Component {
     }
     if (errors.length > 0) {
       errors.forEach(error => {
-        fillShiftnotification(error)
+        fillShiftdefinenotification(error)
       })
     } else {
-      EditShifts({ data: { ...Shifts.selected_record, ...data }, history })
+      EditShiftdefines({ data: { ...Shiftdefines.selected_record, ...data }, history })
     }
   }
 }
-ShiftsEdit.contextType = FormContext
+ShiftdefinesEdit.contextType = FormContext

@@ -161,9 +161,9 @@ const Rooms = lazy(() => import('./Containers/Rooms/Rooms'));
 const RoomsCreate = lazy(() => import('./Containers/Rooms/RoomsCreate'));
 const RoomsEdit = lazy(() => import('./Containers/Rooms/RoomsEdit'));
 
-const Shifts = lazy(() => import('./Containers/Shifts/Shifts'));
-const ShiftsCreate = lazy(() => import('./Containers/Shifts/ShiftsCreate'));
-const ShiftsEdit = lazy(() => import('./Containers/Shifts/ShiftsEdit'));
+const Shiftdefines = lazy(() => import('./Containers/Shiftdefines/Shiftdefines'));
+const ShiftdefinesCreate = lazy(() => import('./Containers/Shiftdefines/ShiftdefinesCreate'));
+const ShiftdefinesEdit = lazy(() => import('./Containers/Shiftdefines/ShiftdefinesEdit'));
 
 const Beds = lazy(() => import('./Containers/Beds/Beds'));
 const BedsCreate = lazy(() => import('./Containers/Beds/BedsCreate'));
@@ -195,10 +195,6 @@ const UnapprovedTodos = lazy(() => import('./Containers/Unapproveds/UnapprovedTo
 
 const Placeviews = lazy(() => import('./Containers/Placeviews/Placeviews'));
 const PlaceviewsTransfer = lazy(() => import('./Containers/Placeviews/PlaceviewsTransfer'));
-
-const Personelshifts = lazy(() => import('./Containers/Personelshifts/Personelshifts'));
-const PersonelshiftsCreate = lazy(() => import('./Containers/Personelshifts/PersonelshiftsCreate'));
-const PersonelshiftsDetail = lazy(() => import('./Containers/Personelshifts/PersonelshiftsDetail'));
 
 const Patientcashregisters = lazy(() => import('./Containers/Patientcashregisters/Patientcashregisters'));
 const PatientcashregistersCreate = lazy(() => import('./Containers/Patientcashregisters/PatientcashregistersCreate'));
@@ -444,9 +440,9 @@ class Routes extends Component {
       { exact: true, path: "/Rooms/Create", auth: true, component: RoomsCreate, permission: 'roomadd' },
       { exact: true, path: "/Rooms/:RoomID/Edit", auth: true, component: RoomsEdit, permission: 'roomupdate' },
 
-      { exact: true, path: "/Shifts", auth: true, component: Shifts, permission: 'shiftview' },
-      { exact: true, path: "/Shifts/Create", auth: true, component: ShiftsCreate, permission: 'shiftadd' },
-      { exact: true, path: "/Shifts/:ShiftID/Edit", auth: true, component: ShiftsEdit, permission: 'shiftupdate' },
+      { exact: true, path: "/Shiftdefines", auth: true, component: Shiftdefines, permission: 'shiftdefineview' },
+      { exact: true, path: "/Shiftdefines/Create", auth: true, component: ShiftdefinesCreate, permission: 'shiftdefineadd' },
+      { exact: true, path: "/Shiftdefines/:ShiftdefineID/Edit", auth: true, component: ShiftdefinesEdit, permission: 'shiftdefineupdate' },
 
       { exact: true, path: "/Equipmentgroups", auth: true, component: Equipmentgroups, permission: 'equipmentgroupview' },
       { exact: true, path: "/Equipmentgroups/Create", auth: true, component: EquipmentgroupsCreate, permission: 'equipmentgroupadd' },
@@ -470,10 +466,6 @@ class Routes extends Component {
 
       { exact: true, path: "/Placeviews", auth: true, component: Placeviews, permission: 'placeviewview' },
       { exact: true, path: "/Placeviews/Transfer", auth: true, component: PlaceviewsTransfer, permission: 'placeviewtransfer' },
-
-      { exact: true, path: "/Personelshifts", auth: true, component: Personelshifts, permission: 'shiftview' },
-      { exact: true, path: "/Personelshifts/Create", auth: true, component: PersonelshiftsCreate, permission: 'shiftadd' },
-      { exact: true, path: "/Personelshifts/:ShiftID", auth: true, component: PersonelshiftsDetail, permission: 'shiftupdate' },
 
       { exact: true, path: "/Patientcashregisters", auth: true, component: Patientcashregisters, permission: 'patientcashregisterview' },
       { exact: true, path: "/Patientcashregisters/Create", auth: true, component: PatientcashregistersCreate, permission: 'patientcashregisteradd' },

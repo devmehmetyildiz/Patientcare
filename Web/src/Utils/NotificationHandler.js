@@ -32,7 +32,7 @@ import { removeTodonotification } from "../Redux/TodoSlice"
 import { removeUnitnotification } from "../Redux/UnitSlice"
 import { removeUsernotification } from "../Redux/UserSlice"
 import { removeWarehousenotification } from "../Redux/WarehouseSlice"
-import { removeShiftnotification } from "../Redux/ShiftSlice"
+import { removeShiftdefinenotification } from "../Redux/ShiftdefineSlice"
 import { removeEquipmentnotification } from "../Redux/EquipmentSlice"
 import { removeEquipmentgroupnotification } from "../Redux/EquipmentgroupSlice"
 import { removePersonelnotification } from "../Redux/PersonelSlice"
@@ -75,7 +75,7 @@ export function NotificationHandler(props) {
             removePatientstocknotification, removePatientstockmovementnotification, removePatientnotification,
             removePatientmovementnotification, removePatientdefinenotification, removeMailsettingnotification,
             removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
-            removePeriodnotification, removeCasenotification, removeBednotification, removeShiftnotification, removeEquipmentnotification,
+            removePeriodnotification, removeCasenotification, removeBednotification, removeShiftdefinenotification, removeEquipmentnotification,
             removeEquipmentgroupnotification, removePersonelnotification, removeBreakdownnotification, removeMainteancenotification,
             removePersonelshiftnotification, removeCompanycashmovementnotification, removePatientcashmovementnotification,
             removePatientcashregisternotification, removeUsernotificationnotification, removeReportnotification, removeUsagetypenotification,
@@ -92,7 +92,7 @@ export function NotificationHandler(props) {
             Profile, Patienttypes, Patientstocks, Patientstockmovements,
             Patients, Patientmovements, Patientdefines, Mailsettings,
             Floors, Files, Departments, Costumertypes, Breakdowns, Mainteancies,
-            Periods, Cases, Beds, Shifts, Equipmentgroups, Equipments, Personels,
+            Periods, Cases, Beds, Shiftdefines, Equipmentgroups, Equipments, Personels,
             Companycashmovements, Patientcashmovements,
             Patientcashregisters, Usernotifications, Reports, Usagetypes, Professions,
             Supportplanlists, Supportplans, Careplans, Helpstatus, Makingtypes, Ratings, Requiredperiods,
@@ -100,7 +100,7 @@ export function NotificationHandler(props) {
         } = props.states
 
         Notification(Warehouses.notifications, removeWarehousenotification)
-        Notification(Shifts.notifications, removeShiftnotification)
+        Notification(Shiftdefines.notifications, removeShiftdefinenotification)
         Notification(Users.notifications, removeUsernotification)
         Notification(Units.notifications, removeUnitnotification)
         Notification(Todos.notifications, removeTodonotification)
@@ -174,7 +174,7 @@ const mapDispatchToProps = {
     removePatientstocknotification, removePatientstockmovementnotification, removePatientnotification,
     removePatientmovementnotification, removePatientdefinenotification, removeMailsettingnotification,
     removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
-    removePeriodnotification, removeCasenotification, removeBednotification, removeShiftnotification,
+    removePeriodnotification, removeCasenotification, removeBednotification, removeShiftdefinenotification,
     removeEquipmentgroupnotification, removeEquipmentnotification, removePersonelnotification, removeBreakdownnotification,
     removeMainteancenotification, removeCompanycashmovementnotification, removePatientcashmovementnotification,
     removePatientcashregisternotification, removeUsernotificationnotification, removeReportnotification, removeUsagetypenotification,

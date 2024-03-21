@@ -27,9 +27,9 @@ const Literals = {
             tr: 'Kat',
             en: 'Floor'
         },
-        Shift: {
-            tr: 'Vardiya',
-            en: 'Shift'
+        Shiftdefine: {
+            tr: 'Vardiya Tanımı',
+            en: 'Shift Define'
         },
         Isapproved: {
             tr: 'Onaylandı mı?',
@@ -135,8 +135,8 @@ const Literals = {
             en: "Date required"
         },
         Floororshiftrequired: {
-            tr: "Kat veya Vardiya Gerekli",
-            en: "Shift or Floor required"
+            tr: "Kat veya Vardiya Tanımı Gerekli",
+            en: "Shift define or Floor required"
         },
         Yes: {
             tr: "EVET",

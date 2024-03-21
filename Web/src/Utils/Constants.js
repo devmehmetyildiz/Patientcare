@@ -39,7 +39,7 @@ export const ROUTES = {
     BED: 'Beds',
     USAGETYPE: 'Usagetypes',
     FLOOR: 'Floors',
-    SHIFT: 'Shifts',
+    SHIFTDEFINE: 'Shiftdefines',
     HELPSTATU: 'Helpstatus',
     MAKINGTYPE: 'Makingtypes',
     RATING: 'Ratings',
@@ -185,7 +185,7 @@ export const getSidebarroutes = (Profile) => {
             items: [
                 { id: 1, subtitle: Literals.Personelpresettings.Page.Pageheader[Profile.Language], url: "/Personelpresettings", permission: checkAuth('personelpresettingview') },
                 { id: 2, subtitle: Literals.Professionpresettings.Page.Pageheader[Profile.Language], url: "/Professionpresettings", permission: checkAuth('professionpresettingview') },
-                { id: 3, subtitle: Literals.Shifts.Page.Pageheader[Profile.Language], url: "/Shifts", permission: checkAuth('shiftview') },
+                { id: 3, subtitle: Literals.Shifts.Page.Pageheader[Profile.Language], url: "/Shiftdefines", permission: checkAuth('shiftdefineview') },
             ]
         },
         {

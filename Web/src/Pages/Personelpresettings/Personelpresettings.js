@@ -11,10 +11,10 @@ import Formatdate, { Getdateoptions } from '../../Utils/Formatdate'
 export default class Personelpresettings extends Component {
 
   componentDidMount() {
-    const { GetPersonelpresettings, GetFloors, GetShifts, GetUsers } = this.props
+    const { GetPersonelpresettings, GetFloors, GetShiftdefines, GetUsers } = this.props
     GetPersonelpresettings()
     GetFloors()
-    GetShifts()
+    GetShiftdefines()
     GetUsers()
   }
 
@@ -35,7 +35,7 @@ export default class Personelpresettings extends Component {
       { Header: Literals.Columns.Startdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Startdate), },
       { Header: Literals.Columns.Personel[Profile.Language], accessor: row => this.personelCellhandler(row?.PersonelID), },
       { Header: Literals.Columns.Floor[Profile.Language], accessor: row => this.floorCellhandler(row?.FloorID), },
-      { Header: Literals.Columns.Shift[Profile.Language], accessor: row => this.shiftCellhandler(row?.ShiftID), },
+      { Header: Literals.Columns.Shiftdefine[Profile.Language], accessor: row => this.shiftdefineCellhandler(row?.ShiftdefineID), },
       { Header: Literals.Columns.Isapproved[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved), disableProps: true, Cell: (col, row) => this.booliconCellhandler(col, row), },
       { Header: Literals.Columns.Isdeactive[Profile.Language], accessor: row => this.boolCellhandler(row?.Isdeactive), disableProps: true, Cell: (col, row) => this.booliconCellhandler(col, row), },
       { Header: Literals.Columns.Iscompleted[Profile.Language], accessor: row => this.boolCellhandler(row?.Iscompleted), disableProps: true, Cell: (col, row) => this.booliconCellhandler(col, row), },
@@ -112,13 +112,13 @@ export default class Personelpresettings extends Component {
     }
   }
 
-  shiftCellhandler = (value) => {
-    const { Shifts } = this.props
-    if (Shifts.isLoading) {
+  shiftdefineCellhandler = (value) => {
+    const { Shiftdefines } = this.props
+    if (Shiftdefines.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const shift = (Shifts.list || []).find(u => u.Uuid === value)
-      return shift?.Name || ''
+      const shiftdefine = (Shiftdefines.list || []).find(u => u.Uuid === value)
+      return shiftdefine?.Name || ''
     }
   }
 

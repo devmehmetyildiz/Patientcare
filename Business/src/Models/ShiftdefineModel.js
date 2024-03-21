@@ -1,4 +1,4 @@
-module.exports = sequelize.define('shiftModel', {
+module.exports = sequelize.define('shiftdefineModel', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -44,6 +44,6 @@ module.exports = sequelize.define('shiftModel', {
         type: Sequelize.BOOLEAN
     }
 }, {
-    tableName: 'shifts', // replace with the name of your existing table
+    tableName: 'shiftdefines', // replace with the name of your existing table
     timestamps: false
 });

@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { Button, Modal } from 'semantic-ui-react'
 import Literals from './Literals'
 
-export default class ShiftsDelete extends Component {
+export default class ShiftdefinesDelete extends Component {
   render() {
-    const { Profile, Shifts, DeleteShifts, handleDeletemodal, handleSelectedShift } = this.props
-    const { isDeletemodalopen, selected_record } = Shifts
+    const { Profile, Shiftdefines, DeleteShiftdefines, handleDeletemodal, handleSelectedShiftdefine } = this.props
+    const { isDeletemodalopen, selected_record } = Shiftdefines
     return (
       <Modal
         onClose={() => handleDeletemodal(false)}
@@ -24,7 +24,7 @@ export default class ShiftsDelete extends Component {
         <Modal.Actions>
           <Button color='black' onClick={() => {
             handleDeletemodal(false)
-            handleSelectedShift({})
+            handleSelectedShiftdefine({})
           }}>
             {Literals.Button.Giveup[Profile.Language]}
           </Button>
@@ -33,9 +33,9 @@ export default class ShiftsDelete extends Component {
             labelPosition='right'
             icon='checkmark'
             onClick={() => {
-              DeleteShifts(selected_record)
+              DeleteShiftdefines(selected_record)
               handleDeletemodal(false)
-              handleSelectedShift({})
+              handleSelectedShiftdefine({})
             }}
             positive
           />

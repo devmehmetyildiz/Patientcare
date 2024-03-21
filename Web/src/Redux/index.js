@@ -31,7 +31,7 @@ import RuleSlice from "./RuleSlice";
 import RoomSlice from "./RoomSlice";
 import BedSlice from "./BedSlice";
 import FloorSlice from "./FloorSlice";
-import ShiftSlice from "./ShiftSlice";
+import ShiftdefineSlice from "./ShiftdefineSlice";
 import EquipmentSlice from "./EquipmentSlice";
 import EquipmentgroupSlice from "./EquipmentgroupSlice";
 import PersonelSlice from "./PersonelSlice";
@@ -88,7 +88,7 @@ const Slices = combineReducers({
     Mailsettings: MailsettingSlice,
     Printtemplates: PrinttemplateSlice,
     Todos: TodoSlice,
-    Shifts: ShiftSlice,
+    Shiftdefines: ShiftdefineSlice,
     Rules: RuleSlice,
     Equipments: EquipmentSlice,
     Equipmentgroups: EquipmentgroupSlice,

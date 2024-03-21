@@ -19,7 +19,7 @@ module.exports = sequelize.define('professionpresettingModel', {
     ProfessionID: {
         type: Sequelize.STRING
     },
-    ShiftID: {
+    ShiftdefineID: {
         type: Sequelize.STRING
     },
     Isapproved: {

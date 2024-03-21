@@ -15,9 +15,9 @@ export default class ProfessionpresettingsCreate extends Component {
   PAGE_NAME = "ProfessionpresettingsCreate"
 
   componentDidMount() {
-    const { GetFloors, GetShifts, GetProfessions } = this.props
+    const { GetFloors, GetShiftdefines, GetProfessions } = this.props
     GetFloors()
-    GetShifts()
+    GetShiftdefines()
     GetProfessions()
   }
 
@@ -36,14 +36,14 @@ export default class ProfessionpresettingsCreate extends Component {
 
   render() {
 
-    const { Professionpresettings, Floors, Shifts, Professions, Profile, history, closeModal } = this.props
+    const { Professionpresettings, Floors, Shiftdefines, Professions, Profile, history, closeModal } = this.props
 
     const Flooroptions = (Floors.list || []).filter(u => u.Isactive).map(floor => {
       return { key: floor.Uuid, text: floor.Name, value: floor.Uuid }
     })
 
-    const Shiftoptions = (Shifts.list || []).filter(u => u.Isactive).map(shift => {
-      return { key: shift.Uuid, text: shift.Name, value: shift.Uuid }
+    const Shiftdefineoptions = (Shiftdefines.list || []).filter(u => u.Isactive).map(shiftdefine => {
+      return { key: shiftdefine.Uuid, text: shiftdefine.Name, value: shiftdefine.Uuid }
     })
 
     const Professionoptions = (Professions.list || []).filter(u => u.Isactive).map(profession => {
@@ -57,7 +57,7 @@ export default class ProfessionpresettingsCreate extends Component {
     const isLoadingstatus =
     Professionpresettings.isLoading ||
       Floors.isLoading ||
-      Shifts.isLoading ||
+      Shiftdefines.isLoading ||
       Professions.isLoading
 
     return (
@@ -81,7 +81,7 @@ export default class ProfessionpresettingsCreate extends Component {
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Profession[Profile.Language]} name="ProfessionID" formtype="dropdown" options={Professionoptions} />
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Floor[Profile.Language]} name="FloorID" formtype="dropdown" options={Flooroptions} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Shift[Profile.Language]} name="ShiftID" formtype="dropdown" options={Shiftoptions} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Shiftdefine[Profile.Language]} name="ShiftdefineID" formtype="dropdown" options={Shiftdefineoptions} />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Ispersonelstay[Profile.Language]} name="Ispersonelstay" formtype="checkbox" />
@@ -127,7 +127,7 @@ export default class ProfessionpresettingsCreate extends Component {
     if (!validator.isUUID(data.ProfessionID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Professionrequired[Profile.Language] })
     }
-    if (!validator.isUUID(data.ShiftID) && !validator.isUUID(data.FloorID)) {
+    if (!validator.isUUID(data.ShiftdefineID) && !validator.isUUID(data.FloorID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Floororshiftrequired[Profile.Language] })
     }
 
