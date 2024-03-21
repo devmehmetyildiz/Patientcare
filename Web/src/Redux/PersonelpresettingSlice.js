@@ -35,7 +35,7 @@ export const GetPersonelpresettings = createAsyncThunk(
     'Personelpresettings/GetPersonelpresettings',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.PERSONELPRESETTING);
+            const response = await instanse.get(config.services.Business, ROUTES.PERSONELPRESETTING);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -49,7 +49,7 @@ export const GetPersonelpresetting = createAsyncThunk(
     'Personelpresettings/GetPersonelpresetting',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.PERSONELPRESETTING}/${guid}`);
+            const response = await instanse.get(config.services.Business, `${ROUTES.PERSONELPRESETTING}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -65,11 +65,11 @@ export const AddPersonelpresettings = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Setting, ROUTES.PERSONELPRESETTING, data);
+            const response = await instanse.post(config.services.Business, ROUTES.PERSONELPRESETTING, data);
             dispatch(fillPersonelpresettingnotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
+                description: Literals.adddescription[Language],
             }));
             clearForm && clearForm('PersonelpresettingsCreate')
             closeModal && closeModal()
@@ -89,11 +89,11 @@ export const EditPersonelpresettings = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Setting, ROUTES.PERSONELPRESETTING, data);
+            const response = await instanse.put(config.services.Business, ROUTES.PERSONELPRESETTING, data);
             dispatch(fillPersonelpresettingnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
+                description: Literals.updatedescription[Language],
             }));
             closeModal && closeModal()
             clearForm && clearForm('PersonelpresettingsUpdate')
@@ -114,11 +114,11 @@ export const DeletePersonelpresettings = createAsyncThunk(
 
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.PERSONELPRESETTING}/${data.Uuid}`);
+            const response = await instanse.delete(config.services.Business, `${ROUTES.PERSONELPRESETTING}/${data.Uuid}`);
             dispatch(fillPersonelpresettingnotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {

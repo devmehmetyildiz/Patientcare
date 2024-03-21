@@ -36,6 +36,9 @@ export default class ShiftsCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Starttime[Profile.Language]} name="Starttime" type='time' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Endtime[Profile.Language]} name="Endtime" type='time' />
               </Form.Group>
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isjoker[Profile.Language]} name="Isjoker" formtype="checkbox" />
+              </Form.Group>
             </Form>
           </Contentwrapper>
           <Footerwrapper>
@@ -59,6 +62,8 @@ export default class ShiftsCreate extends Component {
     e.preventDefault()
     const { AddShifts, history, fillShiftnotification, Profile, closeModal } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
+
+    !validator.isBoolean(data?.Isjoker) && (data.Isjoker = false)
 
     let errors = []
     if (!validator.isString(data.Name)) {

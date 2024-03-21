@@ -35,7 +35,7 @@ export const GetProfessionpresettings = createAsyncThunk(
     'Professionpresettings/GetProfessionpresettings',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.PROFESSIONPRESETTING);
+            const response = await instanse.get(config.services.Business, ROUTES.PROFESSIONPRESETTING);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -49,7 +49,7 @@ export const GetProfessionpresetting = createAsyncThunk(
     'Professionpresettings/GetProfessionpresetting',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.PROFESSIONPRESETTING}/${guid}`);
+            const response = await instanse.get(config.services.Business, `${ROUTES.PROFESSIONPRESETTING}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -65,11 +65,11 @@ export const AddProfessionpresettings = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Setting, ROUTES.PROFESSIONPRESETTING, data);
+            const response = await instanse.post(config.services.Business, ROUTES.PROFESSIONPRESETTING, data);
             dispatch(fillProfessionpresettingnotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
-                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
+                description: Literals.adddescription[Language],
             }));
             clearForm && clearForm('ProfessionpresettingsCreate')
             closeModal && closeModal()
@@ -89,11 +89,11 @@ export const EditProfessionpresettings = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Setting, ROUTES.PROFESSIONPRESETTING, data);
+            const response = await instanse.put(config.services.Business, ROUTES.PROFESSIONPRESETTING, data);
             dispatch(fillProfessionpresettingnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
+                description: Literals.updatedescription[Language],
             }));
             closeModal && closeModal()
             clearForm && clearForm('ProfessionpresettingsUpdate')
@@ -114,11 +114,11 @@ export const DeleteProfessionpresettings = createAsyncThunk(
 
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.PROFESSIONPRESETTING}/${data.Uuid}`);
+            const response = await instanse.delete(config.services.Business, `${ROUTES.PROFESSIONPRESETTING}/${data.Uuid}`);
             dispatch(fillProfessionpresettingnotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
+                description: Literals.deletedescription[Language],
             }));
             return response.data;
         } catch (error) {

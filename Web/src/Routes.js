@@ -259,6 +259,14 @@ const Professions = lazy(() => import('./Containers/Professions/Professions'));
 const ProfessionsCreate = lazy(() => import('./Containers/Professions/ProfessionsCreate'));
 const ProfessionsEdit = lazy(() => import('./Containers/Professions/ProfessionsEdit'));
 
+const Personelpresettings = lazy(() => import('./Containers/Personelpresettings/Personelpresettings'));
+const PersonelpresettingsCreate = lazy(() => import('./Containers/Personelpresettings/PersonelpresettingsCreate'));
+const PersonelpresettingsEdit = lazy(() => import('./Containers/Personelpresettings/PersonelpresettingsEdit'));
+
+const Professionpresettings = lazy(() => import('./Containers/Professionpresettings/Professionpresettings'));
+const ProfessionpresettingsCreate = lazy(() => import('./Containers/Professionpresettings/ProfessionpresettingsCreate'));
+const ProfessionpresettingsEdit = lazy(() => import('./Containers/Professionpresettings/ProfessionpresettingsEdit'));
+
 const Patientscases = lazy(() => import('./Containers/Patientscases/Patientscases'));
 const Patientfollowup = lazy(() => import('./Containers/Patientfollowup/Patientfollowup'));
 
@@ -510,6 +518,14 @@ class Routes extends Component {
       { exact: true, path: "/Professions", auth: true, component: Professions, permission: 'professionview' },
       { exact: true, path: "/Professions/Create", auth: true, component: ProfessionsCreate, permission: 'professionadd' },
       { exact: true, path: "/Professions/:ProfessionID/Edit", auth: true, component: ProfessionsEdit, permission: 'professionupdate' },
+
+      { exact: true, path: "/Personelpresettings", auth: true, component: Personelpresettings, permission: 'personelpresettingview' },
+      { exact: true, path: "/Personelpresettings/Create", auth: true, component: PersonelpresettingsCreate, permission: 'personelpresettingadd' },
+      { exact: true, path: "/Personelpresettings/:PersonelpresettingID/Edit", auth: true, component: PersonelpresettingsEdit, permission: 'personelpresettingupdate' },
+
+      { exact: true, path: "/Professionpresettings", auth: true, component: Professionpresettings, permission: 'professionpresettingview' },
+      { exact: true, path: "/Professionpresettings/Create", auth: true, component: ProfessionpresettingsCreate, permission: 'professionpresettingadd' },
+      { exact: true, path: "/Professionpresettings/:ProfessionpresettingID/Edit", auth: true, component: ProfessionpresettingsEdit, permission: 'professionpresettingupdate' },
 
       { exact: true, path: "/Requiredperiods", auth: true, component: Requiredperiods, permission: 'requiredperiodview' },
       { exact: true, path: "/Requiredperiods/Create", auth: true, component: RequiredperiodsCreate, permission: 'requiredperiodadd' },

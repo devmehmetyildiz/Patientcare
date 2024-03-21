@@ -4,7 +4,7 @@ import { Form, Breadcrumb } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import { FormInput,Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 
 export default class ShiftsEdit extends Component {
 
@@ -65,6 +65,9 @@ export default class ShiftsEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Starttime[Profile.Language]} name="Starttime" type='time' />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Endtime[Profile.Language]} name="Endtime" type='time' />
               </Form.Group>
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isjoker[Profile.Language]} name="Isjoker" formtype="checkbox" />
+              </Form.Group>
             </Form>
           </Contentwrapper>
           <Footerwrapper>
@@ -88,6 +91,9 @@ export default class ShiftsEdit extends Component {
     e.preventDefault()
     const { EditShifts, history, fillShiftnotification, Profile, Shifts } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
+
+    !validator.isBoolean(data?.Isjoker) && (data.Isjoker = false)
+
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })

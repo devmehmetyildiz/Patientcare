@@ -46,6 +46,7 @@ async function AddShift(req, res, next) {
         Name,
         Starttime,
         Endtime,
+        Isjoker
     } = req.body
 
     if (!validator.isString(Name)) {
@@ -69,6 +70,12 @@ async function AddShift(req, res, next) {
 
 
     try {
+        if (Isjoker) {
+            await db.shiftModel.update({
+                Isjoker: false
+            }, { where: { Isactive: true } }, { transaction: t })
+        }
+
         await db.shiftModel.create({
             ...req.body,
             Uuid: shiftuuid,
@@ -76,6 +83,7 @@ async function AddShift(req, res, next) {
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
 
         await CreateNotification({
             type: types.Create,
@@ -100,6 +108,7 @@ async function UpdateShift(req, res, next) {
         Starttime,
         Endtime,
         Uuid,
+        Isjoker
     } = req.body
 
     if (!validator.isString(Name)) {
@@ -131,6 +140,12 @@ async function UpdateShift(req, res, next) {
         }
         if (shift.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.SHIFT_NOT_ACTIVE], req.language))
+        }
+
+        if (Isjoker) {
+            await db.shiftModel.update({
+                Isjoker: false
+            }, { where: { Isactive: true } }, { transaction: t })
         }
 
         await db.shiftModel.update({

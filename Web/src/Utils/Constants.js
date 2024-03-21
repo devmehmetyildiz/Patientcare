@@ -1,4 +1,4 @@
-import { Tb3DRotate, TbAccessPoint, TbActivity, TbGauge } from "react-icons/tb"
+import { Tb3DRotate, TbAccessPoint, TbActivity, TbGauge, TbCalendar } from "react-icons/tb"
 import Literals from "./Literalregistrar"
 import { MdSettings } from "react-icons/md"
 
@@ -153,6 +153,10 @@ export const getSidebarroutes = (Profile) => {
             en: "System Management",
             tr: "Sistem Yönetimi"
         },
+        Shifts: {
+            en: "Shift Management",
+            tr: "Vardiya Yönetimi"
+        },
     }
 
     const defaultpages = [
@@ -167,15 +171,25 @@ export const getSidebarroutes = (Profile) => {
                 { id: 3, subtitle: Literals.Unapproveds.Page.PageTodoheader[Profile.Language], url: "/UnapprovedTodos", permission: checkAuth('unapprovedtodoview') },
                 { id: 4, subtitle: Literals.Breakdowns.Page.Pageheader[Profile.Language], url: "/Breakdowns", permission: checkAuth('breakdownview') },
                 { id: 5, subtitle: Literals.Mainteancies.Page.Pageheader[Profile.Language], url: "/Mainteancies", permission: checkAuth('mainteanceview') },
-                { id: 6, subtitle: Literals.Personelshifts.Page.Pageheader[Profile.Language], url: "/Personelshifts", permission: checkAuth('shiftview') },
-                { id: 7, subtitle: Literals.Placeviews.Page.Pageheader[Profile.Language], url: "/Placeviews", permission: checkAuth('placeviewview') },
-                { id: 8, subtitle: Literals.Companycashmovements.Page.Pageheader[Profile.Language], url: "/Companycashmovements", permission: checkAuth('companycashmovementview') },
-                { id: 9, subtitle: Literals.Patientscases.Page.Pageheader[Profile.Language], url: "/Patientscases", permission: checkAuth('patientview') },
-                { id: 10, subtitle: Literals.Patientfollowup.Page.Pageheader[Profile.Language], url: "/Patientfollowup", permission: checkAuth('patientview') },
+                { id: 6, subtitle: Literals.Placeviews.Page.Pageheader[Profile.Language], url: "/Placeviews", permission: checkAuth('placeviewview') },
+                { id: 7, subtitle: Literals.Companycashmovements.Page.Pageheader[Profile.Language], url: "/Companycashmovements", permission: checkAuth('companycashmovementview') },
+                { id: 8, subtitle: Literals.Patientscases.Page.Pageheader[Profile.Language], url: "/Patientscases", permission: checkAuth('patientview') },
+                { id: 9, subtitle: Literals.Patientfollowup.Page.Pageheader[Profile.Language], url: "/Patientfollowup", permission: checkAuth('patientview') },
             ]
         },
         {
             id: 2,
+            title: Sidebarliterals.Shifts[Profile.Language],
+            isOpened: false,
+            icon: <TbCalendar className=' text-[#2355a0]' />,
+            items: [
+                { id: 1, subtitle: Literals.Personelpresettings.Page.Pageheader[Profile.Language], url: "/Personelpresettings", permission: checkAuth('personelpresettingview') },
+                { id: 2, subtitle: Literals.Professionpresettings.Page.Pageheader[Profile.Language], url: "/Professionpresettings", permission: checkAuth('professionpresettingview') },
+                { id: 3, subtitle: Literals.Shifts.Page.Pageheader[Profile.Language], url: "/Shifts", permission: checkAuth('shiftview') },
+            ]
+        },
+        {
+            id: 3,
             title: Sidebarliterals.Patients[Profile.Language],
             isOpened: false,
             icon: <Tb3DRotate className=' text-[#2355a0]' />,
@@ -196,7 +210,7 @@ export const getSidebarroutes = (Profile) => {
             ]
         },
         {
-            id: 3,
+            id: 4,
             title: Sidebarliterals.Orders[Profile.Language],
             isOpened: false,
             icon: <TbAccessPoint className=' text-[#2355a0]' />,
@@ -209,7 +223,7 @@ export const getSidebarroutes = (Profile) => {
             ]
         },
         {
-            id: 4,
+            id: 5,
             title: Sidebarliterals.Warehouse[Profile.Language],
             isOpened: false,
             icon: <TbActivity className=' text-[#2355a0]' />,
@@ -224,7 +238,7 @@ export const getSidebarroutes = (Profile) => {
             ]
         },
         {
-            id: 5,
+            id: 6,
             title: Sidebarliterals.System[Profile.Language],
             isOpened: false,
             icon: <TbGauge className=' text-[#2355a0]' />,
@@ -236,36 +250,35 @@ export const getSidebarroutes = (Profile) => {
             ]
         },
         {
-            id: 6,
+            id: 7,
             title: Sidebarliterals.Setting[Profile.Language],
             isOpened: false,
             icon: <MdSettings className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: Literals.Roles.Page.Pageheader[Profile.Language], url: "/Roles", permission: checkAuth('roleview') },
                 { id: 2, subtitle: Literals.Departments.Page.Pageheader[Profile.Language], url: "/Departments", permission: checkAuth('departmentview') },
-                { id: 3, subtitle: Literals.Shifts.Page.Pageheader[Profile.Language], url: "/Shifts", permission: checkAuth('shiftview') },
-                { id: 4, subtitle: Literals.Users.Page.Pageheader[Profile.Language], url: "/Users", permission: checkAuth('userview') },
-                { id: 5, subtitle: Literals.Cases.Page.Pageheader[Profile.Language], url: "/Cases", permission: checkAuth('caseview') },
-                { id: 6, subtitle: Literals.Units.Page.Pageheader[Profile.Language], url: "/Units", permission: checkAuth('unitview') },
-                { id: 7, subtitle: Literals.Stockdefines.Page.Pageheader[Profile.Language], url: "/Stockdefines", permission: checkAuth('stockdefineview') },
-                { id: 8, subtitle: Literals.Files.Page.Pageheader[Profile.Language], url: "/Files", permission: checkAuth('fileview') },
-                { id: 9, subtitle: Literals.Floors.Page.Pageheader[Profile.Language], url: "/Floors", permission: checkAuth('floorview') },
-                { id: 10, subtitle: Literals.Rooms.Page.Pageheader[Profile.Language], url: "/Rooms", permission: checkAuth('roomview') },
-                { id: 11, subtitle: Literals.Beds.Page.Pageheader[Profile.Language], url: "/Beds", permission: checkAuth('bedview') },
-                { id: 12, subtitle: Literals.Patientcashregisters.Page.Pageheader[Profile.Language], url: "/Patientcashregisters", permission: checkAuth('patientcashregisterview') },
-                { id: 13, subtitle: Literals.Patienttypes.Page.Pageheader[Profile.Language], url: "/Patienttypes", permission: checkAuth('patienttypeview') },
-                { id: 14, subtitle: Literals.Costumertypes.Page.Pageheader[Profile.Language], url: "/Costumertypes", permission: checkAuth('costumertypeview') },
-                { id: 15, subtitle: Literals.Periods.Page.Pageheader[Profile.Language], url: "/Periods", permission: checkAuth('periodview') },
-                { id: 16, subtitle: Literals.Tododefines.Page.Pageheader[Profile.Language], url: "/Tododefines", permission: checkAuth('tododefineview') },
-                { id: 17, subtitle: Literals.Todogroupdefines.Page.Pageheader[Profile.Language], url: "/Todogroupdefines", permission: checkAuth('todogroupdefineview') },
-                { id: 18, subtitle: Literals.Usagetypes.Page.Pageheader[Profile.Language], url: "/Usagetypes", permission: checkAuth('usagetypeview') },
-                { id: 19, subtitle: Literals.Supportplans.Page.Pageheader[Profile.Language], url: "/Supportplans", permission: checkAuth('supportplanview') },
-                { id: 20, subtitle: Literals.Supportplanlists.Page.Pageheader[Profile.Language], url: "/Supportplanlists", permission: checkAuth('supportplanlistview') },
-                { id: 21, subtitle: Literals.Helpstatus.Page.Pageheader[Profile.Language], url: "/Helpstatus", permission: checkAuth('helpstatuview') },
-                { id: 22, subtitle: Literals.Makingtypes.Page.Pageheader[Profile.Language], url: "/Makingtypes", permission: checkAuth('makingtypeview') },
-                { id: 23, subtitle: Literals.Ratings.Page.Pageheader[Profile.Language], url: "/Ratings", permission: checkAuth('ratingview') },
-                { id: 24, subtitle: Literals.Requiredperiods.Page.Pageheader[Profile.Language], url: "/Requiredperiods", permission: checkAuth('requiredperiodview') },
-                { id: 25, subtitle: Literals.Professions.Page.Pageheader[Profile.Language], url: "/Professions", permission: checkAuth('professionview') },
+                { id: 3, subtitle: Literals.Users.Page.Pageheader[Profile.Language], url: "/Users", permission: checkAuth('userview') },
+                { id: 4, subtitle: Literals.Cases.Page.Pageheader[Profile.Language], url: "/Cases", permission: checkAuth('caseview') },
+                { id: 5, subtitle: Literals.Units.Page.Pageheader[Profile.Language], url: "/Units", permission: checkAuth('unitview') },
+                { id: 6, subtitle: Literals.Stockdefines.Page.Pageheader[Profile.Language], url: "/Stockdefines", permission: checkAuth('stockdefineview') },
+                { id: 7, subtitle: Literals.Files.Page.Pageheader[Profile.Language], url: "/Files", permission: checkAuth('fileview') },
+                { id: 8, subtitle: Literals.Floors.Page.Pageheader[Profile.Language], url: "/Floors", permission: checkAuth('floorview') },
+                { id: 9, subtitle: Literals.Rooms.Page.Pageheader[Profile.Language], url: "/Rooms", permission: checkAuth('roomview') },
+                { id: 10, subtitle: Literals.Beds.Page.Pageheader[Profile.Language], url: "/Beds", permission: checkAuth('bedview') },
+                { id: 11, subtitle: Literals.Patientcashregisters.Page.Pageheader[Profile.Language], url: "/Patientcashregisters", permission: checkAuth('patientcashregisterview') },
+                { id: 12, subtitle: Literals.Patienttypes.Page.Pageheader[Profile.Language], url: "/Patienttypes", permission: checkAuth('patienttypeview') },
+                { id: 13, subtitle: Literals.Costumertypes.Page.Pageheader[Profile.Language], url: "/Costumertypes", permission: checkAuth('costumertypeview') },
+                { id: 14, subtitle: Literals.Periods.Page.Pageheader[Profile.Language], url: "/Periods", permission: checkAuth('periodview') },
+                { id: 15, subtitle: Literals.Tododefines.Page.Pageheader[Profile.Language], url: "/Tododefines", permission: checkAuth('tododefineview') },
+                { id: 16, subtitle: Literals.Todogroupdefines.Page.Pageheader[Profile.Language], url: "/Todogroupdefines", permission: checkAuth('todogroupdefineview') },
+                { id: 17, subtitle: Literals.Usagetypes.Page.Pageheader[Profile.Language], url: "/Usagetypes", permission: checkAuth('usagetypeview') },
+                { id: 18, subtitle: Literals.Supportplans.Page.Pageheader[Profile.Language], url: "/Supportplans", permission: checkAuth('supportplanview') },
+                { id: 19, subtitle: Literals.Supportplanlists.Page.Pageheader[Profile.Language], url: "/Supportplanlists", permission: checkAuth('supportplanlistview') },
+                { id: 20, subtitle: Literals.Helpstatus.Page.Pageheader[Profile.Language], url: "/Helpstatus", permission: checkAuth('helpstatuview') },
+                { id: 21, subtitle: Literals.Makingtypes.Page.Pageheader[Profile.Language], url: "/Makingtypes", permission: checkAuth('makingtypeview') },
+                { id: 22, subtitle: Literals.Ratings.Page.Pageheader[Profile.Language], url: "/Ratings", permission: checkAuth('ratingview') },
+                { id: 23, subtitle: Literals.Requiredperiods.Page.Pageheader[Profile.Language], url: "/Requiredperiods", permission: checkAuth('requiredperiodview') },
+                { id: 24, subtitle: Literals.Professions.Page.Pageheader[Profile.Language], url: "/Professions", permission: checkAuth('professionview') },
             ]
         },
     ]

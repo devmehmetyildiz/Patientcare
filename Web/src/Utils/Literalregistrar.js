@@ -63,6 +63,8 @@ import Requiredperiods from "../Pages/Requiredperiods/Literals"
 import Professions from "../Pages/Professions/Literals"
 import Patientscases from "../Pages/Patientscases/Literals"
 import Patientfollowup from "../Pages/Patientfollowup/Literals"
+import Personelpresettings from "../Pages/Personelpresettings/Literals"
+import Professionpresettings from "../Pages/Professionpresettings/Literals"
 
 const Literals = {
     Cases,
@@ -130,6 +132,8 @@ const Literals = {
     Professions,
     Patientscases,
     Patientfollowup,
+    Personelpresettings,
+    Professionpresettings,
 }
 
 export default Literals

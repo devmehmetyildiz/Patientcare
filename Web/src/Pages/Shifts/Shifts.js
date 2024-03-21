@@ -30,6 +30,7 @@ export default class Shifts extends Component {
       { Header: Literals.Columns.Starttime[Profile.Language], accessor: 'Starttime', Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Endtime[Profile.Language], accessor: 'Endtime', Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Priority[Profile.Language], accessor: 'Priority', Subtitle: true, Withtext: true },
+      { Header: Literals.Columns.Isjoker[Profile.Language], accessor: row => this.boolCellhandler(row?.Isjoker) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -91,5 +92,10 @@ export default class Shifts extends Component {
           <ShiftsDelete />
         </React.Fragment>
     )
+  }
+
+  boolCellhandler = (value) => {
+    const { Profile } = this.props
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 }

@@ -19,6 +19,9 @@ module.exports = sequelize.define('shiftModel', {
     Priority: {
         type: Sequelize.INTEGER
     },
+    Isjoker: {
+        type: Sequelize.BOOLEAN
+    },
     Createduser: {
         type: Sequelize.STRING
     },

@@ -68,6 +68,12 @@ const messages = {
                 tr: 'Personeller korunacak mı? gerekli',
             }
         },
+        PROFESSIONID_REQUIRED: {
+            code: 'PROFESSIONID_REQUIRED', description: {
+                en: 'profession required',
+                tr: 'Meslek gerekli',
+            }
+        },
     }
 }
 module.exports = messages

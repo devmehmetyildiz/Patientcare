@@ -44,35 +44,35 @@ async function AddProfessionpresetting(req, res, next) {
     let validationErrors = []
     const {
         Startdate,
-        Enddate,
         Isinfinite,
         Isapproved,
         Iscompleted,
         Isdeactive,
         Ispersonelstay,
+        ProfessionID
     } = req.body
 
 
-    if (validator.isBoolean(Isinfinite)) {
+    if (!validator.isUUID(ProfessionID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PROFESSIONID_REQUIRED)
+    }
+    if (!validator.isBoolean(Isinfinite)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISINFITINE_REQUIRED)
     }
-    if (validator.isBoolean(Isapproved)) {
+    if (!validator.isBoolean(Isapproved)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISAPPROVED_REQUIRED)
     }
-    if (validator.isBoolean(Iscompleted)) {
+    if (!validator.isBoolean(Iscompleted)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISCOMPLETED_REQUIRED)
     }
-    if (validator.isBoolean(Isdeactive)) {
+    if (!validator.isBoolean(Isdeactive)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISDEACTIVE_REQUIRED)
     }
-    if (validator.isBoolean(Ispersonelstay)) {
+    if (!validator.isBoolean(Ispersonelstay)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISPERSONELSTAY_REQUIRED)
     }
     if (Isinfinite === false && !validator.isISODate(Startdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
-    }
-    if (Isinfinite === false && !validator.isISODate(Enddate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ENDDATE_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -114,35 +114,35 @@ async function UpdateProfessionpresetting(req, res, next) {
     let validationErrors = []
     const {
         Startdate,
-        Enddate,
         Isinfinite,
         Isapproved,
         Iscompleted,
         Isdeactive,
         Ispersonelstay,
         Uuid,
+        ProfessionID
     } = req.body
 
-    if (validator.isBoolean(Isinfinite)) {
+    if (!validator.isUUID(ProfessionID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PROFESSIONID_REQUIRED)
+    }
+    if (!validator.isBoolean(Isinfinite)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISINFITINE_REQUIRED)
     }
-    if (validator.isBoolean(Isapproved)) {
+    if (!validator.isBoolean(Isapproved)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISAPPROVED_REQUIRED)
     }
-    if (validator.isBoolean(Iscompleted)) {
+    if (!validator.isBoolean(Iscompleted)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISCOMPLETED_REQUIRED)
     }
-    if (validator.isBoolean(Isdeactive)) {
+    if (!validator.isBoolean(Isdeactive)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISDEACTIVE_REQUIRED)
     }
-    if (validator.isBoolean(Ispersonelstay)) {
+    if (!validator.isBoolean(Ispersonelstay)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISPERSONELSTAY_REQUIRED)
     }
     if (Isinfinite === false && !validator.isISODate(Startdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
-    }
-    if (Isinfinite === false && !validator.isISODate(Enddate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ENDDATE_REQUIRED)
     }
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.SHIFTID_REQUIRED)

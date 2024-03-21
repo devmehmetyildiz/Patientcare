@@ -11,25 +11,41 @@ const Literals = {
             tr: 'Tekil ID',
             en: 'Unique ID'
         },
-        Name: {
-            tr: 'Vardiya Adı',
-            en: 'Shift Name'
+        Startdate: {
+            tr: 'Başlangıç Tarihi',
+            en: 'Start Date'
         },
-        Starttime: {
-            tr: 'Başlangıç Zamanı',
-            en: 'Start Time'
+        Enddate: {
+            tr: 'Bitiş Tarihi',
+            en: 'End Date'
         },
-        Endtime: {
-            tr: 'Bitiş Zamanı',
-            en: 'End Time'
+        Personel: {
+            tr: 'Personel',
+            en: 'Personel'
         },
-        Priority: {
-            tr: 'Öncelik Sırası',
-            en: 'Priority order'
+        Floor: {
+            tr: 'Kat',
+            en: 'Floor'
         },
-        Isjoker: {
-            tr: 'Joker Vardiya',
-            en: 'Is Joker'
+        Shift: {
+            tr: 'Vardiya',
+            en: 'Shift'
+        },
+        Isapproved: {
+            tr: 'Onaylandı mı?',
+            en: 'Is Approved?'
+        },
+        Iscompleted: {
+            tr: 'Tamamlandı mı?',
+            en: 'Is Completed?'
+        },
+        Isinfinite: {
+            tr: 'Sınırsız mı?',
+            en: 'Is Infinite?'
+        },
+        Isdeactive: {
+            tr: 'İnaktif mi?',
+            en: 'Is Deactive?'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -62,8 +78,8 @@ const Literals = {
     },
     Page: {
         Pageheader: {
-            tr: "Vardiyalar",
-            en: "Shifts"
+            tr: "Personel Ön Ayarları",
+            en: "Personel Pre Settings"
         },
         Pagecreateheader: {
             tr: "Oluştur",
@@ -74,8 +90,8 @@ const Literals = {
             en: "Update"
         },
         Pagedeleteheader: {
-            tr: "Vardiya Silme",
-            en: "Delete Shift"
+            tr: "Personel Ön Ayarları Silme",
+            en: "Delete Personel Pre Setting"
         }
     },
     Button: {
@@ -103,24 +119,24 @@ const Literals = {
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Vardiya Yok",
-            en: "There is no Shift found"
+            tr: "Tanımlı Ön Ayar Yok",
+            en: "There is no Pre Setting found"
         },
         Deletecheck: {
-            tr: "vardiyasını silmek istediğinize emin misiniz?",
-            en: "Shift will delete, are you sure?"
+            tr: "ön ayarını silmek istediğinize emin misiniz?",
+            en: "pre setting will delete, are you sure?"
         },
-        Namerequired: {
-            tr: "Vardiya Adı Gerekli",
-            en: "Shift Name required"
+        Personelrequired: {
+            tr: "Personel Gerekli",
+            en: "Personel required"
         },
-        Startimerequired: {
-            tr: "Başlangıç Zamanı Gerekli",
-            en: "Start Time required"
+        Daterequired: {
+            tr: "Tarih Gerekli",
+            en: "Date required"
         },
-        Endtimerequired: {
-            tr: "Bitiş Zamanı Gerekli",
-            en: "End Time required"
+        Floororshiftrequired: {
+            tr: "Kat veya Vardiya Gerekli",
+            en: "Shift or Floor required"
         },
         Yes: {
             tr: "EVET",
@@ -129,7 +145,15 @@ const Literals = {
         No: {
             tr: "HAYIR",
             en: "NO"
-        }
+        },
+        Filled: {
+            tr: "Dolu",
+            en: "Filled"
+        },
+        Empty: {
+            tr: "Boş",
+            en: "Empty"
+        },
     }
 }
 

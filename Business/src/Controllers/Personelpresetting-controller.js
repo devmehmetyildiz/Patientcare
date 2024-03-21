@@ -45,35 +45,30 @@ async function AddPersonelpresetting(req, res, next) {
     const {
         PersonelID,
         Startdate,
-        Enddate,
         Isinfinite,
         Isapproved,
         Iscompleted,
         Isdeactive,
-        Ispersonelstay,
     } = req.body
 
 
-    if (validator.isUUID(PersonelID)) {
+    if (!validator.isUUID(PersonelID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERSONELID_REQUIRED)
     }
-    if (validator.isBoolean(Isinfinite)) {
+    if (!validator.isBoolean(Isinfinite)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISINFITINE_REQUIRED)
     }
-    if (validator.isBoolean(Isapproved)) {
+    if (!validator.isBoolean(Isapproved)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISAPPROVED_REQUIRED)
     }
-    if (validator.isBoolean(Iscompleted)) {
+    if (!validator.isBoolean(Iscompleted)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISCOMPLETED_REQUIRED)
     }
-    if (validator.isBoolean(Isdeactive)) {
+    if (!validator.isBoolean(Isdeactive)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISDEACTIVE_REQUIRED)
     }
     if (Isinfinite === false && !validator.isISODate(Startdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
-    }
-    if (Isinfinite === false && !validator.isISODate(Enddate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ENDDATE_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -88,6 +83,9 @@ async function AddPersonelpresetting(req, res, next) {
     try {
         await db.personelpresettingModel.create({
             ...req.body,
+            Isapproved: false,
+            Iscompleted: false,
+            Isdeactive: false,
             Uuid: personelpresettinguuid,
             Createduser: username,
             Createtime: new Date(),
@@ -116,35 +114,30 @@ async function UpdatePersonelpresetting(req, res, next) {
     const {
         PersonelID,
         Startdate,
-        Enddate,
         Isinfinite,
         Isapproved,
         Iscompleted,
         Isdeactive,
-        Ispersonelstay,
         Uuid,
     } = req.body
 
-    if (validator.isUUID(PersonelID)) {
+    if (!validator.isUUID(PersonelID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERSONELID_REQUIRED)
     }
-    if (validator.isBoolean(Isinfinite)) {
+    if (!validator.isBoolean(Isinfinite)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISINFITINE_REQUIRED)
     }
-    if (validator.isBoolean(Isapproved)) {
+    if (!validator.isBoolean(Isapproved)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISAPPROVED_REQUIRED)
     }
-    if (validator.isBoolean(Iscompleted)) {
+    if (!validator.isBoolean(Iscompleted)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISCOMPLETED_REQUIRED)
     }
-    if (validator.isBoolean(Isdeactive)) {
+    if (!validator.isBoolean(Isdeactive)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISDEACTIVE_REQUIRED)
     }
     if (Isinfinite === false && !validator.isISODate(Startdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
-    }
-    if (Isinfinite === false && !validator.isISODate(Enddate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ENDDATE_REQUIRED)
     }
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.SHIFTID_REQUIRED)

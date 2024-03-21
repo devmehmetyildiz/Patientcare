@@ -52,7 +52,7 @@ class Login extends Component {
         const { history, location, logIn, Profile, fillnotification } = this.props
 
         const params = new URLSearchParams(location.search);
-        const redirecturl = localStorage.getItem('patientcare') ? params.get('redirecturl') : null;
+        const redirecturl = params.get('redirecturl') && params.get('redirecturl') !== "/" ? params.get('redirecturl') : null;
 
         if (Profile.isLogging) {
             return false
