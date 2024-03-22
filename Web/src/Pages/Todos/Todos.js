@@ -44,7 +44,7 @@ export default class Todos extends Component {
       { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', disableProps: true },
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Todos"
+    const metaKey = "todo"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Todos.list || []).map(item => {

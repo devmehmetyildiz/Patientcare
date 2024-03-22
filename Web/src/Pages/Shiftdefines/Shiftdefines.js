@@ -39,7 +39,7 @@ export default class Shiftdefines extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Shiftdefines"
+    const metaKey = "shiftdefine"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Shiftdefines.list || []).filter(u => u.Isactive).map(item => {

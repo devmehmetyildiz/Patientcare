@@ -67,7 +67,8 @@ export default class Preregistrations extends Component {
       { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Preregistrations"
+    const metaKey = "preregistration"
+    //TODO check it
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     let passCaselist = (Cases.list || []).filter(u => u.Patientstatus !== 4 && u.Patientstatus !== 6).map(u => u.Uuid)

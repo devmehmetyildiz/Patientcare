@@ -42,7 +42,7 @@ export default class Personelshifts extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Personelshifts"
+    const metaKey = "personelshift"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Personelshifts.list || []).filter(u => u.Isactive).map(item => {

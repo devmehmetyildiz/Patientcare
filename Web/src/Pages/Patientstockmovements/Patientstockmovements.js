@@ -49,7 +49,7 @@ export default class Patientstockmovements extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
-    const metaKey = "Patientstockmovements"
+    const metaKey = "patientstockmovement"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Patientstockmovements.list || []).map(item => {

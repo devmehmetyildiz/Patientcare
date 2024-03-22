@@ -39,7 +39,7 @@ export default class Beds extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Beds"
+    const metaKey = "bed"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Beds.list || []).filter(u => u.Isactive).map(item => {

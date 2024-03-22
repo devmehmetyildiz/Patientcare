@@ -41,7 +41,7 @@ export class Files extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Files"
+    const metaKey = "file"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Files.list || []).map(item => {

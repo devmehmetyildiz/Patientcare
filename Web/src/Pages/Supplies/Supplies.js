@@ -49,7 +49,7 @@ export default class Supplies extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Supplies"
+    const metaKey = "supply"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Stocks.list || []).filter(u => u.Isactive && !u.Ismedicine && u.Issupply).map(item => {

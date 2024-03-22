@@ -37,7 +37,7 @@ export default class Floors extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Floors"
+    const metaKey = "floor"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Floors.list || []).filter(u => u.Isactive).map(item => {

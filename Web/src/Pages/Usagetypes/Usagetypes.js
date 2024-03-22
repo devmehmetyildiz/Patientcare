@@ -38,7 +38,7 @@ export default class Usagetypes extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Usagetypes"
+    const metaKey = "usagetype"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Usagetypes.list || []).filter(u => u.Isactive).map(item => {

@@ -49,7 +49,7 @@ export default class Professionpresettings extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Professionpresettings"
+    const metaKey = "professionpresetting"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Professionpresettings.list || []).filter(u => u.Isactive).map(item => {

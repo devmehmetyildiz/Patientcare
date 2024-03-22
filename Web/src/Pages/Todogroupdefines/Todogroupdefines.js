@@ -45,7 +45,7 @@ export default class Todogroupdefines extends Component {
             { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-        const metaKey = "Todogroupdefines"
+        const metaKey = "todogroupdefine"
         let initialConfig = getInitialconfig(Profile, metaKey)
 
         const list = (Todogroupdefines.list || []).map(item => {

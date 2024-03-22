@@ -46,7 +46,7 @@ export default class Breakdowns extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Breakdowns"
+    const metaKey = "breakdown"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Breakdowns.list || []).filter(u => u.Isactive).map(item => {

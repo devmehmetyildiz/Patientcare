@@ -43,7 +43,7 @@ export default class Stockdefines extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Stockdefines"
+    const metaKey = "stockdefine"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Stockdefines.list || []).map(item => {

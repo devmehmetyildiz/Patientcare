@@ -41,7 +41,7 @@ export default class Mailsettings extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Mailsettings"
+    const metaKey = "mailsetting"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Mailsettings.list || []).map(item => {

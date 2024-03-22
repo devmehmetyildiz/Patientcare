@@ -74,7 +74,7 @@ export default class Patients extends Component {
       { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Patients"
+    const metaKey = "patient"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     let passCaselist = (Cases.list || []).filter(u => u.Patientstatus !== 4 && u.Patientstatus !== 6).map(u => u.Uuid)

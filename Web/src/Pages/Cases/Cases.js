@@ -58,7 +58,7 @@ export default class Cases extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Cases"
+    const metaKey = "case"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Cases.list || []).map(item => {

@@ -46,7 +46,7 @@ export default class Supportplanlists extends Component {
             { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-        const metaKey = "Supportplanlists"
+        const metaKey = "supportplanlist"
         let initialConfig = getInitialconfig(Profile, metaKey)
 
         const list = (Supportplanlists.list || []).map(item => {

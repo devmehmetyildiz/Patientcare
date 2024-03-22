@@ -56,7 +56,7 @@ export default function Departments(props) {
     { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
   ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-  const metaKey = "Departments"
+  const metaKey = "department"
   const initialConfig = getInitialconfig(Profile, metaKey)
   return (
     isLoading ? <LoadingPage /> :

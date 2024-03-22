@@ -67,7 +67,7 @@ export default class Users extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Users"
+    const metaKey = "user"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Users.list || []).map(item => {

@@ -42,7 +42,7 @@ export default class Periods extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Personels"
+    const metaKey = "personel"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Personels.list || []).map(item => {

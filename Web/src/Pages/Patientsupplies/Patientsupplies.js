@@ -53,7 +53,7 @@ export default class Patientsupplies extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Patientsupplies"
+    const metaKey = "patientsupply"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Patientstocks.list || []).filter(u => !u.Ismedicine && u.Isactive && u.Issupply).map(item => {

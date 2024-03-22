@@ -49,7 +49,7 @@ export default class Equipmentgroups extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
-    const metaKey = "Equipmentgroups"
+    const metaKey = "equipmentgroup"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Equipmentgroups.list || []).map(item => {

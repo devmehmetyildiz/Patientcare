@@ -43,7 +43,7 @@ export class Roles extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Roles"
+    const metaKey = "role"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Roles.list || []).filter(u => u.Isactive).map(item => {

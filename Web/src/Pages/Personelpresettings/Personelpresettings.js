@@ -47,7 +47,7 @@ export default class Personelpresettings extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Personelpresettings"
+    const metaKey = "personelpresetting"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Personelpresettings.list || []).filter(u => u.Isactive).map(item => {

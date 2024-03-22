@@ -47,7 +47,7 @@ export default class Careplans extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Careplans"
+    const metaKey = "careplan"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Careplans.list || []).map(item => {

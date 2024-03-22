@@ -37,7 +37,7 @@ export default class Rooms extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Rooms"
+    const metaKey = "room"
 
     let initialConfig = getInitialconfig(Profile, metaKey)
 

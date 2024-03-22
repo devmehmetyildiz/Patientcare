@@ -39,7 +39,7 @@ export default class Periods extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Periods"
+    const metaKey = "period"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Periods.list || []).map(item => {

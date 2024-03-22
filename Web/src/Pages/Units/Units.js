@@ -50,7 +50,7 @@ export default class Units extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Units"
+    const metaKey = "unit"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Units.list || []).map(item => {

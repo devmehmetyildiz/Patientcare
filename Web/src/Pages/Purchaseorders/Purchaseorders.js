@@ -64,7 +64,7 @@ export default class Purchaseorders extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
-    const metaKey = "Purchaseorders"
+    const metaKey = "purchaseorder"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Purchaseorders.list || []).filter(u => u.Isactive).map(item => {

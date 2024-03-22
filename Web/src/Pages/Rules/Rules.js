@@ -39,7 +39,7 @@ export class Rules extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Rules"
+    const metaKey = "rule"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Rules.list || []).filter(u => u.Isactive).map(item => {

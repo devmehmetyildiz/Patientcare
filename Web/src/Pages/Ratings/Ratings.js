@@ -35,7 +35,7 @@ export default class Ratings extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Ratings"
+    const metaKey = "rating"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Ratings.list || []).map(item => {

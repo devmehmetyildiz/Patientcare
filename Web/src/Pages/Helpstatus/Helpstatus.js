@@ -35,7 +35,7 @@ export default class Helpstatus extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Helpstatus"
+    const metaKey = "helpstatu"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Helpstatus.list || []).map(item => {

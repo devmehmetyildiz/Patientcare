@@ -47,7 +47,7 @@ export default class Stockmovements extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Stockmovements"
+    const metaKey = "stockmovement"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Stockmovements.list || []).filter(u => u.Isactive).map(item => {

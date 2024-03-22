@@ -40,7 +40,7 @@ export default class Patientmovements extends Component {
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Patientmovements"
+    const metaKey = "patientmovement"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Patientmovements.list || []).map(item => {

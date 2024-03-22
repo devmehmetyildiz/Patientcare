@@ -35,7 +35,7 @@ export default class Requiredperiods extends Component {
       { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const metaKey = "Requiredperiods"
+    const metaKey = "requiredperiod"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
     const list = (Requiredperiods.list || []).map(item => {
