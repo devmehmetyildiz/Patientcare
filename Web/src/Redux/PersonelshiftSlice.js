@@ -35,7 +35,7 @@ export const GetPersonelshifts = createAsyncThunk(
     'Personelshifts/GetPersonelshifts',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, ROUTES.PERSONELSHIFT);
+            const response = await instanse.get(config.services.Business, ROUTES.PERSONELSHIFT);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -49,7 +49,7 @@ export const GetPersonelshift = createAsyncThunk(
     'Personelshifts/GetPersonelshift',
     async (guid, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Setting, `${ROUTES.PERSONELSHIFT}/${guid}`);
+            const response = await instanse.get(config.services.Business, `${ROUTES.PERSONELSHIFT}/${guid}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -65,7 +65,7 @@ export const AddPersonelshifts = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Setting, ROUTES.PERSONELSHIFT, data);
+            const response = await instanse.post(config.services.Business, ROUTES.PERSONELSHIFT, data);
             dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: Literals.addcode[Language],
@@ -89,7 +89,7 @@ export const EditPersonelshifts = createAsyncThunk(
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Setting, ROUTES.PERSONELSHIFT, data);
+            const response = await instanse.put(config.services.Business, ROUTES.PERSONELSHIFT, data);
             dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: Literals.updatecode[Language],
@@ -114,7 +114,7 @@ export const DeletePersonelshifts = createAsyncThunk(
 
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.delete(config.services.Setting, `${ROUTES.PERSONELSHIFT}/${data.Uuid}`);
+            const response = await instanse.delete(config.services.Business, `${ROUTES.PERSONELSHIFT}/${data.Uuid}`);
             dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],

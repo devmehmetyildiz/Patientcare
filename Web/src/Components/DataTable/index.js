@@ -126,6 +126,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
     } = useTable(
         {
             columns,
+            
             data,
             initialState: { ...Config, pageSize: 15 },
             defaultColumn,

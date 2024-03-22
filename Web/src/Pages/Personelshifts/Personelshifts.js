@@ -1,21 +1,21 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
+import { Icon, Loader } from 'semantic-ui-react'
+import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
-import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
-import validator from '../../Utils/Validator'
 import { getInitialconfig } from '../../Utils/Constants'
+import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import PersonelshiftsDelete from '../../Containers/Personelshifts/PersonelshiftsDelete'
-
+import Formatdate, { Getdateoptions } from '../../Utils/Formatdate'
 export default class Personelshifts extends Component {
 
   componentDidMount() {
-    const { GetPersonelshifts } = this.props
+    const { GetPersonelshifts, GetProfessions } = this.props
     GetPersonelshifts()
+    GetProfessions()
   }
 
   render() {
-
     const { Personelshifts, Profile, handleDeletemodal, handleSelectedPersonelshift } = this.props
     const { isLoading } = Personelshifts
 
@@ -28,38 +28,36 @@ export default class Personelshifts extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Startdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Startdate), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Enddate[Profile.Language], accessor: row => this.dateCellhandler(row?.Enddate), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Period[Profile.Language], accessor: 'Period', Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Startdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Startdate), },
+      { Header: Literals.Columns.Profession[Profile.Language], accessor: row => this.professionCellhandler(row?.ProfessionID), },
+      { Header: Literals.Columns.Isworking[Profile.Language], accessor: row => this.boolCellhandler(row?.Isworking), disableProps: true, Cell: (col, row) => this.booliconCellhandler(col, row), },
+      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved), disableProps: true, Cell: (col, row) => this.booliconCellhandler(col, row), },
+      { Header: Literals.Columns.Isdeactive[Profile.Language], accessor: row => this.boolCellhandler(row?.Isdeactive), disableProps: true, Cell: (col, row) => this.booliconCellhandler(col, row), },
+      { Header: Literals.Columns.Iscompleted[Profile.Language], accessor: row => this.boolCellhandler(row?.Iscompleted), disableProps: true, Cell: (col, row) => this.booliconCellhandler(col, row), },
+      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
       { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-      { Header: Literals.Columns.detail[Profile.Language], accessor: 'detail', disableProps: true },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
+      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "Personelshifts"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
-    const list = (Personelshifts.list || []).map(item => {
+    const list = (Personelshifts.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
-        detail: <div className='w-full flex justify-center items-center'>
-          <Link to={`/Personelshifts/${item.Uuid}`} >
-            <Icon size='large' className='row-edit' name='magnify' />
-          </Link>
-        </div>,
-        delete: <div className='w-full flex justify-center items-center'>
-          <Icon link size='large' color='red' name='alternate trash' onClick={() => {
-            handleSelectedPersonelshift(item)
-            handleDeletemodal(true)
-          }} />
-        </div >
+        edit: <Link to={`/Personelshifts/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+          handleSelectedPersonelshift(item)
+          handleDeletemodal(true)
+        }} />
       }
     })
 
     return (
-      isLoading  ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>
@@ -81,6 +79,7 @@ export default class Personelshifts extends Component {
                   metaKey={metaKey}
                   Showcreatebutton
                   Showcolumnchooser
+                  Showexcelexport
                 />
               </Grid>
             </Headerwrapper>
@@ -98,19 +97,35 @@ export default class Personelshifts extends Component {
     )
   }
 
-  dateCellhandler = (value) => {
-    const date = new Date(value)
-    if (value && validator.isISODate(date)) {
-
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      const formattedDate = `${day}.${month}.${year}`;
-
-      return formattedDate
+  professionCellhandler = (value) => {
+    const { Professions } = this.props
+    if (Professions.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return value
+      const profession = (Professions.list || []).find(u => u.Uuid === value)
+      return profession?.Name
     }
   }
 
+  dateCellhandler = (value) => {
+    if (value) {
+      const dates = Getdateoptions()
+      if (dates.find(u => Formatdate(u.value) === Formatdate(value))) {
+        return `${dates.find(u => Formatdate(u.value) === Formatdate(value))?.text} (${Formatdate(value)})`
+      } else {
+        return Formatdate(value)
+      }
+    }
+    return null
+  }
+
+  boolCellhandler = (value) => {
+    const { Profile } = this.props
+    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+  }
+
+  booliconCellhandler = ({ value }) => {
+    const { Profile } = this.props
+    return value === Literals.Messages.Yes[Profile.Language] ? <Icon color='green' name='checkmark' /> : <Icon color='red' name='close' />
+  }
 }

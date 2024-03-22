@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import Literals from './Literals'
 import { Button, Modal } from 'semantic-ui-react'
+import Literals from './Literals'
 
 export default class PersonelshiftsDelete extends Component {
   render() {
@@ -16,6 +16,7 @@ export default class PersonelshiftsDelete extends Component {
         <Modal.Content image>
           <Modal.Description>
             <p>
+              <span className='font-bold'>{selected_record?.Name} </span>
               {Literals.Messages.Deletecheck[Profile.Language]}
             </p>
           </Modal.Description>

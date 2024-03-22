@@ -263,6 +263,10 @@ const Professionpresettings = lazy(() => import('./Containers/Professionpresetti
 const ProfessionpresettingsCreate = lazy(() => import('./Containers/Professionpresettings/ProfessionpresettingsCreate'));
 const ProfessionpresettingsEdit = lazy(() => import('./Containers/Professionpresettings/ProfessionpresettingsEdit'));
 
+const Personelshifts = lazy(() => import('./Containers/Personelshifts/Personelshifts'));
+const PersonelshiftsCreate = lazy(() => import('./Containers/Personelshifts/PersonelshiftsCreate'));
+const PersonelshiftsEdit = lazy(() => import('./Containers/Personelshifts/PersonelshiftsEdit'));
+
 const Patientscases = lazy(() => import('./Containers/Patientscases/Patientscases'));
 const Patientfollowup = lazy(() => import('./Containers/Patientfollowup/Patientfollowup'));
 
@@ -522,6 +526,10 @@ class Routes extends Component {
       { exact: true, path: "/Requiredperiods", auth: true, component: Requiredperiods, permission: 'requiredperiodview' },
       { exact: true, path: "/Requiredperiods/Create", auth: true, component: RequiredperiodsCreate, permission: 'requiredperiodadd' },
       { exact: true, path: "/Requiredperiods/:RequiredperiodID/Edit", auth: true, component: RequiredperiodsEdit, permission: 'requiredperiodupdate' },
+
+      { exact: true, path: "/Personelshifts", auth: true, component: Personelshifts, permission: 'personelshiftview' },
+      { exact: true, path: "/Personelshifts/Create", auth: true, component: PersonelshiftsCreate, permission: 'personelshiftadd' },
+      { exact: true, path: "/Personelshifts/:PersonelshiftID/Edit", auth: true, component: PersonelshiftsEdit, permission: 'personelshiftupdate' },
 
       { exact: true, path: "/Appreports", auth: true, component: Appreports, permission: 'admin' },
 

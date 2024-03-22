@@ -11,7 +11,7 @@ const Literals = {
     },
     adddescription: {
         en: 'Shiftdefine added successfully',
-        tr: 'Vardiya Başarı ile eklendi'
+        tr: 'Vardiya Tanımı Başarı ile eklendi'
     },
     updatecode: {
         en: 'Data Update',
@@ -19,7 +19,7 @@ const Literals = {
     },
     updatedescription: {
         en: 'Shiftdefine updated successfully',
-        tr: 'Vardiya Başarı ile güncellendi'
+        tr: 'Vardiya Tanımı Başarı ile güncellendi'
     },
     deletecode: {
         en: 'Data Delete',
@@ -27,7 +27,7 @@ const Literals = {
     },
     deletedescription: {
         en: 'Shiftdefine Deleted successfully',
-        tr: 'Vardiya Başarı ile Silindi'
+        tr: 'Vardiya Tanımı Başarı ile Silindi'
     },
 }
 

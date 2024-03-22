@@ -37,13 +37,12 @@ import Rooms from "../Pages/Rooms/Literals"
 import Floors from "../Pages/Floors/Literals"
 import Todos from "../Pages/Todos/Literals"
 import Unapproveds from "../Pages/Unapproveds/Literals"
-import Shifts from "../Pages/Shifts/Literals"
+import Shiftdefines from "../Pages/Shiftdefines/Literals"
 import Equipmentgroups from "../Pages/Equipmentgroups/Literals"
 import Equipments from "../Pages/Equipments/Literals"
 import Personels from "../Pages/Personels/Literals"
 import Breakdowns from "../Pages/Breakdowns/Literals"
 import Mainteancies from "../Pages/Mainteancies/Literals"
-import Personelshifts from "../Pages/Personelshifts/Literals"
 import Placeviews from "../Pages/Placeviews/Literals"
 import Patientcashregisters from "../Pages/Patientcashregisters/Literals"
 import Patientcashmovements from "../Pages/Patientcashmovements/Literals"
@@ -65,6 +64,7 @@ import Patientscases from "../Pages/Patientscases/Literals"
 import Patientfollowup from "../Pages/Patientfollowup/Literals"
 import Personelpresettings from "../Pages/Personelpresettings/Literals"
 import Professionpresettings from "../Pages/Professionpresettings/Literals"
+import Personelshifts from "../Pages/Personelshifts/Literals"
 
 const Literals = {
     Cases,
@@ -106,13 +106,12 @@ const Literals = {
     Purchaseordersupplies,
     Supplies,
     Unapproveds,
-    Shifts,
+    Shiftdefines,
     Equipmentgroups,
     Equipments,
     Personels,
     Breakdowns,
     Mainteancies,
-    Personelshifts,
     Placeviews,
     Patientcashregisters,
     Patientcashmovements,
@@ -134,6 +133,7 @@ const Literals = {
     Patientfollowup,
     Personelpresettings,
     Professionpresettings,
+    Personelshifts
 }
 
 export default Literals

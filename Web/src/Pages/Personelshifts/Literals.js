@@ -1,37 +1,6 @@
 const Literals = {
     Options: {
-        Genderoptions: {
-            value0: {
-                tr: "Erkek",
-                en: "Men"
-            },
-            value1: {
-                tr: "Kadın",
-                en: "Women"
-            },
-        },
-        Professionoptions: {
-            value0: {
-                tr: "Bakım",
-                en: "Bakım"
-            },
-            value1: {
-                tr: "Sağlık",
-                en: "Sağlık"
-            },
-            value2: {
-                tr: "Temizlik",
-                en: "Temizlik"
-            },
-            value3: {
-                tr: "Mutfak",
-                en: "Mutfak"
-            },
-            value4: {
-                tr: "Aşçı",
-                en: "Aşçı"
-            },
-        },
+
     },
     Columns: {
         Id: {
@@ -42,25 +11,29 @@ const Literals = {
             tr: 'Tekil ID',
             en: 'Unique ID'
         },
-        Name: {
-            tr: 'Personel',
-            en: 'Personel'
-        },
         Startdate: {
-            tr: 'Başlangıç Zamanı',
+            tr: 'Başlangıç Tarihi',
             en: 'Start Date'
         },
-        Enddate: {
-            tr: 'Bitiş Zamanı',
-            en: 'End Date'
+        Profession: {
+            tr: 'Meslek',
+            en: 'Profession'
         },
-        Period: {
-            tr: 'Gün Sayısı',
-            en: 'Day Count'
+        Isworking: {
+            tr: 'Çalışıyor mu?',
+            en: 'Is Working'
         },
-        Shift: {
-            tr: 'Vardiya',
-            en: 'Shift'
+        Isdeactive: {
+            tr: 'İnaktif mi?',
+            en: 'Is Deactive'
+        },
+        Isapproved: {
+            tr: 'Onaylandı mı?',
+            en: 'Is approved?'
+        },
+        Iscompleted: {
+            tr: 'Tamamlandı mı?',
+            en: 'Is Completed?'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -78,14 +51,39 @@ const Literals = {
             tr: 'Güncelleme Tarihi',
             en: 'Update Time'
         },
-        detail: {
-            tr: 'Detay',
-            en: 'Detail'
+        edit: {
+            tr: 'Güncelle',
+            en: 'Edit'
+        },
+        watch: {
+            tr: 'İzle',
+            en: 'Watch'
         },
         delete: {
             tr: 'Sil',
             en: 'Delete'
         },
+        Floor: {
+            tr: 'Kat',
+            en: 'Floor'
+        },
+        Shiftdefine: {
+            tr: 'Vardiya Tanımı',
+            en: 'Shift Define'
+        },
+        Ispersonelstay: {
+            tr: 'Personeller Kalacak mı?',
+            en: 'Is Personel Stay'
+        },
+        Minpersonelcount: {
+            tr: 'Minimum Personel Sayısı',
+            en: 'Min Personel Count'
+        },
+        Amount: {
+            tr: 'Adet',
+            en: 'Amount'
+        },
+        
     },
     Page: {
         Pageheader: {
@@ -102,7 +100,15 @@ const Literals = {
         },
         Pagedeleteheader: {
             tr: "Personel Vardiyası Silme",
-            en: "Delete Personel Shift"
+            en: "Delete Personel Shifts"
+        },
+        Pageprofessionoverviewheader: {
+            tr: "Meslek Ön Ayarları",
+            en: "Profession Pre Setting"
+        },
+        Pagepersoneloverviewheader: {
+            tr: "Personel Ön Ayarları",
+            en: "Personel Pre Setting"
         }
     },
     Button: {
@@ -126,42 +132,53 @@ const Literals = {
             tr: "Geri Dön",
             en: "Go Back"
         },
+        Close: {
+            tr: "Kapat",
+            en: "Close"
+        },
 
     },
     Messages: {
         Nodatafind: {
-            tr: "Tanımlı Personel Yok",
-            en: "There is no Personel found"
+            tr: "Tanımlı Vardiya Yok",
+            en: "There is no Personel shift found"
         },
         Deletecheck: {
-            tr: "personel vardiyasını silmek istediğinize emin misiniz?",
-            en: "personel shift will delete, are you sure?"
+            tr: "Personel Vardiyası silmek istediğinize emin misiniz?",
+            en: "Personel Shifts will delete, are you sure?"
         },
-        Startdaterequired: {
-            tr: "Başlangıç Tarihi Gerekli",
-            en: "Startdate required"
+        Foundedprofessionpresetting: {
+            tr: "Meslek Ön Ayarı Bulundu",
+            en: "Profession Pre Setting Founded"
         },
-        Periodrequired: {
-            tr: "Gün sayısı Gerekli",
-            en: "Period required"
+        Foundedpersonelpresetting: {
+            tr: "Personel Ön Ayarı Bulundu",
+            en: "Personel Pre Setting Founded"
         },
-        Countryidrequired: {
-            tr: "Tc Gerekli",
-            en: "Country ID Required"
+        Namerequired: {
+            tr: "Yatak Adı Gerekli",
+            en: "Bed required"
         },
-        Professionsrequired: {
-            tr: "Meslek Grubu Gerekli",
-            en: "Profession Required"
+        RoomIDrequired: {
+            tr: "Oda Gerekli",
+            en: "Room required"
         },
-        Genderrequired: {
-            tr: "Cinsiyet Gerekli",
-            en: "Gender Required"
+        Yes: {
+            tr: "EVET",
+            en: "YES"
         },
-        Workstarttimerequired: {
-            tr: "İşe Başlama Tarihi Gerekli",
-            en: "Work Start Time Required"
+        No: {
+            tr: "HAYIR",
+            en: "NO"
         },
-
+        Filled: {
+            tr: "Dolu",
+            en: "Filled"
+        },
+        Empty: {
+            tr: "Boş",
+            en: "Empty"
+        },
     }
 }
 
