@@ -58,7 +58,7 @@ export class Roles extends Component {
     })
 
     return (
-      isLoading  ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>
@@ -116,8 +116,7 @@ export class Roles extends Component {
   authoryCellhandler = (row, freeze) => {
     const { Profile } = this.props
     const itemId = row?.Id
-    console.log('row?.Privileges: ', row?.Privileges);
-    const itemPrivileges = (row?.Privileges || []).map(u => u.text[Profile.Language])
+    const itemPrivileges = (row?.Privileges || []).map(u => u?.text[Profile.Language])
     const itemPrivilegestxt = itemPrivileges.join(',')
     if (freeze === true) {
       return itemPrivilegestxt

@@ -37,6 +37,16 @@ export default function Settings(props) {
         tr: 'Kapat'
     }
 
+    const { roles } = Profile
+
+    const createRole = `${metaKey}add`
+    const reportRole = `${metaKey}getreport`
+    const manageviewRole = `${metaKey}manageview`
+
+    const willshowcolumncreate = (roles || []).includes(createRole) || (roles || []).includes('admin')
+    const willshowreport = (roles || []).includes(reportRole) || (roles || []).includes('admin')
+    const willshowmanageview = (roles || []).includes(manageviewRole) || (roles || []).includes('admin')
+
     return (
         Profile.Ismobile ?
             <Modal open={modalOpen}
@@ -49,7 +59,7 @@ export default function Settings(props) {
                     <div className='m-4 flex flex-col justify-center items-center w-full '>
                         <Grid stackable columns={1}>
                             <GridColumn stretched={Profile.Ismobile} width={8} >
-                                {Showcreatebutton && <>
+                                {Showcreatebutton && willshowcolumncreate && <>
                                     <Link className="pr-1" to={Pagecreatelink}>
                                         <Button className='!bg-[#2355a0] !text-white' fluid={Profile.Ismobile} floated={`${Profile.Ismobile ? 'left' : 'right'}`} >
                                             {Pagecreateheader}
@@ -57,18 +67,18 @@ export default function Settings(props) {
                                     </Link>
                                 </>
                                 }
-                                {Showcolumnchooser && <>
+                                {Showcolumnchooser && willshowmanageview && <>
                                     <Pagedivider />
                                     <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
                                 </>
 
                                 }
-                                {Showexcelimport && <>
+                                {Showexcelimport && willshowreport && <>
                                     <Pagedivider />
                                     <ExcelImport columns={Columns} addData={AddRecord} />
                                 </>
                                 }
-                                {Showexcelexport && <>
+                                {Showexcelexport && willshowreport && <>
                                     <Pagedivider />
                                     <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />
                                 </>
@@ -83,15 +93,15 @@ export default function Settings(props) {
                 </Modal.Content>
             </Modal>
             : <GridColumn stretched={Profile.Ismobile} width={8} >
-                {Showcreatebutton && <Link className="pr-1" to={Pagecreatelink}>
+                {Showcreatebutton && willshowcolumncreate && <Link className="pr-1" to={Pagecreatelink}>
                     <Button className='!bg-[#2355a0] !text-white' fluid={Profile.Ismobile} floated={`${Profile.Ismobile ? '' : 'right'}`} >
                         {Pagecreateheader}
                     </Button>
                 </Link>}
-                {Showcolumnchooser && <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />}
+                {Showcolumnchooser && willshowmanageview && <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />}
                 {Additionalfunction && <Button className='!bg-[#2355a0] !text-white' floated='right' onClick={Additionalfunction} >{Additionalfunctiontxt}</Button>}
-                {Showexcelimport && <ExcelImport columns={Columns} addData={AddRecord} />}
-                {Showexcelexport && <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />}
+                {Showexcelimport && willshowreport && <ExcelImport columns={Columns} addData={AddRecord} />}
+                {Showexcelexport && willshowreport && <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />}
             </GridColumn>
     )
 }

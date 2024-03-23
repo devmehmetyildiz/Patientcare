@@ -48,6 +48,9 @@ export default class RolesCreate extends Component {
                     <Pagedivider />
                     <Contentwrapper>
                         <Form>
+                            <div className='w-full'>
+                                <Button className='!bg-[#2355a0] !text-white !cursor-pointer' floated='right' onClick={this.handleAddall} >{Literals.Button.Addall[Profile.Language]}</Button>
+                            </div>
                             <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
                             <div className='w-full py-2'>
                                 <Search
@@ -151,6 +154,11 @@ export default class RolesCreate extends Component {
         e.target.checked
             ? this.setState({ selectedPrivileges: [...this.state.selectedPrivileges, this.props.Roles.privileges.find(u => u.code === e.target.id)] })
             : this.setState({ selectedPrivileges: this.state.selectedPrivileges.filter(function (el) { return el.code !== e.target.id; }) })
+    }
+
+    handleAddall = (e) => {
+        e.preventDefault()
+        this.setState({ selectedPrivileges: this.props.Roles.privileges })
     }
 }
 RolesCreate.contextType = FormContext

@@ -86,6 +86,10 @@ const Literals = {
             tr: "Geri Dön",
             en: "Go Back"
         },
+        Addall: {
+            tr: "Hepsini Ekle",
+            en: "Add All"
+        },
 
     },
     Messages: {

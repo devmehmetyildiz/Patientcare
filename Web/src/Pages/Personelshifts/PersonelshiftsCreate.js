@@ -219,13 +219,11 @@ function Personelpresettingoverview({ selectedPersonelpresettings, Profile }) {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {selectedProfessionpresettings.length > 0 && selectedProfessionpresettings.map(column => {
+                  {selectedPersonelpresettings.length > 0 && selectedPersonelpresettings.map(column => {
                     return <Table.Row key={Math.random()}>
                       <Table.Cell className='table-last-section'>
-                        {`${(Floors.list || []).find(u => u.Uuid === column?.FloorID)?.Name || ''}`}
                       </Table.Cell>
                       <Table.Cell>
-                        {`${(Floors.list || []).find(u => u.Uuid === column?.ShiftdefineID)?.Name || ''}`}
                       </Table.Cell>
                       <Table.Cell>
                         {`${column.Ispersonelstay ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language]}`}
