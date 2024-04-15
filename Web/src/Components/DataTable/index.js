@@ -7,64 +7,12 @@ import {
 import { Icon, Pagination, Select, Popup, Input, } from 'semantic-ui-react'
 import "./index.css"
 
-function DefaultColumnFilter({ column }) {
-
-    const { filterValue, preFilteredRows, setFilter } = column
-    const count = preFilteredRows.length
-
-    return (
-        <Popup
-            trigger={<Icon name='filter' className={filterValue !== undefined ? 'text-info' : null} />}
-            on='click'
-            basic
-            position='bottom center'
-            style={{ height: 'auto', width: 'auto' }
-            } >
-            <div>
-                <strong>Filtreler</strong>
-                <input
-                    value={filterValue || ''}
-                    autoFocus
-                    className='form-control'
-                    onChange={e => { setFilter(e.target.value || undefined) }}
-                    placeholder={`Search ${count} records...`}
-                />
-            </div>
-        </Popup>
-    )
-}
-
-
-
 const TWO_HUNDRED_MS = 200;
 
-function GlobalFilter({
-    preGlobalFilteredRows,
-    globalFilter,
-    setGlobalFilter,
-}) {
-    const [value, setValue] = useState(globalFilter);
-    const onChange = useAsyncDebounce(value => {
-        setGlobalFilter(value || undefined)
-    }, TWO_HUNDRED_MS);
 
-    return (
-        <div className='w-full flex justify-start items-center my-2'>
-            <Input
-                icon='search'
-                iconPosition='left'
-                placeholder='Arama...'
-                onChange={e => {
-                    setValue(e.target.value);
-                    onChange(e.target.value);
-                }}
-                value={value || ""}
-            />
-        </div>
-    )
-}
 
 export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
+    
     const columns = useMemo(() => {
         const data = (Columns || [])
             .map(u => {
@@ -89,13 +37,6 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
         }),
         []
     )
-
-    const turkishSort = (rowA, rowB, columnId) => {
-        const valueA = rowA?.values[columnId];
-        const valueB = rowB?.values[columnId];
-
-        return valueA?.localeCompare(valueB, 'tr', { sensitivity: 'base' });
-    };
 
     const {
         getTableProps,
@@ -126,7 +67,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
     } = useTable(
         {
             columns,
-            
+
             data,
             initialState: { ...Config, pageSize: 15 },
             defaultColumn,
@@ -194,7 +135,6 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                 setGlobalFilter={setGlobalFilter}
             />
             <div className='react-table-container'>
-
                 <div className='react-table-box max-h[calc(100vh-13.4rem)]'>
                     {
                         filters.length > 0 ?
@@ -204,7 +144,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                                     {filters.filter(filter => ((Array.isArray(filter.value) && filter.value.length > 0) || filter.value)).map(filter => (
                                         Array.isArray(filter.value) && filter.value.length > 0 ?
                                             filter.value.map((subItem, index) => (
-                                                <span key={`${filter.id}-${index}`} className='item'>
+                                                <span key={index} className='item'>
                                                     <span>{columns.find(column => column.accessor === filter.id) ? columns.find(column => column.accessor === filter.id).Header : filter.id}:</span>
                                                     {subItem}
                                                     <Icon name='times circle'
@@ -219,7 +159,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                                                         }} className='remove-item' />
                                                 </span>))
                                             :
-                                            <span key={filter.id} className='item'>
+                                            <span className='item'>
                                                 <span>{columns.find(column => column.accessor === filter.id) ? columns.find(column => column.accessor === filter.id).Header : filter.id}:</span>
                                                 {filter.value}
                                                 <Icon name='times circle'
@@ -269,10 +209,10 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
                                 ))}
                             </thead>
                             <tbody {...getTableBodyProps()}>
-                                {page.map(row => {
+                                {page.map((row, index) => {
                                     prepareRow(row)
                                     return (
-                                        <React.Fragment key={`rw-${row.id}`}>
+                                        <React.Fragment key={index}>
                                             <tr {...row.getRowProps()} style={{ backgroundColor: row.original?.Case ? row.original.Case?.Casecolor : null }} >
                                                 {row.cells.map(cell => {
                                                     const Isicon = cell?.column?.disableProps
@@ -350,4 +290,60 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
         </React.Fragment>
     )
 }
+
+
+function DefaultColumnFilter({ column }) {
+
+    const { filterValue, preFilteredRows, setFilter } = column
+    const count = preFilteredRows.length
+
+    return (
+        <Popup
+            trigger={<Icon name='filter' className={filterValue !== undefined ? 'text-info' : null} />}
+            on='click'
+            basic
+            position='bottom center'
+            style={{ height: 'auto', width: 'auto' }
+            } >
+            <div>
+                <strong>Filtreler</strong>
+                <input
+                    value={filterValue || ''}
+                    autoFocus
+                    className='form-control'
+                    onChange={e => { setFilter(e.target.value || undefined) }}
+                    placeholder={`${count} Kayıt için ara...`}
+                />
+            </div>
+        </Popup>
+    )
+}
+
+function GlobalFilter({
+    preGlobalFilteredRows,
+    globalFilter,
+    setGlobalFilter,
+}) {
+    const [value, setValue] = useState(globalFilter);
+    const onChange = useAsyncDebounce(value => {
+        setGlobalFilter(value || undefined)
+    }, TWO_HUNDRED_MS);
+
+    return (
+        <div className='w-full flex justify-start items-center my-2'>
+            <Input
+                icon='search'
+                iconPosition='left'
+                placeholder='Arama...'
+                onChange={e => {
+                    setValue(e.target.value);
+                    onChange(e.target.value);
+                }}
+                value={value || ""}
+            />
+        </div>
+    )
+}
+
+
 export default DataTable

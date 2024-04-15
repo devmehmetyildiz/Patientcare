@@ -1,31 +1,38 @@
-import React, { Component, useState } from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Form, Icon, Label, Modal, Table } from 'semantic-ui-react'
+import { Breadcrumb, Button, Form, Label, Transition } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
-import { FormContext } from '../../Provider/FormProvider'
-import {
-  Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump,
-  Headerwrapper, LoadingPage, Notfoundpage, Pagedivider, Pagewrapper, Submitbutton
-} from '../../Components'
 import { Getdateoptions } from '../../Utils/Formatdate'
+import { FormContext } from '../../Provider/FormProvider'
+import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Notfoundpage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import PersonelshiftsProfessionpresettings from '../../Containers/Personelshifts/PersonelshiftsProfessionpresettings'
+import PersonelshiftsPersonelpresettings from '../../Containers/Personelshifts/PersonelshiftsPersonelpresettings'
+import PersonelshiftsPrepare from '../../Containers/Personelshifts/PersonelshiftsPrepare'
 export default class PersonelshiftsCreate extends Component {
 
   PAGE_NAME = "PersonelshiftsCreate"
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      personelshifts: []
+    }
+  }
+
   componentDidMount() {
-    const { GetProfessions, GetProfessionpresettings, GetPersonelpresettings, GetFloors, GetShiftdefines, GetUsers } = this.props
+    const { GetProfessions, GetProfessionpresettings, GetPersonelpresettings, GetFloors, GetShiftdefines, GetUsers, GetUsagetypes } = this.props
     GetProfessions()
     GetProfessionpresettings()
     GetPersonelpresettings()
     GetFloors()
     GetShiftdefines()
     GetUsers()
+    GetUsagetypes()
   }
 
   render() {
-    const { Personelshifts, Professions, Professionpresettings, Personelpresettings,
-      Floors, Users, Shiftdefines, Profile, history, closeModal } = this.props
+    const { Personelshifts, Professions, Professionpresettings, Personelpresettings, Profile, history, closeModal } = this.props
 
     const dateOptions = Getdateoptions()
 
@@ -41,6 +48,8 @@ export default class PersonelshiftsCreate extends Component {
 
     const foundedProfessionpresetting = (Professionpresettings.list || []).filter(u => u.Isactive && (u.Startdate === selectedStartdate || u.Isinfinite) && u.ProfessionID === selectedProfession)
     const foundedPersonelpresetting = (Personelpresettings.list || []).filter(u => u.Isactive && (u.Startdate === selectedStartdate || u.Isinfinite))
+
+    const personelshifts = this.state.personelshifts
 
     return (
       Personelshifts.isLoading ? <LoadingPage /> :
@@ -59,8 +68,26 @@ export default class PersonelshiftsCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Startdate[Profile.Language]} name="Startdate" formtype="dropdown" options={dateOptions} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Profession[Profile.Language]} name="ProfessionID" formtype="dropdown" options={Professionsoptions} />
+                <Transition animation='slide down' visible={(isProfessionselected && isStartdateselected)}>
+                  <div className='w-full'>
+                    {(foundedPersonelpresetting.length <= 0 && foundedProfessionpresetting.length <= 0) ?
+                      <React.Fragment>
+                        <Button className='!bg-[#2355a0] !text-white' floated='right' onClick={() => { }} >
+                          {Literals.Messages.Nopresettingfound[Profile.Language]}
+                        </Button>
+                      </React.Fragment>
+                      : <React.Fragment>
+                        <PersonelshiftsProfessionpresettings selectedProfessionpresettings={foundedProfessionpresetting} />
+                        <PersonelshiftsPersonelpresettings selectedPersonelpresettings={foundedPersonelpresetting} />
+                      </React.Fragment>
+                    }
+                    <Button className='!bg-[#2355a0] !text-white' floated='right' onClick={() => { }} >{Literals.Button.Autofill[Profile.Language]}</Button>
+                  </div>
+                </Transition>
+              </Form.Group>
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Startdate[Profile.Language]} name="Startdate" formtype="dropdown" options={dateOptions} effect={this.handleChange} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Profession[Profile.Language]} name="ProfessionID" formtype="dropdown" options={Professionsoptions} effect={this.handleChange} />
               </Form.Group>
               {(!isProfessionselected || !isStartdateselected)
                 ? <Notfoundpage
@@ -68,16 +95,11 @@ export default class PersonelshiftsCreate extends Component {
                   autoHeight
                 />
                 : <React.Fragment>
-                  <Pagedivider />
-                  <Professionpresettingoverview
-                    selectedProfessionpresettings={foundedProfessionpresetting}
-                    Floors={Floors}
-                    Shiftdefines={Shiftdefines}
-                    Profile={Profile}
-                  />
-                  <Personelpresettingoverview
-                    selectedPersonelpresettings={foundedPersonelpresetting}
-                    Profile={Profile}
+                  <PersonelshiftsPrepare
+                    selectedProfessionID={selectedProfession}
+                    selectedStartdate={selectedStartdate}
+                    personelshifts={personelshifts}
+                    setPersonelshifts={this.setPersonelshifts}
                   />
                 </React.Fragment>
               }
@@ -100,152 +122,71 @@ export default class PersonelshiftsCreate extends Component {
   }
 
 
+  setPersonelshifts = (personelshiftprev) => {
+    this.setState({ personelshifts: [...personelshiftprev] })
+  }
+
+  handleChange = () => {
+    this.setState({ personelshifts: [] })
+  }
+
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddBeds, history, fillBednotification, Profile, closeModal } = this.props
-    const data = this.context.getForm(this.PAGE_NAME)
+    const { Profile, AddPersonelshifts, history, closeModal, fillPersonelshiftnotification } = this.props
+
+    const shiftData = this.context.getForm(this.PAGE_NAME)
+
+    const data = {
+      Startdate: shiftData?.Startdate,
+      ProfessionID: shiftData?.ProfessionID,
+      Isworking: true,
+      Isdeactive: false,
+      Iscompleted: false,
+      Isapproved: false,
+      Personelshiftdetails: this.state.personelshifts
+    }
+
     let errors = []
-    if (!validator.isUUID(data.RoomID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.RoomIDrequired[Profile.Language] })
+
+    if (!validator.isISODate(data.Startdate)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Shiftrequired[Profile.Language] })
     }
-    if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+    if (!validator.isUUID(data.ProfessionID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Professionrequired[Profile.Language] })
     }
+    if (!validator.isArray(data.Personelshiftdetails) && data.Personelshiftdetails.length <= 0) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Personelshiftsrequired[Profile.Language] })
+    } else {
+
+      for (const personelshift of data.Personelshiftdetails) {
+
+        const { Annualtype, Day, PersonelID, ShiftID } = personelshift
+
+        if (!validator.isNumber(Annualtype)) {
+          errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Annualtyperequired[Profile.Language] })
+        }
+        if (!validator.isNumber(Day)) {
+          errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Dayrequired[Profile.Language] })
+        }
+        if (!validator.isUUID(PersonelID)) {
+          errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Personelrequired[Profile.Language] })
+        }
+        if (!validator.isUUID(ShiftID)) {
+          errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Shiftrequired[Profile.Language] })
+        }
+
+      }
+    }
+
     if (errors.length > 0) {
       errors.forEach(error => {
-        fillBednotification(error)
+        fillPersonelshiftnotification(error)
       })
     } else {
-      AddBeds({ data, history, closeModal })
+
+      AddPersonelshifts({ data, history, closeModal })
     }
   }
 }
 PersonelshiftsCreate.contextType = FormContext
 
-
-
-function Professionpresettingoverview({ selectedProfessionpresettings, Floors, Shiftdefines, Profile }) {
-
-  const [open, setOpen] = useState(false)
-
-  return (
-    <div className='p-2'>
-      {selectedProfessionpresettings.length > 0 && (
-        <React.Fragment>
-          <div onClick={() => { setOpen(prev => !prev) }}>
-            <Label size='large' as='a' className='!bg-[#2355a0] !text-white !w-full' image >
-              {Literals.Messages.Foundedprofessionpresetting[Profile.Language]}
-              <Label.Detail>{selectedProfessionpresettings.length} {Literals.Columns.Amount[Profile.Language]}</Label.Detail>
-            </Label>
-          </div>
-          <Modal
-            onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
-            open={open}
-          >
-            <Modal.Header>{Literals.Page.Pageprofessionoverviewheader[Profile.Language]}</Modal.Header>
-            <Modal.Content image>
-              <Table celled className='list-table ' key='product-create-type-conversion-table ' >
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell width={1}>{Literals.Columns.Floor[Profile.Language]}</Table.HeaderCell>
-                    <Table.HeaderCell width={1}>{Literals.Columns.Shiftdefine[Profile.Language]}</Table.HeaderCell>
-                    <Table.HeaderCell width={2}>{Literals.Columns.Ispersonelstay[Profile.Language]}</Table.HeaderCell>
-                    <Table.HeaderCell width={1}>{Literals.Columns.Minpersonelcount[Profile.Language]}</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {selectedProfessionpresettings.length > 0 && selectedProfessionpresettings.map(column => {
-                    return <Table.Row key={Math.random()}>
-                      <Table.Cell className='table-last-section'>
-                        {`${(Floors.list || []).find(u => u.Uuid === column?.FloorID)?.Name || ''}`}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {`${(Floors.list || []).find(u => u.Uuid === column?.ShiftdefineID)?.Name || ''}`}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {`${column.Ispersonelstay ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language]}`}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {`${column.Minpersonelcount}`}
-                      </Table.Cell>
-                    </Table.Row>
-                  })}
-                </Table.Body>
-              </Table>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='black' onClick={() => {
-                setOpen(false)
-              }}>
-                {Literals.Button.Close[Profile.Language]}
-              </Button>
-            </Modal.Actions>
-          </Modal>
-        </React.Fragment>
-      )}
-    </div>
-  )
-}
-
-function Personelpresettingoverview({ selectedPersonelpresettings, Profile }) {
-
-  const [open, setOpen] = useState(false)
-
-  return (
-    <div className='p-2'>
-      {selectedPersonelpresettings.length > 0 && (
-        <React.Fragment>
-          <div onClick={() => { setOpen(prev => !prev) }}>
-            <Label size='large' as='a' className='!bg-[#2355a0] !text-white !w-full' image >
-              {Literals.Messages.Foundedpersonelpresetting[Profile.Language]}
-              <Label.Detail>{selectedPersonelpresettings.length} {Literals.Columns.Amount[Profile.Language]}</Label.Detail>
-            </Label>
-          </div>
-          <Modal
-            onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
-            open={open}
-          >
-            <Modal.Header>{Literals.Page.Pagepersoneloverviewheader[Profile.Language]}</Modal.Header>
-            <Modal.Content image>
-              <Table celled className='list-table ' key='product-create-type-conversion-table ' >
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell width={1}>{Literals.Columns.Floor[Profile.Language]}</Table.HeaderCell>
-                    <Table.HeaderCell width={1}>{Literals.Columns.Shiftdefine[Profile.Language]}</Table.HeaderCell>
-                    <Table.HeaderCell width={2}>{Literals.Columns.Ispersonelstay[Profile.Language]}</Table.HeaderCell>
-                    <Table.HeaderCell width={1}>{Literals.Columns.Minpersonelcount[Profile.Language]}</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {selectedPersonelpresettings.length > 0 && selectedPersonelpresettings.map(column => {
-                    return <Table.Row key={Math.random()}>
-                      <Table.Cell className='table-last-section'>
-                      </Table.Cell>
-                      <Table.Cell>
-                      </Table.Cell>
-                      <Table.Cell>
-                        {`${column.Ispersonelstay ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language]}`}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {`${column.Minpersonelcount}`}
-                      </Table.Cell>
-                    </Table.Row>
-                  })}
-                </Table.Body>
-              </Table>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='black' onClick={() => {
-                setOpen(false)
-              }}>
-                {Literals.Button.Close[Profile.Language]}
-              </Button>
-            </Modal.Actions>
-          </Modal>
-        </React.Fragment>
-      )}
-    </div>
-  )
-}

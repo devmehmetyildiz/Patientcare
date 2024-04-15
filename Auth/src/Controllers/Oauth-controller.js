@@ -101,6 +101,7 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
     } catch (error) {
         return next(requestErrorCatcher(error, "USERROLE"))
     }
+
     try {
         const usersaltreponse = await axios({
             method: 'GET',
@@ -155,6 +156,7 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
         httpOnly: false,
         secure: false,
     }).status(200).json(accessToken)
+
 }
 
 async function responseToGetTokenByRefreshToken(req, res, next) {

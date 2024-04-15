@@ -21,9 +21,11 @@ import Spinner from './Spinner'
 import Submitbutton from './Submitbutton'
 import Textsearch from './Textsearch'
 import Search from './Search'
+import Box from './Box'
 
 export {
     About, AddModal, Contentwrapper, DataTable, Footerwrapper, FormInput, Gobackbutton,
     Headerbredcrump, Headerwrapper, LoadingPage, MobileTable, Navbar, NoDataScreen, Notfoundpage,
-    Pagedivider, ProtectedRoute, Settings, Sidebar, Spinner, Submitbutton, Pagewrapper, Textsearch, Search
+    Pagedivider, ProtectedRoute, Settings, Sidebar, Spinner, Submitbutton, Pagewrapper, Textsearch, Search,
+    Box
 }

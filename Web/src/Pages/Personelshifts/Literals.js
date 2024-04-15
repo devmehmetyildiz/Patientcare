@@ -24,7 +24,7 @@ const Literals = {
             en: 'Is Working'
         },
         Isdeactive: {
-            tr: 'İnaktif mi?',
+            tr: 'İptal mi?',
             en: 'Is Deactive'
         },
         Isapproved: {
@@ -55,6 +55,18 @@ const Literals = {
             tr: 'Güncelle',
             en: 'Edit'
         },
+        approve: {
+            tr: 'Onayla',
+            en: 'Approve'
+        },
+        complete: {
+            tr: 'Tamamla',
+            en: 'Complete'
+        },
+        deactive: {
+            tr: 'İptal Et',
+            en: 'Deactive'
+        },
         watch: {
             tr: 'İzle',
             en: 'Watch'
@@ -83,7 +95,26 @@ const Literals = {
             tr: 'Adet',
             en: 'Amount'
         },
-        
+        Personel: {
+            tr: 'Personel',
+            en: 'Personel'
+        },
+        Shift: {
+            tr: 'Vardiya',
+            en: 'Shift'
+        },
+        Annualtype: {
+            tr: 'Çalışma Durumu Seçiniz',
+            en: 'Enter Annual Type'
+        },
+        Day: {
+            tr: 'Gün',
+            en: 'Day'
+        },
+        Remove: {
+            tr: 'Kaldır',
+            en: 'Remove'
+        },
     },
     Page: {
         Pageheader: {
@@ -102,6 +133,18 @@ const Literals = {
             tr: "Personel Vardiyası Silme",
             en: "Delete Personel Shifts"
         },
+        Pageapproveheader: {
+            tr: "Personel Vardiyası Onaylama",
+            en: "Approve Personel Shifts"
+        },
+        Pagecompleteheader: {
+            tr: "Personel Vardiyası Tamamlama",
+            en: "Complete Personel Shifts"
+        },
+        Pagedeactiveheader: {
+            tr: "Personel Vardiyası İptal Etme",
+            en: "Deactive Personel Shifts"
+        },
         Pageprofessionoverviewheader: {
             tr: "Meslek Ön Ayarları",
             en: "Profession Pre Setting"
@@ -109,6 +152,22 @@ const Literals = {
         Pagepersoneloverviewheader: {
             tr: "Personel Ön Ayarları",
             en: "Personel Pre Setting"
+        },
+        Pageprepareheader: {
+            tr: "Vardiya Hazırlama",
+            en: "Shift Prepare"
+        },
+        Pagepreparepersonelheader: {
+            tr: "Personeller",
+            en: "Personels"
+        },
+        Pageprepareshiftheader: {
+            tr: "Vardiyalar",
+            en: "Shifts"
+        },
+        Pageprepareshiftdetailremovedeleteheader: {
+            tr: "Personel Silme",
+            en: "Delete Personel"
         }
     },
     Button: {
@@ -132,20 +191,59 @@ const Literals = {
             tr: "Geri Dön",
             en: "Go Back"
         },
+        Approve: {
+            tr: "Onayla",
+            en: "Approve"
+        },
+        Complete: {
+            tr: "Tamamla",
+            en: "Complete"
+        },
+        Deactive: {
+            tr: "İptal Et",
+            en: "Deactive"
+        },
         Close: {
             tr: "Kapat",
             en: "Close"
         },
-
+        Prepare: {
+            tr: "Hazırla",
+            en: "Prepare"
+        },
+        Autofill: {
+            tr: "Otomatik Doldur",
+            en: "Autofill"
+        },
     },
     Messages: {
         Nodatafind: {
             tr: "Tanımlı Vardiya Yok",
             en: "There is no Personel shift found"
         },
+        Nofreeuserfound: {
+            tr: "Bu Grup için boşta eleman yok",
+            en: "There is personel found for this group"
+        },
         Deletecheck: {
             tr: "Personel Vardiyası silmek istediğinize emin misiniz?",
             en: "Personel Shifts will delete, are you sure?"
+        },
+        Approvecheck: {
+            tr: "Personel Vardiyası onaylamak istediğinize emin misiniz?",
+            en: "Personel Shifts will approve, are you sure?"
+        },
+        Completecheck: {
+            tr: "Personel Vardiyası tamamlamak istediğinize emin misiniz?",
+            en: "Personel Shifts will complete, are you sure?"
+        },
+        Deactivecheck: {
+            tr: "Personel Vardiyası iptal etmek istediğinize emin misiniz?",
+            en: "Personel Shifts will deactive, are you sure?"
+        },
+        Nopresettingfound: {
+            tr: "Ön Ayar Bulunamadı",
+            en: "No Pre setting Found"
         },
         Foundedprofessionpresetting: {
             tr: "Meslek Ön Ayarı Bulundu",
@@ -159,9 +257,49 @@ const Literals = {
             tr: "Yatak Adı Gerekli",
             en: "Bed required"
         },
+        Startdaterequired: {
+            tr: "Başlangıç Tarihi Gerekli",
+            en: "Start Date required"
+        },
+        Professionrequired: {
+            tr: "Meslek Gerekli",
+            en: "Profession required"
+        },
         RoomIDrequired: {
             tr: "Oda Gerekli",
             en: "Room required"
+        },
+        Userrequired: {
+            tr: "Personel Gerekli",
+            en: "Personel required"
+        },
+        Floorrequired: {
+            tr: "Kat Gerekli",
+            en: "Floor required"
+        },
+        Shiftrequired: {
+            tr: "Vardiya Gerekli",
+            en: "Shift required"
+        },
+        Personelrequired: {
+            tr: "Personel Gerekli",
+            en: "Personel required"
+        },
+        Annualtyperequired: {
+            tr: "Çalışma Durumu Gerekli",
+            en: "Annual status required"
+        },
+        Dayrequired: {
+            tr: "Gün Gerekli",
+            en: "Day Required"
+        },
+        Deletepersonel: {
+            tr: "Personelini silmek istediğinizine emin misiniz?",
+            en: "Are you sure to delete personel?"
+        },
+        Personelshiftsrequired: {
+            tr: "Personel vardiyaları gerekli",
+            en: "Personel shift required"
         },
         Yes: {
             tr: "EVET",

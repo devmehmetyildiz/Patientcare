@@ -6,6 +6,7 @@ import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pag
 import UsersDelete from '../../Containers/Users/UsersDelete'
 import { getInitialconfig, getSidebarroutes } from '../../Utils/Constants'
 import validator from '../../Utils/Validator'
+import Formatdate from '../../Utils/Formatdate'
 export default class Users extends Component {
 
   constructor(props) {
@@ -41,12 +42,9 @@ export default class Users extends Component {
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
       { Header: Literals.Columns.Username[Profile.Language], accessor: 'Username', Title: true },
       { Header: Literals.Columns.Email[Profile.Language], accessor: 'Email', Subheader: true, Subtitle: true },
-      { Header: Literals.Columns.EmailConfirmed[Profile.Language], accessor: 'EmailConfirmed', },
-      { Header: Literals.Columns.AccessFailedCount[Profile.Language], accessor: 'AccessFailedCount', },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', },
       { Header: Literals.Columns.Surname[Profile.Language], accessor: 'Surname', },
       { Header: Literals.Columns.Language[Profile.Language], accessor: 'Language', },
-      { Header: Literals.Columns.UserID[Profile.Language], accessor: 'UserID', },
       { Header: Literals.Columns.Defaultdepartment[Profile.Language], accessor: 'Defaultdepartment', },
       { Header: Literals.Columns.Departments[Profile.Language], accessor: row => this.departmentCellhandler(row), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Roles[Profile.Language], accessor: row => this.rolesCellhandler(row) },
@@ -57,8 +55,15 @@ export default class Users extends Component {
       { Header: Literals.Columns.Workstarttime[Profile.Language], accessor: row => this.dateCellhandler(row?.Workstarttime) },
       { Header: Literals.Columns.Workendtime[Profile.Language], accessor: row => this.dateCellhandler(row?.Workendtime) },
       { Header: Literals.Columns.Gender[Profile.Language], accessor: row => this.genderCellhandler(row?.Gender) },
-      { Header: Literals.Columns.Phonenumber[Profile.Language], accessor: 'Phonenumber', },
-      { Header: Literals.Columns.Adress[Profile.Language], accessor: 'Adress', },
+      { Header: Literals.Columns.Adress[Profile.Language], accessor: 'Adress' },
+      { Header: Literals.Columns.Phonenumber[Profile.Language], accessor: 'Phonenumber' },
+      { Header: Literals.Columns.Dateofbirth[Profile.Language], accessor: row => this.dateCellhandler(row?.Dateofbirth) },
+      { Header: Literals.Columns.Bloodgroup[Profile.Language], accessor: 'Bloodgroup' },
+      { Header: Literals.Columns.Foreignlanguage[Profile.Language], accessor: 'Foreignlanguage' },
+      { Header: Literals.Columns.Graduation[Profile.Language], accessor: 'Graduation' },
+      { Header: Literals.Columns.Contactnumber[Profile.Language], accessor: 'Contactnumber' },
+      { Header: Literals.Columns.Chronicillness[Profile.Language], accessor: 'Chronicillness' },
+      { Header: Literals.Columns.Covid[Profile.Language], accessor: 'Covid' },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
@@ -206,11 +211,7 @@ export default class Users extends Component {
   }
 
   dateCellhandler = (value) => {
-    console.log('value: ', value);
-    if (value) {
-      return value.split('T').length > 0 ? value.split('T')[0] : value
-    }
-    return null
+    return value ? Formatdate(value) : null
   }
 
   genderCellhandler = (value) => {

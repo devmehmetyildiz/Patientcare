@@ -84,7 +84,7 @@ export default class Patients extends Component {
         ...item,
         Filestxt: '',
         Stockstxt: '',
-        actions: <Link to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
+        actions: <Link key={item?.Uuid} to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
       }
     })
 
@@ -252,14 +252,14 @@ export default class Patients extends Component {
     const itemId = row?.Uuid
     const itemFiles = (Files.list || []).filter(u => u.ParentID === itemId)
     let filestext = (itemFiles || []).map((file) => {
-      return file.Name;
+      return file?.Name;
     }).join(", ")
 
     return filestext.length - 35 > 20 ?
       (
         !this.state.filesStatus.includes(itemId) ?
-          [filestext.slice(0, 35) + ' ...(' + itemFiles.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandFiles(itemId)}> ...Daha Fazla Göster</Link>] :
-          [filestext, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkFiles(itemId)}> ...Daha Az Göster</Link>]
+          [filestext.slice(0, 35) + ' ...(' + itemFiles.length + ')', <Link key={itemId} to='#' className='showMoreOrLess' onClick={() => this.expandFiles(itemId)}> ...Daha Fazla Göster</Link>] :
+          [filestext, <Link key={itemId} to='#' className='showMoreOrLess' onClick={() => this.shrinkFiles(itemId)}> ...Daha Az Göster</Link>]
       ) : filestext
   }
 

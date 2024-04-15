@@ -24,21 +24,9 @@ const Literals = {
             tr: 'Kullanıcı Adı',
             en: 'Username'
         },
-        NormalizedUsername: {
-            tr: 'Normalize Kullanıcı Adı',
-            en: 'Normalized Username'
-        },
         Email: {
             tr: 'E posta',
             en: 'E mail'
-        },
-        EmailConfirmed: {
-            tr: 'E-posta Doğrulandı mı',
-            en: 'E-mail Confirmed?'
-        },
-        AccessFailedCount: {
-            tr: 'Hatalı Giriş Sayısı',
-            en: 'Access Failed Count'
         },
         Password: {
             tr: 'Parola',
@@ -52,22 +40,6 @@ const Literals = {
             tr: 'Soy İsim',
             en: 'Surname'
         },
-        PhoneNumber: {
-            tr: 'Telefon Numarası',
-            en: 'Phone Number'
-        },
-        PhoneNumberConfirmed: {
-            tr: 'Telefon Doğrulandı mı?',
-            en: 'Phone Number Confirmed?'
-        },
-        City: {
-            tr: 'Şehir',
-            en: 'City'
-        },
-        Town: {
-            tr: 'İlçe',
-            en: 'Town'
-        },
         Address: {
             tr: 'Adres',
             en: 'Address'
@@ -76,17 +48,9 @@ const Literals = {
             tr: 'Dil',
             en: 'Language'
         },
-        UserID: {
-            tr: 'Kullanıcı ID',
-            en: 'User ID'
-        },
         Defaultdepartment: {
             tr: 'Varsayılan Departman',
             en: 'Default Department'
-        },
-        Stations: {
-            tr: 'İstasyonlar',
-            en: 'Stations'
         },
         Departments: {
             tr: 'Departmanlar',
@@ -131,6 +95,34 @@ const Literals = {
         Phonenumber: {
             tr: 'Telefon',
             en: 'Phone'
+        },
+        Dateofbirth: {
+            tr: 'Doğum Tarihi',
+            en: 'Date of Birth'
+        },
+        Bloodgroup: {
+            tr: 'Kan Grubu',
+            en: 'Blood Group'
+        },
+        Foreignlanguage: {
+            tr: 'Yabancı Dil',
+            en: 'Foreign Language'
+        },
+        Graduation: {
+            tr: 'Mezuniyet',
+            en: 'Graduation'
+        },
+        Contactnumber: {
+            tr: 'İletişim Numarası',
+            en: 'Contant Number'
+        },
+        Chronicillness: {
+            tr: 'Kronik Hastalık',
+            en: 'Chronic Ilness'
+        },
+        Covid: {
+            tr: 'Covid Aşı Durumu',
+            en: 'Covid Status'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',

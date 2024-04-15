@@ -10,26 +10,15 @@ class App extends Component {
 
   constructor(props) {
     super(props)
-    const script = document.createElement('script');
-    const script1 = document.createElement('script');
-    script.src = "https://unpkg.com/react/umd/react.production.min.js";
-    script.async = true;
-    document.body.appendChild(script);
-    script1.src = "https://unpkg.com/react-collapse/build/react-collapse.min.js";
-    script1.async = true;
-    document.body.appendChild(script1);
-    this.mediaQuery = window.matchMedia('(max-width: 768px)'); // Change the breakpoint value as per your requirements
-    const isFullPageLayout = true
-    const iconstate = false
-    this.state = { iconstate, isFullPageLayout, isMobile: false, hideMobile: false }
-  }
 
-  setIconmode = () => {
-    this.setState({ iconstate: !this.state.iconstate })
-  }
+    this.prepareCss()
 
-  sethideMobile = () => {
-    this.setState({ hideMobile: !this.state.hideMobile })
+    this.state = {
+      iconstate: false,
+      isFullPageLayout: true,
+      isMobile: false,
+      hideMobile: false
+    }
   }
 
   componentDidMount() {
@@ -42,29 +31,6 @@ class App extends Component {
     if (this.props.location !== prevProps.location) {
       this.context.setFormstates({})
       this.onRouteChanged();
-    }
-  }
-
-  handleMediaQueryChange = (event) => {
-    this.setState({ isMobile: event.matches });
-  }
-
-  onRouteChanged = () => {
-    window.scrollTo(0, 0);
-    const fullPageLayoutRoutes = ['Login', 'login', 'Register', 'register', 'Forgetpassword', 'forgetpassword', 'Passwordreset'];
-    const path = this.props.location.pathname.split('/').length > 0 ? this.props.location.pathname.split('/')[1] : this.props.location.pathname.replace('/', '')
-    document.title = fullPageLayoutRoutes.includes(path) ? "Elder Camp" : "Elder Camp"//path
-    for (let i = 0; i < fullPageLayoutRoutes.length; i++) {
-      if (path === fullPageLayoutRoutes[i]) {
-        this.setState({
-          isFullPageLayout: true
-        })
-        break;
-      } else {
-        this.setState({
-          isFullPageLayout: false
-        })
-      }
     }
   }
 
@@ -94,7 +60,48 @@ class App extends Component {
     );
   }
 
+  onRouteChanged = () => {
+    window.scrollTo(0, 0);
+    const fullPageLayoutRoutes = ['Login', 'login', 'Register', 'register', 'Forgetpassword', 'forgetpassword', 'Passwordreset'];
+    const path = this.props.location.pathname.split('/').length > 0 ? this.props.location.pathname.split('/')[1] : this.props.location.pathname.replace('/', '')
+    document.title = fullPageLayoutRoutes.includes(path) ? "Elder Camp" : "Elder Camp"//path
+    for (let i = 0; i < fullPageLayoutRoutes.length; i++) {
+      if (path === fullPageLayoutRoutes[i]) {
+        this.setState({
+          isFullPageLayout: true
+        })
+        break;
+      } else {
+        this.setState({
+          isFullPageLayout: false
+        })
+      }
+    }
+  }
 
+  handleMediaQueryChange = (event) => {
+    this.setState({ isMobile: event.matches });
+  }
+
+  setIconmode = () => {
+    this.setState({ iconstate: !this.state.iconstate })
+  }
+
+  sethideMobile = () => {
+    this.setState({ hideMobile: !this.state.hideMobile })
+  }
+
+  prepareCss = () => {
+    const script = document.createElement('script');
+    const script1 = document.createElement('script');
+    script.src = "https://unpkg.com/react/umd/react.production.min.js";
+    script.async = true;
+    document.body.appendChild(script);
+    script1.src = "https://unpkg.com/react-collapse/build/react-collapse.min.js";
+    script1.async = true;
+    document.body.appendChild(script1);
+    this.mediaQuery = window.matchMedia('(max-width: 768px)');
+  }
 }
 export default withRouter(App);
 App.contextType = FormContext

@@ -9,7 +9,7 @@ import 'react-clock/dist/Clock.css';
 
 export default function FormInput(props) {
 
-    const { validationfunc, validationmessage, display, additionalicon, page, isFormvisible, disableOnchange } = props
+    const { validationfunc, validationmessage, display, additionalicon, page, isFormvisible, disableOnchange, effect } = props
     const name = `${page}/${props.name}`
     const context = React.useContext(FormContext)
     const [formdata, setFormdata] = useState(context.formstates)
@@ -66,7 +66,6 @@ export default function FormInput(props) {
         switch (formType) {
             case 'dropdown':
                 return <Dropdown
-                    {...contextProp}
                     value={formdata[name] !== undefined ? formdata[name] : (props.multiple ? [] : '')}
                     clearable
                     search={props.search ? props.search : true}
@@ -74,12 +73,16 @@ export default function FormInput(props) {
                     selection
                     onChange={(e, data) => {
                         context.setFormstates({ ...formdata, [name]: data.value })
-                    }} />
+                        effect && effect()
+                    }}
+                    {...contextProp}
+                />
             case 'checkbox':
                 return <Checkbox toggle className='m-2'
                     checked={formdata[name] ? (formdata[name] === 1 ? true : (formdata[name] === 0 ? false : formdata[name])) : false}
                     onClick={(e) => {
                         context.setFormstates({ ...formdata, [name]: formdata[name] ? !formdata[name] : true })
+                        effect && effect()
                     }}
                 />
             default:
@@ -100,6 +103,7 @@ export default function FormInput(props) {
                                     setIsvalidate(res)
                                 }
                                 context.setFormstates({ ...formdata, [name]: props.type === 'number' ? parseFloat(e.target.value) : e.target.value })
+                                effect && effect()
                             }}
                             onKeyPress={(e) => { handleKeyPress(e) }}
                             onKeyUp={onKeyUpinput}
@@ -119,6 +123,7 @@ export default function FormInput(props) {
                                     setIsvalidate(res)
                                 }
                                 context.setFormstates({ ...formdata, [name]: props.type === 'number' ? parseFloat(e.target.value) : e.target.value })
+                                effect && effect()
                             }}
                             onKeyPress={(e) => { handleKeyPress(e) }}
                             onKeyUp={onKeyUpinput}
@@ -139,6 +144,7 @@ export default function FormInput(props) {
                                 }
                                 setInputvalue(props.type === 'number' ? parseFloat(e.target.value) : e.target.value)
                                 context.setFormstates({ ...formdata, [name]: props.type === 'number' ? parseFloat(e.target.value) : e.target.value })
+                                effect && effect()
                             }}
                             onKeyPress={(e) => { handleKeyPress(e) }}
                             onKeyUp={onKeyUpinput}

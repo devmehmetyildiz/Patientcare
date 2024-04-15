@@ -34,6 +34,7 @@ async function GetPersonelshift(req, res, next) {
 
     try {
         const personelshift = await db.personelshiftModel.findOne({ where: { Uuid: req.params.personelshiftId } });
+        personelshift.Personelshiftdetails = await db.personelshiftdetailModel.findAll({ where: { PersonelshiftID: personelshift?.Uuid } })
         res.status(200).json(personelshift)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -45,7 +46,6 @@ async function AddPersonelshift(req, res, next) {
     let validationErrors = []
     const {
         Startdate,
-        Enddate,
         ProfessionID,
         Isworking,
         Isdeactive,
@@ -54,34 +54,35 @@ async function AddPersonelshift(req, res, next) {
         Personelshiftdetails
     } = req.body
 
-
-    if (validator.isISODate(Startdate)) {
+    if (!validator.isISODate(Startdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
     }
-    if (validator.isISODate(Enddate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ENDDATE_REQUIRED)
-    }
-    if (validator.isUUID(ProfessionID)) {
+    if (!validator.isUUID(ProfessionID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PROFESSIONID_REQUIRED)
     }
-    if (validator.isBoolean(Isworking)) {
+    if (!validator.isBoolean(Isworking)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISWORKING_REQUIRED)
     }
-    if (validator.isBoolean(Isdeactive)) {
+    if (!validator.isBoolean(Isdeactive)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISDEACTIVE_REQUIRED)
     }
-    if (validator.isBoolean(Iscompleted)) {
+    if (!validator.isBoolean(Iscompleted)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISCOMPLETED_REQUIRED)
     }
-    if (validator.isBoolean(Isapproved)) {
+    if (!validator.isBoolean(Isapproved)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISAPPROVED_REQUIRED)
     }
-    if (validator.isArray(Personelshiftdetails)) {
+    if (!validator.isArray(Personelshiftdetails)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERSONELSHIFTDETAILS_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
+    }
+
+    const previouspersonelshift = await db.personelshiftModel.findOne({ where: { Startdate: Startdate, ProfessionID: ProfessionID } });
+    if (previouspersonelshift) {
+        return next(createValidationError([messages.VALIDATION_ERROR.PERSONELSHIIFT_DUBLICATED], req.language))
     }
 
     let personelshiftuuid = uuid()
@@ -101,25 +102,22 @@ async function AddPersonelshift(req, res, next) {
         for (const personelshiftdetail of Personelshiftdetails) {
 
             let detailErrors = []
-            if (validator.isUUID(personelshiftdetail?.ShiftID)) {
+            if (!validator.isUUID(personelshiftdetail?.ShiftID)) {
                 detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.SHIFTID_REQUIRED)
             }
-            if (validator.isUUID(personelshiftdetail?.PersonelID)) {
+            if (!validator.isUUID(personelshiftdetail?.PersonelID)) {
                 detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.PERSONELID_REQUIRED)
             }
-            if (validator.isUUID(personelshiftdetail?.FloorID)) {
-                detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.FLOORID_REQUIRED)
-            }
-            if (validator.isNumber(personelshiftdetail?.Day)) {
+            if (!validator.isNumber(personelshiftdetail?.Day)) {
                 detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.DAY_REQUIRED)
             }
-            if (validator.isBoolean(personelshiftdetail?.Isworking)) {
+            if (!validator.isBoolean(personelshiftdetail?.Isworking)) {
                 detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.ISWORKING_REQUIRED)
             }
-            if (validator.isBoolean(personelshiftdetail?.Isonannual)) {
+            if (!validator.isBoolean(personelshiftdetail?.Isonannual)) {
                 detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.ISONANNUAL_REQUIRED)
             }
-            if (validator.isNumber(personelshiftdetail?.Annualtype)) {
+            if (!validator.isNumber(personelshiftdetail?.Annualtype)) {
                 detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.ANNUALTYPE_REQUIRED)
             }
             if (detailErrors.length > 0) {
@@ -130,13 +128,13 @@ async function AddPersonelshift(req, res, next) {
 
             await db.personelshiftdetailModel.create({
                 ...personelshiftdetail,
-                PersonelshiftID:personelshiftuuid,
+                PersonelshiftID: personelshiftuuid,
                 Uuid: personelshiftdetailuuid,
                 Createduser: username,
                 Createtime: new Date(),
                 Isactive: true
             }, { transaction: t })
-        
+
         }
 
         await CreateNotification({
@@ -160,7 +158,6 @@ async function UpdatePersonelshift(req, res, next) {
     let validationErrors = []
     const {
         Startdate,
-        Enddate,
         ProfessionID,
         Isworking,
         Isdeactive,
@@ -170,28 +167,25 @@ async function UpdatePersonelshift(req, res, next) {
         Uuid,
     } = req.body
 
-    if (validator.isISODate(Startdate)) {
+    if (!validator.isISODate(Startdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
     }
-    if (validator.isISODate(Enddate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ENDDATE_REQUIRED)
-    }
-    if (validator.isUUID(ProfessionID)) {
+    if (!validator.isUUID(ProfessionID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PROFESSIONID_REQUIRED)
     }
-    if (validator.isBoolean(Isworking)) {
+    if (!validator.isBoolean(Isworking)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISWORKING_REQUIRED)
     }
-    if (validator.isBoolean(Isdeactive)) {
+    if (!validator.isBoolean(Isdeactive)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISDEACTIVE_REQUIRED)
     }
-    if (validator.isBoolean(Iscompleted)) {
+    if (!validator.isBoolean(Iscompleted)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISCOMPLETED_REQUIRED)
     }
-    if (validator.isBoolean(Isapproved)) {
+    if (!validator.isBoolean(Isapproved)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISAPPROVED_REQUIRED)
     }
-    if (validator.isArray(Personelshiftdetails)) {
+    if (!validator.isArray(Personelshiftdetails)) {
         validationErrors.push(messages.VALIDATION_ERROR.PERSONELSHIFTDETAILS_REQUIRED)
     }
     if (!Uuid) {
@@ -222,54 +216,44 @@ async function UpdatePersonelshift(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+        await db.personelshiftdetailModel.destroy({ where: { PersonelshiftID: Uuid }, transaction: t });
+
         for (const personelshiftdetail of Personelshiftdetails) {
 
             let detailErrors = []
-            if (validator.isUUID(personelshiftdetail?.ShiftID)) {
+            if (!validator.isUUID(personelshiftdetail?.ShiftID)) {
                 detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.SHIFTID_REQUIRED)
             }
-            if (validator.isUUID(personelshiftdetail?.PersonelID)) {
+            if (!validator.isUUID(personelshiftdetail?.PersonelID)) {
                 detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.PERSONELID_REQUIRED)
             }
-            if (validator.isUUID(personelshiftdetail?.FloorID)) {
-                detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.FLOORID_REQUIRED)
-            }
-            if (validator.isNumber(personelshiftdetail?.Day)) {
+            if (!validator.isNumber(personelshiftdetail?.Day)) {
                 detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.DAY_REQUIRED)
             }
-            if (validator.isBoolean(personelshiftdetail?.Isworking)) {
+            if (!validator.isBoolean(personelshiftdetail?.Isworking)) {
                 detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.ISWORKING_REQUIRED)
             }
-            if (validator.isBoolean(personelshiftdetail?.Isonannual)) {
+            if (!validator.isBoolean(personelshiftdetail?.Isonannual)) {
                 detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.ISONANNUAL_REQUIRED)
             }
-            if (validator.isNumber(personelshiftdetail?.Annualtype)) {
+            if (!validator.isNumber(personelshiftdetail?.Annualtype)) {
                 detailErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.ANNUALTYPE_REQUIRED)
-            }
-            if (!personelshiftdetail?.Uuid) {
-                validationErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.PERSONELSHIIFTDETAILID_REQUIRED)
-            }
-            if (!validator.isUUID(personelshiftdetail?.Uuid)) {
-                validationErrors.push(personelshiftdetailMessages.VALIDATION_ERROR.UNSUPPORTED_PERSONELSHIIFTDETAILID)
             }
             if (detailErrors.length > 0) {
                 return next(createValidationError(detailErrors, req.language))
             }
 
-            const personelshiftdetail = db.personelshiftdetailModel.findOne({ where: { Uuid: Uuid } })
-            if (!personelshiftdetail) {
-                return next(createNotfounderror([personelshiftdetailMessages.ERROR.PERSONELSHIIFTDETAIL_NOT_FOUND], req.language))
-            }
-            if (personelshiftdetail.Isactive === false) {
-                return next(createAccessDenied([personelshiftdetailMessages.ERROR.PERSONELSHIIFTDETAIL_NOT_ACTIVE], req.language))
-            }
+            let personelshiftdetailuuid = uuid()
 
-            await db.personelshiftdetailModel.update({
+            await db.personelshiftdetailModel.create({
                 ...personelshiftdetail,
-                Updateduser: username,
-                Updatetime: new Date(),
-            }, { where: { Uuid: Uuid } }, { transaction: t })
-        
+                PersonelshiftID: Uuid,
+                Uuid: personelshiftdetailuuid,
+                Createduser: username,
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+
         }
 
         await CreateNotification({
@@ -281,6 +265,163 @@ async function UpdatePersonelshift(req, res, next) {
         })
         await t.commit()
     } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPersonelshifts(req, res, next)
+}
+
+async function ApprovePersonelshift(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.personelshiftId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.PERSONELSHIIFTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERSONELSHIIFTID)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const personelshift = await db.personelshiftModel.findOne({ where: { Uuid: Uuid } })
+        if (!personelshift) {
+            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_FOUND], req.language))
+        }
+        if (personelshift.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
+        }
+
+        await db.personelshiftModel.update({
+            ...personelshift,
+            Isapproved: true,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Personel Vardiyaları',
+            role: 'personelshiftnotification',
+            message: `${Uuid} numaralı personel vardiyası ${username} tarafından onaylandı.`,
+            pushurl: '/Personelshifts'
+        })
+
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPersonelshifts(req, res, next)
+}
+
+async function CompletePersonelshift(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.personelshiftId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.PERSONELSHIIFTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERSONELSHIIFTID)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const personelshift = await db.personelshiftModel.findOne({ where: { Uuid: Uuid } })
+        if (!personelshift) {
+            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_FOUND], req.language))
+        }
+        if (personelshift.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
+        }
+        if (personelshift.Isdeactive === true) {
+            return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_HASDEACTIVE], req.language))
+        }
+
+        await db.personelshiftModel.update({
+            ...personelshift,
+            Iscompleted: true,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Personel Vardiyaları',
+            role: 'personelshiftnotification',
+            message: `${Uuid} numaralı personel vardiyası ${username} tarafından tamamlandı.`,
+            pushurl: '/Personelshifts'
+        })
+
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPersonelshifts(req, res, next)
+}
+
+async function DeactivePersonelshift(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.personelshiftId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.PERSONELSHIIFTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERSONELSHIIFTID)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const personelshift = await db.personelshiftModel.findOne({ where: { Uuid: Uuid } })
+        if (!personelshift) {
+            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_FOUND], req.language))
+        }
+        if (personelshift.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
+        }
+        if (personelshift.Iscompleted === true) {
+            return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_HASCOMPLETED], req.language))
+        }
+
+        await db.personelshiftModel.update({
+            ...personelshift,
+            Isdeactive: true,
+            Isworking: false,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Personel Vardiyaları',
+            role: 'personelshiftnotification',
+            message: `${Uuid} numaralı personel vardiyası ${username} tarafından iptal edildi.`,
+            pushurl: '/Personelshifts'
+        })
+
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
         return next(sequelizeErrorCatcher(error))
     }
     GetPersonelshifts(req, res, next)
@@ -338,4 +479,7 @@ module.exports = {
     AddPersonelshift,
     UpdatePersonelshift,
     DeletePersonelshift,
+    ApprovePersonelshift,
+    CompletePersonelshift,
+    DeactivePersonelshift
 }

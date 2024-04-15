@@ -248,7 +248,8 @@ export const ProfileSlice = createSlice({
         resetrequestuser: {},
         Ismobile: false,
         Istokenchecking: false,
-        isFocusedpage: false
+        isFocusedpage: false,
+        scroll: false
     },
     reducers: {
         fillnotification: (state, action) => {
@@ -270,6 +271,9 @@ export const ProfileSlice = createSlice({
         },
         handleFocus: (state, action) => {
             state.isFocusedpage = action.payload
+        },
+        handleScroll: (state, action) => {
+            state.scroll = action.payload
         },
         logOut: () => {
             localStorage.removeItem('patientcare')
@@ -451,7 +455,8 @@ export const {
     removeauth,
     handleauth,
     handlemobile,
-    handleFocus
+    handleFocus,
+    handleScroll
 } = ProfileSlice.actions;
 
 export default ProfileSlice.reducer;

@@ -7,6 +7,7 @@ import { GetPersonelpresettings } from "../../Redux/PersonelpresettingSlice"
 import { GetFloors } from "../../Redux/FloorSlice"
 import { GetShiftdefines } from "../../Redux/ShiftdefineSlice"
 import { GetUsers } from "../../Redux/UserSlice"
+import { GetUsagetypes } from "../../Redux/UsagetypeSlice"
 
 const mapStateToProps = (state) => ({
     Personelshifts: state.Personelshifts,
@@ -16,12 +17,13 @@ const mapStateToProps = (state) => ({
     Floors: state.Floors,
     Shiftdefines: state.Shiftdefines,
     Users: state.Users,
+    Usagetypes: state.Usagetypes,
     Profile: state.Profile
 })
 
 const mapDispatchToProps = {
     AddPersonelshifts, fillPersonelshiftnotification, GetProfessions,
-    GetProfessionpresettings, GetPersonelpresettings, GetFloors, GetShiftdefines, GetUsers
+    GetProfessionpresettings, GetPersonelpresettings, GetFloors, GetShiftdefines, GetUsers, GetUsagetypes
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PersonelshiftsCreate)

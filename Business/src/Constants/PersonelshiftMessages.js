@@ -12,8 +12,26 @@ const messages = {
                 tr: 'Personel vardiya aktif değil',
             }
         },
+        PERSONELSHIIFT_HASCOMPLETED: {
+            code: 'PERSONELSHIIFT_HASCOMPLETED', description: {
+                en: 'Personel shift has completed',
+                tr: 'Personel vardiya tamamlanmış',
+            }
+        },
+        PERSONELSHIIFT_HASDEACTIVE: {
+            code: 'PERSONELSHIIFT_HASDEACTIVE', description: {
+                en: 'Personel shift has deactive',
+                tr: 'Personel vardiya iptal edilmiş',
+            }
+        },
     },
     VALIDATION_ERROR: {
+        PERSONELSHIIFT_DUBLICATED: {
+            code: 'PERSONELSHIIFT_DUBLICATED', description: {
+                en: 'There is already Personel shift with this settings!',
+                tr: 'Bu ayarlarda personel vardiyası zaten var!',
+            }
+        },
         PERSONELSHIIFTID_REQUIRED: {
             code: 'PERSONELSHIIFTID_REQUIRED', description: {
                 en: 'Personel shift id required',

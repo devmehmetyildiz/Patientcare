@@ -404,13 +404,14 @@ async function AddUser(req, res, next) {
             ...req.body,
         }, { transaction: t })
 
+
         await db.usersaltModel.create({
             UserID: useruuid,
             Salt: salt
         }, { transaction: t })
         for (const department of Departments) {
             if (!department.Uuid || !validator.isUUID(department.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
+                return next(createValidationError([messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID], req.language))
             }
             await db.userdepartmentModel.create({
                 UserID: useruuid,
@@ -419,7 +420,7 @@ async function AddUser(req, res, next) {
         }
         for (const role of Roles) {
             if (!role.Uuid || !validator.isUUID(role.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_ROLEID, req.language))
+                return next(createValidationError([messages.VALIDATION_ERROR.UNSUPPORTED_ROLEID], req.language))
             }
             await db.userroleModel.create({
                 UserID: useruuid,
@@ -553,7 +554,13 @@ async function DeleteUser(req, res, next) {
             return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
         }
 
-        await db.userModel.destroy({ where: { uuid: Uuid }, transaction: t });
+        await db.userModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.userroleModel.destroy({ where: { UserID: Uuid }, transaction: t });
+        await db.usersaltModel.destroy({ where: { UserID: Uuid }, transaction: t });
+        await db.userstationModel.destroy({ where: { UserID: Uuid }, transaction: t });
+        await db.usernotificationModel.destroy({ where: { UserID: Uuid }, transaction: t });
+        await db.tablemetaconfigModel.destroy({ where: { UserID: Uuid }, transaction: t });
+        await db.userdepartmentModel.destroy({ where: { UserID: Uuid }, transaction: t });
 
         await CreateNotification({
             type: types.Delete,
@@ -563,6 +570,7 @@ async function DeleteUser(req, res, next) {
             pushurl: '/Users'
         })
         await t.commit();
+
     } catch (error) {
         await t.rollback();
         next(sequelizeErrorCatcher(error))
@@ -694,7 +702,7 @@ async function UpdateUsermeta(req, res, next) {
 
         await db.userModel.update({
             ...req.body,
-            Updateduser:username,
+            Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 

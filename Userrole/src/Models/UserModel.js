@@ -20,20 +20,11 @@ module.exports = sequelize.define('userModel', {
     Email: {
         type: Sequelize.STRING
     },
-    EmailConfirmed: {
-        type: Sequelize.BOOLEAN
-    },
     PasswordHash: {
         type: Sequelize.STRING
     },
-    AccessFailedCount: {
-        type: Sequelize.INTEGER
-    },
     Language: {
         type: Sequelize.STRING
-    },
-    UserID: {
-        type: Sequelize.INTEGER
     },
     Config: {
         type: Sequelize.TEXT
@@ -66,6 +57,27 @@ module.exports = sequelize.define('userModel', {
         type: Sequelize.TEXT
     },
     Phonenumber: {
+        type: Sequelize.STRING
+    },
+    Dateofbirth: {
+        type: Sequelize.DATE
+    },
+    Bloodgroup: {
+        type: Sequelize.STRING
+    },
+    Foreignlanguage: {
+        type: Sequelize.STRING
+    },
+    Graduation: {
+        type: Sequelize.STRING
+    },
+    Contactnumber: {
+        type: Sequelize.STRING
+    },
+    Chronicillness: {
+        type: Sequelize.STRING
+    },
+    Covid: {
         type: Sequelize.STRING
     },
     Createduser: {

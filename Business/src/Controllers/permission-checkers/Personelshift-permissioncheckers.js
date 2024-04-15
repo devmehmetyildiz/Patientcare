@@ -16,6 +16,18 @@ async function UpdatePersonelshift(req, res, next) {
     PermissionHandler(req, next, 'personelshiftupdate')
 }
 
+async function ApprovePersonelshift(req, res, next) {
+    PermissionHandler(req, next, 'personelshiftapprove')
+}
+
+async function CompletePersonelshift(req, res, next) {
+    PermissionHandler(req, next, 'personelshiftcomplete')
+}
+
+async function DeactivePersonelshift(req, res, next) {
+    PermissionHandler(req, next, 'personelshiftdeactive')
+}
+
 async function DeletePersonelshift(req, res, next) {
     PermissionHandler(req, next, 'personelshiftdelete')
 }
@@ -26,4 +38,7 @@ module.exports = {
     AddPersonelshift,
     UpdatePersonelshift,
     DeletePersonelshift,
+    ApprovePersonelshift,
+    CompletePersonelshift,
+    DeactivePersonelshift,
 }
