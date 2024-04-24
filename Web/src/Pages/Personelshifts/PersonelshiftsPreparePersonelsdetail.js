@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useDrag } from "react-dnd";
-import { Breadcrumb, Button, Confirm, Dropdown, Form, Label, Modal } from "semantic-ui-react";
+import { Breadcrumb, Button, Confirm, Dropdown, Form, Label, Modal, Popup } from "semantic-ui-react";
 import { Contentwrapper, FormInput, Headerbredcrump, Headerwrapper } from '../../Components'
 import Literals from './Literals'
 import validator from "../../Utils/Validator";
 
-export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, Startdate, Shiftdefines, personelshifts, setPersonelshifts, fillPersonelshiftnotification }) {
+export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, Startdate, startDay, lastDay, Shiftdefines, personelshifts, setPersonelshifts, fillPersonelshiftnotification }) {
 
     const [personelhistory, setPersonelhistory] = useState(false)
     const [confirm, setConfirm] = useState(false)
@@ -33,7 +33,7 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
     const handleClick = (e) => {
         e.preventDefault()
         if (e.nativeEvent.button === 0) {
-          
+
         } else if (e.nativeEvent.button === 2) {
             setPersonelhistory(true)
         }
@@ -43,16 +43,55 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
         return { key: shift.Uuid, text: shift.Name, value: shift.Uuid }
     })
 
-    return (<React.Fragment>
-        <div
-            ref={drag}
-            onClick={handleClick}
-            onContextMenu={handleClick}
-            className='p-[2px]' key={user?.Uuid}>
-            <Label size='tiny' as='a' className={`${isDragging && 'opacity-40'} !bg-[#2355a0] !text-white !w-full select-none`} image >
-                {`${user?.Name} ${user?.Surname}`}
-            </Label>
-        </div>
+
+
+    return <React.Fragment>
+        <Popup
+            on='click'
+            pinned
+            size="huge"
+            hideOnScroll
+            trigger={<div
+                ref={drag}
+                onClick={handleClick}
+                onContextMenu={handleClick}
+                className='p-[2px]' key={user?.Uuid}>
+                <Label size='tiny' as='a' className={`${isDragging && 'opacity-40'} !bg-[#2355a0] !text-white !w-full select-none`} image >
+                    {`${user?.Name} ${user?.Surname}`}
+                </Label>
+            </div>
+            }
+        >
+            <Form className="w-full">
+                <Form.Group widths={'equal'}>
+                    <FormInput
+                        required
+                        placeholder="Vardiya Seçiniz"
+                        name="Patientstatus"
+                        options={Shiftoptions}
+                        value={usershift}
+                        formtype="dropdown"
+                        onChange={(e, data) => {
+                            setUsershift(data.value)
+                        }}
+                    />
+                </Form.Group>
+            </Form>
+        </Popup>
+        <Modal
+            onClose={() => setPersonelhistory(false)}
+            onOpen={() => setPersonelhistory(true)}
+            open={personelhistory}
+        >
+            <Modal.Header>{`${user?.Name} ${user?.Surname}`}</Modal.Header>
+            <Modal.Content image>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button color='black' onClick={() => setPersonelhistory(false)}>
+                    {Literals.Button.Close[Profile.Language]}
+                </Button>
+            </Modal.Actions>
+        </Modal>
         <Confirm
             open={confirm}
             onCancel={() => {
@@ -90,10 +129,6 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
                 </div>
             }
             onConfirm={() => {
-                const shiftstartdate = new Date(Startdate)
-                const startDay = shiftstartdate.getDate()
-                const lastDay = startDay === 1 ? 15 : new Date(shiftstartdate.getFullYear(), shiftstartdate.getMonth() + 1, 0).getDate();
-
                 let errors = []
                 if (!validator.isUUID(dropuser?.Uuid)) {
                     errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Userrequired[Profile.Language] })
@@ -129,20 +164,5 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
                 }
             }}
         />
-        <Modal
-            onClose={() => setPersonelhistory(false)}
-            onOpen={() => setPersonelhistory(true)}
-            open={personelhistory}
-        >
-            <Modal.Header>{`${user?.Name} ${user?.Surname}`}</Modal.Header>
-            <Modal.Content image>
-            </Modal.Content>
-            <Modal.Actions>
-                <Button color='black' onClick={() => setPersonelhistory(false)}>
-                    {Literals.Button.Close[Profile.Language]}
-                </Button>
-            </Modal.Actions>
-        </Modal>
     </React.Fragment>
-    )
 }

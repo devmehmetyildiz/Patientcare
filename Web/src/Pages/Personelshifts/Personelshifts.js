@@ -31,7 +31,7 @@ export default class Personelshifts extends Component {
     const Columns = [
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Startdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Startdate), },
+      { Header: Literals.Columns.Startdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Startdate), Title: true },
       { Header: Literals.Columns.Profession[Profile.Language], accessor: row => this.professionCellhandler(row?.ProfessionID), },
       { Header: Literals.Columns.Isworking[Profile.Language], accessor: row => this.boolCellhandler(row?.Isworking), disableProps: true, Cell: (col, row) => this.booliconCellhandler(col, row), },
       { Header: Literals.Columns.Isapproved[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved), disableProps: true, Cell: (col, row) => this.booliconCellhandler(col, row), },
@@ -145,8 +145,12 @@ export default class Personelshifts extends Component {
     return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 
-  booliconCellhandler = ({ value }) => {
+  booliconCellhandler = (col) => {
     const { Profile } = this.props
-    return value === Literals.Messages.Yes[Profile.Language] ? <Icon color='green' name='checkmark' /> : <Icon color='red' name='close' />
+    if (!col?.cell?.isGrouped && !Profile.Ismobile) {
+      return col?.value === Literals.Messages.Yes[Profile.Language] ? <Icon color='green' name='checkmark' /> : <Icon color='red' name='close' />
+    } else {
+      return col?.value
+    }
   }
 }

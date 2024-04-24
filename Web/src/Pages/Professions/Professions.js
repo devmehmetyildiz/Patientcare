@@ -9,8 +9,9 @@ import { getInitialconfig } from '../../Utils/Constants'
 export default class Professions extends Component {
 
   componentDidMount() {
-    const { GetProfessions } = this.props
+    const { GetProfessions, GetFloors } = this.props
     GetProfessions()
+    GetFloors()
   }
 
   render() {

@@ -108,6 +108,29 @@ async function Register(req, res, next) {
 
 }
 
+async function GetUsersforshift(req, res, next) {
+    try {
+        const {
+            ProfessionID,
+        } = req.body
+
+        const users = await db.userModel.findAll({
+            where: {
+                Isactive: true,
+                Includeshift: true,
+                ProfessionID: ProfessionID,
+                Workendtime: null
+            }
+        })
+        users.forEach(element => {
+            element.PasswordHash && delete element.PasswordHash
+        });
+        res.status(200).json(users)
+    } catch (error) {
+        next(sequelizeErrorCatcher(error))
+    }
+}
+
 async function GetUsers(req, res, next) {
     try {
         const users = await db.userModel.findAll({ where: { Isactive: true } })
@@ -766,5 +789,6 @@ module.exports = {
     Resettablemeta,
     GetUserscount,
     Changepassword,
-    UpdateUsermeta
+    UpdateUsermeta,
+    GetUsersforshift
 }

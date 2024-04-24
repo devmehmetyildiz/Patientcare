@@ -57,7 +57,10 @@ export default function FormInput(props) {
 
 
     const contextProp = { ...props }
+
     contextProp.isFormvisible && delete contextProp.isFormvisible
+    contextProp.effect && delete contextProp.effect
+
 
     const getFormtime = React.useCallback(() => {
 

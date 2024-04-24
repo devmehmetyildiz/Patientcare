@@ -68,6 +68,10 @@ async function UpdateUsermeta(req, res, next) {
     PermissionHandler(req, next, 'userupdate')
 }
 
+async function GetUsersforshift(req, res, next) {
+    PermissionHandler(req, next, 'userscreen')
+}
+
 module.exports = {
     GetUsers,
     GetUser,
@@ -85,5 +89,6 @@ module.exports = {
     Resettablemeta,
     GetUserscount,
     Changepassword,
-    UpdateUsermeta
+    UpdateUsermeta,
+    GetUsersforshift
 }

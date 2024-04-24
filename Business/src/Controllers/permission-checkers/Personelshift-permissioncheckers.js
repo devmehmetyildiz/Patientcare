@@ -32,6 +32,10 @@ async function DeletePersonelshift(req, res, next) {
     PermissionHandler(req, next, 'personelshiftdelete')
 }
 
+async function Getpeparedpersonelshift(req, res, next) {
+    PermissionHandler(req, next, 'personelshiftscreen')
+}
+
 module.exports = {
     GetPersonelshifts,
     GetPersonelshift,
@@ -41,4 +45,5 @@ module.exports = {
     ApprovePersonelshift,
     CompletePersonelshift,
     DeactivePersonelshift,
+    Getpeparedpersonelshift,
 }

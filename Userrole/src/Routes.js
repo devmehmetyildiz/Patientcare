@@ -9,6 +9,7 @@ const Routes = [
   { method: 'get', path: '/Users/Getbyemail/:email', controller: 'User', action: 'Getbyemail' },
   { method: 'get', path: '/Users/Getusersalt/:userId', controller: 'User', action: 'Getusersalt' },
   { method: 'post', path: '/Users/Changepassword', controller: 'User', action: 'Changepassword' },
+  { method: 'post', path: '/Users/GetUsersforshift', controller: 'User', action: 'GetUsersforshift' },
   { method: 'post', path: '/Users/SaveTableMeta', controller: 'User', action: 'Saveusertablemetaconfig' },
   { method: 'post', path: '/Users', controller: 'User', action: 'AddUser' },
   { method: 'post', path: '/Users/Register', controller: 'User', action: 'Register' },

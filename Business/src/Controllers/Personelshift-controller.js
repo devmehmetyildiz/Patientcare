@@ -3,12 +3,16 @@ const { types } = require("../Constants/Defines")
 const messages = require("../Constants/PersonelshiftMessages")
 const personelshiftdetailMessages = require("../Constants/PersonelshiftdetailMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
+const DoPost = require("../Utilities/DoPost")
+const DoGet = require("../Utilities/DoGet")
+const { Getdateoptions } = require("../Utilities/Formatdate")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const axios = require('axios')
+const { Op } = require("sequelize")
 
 async function GetPersonelshifts(req, res, next) {
     try {
@@ -473,6 +477,80 @@ async function DeletePersonelshift(req, res, next) {
     GetPersonelshifts(req, res, next)
 }
 
+async function Getpeparedpersonelshift(req, res, next) {
+
+    try {
+        const {
+            ProfessionID,
+            Startdate,
+            Startday,
+            Lastday
+        } = req.body
+
+        const userConfig = {
+            ProfessionID: ProfessionID
+        }
+
+        const Dateoptions = Getdateoptions(1000)
+        const startDate = new Date(Startdate)
+        const allshiftdefines = await db.shiftdefineModel.findAll()
+        const profession = await db.professionModel.findOne({ where: { Uuid: ProfessionID } });
+
+        const shiftdefines = allshiftdefines.filter(u => u.Isactive && !u.Isjoker).sort((a, b) => a.Priority - b.Priority)
+        const jokershifts = allshiftdefines.find(u => u.Isactive && u.Isjoker)
+
+        const users = await DoPost(config.services.Userrole, `Users/GetUsersforshift`, userConfig)
+
+        const professionFloors = await DoGet(config.services.Setting, `Floors`)
+
+        const startDateorder = Dateoptions.find(u => new Date(u.value).getTime() === startDate.getTime())?.order
+
+        const previousStartdates = [
+            startDateorder - 1,
+            startDateorder - 2,
+            startDateorder - 3,
+            startDateorder - 4
+        ];
+
+        const previousPersonelshifts = await personelshiftModel.findAll({
+            where: {
+                Startdate: {
+                    [Op.like]: previousStartdates.map(order => {
+                        return Dateoptions.find(date => date.order === order).value
+                    })
+                }
+            },
+            order: [['Startdate', 'DESC']]
+        })
+
+        const previouspersonelshiftdetails = await db.personelshiftdetailModel.findAll({
+            where: {
+                PersonelshiftID: {
+                    [Op.like]: previousPersonelshifts.map(personelshift => {
+                        return personelshift?.Uuid
+                    })
+                },
+                Day: {
+                    [Op.like]: previousStartdates.map(order => {
+                        return Dateoptions.find(date => date.order === order).value
+                    })
+                }
+            }
+        })
+        // vardiya hazırlanacak personelleri bul 
+        // personelleri A,B,C ve Joker olarak grupla, gruplarken önceki vardiyalarda nasıl çalıştıklarını bul 
+        // hangi vardiyada çalıştığını sadece ilk gün için bul 
+
+
+
+
+
+    } catch (error) {
+        next(sequelizeErrorCatcher(error))
+    }
+
+}
+
 module.exports = {
     GetPersonelshifts,
     GetPersonelshift,
@@ -481,5 +559,6 @@ module.exports = {
     DeletePersonelshift,
     ApprovePersonelshift,
     CompletePersonelshift,
-    DeactivePersonelshift
+    DeactivePersonelshift,
+    Getpeparedpersonelshift
 }

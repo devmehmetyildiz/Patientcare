@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form, Label, Transition } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
-import { Getdateoptions } from '../../Utils/Formatdate'
+import { Getdateoptions, Getdateoptionv1, Getshiftlastdate, Getshiftstartdate } from '../../Utils/Formatdate'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Notfoundpage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import PersonelshiftsProfessionpresettings from '../../Containers/Personelshifts/PersonelshiftsProfessionpresettings'
@@ -34,7 +34,7 @@ export default class PersonelshiftsCreate extends Component {
   render() {
     const { Personelshifts, Professions, Professionpresettings, Personelpresettings, Profile, history, closeModal } = this.props
 
-    const dateOptions = Getdateoptions()
+    const dateOptions = Getdateoptions(2)
 
     const Professionsoptions = (Professions.list || []).filter(u => u.Isactive).map(propfession => {
       return { key: propfession.Uuid, text: propfession.Name, value: propfession.Uuid }
@@ -50,6 +50,9 @@ export default class PersonelshiftsCreate extends Component {
     const foundedPersonelpresetting = (Personelpresettings.list || []).filter(u => u.Isactive && (u.Startdate === selectedStartdate || u.Isinfinite))
 
     const personelshifts = this.state.personelshifts
+
+    const startDay = new Date(selectedStartdate).getDate()
+    const lastDay = Getshiftlastdate(selectedStartdate)
 
     return (
       Personelshifts.isLoading ? <LoadingPage /> :
@@ -98,6 +101,8 @@ export default class PersonelshiftsCreate extends Component {
                   <PersonelshiftsPrepare
                     selectedProfessionID={selectedProfession}
                     selectedStartdate={selectedStartdate}
+                    startDay={startDay}
+                    lastDay={lastDay}
                     personelshifts={personelshifts}
                     setPersonelshifts={this.setPersonelshifts}
                   />

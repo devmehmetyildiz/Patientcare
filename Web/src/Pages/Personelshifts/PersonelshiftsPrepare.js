@@ -9,7 +9,7 @@ import PersonelshiftsPreparePersonels from '../../Containers/Personelshifts/Pers
 export default class PersonelshiftsPrepare extends Component {
 
     render() {
-        const { Users, Floors, selectedProfessionID, Professions, selectedStartdate, personelshifts, setPersonelshifts, Profile } = this.props
+        const { Users, Floors, selectedProfessionID, Professions, selectedStartdate, startDay, lastDay, personelshifts, setPersonelshifts, Profile } = this.props
 
         const professionUsers = (Users.list || []).filter(u => u.Includeshift && u.Isactive && u.ProfessionID === selectedProfessionID)
 
@@ -28,6 +28,8 @@ export default class PersonelshiftsPrepare extends Component {
                 <Card.Content extra>
                     <PersonelshiftsPreparePersonels
                         Startdate={selectedStartdate}
+                        startDay={startDay}
+                        lastDay={lastDay}
                         personelshifts={personelshifts}
                         setPersonelshifts={setPersonelshifts}
                         professionUsers={professionUsers}
@@ -38,6 +40,8 @@ export default class PersonelshiftsPrepare extends Component {
                         personelshifts={personelshifts}
                         setPersonelshifts={setPersonelshifts}
                         Startdate={selectedStartdate}
+                        startDay={startDay}
+                        lastDay={lastDay}
                         selectedProfession={selectedProfession}
                         professionFloors={professionFloors}
                         professionUsers={professionUsers}

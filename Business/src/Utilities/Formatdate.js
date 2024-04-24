@@ -65,7 +65,7 @@ const Getdateoptions = (limit = 4) => {
         return monthNames[monthIndex];
     }
 
-    const options = []
+    let options = []
 
     for (let index = -limit; index < limit; index++) {
         const firstShift = new Date()
@@ -77,7 +77,7 @@ const Getdateoptions = (limit = 4) => {
 
         firstShift.setDate(1)
         options.push({
-            key: Math.random(),
+            key: index,
             text: `${getMonthName(firstShift.getMonth())} ${firstShift.getFullYear()}- 1 ${(isCurrentmonth && isStart) ? '(Aktif)' : ''}`,
             value: firstShift.toDateString()
         })
@@ -85,14 +85,14 @@ const Getdateoptions = (limit = 4) => {
         const secondShift = new Date(firstShift)
         secondShift.setDate(lastday)
         options.push({
-            key: Math.random(),
+            key: index,
             text: `${getMonthName(secondShift.getMonth())} ${secondShift.getFullYear()}- 2 ${(isCurrentmonth && !isStart) ? '(Aktif)' : ''}`,
             value: secondShift.toDateString()
         })
     }
+    options = options.map((option, index) => ({ ...option, order: index }))
     return options
 }
 
 
-export { Formatdate, Formatfulldate, Getdateoptions, Getshiftstartdate, Getshiftlastdate }
-export default Formatdate
+module.exports = { Formatdate, Formatfulldate, Getdateoptions, Getshiftstartdate, Getshiftlastdate }
