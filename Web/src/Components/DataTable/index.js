@@ -12,7 +12,7 @@ const TWO_HUNDRED_MS = 200;
 
 
 export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
-    
+
     const columns = useMemo(() => {
         const data = (Columns || [])
             .map(u => {
@@ -67,10 +67,16 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
     } = useTable(
         {
             columns,
-
             data,
             initialState: { ...Config, pageSize: 15 },
             defaultColumn,
+            autoResetGlobalFilter: false,
+            autoResetFilters: false,
+            autoResetSortBy:false,
+            autoResetHiddenColumns:false,
+            autoResetExpanded:false,
+            autoResetGroupBy:false,
+            autoResetPage:false,
             sortTypes: {
                 alphanumeric: (rowA, rowB, columnId) => {
                     const valueA = parseFloat(rowA.values[columnId]);

@@ -5,6 +5,7 @@ import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import Fileupload from '../../Components/Fileupload'
 
 export default class BreakdownsEdit extends Component {
 
@@ -14,39 +15,56 @@ export default class BreakdownsEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
+      selectedFiles: []
     }
   }
 
   componentDidMount() {
-    const { BreakdownID, GetBreakdown, GetEquipments, GetEquipmentgroups, GetUsers, match, history } = this.props
+    const { BreakdownID, GetBreakdown, GetEquipments, GetEquipmentgroups, GetUsagetypes, GetFiles, GetUsers, match, history } = this.props
     let Id = BreakdownID || match?.params?.BreakdownID
     if (validator.isUUID(Id)) {
       GetBreakdown(Id)
       GetEquipments()
       GetEquipmentgroups()
       GetUsers()
+      GetUsagetypes()
+      GetFiles()
     } else {
       history.push("/Breakdowns")
     }
   }
 
   componentDidUpdate() {
-    const { Breakdowns, Equipmentgroups, Users, Equipments } = this.props
+    const { Breakdowns, Equipmentgroups, Users, Usagetypes, Equipments, Files } = this.props
     const { selected_record, isLoading } = Breakdowns
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
-      && !Equipmentgroups.isLoading && !Users.isLoading && !Equipments.isLoading
+      && !Equipmentgroups.isLoading && !Users.isLoading && !Equipments.isLoading && !Usagetypes.isLoading && !Files.isLoading
       && !isLoading && !this.state.isDatafetched) {
       const equipment = (Equipments.list || []).find(u => u.Uuid === selected_record?.EquipmentID)
       const equipmentgroup = (Equipmentgroups.list || []).find(u => u.Uuid === equipment?.EquipmentgroupID)
+      var response = (Files.list || []).filter(u => u.ParentID === selected_record?.Uuid).map(element => {
+        return {
+          ...element,
+          key: Math.random(),
+          Usagetype: (element.Usagetype.split(',') || []).map(u => {
+            return u
+          })
+        }
+      });
       this.setState({
-        isDatafetched: true
+        isDatafetched: true,
+        selectedFiles: [...response] || []
       })
       this.context.setForm(this.PAGE_NAME, { ...selected_record, EquipmentgroupID: equipmentgroup?.Uuid })
     }
   }
 
+  setselectedFiles = (files) => {
+    this.setState({ selectedFiles: [...files] })
+  }
+
   render() {
-    const { Breakdowns, Equipments, Users, Equipmentgroups, Profile, history } = this.props
+    const { Breakdowns, Equipments, Files, Usagetypes, Users, Equipmentgroups, Profile, history, fillBreakdownnotification } = this.props
 
     const Useroptions = (Users.list || []).filter(u => u.Isactive).map(personel => {
       return { key: personel.Uuid, text: `${personel?.Name} ${personel?.Surname}`, value: personel.Uuid }
@@ -60,8 +78,17 @@ export default class BreakdownsEdit extends Component {
       return { key: equipment.Uuid, text: equipment?.Name, value: equipment.Uuid }
     })
 
+    const isLoadingstatus =
+      Breakdowns.isLoading ||
+      Equipments.isLoading ||
+      Usagetypes.isLoading ||
+      Files.isLoading ||
+      Users.isLoading ||
+      Equipmentgroups.isLoading
+
+
     return (
-      Breakdowns.isLoading ? <LoadingPage /> :
+      isLoadingstatus ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -84,6 +111,14 @@ export default class BreakdownsEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Openinfo[Profile.Language]} name="Openinfo" />
               </Form.Group>
             </Form>
+            <Fileupload
+              fillnotification={fillBreakdownnotification}
+              Usagetypes={Usagetypes}
+              selectedFiles={this.state.selectedFiles}
+              setselectedFiles={this.setselectedFiles}
+              Literals={Literals}
+              Profile={Profile}
+            />
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
@@ -118,7 +153,7 @@ export default class BreakdownsEdit extends Component {
         fillBreakdownnotification(error)
       })
     } else {
-      EditBreakdowns({ data: { ...Breakdowns.selected_record, ...data }, history })
+      EditBreakdowns({ data: { ...Breakdowns.selected_record, ...data }, history, files: this.state.selectedFiles })
     }
   }
 }

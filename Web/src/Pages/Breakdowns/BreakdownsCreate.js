@@ -8,19 +8,32 @@ import {
   Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump,
   Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
 } from '../../Components'
+import Fileupload from '../../Components/Fileupload'
 export default class BreakdownsCreate extends Component {
 
   PAGE_NAME = "BreakdownsCreate"
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      selectedFiles: []
+    }
+  }
+
   componentDidMount() {
-    const { GetEquipments, GetEquipmentgroups, GetUsers } = this.props
+    const { GetEquipments, GetUsagetypes, GetEquipmentgroups, GetUsers } = this.props
     GetEquipments()
     GetEquipmentgroups()
     GetUsers()
+    GetUsagetypes()
+  }
+
+  setselectedFiles = (files) => {
+    this.setState({ selectedFiles: [...files] })
   }
 
   render() {
-    const { Breakdowns, Equipments, Users, Equipmentgroups, Profile, history, closeModal } = this.props
+    const { Breakdowns, Usagetypes, Equipments, Users, Equipmentgroups, Profile, history, closeModal, fillBreakdownnotification } = this.props
 
     const Useroptions = (Users.list || []).filter(u => u.Isactive).map(personel => {
       return { key: personel.Uuid, text: `${personel?.Name} ${personel?.Surname}`, value: personel.Uuid }
@@ -34,8 +47,15 @@ export default class BreakdownsCreate extends Component {
       return { key: equipment.Uuid, text: equipment?.Name, value: equipment.Uuid }
     })
 
+    const isLoadingstatus =
+      Breakdowns.isLoading ||
+      Equipments.isLoading ||
+      Usagetypes.isLoading ||
+      Users.isLoading ||
+      Equipmentgroups.isLoading
+
     return (
-      Breakdowns.isLoading ? <LoadingPage /> :
+      isLoadingstatus ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -59,6 +79,14 @@ export default class BreakdownsCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Openinfo[Profile.Language]} name="Openinfo" />
               </Form.Group>
             </Form>
+            <Fileupload
+              fillnotification={fillBreakdownnotification}
+              Usagetypes={Usagetypes}
+              selectedFiles={this.state.selectedFiles}
+              setselectedFiles={this.setselectedFiles}
+              Literals={Literals}
+              Profile={Profile}
+            />
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
@@ -93,7 +121,7 @@ export default class BreakdownsCreate extends Component {
         fillBreakdownnotification(error)
       })
     } else {
-      AddBreakdowns({ data, history, closeModal })
+      AddBreakdowns({ data, history, closeModal, files: this.state.selectedFiles })
     }
   }
 }

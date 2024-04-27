@@ -4,15 +4,17 @@ import { AddBreakdowns, fillBreakdownnotification } from '../../Redux/BreakdownS
 import { GetEquipments } from '../../Redux/EquipmentSlice'
 import { GetEquipmentgroups } from '../../Redux/EquipmentgroupSlice'
 import { GetUsers } from '../../Redux/UserSlice'
+import { GetUsagetypes } from '../../Redux/UsagetypeSlice'
 
 const mapStateToProps = (state) => ({
     Breakdowns: state.Breakdowns,
     Users: state.Users,
+    Usagetypes: state.Usagetypes,
     Equipments: state.Equipments,
     Equipmentgroups: state.Equipmentgroups,
     Profile: state.Profile
 })
 
-const mapDispatchToProps = { AddBreakdowns, fillBreakdownnotification, GetEquipments, GetEquipmentgroups, GetUsers }
+const mapDispatchToProps = { AddBreakdowns, fillBreakdownnotification, GetUsagetypes, GetEquipments, GetEquipmentgroups, GetUsers }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BreakdownsCreate)

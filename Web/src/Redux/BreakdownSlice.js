@@ -3,6 +3,7 @@ import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
+import { FileuploadPrepare } from '../Components/Fileupload';
 
 const Literals = {
     addcode: {
@@ -36,7 +37,7 @@ export const GetBreakdowns = createAsyncThunk(
     async (_, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Warehouse, ROUTES.BREAKDOWN);
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillBreakdownnotification(errorPayload));
@@ -61,7 +62,7 @@ export const GetBreakdown = createAsyncThunk(
 
 export const AddBreakdowns = createAsyncThunk(
     'Breakdowns/AddBreakdowns',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, files, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -74,7 +75,11 @@ export const AddBreakdowns = createAsyncThunk(
             clearForm && clearForm('BreakdownsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Breakdowns');
-            return response.data;
+            if (files && files?.length > 0) {
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillBreakdownnotification, Literals)
+                await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
+            }
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillBreakdownnotification(errorPayload));
@@ -85,7 +90,7 @@ export const AddBreakdowns = createAsyncThunk(
 
 export const EditBreakdowns = createAsyncThunk(
     'Breakdowns/EditBreakdowns',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, files, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -98,7 +103,11 @@ export const EditBreakdowns = createAsyncThunk(
             clearForm && clearForm('BreakdownsUpdate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Breakdowns');
-            return response.data;
+            if (files && files?.length > 0) {
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillBreakdownnotification, Literals)
+                await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
+            }
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillBreakdownnotification(errorPayload));

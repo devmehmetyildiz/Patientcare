@@ -12,8 +12,12 @@ const { formatDate } = require("../Utilities/Convert")
 
 async function GetBreakdowns(req, res, next) {
     try {
+        let data = null
         const breakdowns = await db.breakdownModel.findAll({ where: { Isactive: true } })
-        res.status(200).json(breakdowns)
+        if (req?.Uuid) {
+            data = await db.breakdownModel.findOne({ where: { Uuid: req?.Uuid } });
+        }
+        res.status(200).json({ list: breakdowns, data: data })
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
@@ -94,6 +98,7 @@ async function AddBreakdown(req, res, next) {
         await t.rollback()
         next(sequelizeErrorCatcher(err))
     }
+    req.Uuid = breakdownuuid
     GetBreakdowns(req, res, next)
 }
 
@@ -127,7 +132,7 @@ async function UpdateBreakdown(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const breakdown =await db.breakdownModel.findOne({ where: { Uuid: Uuid } })
+        const breakdown = await db.breakdownModel.findOne({ where: { Uuid: Uuid } })
         if (!breakdown) {
             return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
         }
@@ -153,6 +158,7 @@ async function UpdateBreakdown(req, res, next) {
         await t.rollback()
         return next(sequelizeErrorCatcher(error))
     }
+    req.Uuid = Uuid
     GetBreakdowns(req, res, next)
 }
 
@@ -178,7 +184,7 @@ async function CompleteBreakdown(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const breakdown =await db.breakdownModel.findOne({ where: { Uuid: Uuid } })
+        const breakdown = await db.breakdownModel.findOne({ where: { Uuid: Uuid } })
         if (!breakdown) {
             return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
         }
@@ -229,7 +235,7 @@ async function DeleteBreakdown(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const breakdown =await db.breakdownModel.findOne({ where: { Uuid: Uuid } })
+        const breakdown = await db.breakdownModel.findOne({ where: { Uuid: Uuid } })
         if (!breakdown) {
             return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
         }

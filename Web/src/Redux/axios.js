@@ -34,7 +34,7 @@ function postRequest(service, url, data) {
     })
 }
 
-function putRequest(service, url, data) {
+function putRequest(service, url, data, contentType) {
     return new Promise((resolve, reject) => {
         const token = localStorage.getItem('patientcare')
         const language = localStorage.getItem('Language')
@@ -42,7 +42,8 @@ function putRequest(service, url, data) {
             {
                 headers: {
                     Authorization: "Bearer " + token,
-                    Language: language
+                    Language: language,
+                    contentType
                 }
             })
             .then(response => resolve(response))

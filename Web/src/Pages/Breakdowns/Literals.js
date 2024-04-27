@@ -75,6 +75,30 @@ const Literals = {
             tr: 'Sil',
             en: 'Delete'
         },
+        TableColumnsOrder: {
+            tr: 'Sıra',
+            en: 'Order'
+        },
+        TableColumnsFileName: {
+            tr: 'Dosya Adı',
+            en: 'File Name'
+        },
+        TableColumnsUsagetype: {
+            tr: 'Kullanım Türü',
+            en: 'Usage Type'
+        },
+        TableColumnsFile: {
+            tr: 'Dosya',
+            en: 'File'
+        },
+        TableColumnsUploadStatus: {
+            tr: 'Yüklenme Durumu',
+            en: 'Upload Status'
+        },
+        TableColumnsDelete: {
+            tr: 'Sil',
+            en: 'Delete'
+        },
     },
     Page: {
         Pageheader: {
@@ -122,6 +146,10 @@ const Literals = {
         Complete: {
             tr: "Tamamla",
             en: "Complete"
+        },
+        Addnewfile: {
+            tr: "Dosya Ekle",
+            en: "Add File"
         },
 
     },
