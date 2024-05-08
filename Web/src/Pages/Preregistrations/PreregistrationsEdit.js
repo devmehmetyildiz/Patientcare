@@ -39,11 +39,11 @@ export default class PreregistrationsEdit extends Component {
       this.setState({
         isDatafetched: true,
       })
-      const registerDate = new Date(selected_record?.Registerdate || '');
+      const happensDate = new Date(selected_record?.Happensdate || '');
       const approvaldate = new Date(selected_record?.Approvaldate || '');
-      const formattedregisterDate = `${registerDate.getFullYear()}-${String(registerDate.getMonth() + 1).padStart(2, '0')}-${String(registerDate.getDate()).padStart(2, '0')}`;
+      const formattedhappensDate = `${happensDate.getFullYear()}-${String(happensDate.getMonth() + 1).padStart(2, '0')}-${String(happensDate.getDate()).padStart(2, '0')}`;
       const formattedapprovaldate = `${approvaldate.getFullYear()}-${String(approvaldate.getMonth() + 1).padStart(2, '0')}-${String(approvaldate.getDate()).padStart(2, '0')}`;
-      this.context.setForm(this.PAGE_NAME, { ...selected_record, [`Registerdate`]: formattedregisterDate, ['Approvaldate']: formattedapprovaldate })
+      this.context.setForm(this.PAGE_NAME, { ...selected_record, [`Happensdate`]: formattedhappensDate, ['Approvaldate']: formattedapprovaldate })
     }
   }
 
@@ -86,7 +86,7 @@ export default class PreregistrationsEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Casesoptions} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Approvaldate[Profile.Language]} name="Approvaldate" type='date' />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Happensdate[Profile.Language]} name="Happensdate" type='date' />
               </Form.Group>
             </Form>
@@ -132,8 +132,8 @@ export default class PreregistrationsEdit extends Component {
     if (!validator.isUUID(data.CaseID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CaseID[Profile.Language] })
     }
-    if (!validator.isISODate(data.Registerdate)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Registerdaterequired[Profile.Language] })
+    if (!validator.isISODate(data.Approvaldate)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Approvaldaterequired[Profile.Language] })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

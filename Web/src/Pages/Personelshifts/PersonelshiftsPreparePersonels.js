@@ -4,7 +4,7 @@ import { Card } from "semantic-ui-react";
 import Literals from "./Literals";
 import { NoDataScreen } from "../../Components";
 
-export default function PersonelshiftsPreparePersonels({ professionUsers, Startdate, startDay, lastDay, personelshifts, setPersonelshifts, Profile }) {
+export default function PersonelshiftsPreparePersonels({ professionUsers, Startdate, startDay, lastDay, professionFloors, personelshifts, setPersonelshifts, Profile }) {
 
     const usedUsers = [...new Set([...personelshifts.map(u => u?.PersonelID)])];
     const freeUsercount = (professionUsers || []).filter(u => !usedUsers.includes(u?.Uuid)).length
@@ -24,6 +24,7 @@ export default function PersonelshiftsPreparePersonels({ professionUsers, Startd
                                     user={user}
                                     personelshifts={personelshifts}
                                     setPersonelshifts={setPersonelshifts}
+                                    professionFloors={professionFloors}
                                 />
                             })
                             : <NoDataScreen

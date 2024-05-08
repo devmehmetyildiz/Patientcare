@@ -294,7 +294,7 @@ export default class PreregistrationsComplete extends Component {
                         }
                       </Form.Group>
                       <Form.Group widths={'equal'}>
-                        <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Approvaldate[Profile.Language]} name="Approvaldate" type='date' required />
+                        <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' required />
                         <FormInput page={this.PAGE_NAME} required placeholder={Literals.Complete.Case[Profile.Language]} name="CaseID" options={Casesoptions} formtype="dropdown" />
                       </Form.Group>
                       <Form.Group widths={'equal'}>
@@ -327,8 +327,8 @@ export default class PreregistrationsComplete extends Component {
     e.preventDefault()
     const { CompletePrepatients, history, fillPatientnotification, Profile } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
-    if (!validator.isISODate(data.Approvaldate)) {
-      data.Approvaldate = null
+    if (!validator.isISODate(data.Registerdate)) {
+      data.Registerdate = null
     }
     data.Iswilltransfer = this.context.formstates[`${this.PAGE_NAME}/Iswilltransfer`] || false
     data.WarehouseID = data.Iswilltransfer && this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
@@ -345,8 +345,8 @@ export default class PreregistrationsComplete extends Component {
     if (!validator.isUUID(data.BedID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Complete.Bedrequired[Profile.Language] })
     }
-    if (!validator.isISODate(data.Approvaldate)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Approvaldaterequired[Profile.Language] })
+    if (!validator.isISODate(data.Registerdate)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Registerdaterequired[Profile.Language] })
     }
     if (!validator.isUUID(data.CaseID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Complete.Caserequired[Profile.Language] })

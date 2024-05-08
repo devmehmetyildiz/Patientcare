@@ -54,7 +54,7 @@ export default class Preregistrations extends Component {
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
       { Header: Literals.Columns.Name[Profile.Language], accessor: (row, disableImg) => this.nameCellhandler(row, disableImg), Title: true, Cell: (col, row) => this.imageCellhandler(col, row) },
       { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => this.patientdefineCellhandler(row?.PatientdefineID), Subtitle: true },
-      { Header: Literals.Columns.Registerdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Registerdate), Lowtitle: true, Withtext: true },
+      { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Happensdate), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Approvaldate[Profile.Language], accessor: row => this.dateCellhandler(row?.Approvaldate), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Case[Profile.Language], accessor: row => this.caseCellhandler(row?.CaseID), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Stocks[Profile.Language], accessor: row => this.stockCellhandler(row) },

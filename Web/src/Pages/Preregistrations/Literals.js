@@ -245,7 +245,7 @@ const Literals = {
             en: 'Patient Type'
         },
         Registerdate: {
-            tr: 'Kabul Tarihi',
+            tr: 'Kuruma Giriş Tarihi',
             en: 'Register Date'
         },
         Happensdate: {
@@ -253,7 +253,7 @@ const Literals = {
             en: 'Happens Date'
         },
         Approvaldate: {
-            tr: 'Kuruma Giriş Tarihi',
+            tr: 'Kabul Tarihi',
             en: 'Approval Date'
         },
         Deparment: {

@@ -33,6 +33,7 @@ export default class PersonelshiftsPrepare extends Component {
                         personelshifts={personelshifts}
                         setPersonelshifts={setPersonelshifts}
                         professionUsers={professionUsers}
+                        professionFloors={professionFloors}
                     />
                 </Card.Content>
                 <Card.Content extra>

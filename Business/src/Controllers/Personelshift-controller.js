@@ -494,14 +494,14 @@ async function Getpeparedpersonelshift(req, res, next) {
         const Dateoptions = Getdateoptions(1000)
         const startDate = new Date(Startdate)
         const allshiftdefines = await db.shiftdefineModel.findAll()
+        const allFloors = await DoGet(config.services.Setting, `Floors`)
         const profession = await db.professionModel.findOne({ where: { Uuid: ProfessionID } });
 
         const shiftdefines = allshiftdefines.filter(u => u.Isactive && !u.Isjoker).sort((a, b) => a.Priority - b.Priority)
         const jokershifts = allshiftdefines.find(u => u.Isactive && u.Isjoker)
-
+        // vardiyalar ve joker vardiya ayrı ayrı seçildi
         const users = await DoPost(config.services.Userrole, `Users/GetUsersforshift`, userConfig)
-
-        const professionFloors = await DoGet(config.services.Setting, `Floors`)
+        //meslek grubuna ait personeller bulundu
 
         const startDateorder = Dateoptions.find(u => new Date(u.value).getTime() === startDate.getTime())?.order
 
@@ -512,37 +512,39 @@ async function Getpeparedpersonelshift(req, res, next) {
             startDateorder - 4
         ];
 
-        const previousPersonelshifts = await personelshiftModel.findAll({
+        const previousPersonelshifts = await db.personelshiftModel.findAll({
             where: {
                 Startdate: {
-                    [Op.like]: previousStartdates.map(order => {
-                        return Dateoptions.find(date => date.order === order).value
+                    [Op.in]: previousStartdates.map(order => {
+                        return new Date(Dateoptions.find(date => date.order === order).value)
                     })
-                }
+                },
+                ProfessionID: ProfessionID,
+                Isactive: true,
             },
             order: [['Startdate', 'DESC']]
         })
+        //bu vardiyadan önceki 4 vardiya bulundu
 
         const previouspersonelshiftdetails = await db.personelshiftdetailModel.findAll({
             where: {
                 PersonelshiftID: {
-                    [Op.like]: previousPersonelshifts.map(personelshift => {
+                    [Op.in]: previousPersonelshifts.map(personelshift => {
                         return personelshift?.Uuid
                     })
                 },
-                Day: {
-                    [Op.like]: previousStartdates.map(order => {
-                        return Dateoptions.find(date => date.order === order).value
-                    })
-                }
+                Isstartdate: true
             }
         })
+        // personellere ait  4 vardiyaya shiftler bulundu
+
+        
         // vardiya hazırlanacak personelleri bul 
         // personelleri A,B,C ve Joker olarak grupla, gruplarken önceki vardiyalarda nasıl çalıştıklarını bul 
         // hangi vardiyada çalıştığını sadece ilk gün için bul 
 
 
-
+        res.status(200).json(users)
 
 
     } catch (error) {

@@ -22,6 +22,9 @@ module.exports = sequelize.define('personelshiftdetailModel', {
     Day: {
         type: Sequelize.INTEGER
     },
+    Isstartday:{
+        type: Sequelize.BOOLEAN
+    },
     Isworking: {
         type: Sequelize.BOOLEAN
     },

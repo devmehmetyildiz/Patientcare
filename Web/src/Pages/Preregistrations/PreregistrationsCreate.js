@@ -129,7 +129,7 @@ export default class PreregistrationsCreate extends Component {
     const defaultDepartment = (Departments.list || []).filter(u => u.Isactive).find(u => u.Isdefaultpatientdepartment)
 
     return (
-      isLoading  ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -163,7 +163,7 @@ export default class PreregistrationsCreate extends Component {
                 </React.Fragment>
               }
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Registerdate[Profile.Language]} name="Registerdate" type='date' required />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Approvaldate[Profile.Language]} name="Approvaldate" type='date' required />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Happensdate[Profile.Language]} name="Happensdate" type='date' />
               </Form.Group>
               <Form.Group widths={'equal'}>
@@ -257,8 +257,8 @@ export default class PreregistrationsCreate extends Component {
     if (!validator.isUUID(response.CaseID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CaseID[Profile.Language] })
     }
-    if (!validator.isISODate(response.Registerdate)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Registerdaterequired[Profile.Language] })
+    if (!validator.isISODate(response.Approvaldate)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Approvaldaterequired[Profile.Language] })
     }
     if (this.state.newRegister ? !validator.isString(response.Patientdefine?.CountryID) : !validator.isUUID(response.PatientdefineID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Patientdefinerequired[Profile.Language] })
