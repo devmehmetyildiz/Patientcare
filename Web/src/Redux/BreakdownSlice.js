@@ -76,7 +76,7 @@ export const AddBreakdowns = createAsyncThunk(
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Breakdowns');
             if (files && files?.length > 0) {
-                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillBreakdownnotification, Literals)
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillBreakdownnotification, Literals, state.Profile)
                 await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
             }
             return response?.data?.list || [];
@@ -104,7 +104,7 @@ export const EditBreakdowns = createAsyncThunk(
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Breakdowns');
             if (files && files?.length > 0) {
-                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillBreakdownnotification, Literals)
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillBreakdownnotification, Literals, state.Profile)
                 await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
             }
             return response?.data?.list || [];

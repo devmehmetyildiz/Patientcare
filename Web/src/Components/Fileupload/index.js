@@ -6,7 +6,7 @@ import validator from '../../Utils/Validator'
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios'
 
-export const FileuploadPrepare = (files, notification, Literals) => {
+export const FileuploadPrepare = (files, notification, Literals, Profile) => {
 
     const DataCleaner = (data) => {
         if (data.Id !== undefined) {
@@ -163,7 +163,7 @@ export default function Fileupload(props) {
         setselectedFiles([...selectedFiles, ...files])
     }, []);
 
-    const downloadFile = (fileID, fileName) => {
+    const downloadFile = (fileID, fileName, Profile) => {
         setfileDownloading(true)
         axios.get(`${config.services.File}${ROUTES.FILE}/Downloadfile/${fileID}`, {
             responseType: 'blob'
@@ -243,7 +243,7 @@ export default function Fileupload(props) {
                                     : <div className='flex flex-row'>
                                         <Label color='blue'>{file.Filename}</Label>
                                         {validator.isUUID(file.Uuid) &&
-                                            <div className='cursor-pointer' onClick={() => { downloadFile(file.Uuid, file.Name) }}>
+                                            <div className='cursor-pointer' onClick={() => { downloadFile(file.Uuid, file.Name, Profile) }}>
                                                 <Icon color='blue' name='download' />
                                             </div>
                                         }
