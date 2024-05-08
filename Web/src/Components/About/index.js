@@ -23,7 +23,8 @@ import {
     version1_0_0_6,
     version1_0_0_7,
     version1_0_0_8,
-    version1_0_0_9
+    version1_0_0_9,
+    version1_0_1_1,
 } from './Changelogs'
 import './About.css'
 
@@ -39,6 +40,7 @@ export default class About extends Component {
 
     render() {
         const Changelogs = [
+            version1_0_1_1,
             version1_0_1_0,
             version1_0_0_19,
             version1_0_0_18,

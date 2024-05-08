@@ -664,6 +664,67 @@ const version1_0_1_0 = {
     ],
 }
 
+const version1_0_1_1 = {
+    version: "1.0.1.1",
+    changes: [
+        {
+            title: "Genel", commits: [
+                "Elder Camp yazısı her tarafta düzeltildi"
+            ]
+        },
+        {
+            title: "Ayarlar", commits: [
+                "Mesleklere kat özelliği eklendi, vardiya oluşturmada kullanılacak"
+            ]
+        },
+        {
+            title: "Vardiya Yönetimi", commits: [
+                "Vardiyalar tabı vardiya tanımları olarak güncellendi",
+            ]
+        },
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Personeller uygulamdan kaldırıldı",
+                "Personeller özellikleri kullanıcılar tabına aktarıldı",
+                "Arıza taleplerine dosya ekleme özelliği eklendi",
+            ]
+        },
+
+    ],
+    bugs: [
+        {
+            title: "Hastalar", commits: [
+                "Ön kayıtlardaki kullanıcı giriş hatası düzeltildi.",
+            ]
+        },
+        {
+            title: "Genel", commits: [
+                "Grid ekranlardaki filtrelerin sıfırlanma durumu düzeltildi.",
+            ]
+        },
+
+    ],
+    features: [
+        {
+            title: "Vardiya Yönetimi", commits: [
+                "Personel Ön Ayarı Tabı Eklendi.",
+                "Meslek Ön Ayarı Tabı Eklendi.",
+                "Personel Vardiyaları Eklendi.",
+                "Vardiya oluşturma ile alakalı yeni kurallar eklendi.",
+                "Personeller otomatik olarak tanımlandı.",
+            ],
+        },
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Arıza taleplerine dosya ekleme özelliği eklendi",
+                "Kullanıcılar tabına yeni özellikler eklendi",
+                "İşlemi yapan kullanıcılar artık loglanacak",
+            ]
+        },
+
+    ],
+}
+
 export {
     version1_0_0_0,
     version1_0_0_1,
@@ -685,5 +746,6 @@ export {
     version1_0_0_17,
     version1_0_0_18,
     version1_0_0_19,
+    version1_0_1_1,
     version1_0_1_0,
 }
