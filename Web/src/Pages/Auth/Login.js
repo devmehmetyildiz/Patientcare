@@ -4,11 +4,13 @@ import img from "../../Assets/img"
 import { Button, Form, Grid, Header, Divider, Icon } from 'semantic-ui-react'
 import formToObject from 'form-to-object'
 import { Link, withRouter } from 'react-router-dom'
+import config from '../../Config'
 
 class Login extends Component {
 
     render() {
         const { Profile } = this.props
+        const version = `V${config.version}`
 
         return (
             <div style={{ backgroundImage: `url(${img.loginbg})`, backgroundPosition: 'center', backgroundSize: 'cover' }} className=' font-Common w-full h-[100vh] justify-center items-center flex bg-gray-100' >
@@ -36,8 +38,9 @@ class Login extends Component {
                                 </div>
                                 <div className='mt-4 flex flex-col justify-center items-center'>
                                     <p className='text-[#777] text-sm '>
-                                        <span>Terms of Use</span><br />
-                                        <span>ARMSTeknoloji 2022</span></p>
+                                        <span>{version}</span><br />
+                                        <span>ARMSTeknoloji 2024</span>
+                                    </p>
                                 </div>
                             </Form>
                         </Grid.Column>
