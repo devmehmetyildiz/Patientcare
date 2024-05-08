@@ -1,20 +1,20 @@
 @Echo Off
-CD /D "C:\MyFiles\Patientcare\Patientcare\Auth"
+CD /D "C:\Patientcare\Patientcare\Auth"
 Call npm run build 
-CD /D "C:\MyFiles\Patientcare\Patientcare\Business"
+CD /D "C:\Patientcare\Patientcare\Business"
 Call npm run build
-CD /D "C:\MyFiles\Patientcare\Patientcare\File"
+CD /D "C:\Patientcare\Patientcare\File"
 Call npm run build
-CD /D "C:\MyFiles\Patientcare\Patientcare\Log"
+CD /D "C:\Patientcare\Patientcare\Log"
 Call npm run build
-CD /D "C:\MyFiles\Patientcare\Patientcare\Setting"
+CD /D "C:\Patientcare\Patientcare\Setting"
 Call npm run build
-CD /D "C:\MyFiles\Patientcare\Patientcare\System"
+CD /D "C:\Patientcare\Patientcare\System"
 Call npm run build
-CD /D "C:\MyFiles\Patientcare\Patientcare\Userrole"
+CD /D "C:\Patientcare\Patientcare\Userrole"
 Call npm run build
-CD /D "C:\MyFiles\Patientcare\Patientcare\Warehouse"
+CD /D "C:\Patientcare\Patientcare\Warehouse"
 Call npm run build
-CD /D "C:\MyFiles\Patientcare\Patientcare\Web"
+CD /D "C:\Patientcare\Patientcare\Web"
 Call npm run build
-CD /D "C:\MyFiles\Patientcare\Patientcare"
+CD /D "C:\Patientcare\Patientcare"
