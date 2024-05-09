@@ -133,6 +133,7 @@ async function GetUsersforshift(req, res, next) {
 
 async function GetUsers(req, res, next) {
     try {
+        let data = null
         const users = await db.userModel.findAll({ where: { Isactive: true } })
         for (const user of users) {
             user.Roleuuids = await db.userroleModel.findAll({
@@ -163,7 +164,10 @@ async function GetUsers(req, res, next) {
         users.forEach(element => {
             element.PasswordHash && delete element.PasswordHash
         });
-        res.status(200).json(users)
+        if (req?.Uuid) {
+            data = await db.userModel.findOne({ where: { Uuid: req?.Uuid } });
+        }
+        res.status(200).json({ list: users, data: data })
     } catch (error) {
         next(sequelizeErrorCatcher(error))
     }
@@ -463,6 +467,7 @@ async function AddUser(req, res, next) {
         await t.rollback()
         next(sequelizeErrorCatcher(error))
     }
+    req.Uuid = useruuid
     GetUsers(req, res, next)
 }
 
@@ -547,6 +552,7 @@ async function UpdateUser(req, res, next) {
         await t.rollback()
         next(sequelizeErrorCatcher(error))
     }
+    req.Uuid = Uuid
     GetUsers(req, res, next)
 }
 

@@ -9,6 +9,7 @@ import StationsCreate from '../../Containers/Stations/StationsCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import RolesCreate from '../../Containers/Roles/RolesCreate'
 import { getSidebarroutes } from '../../Utils/Constants'
+import Fileupload from '../../Components/Fileupload'
 
 export default class UsersCreate extends Component {
 
@@ -17,19 +18,24 @@ export default class UsersCreate extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      modelOpened: false
+      selectedFiles: []
     }
   }
 
   componentDidMount() {
-    const { GetRoles, GetDepartments, GetProfessions } = this.props
+    const { GetRoles, GetDepartments, GetProfessions, GetUsagetypes } = this.props
     GetRoles()
     GetDepartments()
     GetProfessions()
+    GetUsagetypes()
+  }
+
+  setselectedFiles = (files) => {
+    this.setState({ selectedFiles: [...files] })
   }
 
   render() {
-    const { Departments, Users, Roles, Professions, Profile, history, closeModal } = this.props
+    const { Departments, Users, Roles, Usagetypes, fillUsernotification, Professions, Profile, history, closeModal } = this.props
 
     const Roleoptions = (Roles.list || []).filter(u => u.Isactive).map(roles => {
       return { key: roles.Uuid, text: roles.Name, value: roles.Uuid }
@@ -59,8 +65,15 @@ export default class UsersCreate extends Component {
       { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
     ]
 
+    const isLoadingstatus =
+      Users.isLoading ||
+      Departments.isLoading ||
+      Roles.isLoading ||
+      Usagetypes.isLoading ||
+      Professions.isLoading
+
     return (
-      Users.isLoading ? <LoadingPage /> :
+      isLoadingstatus ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -106,6 +119,14 @@ export default class UsersCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Adress[Profile.Language]} name="Adress" />
               </Form.Group>
             </Form>
+            <Fileupload
+              fillnotification={fillUsernotification}
+              Usagetypes={Usagetypes}
+              selectedFiles={this.state.selectedFiles}
+              setselectedFiles={this.setselectedFiles}
+              Literals={Literals}
+              Profile={Profile}
+            />
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
@@ -171,7 +192,7 @@ export default class UsersCreate extends Component {
         fillUsernotification(error)
       })
     } else {
-      AddUsers({ data, history, closeModal })
+      AddUsers({ data, history, closeModal, files: this.state.selectedFiles })
     }
   }
 }

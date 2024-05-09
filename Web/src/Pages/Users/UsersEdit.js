@@ -10,6 +10,7 @@ import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import RolesCreate from '../../Containers/Roles/RolesCreate'
 import { getSidebarroutes } from '../../Utils/Constants'
 import Formatdate from '../../Utils/Formatdate'
+import Fileupload from '../../Components/Fileupload'
 export default class UsersEdit extends Component {
 
   PAGE_NAME = "UsersEdit"
@@ -18,31 +19,43 @@ export default class UsersEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
-      modelOpened: false
+      selectedFiles: []
     }
   }
 
   componentDidMount() {
-    const { UserID, GetUser, GetRoles, GetProfessions, GetDepartments, match, history } = this.props
+    const { UserID, GetUser, GetRoles, GetUsagetypes, GetFiles, GetProfessions, GetDepartments, match, history } = this.props
     let Id = UserID || match?.params?.UserID
     if (validator.isUUID(Id)) {
       GetUser(match.params.UserID)
       GetRoles()
       GetDepartments()
       GetProfessions()
+      GetUsagetypes()
+      GetFiles()
     } else {
       history.push("/Users")
     }
   }
 
   componentDidUpdate() {
-    const { Departments, Roles, Users } = this.props
+    const { Departments, Roles, Users, Files, Usagetypes } = this.props
     const { selected_record, isLoading } = Users
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
-      !Departments.isLoading && !Roles.isLoading &&
+      !Departments.isLoading && !Roles.isLoading && !Files.isLoading && !Usagetypes.isLoading &&
       !isLoading && !this.state.isDatafetched) {
+      var response = (Files.list || []).filter(u => u.ParentID === selected_record?.Uuid).map(element => {
+        return {
+          ...element,
+          key: Math.random(),
+          Usagetype: (element.Usagetype.split(',') || []).map(u => {
+            return u
+          })
+        }
+      });
       this.setState({
-        isDatafetched: true
+        isDatafetched: true,
+        selectedFiles: [...response] || []
       })
       this.context.setForm(this.PAGE_NAME,
         {
@@ -55,11 +68,13 @@ export default class UsersEdit extends Component {
     }
   }
 
+  setselectedFiles = (files) => {
+    this.setState({ selectedFiles: [...files] })
+  }
 
   render() {
 
-    const { Departments, Users, Roles, Professions, Profile, history } = this.props
-
+    const { Departments, Users, Roles, Files, Usagetypes, fillUsernotification, Professions, Profile, history } = this.props
 
     const Roleoptions = (Roles.list || []).filter(u => u.Isactive).map(roles => {
       return { key: roles.Uuid, text: roles.Name, value: roles.Uuid }
@@ -88,8 +103,16 @@ export default class UsersEdit extends Component {
       { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
     ]
 
+    const isLoadingstatus =
+      Users.isLoading ||
+      Departments.isLoading ||
+      Roles.isLoading ||
+      Files.isLoading ||
+      Usagetypes.isLoading ||
+      Professions.isLoading
+
     return (
-      Users.isLoading ? <LoadingPage /> :
+      isLoadingstatus ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -133,6 +156,14 @@ export default class UsersEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Adress[Profile.Language]} name="Adress" />
               </Form.Group>
             </Form>
+            <Fileupload
+              fillnotification={fillUsernotification}
+              Usagetypes={Usagetypes}
+              selectedFiles={this.state.selectedFiles}
+              setselectedFiles={this.setselectedFiles}
+              Literals={Literals}
+              Profile={Profile}
+            />
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
@@ -194,7 +225,7 @@ export default class UsersEdit extends Component {
         fillUsernotification(error)
       })
     } else {
-      EditUsers({ data: { ...Users.selected_record, ...data }, history })
+      EditUsers({ data: { ...Users.selected_record, ...data }, history, files: this.state.selectedFiles })
     }
   }
 }

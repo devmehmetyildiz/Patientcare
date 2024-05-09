@@ -3,6 +3,7 @@ import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
+import { FileuploadPrepare } from '../Components/Fileupload';
 
 const Literals = {
     addcode: {
@@ -36,7 +37,7 @@ export const GetUsers = createAsyncThunk(
     async (_, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Userrole, ROUTES.USER);
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillUsernotification(errorPayload));
@@ -61,7 +62,7 @@ export const GetUser = createAsyncThunk(
 
 export const AddUsers = createAsyncThunk(
     'Users/AddUsers',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, files, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -74,7 +75,11 @@ export const AddUsers = createAsyncThunk(
             clearForm && clearForm('UsersCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Users');
-            return response.data;
+            if (files && files?.length > 0) {
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillUsernotification, Literals, state.Profile)
+                await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
+            }
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillUsernotification(errorPayload));
@@ -85,7 +90,7 @@ export const AddUsers = createAsyncThunk(
 
 export const EditUsers = createAsyncThunk(
     'Users/EditUsers',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, files, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -98,7 +103,11 @@ export const EditUsers = createAsyncThunk(
             clearForm && clearForm('UsersEdit')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Users');
-            return response.data;
+            if (files && files?.length > 0) {
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillUsernotification, Literals, state.Profile)
+                await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
+            }
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillUsernotification(errorPayload));
@@ -120,7 +129,7 @@ export const DeleteUsers = createAsyncThunk(
                 code: Literals.deletecode[Language],
                 description: Literals.deletedescription[Language] + ` : ${data?.Username}`,
             }));
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillUsernotification(errorPayload));
