@@ -4,15 +4,19 @@ import { EditMainteancies, GetMaineance, fillMainteancenotification } from "../.
 import { GetEquipments } from '../../Redux/EquipmentSlice'
 import { GetEquipmentgroups } from '../../Redux/EquipmentgroupSlice'
 import { GetUsers } from '../../Redux/UserSlice'
+import { GetUsagetypes } from '../../Redux/UsagetypeSlice'
+import { GetFiles } from '../../Redux/FileSlice'
 
 const mapStateToProps = (state) => ({
     Mainteancies: state.Mainteancies,
     Users: state.Users,
     Equipments: state.Equipments,
+    Files: state.Files,
+    Usagetypes: state.Usagetypes,
     Equipmentgroups: state.Equipmentgroups,
     Profile: state.Profile
 })
 
-const mapDispatchToProps = { EditMainteancies, GetMaineance, fillMainteancenotification, GetEquipments, GetEquipmentgroups, GetUsers }
+const mapDispatchToProps = { GetUsagetypes, GetFiles, EditMainteancies, GetMaineance, fillMainteancenotification, GetEquipments, GetEquipmentgroups, GetUsers }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainteanciesEdit)

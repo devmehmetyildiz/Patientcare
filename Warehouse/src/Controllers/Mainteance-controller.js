@@ -12,8 +12,12 @@ const axios = require('axios')
 
 async function GetMainteancies(req, res, next) {
     try {
+        let data = null
         const mainteancies = await db.mainteanceModel.findAll({ where: { Isactive: true } })
-        res.status(200).json(mainteancies)
+        if (req?.Uuid) {
+            data = await db.mainteanceModel.findOne({ where: { Uuid: req?.Uuid } });
+        }
+        res.status(200).json({ list: mainteancies, data: data })
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
@@ -96,6 +100,7 @@ async function AddMainteance(req, res, next) {
         await t.rollback()
         next(sequelizeErrorCatcher(err))
     }
+    req.Uuid = mainteanceuuid
     GetMainteancies(req, res, next)
 }
 
@@ -128,7 +133,7 @@ async function UpdateMainteance(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const mainteance =await db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
+        const mainteance = await db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
         if (!mainteance) {
             return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
         }
@@ -155,6 +160,7 @@ async function UpdateMainteance(req, res, next) {
         await t.rollback()
         return next(sequelizeErrorCatcher(error))
     }
+    req.Uuid = Uuid
     GetMainteancies(req, res, next)
 }
 
@@ -179,7 +185,7 @@ async function CompleteMainteance(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const mainteance =await db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
+        const mainteance = await db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
         if (!mainteance) {
             return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
         }
@@ -230,7 +236,7 @@ async function DeleteMainteance(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const mainteance =await db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
+        const mainteance = await db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
         if (!mainteance) {
             return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
         }

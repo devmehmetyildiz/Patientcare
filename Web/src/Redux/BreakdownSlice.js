@@ -128,7 +128,7 @@ export const CompleteBreakdowns = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillBreakdownnotification(errorPayload));
@@ -150,7 +150,7 @@ export const DeleteBreakdowns = createAsyncThunk(
                 code: Literals.deletecode[Language],
                 description: Literals.deletedescription[Language],
             }));
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillBreakdownnotification(errorPayload));

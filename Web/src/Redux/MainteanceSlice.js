@@ -3,6 +3,7 @@ import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
+import { FileuploadPrepare } from '../Components/Fileupload';
 
 const Literals = {
     addcode: {
@@ -36,7 +37,7 @@ export const GetMainteancies = createAsyncThunk(
     async (_, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Warehouse, ROUTES.MAINTEANCE);
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillMainteancenotification(errorPayload));
@@ -61,7 +62,7 @@ export const GetMaineance = createAsyncThunk(
 
 export const AddMainteancies = createAsyncThunk(
     'Mainteancies/AddMainteancies',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, files, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -74,7 +75,11 @@ export const AddMainteancies = createAsyncThunk(
             clearForm && clearForm('MainteanciesCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Mainteancies');
-            return response.data;
+            if (files && files?.length > 0) {
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillMainteancenotification, Literals, state.Profile)
+                await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
+            }
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillMainteancenotification(errorPayload));
@@ -85,7 +90,7 @@ export const AddMainteancies = createAsyncThunk(
 
 export const EditMainteancies = createAsyncThunk(
     'Mainteancies/EditMainteancies',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, files, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -98,7 +103,11 @@ export const EditMainteancies = createAsyncThunk(
             clearForm && clearForm('MainteanciesUpdate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Mainteancies');
-            return response.data;
+            if (files && files?.length > 0) {
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillMainteancenotification, Literals, state.Profile)
+                await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
+            }
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillMainteancenotification(errorPayload));
@@ -119,7 +128,7 @@ export const CompleteMainteancies = createAsyncThunk(
                 code: Literals.updatecode[Language],
                 description: Literals.updatedescription[Language],
             }));
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillMainteancenotification(errorPayload));
@@ -141,7 +150,7 @@ export const DeleteMainteancies = createAsyncThunk(
                 code: Literals.deletecode[Language],
                 description: Literals.deletedescription[Language],
             }));
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillMainteancenotification(errorPayload));

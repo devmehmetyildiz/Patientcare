@@ -5,6 +5,7 @@ import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import Fileupload from '../../Components/Fileupload'
 export default class MainteanciesCreate extends Component {
 
   PAGE_NAME = "MainteanciesCreate"
@@ -12,20 +13,24 @@ export default class MainteanciesCreate extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      modelOpened: false
+      selectedFiles: []
     }
   }
 
   componentDidMount() {
-    const { GetEquipments, GetEquipmentgroups, GetUsers } = this.props
+    const { GetEquipments, GetEquipmentgroups, GetUsers, GetUsagetypes } = this.props
     GetEquipments()
     GetEquipmentgroups()
     GetUsers()
+    GetUsagetypes()
   }
 
+  setselectedFiles = (files) => {
+    this.setState({ selectedFiles: [...files] })
+  }
 
   render() {
-    const { Mainteancies, Equipments, Users, Equipmentgroups, Profile, history, closeModal } = this.props
+    const { Mainteancies, Equipments, Users, Usagetypes, Equipmentgroups, Profile, history, closeModal, fillMainteancenotification } = this.props
 
     const Useroptions = (Users.list || []).filter(u => u.Isactive).map(personel => {
       return { key: personel.Uuid, text: `${personel?.Name} ${personel?.Surname}`, value: personel.Uuid }
@@ -39,8 +44,15 @@ export default class MainteanciesCreate extends Component {
       return { key: equipment.Uuid, text: equipment?.Name, value: equipment.Uuid }
     })
 
+    const isLoadingstatus =
+      Mainteancies.isLoading ||
+      Equipments.isLoading ||
+      Usagetypes.isLoading ||
+      Users.isLoading ||
+      Equipmentgroups.isLoading
+
     return (
-      Mainteancies.isLoading ? <LoadingPage /> :
+      isLoadingstatus ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -64,6 +76,14 @@ export default class MainteanciesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Openinfo[Profile.Language]} name="Openinfo" />
               </Form.Group>
             </Form>
+            <Fileupload
+              fillnotification={fillMainteancenotification}
+              Usagetypes={Usagetypes}
+              selectedFiles={this.state.selectedFiles}
+              setselectedFiles={this.setselectedFiles}
+              Literals={Literals}
+              Profile={Profile}
+            />
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
@@ -98,7 +118,7 @@ export default class MainteanciesCreate extends Component {
         fillMainteancenotification(error)
       })
     } else {
-      AddMainteancies({ data, history, closeModal })
+      AddMainteancies({ data, history, closeModal, files: this.state.selectedFiles })
     }
   }
 }
