@@ -725,6 +725,23 @@ const version1_0_1_1 = {
     ],
 }
 
+const version1_0_1_2 = {
+    version: "1.0.1.2",
+    features: [
+        {
+            title: "Ayarlar", commits: [
+                "Kullanıcılara dosya ekleme özelliği eklendi",
+            ],
+        },
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Bakım taleplerine dosya ekleme özelliği eklendi",
+            ]
+        },
+
+    ],
+}
+
 export {
     version1_0_0_0,
     version1_0_0_1,
@@ -746,6 +763,7 @@ export {
     version1_0_0_17,
     version1_0_0_18,
     version1_0_0_19,
-    version1_0_1_1,
     version1_0_1_0,
+    version1_0_1_1,
+    version1_0_1_2,
 }

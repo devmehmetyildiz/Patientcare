@@ -43,7 +43,7 @@ export const FileuploadPrepare = (files, notification, Literals, Profile) => {
     let errors = []
     files.forEach(data => {
         if (!data.Name || data.Name === '') {
-            errors.push({ type: 'Error', code: Literals.addcode[Profile.Language], description: nameRequired[Profile.Language] })
+            errors.push({ type: 'Error', code: Literals.addcode[Profile?.Language], description: nameRequired[Profile?.Language] })
         }
     });
     if (errors.length > 0) {
