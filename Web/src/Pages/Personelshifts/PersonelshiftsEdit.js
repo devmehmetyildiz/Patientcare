@@ -9,6 +9,7 @@ import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump
 import PersonelshiftsProfessionpresettings from '../../Containers/Personelshifts/PersonelshiftsProfessionpresettings'
 import PersonelshiftsPersonelpresettings from '../../Containers/Personelshifts/PersonelshiftsPersonelpresettings'
 import PersonelshiftsPrepare from '../../Containers/Personelshifts/PersonelshiftsPrepare'
+import PersonelshiftsFastcreate from '../../Containers/Personelshifts/PersonelshiftsFastcreate'
 export default class PersonelshiftsEdit extends Component {
 
   PAGE_NAME = "PersonelshiftsEdit"
@@ -139,7 +140,11 @@ export default class PersonelshiftsEdit extends Component {
                         <PersonelshiftsPersonelpresettings selectedPersonelpresettings={foundedPersonelpresetting} />
                       </React.Fragment>
                     }
-                    <Button className='!bg-[#2355a0] !text-white' floated='right' onClick={() => { }} >{Literals.Button.Autofill[Profile.Language]}</Button>
+                    <PersonelshiftsFastcreate
+                      selectedProfession={selectedProfession}
+                      selectedStartdate={selectedStartdate}
+                      setPersonelshifts={this.setPersonelshifts}
+                    />
                   </div>
                 </Transition>
               </Form.Group>

@@ -9,9 +9,17 @@ const Literals = {
         en: 'Data Save',
         tr: 'Veri Kaydetme'
     },
+    fastcreatecode: {
+        en: 'Fast Create',
+        tr: 'Hızlı Oluşturma'
+    },
     adddescription: {
         en: 'Personelshift added successfully',
         tr: 'Personel Vardiyası Başarı ile eklendi'
+    },
+    fastcreatedescription: {
+        en: 'Fast create completed',
+        tr: 'Hızlı oluşturma tamamlandı'
     },
     updatecode: {
         en: 'Data Update',
@@ -192,14 +200,37 @@ export const DeletePersonelshifts = createAsyncThunk(
     }
 );
 
+export const GetfastcreatedPersonelshifts = createAsyncThunk(
+    'Personelshifts/GetfastcreatedPersonelshifts',
+    async ({ data }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.post(config.services.Business, ROUTES.PERSONELSHIFT + "/Getpeparedpersonelshift", data);
+            dispatch(fillPersonelshiftnotification({
+                type: 'Success',
+                code: Literals.fastcreatecode[Language],
+                description: Literals.fastcreatedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPersonelshiftnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const PersonelshiftsSlice = createSlice({
     name: 'Personelshifts',
     initialState: {
         list: [],
+        fastcreatedlist: [],
         selected_record: {},
         errMsg: null,
         notifications: [],
         isLoading: false,
+        isFastcreatesuccess: false,
         isDeletemodalopen: false,
         isApprovemodalopen: false,
         isCompletemodalopen: false,
@@ -243,6 +274,22 @@ export const PersonelshiftsSlice = createSlice({
             })
             .addCase(GetPersonelshifts.rejected, (state, action) => {
                 state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetfastcreatedPersonelshifts.pending, (state) => {
+                state.isLoading = true;
+                state.isFastcreatesuccess = false;
+                state.errMsg = null;
+                state.fastcreatedlist = [];
+            })
+            .addCase(GetfastcreatedPersonelshifts.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isFastcreatesuccess = true;
+                state.fastcreatedlist = action.payload;
+            })
+            .addCase(GetfastcreatedPersonelshifts.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isFastcreatesuccess = false;
                 state.errMsg = action.error.message;
             })
             .addCase(GetPersonelshift.pending, (state) => {

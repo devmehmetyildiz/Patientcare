@@ -483,8 +483,6 @@ async function Getpeparedpersonelshift(req, res, next) {
         const {
             ProfessionID,
             Startdate,
-            Startday,
-            Lastday
         } = req.body
 
         const userConfig = {
@@ -493,37 +491,23 @@ async function Getpeparedpersonelshift(req, res, next) {
 
         const Dateoptions = Getdateoptions(1000)
         const startDate = new Date(Startdate)
+
+        const startDay = startDate.getDate()
+        const lastDay = Getshiftlastdate(startDate)
+
         const allshiftdefines = await db.shiftdefineModel.findAll()
         const allFloors = await DoGet(config.services.Setting, `Floors`)
         const profession = await db.professionModel.findOne({ where: { Uuid: ProfessionID } });
-
+        const professionFloors = profession?.Floors ? (profession?.Floors || '').split(',') : []
         const shiftdefines = allshiftdefines.filter(u => u.Isactive && !u.Isjoker).sort((a, b) => a.Priority - b.Priority)
         const jokershifts = allshiftdefines.find(u => u.Isactive && u.Isjoker)
         // vardiyalar ve joker vardiya ayrı ayrı seçildi
         const users = await DoPost(config.services.Userrole, `Users/GetUsersforshift`, userConfig)
         //meslek grubuna ait personeller bulundu
 
-        const startDateorder = Dateoptions.find(u => new Date(u.value).getTime() === startDate.getTime())?.order
+        // calculation ---------------------------------------------------
 
-        const previousStartdates = [
-            startDateorder - 1,
-            startDateorder - 2,
-            startDateorder - 3,
-            startDateorder - 4
-        ];
-
-        const previousPersonelshifts = await db.personelshiftModel.findAll({
-            where: {
-                Startdate: {
-                    [Op.in]: previousStartdates.map(order => {
-                        return new Date(Dateoptions.find(date => date.order === order).value)
-                    })
-                },
-                ProfessionID: ProfessionID,
-                Isactive: true,
-            },
-            order: [['Startdate', 'DESC']]
-        })
+        const previousPersonelshifts = await Getpreviouspersonelshifts(ProfessionID, startDate)
         //bu vardiyadan önceki 4 vardiya bulundu
 
         const previouspersonelshiftdetails = await db.personelshiftdetailModel.findAll({
@@ -533,24 +517,199 @@ async function Getpeparedpersonelshift(req, res, next) {
                         return personelshift?.Uuid
                     })
                 },
-                Isstartdate: true
+                Isstartday: true
             }
         })
-        // personellere ait  4 vardiyaya shiftler bulundu
 
-        
-        // vardiya hazırlanacak personelleri bul 
+        let userShifts = []
+
+        if (professionFloors.length > 0) {
+
+            let filledPersonels = shiftdefines.map(shiftdefine => {
+                return {
+                    Uuid: shiftdefine.Uuid,
+                    Floor: '',
+                    Priority: shiftdefine.Priority,
+                    Users: []
+                }
+            })
+
+            for (const floorID of professionFloors) {
+                const floor = allFloors.find(u => u.Uuid === floorID)
+                const floorGender = floor?.Gender;
+
+                for (const shiftdefine of shiftdefines) {
+                    let user = users.find(u => Checkuserforlist(userShifts, u?.Uuid))
+                    for (let index = startDay; index <= lastDay; index++) {
+                        userShifts.push({
+                            ShiftID: shiftdefine?.Uuid,
+                            PersonelID: user?.Uuid,
+                            FloorID: floorID,
+                            Day: index,
+                            Isworking: true,
+                            Isonannual: false,
+                            Annualtype: 0,
+                            Isstartday: index === startDay ? true : false
+                        })
+                    }
+                }
+            }
+        } else {
+
+            let filledPersonels = shiftdefines.map(shiftdefine => {
+                return {
+                    Uuid: shiftdefine.Uuid,
+                    Priority: shiftdefine.Priority,
+                    Users: []
+                }
+            })
+
+            for (const user of users) {
+                const shiftdefine = GetShiftforfill(shiftdefines, filledPersonels)
+                const selectedShift = filledPersonels.find(u => u.Uuid === shiftdefine?.Uuid)
+                if (selectedShift) {
+                    selectedShift.Users.push(user)
+                }
+                for (let index = startDay; index <= lastDay; index++) {
+                    userShifts.push({
+                        ShiftID: shiftdefine?.Uuid,
+                        PersonelID: user?.Uuid,
+                        FloorID: "",
+                        Day: index,
+                        Isworking: true,
+                        Isonannual: false,
+                        Annualtype: 0,
+                        Isstartday: index === startDay ? true : false
+                    })
+                }
+            }
+        }
+
+        // bu meslek ile alakalı personeller bulundu
+        // ilgili personellere göre önceki vardiyalar bulundu
+        // bu meslek ile alakalı katları bul, yoksa tek shiftdönecek ++
+        // elde katlar var katlara göre for yap 
+        // response u let ile ayarla, eklenecek her personeli oraya tanımla 
+        // for döngüsü 
+
+        // vardiya hazırlanacak personelleri bul +
         // personelleri A,B,C ve Joker olarak grupla, gruplarken önceki vardiyalarda nasıl çalıştıklarını bul 
         // hangi vardiyada çalıştığını sadece ilk gün için bul 
 
 
-        res.status(200).json(users)
+        res.status(200).json(userShifts)
 
 
     } catch (error) {
         next(sequelizeErrorCatcher(error))
     }
+}
 
+
+
+async function Getpreviouspersonelshifts(ProfessionID, startDate) {
+    const Dateoptions = Getdateoptions(1000)
+    const startDateorder = Dateoptions.find(u => new Date(u.value).getTime() === startDate.getTime())?.order
+
+    const previousStartdates = [
+        startDateorder - 1,
+        startDateorder - 2,
+        startDateorder - 3,
+        startDateorder - 4
+    ];
+
+    const previousPersonelshifts = await db.personelshiftModel.findAll({
+        where: {
+            Startdate: {
+                [Op.in]: previousStartdates.map(order => {
+                    return new Date(Dateoptions.find(date => date.order === order).value)
+                })
+            },
+            ProfessionID: ProfessionID,
+            Isactive: true,
+        },
+        order: [['Startdate', 'DESC']]
+    })
+
+    return previousPersonelshifts
+}
+
+function Checkuserforlist(userShifts, UserID) {
+    return (userShifts || []).find(usershift =>
+        usershift.PersonelID !== UserID
+    ) ? true : false
+}
+
+function Getshiftlastdate(inputdate) {
+    const startDay = new Date(inputdate).getDate()
+    let lastDay = Getshiftstartdate(inputdate)
+    if (lastDay === startDay) {
+        const start = new Date(inputdate)
+        start.setMonth(start.getMonth() + 1)
+        start.setDate(0)
+        lastDay = start.getDate()
+    } else {
+        lastDay--;
+    }
+    return lastDay
+}
+
+function Getshiftstartdate(inputdate) {
+    const lastdaydate = new Date(inputdate)
+    lastdaydate.setMonth(lastdaydate.getMonth() + 1)
+    lastdaydate.setDate(0)
+    const lastday = lastdaydate.getDate()
+    switch (lastday) {
+        case 28:
+            return 15
+        case 29:
+            return 16
+        case 30:
+            return 16
+        case 31:
+            return 17
+        default:
+            return 16
+    }
+}
+
+function GetFloorforfill(floors, Filledusers) {
+    let selectedFloor = null
+    for (const floor of floors) {
+        const thisfloorpersonelcount = (Filledusers.find(filledUser => filledUser?.Uuid === shiftdefine?.Uuid)?.Users || []).length;
+        const otherfloors = floors?.filter(u => u.Uuid !== shiftdefine?.Uuid && u?.Priority > shiftdefine?.Priority)
+        const minpersonelcountedfloors = otherfloors.map(otherfloor => {
+            const othershiftpersonelcount = (Filledusers.find(filledUser => filledUser?.Uuid === otherfloor?.Uuid)?.Users || []).length
+            if (othershiftpersonelcount < thisshiftpersonelcount) {
+                return otherfloor
+            }
+        }).filter(u => u)
+
+        if (minpersonelcountedshifts.length <= 0) {
+            selectedShift = shiftdefine;
+            break;
+        }
+    }
+    return selectedShift
+}
+function GetShiftforfill(shiftdefines, Filledusers) {
+    let selectedShift = null
+    for (const shiftdefine of shiftdefines) {
+        const thisshiftpersonelcount = (Filledusers.find(filledUser => filledUser?.Uuid === shiftdefine?.Uuid)?.Users || []).length;
+        const othershift = shiftdefines?.filter(u => u.Uuid !== shiftdefine?.Uuid && u?.Priority > shiftdefine?.Priority)
+        const minpersonelcountedshifts = othershift.map(othershift => {
+            const othershiftpersonelcount = (Filledusers.find(filledUser => filledUser?.Uuid === othershift?.Uuid)?.Users || []).length
+            if (othershiftpersonelcount < thisshiftpersonelcount) {
+                return othershift
+            }
+        }).filter(u => u)
+
+        if (minpersonelcountedshifts.length <= 0) {
+            selectedShift = shiftdefine;
+            break;
+        }
+    }
+    return selectedShift
 }
 
 module.exports = {
