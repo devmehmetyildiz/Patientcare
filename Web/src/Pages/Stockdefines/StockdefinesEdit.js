@@ -4,9 +4,10 @@ import { Form, Breadcrumb } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import { FormInput,Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import UnitsCreate from '../../Containers/Units/UnitsCreate'
-import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import StocktypesCreate from '../../Containers/Stocktypes/StocktypesCreate'
+
 export default class StockdefinesEdit extends Component {
 
   PAGE_NAME = "StockdefinesEdit"
@@ -15,16 +16,15 @@ export default class StockdefinesEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
-      modelOpened: false
     }
   }
 
   componentDidMount() {
-    const { GetStockdefine, match, history, GetDepartments, GetUnits, StockdefineID } = this.props
+    const { GetStockdefine, match, history, GetStocktypes, GetUnits, StockdefineID } = this.props
     let Id = StockdefineID || match.params.StockdefineID
     if (validator.isUUID(Id)) {
       GetStockdefine(Id)
-      GetDepartments()
+      GetStocktypes()
       GetUnits()
     } else {
       history.push("/Stockdefines")
@@ -32,9 +32,9 @@ export default class StockdefinesEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Stockdefines, Units, Departments } = this.props
+    const { Stockdefines, Units, Stocktypes } = this.props
     const { selected_record, isLoading } = Stockdefines
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && Units.list.length > 0 && !Units.isLoading && Departments.list.length > 0 && !Departments.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !Units.isLoading && !Stocktypes.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true
       })
@@ -44,14 +44,18 @@ export default class StockdefinesEdit extends Component {
 
   render() {
 
-    const { Departments, Stockdefines, Units, Profile, history } = this.props
+    const { Stocktypes, Stockdefines, Units, Profile, history } = this.props
 
-    const Departmentoption = (Departments.list || []).filter(u => u.Isactive).map(station => {
-      return { key: station.Uuid, text: station.Name, value: station.Uuid }
+    const Stocktypesoption = (Stocktypes.list || []).filter(u => u.Isactive).map(item => {
+      return { key: item.Uuid, text: item.Name, value: item.Uuid }
     })
-    const Unitoption = (Units.list || []).filter(u => u.Isactive).map(station => {
-      return { key: station.Uuid, text: station.Name, value: station.Uuid }
+
+    const Unitoption = (Units.list || []).filter(u => u.Isactive).map(item => {
+      return { key: item.Uuid, text: item.Name, value: item.Uuid }
     })
+
+    const selectedType = this.context.formstates[`${this.PAGE_NAME}/StocktypeID`]
+    const Isbarcodeneed = selectedType?.Isbarcodeneed
 
     return (
       Stockdefines.isLoading ? <LoadingPage /> :
@@ -70,17 +74,19 @@ export default class StockdefinesEdit extends Component {
             <Form>
               <Form.Group widths={"equal"}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Description[Profile.Language]} name="Description" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Brand[Profile.Language]} name="Brand" />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoption} name="DepartmentID" formtype='dropdown' modal={DepartmentsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stocktype[Profile.Language]} options={Stocktypesoption} name="StocktypeID" formtype='dropdown' modal={StocktypesCreate} />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unit[Profile.Language]} options={Unitoption} name="UnitID" formtype='dropdown' modal={UnitsCreate} />
               </Form.Group>
+              {Isbarcodeneed &&
+                <Form.Group widths={"equal"}>
+                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Barcode[Profile.Language]} name="Barcode" />
+                </Form.Group>
+              }
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Ismedicine[Profile.Language]} name="Ismedicine" formtype='checkbox' />
-                {this.context.formstates[`${this.PAGE_NAME}/Ismedicine`] ?
-                  <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isredprescription[Profile.Language]} name="Isredprescription" formtype='checkbox' /> : null}
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Issupply[Profile.Language]} name="Issupply" formtype='checkbox' />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -106,16 +112,22 @@ export default class StockdefinesEdit extends Component {
 
     const { EditStockdefines, history, fillStockdefinenotification, Stockdefines, Profile } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
-    data.Isredprescription = data.Isredprescription ? data.Isredprescription || false : false
+    const Isbarcodeneed = data?.StocktypeID?.Isbarcodeneed
+
     let errors = []
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
     }
-    if (!validator.isUUID(data.DepartmentID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentsRequired[Profile.Language] })
+    if (!validator.isUUID(data.StocktypeID)) {
+      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StocktypesRequired[Profile.Language] })
     }
     if (!validator.isUUID(data.UnitID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.UnitsRequired[Profile.Language] })
+    }
+    if (Isbarcodeneed) {
+      if (!validator.isString(data.Barcode)) {
+        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.BarcodeRequired[Profile.Language] })
+      }
     }
     if (errors.length > 0) {
       errors.forEach(error => {

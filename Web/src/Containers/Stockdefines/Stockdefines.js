@@ -7,7 +7,7 @@ import { GetDepartments } from "../../Redux/DepartmentSlice"
 const mapStateToProps = (state) => ({
     Stockdefines: state.Stockdefines,
     Units: state.Units,
-    Departments: state.Departments,
+    Stocktypes: state.Stocktypes,
     Profile: state.Profile
 })
 

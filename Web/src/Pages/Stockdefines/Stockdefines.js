@@ -29,12 +29,11 @@ export default class Stockdefines extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
-      { Header: Literals.Columns.Description[Profile.Language], accessor: 'Description' },
-      { Header: Literals.Columns.Unit[Profile.Language], accessor: row => this.unitCellhandler(row?.UnitID), Subtitle: true, Withtext: true },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: row => this.departmentCellhandler(row?.DepartmentID), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Issupply[Profile.Language], accessor: row => this.boolCellhandler(row?.Issupply) },
-      { Header: Literals.Columns.Ismedicine[Profile.Language], accessor: row => this.boolCellhandler(row?.Ismedicine) },
-      { Header: Literals.Columns.Isredprescription[Profile.Language], accessor: row => this.boolCellhandler(row?.Isredprescription) },
+      { Header: Literals.Columns.Stocktype[Profile.Language], accessor: row => this.stocktypeCellhandler(row?.StocktypeID), },
+      { Header: Literals.Columns.Brand[Profile.Language], accessor: 'Brand', },
+      { Header: Literals.Columns.Barcode[Profile.Language], accessor: 'Barcode', },
+      { Header: Literals.Columns.Unit[Profile.Language], accessor: row => this.unitCellhandler(row?.UnitID), },
+      { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -98,14 +97,7 @@ export default class Stockdefines extends Component {
     )
   }
 
-  departmentCellhandler = (value) => {
-    const { Departments } = this.props
-    if (Departments.isLoading) {
-      return <Loader size='small' active inline='centered' ></Loader>
-    } else {
-      return (Departments.list || []).find(u => u.Uuid === value)?.Name
-    }
-  }
+
 
   unitCellhandler = (value) => {
     const { Units } = this.props
@@ -113,6 +105,15 @@ export default class Stockdefines extends Component {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
       return (Units.list || []).find(u => u.Uuid === value)?.Name
+    }
+  }
+
+  stocktypeCellhandler = (value) => {
+    const { Stocktypes } = this.props
+    if (Stocktypes.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (Stocktypes.list || []).find(u => u.Uuid === value)?.Name
     }
   }
 

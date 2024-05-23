@@ -1,6 +1,6 @@
 const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
+const messages = require("../Constants/StockdefineMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
@@ -51,17 +51,15 @@ async function AddStockdefine(req, res, next) {
     let validationErrors = []
     const {
         Name,
+        StocktypeID,
         UnitID,
-        DepartmentID,
+        Barcode
     } = req.body
 
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
-    if (!DepartmentID || !validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
-    }
-    if (!UnitID || !validator.isUUID(UnitID)) {
+    if (!validator.isUUID(UnitID)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)
     }
 
@@ -75,6 +73,15 @@ async function AddStockdefine(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
+
+        const stocktype = await db.stocktypeModel.findOne({ where: { Uuid: StocktypeID } });
+
+        if (stocktype?.Isbarcodeneed) {
+            if (!validator.isString(Barcode)) {
+                next(createValidationError([messages.VALIDATION_ERROR.BARCODE_REQUIRED], req.language))
+            }
+        }
+
         await db.stockdefineModel.create({
             ...req.body,
             Uuid: stockdefineuuid,
@@ -104,18 +111,16 @@ async function UpdateStockdefine(req, res, next) {
     let validationErrors = []
     const {
         Name,
-        Uuid,
+        StocktypeID,
         UnitID,
-        DepartmentID,
+        Barcode,
+        Uuid
     } = req.body
 
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
-    if (!DepartmentID || !validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
-    }
-    if (!UnitID || !validator.isUUID(UnitID)) {
+    if (!validator.isUUID(UnitID)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)
     }
     if (!Uuid) {
@@ -132,6 +137,14 @@ async function UpdateStockdefine(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
+        const stocktype = await db.stocktypeModel.findOne({ where: { Uuid: StocktypeID } });
+
+        if (stocktype?.Isbarcodeneed) {
+            if (!validator.isString(Barcode)) {
+                next(createValidationError([messages.VALIDATION_ERROR.BARCODE_REQUIRED], req.language))
+            }
+        }
+
         const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!stockdefine) {
             return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_FOUND], req.language))
