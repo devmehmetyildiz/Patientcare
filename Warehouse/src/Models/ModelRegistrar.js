@@ -10,6 +10,9 @@ const applog_warehouseModel = require('./Applog_warehouseModel')
 const stocktypeModel = require('./StocktypeModel')
 const stocktypegroupModel = require('./StocktypegroupModel')
 const warehouseModel = require('./WarehouseModel')
+const purchaseorderModel = require('./PurchaseorderModel')
+const purchaseordernumeratorModel = require('./PurchaseordernumeratorModel')
+const purchaseordermovementModel = require('./PurchaseordermovementModel')
 
 module.exports = {
     breakdownModel,
@@ -23,5 +26,8 @@ module.exports = {
     applog_warehouseModel,
     stocktypeModel,
     stocktypegroupModel,
-    warehouseModel
+    warehouseModel,
+    purchaseorderModel,
+    purchaseordernumeratorModel,
+    purchaseordermovementModel
 }
