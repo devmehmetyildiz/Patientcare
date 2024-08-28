@@ -11,13 +11,8 @@ import { removeMailsettingnotification } from "../Redux/MailsettingSlice"
 import { removePatientdefinenotification } from "../Redux/PatientdefineSlice"
 import { removePatientmovementnotification } from "../Redux/PatientmovementSlice"
 import { removePatientnotification } from "../Redux/PatientSlice"
-import { removePatientstockmovementnotification } from "../Redux/PatientstockmovementSlice"
-import { removePatientstocknotification } from "../Redux/PatientstockSlice"
 import { removePatienttypenotification } from "../Redux/PatienttypeSlice"
 import { removenotification } from "../Redux/ProfileSlice"
-import { removePurchaseordernotification } from "../Redux/PurchaseorderSlice"
-import { removePurchaseorderstocknotification } from "../Redux/PurchaseorderstockSlice"
-import { removePurchaseorderstockmovementnotification } from "../Redux/PurchaseorderstockmovementSlice"
 import { removeRolenotification } from "../Redux/RoleSlice"
 import { removeRoomnotification } from "../Redux/RoomSlice"
 import { removeRulenotification } from "../Redux/RuleSlice"
@@ -56,6 +51,9 @@ import { removePersonelshiftnotification } from "../Redux/PersonelshiftSlice"
 import { removePersonelpresettingnotification } from "../Redux/PersonelpresettingSlice"
 import { removeProfessionpresettingnotification } from "../Redux/ProfessionpresettingSlice"
 import { removePersonelshiftdetailnotification } from "../Redux/PersonelshiftdetailSlice"
+import { removeStocktypenotification } from "../Redux/StocktypeSlice"
+import { removeStocktypegroupnotification } from "../Redux/StocktypegroupSlice"
+import { removePurchaseordernotification } from "../Redux/PurchaseorderSlice"
 import Notificationwrapper from './Notification'
 
 export function NotificationHandler(props) {
@@ -70,9 +68,7 @@ export function NotificationHandler(props) {
             removeTodogroupdefinenotification, removeTododefinenotification, removeStocknotification,
             removeStockmovementnotification, removeStockdefinenotification, removeStationnotification,
             removeRulenotification, removePrinttemplatenotification, removeRoomnotification, removeRolenotification,
-            removePurchaseorderstockmovementnotification, removePurchaseorderstocknotification,
-            removePurchaseordernotification, removenotification, removePatienttypenotification,
-            removePatientstocknotification, removePatientstockmovementnotification, removePatientnotification,
+            removenotification, removePatienttypenotification, removePatientnotification,
             removePatientmovementnotification, removePatientdefinenotification, removeMailsettingnotification,
             removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
             removePeriodnotification, removeCasenotification, removeBednotification, removeShiftdefinenotification, removeEquipmentnotification,
@@ -81,22 +77,22 @@ export function NotificationHandler(props) {
             removePatientcashregisternotification, removeUsernotificationnotification, removeReportnotification, removeUsagetypenotification,
             removeSupportplannotification, removeSupportplanlistnotification, removeCareplannotification, removeHelpstatunotification,
             removeMakingtypenotification, removeRatingnotification, removeRequiredperiodnotification, removeProfessionnotification, removePersonelpresettingnotification,
-            removeProfessionpresettingnotification, removePersonelshiftdetailnotification
+            removeProfessionpresettingnotification, removePersonelshiftdetailnotification, removeStocktypenotification,
+            removeStocktypegroupnotification, removePurchaseordernotification
         } = props
 
         const {
             Warehouses, Users, Units, Todos,
             Todogroupdefines, Tododefines, Stocks, Stockmovements,
             Stockdefines, Stations, Rules, Printtemplates, Rooms,
-            Roles, Purchaseorderstockmovements, Purchaseorderstocks, Purchaseorders,
-            Profile, Patienttypes, Patientstocks, Patientstockmovements,
-            Patients, Patientmovements, Patientdefines, Mailsettings,
+            Roles, Profile, Patienttypes, Patients, Patientmovements, Patientdefines, Mailsettings,
             Floors, Files, Departments, Costumertypes, Breakdowns, Mainteancies,
             Periods, Cases, Beds, Shiftdefines, Equipmentgroups, Equipments, Personels,
             Companycashmovements, Patientcashmovements,
             Patientcashregisters, Usernotifications, Reports, Usagetypes, Professions,
             Supportplanlists, Supportplans, Careplans, Helpstatus, Makingtypes, Ratings, Requiredperiods,
-            Personelshiftdetails, Personelpresettings, Professionpresettings, Personelshifts,
+            Personelshiftdetails, Personelpresettings, Professionpresettings, Personelshifts, Stocktypes,
+            Stocktypegroups, Purchaseorders
         } = props.states
 
         Notification(Warehouses.notifications, removeWarehousenotification)
@@ -114,13 +110,8 @@ export function NotificationHandler(props) {
         Notification(Printtemplates.notifications, removePrinttemplatenotification)
         Notification(Rooms.notifications, removeRoomnotification)
         Notification(Roles.notifications, removeRolenotification)
-        Notification(Purchaseorderstockmovements.notifications, removePurchaseorderstockmovementnotification)
-        Notification(Purchaseorderstocks.notifications, removePurchaseorderstocknotification)
-        Notification(Purchaseorders.notifications, removePurchaseordernotification)
         Notification(Profile.notifications, removenotification)
         Notification(Patienttypes.notifications, removePatienttypenotification)
-        Notification(Patientstocks.notifications, removePatientstocknotification)
-        Notification(Patientstockmovements.notifications, removePatientstockmovementnotification)
         Notification(Patients.notifications, removePatientnotification)
         Notification(Patientmovements.notifications, removePatientmovementnotification)
         Notification(Patientdefines.notifications, removePatientdefinenotification)
@@ -155,6 +146,9 @@ export function NotificationHandler(props) {
         Notification(Personelpresettings.notifications, removePersonelpresettingnotification)
         Notification(Personelshiftdetails.notifications, removePersonelshiftdetailnotification)
         Notification(Professionpresettings.notifications, removeProfessionpresettingnotification)
+        Notification(Stocktypes.notifications, removeStocktypenotification)
+        Notification(Stocktypegroups.notifications, removeStocktypegroupnotification)
+        Notification(Purchaseorders.notifications, removePurchaseordernotification)
     })
 
     return null
@@ -169,9 +163,7 @@ const mapDispatchToProps = {
     removeTodogroupdefinenotification, removeTododefinenotification, removeStocknotification,
     removeStockmovementnotification, removeStockdefinenotification, removeStationnotification,
     removeRulenotification, removePrinttemplatenotification, removeRoomnotification, removeRolenotification,
-    removePurchaseorderstockmovementnotification, removePurchaseorderstocknotification,
-    removePurchaseordernotification, removenotification, removePatienttypenotification,
-    removePatientstocknotification, removePatientstockmovementnotification, removePatientnotification,
+    removenotification, removePatienttypenotification, removePatientnotification,
     removePatientmovementnotification, removePatientdefinenotification, removeMailsettingnotification,
     removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
     removePeriodnotification, removeCasenotification, removeBednotification, removeShiftdefinenotification,
@@ -180,7 +172,8 @@ const mapDispatchToProps = {
     removePatientcashregisternotification, removeUsernotificationnotification, removeReportnotification, removeUsagetypenotification,
     removeSupportplanlistnotification, removeSupportplannotification, removeCareplannotification, removeHelpstatunotification, removeRequiredperiodnotification,
     removeRatingnotification, removeMakingtypenotification, removeProfessionnotification, removePersonelshiftnotification,
-    removePersonelpresettingnotification, removeProfessionpresettingnotification, removePersonelshiftdetailnotification
+    removePersonelpresettingnotification, removeProfessionpresettingnotification, removePersonelshiftdetailnotification,
+    removeStocktypenotification, removeStocktypegroupnotification, removePurchaseordernotification
 
 }
 

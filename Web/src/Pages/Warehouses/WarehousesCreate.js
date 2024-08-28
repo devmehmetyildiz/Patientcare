@@ -4,16 +4,27 @@ import { Form, Breadcrumb, Button } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import {FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import StocktypegroupsCreate from '../../Containers/Stocktypegroups/StocktypegroupsCreate'
 
 export default class WarehousesCreate extends Component {
 
   PAGE_NAME = "WarehousesCreate"
 
+  componentDidMount() {
+    const { GetStocktypegroups } = this.props
+    GetStocktypegroups()
+  }
+
   render() {
 
-    const { Warehouses, Profile, history, closeModal } = this.props
-    const { isLoading} = Warehouses
+    const { Warehouses, Profile, history, closeModal, Stocktypegroups } = this.props
+
+    const Stocktypegroupsoption = (Stocktypegroups.list || []).filter(u => u.Isactive).map(type => {
+      return { key: type.Uuid, text: type.Name, value: type.Uuid }
+    })
+
+    const { isLoading } = Warehouses
 
     return (
       isLoading ? <LoadingPage /> :
@@ -33,7 +44,7 @@ export default class WarehousesCreate extends Component {
             <Form>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Ismedicine[Profile.Language]} name="Ismedicine" formtype="checkbox" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stocktypegroups[Profile.Language]} options={Stocktypegroupsoption} name="Stocktypegroups" formtype='dropdown' multiple modal={StocktypegroupsCreate} />
               </Form.Group>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
             </Form>
@@ -64,6 +75,8 @@ export default class WarehousesCreate extends Component {
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
     }
+    data.Stocktypegroups = (data.Stocktypegroups || []).join(',')
+
     if (errors.length > 0) {
       errors.forEach(error => {
         fillWarehousenotification(error)

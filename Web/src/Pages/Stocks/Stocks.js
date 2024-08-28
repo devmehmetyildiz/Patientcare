@@ -9,12 +9,14 @@ import { getInitialconfig } from '../../Utils/Constants'
 export default class Stocks extends Component {
 
   componentDidMount() {
-    const { GetStocks, GetStockdefines, GetDepartments, GetStockmovements, GetWarehouses } = this.props
+    const { GetStocks, GetStockdefines, GetDepartments, GetStockmovements, GetWarehouses, GetUnits, GetStocktypes } = this.props
     GetStocks()
     GetStockdefines()
     GetDepartments()
     GetStockmovements()
     GetWarehouses()
+    GetUnits()
+    GetStocktypes()
   }
 
   render() {
@@ -33,10 +35,9 @@ export default class Stocks extends Component {
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
       { Header: Literals.Columns.Warehouse[Profile.Language], accessor: row => this.warehouseCellhandler(row?.WarehouseID), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: row => this.stockdefineCellhandler(row?.StockdefineID), Title: true },
-      { Header: Literals.Columns.Department[Profile.Language], accessor: row => this.departmentCellhandler(row?.DepartmentID) },
+      { Header: Literals.Columns.Stocktype[Profile.Language], accessor: row => this.stocktypeCellhandler(row?.StockdefineID), Title: true },
       { Header: Literals.Columns.Amount[Profile.Language], accessor: row => this.amountCellhandler(row), Subtitle: true, Withtext: true },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info' },
-      { Header: Literals.Columns.Isapproved[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
@@ -50,7 +51,7 @@ export default class Stocks extends Component {
     const metaKey = "stock"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
-    const list = (Stocks.list || []).filter(u => u.Isactive && !u.Ismedicine).map(item => {
+    const list = (Stocks.list || []).filter(u => u.Isactive && u.Iscompleted).map(item => {
       return {
         ...item,
         change: <Link to={`/Stockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
@@ -116,6 +117,15 @@ export default class Stocks extends Component {
       return (Stockdefines.list || []).find(u => u.Uuid === value)?.Name
     }
   }
+  stocktypeCellhandler = (value) => {
+    const { Stockdefines, Stocktypes } = this.props
+    if (Stockdefines.isLoading || Stocktypes.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === value)
+      return (Stocktypes.list || []).find(u => u.Uuid === stockdefine?.StocktypeID)?.Name || 'tanımsız tür'
+    }
+  }
   warehouseCellhandler = (value) => {
     const { Warehouses } = this.props
     if (Warehouses.isLoading) {
@@ -125,27 +135,24 @@ export default class Stocks extends Component {
     }
   }
 
-  departmentCellhandler = (value) => {
-    const { Departments } = this.props
-    if (Departments.isLoading) {
-      return <Loader size='small' active inline='centered' ></Loader>
-    } else {
-      return (Departments.list || []).find(u => u.Uuid === value)?.Name
-    }
-  }
-
   amountCellhandler = (row) => {
-    const { Stockmovements, Stocks } = this.props
-    if (Stockmovements.isLoading || Stocks.isLoading) {
+    const { Stockmovements, Stocks, Units, Stockdefines } = this.props
+    if (Stockmovements.isLoading || Stocks.isLoading || Units.isLoading || Stockdefines.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      const selectedStock = (Stocks.list || []).find(u => u.Id === row?.Id)
+      const selectedStock = (Stocks.list || []).find(u => u.Uuid === row?.Uuid)
+      const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === selectedStock?.StockdefineID)
+      const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
       let amount = 0.0;
-      let movements = (Stockmovements.list || []).filter(u => u.StockID === selectedStock?.Uuid && u.Isactive && u.Isapproved)
+      let fullamount = 0.0;
+      let movements = (Stockmovements.list || []).filter(u => u.StockID === selectedStock?.Uuid && u.Isactive)
       movements.forEach(movement => {
-        amount += (movement.Amount * movement.Movementtype);
+        if (movement?.Isapproved) {
+          amount += (movement.Amount * movement.Movementtype);
+        }
+        fullamount += (movement.Amount * movement.Movementtype);
       });
-      return amount
+      return `${amount} ${unit?.Name || 'tanımsız birim'} ${amount !== fullamount ? `( Toplam ${fullamount} ${unit?.Name || 'tanımsız birim'})` : ''}`
     }
   }
 

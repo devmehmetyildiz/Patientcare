@@ -1,89 +1,6 @@
 const Literals = {
     Options: {
-        usageType0: {
-            tr: 'Genel Dosyalar',
-            en: 'General Files'
-        },
-        usageType1: {
-            tr: 'Hasta Dosyaları',
-            en: 'Patient Files'
-        },
-        usageType2: {
-            tr: 'Fotoğraf',
-            en: 'Profile Photo'
-        },
-        usageType3: {
-            tr: 'İlk Görüşme Formu',
-            en: 'İlk Görüşme Formu'
-        },
-        usageType4: {
-            tr: 'Engelli Teslim Etme-Alma Formu',
-            en: 'Engelli Teslim Etme-Alma Formu'
-        },
-        usageType5: {
-            tr: 'İlk Kabul Formu',
-            en: 'İlk Kabul Formu'
-        },
-        usageType6: {
-            tr: 'Engelli Mülkiyeti Teslim Alma Formu',
-            en: 'Engelli Mülkiyeti Teslim Alma Formu'
-        },
-        usageType7: {
-            tr: 'Genel Vucut Kontrol Formu',
-            en: 'Genel Vucut Kontrol Formu'
-        },
-        usageType8: {
-            tr: 'Sağlık Kurul Raporu',
-            en: 'Sağlık Kurul Raporu'
-        },
-        TableColumnsOrder: {
-            tr: 'Sıra',
-            en: 'Order'
-        },
-        TableColumnsFileName: {
-            tr: 'Dosya Adı',
-            en: 'File Name'
-        },
-        TableColumnsUsagetype: {
-            tr: 'Kullanım Türü',
-            en: 'Usage Type'
-        },
-        TableColumnsFile: {
-            tr: 'Dosya',
-            en: 'File'
-        },
-        TableColumnsUploadStatus: {
-            tr: 'Yüklenme Durumu',
-            en: 'Upload Status'
-        },
-        TableColumnsDelete: {
-            tr: 'Sil',
-            en: 'Delete'
-        },
-        TableColumnsStockdefine: {
-            tr: 'Ürün Tanımı',
-            en: 'Stock Define'
-        },
-        TableColumnsDepartment: {
-            tr: 'Departman',
-            en: 'Department'
-        },
-        TableColumnsBarcode: {
-            tr: 'Barkod',
-            en: 'Barcode'
-        },
-        TableColumnsSkt: {
-            tr: 'Skt',
-            en: 'Skt'
-        },
-        TableColumnsAmount: {
-            tr: 'Miktar',
-            en: 'Amount'
-        },
-        TableColumnsInfo: {
-            tr: 'Açıklama',
-            en: 'Info'
-        },
+
     },
     Complete: {
         Totalcount: {
@@ -106,6 +23,7 @@ const Literals = {
             tr: 'Dosyalar',
             en: 'Files'
         },
+
         Firstname: {
             tr: 'İlk İsim',
             en: 'First name'
@@ -184,57 +102,17 @@ const Literals = {
             tr: 'Tekil ID',
             en: 'Unique ID'
         },
-        Name: {
-            tr: 'Hasta Adı',
-            en: 'Patient Name'
-        },
         Newregister: {
-            tr: 'Yeni Giriş',
-            en: 'New Register'
-        },
-        Firstname: {
-            tr: 'İlk İsim',
-            en: 'First Name'
-        },
-        Lastname: {
-            tr: 'Son İsim',
-            en: 'Last Name'
-        },
-        Fathername: {
-            tr: 'Baba Adı',
-            en: 'Father Name'
-        },
-        Mothername: {
-            tr: 'Anne Adı',
-            en: 'Mother Name'
-        },
-        Medicalboardreport: {
-            tr: 'Sağlık Kurul Raporu',
-            en: 'Medical Baord Report'
-        },
-        Dateofbirth: {
-            tr: 'Doğum Tarihi',
-            en: 'Date of Birth'
-        },
-        Placeofbirth: {
-            tr: 'Doğum Yeri',
-            en: 'Place of Birth'
-        },
-        Gender: {
-            tr: 'Cinsiyet',
-            en: 'Gender'
-        },
-        Firstname: {
-            tr: 'İlk İsim',
-            en: 'First Name'
+            tr: 'Yeni Hasta Özlük Bilgileri',
+            en: 'New Patient Detail'
         },
         Registered: {
-            tr: 'Kayıtlı Hasta',
-            en: 'Registered'
+            tr: 'Kayıtlı Hasta Özlük Bilgileri',
+            en: 'Registered Patient Detail Knowledge'
         },
-        CountryID: {
-            tr: 'TC Kimlik No',
-            en: 'Country ID'
+        Name: {
+            tr: 'İsim',
+            en: 'Name'
         },
         Costumertype: {
             tr: 'Müşteri Türü',
@@ -264,9 +142,153 @@ const Literals = {
             tr: 'Hasta Tanımı',
             en: 'Patientdefine'
         },
+        Firstname: {
+            tr: 'İlk İsim',
+            en: 'First Name'
+        },
+        Lastname: {
+            tr: 'Son İsim',
+            en: 'Last Name'
+        },
+        Fathername: {
+            tr: 'Baba Adı',
+            en: 'Father Name'
+        },
+        Mothername: {
+            tr: 'Anne Adı',
+            en: 'Mother Name'
+        },
+        Motherbiologicalaffinity: {
+            tr: 'Anne Biyolojik Yakınlık',
+            en: 'Mother Biological Affinity'
+        },
+        Medicalboardreport: {
+            tr: 'Sağlık Kurul Raporu',
+            en: 'Medical Baord Report'
+        },
+        Ismotheralive: {
+            tr: 'Anne Hayatta mı?',
+            en: 'Is Mother Alive?'
+        },
+        Fatherbiologicalaffinity: {
+            tr: 'Baba Biyolojik Yakınlık',
+            en: 'Father Biological Affinity'
+        },
+        Isfatheralive: {
+            tr: 'Baba Hayatta mı?',
+            en: 'Is Father Alive?'
+        },
+        CountryID: {
+            tr: 'TC Kimlik No',
+            en: 'Country ID'
+        },
+        Dateofbirth: {
+            tr: 'Doğum Tarihi',
+            en: 'Date of Birth'
+        },
+        Placeofbirth: {
+            tr: 'Doğum Yeri',
+            en: 'Place of Birth'
+        },
+        Dateofdeath: {
+            tr: 'Ölüm Tarihi',
+            en: 'Date of Death'
+        },
+        Placeofdeath: {
+            tr: 'Doğum Yeri',
+            en: 'Place of Death'
+        },
+        Deathinfo: {
+            tr: 'Ölüm Nedeni',
+            en: 'Death Info'
+        },
+        Gender: {
+            tr: 'Cinsiyet',
+            en: 'Gender'
+        },
+        Marialstatus: {
+            tr: 'Medeni Hal',
+            en: 'Marial Status'
+        },
+        Criminalrecord: {
+            tr: 'Sabıka Kaybı',
+            en: 'Criminal Record'
+        },
+        Childnumber: {
+            tr: 'Çocuk Sayısı',
+            en: 'Child Number'
+        },
+        Disabledchildnumber: {
+            tr: 'Engelli Çocuk Sayısı',
+            en: 'Disabled Child Number'
+        },
+        Siblingstatus: {
+            tr: 'Kardeş Sayısı',
+            en: 'Sibling Number'
+        },
+        Sgkstatus: {
+            tr: 'Sgk Durumu',
+            en: 'Sgk Status'
+        },
+        Budgetstatus: {
+            tr: 'Maaş Durumu',
+            en: 'Budget Status'
+        },
+        City: {
+            tr: 'İl',
+            en: 'City'
+        },
+        Town: {
+            tr: 'İlçe',
+            en: 'Town'
+        },
+        Address1: {
+            tr: 'Adres 1',
+            en: 'Address 1'
+        },
+        Address2: {
+            tr: 'Adres 2',
+            en: 'Address 2'
+        },
+        Country: {
+            tr: 'Ülke',
+            en: 'Country'
+        },
+        Contactnumber1: {
+            tr: 'İletişim Numarası 1',
+            en: 'Contact Number 1'
+        },
+        Contactnumber2: {
+            tr: 'İletişim Numarası 2',
+            en: 'Contact Number 2'
+        },
+        Contactname1: {
+            tr: 'İletişim Adı 1',
+            en: 'Contact Name 1'
+        },
+        Contactname2: {
+            tr: 'İletişim Adı 2',
+            en: 'Contact Name 2'
+        },
         Case: {
             tr: 'Durum',
             en: 'Case'
+        },
+        Isoninstitution: {
+            tr: 'Hasta Kurumda mı?',
+            en: 'Is on institution'
+        },
+        Oninstitution: {
+            tr: 'Hasta Kurumda',
+            en: 'On institution'
+        },
+        Onnotinstitution: {
+            tr: 'Hasta Kurumda Değil',
+            en: 'Not On institution'
+        },
+        Department: {
+            tr: 'Departman',
+            en: 'Department'
         },
         Stocks: {
             tr: 'Stoklar',
@@ -276,6 +298,14 @@ const Literals = {
             tr: 'Dosyalar',
             en: 'Files'
         },
+        Filesprefix: {
+            tr: 'Adet Dosya',
+            en: 'File'
+        },
+        Stocksprefix: {
+            tr: 'Adet Ürün',
+            en: 'Stock'
+        },
         Medicines: {
             tr: 'İlaçlar',
             en: 'Medicines'
@@ -284,6 +314,53 @@ const Literals = {
             tr: 'Sarf Malzemeleri',
             en: 'Supplies'
         },
+        Info: {
+            tr: 'Açıklama',
+            en: 'Info'
+        },
+
+        Patientcreatetime: {
+            tr: 'Ön Kayıt oluşturma tarihi',
+            en: 'Patient create time'
+        },
+        Patientchecktime: {
+            tr: 'Ön Kayıt kontrol tarihi',
+            en: 'Patient check time'
+        },
+        Patientapprovetime: {
+            tr: 'Ön Kayıt onaylama tarihi',
+            en: 'Patient approve time'
+        },
+        Patientcompletetime: {
+            tr: 'Ön Kayıt onaylama tarihi',
+            en: 'Patient complete time'
+        },
+
+        Checkeduser: {
+            tr: 'Kontrol Eden Kullanıcı',
+            en: 'Checked user'
+        },
+        Approveduser: {
+            tr: 'Onaylayan Kullanıcı',
+            en: 'Checked user'
+        },
+        Completeduser: {
+            tr: 'Tamamlayan Kullanıcı',
+            en: 'Checked user'
+        },
+        Cancelcheckeduser: {
+            tr: 'Kontrol İptali Yapan Kullanıcı',
+            en: 'User Cancel Checked'
+        },
+        Cancelapproveduser: {
+            tr: 'Onay İptali Yapan Kullanıcı',
+            en: 'User Cancel Approved'
+        },
+        Movements: {
+            tr: 'Hareketler',
+            en: 'Movements'
+        },
+
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
             en: 'Created User'
@@ -300,33 +377,41 @@ const Literals = {
             tr: 'Güncelleme Tarihi',
             en: 'Update Time'
         },
-        enter: {
-            tr: 'Kuruma Al',
-            en: 'Enter Corporation'
-        },
-        actions: {
-            tr: 'Eylemler',
-            en: 'Actions'
+        Date: {
+            tr: 'Tarih',
+            en: 'Date'
         },
         edit: {
             tr: 'Güncelle',
             en: 'Edit'
         },
-        editDefine: {
-            tr: 'Tanım Düzenle',
-            en: 'Edit Define'
-        },
-        editFiles: {
-            tr: 'Dosyaları Düzenle',
-            en: 'Edit Files'
-        },
-        editStocks: {
-            tr: 'Stokları Düzenle',
-            en: 'Edit Stocks'
-        },
         delete: {
             tr: 'Sil',
             en: 'Delete'
+        },
+        detail: {
+            tr: 'Detay',
+            en: 'Detail'
+        },
+        check: {
+            tr: 'Kontrol Et',
+            en: 'Check'
+        },
+        cancelcheck: {
+            tr: 'Kontrol İptal',
+            en: 'Cancel Check'
+        },
+        approve: {
+            tr: 'Onayla',
+            en: 'Approve'
+        },
+        cancelapprove: {
+            tr: 'Onay İptal',
+            en: 'Cancel Approve'
+        },
+        complete: {
+            tr: 'Tamamla',
+            en: 'Complete'
         },
     },
     Page: {
@@ -342,21 +427,81 @@ const Literals = {
             tr: "Güncelle",
             en: "Update"
         },
-        Pageeditfileheader: {
-            tr: "Dosya Güncelle",
-            en: "Edit File"
+        Pageprepareinfoheader: {
+            tr: "Hasta Bilgileri",
+            en: "Patient Knowledge"
         },
-        Pageeditstockheader: {
-            tr: "Stok Güncelle",
-            en: "Edit Stock"
+        Pageprepareinfoheaderdesc: {
+            tr: "Hasta Özlük Bilgileri",
+            en: "Patient Detail Knowledge"
+        },
+        Pagepreparestockheader: {
+            tr: "Hasta Stokları",
+            en: "Patient Stocks"
+        },
+        Pagepreparestockheaderdesc: {
+            tr: "Hastaya Ait Sarf Malzeme veya İlaçlar",
+            en: "Patient Stocks or Supplies"
+        },
+        Pagepreparefileheader: {
+            tr: "Hasta Dosyaları",
+            en: "Patient Files"
+        },
+        Pagepreparefileheaderdesc: {
+            tr: "Hasta Özlük Dosyaları",
+            en: "Patient Detail Files"
+        },
+        Pagepreparedetailheader: {
+            tr: "Özet",
+            en: "Detail"
+        },
+        Pagepreparedetailheaderdesc: {
+            tr: "Özet",
+            en: "Detail"
         },
         Pagedeleteheader: {
             tr: "Ön Kayıt Silme",
             en: "Delete Pre Registration"
         },
-        Pagecompleteheader: {
+        Pagecreatedheader: {
+            tr: "Oluşturulan Ön Kayıtlar",
+            en: "Created Preregistrations"
+        },
+        Pagecheckedheader: {
+            tr: "Kontrol Edilen Ön Kayıtlar",
+            en: "Checked Purchase Orders"
+        },
+        Pagecheckedheadermodal: {
+            tr: "Ön Kayıt Kontrol Etme",
+            en: "Purchase Order Check"
+        },
+        Pagecheckedcancelheadermodal: {
+            tr: "Ön Kayıt Kontrol İptal Etme",
+            en: "Purchase Order Cancel Check"
+        },
+        Pageapprovedheader: {
+            tr: "Onaylanan Ön Kayıtlar",
+            en: "Approved Purchase Orders"
+        },
+        Pageapprovedheadermodal: {
             tr: "Ön Kayıt Onaylama",
-            en: "Complete Pre Registration"
+            en: "Purchase Order Approve"
+        },
+        Pageapprovedcancelheadermodal: {
+            tr: "Ön Kayıt Onay İptal Etme",
+            en: "Purchase Order Cancel Approve"
+        },
+        Pagecompletedheader: {
+            tr: "Tamamlanan Ön Kayıtlar",
+            en: "Completed Purchase Orders"
+        },
+        Pagecompletedheadermodal: {
+            tr: "Ön Kayıt Tamamlama",
+            en: "Purchase Order Complete"
+        },
+        PagecompletedheaderBedselectormodal: {
+            tr: "Yatak Seçimi",
+            en: "Bed Selector"
         },
     },
     Button: {
@@ -388,6 +533,14 @@ const Literals = {
             tr: "Kuruma Al",
             en: "Enter"
         },
+        Select: {
+            tr: "Seç",
+            en: "Select"
+        },
+        BedSelect: {
+            tr: "Yatak Seçimi",
+            en: "Bed Select"
+        },
         Delete: {
             tr: "Sil",
             en: "Delete"
@@ -400,7 +553,34 @@ const Literals = {
             tr: "Geri Dön",
             en: "Go Back"
         },
-
+        Approve: {
+            tr: "Onaylama",
+            en: "Approve"
+        },
+        Cancelapprove: {
+            tr: "Onayı İptal Et",
+            en: "Cancel Approve"
+        },
+        Check: {
+            tr: "Kontrol Et",
+            en: "Check"
+        },
+        Cancelcheck: {
+            tr: "Kontrolü İptal Et",
+            en: "Cancel Check"
+        },
+        Complete: {
+            tr: "Tamamlama",
+            en: "Complete"
+        },
+        GoNext: {
+            tr: "İleri",
+            en: "Go Next"
+        },
+        Changeregister: {
+            tr: "Kayıt Türünü Değiştir",
+            en: "Change Register Type"
+        },
     },
     Messages: {
         Nodatafind: {
@@ -414,6 +594,10 @@ const Literals = {
         Popupmessage: {
             tr: "Hasta Girişi için Tıklayınız",
             en: "Enter for Patient Register"
+        },
+        CaseRequired: {
+            tr: "Durum Gerekli",
+            en: "Case Required"
         },
         Departmentrequired: {
             tr: "Departman Gerekli",
@@ -440,7 +624,7 @@ const Literals = {
             en: "Approval date required"
         },
         Patientdefinerequired: {
-            tr: "Hasta TC veya Hasta Tanımı Gerekli",
+            tr: "Geçerli Hasta TC veya Hasta Tanımı Gerekli",
             en: "Patient country ID or Patient define Required"
         },
         Stockdefinedefinerequired: {
@@ -471,7 +655,18 @@ const Literals = {
             tr: "Eksik",
             en: "Needed"
         },
-
+        Notfound: {
+            tr: "Bulunmadı",
+            en: "Notfound"
+        },
+        Yes: {
+            tr: "EVET",
+            en: "YES"
+        },
+        No: {
+            tr: "HAYIR",
+            en: "NO"
+        }
 
     }
 }

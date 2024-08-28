@@ -12,6 +12,8 @@ import AuthProvider from "./Provider/AuthProvider";
 import FormProvider from "./Provider/FormProvider";
 import { handleauth } from "./Redux/ProfileSlice";
 import { tokenMiddleware, notificationMiddleware } from './Utils/Middlewares'
+import './i18n';
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(rootSlice, composeEnhancers(applyMiddleware(thunk, tokenMiddleware, notificationMiddleware)))
 

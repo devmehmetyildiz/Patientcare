@@ -32,6 +32,10 @@ async function DeleteFile(req, res, next) {
     PermissionHandler(req, next, 'filedelete')
 }
 
+async function DeleteFileByParentID(req, res, next) {
+    PermissionHandler(req, next, 'filedelete')
+}
+
 
 module.exports = {
     GetFiles,
@@ -41,5 +45,6 @@ module.exports = {
     DeleteFile,
     Downloadfile,
     GetbyparentID,
-    GetbyorderfileID
+    GetbyorderfileID,
+    DeleteFileByParentID
 }

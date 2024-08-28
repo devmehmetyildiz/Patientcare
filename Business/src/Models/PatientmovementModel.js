@@ -10,55 +10,19 @@ module.exports = sequelize.define('patientmovementModel', {
     PatientID: {
         type: Sequelize.STRING
     },
-    Patientmovementtype: {
-        type: Sequelize.INTEGER
-    },
-    IsDeactive: {
-        type: Sequelize.BOOLEAN
-    },
-    OldPatientmovementtype: {
-        type: Sequelize.INTEGER
-    },
-    NewPatientmovementtype: {
-        type: Sequelize.INTEGER
-    },
-    IsTodoneed: {
-        type: Sequelize.BOOLEAN
-    },
-    IsTodocompleted: {
-        type: Sequelize.BOOLEAN
-    },
-    IsComplated: {
-        type: Sequelize.BOOLEAN
-    },
-    Iswaitingactivation: {
-        type: Sequelize.BOOLEAN
-    },
-    Movementdate: {
-        type: Sequelize.DATE
-    },
-    Createduser: {
+    Type: {
         type: Sequelize.STRING
     },
-    Createtime: {
-        type: Sequelize.DATE
-    },
-    Updateduser: {
+    UserID: {
         type: Sequelize.STRING
     },
-    Updatetime: {
-        type: Sequelize.DATE
-    },
-    Deleteduser: {
+    Info: {
         type: Sequelize.STRING
     },
-    Deletetime: {
+    Occureddate: {
         type: Sequelize.DATE
     },
-    Isactive: {
-        type: Sequelize.BOOLEAN
-    }
 }, {
-    tableName: 'patientmovements', // replace with the name of your existing table
+    tableName: 'patientmovements',
     timestamps: false
 });

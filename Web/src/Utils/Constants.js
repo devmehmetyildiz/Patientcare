@@ -46,14 +46,11 @@ export const ROUTES = {
     REQUIREDPERIOD: 'Requiredperiods',
 
     PURCHASEORDER: 'Purchaseorders',
-    PURCHASEORDERSTOCK: 'Purchaseorderstocks',
-    PURCHASEORDERSTOCKMOVEMENT: 'Purchaseorderstockmovements',
-    DEACTIVESTOCK: 'Deactivestock',
     STOCK: 'Stocks',
     STOCKMOVEMENT: 'Stockmovements',
+    STOCKTYPE: 'Stocktypes',
+    STOCKTYPEGROUP: 'Stocktypegroups',
     WAREHOUSE: 'Warehouses',
-    PATIENTSTOCK: 'Patientstocks',
-    PATIENTSTOCKMOVEMENT: 'Patientstockmovements',
     EQUIPMENTGROUP: 'Equipmentgroups',
     EQUIPMENT: 'Equipments',
     BREAKDOWN: 'Breakdowns',
@@ -97,6 +94,26 @@ export const PATIENTMOVEMENTTYPE = [
     { Name: "Yer değişikliği", value: 7 },
 ]
 
+export const PURCHASEORDER_MOVEMENTTYPES_CREATE = 'create'
+export const PURCHASEORDER_MOVEMENTTYPES_UPDATE = 'update'
+export const PURCHASEORDER_MOVEMENTTYPES_DELETE = 'delete'
+export const PURCHASEORDER_MOVEMENTTYPES_CHECK = 'check'
+export const PURCHASEORDER_MOVEMENTTYPES_APPROVE = 'approve'
+export const PURCHASEORDER_MOVEMENTTYPES_COMPLETE = 'complete'
+export const PURCHASEORDER_MOVEMENTTYPES_CANCELCHECK = 'cancelcheck'
+export const PURCHASEORDER_MOVEMENTTYPES_CANCELAPPROVE = 'cancelapprove'
+
+export const PATIENTS_MOVEMENTTYPES_CREATE = 'patientcreate'
+export const PATIENTS_MOVEMENTTYPES_UPDATE = 'patientupdate'
+export const PATIENTS_MOVEMENTTYPES_DELETE = 'patientdelete'
+export const PATIENTS_MOVEMENTTYPES_CHECK = 'patientcheck'
+export const PATIENTS_MOVEMENTTYPES_APPROVE = 'patientapprove'
+export const PATIENTS_MOVEMENTTYPES_COMPLETE = 'patientcomplete'
+export const PATIENTS_MOVEMENTTYPES_CANCELCHECK = 'patientcancelcheck'
+export const PATIENTS_MOVEMENTTYPES_CANCELAPPROVE = 'patientcancelapprove'
+
+
+
 export const getInitialconfig = (Profile, metaKey) => {
     let tableMeta = (Profile.tablemeta || []).find(u => u.Meta === metaKey)
     const initialConfig = {
@@ -119,6 +136,13 @@ export const getInitialconfig = (Profile, metaKey) => {
 export const ANNUALTYPES = [
     { Name: "Çalışıyor", value: 0, color: 'green' },
     { Name: "İzinli", value: 1, color: 'red' },
+]
+
+export const DELIVERY_TYPE_PATIENT = 0
+export const DELIVERY_TYPE_WAREHOUSE = 1
+export const DELIVERY_TYPES = [
+    { Name: { tr: 'Hastaya', en: 'To Patient' }, value: DELIVERY_TYPE_PATIENT, key: DELIVERY_TYPE_PATIENT },
+    { Name: { tr: 'Ambara', en: 'To Warehouse' }, value: DELIVERY_TYPE_WAREHOUSE, key: DELIVERY_TYPE_WAREHOUSE },
 ]
 
 export const getSidebarroutes = (Profile) => {
@@ -171,9 +195,6 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <TbGauge className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: Literals.Unapproveds.Page.Movement.Pageheader[Profile.Language], url: "/UnapprovedMovements", permission: checkAuth('unapprovedmovementview') },
-                { id: 2, subtitle: Literals.Unapproveds.Page.Stock.Pageheader[Profile.Language], url: "/UnapprovedStocks", permission: checkAuth('unapprovedstockview') },
-                { id: 3, subtitle: Literals.Unapproveds.Page.PageTodoheader[Profile.Language], url: "/UnapprovedTodos", permission: checkAuth('unapprovedtodoview') },
                 { id: 4, subtitle: Literals.Breakdowns.Page.Pageheader[Profile.Language], url: "/Breakdowns", permission: checkAuth('breakdownview') },
                 { id: 5, subtitle: Literals.Mainteancies.Page.Pageheader[Profile.Language], url: "/Mainteancies", permission: checkAuth('mainteanceview') },
                 { id: 6, subtitle: Literals.Placeviews.Page.Pageheader[Profile.Language], url: "/Placeviews", permission: checkAuth('placeviewview') },
@@ -202,30 +223,17 @@ export const getSidebarroutes = (Profile) => {
             items: [
                 { id: 1, subtitle: Literals.Preregistrations.Page.Pageheader[Profile.Language], url: "/Preregistrations", permission: checkAuth('preregistrationview') },
                 { id: 2, subtitle: Literals.Patients.Page.Pageheader[Profile.Language], url: "/Patients", permission: checkAuth('patientview') },
-                { id: 3, subtitle: Literals.Patientmovements.Page.Pageheader[Profile.Language], url: "/Patientmovements", permission: checkAuth('patientmovementview') },
+                //   { id: 3, subtitle: Literals.Patientmovements.Page.Pageheader[Profile.Language], url: "/Patientmovements", permission: checkAuth('patientmovementview') },
                 { id: 4, subtitle: Literals.Patientdefines.Page.Pageheader[Profile.Language], url: "/Patientdefines", permission: checkAuth('patientdefineview') },
-                { id: 5, subtitle: Literals.Patientstocks.Page.Pageheader[Profile.Language], url: "/Patientstocks", permission: checkAuth('patientstockview') },
-                { id: 6, subtitle: Literals.Patientmedicines.Page.Pageheader[Profile.Language], url: "/Patientmedicines", permission: checkAuth('patientmedicineview') },
-                { id: 7, subtitle: Literals.Patientsupplies.Page.Pageheader[Profile.Language], url: "/Patientsupplies", permission: checkAuth('patientsupplyview') },
-                { id: 8, subtitle: Literals.Patientstockmovements.Page.Pageheader[Profile.Language], url: "/Patientstockmovements", permission: checkAuth('patientstockmovementview') },
+                //   { id: 5, subtitle: Literals.Patientstocks.Page.Pageheader[Profile.Language], url: "/Patientstocks", permission: checkAuth('patientstockview') },
+                //  { id: 6, subtitle: Literals.Patientmedicines.Page.Pageheader[Profile.Language], url: "/Patientmedicines", permission: checkAuth('patientmedicineview') },
+                //  { id: 7, subtitle: Literals.Patientsupplies.Page.Pageheader[Profile.Language], url: "/Patientsupplies", permission: checkAuth('patientsupplyview') },
+                //  { id: 8, subtitle: Literals.Patientstockmovements.Page.Pageheader[Profile.Language], url: "/Patientstockmovements", permission: checkAuth('patientstockmovementview') },
                 { id: 9, subtitle: Literals.Patientcashmovements.Page.Pageheader[Profile.Language], url: "/Patientcashmovements", permission: checkAuth('patientcashmovementview') },
-                { id: 10, subtitle: Literals.Patientusestocks.Page.Pageheader[Profile.Language], url: "/Patientusestocks", permission: checkAuth('patientview') },
-                { id: 11, subtitle: Literals.Patientusemedicines.Page.Pageheader[Profile.Language], url: "/Patientusemedicines", permission: checkAuth('patientview') },
-                { id: 12, subtitle: Literals.Patientusesupplies.Page.Pageheader[Profile.Language], url: "/Patientusesupplies", permission: checkAuth('patientview') },
+                //  { id: 10, subtitle: Literals.Patientusestocks.Page.Pageheader[Profile.Language], url: "/Patientusestocks", permission: checkAuth('patientview') },
+                //  { id: 11, subtitle: Literals.Patientusemedicines.Page.Pageheader[Profile.Language], url: "/Patientusemedicines", permission: checkAuth('patientview') },
+                //  { id: 12, subtitle: Literals.Patientusesupplies.Page.Pageheader[Profile.Language], url: "/Patientusesupplies", permission: checkAuth('patientview') },
                 { id: 13, subtitle: Literals.Careplans.Page.Pageheader[Profile.Language], url: "/Careplans", permission: checkAuth('careplanview') },
-            ]
-        },
-        {
-            id: 4,
-            title: Sidebarliterals.Orders[Profile.Language],
-            isOpened: false,
-            icon: <TbAccessPoint className=' text-[#2355a0]' />,
-            items: [
-                { id: 1, subtitle: Literals.Purchaseorders.Page.Pageheader[Profile.Language], url: "/Purchaseorders", permission: checkAuth('purchaseorderview') },
-                { id: 2, subtitle: Literals.Purchaseorderstocks.Page.Pageheader[Profile.Language], url: "/Purchaseorderstocks", permission: checkAuth('purchaseorderstockview') },
-                { id: 3, subtitle: Literals.Purchaseordermedicines.Page.Pageheader[Profile.Language], url: "/Purchaseordermedicines", permission: checkAuth('purchaseordermedicineview') },
-                { id: 4, subtitle: Literals.Purchaseordersupplies.Page.Pageheader[Profile.Language], url: "/Purchaseordersupplies", permission: checkAuth('purchaseordersupplyview') },
-                { id: 5, subtitle: Literals.Purchaseorderstockmovements.Page.Pageheader[Profile.Language], url: "/Purchaseorderstockmovements", permission: checkAuth('purchaseorderstockmovementview') },
             ]
         },
         {
@@ -234,13 +242,12 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <TbActivity className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: Literals.Warehouses.Page.Pageheader[Profile.Language], url: "/Warehouses", permission: checkAuth('warehouseview') },
-                { id: 2, subtitle: Literals.Medicines.Page.Pageheader[Profile.Language], url: "/Medicines", permission: checkAuth('patientmedicineview') },
+                { id: 1, subtitle: Literals.Purchaseorders.Page.Pageheader[Profile.Language], url: "/Purchaseorders", permission: checkAuth('purchaseorderview') },
+                { id: 2, subtitle: Literals.Warehouses.Page.Pageheader[Profile.Language], url: "/Warehouses", permission: checkAuth('warehouseview') },
                 { id: 3, subtitle: Literals.Stocks.Page.Pageheader[Profile.Language], url: "/Stocks", permission: checkAuth('stockview') },
-                { id: 4, subtitle: Literals.Supplies.Page.Pageheader[Profile.Language], url: "/Supplies", permission: checkAuth('supplyview') },
-                { id: 5, subtitle: Literals.Stockmovements.Page.Pageheader[Profile.Language], url: "/Stockmovements", permission: checkAuth('stockmovementview') },
-                { id: 6, subtitle: Literals.Equipmentgroups.Page.Pageheader[Profile.Language], url: "/Equipmentgroups", permission: checkAuth('equipmentgroupview') },
-                { id: 7, subtitle: Literals.Equipments.Page.Pageheader[Profile.Language], url: "/Equipments", permission: checkAuth('equipmentview') },
+                { id: 4, subtitle: Literals.Stockmovements.Page.Pageheader[Profile.Language], url: "/Stockmovements", permission: checkAuth('stockmovementview') },
+                { id: 5, subtitle: Literals.Equipmentgroups.Page.Pageheader[Profile.Language], url: "/Equipmentgroups", permission: checkAuth('equipmentgroupview') },
+                { id: 6, subtitle: Literals.Equipments.Page.Pageheader[Profile.Language], url: "/Equipments", permission: checkAuth('equipmentview') },
             ]
         },
         {
@@ -266,6 +273,8 @@ export const getSidebarroutes = (Profile) => {
                 { id: 3, subtitle: Literals.Users.Page.Pageheader[Profile.Language], url: "/Users", permission: checkAuth('userview') },
                 { id: 4, subtitle: Literals.Cases.Page.Pageheader[Profile.Language], url: "/Cases", permission: checkAuth('caseview') },
                 { id: 5, subtitle: Literals.Units.Page.Pageheader[Profile.Language], url: "/Units", permission: checkAuth('unitview') },
+                { id: 5, subtitle: Literals.Stocktypes.Page.Pageheader[Profile.Language], url: "/Stocktypes", permission: checkAuth('stocktypeview') },
+                { id: 5, subtitle: Literals.Stocktypegroups.Page.Pageheader[Profile.Language], url: "/Stocktypegroups", permission: checkAuth('stocktypegroupview') },
                 { id: 6, subtitle: Literals.Stockdefines.Page.Pageheader[Profile.Language], url: "/Stockdefines", permission: checkAuth('stockdefineview') },
                 { id: 7, subtitle: Literals.Files.Page.Pageheader[Profile.Language], url: "/Files", permission: checkAuth('fileview') },
                 { id: 8, subtitle: Literals.Floors.Page.Pageheader[Profile.Language], url: "/Floors", permission: checkAuth('floorview') },
@@ -290,3 +299,48 @@ export const getSidebarroutes = (Profile) => {
     ]
     return defaultpages
 }
+
+export const LIVE_OPTION_LIVING = false
+export const LIVE_OPTION_NOT_LIVING = true
+export const LIVE_OPTION = [
+    { key: 0, text: { en: "No, Not Living", tr: 'Hayır, Yaşamıyor' }, value: LIVE_OPTION_NOT_LIVING },
+    { key: 1, text: { en: "Yes, Living", tr: 'Evet, Yaşıyor' }, value: LIVE_OPTION_LIVING },
+]
+
+
+export const GENDER_OPTION_MEN = "0"
+export const GENDER_OPTION_WOMEN = "1"
+export const GENDER_OPTION = [
+    { key: 0, text: { en: "MEN", tr: 'ERKEK' }, value: GENDER_OPTION_MEN },
+    { key: 1, text: { en: "WOMEN", tr: 'KADIN' }, value: GENDER_OPTION_WOMEN },
+]
+
+export const AFFINITY_OPTION_OWN = "0"
+export const AFFINITY_OPTION_STEP = "1"
+export const AFFINITY_OPTION = [
+    { key: 0, text: { en: "Own", tr: 'Öz' }, value: AFFINITY_OPTION_OWN },
+    { key: 1, text: { en: "Step", tr: 'Üvey' }, value: AFFINITY_OPTION_STEP },
+]
+
+export const MEDICALBOARDREPORT_OPTION_SPIRITUAL = "Ruhsal"
+export const MEDICALBOARDREPORT_OPTION_PHYSICAL = "Bedensel"
+export const MEDICALBOARDREPORT_OPTION_MENTAL = "Zihinsel"
+export const MEDICALBOARDREPORT_OPTION = [
+    { key: 0, text: { tr: "Ruhsal", en: 'Spiritual' }, value: AFFINITY_OPTION_OWN },
+    { key: 1, text: { tr: "Bedensel", en: 'Physical' }, value: AFFINITY_OPTION_STEP },
+    { key: 2, text: { tr: "Zihinsel", en: 'Mental' }, value: AFFINITY_OPTION_STEP },
+]
+
+export const CASE_STATUS_DEACTIVE = -1
+export const CASE_STATUS_PASSIVE = 0
+export const CASE_STATUS_COMPLETE = 1
+export const CASE_STATUS_START = 2
+
+export const CASE_PATIENT_STATUS_PASSIVE = 0
+export const CASE_PATIENT_STATUS_ONORGANIZATION = 1
+export const CASE_PATIENT_STATUS_FIRST_REGISTER = 2
+export const CASE_PATIENT_STATUS_ONHOSPITAL = 3
+export const CASE_PATIENT_STATUS_DEATH = 4
+export const CASE_PATIENT_STATUS_CHECK = 5
+export const CASE_PATIENT_STATUS_LEFT = 6
+export const CASE_PATIENT_STATUS_PLACE_CHANGE = 7

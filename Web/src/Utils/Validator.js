@@ -66,6 +66,20 @@ const isValidURL = function (str) {
   return !!pattern.test(str);
 }
 
+const isCountryID = (tcNumber) => {
+  if (/^[1-9][0-9]{10}$/.test(tcNumber)) {
+    const numberArray = tcNumber.split('').map(Number);
+    const lastDigit = numberArray.pop();
+    const sum = numberArray.reduce((acc, current, index) => acc + current, 0);
+    const tenthDigit = sum % 10;
+
+    if ((tenthDigit === lastDigit && numberArray[0] !== 0) || (sum % 10 === 0 && lastDigit === 0)) {
+      return true;
+    }
+  }
+  return false;
+};
+
 const validator = {
   isValidURL,
   isIpAddress,
@@ -79,7 +93,8 @@ const validator = {
   isPositiveInteger,
   isNumber,
   isObject,
-  isUUID
+  isUUID,
+  isCountryID
 }
 
 export default validator

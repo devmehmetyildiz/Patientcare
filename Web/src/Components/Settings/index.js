@@ -93,13 +93,13 @@ export default function Settings(props) {
                 </Modal.Content>
             </Modal>
             : <GridColumn stretched={Profile.Ismobile} width={8} >
+                {Additionalfunction && <Button className='!bg-[#2355a0] !text-white' floated='right' onClick={Additionalfunction} >{Additionalfunctiontxt}</Button>}
                 {Showcreatebutton && willshowcolumncreate && <Link className="pr-1" to={Pagecreatelink}>
                     <Button className='!bg-[#2355a0] !text-white' fluid={Profile.Ismobile} floated={`${Profile.Ismobile ? '' : 'right'}`} >
                         {Pagecreateheader}
                     </Button>
                 </Link>}
                 {Showcolumnchooser && willshowmanageview && <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />}
-                {Additionalfunction && <Button className='!bg-[#2355a0] !text-white' floated='right' onClick={Additionalfunction} >{Additionalfunctiontxt}</Button>}
                 {Showexcelimport && willshowreport && <ExcelImport columns={Columns} addData={AddRecord} />}
                 {Showexcelexport && willshowreport && <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />}
             </GridColumn>

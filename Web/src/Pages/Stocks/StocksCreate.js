@@ -7,30 +7,43 @@ import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import WarehousesCreate from '../../Containers/Warehouses/WarehousesCreate'
 import StockdefinesCreate from '../../Containers/Stockdefines/StockdefinesCreate'
-import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 export default class StocksCreate extends Component {
 
   PAGE_NAME = "StocksCreate"
 
   componentDidMount() {
-    const { GetDepartments, GetStockdefines, GetWarehouses } = this.props
-    GetDepartments()
+    const { GetStocktypes, GetStockdefines, GetWarehouses, GetStocktypegroups } = this.props
+    GetStocktypes()
     GetStockdefines()
     GetWarehouses()
+    GetStocktypegroups()
   }
 
   render() {
-    const { Stocks, Warehouses, Departments, Stockdefines, Profile, history, closeModal } = this.props
+    const { Stocks, Warehouses, Stocktypes, Stocktypegroups, Stockdefines, Profile, history, closeModal } = this.props
 
-    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
-      return { key: department.Uuid, text: department.Name, value: department.Uuid }
+    const selectedstockdefineId = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
+    const selectedwarehouseId = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
+    const stockdefine = (Stockdefines.list || []).find(item => item.Uuid === selectedstockdefineId)
+    const selectedstocktypeId = stockdefine?.StocktypeID
+    const stocktype = (Stocktypes.list || []).find(item => item.Uuid === selectedstocktypeId)
+    const Issktneeded = stocktype?.Issktneed
+
+    const warehousestocktypes = ((Warehouses.list || [])
+      .find(u => u?.Uuid === selectedwarehouseId)?.Stocktypegroups || '')
+      .split(',')
+      .filter(u => validator.isUUID(u))
+      .flatMap(groupId => ((Stocktypegroups.list || []).find(group => group?.Uuid === groupId)?.Stocktypes || '').split(',').filter(u => validator.isUUID(u)) || [])
+      .filter(u => validator.isUUID(u))
+
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && (warehousestocktypes || []).includes(u.StocktypeID)).map(item => {
+      return { key: item.Uuid, text: item.Name, value: item.Uuid }
     })
-    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && !u.Ismedicine && !u.Issupply).map(define => {
-      return { key: define.Uuid, text: define.Name, value: define.Uuid }
+
+    const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive).map(item => {
+      return { key: item.Uuid, text: item.Name, value: item.Uuid }
     })
-    const Warehouseoptions = (Warehouses.list || []).filter(u => u.Isactive && !u.Ismedicine).map(warehouse => {
-      return { key: warehouse.Uuid, text: warehouse.Name, value: warehouse.Uuid }
-    })
+
 
     return (
       Stocks.isLoading ? <LoadingPage /> :
@@ -49,12 +62,12 @@ export default class StocksCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' modal={WarehousesCreate} />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' modal={WarehousesCreate} effect={this.onWarehousechange} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' modal={StockdefinesCreate} />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Department[Profile.Language]} options={Departmentoptions} name="DepartmentID" formtype='dropdown' modal={DepartmentsCreate} />
+                {Issktneeded ? <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' /> : null}
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' min={0} max={9999}/>
               </Form.Group>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
@@ -80,17 +93,20 @@ export default class StocksCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddStocks, history, fillStocknotification, Profile, closeModal } = this.props
+    const { AddStocks, history, fillStocknotification, Profile, closeModal, Stockdefines, Stocktypes } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
-    data.Order = 0
-    data.Ismedicine = false
-    data.Issupply = false
-    data.Isredprescription = false
+    data.Type = 0
     data.Isapproved = false
+    data.Isdeactivated = false
+    data.Deactivateinfo = ""
+
+    const selectedstockdefineId = data?.StockdefineID
+    const stockdefine = (Stockdefines.list || []).find(item => item.Uuid === selectedstockdefineId)
+    const selectedstocktypeId = stockdefine?.StocktypeID
+    const stocktype = (Stocktypes.list || []).find(item => item.Uuid === selectedstocktypeId)
+    const Issktneeded = stocktype?.Issktneed
+
     let errors = []
-    if (!validator.isUUID(data.DepartmentID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
-    }
     if (!validator.isUUID(data.WarehouseID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.WarehouseRequired[Profile.Language] })
     }
@@ -100,6 +116,14 @@ export default class StocksCreate extends Component {
     if (!validator.isNumber(data.Amount)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.AmountRequired[Profile.Language] })
     }
+    if (Issktneeded) {
+      if (!validator.isISODate(data.Skt)) {
+        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.SktRequired[Profile.Language] })
+      }
+    } else {
+      data.Skt = null
+    }
+
     if (errors.length > 0) {
       errors.forEach(error => {
         fillStocknotification(error)
@@ -107,6 +131,15 @@ export default class StocksCreate extends Component {
     } else {
       AddStocks({ data, history, closeModal })
     }
+  }
+
+  onWarehousechange = () => {
+    this.context.setFormstates(prev => ({
+      ...prev,
+      [`${this.PAGE_NAME}/StockdefineID`]: "",
+      [`${this.PAGE_NAME}/Skt`]: null,
+      [`${this.PAGE_NAME}/Amount`]: 0,
+    }))
   }
 
 }

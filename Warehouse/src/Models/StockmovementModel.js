@@ -19,17 +19,8 @@ module.exports = sequelize.define('stockmovementModel', {
     Amount: {
         type: Sequelize.DOUBLE
     },
-    Prevvalue: {
-        type: Sequelize.DOUBLE
-    },
-    Newvalue: {
-        type: Sequelize.DOUBLE
-    },
     Movementdate: {
         type: Sequelize.DATE
-    },
-    Status: {
-        type: Sequelize.INTEGER
     },
     Createduser: {
         type: Sequelize.STRING

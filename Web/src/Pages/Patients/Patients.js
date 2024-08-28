@@ -1,25 +1,60 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Grid, GridColumn, Icon, Loader } from 'semantic-ui-react'
-import Literals from './Literals'
-import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
-import { ROUTES, getInitialconfig } from '../../Utils/Constants'
+import { Breadcrumb, Checkbox, Grid, GridColumn, Icon, Loader, Tab } from 'semantic-ui-react'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
+import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT, GENDER_OPTION_MEN, ROUTES, getInitialconfig } from '../../Utils/Constants'
 import config from '../../Config'
-export default class Patients extends Component {
+import Formatdate from '../../Utils/Formatdate'
+import PatientsLeftModal from '../../Containers/Patients/PatientsLeftModal'
+import PatientsDeadModal from '../../Containers/Patients/PatientsDeadModal'
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-      selectedrecord: {},
-      stocksStatus: [],
-      filesStatus: [],
-      collapseStatus: []
+
+export default function Patients(props) {
+
+  const { Patients, Profile, Cases, Patientdefines, Files, Usagetypes, Floors, Rooms, Beds, handleSelectedPatient, handleDetailmodal } = props
+  const t = Profile?.i18n?.t || null
+
+  const { isLoading } = Patients
+
+  const Columns = [
+    { Header: t('Common.Column.Id'), accessor: 'Id' },
+    { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+    { Header: t('Pages.Patients.Column.Name'), accessor: row => nameCellhandler(row), Cell: (col, row) => imageCellhandler(col, row), Title: true },
+    { Header: t('Pages.Patients.Column.Gender'), accessor: row => genderCellhandler(row) },
+    { Header: t('Pages.Patients.Column.Registerdate'), accessor: row => dateCellhandler(row?.Registerdate) },
+    { Header: t('Pages.Patients.Column.Approvaldate'), accessor: row => dateCellhandler(row?.Approvaldate) },
+    { Header: t('Pages.Patients.Column.Leavedate'), accessor: row => dateCellhandler(row?.Leavedate), key: 'left' },
+    { Header: t('Pages.Patients.Column.Leftinfo'), accessor: 'Leftinfo', key: 'left' },
+    { Header: t('Pages.Patients.Column.Deathdate'), accessor: row => dateCellhandler(row?.Deathdate), key: 'dead' },
+    { Header: t('Pages.Patients.Column.Deadinfo'), accessor: 'Deadinfo', key: 'dead' },
+    { Header: t('Pages.Patients.Column.Floor'), accessor: row => floorCellhandler(row?.FloorID), Lowtitle: true, Withtext: true, key: 'pass' },
+    { Header: t('Pages.Patients.Column.Room'), accessor: row => roomCellhandler(row?.RoomID), Lowtitle: true, Withtext: true, key: 'pass' },
+    { Header: t('Pages.Patients.Column.Bed'), accessor: row => bedCellhandler(row?.BedID), Lowtitle: true, Withtext: true, key: 'pass' },
+    { Header: t('Pages.Patients.Column.Case'), accessor: row => caseCellhandler(row?.CaseID), Subtitle: true },
+    { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+    { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+    { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+    { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+    { Header: t('Common.Column.define'), accessor: 'define', disableProps: true },
+  ]
+
+  let passCaselist = (Cases.list || []).filter(u => u.Patientstatus !== CASE_PATIENT_STATUS_DEATH && u.Patientstatus !== CASE_PATIENT_STATUS_LEFT).map(u => u.Uuid)
+  let deadCaselist = (Cases.list || []).filter(u => u.Patientstatus === CASE_PATIENT_STATUS_DEATH).map(u => u.Uuid)
+  let leftCaselist = (Cases.list || []).filter(u => u.Patientstatus === CASE_PATIENT_STATUS_LEFT).map(u => u.Uuid)
+
+  const list = (Patients.list || []).filter(u => u.Isactive).map(item => {
+    const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === item?.PatientdefineID)
+    return {
+      ...item,
+      define: <Link key={item?.Uuid} to={`/Patientdefines/${patientdefine?.Uuid}/edit`} ><Icon size='large' color='red' className='row-edit' name='address book' /> </Link>,
     }
-  }
+  })
 
+  const passList = list.filter(u => (passCaselist || []).includes(u?.CaseID))
+  const deadList = list.filter(u => (deadCaselist || []).includes(u?.CaseID))
+  const leftList = list.filter(u => (leftCaselist || []).includes(u?.CaseID))
 
-  componentDidMount() {
+  useEffect(() => {
     const {
       GetPatients,
       GetPatientdefines,
@@ -27,140 +62,35 @@ export default class Patients extends Component {
       GetBeds,
       GetFloors,
       GetCases,
-      GetFiles,
-      GetPatientstocks,
       GetStockdefines,
-      GetUsagetypes
-    } = this.props
+      GetUsagetypes,
+      GetFiles
+    } = props
     GetPatients()
     GetPatientdefines()
     GetRooms()
     GetBeds()
     GetFloors()
     GetCases()
-    GetFiles()
-    GetPatientstocks()
     GetUsagetypes()
     GetStockdefines()
-  }
+    GetFiles()
+  }, [])
 
-
-  render() {
-    const { Patients, Profile, Cases } = this.props
-    const { isLoading } = Patients
-
-    const colProps = {
-      sortable: true,
-      canGroupBy: true,
-      canFilter: true
-    }
-
-    const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: row => this.nameCellhandler(row), Cell: (col, row) => this.imageCellhandler(col, row), Title: true },
-      { Header: Literals.Columns.Registerdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Registerdate) },
-      { Header: Literals.Columns.Approvaldate[Profile.Language], accessor: row => this.dateCellhandler(row?.Approvaldate) },
-      { Header: Literals.Columns.Floor[Profile.Language], accessor: row => this.floorCellhandler(row?.FloorID), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Room[Profile.Language], accessor: row => this.roomCellhandler(row?.RoomID), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Bed[Profile.Language], accessor: row => this.bedCellhandler(row?.BedID), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Case[Profile.Language], accessor: row => this.caseCellhandler(row?.CaseID), Subtitle: true },
-      { Header: Literals.Columns.Stocks[Profile.Language], accessor: row => this.stockCellhandler(row) },
-      { Header: Literals.Columns.Files[Profile.Language], accessor: row => this.filesCellhandler(row) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-      { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
-    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
-
-    const metaKey = "patient"
-    let initialConfig = getInitialconfig(Profile, metaKey)
-
-    let passCaselist = (Cases.list || []).filter(u => u.Patientstatus !== 4 && u.Patientstatus !== 6).map(u => u.Uuid)
-
-    const list = (Patients.list || []).filter(u => !u.Iswaitingactivation).filter(u => (passCaselist || []).includes(u?.CaseID)).map(item => {
-      return {
-        ...item,
-        Filestxt: '',
-        Stockstxt: '',
-        actions: <Link key={item?.Uuid} to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
-      }
-    })
-
-    return (
-      isLoading ? <LoadingPage /> :
-        <React.Fragment>
-          <Pagewrapper>
-            <Headerwrapper>
-              <Grid columns='2' >
-                <GridColumn width={8}>
-                  <Breadcrumb size='big'>
-                    <Link to={"/Patients"}>
-                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-                    </Link>
-                  </Breadcrumb>
-                </GridColumn>
-                <Settings
-                  Profile={Profile}
-                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
-                  Pagecreatelink={"/Patients/Create"}
-                  Columns={Columns}
-                  list={list}
-                  initialConfig={initialConfig}
-                  metaKey={metaKey}
-                  Showcreatebutton
-                  Showcolumnchooser
-                  Showexcelexport
-                />
-              </Grid>
-            </Headerwrapper>
-            <Pagedivider />
-            {list.length > 0 ?
-              <div className='w-full mx-auto '>
-                {Profile.Ismobile ?
-                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
-            }
-          </Pagewrapper>
-        </React.Fragment >
-    )
-  }
-
-  handleCollapstatus = (floorID) => {
-    const isHave = this.state.collapseStatus.includes(floorID)
-    if (isHave) {
-      let previous = this.state.collapseStatus.filter(u => u !== floorID)
-      this.setState({ collapseStatus: previous })
-    } else {
-      let previous = this.state.collapseStatus
-      previous.push(floorID)
-      this.setState({ collapseStatus: previous })
-    }
-  }
-
-  handleClick = (e, titleProps) => {
-    const { index } = titleProps
-    const items = [...this.state.activeIndex]
-    if (items.includes(index)) {
-      const x = items.filter(item => item !== index);
-      this.setState({ activeIndex: x })
-    } else {
-      items.push(index)
-      this.setState({ activeIndex: items })
-    }
-  }
-
-  nameCellhandler = (row) => {
-    const { Patientdefines } = this.props
+  const nameCellhandler = (row) => {
     const patient = row
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
     return `${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`
   }
 
-  imageCellhandler = (col, row) => {
-    const { Files, Patientdefines, Usagetypes, Profile } = this.props
+  const genderCellhandler = (row) => {
+    const patient = row
+    const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+    const gender = patientdefine?.Gender
+    return gender ? gender === GENDER_OPTION_MEN ? t('Pages.Patients.Column.GenderMen') : t('Pages.Patients.Column.GenderWomen') : t('Common.NoDataFound')
+  }
+
+  const imageCellhandler = (col, row) => {
     if (!col?.cell?.isGrouped && !Profile.Ismobile) {
       const patient = col?.row?.original || row
       if (!patient?.Uuid) {
@@ -169,9 +99,9 @@ export default class Patients extends Component {
       const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
       let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
       let file = (Files.list || []).filter(u => u.ParentID === patient?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
-      return <div className='flex justify-start items-center flex-row flex-nowrap whitespace-nowrap'>
+      return <div className='flex justify-start items-center flex-row flex-wrap whitespace-nowrap'>
         {file
-          ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file?.Uuid}`} className="rounded-full" style={{ width: '40px', height: '40px' }} />
+          ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file?.Uuid}`} className="rounded-full" style={{ width: '30px', height: '30px' }} />
           : null}
         {patientdefine?.Firstname ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}` : `${patientdefine?.CountryID}`}
       </div>
@@ -185,8 +115,7 @@ export default class Patients extends Component {
     }
   }
 
-  floorCellhandler = (value) => {
-    const { Floors } = this.props
+  const floorCellhandler = (value) => {
     if (Floors.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
@@ -194,8 +123,7 @@ export default class Patients extends Component {
     }
   }
 
-  roomCellhandler = (value) => {
-    const { Rooms } = this.props
+  const roomCellhandler = (value) => {
     if (Rooms.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
@@ -203,8 +131,7 @@ export default class Patients extends Component {
     }
   }
 
-  bedCellhandler = (value) => {
-    const { Beds } = this.props
+  const bedCellhandler = (value) => {
     if (Beds.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
@@ -212,8 +139,7 @@ export default class Patients extends Component {
     }
   }
 
-  caseCellhandler = (value) => {
-    const { Cases } = this.props
+  const caseCellhandler = (value) => {
     if (Cases.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
@@ -221,96 +147,304 @@ export default class Patients extends Component {
     }
   }
 
-  dateCellhandler = (value) => {
+  const dateCellhandler = (value) => {
     if (value) {
-      return value.split('T')[0]
+      return Formatdate(value, true)
     }
     return null
   }
 
-  stockCellhandler = (row) => {
 
-    const { Patientstocks, Stockdefines } = this.props
-
-    const itemId = row?.Uuid
-    const itemStocks = (Patientstocks.list || []).filter(u => u.PatientID === itemId)
-    let stockstext = (itemStocks || []).map((stock) => {
-      return (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)?.Name
-    }).join(", ")
-
-    return stockstext.length - 35 > 20 ?
-      (
-        !this.state.stocksStatus.includes(itemId) ?
-          [stockstext.slice(0, 35) + ' ...(' + itemStocks.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandStocks(itemId)}> ...Daha Fazla Göster</Link>] :
-          [stockstext, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkStocks(itemId)}> ...Daha Az Göster</Link>]
-      ) : stockstext
-  }
-
-  filesCellhandler = (row) => {
-
-    const { Files } = this.props
-    const itemId = row?.Uuid
-    const itemFiles = (Files.list || []).filter(u => u.ParentID === itemId)
-    let filestext = (itemFiles || []).map((file) => {
-      return file?.Name;
-    }).join(", ")
-
-    return filestext.length - 35 > 20 ?
-      (
-        !this.state.filesStatus.includes(itemId) ?
-          [filestext.slice(0, 35) + ' ...(' + itemFiles.length + ')', <Link key={itemId} to='#' className='showMoreOrLess' onClick={() => this.expandFiles(itemId)}> ...Daha Fazla Göster</Link>] :
-          [filestext, <Link key={itemId} to='#' className='showMoreOrLess' onClick={() => this.shrinkFiles(itemId)}> ...Daha Az Göster</Link>]
-      ) : filestext
-  }
-
-  expandStocks = (rowid) => {
-    const prevData = this.state.stocksStatus
-    prevData.push(rowid)
-    this.setState({ stocksStatus: [...prevData] })
-  }
-
-  shrinkStocks = (rowid) => {
-    const index = this.state.stocksStatus.indexOf(rowid)
-    const prevData = this.state.stocksStatus
-    if (index > -1) {
-      prevData.splice(index, 1)
-      this.setState({ stocksStatus: [...prevData] })
-    }
-  }
-  expandFiles = (rowid) => {
-    const prevData = this.state.filesStatus
-    prevData.push(rowid)
-    this.setState({ filesStatus: [...prevData] })
-  }
-
-  shrinkFiles = (rowid) => {
-    const index = this.state.filesStatus.indexOf(rowid)
-    const prevData = this.state.filesStatus
-    if (index > -1) {
-      prevData.splice(index, 1)
-      this.setState({ filesStatus: [...prevData] })
-    }
-  }
-
-  /*   generatePDF = (html) => {
-      const pdf = new jsPDF({
-        orientation: 'p',
-        unit: 'px',
-        format: 'a4',
-        putOnlyUsedFonts: true,
-        floatPrecision: 16 // or "smart", default is 16
-      });
-      pdf.addFont(myTurkishFont, 'AbhayaLibre-Medium', 'normal');
-      pdf.setFont('AbhayaLibre-Medium');
-      const options = {
-        callback: () => {
-          pdf.save("download.pdf");
-        }
-      };
-      // Convert the HTML element to PDF with the specified options
-      pdf.html(html, options);
-    }
-   */
-
+  return (
+    isLoading ? <LoadingPage /> :
+      <React.Fragment>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Grid columns='2' >
+              <GridColumn width={8}>
+                <Breadcrumb size='big'>
+                  <Link to={"/Patients"}>
+                    <Breadcrumb.Section>{t('Pages.Patients.Page.Header')}</Breadcrumb.Section>
+                  </Link>
+                </Breadcrumb>
+              </GridColumn>
+              <Settings
+                Profile={Profile}
+                Pagecreateheader={t('Pages.Patients.Page.CreateHeader')}
+                Pagecreatelink={"/Patients/Create"}
+                Showcreatebutton
+              />
+            </Grid>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Tab
+              className="w-full !bg-transparent"
+              panes={[
+                {
+                  menuItem: `${t('Pages.Patients.Page.Tab.PassHeader')} (${(passList || []).length})`,
+                  pane: {
+                    key: 'pass',
+                    content: <PassPatientList
+                      Profile={Profile}
+                      list={passList}
+                      Columns={Columns}
+                    />
+                  }
+                },
+                {
+                  menuItem: `${t('Pages.Patients.Page.Tab.DeadHeader')} (${(deadList || []).length})`,
+                  pane: {
+                    key: 'dead',
+                    content: <DeadPatientList
+                      Profile={Profile}
+                      list={deadList}
+                      Columns={Columns}
+                      handleSelectedPatient={handleSelectedPatient}
+                      handleDetailmodal={handleDetailmodal}
+                    />
+                  }
+                },
+                {
+                  menuItem: `${t('Pages.Patients.Page.Tab.LeftHeader')} (${(leftList || []).length})`,
+                  pane: {
+                    key: 'left',
+                    content: <LeftPatientList
+                      Profile={Profile}
+                      list={leftList}
+                      Columns={Columns}
+                      handleSelectedPatient={handleSelectedPatient}
+                      handleDetailmodal={handleDetailmodal}
+                    />
+                  }
+                },
+              ]}
+              renderActiveOnly={false}
+            />
+          </Contentwrapper>
+        </Pagewrapper>
+      </React.Fragment >
+  )
 }
 
+
+function PassPatientList({ Profile, Columns, list }) {
+
+  const [selectedRecords, setSelectedRecords] = useState([])
+  const [openMulti, setOpenMulti] = useState(false)
+  const [openplace, setOpenplace] = useState(false)
+  const [opendead, setOpendead] = useState(false)
+  const [openleft, setOpenleft] = useState(false)
+  const [record, setRecord] = useState(null)
+
+  const colProps = {
+    sortable: true,
+    canGroupBy: true,
+    canFilter: true
+  }
+
+  const metaKey = "patients"
+  let initialConfig = getInitialconfig(Profile, metaKey)
+  const t = Profile?.i18n?.t || null
+
+  const columns = [
+    { Header: t('Common.Column.Empty'), accessor: 'select', disableProps: true },
+    ...Columns.filter(u => u.key ? u.key === 'pass' : true),
+    { Header: t('Pages.Patients.Column.changeplace'), accessor: 'changeplace', disableProps: true },
+    { Header: t('Pages.Patients.Column.deadpatient'), accessor: 'deadpatient', disableProps: true },
+    { Header: t('Pages.Patients.Column.leftpatient'), accessor: 'leftpatient', disableProps: true },
+    { Header: t('Common.Column.detail'), accessor: 'actions', disableProps: true }
+  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+
+  const decoratedList = list.map(item => {
+
+    return {
+      ...item,
+      select: <div
+        onClick={() => {
+          (selectedRecords || []).includes(item?.Uuid)
+            ? setSelectedRecords((selectedRecords || []).filter(u => u !== item?.Uuid))
+            : setSelectedRecords([item?.Uuid, ...(selectedRecords || [])])
+        }}
+        className='flex justify-center items-center'>
+        <Checkbox checked={selectedRecords.includes(item?.Uuid)} />
+      </div>,
+      deadpatient: <div
+        className='cursor-pointer'
+        onClick={() => {
+          setRecord(item)
+          setOpendead(true)
+        }}
+      >
+        <Icon size='large' color='black' className='row-edit' name='tag' />
+      </div>,
+      leftpatient: <div
+        className='cursor-pointer'
+        onClick={() => {
+          setRecord(item)
+          setOpenleft(true)
+        }}
+      >
+        <Icon size='large' color='blue' className='row-edit' name='external share' />
+      </div>,
+      changeplace: <div
+        className='cursor-pointer'
+        onClick={() => {
+          setRecord(item)
+          setOpenplace(true)
+        }}
+      >
+        <Icon size='large' color='green' className='row-edit' name='exchange' />
+      </div>,
+      actions: <Link key={item?.Uuid} to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
+    }
+  })
+
+  return (
+    <>
+      <Headerwrapper>
+        <Grid columns='2' >
+          <GridColumn width={8} />
+          <Settings
+            Profile={Profile}
+            Columns={columns}
+            list={decoratedList}
+            initialConfig={initialConfig}
+            metaKey={metaKey}
+            Showcolumnchooser
+            Showexcelexport
+            Additionalfunctiontxt="Çoklu Seçim"
+            Additionalfunction={() => { alert("yes") }}
+          />
+        </Grid>
+      </Headerwrapper>
+      {list.length > 0 ?
+        <div className='w-full mx-auto '>
+          {Profile.Ismobile ?
+            <MobileTable Columns={columns} Data={decoratedList} Config={initialConfig} Profile={Profile} /> :
+            <DataTable Columns={columns} Data={decoratedList} Config={initialConfig} />}
+        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
+      }
+      <PatientsLeftModal
+        open={openleft}
+        setOpen={setOpenleft}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PatientsDeadModal
+        open={opendead}
+        setOpen={setOpendead}
+        record={record}
+        setRecord={setRecord}
+      />
+    </>
+  )
+}
+
+function LeftPatientList({ Profile, Columns, list, handleSelectedPatient, handleDetailmodal }) {
+
+  const colProps = {
+    sortable: true,
+    canGroupBy: true,
+    canFilter: true
+  }
+
+  const metaKey = "patients"
+  let initialConfig = getInitialconfig(Profile, metaKey)
+  const t = Profile?.i18n?.t || null
+
+  const columns = [
+    ...Columns.filter(u => u.key ? u.key === 'left' : true),
+    { Header: t('Common.Column.detail'), accessor: 'actions', disableProps: true }
+  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+
+  const decoratedList = list.map(item => {
+    return {
+      ...item,
+      actions: <Icon link size='large' color='grey' name='history' onClick={() => {
+        handleSelectedPatient(item)
+        handleDetailmodal(true)
+      }} />,
+    }
+  })
+
+  return (
+    <>
+      <Headerwrapper>
+        <Grid columns='2' >
+          <GridColumn width={8} />
+          <Settings
+            Profile={Profile}
+            Columns={columns}
+            list={decoratedList}
+            initialConfig={initialConfig}
+            metaKey={metaKey}
+            Showcolumnchooser
+            Showexcelexport
+          />
+        </Grid>
+      </Headerwrapper>
+      {decoratedList.length > 0 ?
+        <div className='w-full mx-auto '>
+          {Profile.Ismobile ?
+            <MobileTable Columns={columns} Data={decoratedList} Config={initialConfig} Profile={Profile} /> :
+            <DataTable Columns={columns} Data={decoratedList} Config={initialConfig} />}
+        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
+      }
+    </>
+  )
+}
+
+function DeadPatientList({ Profile, Columns, list, handleSelectedPatient, handleDetailmodal }) {
+
+  const colProps = {
+    sortable: true,
+    canGroupBy: true,
+    canFilter: true
+  }
+
+  const metaKey = "patients"
+  let initialConfig = getInitialconfig(Profile, metaKey)
+  const t = Profile?.i18n?.t || null
+
+  const columns = [
+    ...Columns.filter(u => u.key ? u.key === 'dead' : true),
+    { Header: t('Common.Column.detail'), accessor: 'actions', disableProps: true }
+  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+
+  const decoratedList = list.map(item => {
+    return {
+      ...item,
+      actions: <Icon link size='large' color='grey' name='history' onClick={() => {
+        handleSelectedPatient(item)
+        handleDetailmodal(true)
+      }} />,
+    }
+  })
+
+  return (
+    <>
+      <Headerwrapper>
+        <Grid columns='2' >
+          <GridColumn width={8} />
+          <Settings
+            Profile={Profile}
+            Columns={columns}
+            list={decoratedList}
+            initialConfig={initialConfig}
+            metaKey={metaKey}
+            Showcolumnchooser
+            Showexcelexport
+          />
+        </Grid>
+      </Headerwrapper>
+      {decoratedList.length > 0 ?
+        <div className='w-full mx-auto '>
+          {Profile.Ismobile ?
+            <MobileTable Columns={columns} Data={decoratedList} Config={initialConfig} Profile={Profile} /> :
+            <DataTable Columns={columns} Data={decoratedList} Config={initialConfig} />}
+        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
+      }
+    </>
+  )
+}

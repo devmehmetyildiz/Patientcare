@@ -20,6 +20,10 @@ async function ChangeBedstatus(req, res, next) {
     PermissionHandler(req, next, 'bedupdate')
 }
 
+async function ChangeBedOccupied(req, res, next) {
+    PermissionHandler(req, next, 'bedupdate')
+}
+
 async function DeleteBed(req, res, next) {
     PermissionHandler(req, next, 'beddelete')
 }
@@ -30,5 +34,6 @@ module.exports = {
     AddBed,
     UpdateBed,
     DeleteBed,
-    ChangeBedstatus
+    ChangeBedstatus,
+    ChangeBedOccupied
 }

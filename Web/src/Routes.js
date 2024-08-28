@@ -18,10 +18,6 @@ const Departments = lazy(() => import('./Containers/Departments/Departments'));
 const DepartmentsCreate = lazy(() => import('./Containers/Departments/DepartmentsCreate'));
 const DepartmentsEdit = lazy(() => import('./Containers/Departments/DepartmentsEdit'));
 
-const Stations = lazy(() => import('./Containers/Stations/Stations'));
-const StationsCreate = lazy(() => import('./Containers/Stations/StationsCreate'));
-const StationsEdit = lazy(() => import('./Containers/Stations/StationsEdit'));
-
 const Cases = lazy(() => import('./Containers/Cases/Cases'));
 const CasesCreate = lazy(() => import('./Containers/Cases/CasesCreate'));
 const CasesEdit = lazy(() => import('./Containers/Cases/CasesEdit'));
@@ -34,34 +30,18 @@ const Users = lazy(() => import('./Containers/Users/Users'));
 const UsersCreate = lazy(() => import('./Containers/Users/UsersCreate'));
 const UsersEdit = lazy(() => import('./Containers/Users/UsersEdit'));
 
-const Stockdefines = lazy(() => import('./Containers/Stockdefines/Stockdefines'));
-const StockdefinesCreate = lazy(() => import('./Containers/Stockdefines/StockdefinesCreate'));
-const StockdefinesEdit = lazy(() => import('./Containers/Stockdefines/StockdefinesEdit'));
-
 const Files = lazy(() => import('./Containers/Files/Files'));
 const FilesCreate = lazy(() => import('./Containers/Files/FilesCreate'));
 const FilesEdit = lazy(() => import('./Containers/Files/FilesEdit'));
-
-const Purchaseorders = lazy(() => import('./Containers/Purchaseorders/Purchaseorders'));
-const PurchaseordersCreate = lazy(() => import('./Containers/Purchaseorders/PurchaseordersCreate'));
-const PurchaseordersEdit = lazy(() => import('./Containers/Purchaseorders/PurchaseordersEdit'));
-
-const Patienttypes = lazy(() => import('./Containers/Patienttypes/Patienttypes'));
-const PatienttypesCreate = lazy(() => import('./Containers/Patienttypes/PatienttypesCreate'));
-const PatienttypesEdit = lazy(() => import('./Containers/Patienttypes/PatienttypesEdit'));
 
 const Costumertypes = lazy(() => import('./Containers/Costumertypes/Costumertypes'));
 const CostumertypesCreate = lazy(() => import('./Containers/Costumertypes/CostumertypesCreate'));
 const CostumertypesEdit = lazy(() => import('./Containers/Costumertypes/CostumertypesEdit'));
 
-const Patientdefines = lazy(() => import('./Containers/Patientdefines/Patientdefines'));
-const PatientdefinesCreate = lazy(() => import('./Containers/Patientdefines/PatientdefinesCreate'));
-const PatientdefinesEdit = lazy(() => import('./Containers/Patientdefines/PatientdefinesEdit'));
-
 const Patients = lazy(() => import('./Containers/Patients/Patients'));
-const PatientsCreate = lazy(() => import('./Containers/Patients/PatientsCreate'));
-const PatientsEdit = lazy(() => import('./Containers/Patients/PatientsEdit'));
 const PatientsDetail = lazy(() => import('./Containers/Patients/PatientsDetail'));
+/*const PatientsEdit = lazy(() => import('./Containers/Patients/PatientsEdit'));
+const PatientsCreate = lazy(() => import('./Containers/Patients/PatientsCreate'));
 const PatientsFiles = lazy(() => import('./Containers/Patients/PatientsFiles'));
 const PatientsAddstock = lazy(() => import('./Containers/Patients/PatientsAddstock'));
 const PatientsAddmedicine = lazy(() => import('./Containers/Patients/PatientsAddmedicine'));
@@ -71,65 +51,64 @@ const PatientsEditcase = lazy(() => import('./Containers/Patients/PatientsEditca
 const PatientsEditroutine = lazy(() => import('./Containers/Patients/PatientsEditroutine'));
 const PatientsEditsupportplan = lazy(() => import('./Containers/Patients/PatientsEditsupportplan'));
 const PatientsEditcash = lazy(() => import('./Containers/Patients/PatientsEditcash'));
+const Patientusestocks = lazy(() => import('./Containers/Patientusestocks/Patientusestocks'));
+const Patientusesupplies = lazy(() => import('./Containers/Patientusesupplies/Patientusesupplies'));
+const Patientusemedicines = lazy(() => import('./Containers/Patientusemedicines/Patientusemedicines')); */
 
-const Patientstocks = lazy(() => import('./Containers/Patientstocks/Patientstocks'));
-const PatientstocksCreate = lazy(() => import('./Containers/Patientstocks/PatientstocksCreate'));
-const PatientstocksEdit = lazy(() => import('./Containers/Patientstocks/PatientstocksEdit'));
+const Patientscases = lazy(() => import('./Containers/Patientscases/Patientscases'));
 
-const Patientmedicines = lazy(() => import('./Containers/Patientmedicines/Patientmedicines'));
-const PatientmedicinesCreate = lazy(() => import('./Containers/Patientmedicines/PatientmedicinesCreate'));
-const PatientmedicinesEdit = lazy(() => import('./Containers/Patientmedicines/PatientmedicinesEdit'));
+const Preregistrations = lazy(() => import('./Containers/Preregistrations/Preregistrations'));
+const PreregistrationsCreate = lazy(() => import('./Containers/Preregistrations/PreregistrationsCreate'));
+const PreregistrationsEdit = lazy(() => import('./Containers/Preregistrations/PreregistrationsEdit'));
 
-const Patientsupplies = lazy(() => import('./Containers/Patientsupplies/Patientsupplies'));
-const PatientsuppliesCreate = lazy(() => import('./Containers/Patientsupplies/PatientsuppliesCreate'));
-const PatientsuppliesEdit = lazy(() => import('./Containers/Patientsupplies/PatientsuppliesEdit'));
+const Patientdefines = lazy(() => import('./Containers/Patientdefines/Patientdefines'));
+const PatientdefinesCreate = lazy(() => import('./Containers/Patientdefines/PatientdefinesCreate'));
+const PatientdefinesEdit = lazy(() => import('./Containers/Patientdefines/PatientdefinesEdit'));
 
-const Patientstockmovements = lazy(() => import('./Containers/Patientstockmovements/Patientstockmovements'));
-const PatientstockmovementsCreate = lazy(() => import('./Containers/Patientstockmovements/PatientstockmovementsCreate'));
-const PatientstockmovementsEdit = lazy(() => import('./Containers/Patientstockmovements/PatientstockmovementsEdit'));
+const Patienttypes = lazy(() => import('./Containers/Patienttypes/Patienttypes'));
+const PatienttypesCreate = lazy(() => import('./Containers/Patienttypes/PatienttypesCreate'));
+const PatienttypesEdit = lazy(() => import('./Containers/Patienttypes/PatienttypesEdit'));
 
-const Purchaseorderstocks = lazy(() => import('./Containers/Purchaseorderstocks/Purchaseorderstocks'));
-const PurchaseorderstocksCreate = lazy(() => import('./Containers/Purchaseorderstocks/PurchaseorderstocksCreate'));
-const PurchaseorderstocksEdit = lazy(() => import('./Containers/Purchaseorderstocks/PurchaseorderstocksEdit'));
-
-const Purchaseordersupplies = lazy(() => import('./Containers/Purchaseordersupplies/Purchaseordersupplies'));
-const PurchaseordersuppliesCreate = lazy(() => import('./Containers/Purchaseordersupplies/PurchaseordersuppliesCreate'));
-const PurchaseordersuppliesEdit = lazy(() => import('./Containers/Purchaseordersupplies/PurchaseordersuppliesEdit'));
-
-const Purchaseordermedicines = lazy(() => import('./Containers/Purchaseordermedicines/Purchaseordermedicines'));
-const PurchaseordermedicinesCreate = lazy(() => import('./Containers/Purchaseordermedicines/PurchaseordermedicinesCreate'));
-const PurchaseordermedicinesEdit = lazy(() => import('./Containers/Purchaseordermedicines/PurchaseordermedicinesEdit'));
-
-const Purchaseorderstockmovements = lazy(() => import('./Containers/Purchaseorderstockmovements/Purchaseorderstockmovements'));
-const PurchaseorderstockmovementsCreate = lazy(() => import('./Containers/Purchaseorderstockmovements/PurchaseorderstockmovementsCreate'));
-const PurchaseorderstockmovementsEdit = lazy(() => import('./Containers/Purchaseorderstockmovements/PurchaseorderstockmovementsEdit'));
+//-----------------------------Warehouse-----------------------------
+const Purchaseorders = lazy(() => import('./Containers/Purchaseorders/Purchaseorders'));
+const PurchaseordersCreate = lazy(() => import('./Containers/Purchaseorders/PurchaseordersCreate'));
+const PurchaseordersEdit = lazy(() => import('./Containers/Purchaseorders/PurchaseordersEdit'));
 
 const Warehouses = lazy(() => import('./Containers/Warehouses/Warehouses'));
 const WarehousesCreate = lazy(() => import('./Containers/Warehouses/WarehousesCreate'));
 const WarehousesEdit = lazy(() => import('./Containers/Warehouses/WarehousesEdit'));
 
-const Preregistrations = lazy(() => import('./Containers/Preregistrations/Preregistrations'));
-const PreregistrationsCreate = lazy(() => import('./Containers/Preregistrations/PreregistrationsCreate'));
-const PreregistrationsEdit = lazy(() => import('./Containers/Preregistrations/PreregistrationsEdit'));
-const PreregistrationsEditfile = lazy(() => import('./Containers/Preregistrations/PreregistrationsEditfile'));
-const PreregistrationsEditstock = lazy(() => import('./Containers/Preregistrations/PreregistrationsEditstock'));
-const PreregistrationsComplete = lazy(() => import('./Containers/Preregistrations/PreregistrationsComplete'));
-
 const Stocks = lazy(() => import('./Containers/Stocks/Stocks'));
 const StocksCreate = lazy(() => import('./Containers/Stocks/StocksCreate'));
 const StocksEdit = lazy(() => import('./Containers/Stocks/StocksEdit'));
 
-const Medicines = lazy(() => import('./Containers/Medicines/Medicines'));
-const MedicinesCreate = lazy(() => import('./Containers/Medicines/MedicinesCreate'));
-const MedicinesEdit = lazy(() => import('./Containers/Medicines/MedicinesEdit'));
-
-const Supplies = lazy(() => import('./Containers/Supplies/Supplies'));
-const SuppliesCreate = lazy(() => import('./Containers/Supplies/SuppliesCreate'));
-const SuppliesEdit = lazy(() => import('./Containers/Supplies/SuppliesEdit'));
-
 const Stockmovements = lazy(() => import('./Containers/Stockmovements/Stockmovements'));
+const StockmovementsDetail = lazy(() => import('./Containers/Stockmovements/StockmovementsDetail'));
 const StockmovementsCreate = lazy(() => import('./Containers/Stockmovements/StockmovementsCreate'));
 const StockmovementsEdit = lazy(() => import('./Containers/Stockmovements/StockmovementsEdit'));
+
+const Stockdefines = lazy(() => import('./Containers/Stockdefines/Stockdefines'));
+const StockdefinesCreate = lazy(() => import('./Containers/Stockdefines/StockdefinesCreate'));
+const StockdefinesEdit = lazy(() => import('./Containers/Stockdefines/StockdefinesEdit'));
+
+const Stocktypes = lazy(() => import('./Containers/Stocktypes/Stocktypes'));
+const StocktypesCreate = lazy(() => import('./Containers/Stocktypes/StocktypesCreate'));
+const StocktypesEdit = lazy(() => import('./Containers/Stocktypes/StocktypesEdit'));
+
+const Stocktypegroups = lazy(() => import('./Containers/Stocktypegroups/Stocktypegroups'));
+const StocktypegroupsCreate = lazy(() => import('./Containers/Stocktypegroups/StocktypegroupsCreate'));
+const StocktypegroupsEdit = lazy(() => import('./Containers/Stocktypegroups/StocktypegroupsEdit'));
+
+const Equipmentgroups = lazy(() => import('./Containers/Equipmentgroups/Equipmentgroups'));
+const EquipmentgroupsCreate = lazy(() => import('./Containers/Equipmentgroups/EquipmentgroupsCreate'));
+const EquipmentgroupsEdit = lazy(() => import('./Containers/Equipmentgroups/EquipmentgroupsEdit'));
+
+const Equipments = lazy(() => import('./Containers/Equipments/Equipments'));
+const EquipmentsCreate = lazy(() => import('./Containers/Equipments/EquipmentsCreate'));
+const EquipmentsEdit = lazy(() => import('./Containers/Equipments/EquipmentsEdit'));
+
+
+//-----------------------------END-----------------------------
 
 const Tododefines = lazy(() => import('./Containers/Tododefines/Tododefines'));
 const TododefinesCreate = lazy(() => import('./Containers/Tododefines/TododefinesCreate'));
@@ -142,10 +121,6 @@ const TodogroupdefinesEdit = lazy(() => import('./Containers/Todogroupdefines/To
 const Periods = lazy(() => import('./Containers/Periods/Periods'));
 const PeriodsCreate = lazy(() => import('./Containers/Periods/PeriodsCreate'));
 const PeriodsEdit = lazy(() => import('./Containers/Periods/PeriodsEdit'));
-
-const Patientmovements = lazy(() => import('./Containers/Patientmovements/Patientmovements'));
-const PatientmovementsCreate = lazy(() => import('./Containers/Patientmovements/PatientmovementsCreate'));
-const PatientmovementsEdit = lazy(() => import('./Containers/Patientmovements/PatientmovementsEdit'));
 
 const Todos = lazy(() => import('./Containers/Todos/Todos'));
 
@@ -173,13 +148,6 @@ const Floors = lazy(() => import('./Containers/Floors/Floors'));
 const FloorsCreate = lazy(() => import('./Containers/Floors/FloorsCreate'));
 const FloorsEdit = lazy(() => import('./Containers/Floors/FloorsEdit'));
 
-const Equipmentgroups = lazy(() => import('./Containers/Equipmentgroups/Equipmentgroups'));
-const EquipmentgroupsCreate = lazy(() => import('./Containers/Equipmentgroups/EquipmentgroupsCreate'));
-const EquipmentgroupsEdit = lazy(() => import('./Containers/Equipmentgroups/EquipmentgroupsEdit'));
-
-const Equipments = lazy(() => import('./Containers/Equipments/Equipments'));
-const EquipmentsCreate = lazy(() => import('./Containers/Equipments/EquipmentsCreate'));
-const EquipmentsEdit = lazy(() => import('./Containers/Equipments/EquipmentsEdit'));
 
 const Breakdowns = lazy(() => import('./Containers/Breakdowns/Breakdowns'));
 const BreakdownsCreate = lazy(() => import('./Containers/Breakdowns/BreakdownsCreate'));
@@ -188,10 +156,6 @@ const BreakdownsEdit = lazy(() => import('./Containers/Breakdowns/BreakdownsEdit
 const Mainteancies = lazy(() => import('./Containers/Mainteancies/Mainteancies'));
 const MainteanciesCreate = lazy(() => import('./Containers/Mainteancies/MainteanciesCreate'));
 const MainteanciesEdit = lazy(() => import('./Containers/Mainteancies/MainteanciesEdit'));
-
-const UnapprovedMovements = lazy(() => import('./Containers/Unapproveds/UnapprovedMovements'));
-const UnapprovedStocks = lazy(() => import('./Containers/Unapproveds/UnapprovedStocks'));
-const UnapprovedTodos = lazy(() => import('./Containers/Unapproveds/UnapprovedTodos'));
 
 const Placeviews = lazy(() => import('./Containers/Placeviews/Placeviews'));
 const PlaceviewsTransfer = lazy(() => import('./Containers/Placeviews/PlaceviewsTransfer'));
@@ -218,10 +182,6 @@ const Passwordforget = lazy(() => import('./Containers/Auth/Passwordforget'));
 const PasswordReset = lazy(() => import('./Containers/Auth/PasswordReset'));
 
 const Appreports = lazy(() => import('./Containers/Appreports/Appreports'));
-
-const Patientusestocks = lazy(() => import('./Containers/Patientusestocks/Patientusestocks'));
-const Patientusesupplies = lazy(() => import('./Containers/Patientusesupplies/Patientusesupplies'));
-const Patientusemedicines = lazy(() => import('./Containers/Patientusemedicines/Patientusemedicines'));
 
 const Careplans = lazy(() => import('./Containers/Careplans/Careplans'));
 const CareplansCreate = lazy(() => import('./Containers/Careplans/CareplansCreate'));
@@ -267,7 +227,8 @@ const Personelshifts = lazy(() => import('./Containers/Personelshifts/Personelsh
 const PersonelshiftsCreate = lazy(() => import('./Containers/Personelshifts/PersonelshiftsCreate'));
 const PersonelshiftsEdit = lazy(() => import('./Containers/Personelshifts/PersonelshiftsEdit'));
 
-const Patientscases = lazy(() => import('./Containers/Patientscases/Patientscases'));
+
+
 const Patientfollowup = lazy(() => import('./Containers/Patientfollowup/Patientfollowup'));
 
 const Home = lazy(() => import('./Pages/Home'));
@@ -310,16 +271,17 @@ class Routes extends Component {
       { exact: true, path: "/Stocks/Create", auth: true, component: StocksCreate, permission: 'stockadd' },
       { exact: true, path: "/Stocks/:StockID/Edit", auth: true, component: StocksEdit, permission: 'stockupdate' },
 
-      { exact: true, path: "/Medicines", auth: true, component: Medicines, permission: 'medicineview' },
-      { exact: true, path: "/Medicines/Create", auth: true, component: MedicinesCreate, permission: 'medicineadd' },
-      { exact: true, path: "/Medicines/:StockID/Edit", auth: true, component: MedicinesEdit, permission: 'medicineupdate' },
+      { exact: true, path: "/Stocktypes", auth: true, component: Stocktypes, permission: 'stocktypeview' },
+      { exact: true, path: "/Stocktypes/Create", auth: true, component: StocktypesCreate, permission: 'stocktypeadd' },
+      { exact: true, path: "/Stocktypes/:StocktypeID/Edit", auth: true, component: StocktypesEdit, permission: 'stocktypeupdate' },
 
-      { exact: true, path: "/Supplies", auth: true, component: Supplies, permission: 'supplyview' },
-      { exact: true, path: "/Supplies/Create", auth: true, component: SuppliesCreate, permission: 'supplyadd' },
-      { exact: true, path: "/Supplies/:StockID/Edit", auth: true, component: SuppliesEdit, permission: 'supplyupdate' },
+      { exact: true, path: "/Stocktypegroups", auth: true, component: Stocktypegroups, permission: 'stocktypegroupview' },
+      { exact: true, path: "/Stocktypegroups/Create", auth: true, component: StocktypegroupsCreate, permission: 'stocktypegroupadd' },
+      { exact: true, path: "/Stocktypegroups/:StocktypegroupID/Edit", auth: true, component: StocktypegroupsEdit, permission: 'stocktypegroupupdate' },
 
       { exact: true, path: "/Stockmovements", auth: true, component: Stockmovements, permission: 'stockmovementview' },
       { exact: true, path: "/Stockmovements/Create", auth: true, component: StockmovementsCreate, permission: 'stockmovementadd' },
+      { exact: true, path: "/Stockmovements/:StockmovementID", auth: true, component: StockmovementsDetail, permission: 'stockmovementview' },
       { exact: true, path: "/Stockmovements/:StockmovementID/Edit", auth: true, component: StockmovementsEdit, permission: 'stockmovementupdate' },
 
       { exact: true, path: "/Users", auth: true, component: Users, permission: 'userview' },
@@ -329,10 +291,6 @@ class Routes extends Component {
       { exact: true, path: "/Files", auth: true, component: Files, permission: 'fileview' },
       { exact: true, path: "/Files/Create", auth: true, component: FilesCreate, permission: 'fileadd' },
       { exact: true, path: "/Files/:FileID/Edit", auth: true, component: FilesEdit, permission: 'fileupdate' },
-
-      { exact: true, path: "/Purchaseorders", auth: true, component: Purchaseorders, permission: 'purchaseorderview' },
-      { exact: true, path: "/Purchaseorders/Create", auth: true, component: PurchaseordersCreate, permission: 'purchaseorderadd' },
-      { exact: true, path: "/Purchaseorders/:PurchaseorderID/Edit", auth: true, component: PurchaseordersEdit, permission: 'purchaseorderupdate' },
 
       { exact: true, path: "/Costumertypes", auth: true, component: Costumertypes, permission: 'costumertypeview' },
       { exact: true, path: "/Costumertypes/Create", auth: true, component: CostumertypesCreate, permission: 'costumertypeadd' },
@@ -347,24 +305,29 @@ class Routes extends Component {
       { exact: true, path: "/Patientdefines/:PatientdefineID/Edit", auth: true, component: PatientdefinesEdit, permission: 'patientdefineupdate' },
 
       { exact: true, path: "/Patients", auth: true, component: Patients, permission: 'patientview' },
-      { exact: true, path: "/Patients/Create", auth: true, component: PatientsCreate, permission: 'patientadd' },
       { exact: true, path: "/Patients/:PatientID", auth: true, component: PatientsDetail, permission: 'patientview' },
-      { exact: true, path: "/Patients/:PatientID/Editfile", auth: true, component: PatientsFiles, permission: 'patientupdate' },
-      { exact: true, path: "/Patients/:PatientID/Edit", auth: true, component: PatientsEdit, permission: 'patientupdate' },
-      { exact: true, path: "/Patients/:PatientID/Addstock", auth: true, component: PatientsAddstock, permission: 'patientupdate' },
-      { exact: true, path: "/Patients/:PatientID/Addmedicine", auth: true, component: PatientsAddmedicine, permission: 'patientupdate' },
-      { exact: true, path: "/Patients/:PatientID/Removestock", auth: true, component: PatientsRemovestock, permission: 'patientupdate' },
-      { exact: true, path: "/Patients/:PatientID/Removemedicine", auth: true, component: PatientsRemovemedicine, permission: 'patientupdate' },
-      { exact: true, path: "/Patients/:PatientID/Editcase", auth: true, component: PatientsEditcase, permission: 'patientupdate' },
-      { exact: true, path: "/Patients/:PatientID/Editroutine", auth: true, component: PatientsEditroutine, permission: 'patientupdate' },
-      { exact: true, path: "/Patients/:PatientID/Editsupportplan", auth: true, component: PatientsEditsupportplan, permission: 'patientupdate' },
-      { exact: true, path: "/Patients/:PatientID/Editcash", auth: true, component: PatientsEditcash, permission: 'patientupdate' },
-      { exact: true, path: "/Patientusestocks", auth: true, component: Patientusestocks, permission: 'patientupdate' },
-      { exact: true, path: "/Patientusesupplies", auth: true, component: Patientusesupplies, permission: 'patientupdate' },
-      { exact: true, path: "/Patientusemedicines", auth: true, component: Patientusemedicines, permission: 'patientupdate' },
+      /*
+      { exact: true, path: "/Patients/Create", auth: true, component: PatientsCreate, permission: 'patientadd' },
+        { exact: true, path: "/Patients/:PatientID/Editfile", auth: true, component: PatientsFiles, permission: 'patientupdate' },
+        { exact: true, path: "/Patients/:PatientID/Edit", auth: true, component: PatientsEdit, permission: 'patientupdate' },
+        { exact: true, path: "/Patients/:PatientID/Addstock", auth: true, component: PatientsAddstock, permission: 'patientupdate' },
+        { exact: true, path: "/Patients/:PatientID/Addmedicine", auth: true, component: PatientsAddmedicine, permission: 'patientupdate' },
+        { exact: true, path: "/Patients/:PatientID/Removestock", auth: true, component: PatientsRemovestock, permission: 'patientupdate' },
+        { exact: true, path: "/Patients/:PatientID/Removemedicine", auth: true, component: PatientsRemovemedicine, permission: 'patientupdate' },
+        { exact: true, path: "/Patients/:PatientID/Editcase", auth: true, component: PatientsEditcase, permission: 'patientupdate' },
+        { exact: true, path: "/Patients/:PatientID/Editroutine", auth: true, component: PatientsEditroutine, permission: 'patientupdate' },
+        { exact: true, path: "/Patients/:PatientID/Editsupportplan", auth: true, component: PatientsEditsupportplan, permission: 'patientupdate' },
+        { exact: true, path: "/Patients/:PatientID/Editcash", auth: true, component: PatientsEditcash, permission: 'patientupdate' },
+        { exact: true, path: "/Patientusestocks", auth: true, component: Patientusestocks, permission: 'patientupdate' },
+        { exact: true, path: "/Patientusesupplies", auth: true, component: Patientusesupplies, permission: 'patientupdate' },
+        { exact: true, path: "/Patientusemedicines", auth: true, component: Patientusemedicines, permission: 'patientupdate' }, */
 
       { exact: true, path: "/Patientscases", auth: true, component: Patientscases, permission: 'patientview' },
       { exact: true, path: "/Patientfollowup", auth: true, component: Patientfollowup, permission: 'patientview' },
+
+      { exact: true, path: "/Purchaseorders", auth: true, component: Purchaseorders, permission: 'purchaseorderview' },
+      { exact: true, path: "/Purchaseorders/Create", auth: true, component: PurchaseordersCreate, permission: 'purchaseorderadd' },
+      { exact: true, path: "/Purchaseorders/:PurchaseorderID/Edit", auth: true, component: PurchaseordersEdit, permission: 'purchaseorderupdate' },
 
       { exact: true, path: "/Warehouses", auth: true, component: Warehouses, permission: 'warehouseview' },
       { exact: true, path: "/Warehouses/Create", auth: true, component: WarehousesCreate, permission: 'warehouseadd' },
@@ -377,42 +340,6 @@ class Routes extends Component {
       { exact: true, path: "/Todogroupdefines", auth: true, component: Todogroupdefines, permission: 'todogroupdefineview' },
       { exact: true, path: "/Todogroupdefines/Create", auth: true, component: TodogroupdefinesCreate, permission: 'todogroupdefineadd' },
       { exact: true, path: "/Todogroupdefines/:TodogroupdefineID/Edit", auth: true, component: TodogroupdefinesEdit, permission: 'todogroupdefineupdate' },
-
-      { exact: true, path: "/Patientstocks", auth: true, component: Patientstocks, permission: 'patientstockview' },
-      { exact: true, path: "/Patientstocks/Create", auth: true, component: PatientstocksCreate, permission: 'patientstockadd' },
-      { exact: true, path: "/Patientstocks/:PatientstockID/Edit", auth: true, component: PatientstocksEdit, permission: 'patientstockupdate' },
-
-      { exact: true, path: "/Patientmedicines", auth: true, component: Patientmedicines, permission: 'patientmedicineview' },
-      { exact: true, path: "/Patientmedicines/Create", auth: true, component: PatientmedicinesCreate, permission: 'patientmedicineadd' },
-      { exact: true, path: "/Patientmedicines/:PatientstockID/Edit", auth: true, component: PatientmedicinesEdit, permission: 'patientmedicineupdate' },
-
-      { exact: true, path: "/Patientsupplies", auth: true, component: Patientsupplies, permission: 'patientsupplyview' },
-      { exact: true, path: "/Patientsupplies/Create", auth: true, component: PatientsuppliesCreate, permission: 'patientsupplyadd' },
-      { exact: true, path: "/Patientsupplies/:PatientstockID/Edit", auth: true, component: PatientsuppliesEdit, permission: 'patientsupplyupdate' },
-
-      { exact: true, path: "/Patientstockmovements", auth: true, component: Patientstockmovements, permission: 'patientstockmovementview' },
-      { exact: true, path: "/Patientstockmovements/Create", auth: true, component: PatientstockmovementsCreate, permission: 'patientstockmovementadd' },
-      { exact: true, path: "/Patientstockmovements/:PatientstockmovementID/Edit", auth: true, component: PatientstockmovementsEdit, permission: 'patientstockmovementupdate' },
-
-      { exact: true, path: "/Purchaseorderstocks", auth: true, component: Purchaseorderstocks, permission: 'purchaseorderstockview' },
-      { exact: true, path: "/Purchaseorderstocks/Create", auth: true, component: PurchaseorderstocksCreate, permission: 'purchaseorderstockadd' },
-      { exact: true, path: "/Purchaseorderstocks/:PurchaseorderstockID/Edit", auth: true, component: PurchaseorderstocksEdit, permission: 'purchaseorderstockupdate' },
-
-      { exact: true, path: "/Purchaseordermedicines", auth: true, component: Purchaseordermedicines, permission: 'purchaseordermedicineview' },
-      { exact: true, path: "/Purchaseordermedicines/Create", auth: true, component: PurchaseordermedicinesCreate, permission: 'purchaseordermedicineadd' },
-      { exact: true, path: "/Purchaseordermedicines/:PurchaseorderstockID/Edit", auth: true, component: PurchaseordermedicinesEdit, permission: 'purchaseordermedicineupdate' },
-
-      { exact: true, path: "/Purchaseordersupplies", auth: true, component: Purchaseordersupplies, permission: 'purchaseordersupplyview' },
-      { exact: true, path: "/Purchaseordersupplies/Create", auth: true, component: PurchaseordersuppliesCreate, permission: 'purchaseordersupplyadd' },
-      { exact: true, path: "/Purchaseordersupplies/:PurchaseorderstockID/Edit", auth: true, component: PurchaseordersuppliesEdit, permission: 'purchaseordersupplyupdate' },
-
-      { exact: true, path: "/Purchaseorderstockmovements", auth: true, component: Purchaseorderstockmovements, permission: 'purchaseorderstockmovementview' },
-      { exact: true, path: "/Purchaseorderstockmovements/Create", auth: true, component: PurchaseorderstockmovementsCreate, permission: 'purchaseorderstockmovementadd' },
-      { exact: true, path: "/Purchaseorderstockmovements/:PurchaseorderstockmovementID/Edit", auth: true, component: PurchaseorderstockmovementsEdit, permission: 'purchaseorderstockmovementupdate' },
-
-      { exact: true, path: "/Patientmovements", auth: true, component: Patientmovements, permission: 'patientmovementview' },
-      { exact: true, path: "/Patientmovements/Create", auth: true, component: PatientmovementsCreate, permission: 'patientmovementadd' },
-      { exact: true, path: "/Patientmovements/:PatientmovementID/Edit", auth: true, component: PatientmovementsEdit, permission: 'patientmovementupdate' },
 
       { exact: true, path: "/Mailsettings", auth: true, component: Mailsettings, permission: 'mailsettingview' },
       { exact: true, path: "/Mailsettings/Create", auth: true, component: MailsettingsCreate, permission: 'mailsettingadd' },
@@ -463,10 +390,6 @@ class Routes extends Component {
       { exact: true, path: "/Mainteancies", auth: true, component: Mainteancies, permission: 'mainteanceview' },
       { exact: true, path: "/Mainteancies/Create", auth: true, component: MainteanciesCreate, permission: 'mainteanceadd' },
       { exact: true, path: "/Mainteancies/:MainteanceID/Edit", auth: true, component: MainteanciesEdit, permission: 'mainteanceupdate' },
-
-      { exact: true, path: "/UnapprovedMovements", auth: true, component: UnapprovedMovements, permission: 'unapprovedmovementview' },
-      { exact: true, path: "/UnapprovedStocks", auth: true, component: UnapprovedStocks, permission: 'unapprovedstockview' },
-      { exact: true, path: "/UnapprovedTodos", auth: true, component: UnapprovedTodos, permission: 'unapprovedtodoview' },
 
       { exact: true, path: "/Placeviews", auth: true, component: Placeviews, permission: 'placeviewview' },
       { exact: true, path: "/Placeviews/Transfer", auth: true, component: PlaceviewsTransfer, permission: 'placeviewtransfer' },
@@ -536,9 +459,6 @@ class Routes extends Component {
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'preregistrationview' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'preregistrationadd' },
       { exact: true, path: "/Preregistrations/:PatientID/Edit", auth: true, component: PreregistrationsEdit, permission: 'preregistrationupdate' },
-      { exact: true, path: "/Preregistrations/:PatientID/Editfile", auth: true, component: PreregistrationsEditfile, permission: 'preregistrationupdate' },
-      { exact: true, path: "/Preregistrations/:PatientID/Editstock", auth: true, component: PreregistrationsEditstock, permission: 'preregistrationupdate' },
-      { exact: true, path: "/Preregistrations/:PatientID/Complete", auth: true, component: PreregistrationsComplete, permission: 'preregistrationupdate' },
 
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit, permission: 'basic' },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange, permission: 'basic' },

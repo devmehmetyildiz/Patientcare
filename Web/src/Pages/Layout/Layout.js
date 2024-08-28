@@ -62,7 +62,9 @@ export default class Layout extends Component {
   }
 
   render() {
+
     const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal, Istokenchecking, Usagetypes, handleOpen } = this.props
+
     return (
       Istokenchecking || Profile.isLogging || Profile.isFetching ?
         <LoadingPage />
@@ -110,6 +112,9 @@ export default class Layout extends Component {
   handleLanguage = () => {
     const { Profile } = this.props
     if (Profile && Profile.meta && Profile.meta.Language) {
+      if (Profile?.i18n && (Profile?.i18n?.i18n?.language !== Profile.meta.Language)) {
+        Profile?.i18n?.i18n?.changeLanguage(Profile.meta.Language || 'tr');
+      }
       localStorage.setItem('Language', Profile.meta.Language)
     }
   }

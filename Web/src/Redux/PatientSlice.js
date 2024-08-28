@@ -1,76 +1,16 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../Utils/Constants";
-import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
-import instanse from "./axios";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { FileuploadPrepare } from "../Components/Fileupload";
 import config from "../Config";
-import axios from 'axios'
-import validator from '../Utils/Validator';
-
-const Literals = {
-    addcode: {
-        en: 'Data Save',
-        tr: 'Veri Kaydetme'
-    },
-    adddescriptionpatientfull: {
-        en: 'Patient added successfully, Files will Add',
-        tr: 'Hasta Başarı ile eklendi, Dosyalar Eklenecek'
-    },
-    adddescriptionfilefull: {
-        en: 'Patient files added successfully, Stocks will Add',
-        tr: 'Hasta dosyaları Başarı ile eklendi, Stoklar Eklenecek'
-    },
-    adddescriptionstocksfull: {
-        en: 'Patient Stocks added successfully, Patient will Enter to Facility',
-        tr: 'Hasta Stokları Başarı ile eklendi, Hasta Kuruma Alınacak'
-    },
-    adddescriptioncompletefull: {
-        en: 'Patient Entered Facility',
-        tr: 'Hasta Kuruma Alındı'
-    },
-    addpatienterror: {
-        en: 'Ekleme Sırasında hasta Id değeri gelmedi',
-        tr: 'Ekleme Sırasında hasta Id değeri gelmedi'
-    },
-    adddescription: {
-        en: 'Patient added successfully',
-        tr: 'Hasta Başarı ile eklendi'
-    },
-    updatecode: {
-        en: 'Data Update',
-        tr: 'Veri Güncelleme'
-    },
-    updatedescription: {
-        en: 'Patient updated successfully',
-        tr: 'Hasta Başarı ile güncellendi'
-    },
-    deletecode: {
-        en: 'Data Delete',
-        tr: 'Veri Silme'
-    },
-    deletedescription: {
-        en: 'Patient Deleted successfully',
-        tr: 'Hasta Başarı ile Silindi'
-    },
-    completedescription: {
-        en: 'Patient Entered Organisation successfully',
-        tr: 'Hasta Başarı ile Kuruma Girdi'
-    },
-    outdescription: {
-        en: 'Patient left the Organisation successfully',
-        tr: 'Hasta Başarı ile Kurumdan ayrıldı'
-    },
-    indescription: {
-        en: 'Patient Entered Organisation successfully',
-        tr: 'Hasta Başarı ile Kuruma Girdi'
-    },
-}
+import AxiosErrorHelper from "../Utils/AxiosErrorHelper";
+import { ROUTES } from "../Utils/Constants";
+import instanse from './axios';
 
 export const GetPatients = createAsyncThunk(
     'Patients/GetPatients',
     async (_, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Business, ROUTES.PATIENT);
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillPatientnotification(errorPayload));
@@ -84,7 +24,7 @@ export const GetPatientforsearch = createAsyncThunk(
     async (_, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Business, ROUTES.PATIENT);
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillPatientnotification(errorPayload));
@@ -107,11 +47,11 @@ export const GetPatient = createAsyncThunk(
     }
 );
 
-export const Getpreregistrations = createAsyncThunk(
-    'Patients/Getpreregistrations',
-    async (_, { dispatch }) => {
+export const GetPatientByPlace = createAsyncThunk(
+    'Patients/GetPatientByPlace',
+    async ({ data }, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Business, ROUTES.PATIENT + "/Preregistrations");
+            const response = await instanse.post(config.services.Business, ROUTES.PATIENT + '/GetPatientByPlace', data);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -123,103 +63,24 @@ export const Getpreregistrations = createAsyncThunk(
 
 export const AddPatients = createAsyncThunk(
     'Patients/AddPatients',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, files, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.post(config.services.Business, ROUTES.PATIENT, data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                code: t('Common.Code.Add'),
+                description: t('Redux.Patients.Messages.Add'),
             }));
             clearForm && clearForm('PatientsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patients');
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
-export const AddPatientReturnPatient = createAsyncThunk(
-    'Patients/AddPatientReturnPatient',
-    async ({ Patientdata, files, stocks, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
-        try {
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const createdpatientresponse = await instanse.post(config.services.Business, ROUTES.PATIENT + '/AddPatientReturnPatient', Patientdata);
-            const createdpatient = createdpatientresponse.data
-            dispatch(fillPatientnotification({
-                type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescriptionpatientfull[Language],
-            }));
-
-            if (validator.isUUID(createdpatient?.Uuid)) {
-                if ((files || []).length > 0) {
-                    const formData = new FormData();
-                    const newFiles = (files || []).map(u => {
-                        return { ...u, ParentID: createdpatient?.Uuid }
-                    })
-                    newFiles.forEach((data, index) => {
-                        Object.keys(data).forEach(element => {
-                            formData.append(`list[${index}].${element}`, data[element])
-                        });
-                    })
-
-                    await axios({
-                        method: `put`,
-                        url: config.services.File + `${ROUTES.FILE}`,
-                        headers: { Authorization: "Bearer  " +localStorage.getItem('patientcare'), contentType: 'mime/form-data' },
-                        data: formData
-                    })
-                    dispatch(fillPatientnotification({
-                        type: 'Success',
-                        code: Literals.addcode[Language],
-                        description: Literals.adddescriptionfilefull[Language],
-                    }));
-                }
-                if ((stocks || []).length > 0) {
-                    const newStocks = (stocks || []).map(u => {
-                        return { ...u, PatientID: createdpatient?.Uuid }
-                    })
-                    await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Editpatientstocks", newStocks);
-                    dispatch(fillPatientnotification({
-                        type: 'Success',
-                        code: Literals.addcode[Language],
-                        description: Literals.adddescriptionstocksfull[Language],
-                    }));
-                }
-                const completebody = {
-                    ...createdpatient,
-                    WarehouseID: Patientdata.WarehouseID,
-                    RoomID: Patientdata.RoomID,
-                    FloorID: Patientdata.FloorID,
-                    BedID: Patientdata.BedID,
-                    Iswilltransfer: Patientdata.Iswilltransfer
-                }
-                const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Complete", completebody);
-                dispatch(fillPatientnotification({
-                    type: 'Success',
-                    code: Literals.addcode[Language],
-                    description: Literals.adddescriptioncompletefull[Language],
-                }));
-                clearForm && clearForm('PatientsCreate')
-                closeModal && closeModal()
-                history && history.push(redirectUrl ? redirectUrl : '/Patients');
-                return response.data;
-            } else {
-                dispatch(fillPatientnotification({
-                    type: 'Error',
-                    code: Literals.addcode[Language],
-                    description: Literals.addpatienterror[Language],
-                }));
+            if (files && files?.length > 0) {
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillPatientnotification, null, state.Profile)
+                await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
             }
-            return [];
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillPatientnotification(errorPayload));
@@ -230,19 +91,242 @@ export const AddPatientReturnPatient = createAsyncThunk(
 
 export const EditPatients = createAsyncThunk(
     'Patients/EditPatients',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, files, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT, data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Update'),
             }));
             clearForm && clearForm('PatientsUpdate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Patients');
+            if (files && files?.length > 0) {
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillPatientnotification, null, state.Profile)
+                await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
+            }
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeletePatients = createAsyncThunk(
+    'Patients/DeletePatients',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENT}/${data.Uuid}`);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Patients.Messages.Delete'),
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const CheckPatients = createAsyncThunk(
+    'Patients/CheckPatients',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PATIENT}/Check`, data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Check'),
+                description: t('Redux.Patients.Messages.Check'),
+            }));
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const CancelCheckPatients = createAsyncThunk(
+    'Patients/CancelCheckPatients',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PATIENT}/CancelCheck`, data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Check'),
+                description: t('Redux.Patients.Messages.CancelCheck'),
+            }));
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const ApprovePatients = createAsyncThunk(
+    'Patients/ApprovePatients',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PATIENT}/Approve`, data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Approve'),
+                description: t('Redux.Patients.Messages.Approve'),
+            }));
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const CancelApprovePatients = createAsyncThunk(
+    'Patients/CancelApprovePatients',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PATIENT}/CancelApprove`, data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Approve'),
+                description: t('Redux.Patients.Messages.CancelApprove'),
+            }));
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const CompletePatients = createAsyncThunk(
+    'Patients/CompletePatients',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PATIENT}/Complete`, data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Complete'),
+                description: t('Redux.Patients.Messages.Complete'),
+            }));
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const RemovePatients = createAsyncThunk(
+    'Patients/RemovePatients',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PATIENT}/PatientsRemove`, data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Remove'),
+            }));
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeadPatients = createAsyncThunk(
+    'Patients/DeadPatients',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PATIENT}/PatientsDead`, data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Dead'),
+            }));
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeletePreregisrations = createAsyncThunk(
+    'Patients/DeletePreregisrations',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENT}/DeletePreregisrations/${data.Uuid}`);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Patients.Messages.Delete'),
+            }));
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeletePatient = createAsyncThunk(
+    'Patients/DeletePatient',
+    async (data, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENT}/DeletePatient/${data.Uuid}`);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Patients.Messages.Delete'),
+            }));
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -257,12 +341,12 @@ export const Editpatientcase = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientcase", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Update'),
             }));
             history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
             return response.data;
@@ -279,12 +363,12 @@ export const Editpatientscase = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientscase", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Update'),
             }));
             history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
             return response.data;
@@ -301,12 +385,12 @@ export const Editpatientplace = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientplace", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Update'),
             }));
             history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
             return response.data;
@@ -317,17 +401,18 @@ export const Editpatientplace = createAsyncThunk(
         }
     }
 );
+
 export const Transferpatientplace = createAsyncThunk(
     'Patients/Transferpatientplace',
     async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/TransferPatientplace", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Update'),
             }));
             history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
             return response.data;
@@ -338,17 +423,18 @@ export const Transferpatientplace = createAsyncThunk(
         }
     }
 );
+
 export const UpdatePatienttododefines = createAsyncThunk(
     'Patients/UpdatePatienttododefines',
     async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatienttododefines", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Update'),
             }));
             history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
             return response.data;
@@ -359,17 +445,18 @@ export const UpdatePatienttododefines = createAsyncThunk(
         }
     }
 );
+
 export const UpdatePatientsupportplans = createAsyncThunk(
     'Patients/UpdatePatientsupportplans',
     async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientsupportplans", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Update'),
             }));
             history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
             return response.data;
@@ -386,12 +473,12 @@ export const EditPatientstocks = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm, }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Editpatientstocks", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Update'),
             }));
             dispatch(fillPatientnotification({
                 type: 'Clear',
@@ -407,108 +494,27 @@ export const EditPatientstocks = createAsyncThunk(
         }
     }
 );
-export const CompletePrepatients = createAsyncThunk(
-    'Patients/CompletePrepatients',
-    async ({ data, history, redirectUrl, closeModal, clearForm, }, { dispatch, getState }) => {
-        try {
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Complete", data);
-            dispatch(fillPatientnotification({
-                type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.completedescription[Language],
-            }));
-            history && history.push(redirectUrl ? redirectUrl : '/Patients')
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
-export const DeletePatients = createAsyncThunk(
-    'Patients/DeletePatients',
-    async (data, { dispatch, getState }) => {
-        try {
-
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENT}/${data.Uuid}`);
-            dispatch(fillPatientnotification({
-                type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
-            }));
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
-export const OutPatients = createAsyncThunk(
-    'Patients/OutPatients',
-    async (data, { dispatch, getState }) => {
-        try {
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Business, `${ROUTES.PATIENT}/OutPatient/${data.Uuid}`);
-            dispatch(fillPatientnotification({
-                type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.outdescription[Language],
-            }));
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-export const InPatients = createAsyncThunk(
-    'Patients/InPatients',
-    async (data, { dispatch, getState }) => {
-        try {
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Business, `${ROUTES.PATIENT}/InPatient/${data.Uuid}`);
-            dispatch(fillPatientnotification({
-                type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.indescription[Language],
-            }));
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
 
 export const PatientsSlice = createSlice({
     name: 'Patients',
     initialState: {
         list: [],
         listsearch: [],
+        patientByPlace: {},
         selected_record: {},
         errMsg: null,
         notifications: [],
         isLoading: false,
+        isPatientByPlaceLoading: false,
         isLoadingsearch: false,
-        isCheckperiodloading: false,
-        isTodogroupdefineloading: false,
         selected_patient: {},
+        isDetailmodalopen: false,
         isDeletemodalopen: false,
+        isCheckmodalopen: false,
+        isApprovemodalopen: false,
         isCompletemodalopen: false,
-        isOutmodalopen: false,
-        isInmodalopen: false,
+        isCheckdeactive: false,
+        isApprovedeactive: false,
         isPlacemodalopen: false,
     },
     reducers: {
@@ -529,14 +535,21 @@ export const PatientsSlice = createSlice({
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
         },
+        handleCheckmodal: (state, action) => {
+            const { modal, deactive } = action.payload
+            state.isCheckmodalopen = modal ? modal : action.payload
+            state.isCheckdeactive = deactive ? deactive : false
+        },
+        handleApprovemodal: (state, action) => {
+            const { modal, deactive } = action.payload
+            state.isApprovemodalopen = modal ? modal : action.payload
+            state.isApprovedeactive = deactive ? deactive : false
+        },
         handleCompletemodal: (state, action) => {
             state.isCompletemodalopen = action.payload
         },
-        handleOutmodal: (state, action) => {
-            state.isOutmodalopen = action.payload
-        },
-        handleInmodal: (state, action) => {
-            state.isInmodalopen = action.payload
+        handleDetailmodal: (state, action) => {
+            state.isDetailmodalopen = action.payload
         },
         handlePlacemodal: (state, action) => {
             state.isPlacemodalopen = action.payload
@@ -557,6 +570,19 @@ export const PatientsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(GetPatientByPlace.pending, (state) => {
+                state.isPatientByPlaceLoading = true;
+                state.errMsg = null;
+                state.patientByPlace = {};
+            })
+            .addCase(GetPatientByPlace.fulfilled, (state, action) => {
+                state.isPatientByPlaceLoading = false;
+                state.patientByPlace = action.payload;
+            })
+            .addCase(GetPatientByPlace.rejected, (state, action) => {
+                state.isPatientByPlaceLoading = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(GetPatientforsearch.pending, (state) => {
                 state.isLoadingsearch = true;
                 state.errMsg = null;
@@ -568,19 +594,6 @@ export const PatientsSlice = createSlice({
             })
             .addCase(GetPatientforsearch.rejected, (state, action) => {
                 state.isLoadingsearch = false;
-                state.errMsg = action.error.message;
-            })
-            .addCase(Getpreregistrations.pending, (state) => {
-                state.isLoading = true;
-                state.errMsg = null;
-                state.list = [];
-            })
-            .addCase(Getpreregistrations.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.list = action.payload;
-            })
-            .addCase(Getpreregistrations.rejected, (state, action) => {
-                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(GetPatient.pending, (state) => {
@@ -607,17 +620,6 @@ export const PatientsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(AddPatientReturnPatient.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(AddPatientReturnPatient.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.list = action.payload;
-            })
-            .addCase(AddPatientReturnPatient.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errMsg = action.error.message;
-            })
             .addCase(EditPatients.pending, (state) => {
                 state.isLoading = true;
             })
@@ -629,25 +631,80 @@ export const PatientsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(CompletePrepatients.pending, (state) => {
+            .addCase(CheckPatients.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(CompletePrepatients.fulfilled, (state, action) => {
+            .addCase(CheckPatients.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(CompletePrepatients.rejected, (state, action) => {
+            .addCase(CheckPatients.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditPatientstocks.pending, (state) => {
+            .addCase(CancelCheckPatients.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(EditPatientstocks.fulfilled, (state, action) => {
+            .addCase(CancelCheckPatients.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(EditPatientstocks.rejected, (state, action) => {
+            .addCase(CancelCheckPatients.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ApprovePatients.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(ApprovePatients.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(ApprovePatients.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(CompletePatients.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(CompletePatients.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(CompletePatients.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(RemovePatients.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(RemovePatients.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(RemovePatients.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeadPatients.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(DeadPatients.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(DeadPatients.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeletePreregisrations.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(DeletePreregisrations.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(DeletePreregisrations.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
@@ -662,25 +719,25 @@ export const PatientsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(OutPatients.pending, (state) => {
+            .addCase(CancelApprovePatients.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(OutPatients.fulfilled, (state, action) => {
+            .addCase(CancelApprovePatients.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.selected_record = action.payload;
+                state.list = action.payload;
             })
-            .addCase(OutPatients.rejected, (state, action) => {
+            .addCase(CancelApprovePatients.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(InPatients.pending, (state) => {
+            .addCase(EditPatientstocks.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(InPatients.fulfilled, (state, action) => {
+            .addCase(EditPatientstocks.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.selected_record = action.payload;
+                state.list = action.payload;
             })
-            .addCase(InPatients.rejected, (state, action) => {
+            .addCase(EditPatientstocks.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
@@ -754,11 +811,12 @@ export const {
     fillPatientnotification,
     removePatientnotification,
     setPatient,
+    handlePlacemodal,
     handleDeletemodal,
+    handleApprovemodal,
+    handleCheckmodal,
     handleCompletemodal,
-    handleInmodal,
-    handleOutmodal,
-    handlePlacemodal
+    handleDetailmodal
 } = PatientsSlice.actions;
 
 export default PatientsSlice.reducer;

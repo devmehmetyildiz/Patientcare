@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
+import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import WarehousesList from './WarehousesList'
@@ -10,17 +10,17 @@ import { getInitialconfig } from '../../Utils/Constants'
 export default class Warehouses extends Component {
 
   componentDidMount() {
-    const { GetWarehouses, GetDepartments, GetUnits, GetStockdefines, GetStockmovements, GetStocks } = this.props
-    GetDepartments()
+    const { GetWarehouses, GetUnits, GetStockdefines, GetStockmovements, GetStocks, GetStocktypegroups } = this.props
     GetUnits()
     GetStockdefines()
     GetStockmovements()
     GetWarehouses()
     GetStocks()
+    GetStocktypegroups()
   }
 
   render() {
-    const { Warehouses, Departments, Units, Stocks, Stockmovements, Stockdefines, handleDeletemodal, handleSelectedWarehouse, Profile } = this.props
+    const { Warehouses,  Units, Stocks, Stockmovements, Stockdefines, handleDeletemodal, handleSelectedWarehouse, Profile } = this.props
     const { isLoading } = Warehouses
 
     const colProps = {
@@ -34,8 +34,8 @@ export default class Warehouses extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
+      { Header: Literals.Columns.Stocktypegroups[Profile.Language], accessor: row => this.stocktypegroupsCellhandler(row?.Stocktypegroups), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', },
-      { Header: Literals.Columns.Ismedicine[Profile.Language], accessor: row => this.boolCellhandler(row?.Ismedicine) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
@@ -59,7 +59,7 @@ export default class Warehouses extends Component {
     })
 
     return (
-      isLoading? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>
@@ -95,7 +95,6 @@ export default class Warehouses extends Component {
                     Columns={Columns}
                     initialConfig={initialConfig}
                     Profile={Profile}
-                    Departments={Departments}
                     Units={Units}
                     Stockmovements={Stockmovements}
                     Stockdefines={Stockdefines}
@@ -113,6 +112,15 @@ export default class Warehouses extends Component {
   boolCellhandler = (value) => {
     const { Profile } = this.props
     return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+  }
+
+  stocktypegroupsCellhandler = (value) => {
+    const { Stocktypegroups } = this.props
+    if (Stocktypegroups.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return (value || '').split(',').map(type => (Stocktypegroups.list || []).find(u => u.Uuid === type)?.Name).join(',')
+    }
   }
 
   expandCellhandler = (col) => {

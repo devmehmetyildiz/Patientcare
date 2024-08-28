@@ -249,7 +249,11 @@ export const ProfileSlice = createSlice({
         Ismobile: false,
         Istokenchecking: false,
         isFocusedpage: false,
-        scroll: false
+        scroll: false,
+        i18n: {
+            i18n: null,
+            t: null
+        }
     },
     reducers: {
         fillnotification: (state, action) => {
@@ -274,6 +278,9 @@ export const ProfileSlice = createSlice({
         },
         handleScroll: (state, action) => {
             state.scroll = action.payload
+        },
+        setI18n: (state, action) => {
+            state.i18n = action.payload
         },
         logOut: () => {
             localStorage.removeItem('patientcare')
@@ -456,7 +463,8 @@ export const {
     handleauth,
     handlemobile,
     handleFocus,
-    handleScroll
+    handleScroll,
+    setI18n
 } = ProfileSlice.actions;
 
 export default ProfileSlice.reducer;

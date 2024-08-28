@@ -1,57 +1,55 @@
 import { connect } from 'react-redux'
 import PatientsDetail from '../../Pages/Patients/PatientsDetail'
-import { GetPatient, setPatient, handleDeletemodal, handleSelectedPatient, handleInmodal, handleOutmodal, handlePlacemodal, fillPatientnotification } from "../../Redux/PatientSlice"
+import { GetPatient, handleSelectedPatient, fillPatientnotification } from "../../Redux/PatientSlice"
 import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
+import { GetFiles } from "../../Redux/FileSlice"
+import { GetUsagetypes } from "../../Redux/UsagetypeSlice"
 import { GetCases } from "../../Redux/CaseSlice"
+import { GetDepartments } from "../../Redux/DepartmentSlice"
 import { GetCostumertypes } from "../../Redux/CostumertypeSlice"
 import { GetPatienttypes } from "../../Redux/PatienttypeSlice"
 import { GetFloors } from "../../Redux/FloorSlice"
 import { GetRooms } from "../../Redux/RoomSlice"
 import { GetBeds } from "../../Redux/BedSlice"
-import { GetPatientstocks } from "../../Redux/PatientstockSlice"
-import { GetStockdefines } from "../../Redux/StockdefineSlice"
-import { GetUnits } from "../../Redux/UnitSlice"
-import { GetPatientmovements } from "../../Redux/PatientmovementSlice"
-import { GetFiles } from "../../Redux/FileSlice"
-import { GetPatientstockmovements } from "../../Redux/PatientstockmovementSlice"
-import { GetTodosbyPatient } from "../../Redux/TodoSlice"
-import { GetTododefines } from "../../Redux/TododefineSlice"
 import { GetPatientcashmovements } from "../../Redux/PatientcashmovementSlice"
 import { GetPatientcashregisters } from "../../Redux/PatientcashregisterSlice"
-import { GetUsagetypes } from "../../Redux/UsagetypeSlice"
+import { GetStocks } from "../../Redux/StockSlice"
+import { GetStockdefines } from "../../Redux/StockdefineSlice"
+import { GetStockmovements } from "../../Redux/StockmovementSlice"
+import { GetUsers } from "../../Redux/UserSlice"
+import { GetStocktypes } from "../../Redux/StocktypeSlice"
+import { GetStocktypegroups } from "../../Redux/StocktypegroupSlice"
+import { GetUnits } from "../../Redux/UnitSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
     Patientdefines: state.Patientdefines,
+    Files: state.Files,
+    Usagetypes: state.Usagetypes,
     Cases: state.Cases,
-    Profile: state.Profile,
-    Patienttypes: state.Patienttypes,
+    Departments: state.Departments,
     Costumertypes: state.Costumertypes,
+    Patienttypes: state.Patienttypes,
     Floors: state.Floors,
     Rooms: state.Rooms,
     Beds: state.Beds,
-    Patientstocks: state.Patientstocks,
-    Stockdefines: state.Stockdefines,
-    Units: state.Units,
-    Patientmovements: state.Patientmovements,
-    Files: state.Files,
-    Patientstockmovements: state.Patientstockmovements,
-    Todos: state.Todos,
-    Tododefines: state.Tododefines,
-    Patientcashmovements: state.Patientcashmovements,
     Patientcashregisters: state.Patientcashregisters,
-    Usagetypes: state.Usagetypes,
+    Patientcashmovements: state.Patientcashmovements,
+    Stocks: state.Stocks,
+    Stockmovements: state.Stockmovements,
+    Stockdefines: state.Stockdefines,
+    Users: state.Users,
+    Stocktypes: state.Stocktypes,
+    Stocktypegroups: state.Stocktypegroups,
+    Units: state.Units,
+    Profile: state.Profile
 })
 
 const mapDispatchToProps = {
-    GetPatient, setPatient, handleDeletemodal, handleSelectedPatient,
-    GetPatientdefines, GetCases,
-    GetCostumertypes, GetPatienttypes,
-    GetFloors, GetRooms, GetBeds, GetPatientcashmovements,
-    GetPatientstocks, GetStockdefines, GetUnits,
-    GetPatientmovements, GetFiles, handlePlacemodal,
-    GetPatientstockmovements, handleInmodal, handleOutmodal, GetTodosbyPatient, GetTododefines,
-    GetPatientcashregisters, GetUsagetypes, fillPatientnotification
+    GetPatient, handleSelectedPatient, fillPatientnotification, GetPatienttypes, GetCostumertypes,
+    GetPatientdefines, GetFiles, GetUsagetypes, GetCases, GetDepartments, GetFloors, GetRooms, GetBeds,
+    GetPatientcashmovements, GetPatientcashregisters, GetStocks, GetStockdefines, GetStockmovements,
+    GetUsers, GetStocktypes, GetStocktypegroups, GetUnits
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsDetail)

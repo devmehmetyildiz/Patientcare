@@ -2,6 +2,7 @@ const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
+const DoGet = require("../Utilities/DoGet")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -52,8 +53,6 @@ async function AddStockmovement(req, res, next) {
         StockID,
         Movementtype,
         Amount,
-        Prevvalue,
-        Newvalue,
         Movementdate,
     } = req.body
 
@@ -65,12 +64,6 @@ async function AddStockmovement(req, res, next) {
     }
     if (!validator.isNumber(Amount)) {
         validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED)
-    }
-    if (!validator.isNumber(Prevvalue)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PREVVALUE_REQUIRED)
-    }
-    if (!validator.isNumber(Newvalue)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NEWVALUE_REQUIRED)
     }
     if (!validator.isISODate(Movementdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED)
@@ -93,8 +86,6 @@ async function AddStockmovement(req, res, next) {
         });
         await db.stockmovementModel.create({
             ...req.body,
-            Prevvalue: amount,
-            Newvalue: Amount + amount,
             Uuid: stockmovementuuid,
             Isapproved: false,
             Createduser: username,
@@ -130,8 +121,6 @@ async function UpdateStockmovement(req, res, next) {
         StockID,
         Movementtype,
         Amount,
-        Prevvalue,
-        Newvalue,
         Movementdate,
         Uuid
     } = req.body
@@ -144,12 +133,6 @@ async function UpdateStockmovement(req, res, next) {
     }
     if (!validator.isNumber(Amount)) {
         validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED)
-    }
-    if (!validator.isNumber(Prevvalue)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PREVVALUE_REQUIRED)
-    }
-    if (!validator.isNumber(Newvalue)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NEWVALUE_REQUIRED)
     }
     if (!validator.isISODate(Movementdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED)

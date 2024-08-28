@@ -5,8 +5,11 @@ import config from '../../Config'
 import validator from '../../Utils/Validator'
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios'
+import Literals from './Literals'
 
-export const FileuploadPrepare = (files, notification, Literals, Profile) => {
+export const FileuploadPrepare = (files, notification, _Literals, Profile) => {
+
+    const t = Profile?.i18n?.t
 
     const DataCleaner = (data) => {
         if (data.Id !== undefined) {
@@ -33,17 +36,14 @@ export const FileuploadPrepare = (files, notification, Literals, Profile) => {
         return data
     }
 
-    const nameRequired = {
-        en: "Name Required",
-        tr: "İsim gerekli"
-    }
+
 
     const uncleanfiles = [...files]
 
     let errors = []
     files.forEach(data => {
         if (!data.Name || data.Name === '') {
-            errors.push({ type: 'Error', code: Literals.addcode[Profile?.Language], description: nameRequired[Profile?.Language] })
+            errors.push({ type: 'Error', code: t('Common.Code.Add'), description: Literals.Namerequired[Profile?.Language] })
         }
     });
     if (errors.length > 0) {
@@ -72,7 +72,7 @@ export const FileuploadPrepare = (files, notification, Literals, Profile) => {
 
 export default function Fileupload(props) {
 
-    const { fillnotification, Usagetypes, Profile, Literals, selectedFiles, setselectedFiles } = props
+    const { fillnotification, Usagetypes, Profile, _Literals, selectedFiles, setselectedFiles } = props
     const [fileDownloading, setfileDownloading] = useState(false)
 
     const AddNewFile = () => {
@@ -186,7 +186,7 @@ export default function Fileupload(props) {
             window.URL.revokeObjectURL(url);
         }).catch((err) => {
             setfileDownloading(false)
-            fillnotification([{ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: err.message }])
+            fillnotification([{ type: 'Error', code: Literals.Code[Profile.Language], description: err.message }])
             console.log(err.message)
         });
     }
@@ -206,12 +206,12 @@ export default function Fileupload(props) {
             <Table celled className='list-table' key='product-create-type-conversion-table' >
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell width={1}>{Literals.Columns.TableColumnsOrder[Profile.Language]}</Table.HeaderCell>
-                        <Table.HeaderCell width={3}>{Literals.Columns.TableColumnsFileName[Profile.Language]}</Table.HeaderCell>
-                        <Table.HeaderCell width={3}>{Literals.Columns.TableColumnsUsagetype[Profile.Language]}</Table.HeaderCell>
-                        <Table.HeaderCell width={9}>{Literals.Columns.TableColumnsFile[Profile.Language]}</Table.HeaderCell>
-                        <Table.HeaderCell width={9}>{Literals.Columns.TableColumnsUploadStatus[Profile.Language]}</Table.HeaderCell>
-                        <Table.HeaderCell width={1}>{Literals.Columns.TableColumnsDelete[Profile.Language]}</Table.HeaderCell>
+                        <Table.HeaderCell width={1}>{Literals.Order[Profile.Language]}</Table.HeaderCell>
+                        <Table.HeaderCell width={3}>{Literals.Filename[Profile.Language]}</Table.HeaderCell>
+                        <Table.HeaderCell width={3}>{Literals.Usagetype[Profile.Language]}</Table.HeaderCell>
+                        <Table.HeaderCell width={9}>{Literals.File[Profile.Language]}</Table.HeaderCell>
+                        <Table.HeaderCell width={9}>{Literals.Uploadstatus[Profile.Language]}</Table.HeaderCell>
+                        <Table.HeaderCell width={1}>{Literals.Delete[Profile.Language]}</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -224,10 +224,29 @@ export default function Fileupload(props) {
                                 </Button.Group>
                             </Table.Cell>
                             <Table.Cell>
-                                <Form.Input disabled={file.WillDelete} value={file.Name} placeholder={Literals.Columns.TableColumnsFileName[Profile.Language]} name="Name" fluid onChange={(e) => { selectedFilesChangeHandler(file.key, 'Name', e.target.value) }} />
+                                <Form.Input
+                                    disabled={file.WillDelete}
+                                    value={file.Name}
+                                    placeholder={Literals.Filename[Profile.Language]}
+                                    name="Name"
+                                    fluid
+                                    onChange={(e) => { selectedFilesChangeHandler(file.key, 'Name', e.target.value) }}
+                                />
                             </Table.Cell>
                             <Table.Cell>
-                                <Dropdown disabled={file.WillDelete} value={file.Usagetype} placeholder={Literals.Columns.TableColumnsUsagetype[Profile.Language]} name="Usagetype" clearable selection search fluid multiple options={usagetypes} onChange={(e, data) => { selectedFilesChangeHandler(file.key, 'Usagetype', data.value) }} />
+                                <Dropdown
+                                    disabled={file.WillDelete}
+                                    value={file.Usagetype}
+                                    placeholder={Literals.Usagetype[Profile.Language]}
+                                    name="Usagetype"
+                                    clearable
+                                    selection
+                                    search
+                                    fluid
+                                    multiple
+                                    options={usagetypes}
+                                    onChange={(e, data) => { selectedFilesChangeHandler(file.key, 'Usagetype', data.value) }}
+                                />
                             </Table.Cell>
                             <Table.Cell>
                                 {file.fileChanged
@@ -256,8 +275,13 @@ export default function Fileupload(props) {
                                 }
                             </Table.Cell>
                             <Table.Cell className='table-last-section'>
-                                <Icon className='type-conversion-remove-icon' link color={file.WillDelete ? 'green' : 'red'} name={`${file.WillDelete ? 'checkmark' : 'minus circle'}`}
-                                    onClick={() => { removeFile(file.key, file.Order) }} />
+                                <Icon
+                                    className='type-conversion-remove-icon'
+                                    link
+                                    color={file.WillDelete ? 'green' : 'red'}
+                                    name={`${file.WillDelete ? 'checkmark' : 'minus circle'}`}
+                                    onClick={() => { removeFile(file.key, file.Order) }}
+                                />
                             </Table.Cell>
                         </Table.Row>
                     })}
@@ -265,7 +289,12 @@ export default function Fileupload(props) {
                 <Table.Footer>
                     <Table.Row>
                         <Table.HeaderCell colSpan='7'>
-                            <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { AddNewFile() }}>{Literals.Button.Addnewfile[Profile.Language]}</Button>
+                            <Button
+                                type="button"
+                                color='green'
+                                className='addMoreButton'
+                                size='mini'
+                                onClick={() => { AddNewFile() }}>{Literals.Add[Profile.Language]}</Button>
                         </Table.HeaderCell>
                     </Table.Row>
                 </Table.Footer>

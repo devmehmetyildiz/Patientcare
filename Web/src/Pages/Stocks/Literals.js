@@ -14,6 +14,10 @@ const Literals = {
             tr: 'Stok Adı',
             en: 'Stock Name'
         },
+        Stocktype: {
+            tr: 'Stok Türü',
+            en: 'Stock Type'
+        },
         Warehouse: {
             tr: 'Ambar Adı',
             en: 'Warehouse Name'
@@ -160,6 +164,10 @@ const Literals = {
         AmountRequired: {
             tr: "Miktar Gerekli",
             en: "Amount Required"
+        },
+        SktRequired: {
+            tr: "Skt Gerekli",
+            en: "Skt Required"
         },
         Yes: {
             tr: "EVET",

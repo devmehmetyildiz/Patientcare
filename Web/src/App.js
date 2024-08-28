@@ -1,97 +1,65 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Layout from './Containers/Layout/Layout';
-import { withRouter } from 'react-router-dom';
+import { useLocation, withRouter } from 'react-router-dom';
 import { FormContext } from './Provider/FormProvider';
 import Routes from './Routes';
 import NotificationHandler from './Utils/NotificationHandler';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-class App extends Component {
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { setI18n } from './Redux/ProfileSlice';
 
-  constructor(props) {
-    super(props)
+const App = (props) => {
+  const { t, i18n } = useTranslation();
+  const location = useLocation();
+  const formContext = useContext(FormContext);
 
-    this.prepareCss()
+  const [iconstate, setIconstate] = useState(false);
+  const [isFullPageLayout, setIsFullPageLayout] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [hideMobile, setHideMobile] = useState(false);
+  const [mediaQuery, setMediaQuery] = useState(window.matchMedia('(max-width: 768px)'));
 
-    this.state = {
-      iconstate: false,
-      isFullPageLayout: true,
-      isMobile: false,
-      hideMobile: false
-    }
-  }
+  useEffect(() => {
+    props.setI18n({ t: t, i18n: i18n })
+  }, [])
 
-  componentDidMount() {
-    this.onRouteChanged();
-    this.setState({ isMobile: this.mediaQuery.matches });
-    this.mediaQuery.addEventListener('change', this.handleMediaQueryChange);
-  }
+  useEffect(() => {
+    prepareCss();
+    onRouteChanged();
+    setIsMobile(mediaQuery.matches);
 
-  componentDidUpdate(prevProps) {
-    if (this.props.location !== prevProps.location) {
-      this.context.setFormstates({})
-      this.onRouteChanged();
-    }
-  }
+    const handleMediaQueryChange = (event) => {
+      setIsMobile(event.matches);
+    };
 
-  componentWillUnmount() {
-    document.body.removeChild(this.state.script);
-    document.body.removeChild(this.state.script1);
-  }
+    mediaQuery.addEventListener('change', handleMediaQueryChange);
 
-  render() {
-    return (
-      <React.Fragment>
-        <ToastContainer />
-        <NotificationHandler />
-        {this.state.isFullPageLayout ?
-          <div className='w-full' >
-            <Routes />
-          </div>
-          :
-          <Layout {...this.props}
-            isMobile={this.state.isMobile}
-            iconOnly={this.state.iconstate}
-            seticonOnly={this.setIconmode}
-            hideMobile={this.state.hideMobile}
-            sethideMobile={this.sethideMobile} />
-        }
-      </React.Fragment>
-    );
-  }
+    return () => {
+      document.body.removeChild(document.querySelector('script[src="https://unpkg.com/react/umd/react.production.min.js"]'));
+      document.body.removeChild(document.querySelector('script[src="https://unpkg.com/react-collapse/build/react-collapse.min.js"]'));
+      mediaQuery.removeEventListener('change', handleMediaQueryChange);
+    };
+  }, [mediaQuery]);
 
-  onRouteChanged = () => {
+  useEffect(() => {
+    formContext.setFormstates({});
+    onRouteChanged();
+  }, [location]);
+
+  const onRouteChanged = () => {
     window.scrollTo(0, 0);
     const fullPageLayoutRoutes = ['Login', 'login', 'Register', 'register', 'Forgetpassword', 'forgetpassword', 'Passwordreset'];
-    const path = this.props.location.pathname.split('/').length > 0 ? this.props.location.pathname.split('/')[1] : this.props.location.pathname.replace('/', '')
-    document.title = fullPageLayoutRoutes.includes(path) ? "Elder Camp" : "Elder Camp"//path
-    for (let i = 0; i < fullPageLayoutRoutes.length; i++) {
-      if (path === fullPageLayoutRoutes[i]) {
-        this.setState({
-          isFullPageLayout: true
-        })
-        break;
-      } else {
-        this.setState({
-          isFullPageLayout: false
-        })
-      }
-    }
-  }
+    const path = location.pathname.split('/').length > 0 ? location.pathname.split('/')[1] : location.pathname.replace('/', '');
 
-  handleMediaQueryChange = (event) => {
-    this.setState({ isMobile: event.matches });
-  }
+    document.title = fullPageLayoutRoutes.includes(path) ? "Elder Camp" : "Elder Camp";
 
-  setIconmode = () => {
-    this.setState({ iconstate: !this.state.iconstate })
-  }
+    const isFullPage = fullPageLayoutRoutes.includes(path);
+    setIsFullPageLayout(isFullPage);
+  };
 
-  sethideMobile = () => {
-    this.setState({ hideMobile: !this.state.hideMobile })
-  }
-
-  prepareCss = () => {
+  const prepareCss = () => {
     const script = document.createElement('script');
     const script1 = document.createElement('script');
     script.src = "https://unpkg.com/react/umd/react.production.min.js";
@@ -100,8 +68,34 @@ class App extends Component {
     script1.src = "https://unpkg.com/react-collapse/build/react-collapse.min.js";
     script1.async = true;
     document.body.appendChild(script1);
-    this.mediaQuery = window.matchMedia('(max-width: 768px)');
-  }
-}
-export default withRouter(App);
-App.contextType = FormContext
+  };
+
+  return (
+    <React.Fragment>
+      <ToastContainer />
+      <NotificationHandler />
+      {isFullPageLayout ? (
+        <div className='w-full'>
+          <Routes />
+        </div>
+      ) : (
+        <Layout
+          {...props}
+          isMobile={isMobile}
+          iconOnly={iconstate}
+          seticonOnly={() => setIconstate(!iconstate)}
+          hideMobile={hideMobile}
+          sethideMobile={() => setHideMobile(!hideMobile)}
+        />
+      )}
+    </React.Fragment>
+  );
+};
+
+const mapStateToProps = (state) => ({
+  Profile: state.Profile
+})
+
+const mapDispatchToProps = { setI18n }
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App))

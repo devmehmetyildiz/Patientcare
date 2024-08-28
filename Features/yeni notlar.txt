@@ -1,0 +1,43 @@
+------ Sağlık Birimi İçin ------
+
+Hasta Özlük dosyaları tutuluyor
+Hasta Cüzdanı 
+Hasta İlaç ve Rapor Reçeteleri Kaydı ve Takibi
+Hasta Hastane gidiş geliş 
+Hasta İzin ve Hakediş Takibi
+Hasta Teşvik Takibi
+Hasta Bakım ve Psikososyal Hizmet planları Takibi
+Hasta Sarf Malzeme ve Ürün Takibi
+Hasta Rutin Takibi*
+Hastalar için etkinlik oluşturma takibi 
+
+------ Kurum için ------
+
+Personel Özlük dosyaları
+Personel İzin ve Vardiya Takibi
+Personel Hakediş Takibi
+Kurum Basit Muhasebe Takibi
+Kurum Alışveriş Takibi ve Skt erken uyarı sistemi
+Kurum Stokları Takibi
+Kurum Demişbaş ve Arıza Kaydı ve Bakım Talep Kaydı
+Kurum Demirbaş Zimmet takibi
+KYS adına bakım taleplerinin geri bildirimleri
+Yönetim ve Sorumlu Müdür Onay Takibi (Bildirim Onaylama sistemi)
+Hizmet içi Eğitim oluşturma Takibi
+Ürünlerin Geçmiş Hareketleri
+
+------ Uygulama Özellikleri ------
+
+Uygulama Kullanıcılarına Roller atama
+Rollere göre oluşturma/güncelleme/silme/rapor alma yetki ataması
+Uygulama içerisinde Rapor ve Doküman oluşturabilme
+Bildirim oluşturabilme
+Kurum Kat/Oda/Yatak oluşturma özelliği
+Kurum içi Meslek Oluşturma ve Personel atama
+Bakım ve Destek Planları hazırlama
+Otomatik Mail oluşturma
+İşlem Kayıt Takibi
+Personel Uygulama Kullanım Takibi
+Yabancı Dil Desteği
+Web üzerinden çalışabilme ve Bulut Yedekleme sistemi
+Mobil Ekranlar için 100% Uyumluluk

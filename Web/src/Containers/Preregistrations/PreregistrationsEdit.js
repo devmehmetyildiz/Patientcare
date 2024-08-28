@@ -1,21 +1,20 @@
 import { connect } from 'react-redux'
 import PreregistrationsEdit from "../../Pages/Preregistrations/PreregistrationsEdit"
 import { GetPatient, EditPatients, fillPatientnotification } from "../../Redux/PatientSlice"
-import { GetDepartments } from "../../Redux/DepartmentSlice"
-import { GetCases } from "../../Redux/CaseSlice"
-import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
+import { GetStocks } from '../../Redux/StockSlice'
+import { GetFiles } from '../../Redux/FileSlice'
 
 const mapStateToProps = (state) => ({
   Patients: state.Patients,
-  Departments: state.Departments,
-  Cases: state.Cases,
-  Patientdefines: state.Patientdefines,
+  Stocks: state.Stocks,
+  Files: state.Files,
+  Stockdefines: state.Stockdefines,
+  Stocktypes: state.Stocktypes,
   Profile: state.Profile
 })
 
 const mapDispatchToProps = {
-  GetPatient, EditPatients, fillPatientnotification, GetPatientdefines
-  , GetDepartments, GetCases
+  GetPatient, EditPatients, fillPatientnotification, GetStocks, GetFiles
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreregistrationsEdit)

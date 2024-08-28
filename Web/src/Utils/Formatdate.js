@@ -1,4 +1,4 @@
-const Formatdate = (date) => {
+const Formatdate = (date, trFormat) => {
     if (!date) {
         return ''
     }
@@ -6,7 +6,7 @@ const Formatdate = (date) => {
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
     const day = String(currentDate.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDate = trFormat ? `${day}-${month}-${year}` : `${year}-${month}-${day}`;
     return formattedDate
 }
 

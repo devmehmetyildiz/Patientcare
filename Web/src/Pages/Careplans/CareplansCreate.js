@@ -370,11 +370,11 @@ export default class CareplansCreate extends Component {
       let willapprove = (data.Careplanservices || []).map(u => {
         return (Supportplans.list || []).find(plan => plan.Uuid === u?.SupportplanID)?.IsRequired
       }).filter(u => u === true || u === 1).length > 0
-      
+
       let isRequired = (data.Careplanservices || []).map(u => {
         return (Supportplans.list || []).find(plan => plan.Uuid === u?.SupportplanID)?.IsNeedactivation
       }).filter(u => u === true || u === 1).length > 0
-      
+
       console.log('isRequired: ', isRequired);
       console.log('willapprove: ', willapprove);
       AddCareplans({ data: { ...data, Needapprove: willapprove || isRequired, Isapproved: false }, history, closeModal })

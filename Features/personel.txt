@@ -1,0 +1,22 @@
+personel detay listesi olacak, aynı hastalar gibi
+kullanıcılara personelmi butonu koy 
+
+izin gir ->
+
+    izin türü seçecek,
+    başlangıç saati,
+    bitiş saati,
+    dosya ekleme,
+    maas hesaplamadan düşecek
+
+eğitim geçmişi 
+
+
+personelin detay bilgileri , aktif vardiyası falan filan 
+
+
+
+
+
+hastalar içinde eğitim geçmişi çıkacak 
+

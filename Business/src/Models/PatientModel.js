@@ -7,12 +7,14 @@ module.exports = sequelize.define('patientModel', {
     Uuid: {
         type: Sequelize.STRING
     },
+
     PatientdefineID: {
         type: Sequelize.STRING
     },
     Patientstatus: {
         type: Sequelize.INTEGER
     },
+
     Approvaldate: {
         type: Sequelize.DATE
     },
@@ -28,6 +30,10 @@ module.exports = sequelize.define('patientModel', {
     Leavedate: {
         type: Sequelize.DATE
     },
+    Deathdate: {
+        type: Sequelize.DATE
+    },
+
     RoomID: {
         type: Sequelize.STRING
     },
@@ -37,21 +43,66 @@ module.exports = sequelize.define('patientModel', {
     BedID: {
         type: Sequelize.STRING
     },
+
     DepartmentID: {
         type: Sequelize.STRING
     },
-    Iswaitingactivation: {
+
+    Patientcreatetime: {
+        type: Sequelize.DATE
+    },
+    Patientchecktime: {
+        type: Sequelize.DATE
+    },
+    Patientapprovetime: {
+        type: Sequelize.DATE
+    },
+    Patientcompletetime: {
+        type: Sequelize.DATE
+    },
+    CreateduserID: {
+        type: Sequelize.STRING
+    },
+    CheckeduserID: {
+        type: Sequelize.STRING
+    },
+    ApproveduserID: {
+        type: Sequelize.STRING
+    },
+    CompleteduserID: {
+        type: Sequelize.STRING
+    },
+
+    Ischecked: {
         type: Sequelize.BOOLEAN
     },
-    WarehouseID: {
+    Isapproved: {
+        type: Sequelize.BOOLEAN
+    },
+    Ispreregistration: {
+        type: Sequelize.BOOLEAN
+    },
+    Isalive: {
+        type: Sequelize.BOOLEAN
+    },
+    Isoninstitution: {
+        type: Sequelize.BOOLEAN
+    },
+    Isleft: {
+        type: Sequelize.BOOLEAN
+    },
+
+    Leftinfo: {
         type: Sequelize.STRING
     },
-    ImageID: {
+    Deadinfo: {
         type: Sequelize.STRING
     },
+
     CaseID: {
         type: Sequelize.STRING
     },
+
     Createduser: {
         type: Sequelize.STRING
     },

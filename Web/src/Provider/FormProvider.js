@@ -10,8 +10,10 @@ const FormProvider = ({ children }) => {
 
     useEffect(() => {
         if (buffer.length > 0) {
-            setFormstates(prevstate=>({ ...prevstate, [buffer[0]?.key]: buffer[0]?.value }))
-            setBuffer(buffer.slice(1))
+            if (!(formstates[buffer[0]?.key])) {
+                setFormstates(prevstate => ({ ...prevstate, [buffer[0]?.key]: buffer[0]?.value }))
+                setBuffer(buffer.slice(1))
+            }
         }
     }, [buffer])
 

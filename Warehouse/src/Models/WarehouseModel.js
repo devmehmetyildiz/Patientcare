@@ -10,11 +10,11 @@ module.exports = sequelize.define('warehouseModel', {
     Name: {
         type: Sequelize.STRING
     },
-    Info: {
+    Stocktypegroups: {
         type: Sequelize.STRING
     },
-    Ismedicine: {
-        type: Sequelize.BOOLEAN
+    Info: {
+        type: Sequelize.TEXT
     },
     Createduser: {
         type: Sequelize.STRING

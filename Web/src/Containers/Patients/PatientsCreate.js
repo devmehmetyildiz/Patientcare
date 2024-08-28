@@ -3,7 +3,6 @@ import PatientsCreate from '../../Pages/Patients/PatientsCreate'
 import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
 import { AddPatientReturnPatient, fillPatientnotification } from "../../Redux/PatientSlice"
 import { EditFiles } from "../../Redux/FileSlice"
-import { EditPatientstocks } from "../../Redux/PatientstockSlice"
 import { GetDepartments } from "../../Redux/DepartmentSlice"
 import { GetCases } from "../../Redux/CaseSlice"
 import { GetCostumertypes } from "../../Redux/CostumertypeSlice"
@@ -32,7 +31,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  GetPatientdefines, GetDepartments, GetCases, GetCostumertypes, fillPatientnotification, EditPatientstocks,
+  GetPatientdefines, GetDepartments, GetCases, GetCostumertypes, fillPatientnotification,
   GetPatienttypes, GetStockdefines, GetFloors, GetRooms, GetBeds, GetWarehouses, EditFiles, AddPatientReturnPatient, GetUsagetypes
 }
 

@@ -14,9 +14,9 @@ const Literals = {
             tr: 'Ambar Adı',
             en: 'Warehouse Name'
         },
-        Ismedicine: {
-            tr: 'İlaç Ambarı mı?',
-            en: 'Is Medicine Warehouse?'
+        Stocktypegroups: {
+            tr: 'Stok tür Grupları',
+            en: 'Stock type groups'
         },
         Stockdefine: {
             tr: 'Ürün Tanımı',

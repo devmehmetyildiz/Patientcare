@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon } from 'semantic-ui-react'
-import Literals from './Literals'
 import DepartmentDelete from "../../Containers/Departments/DepartmentsDelete"
 import { getInitialconfig } from '../../Utils/Constants'
 import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
@@ -9,6 +8,7 @@ import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Paged
 export default function Departments(props) {
 
   const { Departments, Profile, handleSelectedDepartment, handleDeletemodal, GetDepartments } = props
+  const t = Profile?.i18n?.t
 
   const [list, setList] = useState([])
 
@@ -43,21 +43,22 @@ export default function Departments(props) {
   }
 
   const Columns = [
-    { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
-    { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-    { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
-    { Header: Literals.Columns.Ishavepatients[Profile.Language], accessor: row => boolCellhandler(row?.Ishavepatients), Subtitle: true, Withtext: true },
-    { Header: Literals.Columns.Isdefaultpatientdepartment[Profile.Language], accessor: row => boolCellhandler(row?.Isdefaultpatientdepartment), Lowtitle: true, Withtext: true },
-    { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
-    { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
-    { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
-    { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-    { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
-    { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+    { Header: t("Common.Column.Id"), accessor: 'Id' },
+    { Header: t("Common.Column.Uuid"), accessor: 'Uuid' },
+    { Header: t("Pages.Departments.Columns.Name"), accessor: 'Name', Title: true },
+    { Header: t("Pages.Departments.Columns.Ishavepatients"), accessor: row => boolCellhandler(row?.Ishavepatients), Subtitle: true, Withtext: true },
+    { Header: t("Pages.Departments.Columns.Isdefaultpatientdepartment"), accessor: row => boolCellhandler(row?.Isdefaultpatientdepartment), Lowtitle: true, Withtext: true },
+    { Header: t("Common.Column.Createduser"), accessor: 'Createduser' },
+    { Header: t("Common.Column.Updateduser"), accessor: 'Updateduser' },
+    { Header: t("Common.Column.Createtime"), accessor: 'Createtime' },
+    { Header: t("Common.Column.Updatetime"), accessor: 'Updatetime' },
+    { Header: t("Common.Column.edit"), accessor: 'edit', disableProps: true },
+    { Header: t("Common.Column.delete"), accessor: 'delete', disableProps: true }
   ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
   const metaKey = "department"
   const initialConfig = getInitialconfig(Profile, metaKey)
+
   return (
     isLoading ? <LoadingPage /> :
       <React.Fragment>
@@ -67,13 +68,13 @@ export default function Departments(props) {
               <GridColumn width={8}>
                 <Breadcrumb size='big'>
                   <Link to={"/Departments"}>
-                    <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                    <Breadcrumb.Section>{t("Pages.Departments.Page.Header")}</Breadcrumb.Section>
                   </Link>
                 </Breadcrumb>
               </GridColumn>
               <Settings
                 Profile={Profile}
-                Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                Pagecreateheader={t("Pages.Departments.Page.CreateHeader")}
                 Pagecreatelink={"/Departments/Create"}
                 Columns={Columns}
                 list={list}
@@ -91,7 +92,7 @@ export default function Departments(props) {
               {Profile.Ismobile ?
                 <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-            </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+            </div> : <NoDataScreen message={t("Common.NoDataFound")} />
           }
         </Pagewrapper>
         <DepartmentDelete />

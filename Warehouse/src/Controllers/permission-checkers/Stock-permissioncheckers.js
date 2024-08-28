@@ -28,13 +28,8 @@ async function DeleteStock(req, res, next) {
     PermissionHandler(req, next, 'stockdelete', 'medicinedelete', 'supplydelete')
 }
 
-async function TransfertoPatient(req, res, next) {
-    PermissionHandler(req, next, 'stockupdate', 'medicineupdate', 'supplyupdate')
-
-}
-
-async function TransferfromPatient(req, res, next) {
-    PermissionHandler(req, next, 'stockupdate', 'medicineupdate', 'supplyupdate')
+async function DeleteStockByWarehouseID(req, res, next) {
+    PermissionHandler(req, next, 'stockdelete', 'medicinedelete', 'supplydelete')
 }
 
 module.exports = {
@@ -45,6 +40,5 @@ module.exports = {
     DeleteStock,
     ApproveStock,
     ApproveStocks,
-    TransferfromPatient,
-    TransfertoPatient
+    DeleteStockByWarehouseID
 }

@@ -1,39 +1,31 @@
 import { connect } from 'react-redux'
 import Preregistrations from "../../Pages/Preregistrations/Preregistrations"
-import { GetPatients, CompletePrepatients, DeletePatients, fillPatientnotification, handleDeletemodal, handleSelectedPatient, handleCompletemodal } from "../../Redux/PatientSlice"
-import { GetWarehouses } from "../../Redux/WarehouseSlice"
-import { GetCases } from "../../Redux/CaseSlice"
-import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
-import { GetRooms } from "../../Redux/RoomSlice"
-import { GetBeds } from "../../Redux/BedSlice"
-import { GetFloors } from "../../Redux/FloorSlice"
-import { GetFiles } from "../../Redux/FileSlice"
-import { GetPatientstocks } from "../../Redux/PatientstockSlice"
-import { GetPatientstockmovements } from "../../Redux/PatientstockmovementSlice"
-import { GetStockdefines } from "../../Redux/StockdefineSlice"
-import { GetUsagetypes } from "../../Redux/UsagetypeSlice"
+import { GetPatients, handleDeletemodal, handleSelectedPatient, handleCompletemodal, handleApprovemodal, handleCheckmodal, handleDetailmodal } from "../../Redux/PatientSlice"
+import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
+import { GetCases } from '../../Redux/CaseSlice'
+import { GetUsers } from '../../Redux/UserSlice'
+import { GetUsagetypes } from '../../Redux/UsagetypeSlice'
+import { GetFiles } from '../../Redux/FileSlice'
+import { GetFloors } from '../../Redux/FloorSlice'
+import { GetRooms } from '../../Redux/RoomSlice'
+import { GetBeds } from '../../Redux/BedSlice'
 
 const mapStateToProps = (state) => ({
   Patients: state.Patients,
-  Profile: state.Profile,
-  Files: state.Files,
   Patientdefines: state.Patientdefines,
-  Patientstocks: state.Patientstocks,
-  Patientstockmovements: state.Patientstockmovements,
-  Stockdefines: state.Stockdefines,
   Cases: state.Cases,
-  Warehouses: state.Warehouses,
+  Users: state.Users,
+  Usagetypes: state.Usagetypes,
+  Files: state.Files,
   Floors: state.Floors,
   Rooms: state.Rooms,
   Beds: state.Beds,
-  Usagetypes: state.Usagetypes,
+  Profile: state.Profile,
 })
 
 const mapDispatchToProps = {
-  GetPatients, CompletePrepatients, DeletePatients, GetPatientstockmovements,
-  handleDeletemodal, handleSelectedPatient, fillPatientnotification, GetWarehouses, GetStockdefines,
-  GetCases, GetPatientdefines, GetRooms, handleCompletemodal, GetUsagetypes,
-  GetBeds, GetFloors, GetFiles, GetPatientstocks
+  GetPatients, handleDeletemodal, handleSelectedPatient, handleCompletemodal, handleApprovemodal, handleCheckmodal, handleDetailmodal,
+  GetPatientdefines, GetCases, GetUsers, GetUsagetypes, GetFiles, GetFloors, GetRooms, GetBeds
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Preregistrations)

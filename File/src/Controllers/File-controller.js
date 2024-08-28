@@ -320,6 +320,42 @@ async function DeleteFile(req, res, next) {
     GetFiles(req, res, next)
 }
 
+async function DeleteFileByParentID(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.parentID
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.FILEID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_FILEID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+    try {
+        const files = await db.fileModel.findAll({ where: { ParentID: Uuid } });
+        if ((files || []).length > 0) {
+            for (const file of files) {
+                await db.fileModel.update({
+                    Updateduser: username,
+                    Updatetime: new Date(),
+                    Isactive: false
+                }, { where: { Uuid: file?.Uuid } }, { transaction: t })
+            }
+        }
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetFiles(req, res, next)
+}
+
 async function Uploadfiletoftp(fileObject) {
     let isuploaded = false
     if (!fileObject.File) {
@@ -424,5 +460,6 @@ module.exports = {
     DeleteFile,
     Downloadfile,
     GetbyparentID,
-    GetbyorderfileID
+    GetbyorderfileID,
+    DeleteFileByParentID
 }

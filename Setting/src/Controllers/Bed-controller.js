@@ -168,7 +168,7 @@ async function ChangeBedstatus(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
     try {
         if (OldUuid && validator.isUUID(OldUuid)) {
-            const oldbed =await db.bedModel.findOne({ where: { Uuid: OldUuid } })
+            const oldbed = await db.bedModel.findOne({ where: { Uuid: OldUuid } })
             if (!oldbed) {
                 return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
             }
@@ -213,6 +213,58 @@ async function ChangeBedstatus(req, res, next) {
     GetBeds(req, res, next)
 }
 
+async function ChangeBedOccupied(req, res, next) {
+
+    let validationErrors = []
+    const {
+        BedID,
+        Isoccupied
+    } = req.body
+
+    if (!validator.isUUID(BedID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
+    }
+    if (!validator.isBoolean(Isoccupied)) {
+        validationErrors.push(messages.VALIDATION_ERROR.ISOCCUPIED_REQUIRED)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+    try {
+        const bed = await db.bedModel.findOne({ where: { Uuid: BedID } })
+        if (!bed) {
+            return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
+        }
+        if (bed.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.BED_NOT_ACTIVE], req.language))
+        }
+
+        await db.bedModel.update({
+            ...bed,
+            Isoccupied: Isoccupied,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: BedID } }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Yataklar',
+            role: 'bednotification',
+            message: `${bed?.Name} yatağı ${username} tarafından Güncellendi.`,
+            pushurl: '/Beds'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetBeds(req, res, next)
+}
+
+
 async function DeleteBed(req, res, next) {
 
     let validationErrors = []
@@ -227,7 +279,7 @@ async function DeleteBed(req, res, next) {
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
-    
+
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
@@ -262,5 +314,6 @@ module.exports = {
     AddBed,
     UpdateBed,
     DeleteBed,
-    ChangeBedstatus
+    ChangeBedstatus,
+    ChangeBedOccupied
 }

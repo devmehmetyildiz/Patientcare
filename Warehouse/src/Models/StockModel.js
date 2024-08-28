@@ -7,38 +7,44 @@ module.exports = sequelize.define('stockModel', {
     Uuid: {
         type: Sequelize.STRING
     },
+    Order: {
+        type: Sequelize.INTEGER
+    },
     WarehouseID: {
+        type: Sequelize.STRING
+    },
+    Type: {
+        type: Sequelize.INTEGER
+    },
+    Amount: {
+        type: Sequelize.DOUBLE
+    },
+    StocktypeID: {
+        type: Sequelize.STRING
+    },
+    StockgrouptypeID: {
         type: Sequelize.STRING
     },
     StockdefineID: {
         type: Sequelize.STRING
     },
-    DepartmentID: {
-        type: Sequelize.STRING
-    },
-    Ismedicine: {
-        type: Sequelize.BOOLEAN
-    },
-    Isredprescription: {
-        type: Sequelize.BOOLEAN
-    },
-    Issupply: {
-        type: Sequelize.BOOLEAN
-    },
     Isapproved: {
         type: Sequelize.BOOLEAN
+    },
+    Isdeactivated: {
+        type: Sequelize.BOOLEAN
+    },
+    Deactivateinfo: {
+        type: Sequelize.STRING
     },
     Skt: {
         type: Sequelize.DATE
     },
-    Barcodeno: {
-        type: Sequelize.STRING
-    },
     Info: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
     },
-    Order: {
-        type: Sequelize.INTEGER
+    Iscompleted: {
+        type: Sequelize.BOOLEAN
     },
     Createduser: {
         type: Sequelize.STRING

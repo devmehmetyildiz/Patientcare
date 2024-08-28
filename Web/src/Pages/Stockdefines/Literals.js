@@ -11,32 +11,28 @@ const Literals = {
             en: 'Unique ID'
         },
         Name: {
-            tr: 'Stok Tanım Adı',
-            en: 'Stock Define Name'
+            tr: 'İsim',
+            en: 'Name'
         },
-        Description: {
-            tr: 'Açıklama',
-            en: 'Description'
+        Stocktype: {
+            tr: 'Stok Türü',
+            en: 'Stock Type'
+        },
+        Brand: {
+            tr: 'Marka',
+            en: 'Brand'
+        },
+        Barcode: {
+            tr: 'Barkod',
+            en: 'Barcode'
         },
         Unit: {
             tr: 'Birim',
             en: 'Unit'
         },
-        Department: {
-            tr: 'Departman',
-            en: 'Department'
-        },
-        Ismedicine: {
-            tr: 'İlaç mı?',
-            en: 'Is Medicine?'
-        },
-        Isredprescription: {
-            tr: 'Kırmızı Reçete mi?',
-            en: 'Is Redprescription?'
-        },
-        Issupply: {
-            tr: 'Sarf Malzemesi mi?',
-            en: 'Is Supply?'
+        Info: {
+            tr: 'Açıklama',
+            en: 'Info'
         },
         Createduser: {
             tr: 'Oluşturan Kullanıcı',
@@ -114,16 +110,20 @@ const Literals = {
             en: "stock defines will delete, are you sure?"
         },
         NameRequired: {
-            tr: "Stok tanım adı Gerekli",
-            en: "Stock define name Required"
+            tr: "İsim Gerekli",
+            en: "Name Required"
         },
-        DepartmentsRequired: {
-            tr: "Departman Gerekli",
-            en: "Department Required"
+        StocktypesRequired: {
+            tr: "Stok Türü Gerekli",
+            en: "Stok Type Required"
         },
         UnitsRequired: {
             tr: "Birim Gerekli",
             en: "Units Required"
+        },
+        BarcodeRequired: {
+            tr: "Barkod Gerekli",
+            en: "Barcode Required"
         },
         Yes: {
             tr: "EVET",

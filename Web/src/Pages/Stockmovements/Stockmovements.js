@@ -34,8 +34,6 @@ export default class Stockmovements extends Component {
       { Header: Literals.Columns.Movementdate[Profile.Language], accessor: row => this.dateCellhandler(row?.Movementdate), Subtitle: true },
       { Header: Literals.Columns.Movementtype[Profile.Language], accessor: row => this.movementCellhandler(row?.Movementtype), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Amount[Profile.Language], accessor: row => this.amountCellhandler(row), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Prevvalue[Profile.Language], accessor: row => this.prevamountCellhandler(row) },
-      { Header: Literals.Columns.Newvalue[Profile.Language], accessor: row => this.newamountCellhandler(row) },
       { Header: Literals.Columns.Isapproved[Profile.Language], accessor: row => this.boolCellhandler(row?.Isapproved) },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },

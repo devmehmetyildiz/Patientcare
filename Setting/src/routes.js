@@ -61,6 +61,7 @@ const Routes = [
   { method: 'get', path: '/Beds', controller: 'Bed', action: 'GetBeds' },
   { method: 'post', path: '/Beds', controller: 'Bed', action: 'AddBed' },
   { method: 'put', path: '/Beds/ChangeBedstatus', controller: 'Bed', action: 'ChangeBedstatus' },
+  { method: 'put', path: '/Beds/ChangeBedOccupied', controller: 'Bed', action: 'ChangeBedOccupied' },
   { method: 'put', path: '/Beds', controller: 'Bed', action: 'UpdateBed' },
   { method: 'delete', path: '/Beds/:bedId', controller: 'Bed', action: 'DeleteBed' },
 

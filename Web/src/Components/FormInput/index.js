@@ -60,6 +60,7 @@ export default function FormInput(props) {
 
     contextProp.isFormvisible && delete contextProp.isFormvisible
     contextProp.effect && delete contextProp.effect
+    contextProp.validationfunc && delete contextProp.validationfunc
 
 
     const getFormtime = React.useCallback(() => {
@@ -75,7 +76,7 @@ export default function FormInput(props) {
                     fluid
                     selection
                     onChange={(e, data) => {
-                        context.setFormstates({ ...formdata, [name]: data.value })
+                        context.setFormstates(prev => ({ ...prev, [name]: data.value }))
                         effect && effect()
                     }}
                     {...contextProp}
@@ -84,7 +85,7 @@ export default function FormInput(props) {
                 return <Checkbox toggle className='m-2'
                     checked={formdata[name] ? (formdata[name] === 1 ? true : (formdata[name] === 0 ? false : formdata[name])) : false}
                     onClick={(e) => {
-                        context.setFormstates({ ...formdata, [name]: formdata[name] ? !formdata[name] : true })
+                        context.setFormstates(prev => ({ ...prev, [name]: formdata[name] ? !formdata[name] : true }))
                         effect && effect()
                     }}
                 />
@@ -105,7 +106,7 @@ export default function FormInput(props) {
                                     const res = validationfunc(e.target.value)
                                     setIsvalidate(res)
                                 }
-                                context.setFormstates({ ...formdata, [name]: props.type === 'number' ? parseFloat(e.target.value) : e.target.value })
+                                context.setFormstates(prev => ({ ...prev, [name]: props.type === 'number' ? parseFloat(e.target.value) : e.target.value }))
                                 effect && effect()
                             }}
                             onKeyPress={(e) => { handleKeyPress(e) }}
@@ -125,7 +126,7 @@ export default function FormInput(props) {
                                     const res = validationfunc(e.target.value)
                                     setIsvalidate(res)
                                 }
-                                context.setFormstates({ ...formdata, [name]: props.type === 'number' ? parseFloat(e.target.value) : e.target.value })
+                                context.setFormstates(prev => ({ ...prev, [name]: props.type === 'number' ? parseFloat(e.target.value) : e.target.value }))
                                 effect && effect()
                             }}
                             onKeyPress={(e) => { handleKeyPress(e) }}
@@ -146,7 +147,7 @@ export default function FormInput(props) {
                                     setIsvalidate(res)
                                 }
                                 setInputvalue(props.type === 'number' ? parseFloat(e.target.value) : e.target.value)
-                                context.setFormstates({ ...formdata, [name]: props.type === 'number' ? parseFloat(e.target.value) : e.target.value })
+                                context.setFormstates(prev => ({ ...prev, [name]: props.type === 'number' ? parseFloat(e.target.value) : e.target.value }))
                                 effect && effect()
                             }}
                             onKeyPress={(e) => { handleKeyPress(e) }}

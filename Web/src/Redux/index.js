@@ -10,15 +10,10 @@ import StockSlice from "./StockSlice"
 import StockmovementsSlice from "./StockmovementSlice";
 import UserSlice from "./UserSlice";
 import FileSlice from "./FileSlice";
-import PurchaseorderSlice from "./PurchaseorderSlice"
 import PatienttypeSlice from "./PatienttypeSlice"
 import CostumertypeSlice from "./CostumertypeSlice"
 import PatientdefineSlice from "./PatientdefineSlice"
 import PatientSlice from "./PatientSlice";
-import PatientstockmovementSlice from "./PatientstockmovementSlice";
-import PatientstockSlice from "./PatientstockSlice"
-import PurchaseorderstockmovementSlice from "./PurchaseorderstockmovementSlice"
-import PurchaseorderstockSlice from "./PurchaseorderstockSlice"
 import WarehouseSlice from "./WarehouseSlice"
 import TododefineSlice from "./TododefineSlice";
 import TodogroupdefineSlice from "./TodogroupdefineSlice";
@@ -55,6 +50,9 @@ import PersonelpresettingSlice from "./PersonelpresettingSlice";
 import PersonelshiftSlice from "./PersonelshiftSlice";
 import PersonelshiftdetailSlice from "./PersonelshiftdetailSlice";
 import ProfessionpresettingSlice from "./ProfessionpresettingSlice";
+import StocktypeSlice from "./StocktypeSlice";
+import StocktypegroupSlice from "./StocktypegroupSlice";
+import PurchaseorderSlice from "./PurchaseorderSlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -71,15 +69,10 @@ const Slices = combineReducers({
     Stockmovements: StockmovementsSlice,
     Users: UserSlice,
     Files: FileSlice,
-    Purchaseorders: PurchaseorderSlice,
     Costumertypes: CostumertypeSlice,
     Patienttypes: PatienttypeSlice,
     Patientdefines: PatientdefineSlice,
     Patients: PatientSlice,
-    Patientstockmovements: PatientstockmovementSlice,
-    Patientstocks: PatientstockSlice,
-    Purchaseorderstockmovements: PurchaseorderstockmovementSlice,
-    Purchaseorderstocks: PurchaseorderstockSlice,
     Warehouses: WarehouseSlice,
     Tododefines: TododefineSlice,
     Todogroupdefines: TodogroupdefineSlice,
@@ -113,6 +106,9 @@ const Slices = combineReducers({
     Personelshiftdetails: PersonelshiftdetailSlice,
     Professionpresettings: ProfessionpresettingSlice,
     Personelpresettings: PersonelpresettingSlice,
+    Stocktypes:StocktypeSlice,
+    Stocktypegroups:StocktypegroupSlice,
+    Purchaseorders:PurchaseorderSlice,
 });
 
 export default Slices;
