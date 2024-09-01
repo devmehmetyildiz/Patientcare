@@ -12,6 +12,10 @@ async function AddStockmovement(req, res, next) {
     PermissionHandler(req, next, 'stockmovementadd')
 }
 
+async function AddStockmovements(req, res, next) {
+    PermissionHandler(req, next, 'stockmovementadd')
+}
+
 async function UpdateStockmovement(req, res, next) {
     PermissionHandler(req, next, 'stockmovementupdate')
 }
@@ -36,5 +40,6 @@ module.exports = {
     UpdateStockmovement,
     DeleteStockmovement,
     ApproveStockmovement,
-    ApproveStockmovements
+    ApproveStockmovements,
+    AddStockmovements
 }

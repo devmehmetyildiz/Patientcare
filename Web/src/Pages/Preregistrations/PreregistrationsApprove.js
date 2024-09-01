@@ -3,6 +3,8 @@ import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { Button, Checkbox, Dropdown, Form, Modal } from 'semantic-ui-react'
 import { Contentwrapper, PatientsDetailCard } from '../../Components'
+import Formatdate from '../../Utils/Formatdate'
+import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT } from '../../Utils/Constants'
 
 export default function PreregistrationsApprove(props) {
   const {
@@ -45,6 +47,7 @@ export default function PreregistrationsApprove(props) {
 
   const {
     CaseID,
+    Uuid,
     Isoninstitution
   } = selected_record
 
@@ -71,7 +74,28 @@ export default function PreregistrationsApprove(props) {
     }
   }, [isApprovemodalopen])
 
-  const CaseOption = (Cases.list || []).filter(u => u.Isactive).map(casedata => {
+  const stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
+    return {
+      ...element,
+      key: Math.random(),
+      Skt: validator.isISODate(element.Skt) ? Formatdate(element.Skt) : element.Skt
+    }
+  });
+
+  const files = (Files.list || []).filter(u => u.Isactive).filter(u => u.ParentID === Uuid).map(element => {
+    return {
+      ...element,
+      key: Math.random(),
+      Usagetype: ((element?.Usagetype || '').split(',') || []).map(u => {
+        return (Usagetypes.list || []).find(type => type.Uuid === u)?.Name
+      })
+    }
+  });
+
+  const CaseOption = (Cases.list || [])
+  .filter(u => u.Isactive)
+  .filter(u => u.Patientstatus !== CASE_PATIENT_STATUS_DEATH && u.Patientstatus !== CASE_PATIENT_STATUS_LEFT)
+  .map(casedata => {
     const departmentuuids = (casedata?.Departmentuuids || []).map(u => u.DepartmentID);
     let isHavepatients = false
     departmentuuids.forEach(departmentuuid => {
@@ -118,6 +142,8 @@ export default function PreregistrationsApprove(props) {
         Patienttypes={Patienttypes}
         Usagetypes={Usagetypes}
         fillnotification={fillPatientnotification}
+        stocks={stocks}
+        files={files}
       />
       <Modal.Content>
         <Contentwrapper>

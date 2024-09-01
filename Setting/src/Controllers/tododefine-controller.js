@@ -229,8 +229,11 @@ async function DeleteTododefine(req, res, next) {
             return next(createAccessDenied([messages.ERROR.TODODEFINE_NOT_ACTIVE], req.language))
         }
 
-        await db.tododefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
-        await db.tododefineperiodModel.destroy({ where: { TododefineID: Uuid }, transaction: t });
+        await db.tododefineModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

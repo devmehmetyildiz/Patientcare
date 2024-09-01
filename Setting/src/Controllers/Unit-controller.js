@@ -221,8 +221,11 @@ async function DeleteUnit(req, res, next) {
             return next(createAccessDenied([messages.ERROR.UNIT_NOT_ACTIVE], req.language))
         }
 
-        await db.unitdepartmentModel.destroy({ where: { UnitID: Uuid }, transaction: t });
-        await db.unitModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.unitModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

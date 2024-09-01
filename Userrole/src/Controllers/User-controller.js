@@ -583,13 +583,19 @@ async function DeleteUser(req, res, next) {
             return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
         }
 
-        await db.userModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.userModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+     /*    await db.userModel.destroy({ where: { Uuid: Uuid }, transaction: t });
         await db.userroleModel.destroy({ where: { UserID: Uuid }, transaction: t });
         await db.usersaltModel.destroy({ where: { UserID: Uuid }, transaction: t });
         await db.userstationModel.destroy({ where: { UserID: Uuid }, transaction: t });
         await db.usernotificationModel.destroy({ where: { UserID: Uuid }, transaction: t });
         await db.tablemetaconfigModel.destroy({ where: { UserID: Uuid }, transaction: t });
-        await db.userdepartmentModel.destroy({ where: { UserID: Uuid }, transaction: t });
+        await db.userdepartmentModel.destroy({ where: { UserID: Uuid }, transaction: t }); */
 
         await CreateNotification({
             type: types.Delete,

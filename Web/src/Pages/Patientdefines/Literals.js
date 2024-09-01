@@ -93,7 +93,7 @@ const Literals = {
             en: 'Date of Death'
         },
         Placeofdeath: {
-            tr: 'Doğum Yeri',
+            tr: 'Ölüm Yeri',
             en: 'Place of Death'
         },
         Deathinfo: {

@@ -21,7 +21,7 @@ export default function PatientsDetailProfile(props) {
   const Happensdate = patient?.Happensdate ? Formatdate(patient?.Happensdate, true) : t('Common.NoDataFound')
 
   return (
-    <div className='bg-white shadow-lg w-full font-poppins rounded-lg flex flex-col justify-center items-center  p-4 m-4 mt-0 min-w-[250px]'>
+    <div className='bg-white shadow-lg w-full  rounded-lg flex flex-col justify-center items-center  p-4 m-4 mt-0 min-w-[250px]'>
       {files
         ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${files?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
         : <Header className='!m-0 !p-0' as='h2' icon textAlign='center'><Icon name='users' circular /></Header>

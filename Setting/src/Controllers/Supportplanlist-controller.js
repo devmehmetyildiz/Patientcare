@@ -221,8 +221,11 @@ async function DeleteSupportplanlist(req, res, next) {
             return createNotfounderror([messages.ERROR.SUPPORTPLANLIST_NOT_ACTIVE])
         }
 
-        await db.supportplanlistsupportplanModel.destroy({ where: { ListID: Uuid }, transaction: t });
-        await db.supportplanlistModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.supportplanlistModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

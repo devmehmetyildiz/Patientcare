@@ -5,9 +5,58 @@ const createValidationError = require("../Utilities/Error").createValidation
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
-async function GetLogswithquerry(req, res, next) {
+async function GetLogsByQuerry(req, res, next) {
     try {
-        const logs = await db.logModel.findAll({ where: { ...req.body } })
+        const {
+            Startdate,
+            Enddate,
+            Status,
+            Service,
+            UserID,
+            Targeturl,
+            Requesttype
+        } = req.body
+
+        let whereClause = {};
+
+        if (Startdate && Enddate) {
+            whereClause.Createtime = {
+                [Sequelize.Op.between]: [Startdate, Enddate]
+            };
+        } else if (Startdate) {
+            whereClause.Createtime = {
+                [Sequelize.Op.gte]: Startdate
+            };
+        } else if (Enddate) {
+            whereClause.Createtime = {
+                [Sequelize.Op.lte]: Enddate
+            };
+        }
+
+        if (Status) {
+            whereClause.Status = Status;
+        }
+
+        if (Service) {
+            whereClause.Service = Service;
+        }
+
+        if (UserID) {
+            whereClause.UserID = UserID;
+        }
+
+        if (Targeturl) {
+            whereClause.Targeturl = Targeturl;
+        }
+
+        if (Requesttype) {
+            whereClause.Requesttype = Requesttype;
+        }
+
+        const logs = await db.logModel.findAll({
+            where: whereClause,
+            order: [['Createtime', 'DESC']]
+        });
         res.status(200).json(logs)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -52,7 +101,7 @@ async function AddLog(req, res, next) {
 }
 
 module.exports = {
-    GetLogswithquerry,
+    GetLogsByQuerry,
     GetLogs,
     AddLog
 }

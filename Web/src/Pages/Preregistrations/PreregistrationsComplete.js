@@ -4,6 +4,7 @@ import validator from '../../Utils/Validator'
 import { Button, Checkbox, Dropdown, Feed, Form, Modal, } from 'semantic-ui-react'
 import { Contentwrapper, PatientsDetailCard } from '../../Components'
 import BedSelector from '../../Components/BedSelector'
+import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT } from '../../Utils/Constants'
 
 export default function PreregistrationsComplete(props) {
   const {
@@ -51,6 +52,7 @@ export default function PreregistrationsComplete(props) {
 
   const {
     CaseID,
+    Uuid,
     Registerdate,
     Isoninstitution
   } = selected_record
@@ -105,17 +107,38 @@ export default function PreregistrationsComplete(props) {
 
   const Notfound = t('Common.NoDataFound')
 
-  const CaseOption = (Cases.list || []).filter(u => u.Isactive).map(casedata => {
-    const departmentuuids = (casedata?.Departmentuuids || []).map(u => u.DepartmentID);
-    let isHavepatients = false
-    departmentuuids.forEach(departmentuuid => {
-      const department = (Departments.list || []).find(u => u.Uuid === departmentuuid)
-      if (department?.Ishavepatients === true || department?.Ishavepatients === 1) {
-        isHavepatients = true
-      }
-    });
-    return isHavepatients === true && casedata?.CaseStatus === 0 ? { key: casedata.Uuid, text: casedata.Name, value: casedata.Uuid } : false
-  }).filter(u => u)
+  const stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
+    return {
+      ...element,
+      key: Math.random(),
+      Skt: validator.isISODate(element.Skt) ? Formatdate(element.Skt) : element.Skt
+    }
+  });
+
+  const files = (Files.list || []).filter(u => u.Isactive).filter(u => u.ParentID === Uuid).map(element => {
+    return {
+      ...element,
+      key: Math.random(),
+      Usagetype: ((element?.Usagetype || '').split(',') || []).map(u => {
+        return (Usagetypes.list || []).find(type => type.Uuid === u)?.Name
+      })
+    }
+  });
+
+  const CaseOption = (Cases.list || [])
+    .filter(u => u.Isactive)
+    .filter(u => u.Patientstatus !== CASE_PATIENT_STATUS_DEATH && u.Patientstatus !== CASE_PATIENT_STATUS_LEFT)
+    .map(casedata => {
+      const departmentuuids = (casedata?.Departmentuuids || []).map(u => u.DepartmentID);
+      let isHavepatients = false
+      departmentuuids.forEach(departmentuuid => {
+        const department = (Departments.list || []).find(u => u.Uuid === departmentuuid)
+        if (department?.Ishavepatients === true || department?.Ishavepatients === 1) {
+          isHavepatients = true
+        }
+      });
+      return isHavepatients === true && casedata?.CaseStatus === 0 ? { key: casedata.Uuid, text: casedata.Name, value: casedata.Uuid } : false
+    }).filter(u => u)
 
   const bed = (Beds.list || []).find(u => u.Uuid === selectedbed)
   const room = (Rooms.list || []).find(u => u.Uuid === bed?.RoomID)
@@ -156,6 +179,8 @@ export default function PreregistrationsComplete(props) {
         Patienttypes={Patienttypes}
         Usagetypes={Usagetypes}
         fillnotification={fillPatientnotification}
+        stocks={stocks}
+        files={files}
       />
       <Modal.Content>
         {!isLoadingstatus ?

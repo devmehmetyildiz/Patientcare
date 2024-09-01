@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import RoomsCreate from '../../Containers/Rooms/RoomsCreate'
@@ -22,6 +21,7 @@ export default class BedsCreate extends Component {
   render() {
     const { Beds, Rooms, Floors, Profile, history, closeModal } = this.props
 
+    const t = Profile?.i18n?.t
     const Roomsoptions = (Rooms.list || []).filter(u => u.Isactive).map(room => {
       return { key: room.Uuid, text: `${room.Name} (${(Floors.list || []).find(u => u.Uuid === room.FloorID)?.Name})`, value: room.Uuid }
     })
@@ -32,10 +32,10 @@ export default class BedsCreate extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Beds"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Beds.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Beds.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
@@ -43,21 +43,20 @@ export default class BedsCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.RoomID[Profile.Language]} name="RoomID" options={Roomsoptions} formtype='dropdown' modal={RoomsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Beds.Label.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Beds.Label.Room')} name="RoomID" options={Roomsoptions} formtype='dropdown' modal={RoomsCreate} />
               </Form.Group>
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Isoccupied[Profile.Language]} name="Isoccupied" formtype={'checkbox'} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
               history={history}
               redirectUrl={"/Beds"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Beds.isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -69,13 +68,14 @@ export default class BedsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddBeds, history, fillBednotification, Profile, closeModal } = this.props
+    const t = Profile?.i18n?.t
     const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
     if (!validator.isUUID(data.RoomID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.RoomIDrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Beds.Page.Header'), description: t('Pages.Beds.Messages.RoomRequired') })
     }
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Beds.Page.Header'), description: t('Pages.Beds.Messages.NameRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

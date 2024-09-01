@@ -208,9 +208,12 @@ async function DeleteCostumertype(req, res, next) {
         if (costumertype.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.COSTUMERTYPE_NOT_ACTIVE], req.language))
         }
-
-        await db.costumertypedepartmentModel.destroy({ where: { CostumertypeID: Uuid }, transaction: t });
-        await db.costumertypeModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+       
+        await db.costumertypeModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

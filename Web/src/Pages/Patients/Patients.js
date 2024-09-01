@@ -42,7 +42,7 @@ export default function Patients(props) {
   let deadCaselist = (Cases.list || []).filter(u => u.Patientstatus === CASE_PATIENT_STATUS_DEATH).map(u => u.Uuid)
   let leftCaselist = (Cases.list || []).filter(u => u.Patientstatus === CASE_PATIENT_STATUS_LEFT).map(u => u.Uuid)
 
-  const list = (Patients.list || []).filter(u => u.Isactive).map(item => {
+  const list = (Patients.list || []).filter(u => u.Isactive && !u.Ispreregistration).map(item => {
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === item?.PatientdefineID)
     return {
       ...item,
@@ -247,14 +247,15 @@ function PassPatientList({ Profile, Columns, list }) {
   let initialConfig = getInitialconfig(Profile, metaKey)
   const t = Profile?.i18n?.t || null
 
+  const filteredColumns = openMulti ? (Columns || []).filter(u => u.accessor !== 'define') : Columns
   const columns = [
-    { Header: t('Common.Column.Empty'), accessor: 'select', disableProps: true },
-    ...Columns.filter(u => u.key ? u.key === 'pass' : true),
-    { Header: t('Pages.Patients.Column.changeplace'), accessor: 'changeplace', disableProps: true },
-    { Header: t('Pages.Patients.Column.deadpatient'), accessor: 'deadpatient', disableProps: true },
-    { Header: t('Pages.Patients.Column.leftpatient'), accessor: 'leftpatient', disableProps: true },
-    { Header: t('Common.Column.detail'), accessor: 'actions', disableProps: true }
-  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+    { Header: t('Common.Column.Empty'), accessor: 'select', disableProps: true, hidden: !openMulti },
+    ...filteredColumns.filter(u => u.key ? u.key === 'pass' : true),
+    { Header: t('Pages.Patients.Column.changeplace'), accessor: 'changeplace', disableProps: true, hidden: openMulti },
+    { Header: t('Pages.Patients.Column.deadpatient'), accessor: 'deadpatient', disableProps: true, hidden: openMulti },
+    { Header: t('Pages.Patients.Column.leftpatient'), accessor: 'leftpatient', disableProps: true, hidden: openMulti },
+    { Header: t('Common.Column.detail'), accessor: 'actions', disableProps: true, hidden: openMulti }
+  ].filter(u => !u.hidden).map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
   const decoratedList = list.map(item => {
 
@@ -313,8 +314,8 @@ function PassPatientList({ Profile, Columns, list }) {
             metaKey={metaKey}
             Showcolumnchooser
             Showexcelexport
-            Additionalfunctiontxt="Çoklu Seçim"
-            Additionalfunction={() => { alert("yes") }}
+            Additionalfunctiontxt={openMulti ? t('Common.Button.Singleselect') : t('Common.Button.Multiselect')}
+            Additionalfunction={() => { setOpenMulti(!openMulti) }}
           />
         </Grid>
       </Headerwrapper>

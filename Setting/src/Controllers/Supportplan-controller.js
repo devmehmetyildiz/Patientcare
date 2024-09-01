@@ -164,7 +164,11 @@ async function DeleteSupportplan(req, res, next) {
             return next(createAccessDenied([messages.ERROR.SUPPORTPLAN_NOT_ACTIVE], req.language))
         }
 
-        await db.supportplanModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.supportplanModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

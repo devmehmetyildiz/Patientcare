@@ -55,7 +55,7 @@ export default class PatientcashregistersCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const { AddPatientcashregisters, history, fillPatientcashregisterotification, Profile, closeModal } = this.props
+    const { AddPatientcashregisters, history, fillPatientcashregisternotification, Profile, closeModal } = this.props
 
     const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
@@ -64,7 +64,7 @@ export default class PatientcashregistersCreate extends Component {
     }
     if (errors.length > 0) {
       errors.forEach(error => {
-        fillPatientcashregisterotification(error)
+        fillPatientcashregisternotification(error)
       })
     } else {
       AddPatientcashregisters({ data, history, closeModal })

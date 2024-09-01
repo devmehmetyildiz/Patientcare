@@ -3,18 +3,30 @@
 @tailwind utilities;
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
 
+
+
 .ReactCollapse--collapse {
   transition: height 500ms;
 }
 
 html {
   scroll-behavior: smooth;
+  font-family: 'Lato TR-light', sans-serif !important;
+}
+* {
+  font-family: 'Lato TR-light', sans-serif !important;
+}
+
+i {
+  font-family: 'icons' !important;
+}
+
+.ui {
+  font-family: 'Lato TR-light', sans-serif !important;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -31,7 +43,7 @@ p {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: 'Lato TR', sans-serif !important;
 }
 
 .contentWrapper {
@@ -914,4 +926,3 @@ code {
   display: flex;
   flex-direction: col;
 }
-

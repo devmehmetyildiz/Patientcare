@@ -114,6 +114,90 @@ async function AddStockmovement(req, res, next) {
     GetStockmovements(req, res, next)
 }
 
+async function AddStockmovements(req, res, next) {
+
+    let validationErrors = []
+
+    const {
+        Stockmovements
+    } = req.body
+
+    if (!validator.isArray(Stockmovements)) {
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTS_REQUIRED)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    for (const movement of Stockmovements) {
+        const {
+            StockID,
+            Movementtype,
+            Amount,
+            Movementdate,
+        } = movement
+
+        if (!validator.isUUID(StockID)) {
+            validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+        }
+        if (!validator.isNumber(Movementtype)) {
+            validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED)
+        }
+        if (!validator.isNumber(Amount)) {
+            validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED)
+        }
+        if (!validator.isISODate(Movementdate)) {
+            validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED)
+        }
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        for (const movement of Stockmovements) {
+            const {
+                StockID,
+            } = movement
+
+            let stockmovementuuid = uuid()
+            let amount = 0.0;
+            let movements = await db.stockmovementModel.findAll({ where: { StockID: StockID } })
+            movements.forEach(movement => {
+                amount += (movement.Amount * movement.Movementtype);
+            });
+            await db.stockmovementModel.create({
+                ...movement,
+                Uuid: stockmovementuuid,
+                Isapproved: false,
+                Createduser: username,
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+
+        }
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Stok Hareketleri',
+            role: 'stockmovementnotification',
+            message: `Stok hareketleri ${username} tarafından eklendi.`,
+            pushurl: `/Stockmovements`
+        })
+
+        await t.commit()
+    } catch (err) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(err))
+    }
+    GetStockmovements(req, res, next)
+}
+
 async function UpdateStockmovement(req, res, next) {
 
     let validationErrors = []
@@ -312,7 +396,12 @@ async function DeleteStockmovement(req, res, next) {
         if (stockmovement.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
         }
-        await db.stockmovementModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await db.stockmovementModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         const stock = await db.stockModel.findOne({ where: { Uuid: stockmovement?.StockID } });
         const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock?.StockdefineID } });
@@ -341,5 +430,6 @@ module.exports = {
     UpdateStockmovement,
     DeleteStockmovement,
     ApproveStockmovement,
-    ApproveStockmovements
+    ApproveStockmovements,
+    AddStockmovements
 }

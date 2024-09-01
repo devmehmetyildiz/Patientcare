@@ -40,9 +40,9 @@ export default function PatientsDetailInfo(props) {
   ]
 
   return (
-    <div className='bg-white shadow-lg w-full font-poppins rounded-lg flex flex-col gap-4 justify-center items-center  p-4 m-4 mt-0 min-w-[250px]'>
+    <div className='bg-white shadow-lg w-full rounded-lg flex flex-col gap-4 justify-center items-center  p-4 m-4 mt-0 min-w-[250px]'>
       <div className='w-full flex justify-start items-start'>
-        <div className='font-bold text-xl font-poppins'> {t('Pages.Patients.PatientsDetail.PatientDetailInfo.Header')}</div>
+        <div className='font-bold text-xl '> {t('Pages.Patients.PatientsDetail.PatientDetailInfo.Header')}</div>
       </div>
       {Columns.map((item, index) => {
         return <div key={index} className='w-full flex justify-center items-center gap-2'>

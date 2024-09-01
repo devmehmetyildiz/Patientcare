@@ -25,7 +25,7 @@ export default class Preregistrations extends Component {
 
   render() {
 
-    const { Profile, Patients, handleDeletemodal, handleSelectedPatient, handleCompletemodal, handleApprovemodal, handleCheckmodal, handleDetailmodal } = this.props
+    const { Profile, Patients,Patientdefines, handleDeletemodal, handleSelectedPatient, handleCompletemodal, handleApprovemodal, handleCheckmodal, handleDetailmodal } = this.props
     const { isLoading } = Patients
     const t = Profile?.i18n?.t || null
 
@@ -56,6 +56,7 @@ export default class Preregistrations extends Component {
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
       { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
+      { Header: t('Common.Column.define'), accessor: 'define', disableProps: true },
       { Header: t('Common.Column.check'), accessor: 'check', disableProps: true, key: 'created' },
       { Header: t('Common.Column.cancelcheck'), accessor: 'cancelcheck', disableProps: true, key: 'checked' },
       { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, key: 'checked' },
@@ -67,9 +68,11 @@ export default class Preregistrations extends Component {
 
 
     const list = (Patients.list || []).filter(u => u.Isactive).map(item => {
+      const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === item?.PatientdefineID)
       return {
         ...item,
         edit: <Link to={`/Preregistrations/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        define: <Link key={item?.Uuid} to={`/Patientdefines/${patientdefine?.Uuid}/edit`} ><Icon size='large' color='red' className='row-edit' name='address book' /> </Link>,
         delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedPatient(item)
           handleDeletemodal(true)

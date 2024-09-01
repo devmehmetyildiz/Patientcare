@@ -166,7 +166,11 @@ async function DeleteRating(req, res, next) {
             return next(createAccessDenied([messages.ERROR.RATING_NOT_ACTIVE], req.language))
         }
 
-        await db.ratingModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.ratingModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

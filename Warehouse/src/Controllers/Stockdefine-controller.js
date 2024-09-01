@@ -202,7 +202,11 @@ async function DeleteStockdefine(req, res, next) {
             return next(createAccessDenied([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language))
         }
 
-        await db.stockdefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.stockdefineModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Create,

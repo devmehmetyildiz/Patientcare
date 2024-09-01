@@ -220,8 +220,11 @@ async function DeleteTodogroupdefine(req, res, next) {
             return next(createAccessDenied([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language))
         }
 
-        await db.todogroupdefinetododefineModel.destroy({ where: { GroupID: Uuid }, transaction: t });
-        await db.todogroupdefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.todogroupdefineModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

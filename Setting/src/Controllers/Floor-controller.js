@@ -291,7 +291,12 @@ async function DeleteFloor(req, res, next) {
         if (floor.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.FLOOR_NOT_ACTIVE], req.language))
         }
-        await db.floorModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await db.floorModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

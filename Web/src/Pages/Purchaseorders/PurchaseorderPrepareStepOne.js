@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { Breadcrumb, Button, Form, Grid, GridColumn, Icon, Transition } from 'semantic-ui-react'
 import { Contentwrapper, FormInput, Headerwrapper, Pagedivider } from '../../Components'
-import Literals from './Literals'
 import { Link } from 'react-router-dom'
 import { DELIVERY_TYPES, DELIVERY_TYPE_PATIENT, DELIVERY_TYPE_WAREHOUSE } from '../../Utils/Constants'
 import { FormContext } from '../../Provider/FormProvider'
@@ -9,6 +8,8 @@ import { FormContext } from '../../Provider/FormProvider'
 export default function PurchaseorderPrepareStepOne({ Preparestatus, setCompletedSteps, goNext, stepKey, PAGE_NAME, Profile, GetUsers, GetWarehouses, GetPatients, GetCases, GetPatientdefines, GetDepartments, Warehouses, Departments, Patients, Patientdefines, Users, Cases }) {
 
     const context = useContext(FormContext)
+
+    const t = Profile?.i18n?.t
 
     useEffect(() => {
         GetUsers()
@@ -60,7 +61,7 @@ export default function PurchaseorderPrepareStepOne({ Preparestatus, setComplete
                             <GridColumn width={8}>
                                 <Breadcrumb size='big'>
                                     <Link to={"/Purchaseorders"}>
-                                        <Breadcrumb.Section>{Literals.Page.Pageinfoheader[Profile.Language]}</Breadcrumb.Section>
+                                        <Breadcrumb.Section>{t('Pages.Purchaseorder.Page.InfoHeader')}</Breadcrumb.Section>
                                     </Link>
                                 </Breadcrumb>
                             </GridColumn>
@@ -68,32 +69,32 @@ export default function PurchaseorderPrepareStepOne({ Preparestatus, setComplete
                     </Headerwrapper>
                     <Form>
                         <Form.Group widths={'equal'}>
-                            <FormInput page={PAGE_NAME} required placeholder={Literals.Columns.Company[Profile.Language]} name="Company" />
-                            <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Purchaseorder.Label.Company')} name="Company" />
+                            <FormInput page={PAGE_NAME} placeholder={t('Pages.Purchaseorder.Label.Info')} name="Info" />
                         </Form.Group>
                         <Form.Group widths={'equal'}>
-                            <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Delivereruser[Profile.Language]} name="Delivereruser" />
-                            <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Receiveruser[Profile.Language]} name="ReceiveruserID" options={Useroptions} formtype='dropdown' loading={Users.isLoading} />
+                            <FormInput page={PAGE_NAME} placeholder={t('Pages.Purchaseorder.Label.Delivereruser')} name="Delivereruser" />
+                            <FormInput page={PAGE_NAME} placeholder={t('Pages.Purchaseorder.Label.Receiveruser')} name="ReceiveruserID" options={Useroptions} formtype='dropdown' loading={Users.isLoading} />
                         </Form.Group>
                         <Pagedivider />
                         <Form.Group widths={'equal'}>
-                            <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Deliverytype[Profile.Language]} name="Deliverytype" options={Delivertypeoptions} formtype='dropdown' />
+                            <FormInput page={PAGE_NAME} placeholder={t('Pages.Purchaseorder.Label.Deliverytype')} name="Deliverytype" options={Delivertypeoptions} formtype='dropdown' />
                             {selectedDeliverytype === DELIVERY_TYPE_WAREHOUSE
-                                ? <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Deliverywarehouse[Profile.Language]} name="DeliverywarehouseID" options={Warehouseoptions} formtype='dropdown' loading={Warehouses.isLoading} />
+                                ? <FormInput page={PAGE_NAME} placeholder={t('Pages.Purchaseorder.Label.Deliverywarehouse')} name="DeliverywarehouseID" options={Warehouseoptions} formtype='dropdown' loading={Warehouses.isLoading} />
                                 : null
                             }
                             {selectedDeliverytype === DELIVERY_TYPE_PATIENT
-                                ? <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Deliverypatient[Profile.Language]} name="DeliverypatientID" options={Patientoptions} formtype='dropdown' loading={Patients.isLoading} />
+                                ? <FormInput page={PAGE_NAME} placeholder={t('Pages.Purchaseorder.Label.Deliverypatient')} name="DeliverypatientID" options={Patientoptions} formtype='dropdown' loading={Patients.isLoading} />
                                 : null
                             }
                         </Form.Group>
                         <Pagedivider />
                         <Form.Group widths={'equal'}>
-                            <FormInput required page={PAGE_NAME} placeholder={Literals.Columns.Case[Profile.Language]} name="CaseID" options={Caseoption} formtype='dropdown' loading={Cases.isLoading} />
-                            <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Price[Profile.Language]} name="Price" />
+                            <FormInput required page={PAGE_NAME} placeholder={t('Pages.Purchaseorder.Label.Case')} name="CaseID" options={Caseoption} formtype='dropdown' loading={Cases.isLoading} />
+                            <FormInput page={PAGE_NAME} placeholder={t('Pages.Purchaseorder.Label.Price')} name="Price" type='number' min={0} max={99999999} step={"0.01"}/>
                         </Form.Group>
                         <Form.Group widths={'equal'}>
-                            <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Billno[Profile.Language]} name="Billno" />
+                            <FormInput page={PAGE_NAME} placeholder={t('Pages.Purchaseorder.Label.Billno')} name="Billno" />
                         </Form.Group>
                         <div className='w-full flex justify-center items-center'>
                             <Button
@@ -105,7 +106,7 @@ export default function PurchaseorderPrepareStepOne({ Preparestatus, setComplete
                                     goNext()
                                 }}
                             >
-                                {Literals.Button.GoNext[Profile.Language]}
+                                {t('Common.Button.GoNext')}
                                 <Icon name='right arrow' />
                             </Button>
                         </div>

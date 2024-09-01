@@ -62,12 +62,12 @@ export default class StocksCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' modal={WarehousesCreate} effect={this.onWarehousechange} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' modal={StockdefinesCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' modal={WarehousesCreate} effect={this.onWarehousechange} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' modal={StockdefinesCreate} />
               </Form.Group>
               <Form.Group widths='equal'>
-                {Issktneeded ? <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' /> : null}
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' min={0} max={9999}/>
+                {Issktneeded ? <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' /> : null}
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' min={0} max={9999}/>
               </Form.Group>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />

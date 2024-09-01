@@ -244,7 +244,11 @@ async function DeleteMainteance(req, res, next) {
             return next(createAccessDenied([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
         }
 
-        await db.mainteanceModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.mainteanceModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

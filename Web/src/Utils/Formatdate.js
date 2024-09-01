@@ -10,7 +10,7 @@ const Formatdate = (date, trFormat) => {
     return formattedDate
 }
 
-const Formatfulldate = (date) => {
+const Formatfulldate = (date, trFormat) => {
     const currentDate = date ? new Date(date || '') : null;
     if (!currentDate) {
         return ''
@@ -20,7 +20,7 @@ const Formatfulldate = (date) => {
     const day = String(currentDate.getDate()).padStart(2, '0');
     const hour = String(currentDate.getHours()).padStart(2, '0');
     const min = String(currentDate.getMinutes()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day} ${hour}:${min}`;
+    const formattedDate = trFormat ? `${day}-${month}-${year} ${hour}:${min}` : `${year}-${month}-${day} ${hour}:${min}`;;
     return formattedDate
 }
 

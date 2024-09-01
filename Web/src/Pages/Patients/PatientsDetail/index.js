@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PatientsDetailProfile from './PatientsDetailProfile'
 import PatientsDetailInfo from './PatientsDetailInfo'
 import PatientsDetailCard from './PatientsDetailCard'
@@ -10,6 +10,8 @@ import validator from '../../../Utils/Validator'
 import PatientDetailMovements from './PatientDetailMovements'
 import PatientsDetailStocks from './PatientsDetailStocks'
 import { Button, Dimmer, DimmerDimmable, Dropdown, Header, Icon, Loader, Modal } from 'semantic-ui-react'
+import PatientsLeftModal from '../../../Containers/Patients/PatientsLeftModal'
+import PatientsDeadModal from '../../../Containers/Patients/PatientsDeadModal'
 
 export default function Patientsdetail(props) {
 
@@ -25,6 +27,9 @@ export default function Patientsdetail(props) {
         Stockmovements, Users, Stocktypes, Stocktypegroups, Units,
         PatientID, Profile } = props
 
+    const [opendead, setOpendead] = useState(false)
+    const [openleft, setOpenleft] = useState(false)
+    const [record, setRecord] = useState(null)
     const location = useLocation()
     const params = useParams()
     const history = useHistory()
@@ -134,41 +139,73 @@ export default function Patientsdetail(props) {
                                 className='!bg-[#2355a0] !text-white icon'
                             >
                                 <Dropdown.Menu>
-                                    <Dropdown.Header icon='tags' content='İşlemler' />
+                                    <Dropdown.Header icon='tags' content={t('Pages.Patients.PatientsDetail.Button.Processtag')} />
                                     <Dropdown.Divider />
                                     <Dropdown.Item onClick={() => { alert("Important") }}>
                                         <Icon name='attention' className='right floated' />
-                                        Ürün Aktar
+                                        {t('Pages.Patients.PatientsDetail.Button.Insertstock')}
                                     </Dropdown.Item>
                                     <Dropdown.Item>
                                         <Icon name='comment' className='right floated' />
-                                        Ürün Tüket
+                                        {t('Pages.Patients.PatientsDetail.Button.Removestock')}
                                     </Dropdown.Item>
                                     <Dropdown.Item>
                                         <Icon name='conversation' className='right floated' />
-                                        Yatak Değiştir
+                                        {t('Pages.Patients.PatientsDetail.Button.Editplace')}
                                     </Dropdown.Item>
                                     <Dropdown.Item>
                                         <Icon name='conversation' className='right floated' />
-                                        Para Girişi
+                                        {t('Pages.Patients.PatientsDetail.Button.Insertcash')}
                                     </Dropdown.Item>
-                                    <Dropdown.Header icon='setting' content='Düzenlemeler' />
+                                    <Dropdown.Item>
+                                        <Icon name='conversation' className='right floated' />
+                                        {t('Pages.Patients.PatientsDetail.Button.Editcase')}
+                                    </Dropdown.Item>
+                                    <Dropdown.Item>
+                                        <Icon name='conversation' className='right floated' />
+                                        {t('Pages.Patients.PatientsDetail.Button.Editstatus')}
+                                    </Dropdown.Item>
+                                    <Dropdown.Header icon='setting' content={t('Pages.Patients.PatientsDetail.Button.Settingtag')} />
                                     <Dropdown.Divider />
-                                    <Dropdown.Item>
+                                    <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Editcash`) }}>
                                         <Icon name='conversation' className='right floated' />
-                                        Rutinleri Düzenle
+                                        {t('Pages.Patients.PatientsDetail.Button.Editcash')}
                                     </Dropdown.Item>
-                                    <Dropdown.Item>
+                                    <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Editroutine`) }}>
                                         <Icon name='conversation' className='right floated' />
-                                        Destek Planları Düzenle
+                                        {t('Pages.Patients.PatientsDetail.Button.Editroutine')}
                                     </Dropdown.Item>
-                                    <Dropdown.Item>
+                                    <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Editsupportplan`) }}>
                                         <Icon name='conversation' className='right floated' />
-                                        Dosyaları Düzenle
+                                        {t('Pages.Patients.PatientsDetail.Button.Editsupportplans')}
                                     </Dropdown.Item>
-                                    <Dropdown.Item>
+                                    <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Editfile`) }}>
                                         <Icon name='conversation' className='right floated' />
-                                        Tanımları Düzenle
+                                        {t('Pages.Patients.PatientsDetail.Button.Editfiles')}
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onClick={() => { history.push(`/Patientdefines/${patientdefine?.Uuid}/edit`) }}>
+                                        <Icon name='conversation' className='right floated' />
+                                        {t('Pages.Patients.PatientsDetail.Button.Editdefine')}
+                                    </Dropdown.Item>
+                                    <Dropdown.Header icon='setting' content={t('Pages.Patients.PatientsDetail.Button.Specialtag')} />
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item
+                                        onClick={() => {
+                                            setRecord(patient)
+                                            setOpenleft(true)
+                                        }}
+                                    >
+                                        <Icon name='conversation' className='right floated' />
+                                        {t('Pages.Patients.PatientsDetail.Button.Removefromorganization')}
+                                    </Dropdown.Item>
+                                    <Dropdown.Item
+                                        onClick={() => {
+                                            setRecord(patient)
+                                            setOpendead(true)
+                                        }}
+                                    >
+                                        <Icon name='conversation' className='right floated' />
+                                        {t('Pages.Patients.PatientsDetail.Button.Enterdead')}
                                     </Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
@@ -202,6 +239,18 @@ export default function Patientsdetail(props) {
                     </div>
                 </div>
             </DimmerDimmable>
-        </Pagewrapper>
+            <PatientsLeftModal
+                open={openleft}
+                setOpen={setOpenleft}
+                record={record}
+                setRecord={setRecord}
+            />
+            <PatientsDeadModal
+                open={opendead}
+                setOpen={setOpendead}
+                record={record}
+                setRecord={setRecord}
+            />
+        </Pagewrapper >
     )
 }

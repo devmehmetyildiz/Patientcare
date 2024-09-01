@@ -1,17 +1,19 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Card, Dimmer, Feed, Icon, Image, Label, Loader, Modal, Transition } from 'semantic-ui-react'
 import { PATIENTS_MOVEMENTTYPES_APPROVE, PATIENTS_MOVEMENTTYPES_CANCELAPPROVE, PATIENTS_MOVEMENTTYPES_CANCELCHECK, PATIENTS_MOVEMENTTYPES_CHECK, PATIENTS_MOVEMENTTYPES_COMPLETE, PATIENTS_MOVEMENTTYPES_CREATE, PATIENTS_MOVEMENTTYPES_UPDATE, ROUTES } from '../../Utils/Constants'
 import config from '../../Config'
 import Formatdate from '../../Utils/Formatdate'
-import validator from '../../Utils/Validator'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import { FormContext } from '../../Provider/FormProvider'
 
 export default function PatientsDetailCard(props) {
 
     const [fileDownloading, setfileDownloading] = useState(false)
     const [movementsOpen, setMovementsOpen] = useState(false)
     const {
+        usecontext,
+        PAGE_NAME,
         Profile,
         Patients,
         Patientdefines,
@@ -27,10 +29,13 @@ export default function PatientsDetailCard(props) {
         Costumertypes,
         Patienttypes,
         Usagetypes,
-        fillnotification
+        fillnotification,
+        stocks,
+        files
     } = props
     const t = Profile?.i18n?.t || null
-    const { selected_record } = Patients
+    const context = useContext(FormContext)
+    const selected_record = usecontext ? context.getForm(PAGE_NAME) : Patients?.selected_record
     const {
         Uuid,
         PatientdefineID,
@@ -59,24 +64,6 @@ export default function PatientsDetailCard(props) {
         fileDownloading
 
     const Notfound = t('Common.NoDataFound')
-
-    const stocks = (Stocks.list || []).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
-        return {
-            ...element,
-            key: Math.random(),
-            Skt: validator.isISODate(element.Skt) ? Formatdate(element.Skt) : element.Skt
-        }
-    });
-
-    const files = (Files.list || []).filter(u => u.ParentID === Uuid).map(element => {
-        return {
-            ...element,
-            key: Math.random(),
-            Usagetype: ((element?.Usagetype || '').split(',') || []).map(u => {
-                return (Usagetypes.list || []).find(type => type.Uuid === u)?.Name
-            })
-        }
-    });
 
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === PatientdefineID)
     const patientName = `${patientdefine?.Firstname || Notfound} ${patientdefine?.Lastname || Notfound}`

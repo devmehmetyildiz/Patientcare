@@ -30,7 +30,7 @@ export default class Cases extends Component {
 
 
     const { Cases, Profile, handleSelectedCase, handleDeletemodal } = this.props
-    const { isLoading} = Cases
+    const { isLoading } = Cases
 
 
     const colProps = {
@@ -73,7 +73,7 @@ export default class Cases extends Component {
     })
 
     return (
-      isLoading  ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>
@@ -158,7 +158,12 @@ export default class Cases extends Component {
 
   casecolorCellhandler = (col) => {
     if (col.value) {
-      return <div className='flex flex-row justify-center items-center text-center'><p className='m-0 p-0'>{col.value}</p><Icon style={{ color: col.value }} className="ml-2" name='circle' /></div>
+      return <div className='flex flex-row justify-start items-center gap-2'>
+        {col.value}
+        <div>
+          <Icon style={{ color: col.value }} name='circle' />
+        </div>
+      </div>
     }
     return null
   }

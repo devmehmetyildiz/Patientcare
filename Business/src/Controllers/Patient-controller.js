@@ -12,6 +12,8 @@ const uuid = require('uuid').v4
 const axios = require('axios')
 const { patientmovementtypes } = require('../Constants/Patientmovementypes')
 const DoDelete = require("../Utilities/DoDelete")
+const Createlog = require("../Utilities/Createlog")
+const DoPut = require("../Utilities/DoPut")
 
 const DELIVERY_TYPE_PATIENT = 0
 const DELIVERY_TYPE_WAREHOUSE = 1
@@ -26,7 +28,7 @@ async function GetPatients(req, res, next) {
         if (req?.Uuid) {
             data = await db.patientModel.findOne({ where: { Uuid: req?.Uuid } });
         }
-        res.status(200).json({ list: patients, data: data })
+        res.json({ list: patients, data: data })
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
@@ -181,8 +183,9 @@ async function AddPatient(req, res, next) {
                 }
             }
 
-            await DoPost(config.services.Warehouse, `Stocks`, {
+            await DoPost(config.services.Warehouse, `Stocks/AddStockWithoutMovement`, {
                 ...stock,
+                Isapproved: true,
                 WarehouseID: patientuuid,
             })
         }
@@ -306,8 +309,21 @@ async function UpdatePatient(req, res, next) {
                 }
             }
 
-            await DoPost(config.services.Warehouse, `Stocks`, {
-                ...stock,
+            await DoPost(config.services.Warehouse, `Stocks/AddStockWithoutMovement`, {
+                ...{
+                    Order: stock?.Order,
+                    Type: stock?.Type,
+                    Amount: stock?.Amount,
+                    StocktypeID: stock?.StocktypeID,
+                    StockgrouptypeID: stock?.StockgrouptypeID,
+                    StockdefineID: stock?.StockdefineID,
+                    Isapproved: true,
+                    Isdeactivated: stock?.Isdeactivated,
+                    Deactivateinfo: stock?.Deactivateinfo,
+                    Skt: stock?.Skt,
+                    Info: stock?.Info,
+                    Iscompleted: stock?.Iscompleted,
+                },
                 WarehouseID: Uuid,
             })
         }
@@ -790,8 +806,30 @@ async function CompletePatient(req, res, next) {
             return next(createValidationError(validationErrors, req.language))
         }
 
-        const cases = await DoGet(config.services.Setting, `Cases`)
+        await DoPut(config.services.Setting, 'Beds/ChangeBedOccupied', {
+            BedID: BedID,
+            Isoccupied: true,
+            PatientID: patient?.Uuid
+        })
 
+        const patientstocks = await DoGet(config.services.Warehouse, `Stocks/GetStocksByWarehouseID/${patient?.Uuid}`)
+
+        if (!isTransferstocks) {
+            let reqBody = []
+            for (const stock of patientstocks) {
+                reqBody.push({
+                    StockID: stock?.Uuid,
+                    Amount: stock?.Amount || 0,
+                    Movementdate: new Date(),
+                    Movementtype: 1,
+                    Isapproved: true,
+                })
+            }
+
+            await DoPost(config.services.Warehouse, 'Stockmovements/InsertList', {
+                Stockmovements: reqBody
+            })
+        }
 
         await db.patientModel.update({
             ...patient,

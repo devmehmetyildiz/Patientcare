@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { Button, Modal } from 'semantic-ui-react'
-import Literals from './Literals'
 
 export default class PurchaseordersDelete extends Component {
   render() {
     const { Profile, Purchaseorders, DeletePurchaseorders, handleDeletemodal, handleSelectedPurchaseorder } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isDeletemodalopen, selected_record } = Purchaseorders
     return (
       <Modal
@@ -12,12 +14,12 @@ export default class PurchaseordersDelete extends Component {
         onOpen={() => handleDeletemodal(true)}
         open={isDeletemodalopen}
       >
-        <Modal.Header>{Literals.Page.Pagedeleteheader[Profile.Language]}</Modal.Header>
+        <Modal.Header>{t('Pages.Purchaseorder.Page.DeleteHeader')}</Modal.Header>
         <Modal.Content image>
           <Modal.Description>
             <p>
               <span className='font-bold'>{selected_record?.Purchaseno} </span>
-              {Literals.Messages.Deletecheck[Profile.Language]}
+              {t('Pages.Purchaseorder.Messages.Deletecheck')}
             </p>
           </Modal.Description>
         </Modal.Content>
@@ -26,10 +28,10 @@ export default class PurchaseordersDelete extends Component {
             handleDeletemodal(false)
             handleSelectedPurchaseorder({})
           }}>
-            {Literals.Button.Giveup[Profile.Language]}
+            {t('Common.Button.Giveup')}
           </Button>
           <Button
-            content={Literals.Button.Delete[Profile.Language]}
+            content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'
             className=' !bg-[#2355a0] !text-white'

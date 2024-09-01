@@ -218,7 +218,8 @@ async function ChangeBedOccupied(req, res, next) {
     let validationErrors = []
     const {
         BedID,
-        Isoccupied
+        Isoccupied,
+        PatientID
     } = req.body
 
     if (!validator.isUUID(BedID)) {
@@ -226,6 +227,10 @@ async function ChangeBedOccupied(req, res, next) {
     }
     if (!validator.isBoolean(Isoccupied)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISOCCUPIED_REQUIRED)
+    } else {
+        if (Isoccupied && !validator.isUUID(PatientID)) {
+            validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+        }
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -245,6 +250,7 @@ async function ChangeBedOccupied(req, res, next) {
         await db.bedModel.update({
             ...bed,
             Isoccupied: Isoccupied,
+            PatientID: Isoccupied ? PatientID : null,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: BedID } }, { transaction: t })
@@ -288,9 +294,17 @@ async function DeleteBed(req, res, next) {
             return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
         }
         if (bed.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.BED_NOT_ACTIVE], req.language))
+            return next(createValidationError([messages.ERROR.BED_NOT_ACTIVE], req.language))
         }
-        await db.bedModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        if (bed.Isoccupied === true || bed.Isoccupied === 1) {
+            return next(createValidationError([messages.ERROR.BED_IS_OCCUPIED], req.language))
+        }
+
+        await db.bedModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

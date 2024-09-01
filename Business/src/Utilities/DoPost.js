@@ -15,6 +15,6 @@ module.exports = async (service, route, body) => {
 
         return res.data
     } catch (error) {
-        throw requestErrorCatcher(error, "notification " + service)
+        throw error
     }
 }

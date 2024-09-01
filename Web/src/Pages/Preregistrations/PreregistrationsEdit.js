@@ -44,7 +44,7 @@ export default class PreregistrationsEdit extends Component {
           })
         }
       });
-      var stocks = (Stocks.list || []).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
+      var stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
         return {
           ...element,
           key: Math.random()
@@ -160,7 +160,7 @@ export default class PreregistrationsEdit extends Component {
     for (const stock of data.Stocks) {
 
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
-      const stocktype = (Stocktypes.list || []).find(u => stockdefine?.StocktypeID)
+      const stocktype = (Stocktypes.list || []).find(u => u.Uuid === stockdefine?.StocktypeID)
       const Issktneed = stocktype?.Issktneed
 
       if (!validator.isUUID(stock.StockdefineID)) {

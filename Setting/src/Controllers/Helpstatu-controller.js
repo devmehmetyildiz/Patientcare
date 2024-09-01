@@ -166,6 +166,12 @@ async function DeleteHelpstatu(req, res, next) {
             return next(createAccessDenied([messages.ERROR.HELPSTATU_NOT_ACTIVE], req.language))
         }
 
+        await db.helpstatuModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
         await CreateNotification({
             type: types.Delete,
             service: 'Bakıma İhtiyaç durumları',
@@ -173,8 +179,7 @@ async function DeleteHelpstatu(req, res, next) {
             message: `${helpstatu?.Name} bakıma ihtiyaç durumu ${username} tarafından Silindi.`,
             pushurl: '/Helpstatus'
         })
-
-        await db.helpstatuModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        
         await t.commit();
     } catch (error) {
         await t.rollback();

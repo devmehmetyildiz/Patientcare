@@ -171,7 +171,11 @@ async function DeleteRoom(req, res, next) {
             return next(createAccessDenied([messages.ERROR.BED_NOT_ACTIVE], req.language))
         }
 
-        await db.roomModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.roomModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

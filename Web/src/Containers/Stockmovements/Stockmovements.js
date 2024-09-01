@@ -7,19 +7,21 @@ import {
 import { GetUnits } from '../../Redux/UnitSlice'
 import { GetStockdefines } from '../../Redux/StockdefineSlice'
 import { GetStocks } from '../../Redux/StockSlice'
+import { GetStocktypes } from '../../Redux/StocktypeSlice'
 
 const mapStateToProps = (state) => ({
     Stockmovements: state.Stockmovements,
-    Profile: state.Profile,
     Stocks: state.Stocks,
     Stockdefines: state.Stockdefines,
-    Units: state.Units
+    Units: state.Units,
+    Stocktypes: state.Stocktypes,
+    Profile: state.Profile,
 })
 
 const mapDispatchToProps = {
     GetStockmovements, fillStockmovementnotification, DeleteStockmovements,
     handleDeletemodal, handleSelectedStockmovement, GetUnits, GetStockdefines,
-    GetStocks, handleApprovemodal
+    GetStocks, handleApprovemodal, GetStocktypes
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stockmovements)

@@ -4,11 +4,19 @@ async function GetStocks(req, res, next) {
     PermissionHandler(req, next, 'stockscreen', 'medicinescreen', 'supplyscreen')
 }
 
+async function GetStocksByWarehouseID(req, res, next) {
+    PermissionHandler(req, next, 'stockscreen', 'medicinescreen', 'supplyscreen')
+}
+
 async function GetStock(req, res, next) {
     PermissionHandler(req, next, 'stockscreen', 'medicinescreen', 'supplyscreen')
 }
 
 async function AddStock(req, res, next) {
+    PermissionHandler(req, next, 'stockadd', 'medicineadd', 'supplyadd')
+}
+
+async function AddStockWithoutMovement(req, res, next) {
     PermissionHandler(req, next, 'stockadd', 'medicineadd', 'supplyadd')
 }
 
@@ -34,11 +42,13 @@ async function DeleteStockByWarehouseID(req, res, next) {
 
 module.exports = {
     GetStocks,
+    GetStocksByWarehouseID,
     GetStock,
     AddStock,
     UpdateStock,
     DeleteStock,
     ApproveStock,
     ApproveStocks,
-    DeleteStockByWarehouseID
+    DeleteStockByWarehouseID,
+    AddStockWithoutMovement
 }

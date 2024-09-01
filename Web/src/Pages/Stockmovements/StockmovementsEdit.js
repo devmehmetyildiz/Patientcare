@@ -18,12 +18,13 @@ export default class StockmovementsEdit extends Component {
 
 
   componentDidMount() {
-    const { GetStockmovement, GetStocks, GetStockdefines, match, history, StockmovementID } = this.props
+    const { GetStockmovement, GetStocks, GetStockdefines, GetStocktypes, match, history, StockmovementID } = this.props
     let Id = StockmovementID || match.params.StockmovementID
     if (validator.isUUID(Id)) {
       GetStockmovement(Id)
       GetStocks()
       GetStockdefines()
+      GetStocktypes()
     } else {
       history.push("/Stockmovements")
     }
@@ -43,20 +44,18 @@ export default class StockmovementsEdit extends Component {
   }
 
   render() {
-    const { Stockmovements, Stocks, Profile, Stockdefines, history } = this.props
+    const { Stockmovements, Stocks, Profile, Stockdefines, Stocktypes, history } = this.props
 
     const Stockoptions = (Stocks.list || []).filter(u => u.Isactive).map(stock => {
-      if (stock.Barcodeno) {
-        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
-      }
-      else {
-        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name}`, value: stock.Uuid }
-      }
+      const stockdefine = (Stockdefines.list || []).find(u => u?.Uuid === stock?.StockdefineID)
+      const stocktype = (Stocktypes.list || []).find(u => u?.Uuid === stockdefine?.StocktypeID)
+      const isHavebarcode = stocktype?.Isbarcodeneed
+      return { key: stock.Uuid, text: `${stockdefine?.Name}${isHavebarcode ? ` (${stockdefine.Barcode})` : ''}`, value: stock.Uuid }
     })
 
     const Movementoptions = [
-      { key: -1, text: "STOKDAN DÜŞME", value: -1 },
-      { key: 1, text: "STOĞA EKLEME", value: 1 },
+      { key: -1, text: Literals.Options.Movementoptions.value0[Profile.Language], value: -1 },
+      { key: 1, text: Literals.Options.Movementoptions.value1[Profile.Language], value: 1 },
     ]
 
     return (
@@ -74,10 +73,10 @@ export default class StockmovementsEdit extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockoptions} name="StockID" formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockoptions} name="StockID" formtype='dropdown' />
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' min={0} max={9999} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' min={0} max={9999} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
               </Form.Group>
             </Form>
           </Contentwrapper>

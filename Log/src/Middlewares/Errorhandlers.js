@@ -1,23 +1,27 @@
 const config = require("../Config")
-
+const validator = require('../Utilities/Validator')
 module.exports.init = function (app) {
   app.use(function (req, res, next) {
     res.status(404)
     res.json({
       type: 'NOT_FOUND',
       code: 'ERR_NOT_FOUND',
-      description: 'Resource not found in '+ config.session.name,
+      description: 'Resource not found in ' + config.session.name,
     })
   })
 
   app.use(function (err, req, res, next) {
     if (err !== undefined && err.type !== undefined) {
+      
       const result = {
         type: err.type,
         code: err.code || '',
         description: err.description,
+        fulldescription: err?.fulldescription?.stack
+        ? isJsonString(err?.fulldescription?.stack) ? JSON.stringify(err?.fulldescription?.stack) : String(err?.fulldescription?.stack)
+        : isJsonString(err?.stack) ? JSON.stringify(err?.stack) : String(err?.stack)
       }
-
+      
       if (err.list !== undefined) {
         result.list = err.list
       }
@@ -73,38 +77,50 @@ module.exports.init = function (app) {
           res.json(result)
           break
 
-          default:
-            if (isBodyParseError(err)) {
-              res.status(err.statusCode)
-              res.json({
-                type: err.type,
-                code: 'BODY_PARSE_ERROR',
-                description: err.message,
-                callstack: (config.env === 'development' ? err.stack : '')
-              })
-            } else {
-              res.status(500)
-              res.json({
-                type: 'SERVER_ERROR',
-                code: 'SERVER_ERROR',
-                description: 'Unexpected internal server error happened.',
-                callstack: (config.env === 'development' ? err.stack : '')
-              })
-            }
-        }
+        default:
+          if (isBodyParseError(err)) {
+            res.status(err.statusCode)
+            res.json({
+              type: err.type,
+              code: 'BODY_PARSE_ERROR',
+              description: err.message,
+              callstack: (config.env === 'development' ? err.stack : '')
+            })
+          } else {
+            res.status(500)
+            res.json({
+              type: 'SERVER_ERROR',
+              code: 'SERVER_ERROR',
+              description: 'Unexpected internal server error happened.',
+              callstack: (config.env === 'development' ? err.stack : '')
+            })
+          }
       }
-      else {
-        res.status(500)
-        res.json({
-          type: 'SERVER_ERROR',
-          code: 'SERVER_ERROR',
-          description: err.message
-        })
-      }
-    })
-  }
+    }
+    else {
+      res.status(500)
+      res.json({
+        type: 'SERVER_ERROR',
+        code: 'SERVER_ERROR',
+        description: err.message
+      })
+    }
+  })
+}
 
 
 function isBodyParseError(err) {
   return err.type && err.expose && err.statusCode
+}
+
+function isJsonString(str) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    if (validator.isObject(str) || validator.isArray(str)) {
+      return true
+    }
+    return false;
+  }
+  return true;
 }

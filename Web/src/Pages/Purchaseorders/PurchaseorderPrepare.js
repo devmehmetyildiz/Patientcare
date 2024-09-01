@@ -4,7 +4,6 @@ import PurchaseorderPrepareStepOne from '../../Containers/Purchaseorders/Purchas
 import PurchaseorderPrepareStepTwo from '../../Containers/Purchaseorders/PurchaseorderPrepareStepTwo'
 import PurchaseorderPrepareStepThree from '../../Containers/Purchaseorders/PurchaseorderPrepareStepThree'
 import PurchaseorderPrepareStepFour from '../../Containers/Purchaseorders/PurchaseorderPrepareStepFour'
-import Literals from './Literals'
 import { FormContext } from '../../Provider/FormProvider'
 import validator from '../../Utils/Validator'
 
@@ -18,6 +17,8 @@ export default function PurchaseorderPrepare({ PAGE_NAME, Preparestatus, selecte
     const [step, setStep] = useState(STEPONE)
     const [completedSteps, setCompletedSteps] = useState([])
     const context = useContext(FormContext)
+
+    const t = Profile?.i18n?.t
 
     const goNext = () => {
         switch (step) {
@@ -69,8 +70,8 @@ export default function PurchaseorderPrepare({ PAGE_NAME, Preparestatus, selecte
                     active={step === STEPONE}
                 >
                     <Step.Content>
-                        <Step.Title>{Literals.Page.Pageinfoheader[Profile.Language]}</Step.Title>
-                        <Step.Description>{Literals.Page.Pageinfoheaderdesc[Profile.Language]}</Step.Description>
+                        <Step.Title>{t('Pages.Purchaseorder.Page.InfoHeader')}</Step.Title>
+                        <Step.Description>{t('Pages.Purchaseorder.Page.InfoHeader.Desc')}</Step.Description>
                     </Step.Content>
                 </Step>
                 <Step
@@ -80,8 +81,8 @@ export default function PurchaseorderPrepare({ PAGE_NAME, Preparestatus, selecte
                     active={step === STEPTWO}
                 >
                     <Step.Content>
-                        <Step.Title>{Literals.Page.Pageproductheader[Profile.Language]}</Step.Title>
-                        <Step.Description>{Literals.Page.Pageproductheaderdesc[Profile.Language]}</Step.Description>
+                        <Step.Title>{t('Pages.Purchaseorder.Page.ProductHeader')}</Step.Title>
+                        <Step.Description>{t('Pages.Purchaseorder.Page.ProductHeader.Desc')}</Step.Description>
                     </Step.Content>
                 </Step>
                 <Step
@@ -91,8 +92,8 @@ export default function PurchaseorderPrepare({ PAGE_NAME, Preparestatus, selecte
                     active={step === STEPTHREE}
                 >
                     <Step.Content>
-                        <Step.Title>{Literals.Page.Pagefileheader[Profile.Language]}</Step.Title>
-                        <Step.Description>{Literals.Page.Pagefileheaderdesc[Profile.Language]}</Step.Description>
+                        <Step.Title>{t('Pages.Purchaseorder.Page.FileHeader')}</Step.Title>
+                        <Step.Description>{t('Pages.Purchaseorder.Page.FileHeader.Desc')}</Step.Description>
                     </Step.Content>
                 </Step>
                 <Step
@@ -102,8 +103,8 @@ export default function PurchaseorderPrepare({ PAGE_NAME, Preparestatus, selecte
                     active={step === STEPFOUR}
                 >
                     <Step.Content>
-                        <Step.Title>{Literals.Page.Pagedetailheader[Profile.Language]}</Step.Title>
-                        <Step.Description>{Literals.Page.Pagedetailheaderdesc[Profile.Language]}</Step.Description>
+                        <Step.Title>{t('Pages.Purchaseorder.Page.DetailHeader')}</Step.Title>
+                        <Step.Description>{t('Pages.Purchaseorder.Page.DetailHeader.Desc')}</Step.Description>
                     </Step.Content>
                 </Step>
             </Step.Group>

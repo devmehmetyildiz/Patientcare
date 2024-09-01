@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import { Button, Modal } from 'semantic-ui-react'
 import { PatientsDetailCard } from '../../Components'
+import validator from '../../Utils/Validator'
+import Formatdate from '../../Utils/Formatdate'
 
 export default function PreregistrationsDetail(props) {
   const {
@@ -38,8 +40,8 @@ export default function PreregistrationsDetail(props) {
   } = props
 
 
-  const { isDetailmodalopen } = Patients
-
+  const { isDetailmodalopen, selected_record } = Patients
+  const { Uuid } = selected_record
   const t = Profile?.i18n?.t || null
 
   useEffect(() => {
@@ -59,6 +61,24 @@ export default function PreregistrationsDetail(props) {
       GetPatienttypes()
     }
   }, [isDetailmodalopen])
+
+  const stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
+    return {
+      ...element,
+      key: Math.random(),
+      Skt: validator.isISODate(element.Skt) ? Formatdate(element.Skt) : element.Skt
+    }
+  });
+
+  const files = (Files.list || []).filter(u => u.Isactive).filter(u => u.ParentID === Uuid).map(element => {
+    return {
+      ...element,
+      key: Math.random(),
+      Usagetype: ((element?.Usagetype || '').split(',') || []).map(u => {
+        return (Usagetypes.list || []).find(type => type.Uuid === u)?.Name
+      })
+    }
+  });
 
   return (
     <Modal
@@ -84,6 +104,8 @@ export default function PreregistrationsDetail(props) {
         Patienttypes={Patienttypes}
         Usagetypes={Usagetypes}
         fillnotification={fillPatientnotification}
+        stocks={stocks}
+        files={files}
       />
       <Modal.Actions>
         <Button color='black' onClick={() => {

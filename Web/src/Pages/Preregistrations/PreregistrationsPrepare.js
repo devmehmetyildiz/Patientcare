@@ -5,12 +5,14 @@ import PreregistrationsPrepareStepTwo from '../../Containers/Preregistrations/Pr
 import PreregistrationsPrepareStepThree from '../../Containers/Preregistrations/PreregistrationsPrepareStepThree'
 import { FormContext } from '../../Provider/FormProvider'
 import validator from '../../Utils/Validator'
+import PreregistrationsPrepareStepFour from '../../Containers/Preregistrations/PreregistrationsPrepareStepFour'
 
 export default function PreregistrationsPrepare({ PAGE_NAME, Preparestatus, selectedFiles, selectedStocks, setselectedFiles, setselectedStocks, Profile }) {
 
     const STEPONE = "one"
     const STEPTWO = "two"
     const STEPTHREE = "three"
+    const STEPFOUR = "four"
 
     const t = Profile?.i18n?.t
 
@@ -25,6 +27,9 @@ export default function PreregistrationsPrepare({ PAGE_NAME, Preparestatus, sele
                 break;
             case STEPTWO:
                 setStep(STEPTHREE)
+                break;
+            case STEPTHREE:
+                setStep(STEPFOUR)
                 break;
         }
     }
@@ -111,6 +116,17 @@ export default function PreregistrationsPrepare({ PAGE_NAME, Preparestatus, sele
                         <Step.Description>{t('Pages.Preregistrations.Page.FileHeader.Desc')}</Step.Description>
                     </Step.Content>
                 </Step>
+                <Step
+                    onClick={() => setStep(STEPFOUR)}
+                    completed={completedSteps.includes(STEPFOUR)}
+                    link
+                    active={step === STEPFOUR}
+                >
+                    <Step.Content>
+                        <Step.Title>{t('Pages.Preregistrations.Page.InfoHeader')}</Step.Title>
+                        <Step.Description>{t('Pages.Preregistrations.Page.InfoHeader.Desc')}</Step.Description>
+                    </Step.Content>
+                </Step>
             </Step.Group>
             {step === STEPONE ?
                 <PreregistrationsPrepareStepOne
@@ -139,6 +155,16 @@ export default function PreregistrationsPrepare({ PAGE_NAME, Preparestatus, sele
                     setCompletedSteps={setCompletedSteps}
                     goNext={goNext}
                     stepKey={STEPTHREE}
+                />
+                : null}
+            {step === STEPFOUR ?
+                <PreregistrationsPrepareStepFour
+                    PAGE_NAME={PAGE_NAME}
+                    selectedFiles={selectedFiles}
+                    setselectedFiles={setselectedFiles}
+                    setCompletedSteps={setCompletedSteps}
+                    goNext={goNext}
+                    stepKey={STEPFOUR}
                 />
                 : null}
         </div>

@@ -131,6 +131,30 @@ export const EditBeds = createAsyncThunk(
     }
 );
 
+export const ChangeBedOccupied = createAsyncThunk(
+    'Beds/ChangeBedOccupied',
+    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Setting, ROUTES.BED + '/ChangeBedOccupied', data);
+            dispatch(fillBednotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.updatedescription[Language],
+            }));
+            closeModal && closeModal()
+            clearForm && clearForm('BedsUpdate')
+            history && history.push(redirectUrl ? redirectUrl : '/Beds');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillBednotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const DeleteBeds = createAsyncThunk(
     'Beds/DeleteBeds',
     async (data, { dispatch, getState }) => {
@@ -237,6 +261,17 @@ export const BedsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(EditBeds.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ChangeBedOccupied.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(ChangeBedOccupied.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(ChangeBedOccupied.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

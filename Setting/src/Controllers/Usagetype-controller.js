@@ -167,7 +167,11 @@ async function DeleteUsagetype(req, res, next) {
             return next(createAccessDenied([messages.ERROR.USAGETYPE_NOT_ACTIVE], req.language))
         }
 
-        await db.usagetypeModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.usagetypeModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

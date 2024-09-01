@@ -40,20 +40,14 @@ const CostumertypesEdit = lazy(() => import('./Containers/Costumertypes/Costumer
 
 const Patients = lazy(() => import('./Containers/Patients/Patients'));
 const PatientsDetail = lazy(() => import('./Containers/Patients/PatientsDetail'));
+const PatientsEditcash = lazy(() => import('./Containers/Patients/PatientsEditcash'));
+const PatientsEditsupportplan = lazy(() => import('./Containers/Patients/PatientsEditsupportplan'));
+const PatientsEditroutine = lazy(() => import('./Containers/Patients/PatientsEditroutine'));
+const PatientsFiles = lazy(() => import('./Containers/Patients/PatientsFiles'));
 /*const PatientsEdit = lazy(() => import('./Containers/Patients/PatientsEdit'));
 const PatientsCreate = lazy(() => import('./Containers/Patients/PatientsCreate'));
-const PatientsFiles = lazy(() => import('./Containers/Patients/PatientsFiles'));
-const PatientsAddstock = lazy(() => import('./Containers/Patients/PatientsAddstock'));
-const PatientsAddmedicine = lazy(() => import('./Containers/Patients/PatientsAddmedicine'));
-const PatientsRemovestock = lazy(() => import('./Containers/Patients/PatientsRemovestock'));
-const PatientsRemovemedicine = lazy(() => import('./Containers/Patients/PatientsRemovemedicine'));
 const PatientsEditcase = lazy(() => import('./Containers/Patients/PatientsEditcase'));
-const PatientsEditroutine = lazy(() => import('./Containers/Patients/PatientsEditroutine'));
-const PatientsEditsupportplan = lazy(() => import('./Containers/Patients/PatientsEditsupportplan'));
-const PatientsEditcash = lazy(() => import('./Containers/Patients/PatientsEditcash'));
-const Patientusestocks = lazy(() => import('./Containers/Patientusestocks/Patientusestocks'));
-const Patientusesupplies = lazy(() => import('./Containers/Patientusesupplies/Patientusesupplies'));
-const Patientusemedicines = lazy(() => import('./Containers/Patientusemedicines/Patientusemedicines')); */
+ */
 
 const Patientscases = lazy(() => import('./Containers/Patientscases/Patientscases'));
 
@@ -227,9 +221,9 @@ const Personelshifts = lazy(() => import('./Containers/Personelshifts/Personelsh
 const PersonelshiftsCreate = lazy(() => import('./Containers/Personelshifts/PersonelshiftsCreate'));
 const PersonelshiftsEdit = lazy(() => import('./Containers/Personelshifts/PersonelshiftsEdit'));
 
-
-
 const Patientfollowup = lazy(() => import('./Containers/Patientfollowup/Patientfollowup'));
+
+const Log = lazy(() => import('./Containers/Log/Log'));
 
 const Home = lazy(() => import('./Pages/Home'));
 const Notfoundpage = lazy(() => import('./Components/Notfoundpage'));
@@ -306,21 +300,15 @@ class Routes extends Component {
 
       { exact: true, path: "/Patients", auth: true, component: Patients, permission: 'patientview' },
       { exact: true, path: "/Patients/:PatientID", auth: true, component: PatientsDetail, permission: 'patientview' },
+      { exact: true, path: "/Patients/:PatientID/Editcash", auth: true, component: PatientsEditcash, permission: 'patientupdate' },
+      { exact: true, path: "/Patients/:PatientID/Editsupportplan", auth: true, component: PatientsEditsupportplan, permission: 'patientupdate' },
+      { exact: true, path: "/Patients/:PatientID/Editroutine", auth: true, component: PatientsEditroutine, permission: 'patientupdate' },
+      { exact: true, path: "/Patients/:PatientID/Editfile", auth: true, component: PatientsFiles, permission: 'patientupdate' },
       /*
       { exact: true, path: "/Patients/Create", auth: true, component: PatientsCreate, permission: 'patientadd' },
-        { exact: true, path: "/Patients/:PatientID/Editfile", auth: true, component: PatientsFiles, permission: 'patientupdate' },
-        { exact: true, path: "/Patients/:PatientID/Edit", auth: true, component: PatientsEdit, permission: 'patientupdate' },
-        { exact: true, path: "/Patients/:PatientID/Addstock", auth: true, component: PatientsAddstock, permission: 'patientupdate' },
-        { exact: true, path: "/Patients/:PatientID/Addmedicine", auth: true, component: PatientsAddmedicine, permission: 'patientupdate' },
-        { exact: true, path: "/Patients/:PatientID/Removestock", auth: true, component: PatientsRemovestock, permission: 'patientupdate' },
-        { exact: true, path: "/Patients/:PatientID/Removemedicine", auth: true, component: PatientsRemovemedicine, permission: 'patientupdate' },
+      { exact: true, path: "/Patients/:PatientID/Edit", auth: true, component: PatientsEdit, permission: 'patientupdate' },
         { exact: true, path: "/Patients/:PatientID/Editcase", auth: true, component: PatientsEditcase, permission: 'patientupdate' },
-        { exact: true, path: "/Patients/:PatientID/Editroutine", auth: true, component: PatientsEditroutine, permission: 'patientupdate' },
-        { exact: true, path: "/Patients/:PatientID/Editsupportplan", auth: true, component: PatientsEditsupportplan, permission: 'patientupdate' },
-        { exact: true, path: "/Patients/:PatientID/Editcash", auth: true, component: PatientsEditcash, permission: 'patientupdate' },
-        { exact: true, path: "/Patientusestocks", auth: true, component: Patientusestocks, permission: 'patientupdate' },
-        { exact: true, path: "/Patientusesupplies", auth: true, component: Patientusesupplies, permission: 'patientupdate' },
-        { exact: true, path: "/Patientusemedicines", auth: true, component: Patientusemedicines, permission: 'patientupdate' }, */
+        */
 
       { exact: true, path: "/Patientscases", auth: true, component: Patientscases, permission: 'patientview' },
       { exact: true, path: "/Patientfollowup", auth: true, component: Patientfollowup, permission: 'patientview' },
@@ -455,6 +443,7 @@ class Routes extends Component {
       { exact: true, path: "/Personelshifts/:PersonelshiftID/Edit", auth: true, component: PersonelshiftsEdit, permission: 'personelshiftupdate' },
 
       { exact: true, path: "/Appreports", auth: true, component: Appreports, permission: 'admin' },
+      { exact: true, path: "/Logs", auth: true, component: Log, permission: 'admin' },
 
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'preregistrationview' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'preregistrationadd' },

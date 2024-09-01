@@ -126,6 +126,12 @@ const messages = {
         tr: 'Bu işlem için başlangıç zamanı gerekli',
       }
     },
+    STOCKMOVEMENTS_REQUIRED: {
+      code: 'STOCKMOVEMENTS_REQUIRED', description: {
+        en: 'The stock movements required',
+        tr: 'Bu işlem için stok hareketleri gerekli',
+      }
+    },
     NAME_REQUIRED: {
       code: 'NAME_REQUIRED', description: {
         en: 'The name required',

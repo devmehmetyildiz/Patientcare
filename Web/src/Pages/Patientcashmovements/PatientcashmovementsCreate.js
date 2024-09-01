@@ -90,10 +90,10 @@ export default class PatientcashmovementsCreate extends Component {
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementvalue[Profile.Language]} name="Movementvalue" type='number' step='0.01'/>
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementvalue[Profile.Language]} name="Movementvalue" type='number' min={0} max={999999} step='0.01'/>
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                <FormInput page={this.PAGE_NAME}  placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
             </Form>
           </Contentwrapper>

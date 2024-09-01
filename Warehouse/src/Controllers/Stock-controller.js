@@ -19,6 +19,25 @@ async function GetStocks(req, res, next) {
     }
 }
 
+async function GetStocksByWarehouseID(req, res, next) {
+    let validationErrors = []
+    if (!req.params.warehouseId) {
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+    }
+    if (!validator.isUUID(req.params.warehouseId)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+    try {
+        const stocks = await db.stockModel.findAll({ where: { WarehouseID: req.params.warehouseId } })
+        res.status(200).json(stocks)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
 async function GetStock(req, res, next) {
 
     let validationErrors = []
@@ -104,6 +123,73 @@ async function AddStock(req, res, next) {
             Movementtype: 1,
             Isapproved: true,
             Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
+        }, { transaction: t })
+
+        const unit = await DoGet(config.services.Setting, `Units/${stockdefine?.UnitID}`)
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Stoklar',
+            role: 'stocknotification',
+            message: `${req.body.Amount} ${unit?.Name} ${stockdefine?.Name} ürünü ${username} tarafından eklendi.`,
+            pushurl: '/Stocks'
+        })
+
+        await t.commit()
+    } catch (err) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(err))
+    }
+    GetStocks(req, res, next)
+}
+
+async function AddStockWithoutMovement(req, res, next) {
+
+    let validationErrors = []
+    const {
+        WarehouseID,
+        StockdefineID,
+        Type,
+        Skt,
+    } = req.body
+
+    if (!validator.isUUID(WarehouseID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
+    }
+    if (!validator.isUUID(StockdefineID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
+    }
+    if (!validator.isNumber(Type)) {
+        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    let stockuuid = uuid()
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+
+        const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: StockdefineID } });
+        const stocktype = await db.stocktypeModel.findOne({ where: { Uuid: stockdefine?.StocktypeID } });
+
+        if (stocktype?.Issktneed) {
+            if (!validator.isString(Skt)) {
+                next(createValidationError([messages.VALIDATION_ERROR.SKT_REQUIRED], req.language))
+            }
+        }
+
+        await db.stockModel.create({
+            ...req.body,
+            Uuid: stockuuid,
+            Createduser: username,
+            Iscompleted: true,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
@@ -415,5 +501,7 @@ module.exports = {
     DeleteStock,
     ApproveStock,
     ApproveStocks,
-    DeleteStockByWarehouseID
+    DeleteStockByWarehouseID,
+    GetStocksByWarehouseID,
+    AddStockWithoutMovement
 }

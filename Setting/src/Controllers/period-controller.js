@@ -262,7 +262,11 @@ async function DeletePeriod(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PERIOD_NOT_ACTIVE], req.language))
         }
 
-        await db.periodModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.periodModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

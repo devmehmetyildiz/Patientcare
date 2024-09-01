@@ -19,6 +19,7 @@ function create(type, code) {
   message = message || code
   let err = new Error(message)
   err.description = message
+  err.fulldescription = lastArgument || message
   err.type = type
   err.code = code
   if (errorList) {
@@ -31,6 +32,15 @@ function create(type, code) {
   }
 
   return err
+}
+
+function createsequleize(type, code, errormessage, error) {
+  return {
+    description: errormessage,
+    type: type,
+    code: code,
+    fulldescription: error
+  }
 }
 
 function createList(type, code) {
@@ -102,7 +112,7 @@ function createNotfounderror(param, language) {
 }
 
 function createAccessDenied(privilege, language, descriptions) {
-  let code = privilege.replace(' ', '_').toUpperCase()
+  let code = privilege.replace('', '_').toUpperCase()
 
   let description = {
     en: `The ${descriptions[language]} access denied, you must have '${privilege}' privilege to do this operation`,
@@ -196,12 +206,12 @@ function requestErrorCatcher(err, serviceName = null) {
   }
 }
 
-function sequelizeErrorCatcher(err, errHelper) {
+function sequelizeErrorCatcher(err) {
   if (err && err.message) {
-    return create('SERVER_ERROR', `INTERNAL_${config.session.name.toUpperCase()}_ERROR`, err.message)
+    return createsequleize('SERVER_ERROR', `INTERNAL_${config.session.name.toUpperCase()}_ERROR`, err.message, err)
   }
   if (err && err.name) {
-    return create('VALIDATION', err.name, (err.parent && err.parent.code && err.parent.sqlMessage) ? `${err.parent.code} ${err.parent.sqlMessage} on ${config.session.name} service` : `Undefines error on Sequileze on ${config.session.name} service`)
+    return createsequleize('VALIDATION', err.name, (err.parent && err.parent.code && err.parent.sqlMessage) ? `${err.parent.code} ${err.parent.sqlMessage} on ${config.session.name} service` : `Undefines error on Sequileze on ${config.session.name} service`, err)
   }
   throw err;
 }

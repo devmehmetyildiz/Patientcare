@@ -16,6 +16,7 @@ export default class UsagetypesEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
+      isHavevalue: false
     }
   }
 
@@ -45,7 +46,7 @@ export default class UsagetypesEdit extends Component {
     const { Usagetypes, Profile, history } = this.props
 
     return (
-      Usagetypes.isLoading  ? <LoadingPage /> :
+      Usagetypes.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
@@ -60,10 +61,10 @@ export default class UsagetypesEdit extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Value[Profile.Language]} name="Value" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                {this.state.isHavevalue && <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Value[Profile.Language]} name="Value" />}
               </Form.Group>
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Isrequired[Profile.Language]} name="Isrequired" formtype={'checkbox'} />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isrequired[Profile.Language]} name="Isrequired" formtype={'checkbox'} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>

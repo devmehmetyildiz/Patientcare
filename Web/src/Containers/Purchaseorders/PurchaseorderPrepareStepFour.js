@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import PurchaseorderPrepareStepFour from "../../Pages/Purchaseorders/PurchaseorderPrepareStepFour"
+import { fillPurchaseordernotification } from "../../Redux/PurchaseorderSlice"
 import { GetUsers } from "../../Redux/UserSlice"
 import { GetStocks } from "../../Redux/StockSlice"
 import { GetFiles } from "../../Redux/FileSlice"
@@ -29,7 +30,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetUsers, GetStocks, GetFiles, GetUsagetypes, GetStockdefines, GetUnits, GetWarehouses, GetPatients, GetPatientdefines, GetCases, GetDepartments
+    GetUsers, GetStocks, GetFiles, GetUsagetypes, GetStockdefines, GetUnits,
+    GetWarehouses, GetPatients, GetPatientdefines, GetCases, GetDepartments,
+    fillPurchaseordernotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PurchaseorderPrepareStepFour)

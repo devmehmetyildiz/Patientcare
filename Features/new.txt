@@ -8,3 +8,7 @@ stok tanımlarında patientID hatası veriyor ona bak
 dosya yüklemeler eklenecek
 hasta yerleşimleri detaylanacak
 otomatik vardiya olustur eklenecek 
+
+
+odalar yataklar ve katlar silinirken sorgulanacak 
+

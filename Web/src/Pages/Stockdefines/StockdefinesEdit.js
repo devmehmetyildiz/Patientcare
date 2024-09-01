@@ -80,10 +80,11 @@ export default class StockdefinesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stocktype[Profile.Language]} options={Stocktypesoption} name="StocktypeID" formtype='dropdown' modal={StocktypesCreate} />
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unit[Profile.Language]} options={Unitoption} name="UnitID" formtype='dropdown' modal={UnitsCreate} />
               </Form.Group>
-              {Isbarcodeneed &&
+              {Isbarcodeneed ?
                 <Form.Group widths={"equal"}>
                   <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Barcode[Profile.Language]} name="Barcode" />
                 </Form.Group>
+                : null
               }
               <Form.Group widths={"equal"}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />

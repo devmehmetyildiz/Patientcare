@@ -87,7 +87,6 @@ export default class PatientsEditcash extends Component {
             { Header: Literals.Editcash.Register[Profile.Language], accessor: 'RegisterID', Cell: col => this.registerCellhandler(col) },
             { Header: Literals.Editcash.Movementtype[Profile.Language], accessor: 'Movementtype', Cell: col => this.typeCellhandler(col) },
             { Header: Literals.Editcash.Movementvalue[Profile.Language], accessor: 'Movementvalue', Cell: col => this.cashCellhandler(col) },
-            { Header: Literals.Editcash.Report[Profile.Language], accessor: 'ReportID' },
             { Header: Literals.Editcash.Createduser[Profile.Language], accessor: 'Createduser' },
             { Header: Literals.Editcash.Updateduser[Profile.Language], accessor: 'Updateduser' },
             { Header: Literals.Editcash.Createtime[Profile.Language], accessor: 'Createtime' },

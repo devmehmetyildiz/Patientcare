@@ -7,10 +7,10 @@ module.exports = sequelize.define('logModel', {
     Uuid: {
         type: Sequelize.STRING
     },
-    Servername: {
+    Service: {
         type: Sequelize.STRING
     },
-    RequestuserID: {
+    UserID: {
         type: Sequelize.STRING
     },
     Requesttype: {
@@ -28,30 +28,15 @@ module.exports = sequelize.define('logModel', {
     Status: {
         type: Sequelize.STRING
     },
-    Data: {
+    Requestdata: {
         type: Sequelize.TEXT
     },
-    Createduser: {
-        type: Sequelize.STRING
+    Responsedata: {
+        type: Sequelize.TEXT
     },
     Createtime: {
         type: Sequelize.DATE
     },
-    Updateduser: {
-        type: Sequelize.STRING
-    },
-    Updatetime: {
-        type: Sequelize.DATE
-    },
-    Deleteduser: {
-        type: Sequelize.STRING
-    },
-    Deletetime: {
-        type: Sequelize.DATE
-    },
-    Isactive: {
-        type: Sequelize.BOOLEAN
-    }
 }, {
     tableName: 'logs', // replace with the name of your existing table
     timestamps: false

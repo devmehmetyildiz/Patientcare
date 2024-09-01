@@ -830,6 +830,7 @@ async function DeletePurchaseorder(req, res, next) {
         return next(createValidationError(validationErrors, req.language))
     }
 
+    const username = req?.identity?.user?.Username || 'System'
     const t = await db.sequelize.transaction();
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } })
@@ -840,9 +841,24 @@ async function DeletePurchaseorder(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
         }
 
-        await db.purchaseorderModel.destroy({ where: { Uuid: Uuid }, transaction: t });
-        await db.purchaseordermovementModel.destroy({ where: { PurchaseorderID: Uuid }, transaction: t });
-        await db.stockModel.destroy({ where: { WarehouseID: Uuid }, transaction: t });
+        await db.purchaseorderModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+      
+        await db.purchaseordermovementModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { PurchaseorderID: Uuid } }, { transaction: t })
+      
+        await db.stockModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { WarehouseID: Uuid } }, { transaction: t })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

@@ -243,7 +243,11 @@ async function DeleteBreakdown(req, res, next) {
             return next(createAccessDenied([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
         }
 
-        await db.breakdownModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.breakdownModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

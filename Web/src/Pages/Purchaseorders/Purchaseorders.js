@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn, Loader, Tab } from 'semantic-ui-react'
-import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
 import PurchaseordersDelete from '../../Containers/Purchaseorders/PurchaseordersDelete'
 import { getInitialconfig } from '../../Utils/Constants'
@@ -10,6 +9,7 @@ import PurchaseordersCheck from '../../Containers/Purchaseorders/PurchaseordersC
 import PurchaseordersApprove from '../../Containers/Purchaseorders/PurchaseordersApprove'
 import PurchaseordersComplete from '../../Containers/Purchaseorders/PurchaseordersComplete'
 import PurchaseordersDetail from '../../Containers/Purchaseorders/PurchaseordersDetail'
+import { t } from 'i18next'
 
 export default class Purchaseorders extends Component {
 
@@ -24,6 +24,8 @@ export default class Purchaseorders extends Component {
       handleCheckmodal, handleCompletemodal } = this.props
     const { isLoading } = Purchaseorders
 
+    const t = Profile?.i18n?.t
+
     const colProps = {
       sortable: true,
       canGroupBy: true,
@@ -31,32 +33,32 @@ export default class Purchaseorders extends Component {
     }
 
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Purchaseno[Profile.Language], accessor: 'Purchaseno' },
-      { Header: Literals.Columns.Company[Profile.Language], accessor: 'Company' },
-      { Header: Literals.Columns.Billno[Profile.Language], accessor: 'Billno' },
-      { Header: Literals.Columns.Receiveruser[Profile.Language], accessor: row => this.userCellhandler(row?.ReceiveruserID) },
-      { Header: Literals.Columns.Purchasecreatetime[Profile.Language], accessor: row => this.dateCellhandler(row?.Purchasecreatetime), key: 'created' },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: row => this.userCellhandler(row?.CreateduserID), key: 'created' },
-      { Header: Literals.Columns.Purchasechecktime[Profile.Language], accessor: row => this.dateCellhandler(row?.Purchasechecktime), key: 'checked' },
-      { Header: Literals.Columns.Checkeduser[Profile.Language], accessor: row => this.userCellhandler(row?.CheckeduserID), key: 'checked' },
-      { Header: Literals.Columns.Purchaseapprovetime[Profile.Language], accessor: row => this.dateCellhandler(row?.Purchaseapprovetime), key: 'approved' },
-      { Header: Literals.Columns.Approveduser[Profile.Language], accessor: row => this.userCellhandler(row?.ApproveduserID), key: 'approved' },
-      { Header: Literals.Columns.Purchasecompletetime[Profile.Language], accessor: row => this.dateCellhandler(row?.Purchasecompletetime), key: 'completed' },
-      { Header: Literals.Columns.Completeduser[Profile.Language], accessor: row => this.userCellhandler(row?.CompleteduserID), key: 'completed' },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-      { Header: Literals.Columns.detail[Profile.Language], accessor: 'detail', disableProps: true },
-      { Header: Literals.Columns.check[Profile.Language], accessor: 'check', disableProps: true, key: 'created' },
-      { Header: Literals.Columns.cancelcheck[Profile.Language], accessor: 'cancelcheck', disableProps: true, key: 'checked' },
-      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', disableProps: true, key: 'checked' },
-      { Header: Literals.Columns.cancelapprove[Profile.Language], accessor: 'cancelapprove', disableProps: true, key: 'approved' },
-      { Header: Literals.Columns.complete[Profile.Language], accessor: 'complete', disableProps: true, key: 'approved' },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true, key: 'created' },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true, disableOncomplete: true }
+      { Header: t('Common.Column.Id'), accessor: 'Id' },
+      { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+      { Header: t('Pages.Purchaseorder.Columns.Purchaseno'), accessor: 'Purchaseno' },
+      { Header: t('Pages.Purchaseorder.Columns.Company'), accessor: 'Company' },
+      { Header: t('Pages.Purchaseorder.Columns.Billno'), accessor: 'Billno' },
+      { Header: t('Pages.Purchaseorder.Columns.Receiveruser'), accessor: row => this.userCellhandler(row?.ReceiveruserID) },
+      { Header: t('Pages.Purchaseorder.Columns.Purchasecreatetime'), accessor: row => this.dateCellhandler(row?.Purchasecreatetime), key: 'created' },
+      { Header: t('Pages.Purchaseorder.Columns.Createduser'), accessor: row => this.userCellhandler(row?.CreateduserID), key: 'created' },
+      { Header: t('Pages.Purchaseorder.Columns.Purchasechecktime'), accessor: row => this.dateCellhandler(row?.Purchasechecktime), key: 'checked' },
+      { Header: t('Pages.Purchaseorder.Columns.Checkeduser'), accessor: row => this.userCellhandler(row?.CheckeduserID), key: 'checked' },
+      { Header: t('Pages.Purchaseorder.Columns.Purchaseapprovetime'), accessor: row => this.dateCellhandler(row?.Purchaseapprovetime), key: 'approved' },
+      { Header: t('Pages.Purchaseorder.Columns.Approveduser'), accessor: row => this.userCellhandler(row?.ApproveduserID), key: 'approved' },
+      { Header: t('Pages.Purchaseorder.Columns.Purchasecompletetime'), accessor: row => this.dateCellhandler(row?.Purchasecompletetime), key: 'completed' },
+      { Header: t('Pages.Purchaseorder.Columns.Completeduser'), accessor: row => this.userCellhandler(row?.CompleteduserID), key: 'completed' },
+      { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+      { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+      { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+      { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+      { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
+      { Header: t('Common.Column.check'), accessor: 'check', disableProps: true, key: 'created' },
+      { Header: t('Common.Column.cancelcheck'), accessor: 'cancelcheck', disableProps: true, key: 'checked' },
+      { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, key: 'checked' },
+      { Header: t('Common.Column.cancelapprove'), accessor: 'cancelapprove', disableProps: true, key: 'approved' },
+      { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, key: 'approved' },
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, key: 'created' },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, disableOncomplete: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const list = (Purchaseorders.list || []).map(item => {
@@ -108,13 +110,13 @@ export default class Purchaseorders extends Component {
                 <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Purchaseorders"}>
-                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                      <Breadcrumb.Section>{t('Pages.Purchaseorder.Page.Header')}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
                 <Settings
                   Profile={Profile}
-                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreateheader={t('Pages.Purchaseorder.Page.CreateHeader')}
                   Pagecreatelink={"/Purchaseorders/Create"}
                   Showcreatebutton
                 />
@@ -126,7 +128,7 @@ export default class Purchaseorders extends Component {
                 className="w-full !bg-transparent"
                 panes={[
                   {
-                    menuItem: `${Literals.Page.Pagecreatedheader[Profile.Language]} (${(createList || []).length})`,
+                    menuItem: `${t('Pages.Purchaseorder.Page.Tab.CreateHeader')} (${(createList || []).length})`,
                     pane: {
                       key: 'created',
                       content: <Purchaseorderscreated
@@ -137,7 +139,7 @@ export default class Purchaseorders extends Component {
                     }
                   },
                   {
-                    menuItem: `${Literals.Page.Pagecheckedheader[Profile.Language]} (${(checkList || []).length})`,
+                    menuItem: `${t('Pages.Purchaseorder.Page.Tab.CheckHeader')} (${(checkList || []).length})`,
                     pane: {
                       key: 'checked',
                       content: <Purchaseorderschecked
@@ -148,7 +150,7 @@ export default class Purchaseorders extends Component {
                     }
                   },
                   {
-                    menuItem: `${Literals.Page.Pageapprovedheader[Profile.Language]} (${(approveList || []).length})`,
+                    menuItem: `${t('Pages.Purchaseorder.Page.Tab.ApproveHeader')} (${(approveList || []).length})`,
                     pane: {
                       key: 'approved',
                       content: <Purchaseordersapproved
@@ -159,7 +161,7 @@ export default class Purchaseorders extends Component {
                     }
                   },
                   {
-                    menuItem: `${Literals.Page.Pagecompletedheader[Profile.Language]} (${(completeList || []).length})`,
+                    menuItem: `${t('Pages.Purchaseorder.Page.Tab.CompleteHeader')} (${(completeList || []).length})`,
                     pane: {
                       key: 'completed',
                       content: <Purchaseorderscompleted
@@ -238,7 +240,7 @@ function Purchaseorderscreated({ Profile, Columns, list }) {
           {Profile.Ismobile ?
             <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
             <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-        </div> : <NoDataScreen style={{ height: 'auto' }} message={Literals.Messages.Nodatafind[Profile.Language]} />
+        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
       }
     </>
   )
@@ -270,7 +272,7 @@ function Purchaseorderschecked({ Profile, Columns, list }) {
           {Profile.Ismobile ?
             <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
             <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-        </div> : <NoDataScreen style={{ height: 'auto' }} message={Literals.Messages.Nodatafind[Profile.Language]} />
+        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
       }
     </>
   )
@@ -302,7 +304,7 @@ function Purchaseordersapproved({ Profile, Columns, list }) {
           {Profile.Ismobile ?
             <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
             <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-        </div> : <NoDataScreen style={{ height: 'auto' }} message={Literals.Messages.Nodatafind[Profile.Language]} />
+        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
       }
     </>
   )
@@ -334,7 +336,7 @@ function Purchaseorderscompleted({ Profile, Columns, list }) {
           {Profile.Ismobile ?
             <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
             <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-        </div> : <NoDataScreen style={{ height: 'auto' }} message={Literals.Messages.Nodatafind[Profile.Language]} />
+        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
       }
     </>
   )

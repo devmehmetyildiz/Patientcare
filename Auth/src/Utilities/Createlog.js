@@ -1,35 +1,40 @@
 const axios = require('axios')
 const config = require('../Config')
 const validator = require('./Validator')
-const { sequelizeErrorCatcher, requestErrorCatcher } = require('./Error')
 
-module.exports = async (req) => {
+module.exports = async (req, res, error) => {
     try {
-        const servername = config.session.name
-        const requestuserID = req.identity.user.Uuid
-        const requestType = req.method;
-        const requesturl = Getdomain(req)
-        const requestip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-        const targeturl = req.originalUrl
-        const status = 'success'
-        const data = validator.isObject(req.body) ? JSON.stringify(req.body) : ''
-        await axios({
-            method: 'POST',
-            url: `${config.services.Log}Logs`,
-            headers: {
-                session_key: config.session.secret
-            },
-            data: {
-                Servername: servername,
-                RequestuserID: requestuserID,
-                Requesttype: requestType,
-                Requesturl: requesturl,
-                Requestip: requestip,
-                Targeturl: targeturl,
-                Status: status,
-                Data: data
-            }
-        })
+        const originalSend = res.send;
+        const username = req?.identity?.user?.Username || 'System'
+        res.send = function (body) {
+            const servername = config.session.name
+            const requestuserID = username
+            const requestType = req.method;
+            const requesturl = Getdomain(req)
+            const requestip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+            const targeturl = req.originalUrl
+            axios({
+                method: 'POST',
+                url: `${config.services.Log}Logs`,
+                headers: {
+                    session_key: config.session.secret
+                },
+                data: {
+                    Service: servername,
+                    UserID: requestuserID,
+                    Requesttype: requestType,
+                    Requesturl: requesturl,
+                    Requestip: requestip,
+                    Targeturl: targeturl,
+                    Status: res.statusCode,
+                    Requestdata: isJsonString(req.body) ? JSON.stringify(req.body).replace(/\\/g, "") : String(req.body),
+                    Responsedata: isJsonString(body) ? JSON.stringify(body).replace(/\\/g, "") : String(body),
+                }
+            }).catch(() => {
+            })
+            originalSend.call(this, body);
+        };
+        next()
     } catch {
     }
 }
@@ -42,4 +47,16 @@ function Getdomain(req) {
     } else {
         return null
     }
+}
+
+function isJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        if (validator.isObject(str) || validator.isArray(str)) {
+            return true
+        }
+        return false;
+    }
+    return true;
 }

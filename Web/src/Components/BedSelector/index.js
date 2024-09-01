@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Card, Label, Loader, Modal, Popup, Tab } from 'semantic-ui-react'
+import { Button, Card, Icon, Image, Label, Loader, Modal, Popup, Segment, Tab } from 'semantic-ui-react'
 import Literals from './Literals'
 import { connect } from 'react-redux'
 import { GetPatientByPlace } from '../../Redux/PatientSlice'
@@ -23,31 +23,41 @@ function BedSelector({
     const getViewbase = (list) => {
         return (list || []).length > 0 ?
             <div key={Math.random()} className='
-                 flex flex-row justify-start 
-                items-center flex-wrap gap-5 '>
+                grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8  
+                '>
                 {list.map((option, index) => {
                     return <div
                         key={index}
-                        className={option?.BedID === record ? 'bordereddiv' : ''}
-                        onClick={() => { setRecord(option?.BedID) }}
+                        className={`!cursor-pointer !hover:shadow-lg`}
+                        onClick={() => {
+                            if (option?.Isoccupied) {
+                                fillNotification({
+                                    type: 'Information',
+                                    code: t('Pages.Beds.Page.Header'),
+                                    description: t('Pages.Beds.Messages.Filled'),
+                                })
+                            } else {
+                                setRecord(option?.BedID)
+                            }
+
+                        }}
                     >
-                        <Card
-                            className=' !w-auto !hover:shadow-xl !hover:bg-white'
-                            link
-                            description={<div
-                                className={`
-                                 flex relative flex-col justify-start items-start 
-                         gap-2 p-4  w-full rounded-lg
-                          cursor-pointer transition-all ease-in-out duration-500  z-1 
-                                `}
+                        <Segment>
+                            <Label
+                                size='large'
+                                color={option?.BedID === record ? 'blue' : option?.Isoccupied ? 'green' : 'red'}
+                                className='!flex !flex-col !justify-start !items-start'
                             >
-                                <div style={{ backgroundColor: option?.Isoccupied ? 'green' : 'red' }} className='absolute right-1 top-1 p-2 rounded-full'></div>
-                                <div>{option?.Floorname}</div>
-                                <div>{option?.Roomname}</div>
-                                <div>{option?.Bedname}</div>
-                            </div>}
-                        >
-                        </Card>
+                                <Icon name='mail' />
+                                {option?.Bedname}
+                                <Label.Detail>
+                                    {option?.Floorname}
+                                </Label.Detail>
+                                <Label.Detail >
+                                    {option?.Roomname}
+                                </Label.Detail>
+                            </Label>
+                        </Segment>
                     </div>
                 })}
             </div>

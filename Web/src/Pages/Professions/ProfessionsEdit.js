@@ -64,7 +64,7 @@ export default class ProfessionsEdit extends Component {
           <Contentwrapper>
             <Form>
               <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Floors[Profile.Language]} name="Floors" formtype='dropdown' multiple options={Floorsoptions} />
+              <FormInput page={this.PAGE_NAME}  placeholder={Literals.Columns.Floors[Profile.Language]} name="Floors" formtype='dropdown' multiple options={Floorsoptions} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>

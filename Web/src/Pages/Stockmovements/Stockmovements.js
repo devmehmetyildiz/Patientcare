@@ -6,14 +6,16 @@ import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pag
 import StockmovementsDelete from '../../Containers/Stockmovements/StockmovementsDelete'
 import StockmovementsApprove from '../../Containers/Stockmovements/StockmovementsApprove'
 import { MOVEMENTTYPES, getInitialconfig } from '../../Utils/Constants'
+import { Formatfulldate } from '../../Utils/Formatdate'
 export default class Stockmovements extends Component {
 
   componentDidMount() {
-    const { GetStockmovements, GetStocks, GetUnits, GetStockdefines } = this.props
+    const { GetStockmovements, GetStocks, GetUnits, GetStockdefines, GetStocktypes } = this.props
     GetStockmovements()
     GetStockdefines()
     GetStocks()
     GetUnits()
+    GetStocktypes()
   }
 
   render() {
@@ -52,12 +54,12 @@ export default class Stockmovements extends Component {
       return {
         ...item,
         watch: <Link to={`/Stockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
-        edit: <Link to={`/Stockmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+        edit: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Link to={`/Stockmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
           handleSelectedStockmovement(item)
           handleApprovemodal(true)
         }} />,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+        delete: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='alternate trash' onClick={() => {
           handleSelectedStockmovement(item)
           handleDeletemodal(true)
         }} />
@@ -144,22 +146,24 @@ export default class Stockmovements extends Component {
   }
 
   stockCellhandler = (value) => {
-    const { Stocks, Stockdefines } = this.props
-    if (Stocks.isLoading || Stockdefines.isLoading) {
+    const { Stocks, Stockdefines, Stocktypes } = this.props
+    if (Stocks.isLoading || Stockdefines.isLoading || Stocktypes.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
       const stock = (Stocks.list || []).find(u => u.Uuid === value)
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
-      return stockdefine?.Name
-    }
+      const stocktype = (Stocktypes.list || []).find(u => u.Uuid === stockdefine?.StocktypeID)
 
+
+      return `${stockdefine?.Name} ${stocktype?.Isbarcodeneed ? ` (${stockdefine?.Barcode})` : ''}`
+    }
   }
 
   dateCellhandler = (value) => {
     if (value) {
-      return value.split('T').length > 0 ? value.split('T')[0] : value
+      return Formatfulldate(value, true)
     }
-    return null
+    return value
   }
 
   movementCellhandler = (value) => {

@@ -51,7 +51,6 @@ import Patientfollowup from "../Pages/Patientfollowup/Literals"
 import Personelpresettings from "../Pages/Personelpresettings/Literals"
 import Professionpresettings from "../Pages/Professionpresettings/Literals"
 import Personelshifts from "../Pages/Personelshifts/Literals"
-import Purchaseorders from "../Pages/Purchaseorders/Literals"
 
 const Literals = {
     Cases,
@@ -107,7 +106,6 @@ const Literals = {
     Professionpresettings,
     Personelshifts,
     Stocktypegroups,
-    Purchaseorders
 }
 
 export default Literals

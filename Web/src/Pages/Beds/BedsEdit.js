@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { } from 'semantic-ui-react'
 import { Breadcrumb, Form } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import RoomsCreate from '../../Containers/Rooms/RoomsCreate'
@@ -46,42 +45,42 @@ export default class BedsEdit extends Component {
 
   render() {
     const { Beds, Rooms, Floors, Profile, history } = this.props
+    const t = Profile?.i18n?.t
 
     const Roomsoptions = (Rooms.list || []).filter(u => u.Isactive).map(room => {
       return { key: room.Uuid, text: `${room.Name} (${(Floors.list || []).find(u => u.Uuid === room.FloorID)?.Name})`, value: room.Uuid }
     })
 
     return (
-      Rooms.isLoading  || Beds.isLoading  ? <LoadingPage /> :
+      Rooms.isLoading || Beds.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Beds"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Beds.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Beds.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.RoomID[Profile.Language]} name="RoomID" options={Roomsoptions} formtype='dropdown' modal={RoomsCreate} />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Beds.Label.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Beds.Label.Room')} name="RoomID" options={Roomsoptions} formtype='dropdown' modal={RoomsCreate} />
               </Form.Group>
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Isoccupied[Profile.Language]} name="Isoccupied" formtype={'checkbox'} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
               history={history}
               redirectUrl={"/Beds"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Beds.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -93,13 +92,14 @@ export default class BedsEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditBeds, history, fillBednotification, Profile, Beds } = this.props
+    const t = Profile?.i18n?.t
     const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
     if (!validator.isUUID(data.RoomID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.RoomIDrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Beds.Page.Header'), description: t('Pages.Beds.Messages.RoomRequired') })
     }
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Beds.Page.Header'), description: t('Pages.Beds.Messages.RoomRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

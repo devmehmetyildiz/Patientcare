@@ -16,6 +16,9 @@ module.exports = sequelize.define('bedModel', {
     Isoccupied: {
         type: Sequelize.INTEGER
     },
+    PatientID: {
+        type: Sequelize.STRING
+    },
     Createduser: {
         type: Sequelize.STRING
     },

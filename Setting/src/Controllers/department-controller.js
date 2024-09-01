@@ -175,7 +175,12 @@ async function DeleteDepartment(req, res, next) {
         if (department.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.DEPARTMENT_NOT_ACTIVE], req.language))
         }
-        await db.departmentModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await db.departmentModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

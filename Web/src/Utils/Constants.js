@@ -1,4 +1,4 @@
-import { Tb3DRotate, TbAccessPoint, TbActivity, TbGauge, TbCalendar } from "react-icons/tb"
+import { Tb3DRotate, TbActivity, TbGauge, TbCalendar } from "react-icons/tb"
 import Literals from "./Literalregistrar"
 import { MdSettings } from "react-icons/md"
 
@@ -149,6 +149,8 @@ export const getSidebarroutes = (Profile) => {
 
     const { roles } = Profile
 
+    const t = Profile?.i18n?.t
+
     const checkAuth = (authname) => {
         let isAvailable = false
         if (roles.includes('admin') || roles.includes(authname)) {
@@ -222,18 +224,10 @@ export const getSidebarroutes = (Profile) => {
             icon: <Tb3DRotate className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: Literals.Preregistrations.Page.Pageheader[Profile.Language], url: "/Preregistrations", permission: checkAuth('preregistrationview') },
-                { id: 2, subtitle: Literals.Patients.Page.Pageheader[Profile.Language], url: "/Patients", permission: checkAuth('patientview') },
-                //   { id: 3, subtitle: Literals.Patientmovements.Page.Pageheader[Profile.Language], url: "/Patientmovements", permission: checkAuth('patientmovementview') },
+                { id: 3, subtitle: Literals.Patients.Page.Pageheader[Profile.Language], url: "/Patients", permission: checkAuth('patientview') },
                 { id: 4, subtitle: Literals.Patientdefines.Page.Pageheader[Profile.Language], url: "/Patientdefines", permission: checkAuth('patientdefineview') },
-                //   { id: 5, subtitle: Literals.Patientstocks.Page.Pageheader[Profile.Language], url: "/Patientstocks", permission: checkAuth('patientstockview') },
-                //  { id: 6, subtitle: Literals.Patientmedicines.Page.Pageheader[Profile.Language], url: "/Patientmedicines", permission: checkAuth('patientmedicineview') },
-                //  { id: 7, subtitle: Literals.Patientsupplies.Page.Pageheader[Profile.Language], url: "/Patientsupplies", permission: checkAuth('patientsupplyview') },
-                //  { id: 8, subtitle: Literals.Patientstockmovements.Page.Pageheader[Profile.Language], url: "/Patientstockmovements", permission: checkAuth('patientstockmovementview') },
-                { id: 9, subtitle: Literals.Patientcashmovements.Page.Pageheader[Profile.Language], url: "/Patientcashmovements", permission: checkAuth('patientcashmovementview') },
-                //  { id: 10, subtitle: Literals.Patientusestocks.Page.Pageheader[Profile.Language], url: "/Patientusestocks", permission: checkAuth('patientview') },
-                //  { id: 11, subtitle: Literals.Patientusemedicines.Page.Pageheader[Profile.Language], url: "/Patientusemedicines", permission: checkAuth('patientview') },
-                //  { id: 12, subtitle: Literals.Patientusesupplies.Page.Pageheader[Profile.Language], url: "/Patientusesupplies", permission: checkAuth('patientview') },
-                { id: 13, subtitle: Literals.Careplans.Page.Pageheader[Profile.Language], url: "/Careplans", permission: checkAuth('careplanview') },
+                { id: 5, subtitle: Literals.Patientcashmovements.Page.Pageheader[Profile.Language], url: "/Patientcashmovements", permission: checkAuth('patientcashmovementview') },
+                { id: 6, subtitle: Literals.Careplans.Page.Pageheader[Profile.Language], url: "/Careplans", permission: checkAuth('careplanview') },
             ]
         },
         {
@@ -242,7 +236,7 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <TbActivity className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: Literals.Purchaseorders.Page.Pageheader[Profile.Language], url: "/Purchaseorders", permission: checkAuth('purchaseorderview') },
+                { id: 1, subtitle: t('Pages.Purchaseorder.Page.Header'), url: "/Purchaseorders", permission: checkAuth('purchaseorderview') },
                 { id: 2, subtitle: Literals.Warehouses.Page.Pageheader[Profile.Language], url: "/Warehouses", permission: checkAuth('warehouseview') },
                 { id: 3, subtitle: Literals.Stocks.Page.Pageheader[Profile.Language], url: "/Stocks", permission: checkAuth('stockview') },
                 { id: 4, subtitle: Literals.Stockmovements.Page.Pageheader[Profile.Language], url: "/Stockmovements", permission: checkAuth('stockmovementview') },
@@ -260,6 +254,7 @@ export const getSidebarroutes = (Profile) => {
                 { id: 2, subtitle: Literals.Mailsettings.Page.Pageheader[Profile.Language], url: "/Mailsettings", permission: checkAuth('mailsettingview') },
                 { id: 3, subtitle: Literals.Printtemplates.Page.Pageheader[Profile.Language], url: "/Printtemplates", permission: checkAuth('printtemplateview') },
                 { id: 4, subtitle: Literals.Appreports.Page.Pageheader[Profile.Language], url: "/Appreports", permission: checkAuth('admin') },
+                { id: 5, subtitle: t('Pages.Log.Page.Header'), url: "/Logs", permission: checkAuth('admin') },
             ]
         },
         {

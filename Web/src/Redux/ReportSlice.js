@@ -45,6 +45,20 @@ export const GetLogs = createAsyncThunk(
     }
 );
 
+export const GetLogsByQuerry = createAsyncThunk(
+    'ReportsSlice/GetLogsByQuerry',
+    async ({ data }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Log, `${ROUTES.LOG}/GetByQuerry`, data);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillReportnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 
 export const ReportsSlice = createSlice({
     name: 'Reports',
@@ -76,6 +90,19 @@ export const ReportsSlice = createSlice({
                 state.logs = action.payload;
             })
             .addCase(GetLogs.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetLogsByQuerry.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.logs = [];
+            })
+            .addCase(GetLogsByQuerry.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.logs = action.payload;
+            })
+            .addCase(GetLogsByQuerry.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

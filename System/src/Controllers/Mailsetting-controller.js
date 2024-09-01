@@ -225,7 +225,11 @@ async function DeleteMailsetting(req, res, next) {
             return next(createAccessDenied([messages.ERROR.MAILSETTING_NOT_ACTIVE], req.language))
         }
 
-        await db.mailsettingModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.mailsettingModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form, Breadcrumb } from 'semantic-ui-react'
-import Literals from './Literals'
+import { Breadcrumb } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import PurchaseorderPrepare from './PurchaseorderPrepare'
 import { Formatdate } from '../../Utils/Formatdate'
 export default class PurchaseordersEdit extends Component {
@@ -71,16 +70,18 @@ export default class PurchaseordersEdit extends Component {
 
     const { Purchaseorders, Profile, history } = this.props
 
+    const t = Profile?.i18n?.t
+
     return (
       Purchaseorders.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Purchaseorders"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Purchaseorder.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Purchaseorder.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
@@ -99,11 +100,11 @@ export default class PurchaseordersEdit extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Purchaseorders"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Purchaseorders.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -116,6 +117,9 @@ export default class PurchaseordersEdit extends Component {
     e.preventDefault()
 
     const { EditPurchaseorders, history, fillPurchaseordernotification, Purchaseorders, Profile, Stockdefines, Stocktypes } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     data.Price = validator.isNumber(Number(data.Price)) ? Number(data.Price) : 0
     data.Stocks = this.state.selectedStocks
@@ -123,40 +127,40 @@ export default class PurchaseordersEdit extends Component {
 
     let errors = []
     if (!validator.isString(data.Company)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CompanyRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Purchaseorder.Page.Header'), description: t('Pages.Purchaseorder.Messages.CompanyRequired') })
     }
     if (!validator.isUUID(data.CaseID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CaseRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Purchaseorder.Page.Header'), description: t('Pages.Purchaseorder.Messages.CaseRequired') })
     }
 
     if (!validator.isArray(data.Stocks)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StocksRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Purchaseorder.Page.Header'), description: t('Pages.Purchaseorder.Messages.StocksRequired') })
     }
 
     for (const stock of data.Stocks) {
 
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
-      const stocktype = (Stocktypes.list || []).find(u => stockdefine?.StocktypeID)
+      const stocktype = (Stocktypes.list || []).find(u => u.Uuid === stockdefine?.StocktypeID)
       const Issktneed = stocktype?.Issktneed
 
       if (!validator.isUUID(stock.StockdefineID)) {
-        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StockRequired[Profile.Language] })
+        errors.push({ type: 'Error', code: t('Pages.Purchaseorder.Page.Header'), description: t('Pages.Purchaseorder.Messages.StockRequired') })
       }
       if (!validator.isUUID(stock.StocktypeID)) {
-        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StocktypeRequired[Profile.Language] })
+        errors.push({ type: 'Error', code: t('Pages.Purchaseorder.Page.Header'), description: t('Pages.Purchaseorder.Messages.StocktypeRequired') })
       }
 
       if (!validator.isNumber(Number(stock.Amount))) {
-        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.AmountRequired[Profile.Language] })
+        errors.push({ type: 'Error', code: t('Pages.Purchaseorder.Page.Header'), description: t('Pages.Purchaseorder.Messages.AmountRequired') })
       } else {
         if (Number(stock.Amount) === 0) {
-          errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.AmountRequired[Profile.Language] })
+          errors.push({ type: 'Error', code: t('Pages.Purchaseorder.Page.Header'), description: t('Pages.Purchaseorder.Messages.AmountRequired') })
         }
       }
 
       if (Issktneed) {
         if (!validator.isISODate(stock.Skt)) {
-          errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.SktRequired[Profile.Language] })
+          errors.push({ type: 'Error', code: t('Pages.Purchaseorder.Page.Header'), description: t('Pages.Purchaseorder.Messages.SktRequired') })
         }
       }
     }

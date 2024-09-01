@@ -217,8 +217,11 @@ async function DeleteEquipment(req, res, next) {
             return next(createAccessDenied([messages.ERROR.EQUIPMENT_NOT_ACTIVE], req.language))
         }
 
-        await db.equipmentModel.destroy({ where: { Uuid: Uuid }, transaction: t });
-        await db.equipmentpropertyModel.destroy({ where: { EquipmentID: Uuid }, transaction: t });
+        await db.equipmentModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

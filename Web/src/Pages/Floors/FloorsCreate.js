@@ -33,8 +33,8 @@ export default class FloorsCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Gender[Profile.Language]} name="Gender" options={Genderoptions} formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Gender[Profile.Language]} name="Gender" options={Genderoptions} formtype='dropdown' />
             </Form>
           </Contentwrapper>
           <Footerwrapper>

@@ -173,7 +173,12 @@ async function DeleteStocktypegroup(req, res, next) {
         if (stocktypegroup.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.STOCKTYPEGROUP_NOT_ACTIVE], req.language))
         }
-        await db.stocktypegroupModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await db.stocktypegroupModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

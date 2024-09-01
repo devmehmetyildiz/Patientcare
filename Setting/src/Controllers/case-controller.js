@@ -215,7 +215,7 @@ async function UpdateCase(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const casedata =await db.caseModel.findOne({ where: { Uuid: Uuid } })
+        const casedata = await db.caseModel.findOne({ where: { Uuid: Uuid } })
         if (!casedata) {
             return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
         }
@@ -273,7 +273,7 @@ async function DeleteCase(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const casedata =await db.caseModel.findOne({ where: { Uuid: Uuid } })
+        const casedata = await db.caseModel.findOne({ where: { Uuid: Uuid } })
         if (!casedata) {
             return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
         }
@@ -281,8 +281,11 @@ async function DeleteCase(req, res, next) {
             return next(createAccessDenied([messages.ERROR.CASE_NOT_ACTIVE], req.language))
         }
 
-        await db.casedepartmentModel.destroy({ where: { CaseID: Uuid }, transaction: t });
-        await db.caseModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.caseModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

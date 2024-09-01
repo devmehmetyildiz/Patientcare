@@ -165,7 +165,11 @@ async function DeletePatienttype(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PATIENTTYPE_NOT_ACTIVE], req.language))
         }
 
-        await db.patienttypeModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.patienttypeModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

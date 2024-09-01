@@ -126,15 +126,15 @@ export default class PatientdefinesCreate extends Component {
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Dateofdeath[Profile.Language]} name="Dateofdeath" type='date' />
                   </Form.Group>
                   <Form.Group widths='equal'>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Placeofbirth[Profile.Language]} name="Placeofdeath" />
+                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Placeofdeath[Profile.Language]} name="Placeofdeath" />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Deathinfo[Profile.Language]} name="Deathinfo" />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Gender[Profile.Language]} name="Gender" options={Genderoptions} formtype="dropdown" />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Marialstatus[Profile.Language]} name="Marialstatus" />
                   </Form.Group>
                   <Form.Group widths='equal'>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Childnumber[Profile.Language]} name="Childnumber" type='number' />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Disabledchildnumber[Profile.Language]} name="Disabledchildnumber" type='number' />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Siblingstatus[Profile.Language]} name="Siblingstatus" />
+                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Childnumber[Profile.Language]} name="Childnumber" type='number' min={0} max={99}/>
+                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Disabledchildnumber[Profile.Language]} name="Disabledchildnumber" type='number' min={0} max={99}/>
+                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Siblingstatus[Profile.Language]} name="Siblingstatus" type='number' min={0} max={99}/>
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Sgkstatus[Profile.Language]} name="Sgkstatus" />
                   </Form.Group>
                   <Form.Group widths='equal'>

@@ -51,7 +51,7 @@ export default class Stocks extends Component {
     const metaKey = "stock"
     let initialConfig = getInitialconfig(Profile, metaKey)
 
-    const list = (Stocks.list || []).filter(u => u.Isactive && u.Iscompleted).map(item => {
+    const list = (Stocks.list || []).filter(u => u.Isactive && u.Iscompleted && u.Type === 0).map(item => {
       return {
         ...item,
         change: <Link to={`/Stockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,

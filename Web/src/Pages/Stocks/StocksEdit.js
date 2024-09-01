@@ -90,14 +90,14 @@ export default class StocksEdit extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' modal={WarehousesCreate} effect={this.onWarehousechange} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' modal={StockdefinesCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' modal={WarehousesCreate} effect={this.onWarehousechange} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' modal={StockdefinesCreate} />
               </Form.Group>
               <Form.Group widths='equal'>
-                {Issktneeded ? <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' /> : null}
+                {Issktneeded ? <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' /> : null}
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
             </Form>
           </Contentwrapper>

@@ -177,6 +177,7 @@ async function DeleteWarehouse(req, res, next) {
             Isactive: false,
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
+
         await CreateNotification({
             type: types.Delete,
             service: 'Ambarlar',

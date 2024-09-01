@@ -60,6 +60,12 @@ const messages = {
         tr: 'Yatak aktif değil',
       }
     },
+    BED_IS_OCCUPIED: {
+      code: 'BED_IS_OCCUPIED', description: {
+        en: 'Bed is occupied',
+        tr: 'Yatak dolu durumda',
+      }
+    },
     ROOM_NOT_FOUND: {
       code: 'ROOM_NOT_FOUND', description: {
         en: 'Room not found',
@@ -392,6 +398,12 @@ const messages = {
       code: 'PATIENTTYPEID_REQUIRED', description: {
         en: 'The patienttypeId required',
         tr: 'Bu işlem için patienttypeId bilgisi gerekli',
+      }
+    },
+    PATIENTID_REQUIRED: {
+      code: 'PATIENTID_REQUIRED', description: {
+        en: 'The patient Id required',
+        tr: 'Bu işlem için hasta gerekli',
       }
     },
     STATIONS_REQUIRED: {

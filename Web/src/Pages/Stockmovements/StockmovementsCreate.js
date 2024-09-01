@@ -10,9 +10,10 @@ export default class StockmovementsCreate extends Component {
   PAGE_NAME = "StockmovementsCreate"
 
   componentDidMount() {
-    const { GetStocks, GetStockdefines } = this.props
+    const { GetStocks, GetStockdefines, GetStocktypes } = this.props
     GetStocks()
     GetStockdefines()
+    GetStocktypes()
   }
 
   componentDidUpdate() {
@@ -32,15 +33,13 @@ export default class StockmovementsCreate extends Component {
   }
 
   render() {
-    const { Stockmovements, Stocks, Stockdefines, Profile, history, closeModal } = this.props
+    const { Stockmovements, Stocks, Stockdefines, Profile, history, closeModal, Stocktypes } = this.props
 
     const Stockoptions = (Stocks.list || []).filter(u => u.Isactive).map(stock => {
-      if (stock.Barcodeno) {
-        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name} - ${stock.Barcodeno}`, value: stock.Uuid }
-      }
-      else {
-        return { key: stock.Uuid, text: `${(Stockdefines.list || []).find(define => define.Uuid === stock.StockdefineID)?.Name}`, value: stock.Uuid }
-      }
+      const stockdefine = (Stockdefines.list || []).find(u => u?.Uuid === stock?.StockdefineID)
+      const stocktype = (Stocktypes.list || []).find(u => u?.Uuid === stockdefine?.StocktypeID)
+      const isHavebarcode = stocktype?.Isbarcodeneed
+      return { key: stock.Uuid, text: `${stockdefine?.Name}${isHavebarcode ? ` (${stockdefine.Barcode})` : ''}`, value: stock.Uuid }
     })
 
     const Movementoptions = [
@@ -64,10 +63,10 @@ export default class StockmovementsCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockoptions} name="StockID" formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockoptions} name="StockID" formtype='dropdown' />
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' min={0} max={9999} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' min={0} max={9999} />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
               </Form.Group>
             </Form>
           </Contentwrapper>

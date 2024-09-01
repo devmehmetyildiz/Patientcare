@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Breadcrumb, Button, Dimmer, Grid, GridColumn, Icon, Step, Transition } from 'semantic-ui-react'
 import { Contentwrapper, Headerwrapper, LoadingPage } from '../../Components'
 import { Link } from 'react-router-dom'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import Stockmanage from '../../Components/Stockmanage'
 
@@ -13,7 +12,8 @@ export default function PurchaseorderPrepareStepTwo(props) {
         Purchaseorders, Stocktypes, Stocktypegroups, Stockdefines, Units, Stockmovements, Stocks,
         GetStocktypes, GetStocktypegroups, GetUnits, GetStockdefines, GetStocks, GetStockmovements
     } = props
-    
+
+    const t = Profile?.i18n?.t
     const [active, setActive] = useState(null)
 
     useEffect(() => {
@@ -61,7 +61,7 @@ export default function PurchaseorderPrepareStepTwo(props) {
                                 <GridColumn width={8}>
                                     <Breadcrumb size='big'>
                                         <Link to={"/Purchaseorders"}>
-                                            <Breadcrumb.Section>{Literals.Page.Pageproductheader[Profile.Language]}</Breadcrumb.Section>
+                                            <Breadcrumb.Section>{t('Pages.Purchaseorder.Page.ProductHeader')}</Breadcrumb.Section>
                                         </Link>
                                     </Breadcrumb>
                                 </GridColumn>
@@ -111,7 +111,7 @@ export default function PurchaseorderPrepareStepTwo(props) {
                                     goNext()
                                 }}
                             >
-                                {Literals.Button.GoNext[Profile.Language]}
+                                {t('Common.Button.GoNext')}
                                 <Icon name='right arrow' />
                             </Button>
                         </div>

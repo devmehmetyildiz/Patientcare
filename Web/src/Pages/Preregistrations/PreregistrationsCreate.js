@@ -106,7 +106,7 @@ export default class PreregistrationsCreate extends Component {
     for (const stock of data.Stocks) {
 
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock.StockdefineID)
-      const stocktype = (Stocktypes.list || []).find(u => stockdefine?.StocktypeID)
+      const stocktype = (Stocktypes.list || []).find(u => u.Uuid === stockdefine?.StocktypeID)
       const Issktneed = stocktype?.Issktneed
 
       if (!validator.isUUID(stock.StockdefineID)) {
