@@ -9,6 +9,7 @@ const patientmovementtypes = {
     Patientcancelapprove: 'patientcancelapprove',
     Patientleft: 'patientleft',
     Patientdead: 'patientdead',
+    Patientcasechange: 'patientcasechange',
 }
 
 module.exports = { patientmovementtypes }

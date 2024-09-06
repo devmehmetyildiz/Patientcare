@@ -33,7 +33,7 @@ const Literals = {
             en: 'Case Name'
         },
         Shortname: {
-            tr: 'Durum Kısaltmasıı',
+            tr: 'Durum Kısaltması',
             en: 'Short Name'
         },
         CaseStatus: {

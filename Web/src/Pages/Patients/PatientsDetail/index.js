@@ -9,9 +9,13 @@ import { useLocation, useParams, useHistory } from 'react-router-dom'
 import validator from '../../../Utils/Validator'
 import PatientDetailMovements from './PatientDetailMovements'
 import PatientsDetailStocks from './PatientsDetailStocks'
-import { Button, Dimmer, DimmerDimmable, Dropdown, Header, Icon, Loader, Modal } from 'semantic-ui-react'
+import { Dimmer, DimmerDimmable, Dropdown, Icon, Loader } from 'semantic-ui-react'
 import PatientsLeftModal from '../../../Containers/Patients/PatientsLeftModal'
 import PatientsDeadModal from '../../../Containers/Patients/PatientsDeadModal'
+import PatientsEntercashModal from '../../../Containers/Patients/PatientsEntercashModal'
+import PatientsEditstatus from '../../../Containers/Patients/PatientsEditstatusModal'
+import PatientsEditcaseModal from '../../../Containers/Patients/PatientsEditcaseModal'
+import PatientsEditplaceModal from '../../../Containers/Patients/PatientsEditplaceModal'
 
 export default function Patientsdetail(props) {
 
@@ -27,6 +31,10 @@ export default function Patientsdetail(props) {
         Stockmovements, Users, Stocktypes, Stocktypegroups, Units,
         PatientID, Profile } = props
 
+    const [openeditplace, setOpeneditplace] = useState(false)
+    const [openeditcase, setOpeneditcase] = useState(false)
+    const [openentercash, setOpenentercash] = useState(false)
+    const [openstatus, setOpenstatus] = useState(false)
     const [opendead, setOpendead] = useState(false)
     const [openleft, setOpenleft] = useState(false)
     const [record, setRecord] = useState(null)
@@ -149,19 +157,39 @@ export default function Patientsdetail(props) {
                                         <Icon name='comment' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Removestock')}
                                     </Dropdown.Item>
-                                    <Dropdown.Item>
+                                    <Dropdown.Item
+                                        onClick={() => {
+                                            setRecord(patient)
+                                            setOpeneditplace(true)
+                                        }}
+                                    >
                                         <Icon name='conversation' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editplace')}
                                     </Dropdown.Item>
-                                    <Dropdown.Item>
+                                    <Dropdown.Item
+                                        onClick={() => {
+                                            setRecord(patient)
+                                            setOpenentercash(true)
+                                        }}
+                                    >
                                         <Icon name='conversation' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Insertcash')}
                                     </Dropdown.Item>
-                                    <Dropdown.Item>
+                                    <Dropdown.Item
+                                        onClick={() => {
+                                            setRecord(patient)
+                                            setOpeneditcase(true)
+                                        }}
+                                    >
                                         <Icon name='conversation' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editcase')}
                                     </Dropdown.Item>
-                                    <Dropdown.Item>
+                                    <Dropdown.Item
+                                        onClick={() => {
+                                            setRecord(patient)
+                                            setOpenstatus(true)
+                                        }}
+                                    >
                                         <Icon name='conversation' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editstatus')}
                                     </Dropdown.Item>
@@ -248,6 +276,34 @@ export default function Patientsdetail(props) {
             <PatientsDeadModal
                 open={opendead}
                 setOpen={setOpendead}
+                record={record}
+                setRecord={setRecord}
+            />
+            <PatientsEntercashModal
+                isPatientdetailpage
+                open={openentercash}
+                setOpen={setOpenentercash}
+                record={record}
+                setRecord={setRecord}
+            />
+            <PatientsEditstatus
+                isPatientdetailpage
+                open={openstatus}
+                setOpen={setOpenstatus}
+                record={record}
+                setRecord={setRecord}
+            />
+            <PatientsEditcaseModal
+                isPatientdetailpage
+                open={openeditcase}
+                setOpen={setOpeneditcase}
+                record={record}
+                setRecord={setRecord}
+            />
+            <PatientsEditplaceModal
+                isPatientdetailpage
+                open={openeditplace}
+                setOpen={setOpeneditplace}
                 record={record}
                 setRecord={setRecord}
             />

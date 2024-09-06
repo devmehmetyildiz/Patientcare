@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
-import Literals from './Literals'
 import { Button, Modal } from 'semantic-ui-react'
 import { PatientsDetailCard } from '../../Components'
+import validator from '../../Utils/Validator'
+import Formatdate from '../../Utils/Formatdate'
 
 export default function PatientsDetailModal(props) {
     const {
@@ -39,7 +40,7 @@ export default function PatientsDetailModal(props) {
     } = props
 
 
-    const { isDetailmodalopen } = Patients
+    const { isDetailmodalopen, selected_record } = Patients
 
     const t = Profile?.i18n?.t || null
 
@@ -61,13 +62,31 @@ export default function PatientsDetailModal(props) {
         }
     }, [isDetailmodalopen])
 
+    const stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
+        return {
+            ...element,
+            key: Math.random(),
+            Skt: validator.isISODate(element.Skt) ? Formatdate(element.Skt) : element.Skt
+        }
+    });
+
+    const files = (Files.list || []).filter(u => u.Isactive).filter(u => u.ParentID === selected_record?.Uuid).map(element => {
+        return {
+            ...element,
+            key: Math.random(),
+            Usagetype: ((element?.Usagetype || '').split(',') || []).map(u => {
+                return (Usagetypes.list || []).find(type => type.Uuid === u)?.Name
+            })
+        }
+    });
+
     return (
         <Modal
             onClose={() => handleDetailmodal(false)}
             onOpen={() => handleDetailmodal(true)}
             open={isDetailmodalopen}
         >
-            <Modal.Header>{Literals.Page.Pagepreparedetailheader[Profile.Language]}</Modal.Header>
+            <Modal.Header>{t('Pages.Patients.PatientsDetail.Page.Header')}</Modal.Header>
             <PatientsDetailCard
                 Profile={Profile}
                 Patients={Patients}
@@ -85,13 +104,15 @@ export default function PatientsDetailModal(props) {
                 Patienttypes={Patienttypes}
                 Usagetypes={Usagetypes}
                 fillnotification={fillPatientnotification}
+                stocks={stocks}
+                files={files}
             />
             <Modal.Actions>
                 <Button color='black' onClick={() => {
                     handleDetailmodal(false)
                     handleSelectedPatient({})
                 }}>
-                    {Literals.Button.Goback[Profile.Language]}
+                    {t('Common.Button.Goback')}
                 </Button>
             </Modal.Actions>
         </Modal>

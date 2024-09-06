@@ -6,6 +6,7 @@ import Formatdate from '../../Utils/Formatdate'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { FormContext } from '../../Provider/FormProvider'
+import validator from '../../Utils/Validator'
 
 export default function PatientsDetailCard(props) {
 
@@ -169,7 +170,7 @@ export default function PatientsDetailCard(props) {
                                     {` ${t('Pages.Preregistrations.DetailCard.Label.Mothername')} `}
                                     <strong>{patientdefine?.Mothername || Notfound}</strong>
                                     {` ${t('Pages.Preregistrations.DetailCard.Label.Dateofbirth')} `}
-                                    <strong>{patientdefine?.Dateofbirth || Notfound}</strong>
+                                    <strong>{validator.isISODate(patientdefine?.Dateofbirth) ? Formatdate(patientdefine?.Dateofbirth, true) : Notfound}</strong>
                                     {` ${t('Pages.Preregistrations.DetailCard.Label.Placeofbirth')} `}
                                     <strong>{patientdefine?.Placeofbirth || Notfound}</strong>
                                 </Card.Description>
@@ -217,13 +218,13 @@ export default function PatientsDetailCard(props) {
                     <Card.Content className='w-full flex flex-row justify-between items-center'>
                         <Card.Content className='flex flex-col justify-start items-start'>
                             <Label basic ribbon>
-                                {`${t('Pages.Preregistrations.DetailCard.Label.Registerdate')} : ${Formatdate(Registerdate) || Notfound}`}
+                                {`${t('Pages.Preregistrations.DetailCard.Label.Registerdate')} : ${Formatdate(Registerdate, true) || Notfound}`}
                             </Label>
                             <Label basic ribbon>
-                                {`${t('Pages.Preregistrations.DetailCard.Label.Approvaldate')} : ${Formatdate(Approvaldate) || Notfound}`}
+                                {`${t('Pages.Preregistrations.DetailCard.Label.Approvaldate')} : ${Formatdate(Approvaldate, true) || Notfound}`}
                             </Label>
                             <Label basic ribbon>
-                                {`${t('Pages.Preregistrations.DetailCard.Label.Happensdate')} : ${Formatdate(Happensdate) || Notfound}`}
+                                {`${t('Pages.Preregistrations.DetailCard.Label.Happensdate')} : ${Formatdate(Happensdate, true) || Notfound}`}
                             </Label>
                         </Card.Content>
                         <Card.Content className='w-full flex justify-end items-end flex-col'>

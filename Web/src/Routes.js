@@ -44,10 +44,6 @@ const PatientsEditcash = lazy(() => import('./Containers/Patients/PatientsEditca
 const PatientsEditsupportplan = lazy(() => import('./Containers/Patients/PatientsEditsupportplan'));
 const PatientsEditroutine = lazy(() => import('./Containers/Patients/PatientsEditroutine'));
 const PatientsFiles = lazy(() => import('./Containers/Patients/PatientsFiles'));
-/*const PatientsEdit = lazy(() => import('./Containers/Patients/PatientsEdit'));
-const PatientsCreate = lazy(() => import('./Containers/Patients/PatientsCreate'));
-const PatientsEditcase = lazy(() => import('./Containers/Patients/PatientsEditcase'));
- */
 
 const Patientscases = lazy(() => import('./Containers/Patientscases/Patientscases'));
 
@@ -304,11 +300,6 @@ class Routes extends Component {
       { exact: true, path: "/Patients/:PatientID/Editsupportplan", auth: true, component: PatientsEditsupportplan, permission: 'patientupdate' },
       { exact: true, path: "/Patients/:PatientID/Editroutine", auth: true, component: PatientsEditroutine, permission: 'patientupdate' },
       { exact: true, path: "/Patients/:PatientID/Editfile", auth: true, component: PatientsFiles, permission: 'patientupdate' },
-      /*
-      { exact: true, path: "/Patients/Create", auth: true, component: PatientsCreate, permission: 'patientadd' },
-      { exact: true, path: "/Patients/:PatientID/Edit", auth: true, component: PatientsEdit, permission: 'patientupdate' },
-        { exact: true, path: "/Patients/:PatientID/Editcase", auth: true, component: PatientsEditcase, permission: 'patientupdate' },
-        */
 
       { exact: true, path: "/Patientscases", auth: true, component: Patientscases, permission: 'patientview' },
       { exact: true, path: "/Patientfollowup", auth: true, component: Patientfollowup, permission: 'patientview' },

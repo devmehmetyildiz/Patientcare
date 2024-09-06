@@ -346,6 +346,85 @@ async function UpdatePatient(req, res, next) {
     GetPatients(req, res, next)
 }
 
+async function UpdatePatientDates(req, res, next) {
+
+    let validationErrors = []
+    const {
+        Uuid,
+        Happensdate,
+        Approvaldate,
+        Registerdate,
+    } = req.body
+
+
+    if (!validator.isISODate(Approvaldate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.APPROVALDATE_REQUIRED)
+    }
+    if (!validator.isISODate(Registerdate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.REGISTERDATE_REQUIRED)
+    }
+    if (!validator.isISODate(Happensdate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.HAPPENSDATE_REQUIRED)
+    }
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTID)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const patient = await db.patientModel.findOne({ where: { Uuid: Uuid } })
+        if (!patient) {
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
+        }
+        if (patient.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.patientModel.update({
+            ...patient,
+            Registerdate: Registerdate,
+            Approvaldate: Approvaldate,
+            Happensdate: Happensdate,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await db.patientmovementModel.create({
+            Uuid: uuid(),
+            Type: patientmovementtypes.Patientupdate,
+            PatientID: Uuid,
+            UserID: req?.identity?.user?.Uuid || username,
+            Info: '',
+            Occureddate: new Date()
+        }, { transaction: t })
+
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastası ${username} tarafından güncellendi.`,
+            pushurl: '/Patients'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    req.Uuid = Uuid
+    GetPatients(req, res, next)
+}
+
 async function CheckPatient(req, res, next) {
 
     let validationErrors = []
@@ -826,9 +905,11 @@ async function CompletePatient(req, res, next) {
                 })
             }
 
-            await DoPost(config.services.Warehouse, 'Stockmovements/InsertList', {
-                Stockmovements: reqBody
-            })
+            if (reqBody.length > 0) {
+                await DoPost(config.services.Warehouse, 'Stockmovements/InsertList', {
+                    Stockmovements: reqBody
+                })
+            }
         }
 
         await db.patientModel.update({
@@ -1196,21 +1277,6 @@ async function UpdatePatientcase(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
-        const selectedCase = await DoGet(config.services.Setting, `Cases/${CaseID}`)
-
-        if (selectedCase?.Patientstatus === 4) { //Ölüm
-            const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
-            if (!validator.isISODate(patientdefine?.Dateofdeath)) {
-                return next(createValidationError([messages.VALIDATION_ERROR.DATEOFDEATH_REQUIRED_CASE], req.language))
-            }
-        }
-
-        if (selectedCase?.Patientstatus === 6) { //Ayrılmış
-            if (!validator.isISODate(patient?.Leavedate)) {
-                return next(createValidationError([messages.VALIDATION_ERROR.LEAVEDATE_REQUIRED], req.language))
-            }
-        }
-
         await db.patientModel.update({
             ...patient,
             CaseID: CaseID,
@@ -1218,31 +1284,13 @@ async function UpdatePatientcase(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: PatientID } }, { transaction: t })
 
-        const lastpatientmovement = await db.patientmovementModel.findOne({
-            order: [['Id', 'DESC']],
-            where: {
-                PatientID: patient?.Uuid
-            }
-        });
-
-        let patientmovementuuid = uuid()
-
         await db.patientmovementModel.create({
-            ...req.body,
-            Uuid: patientmovementuuid,
-            OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
-            Patientmovementtype: selectedCase.Patientstatus,
-            NewPatientmovementtype: selectedCase.Patientstatus,
-            Createduser: username,
-            Createtime: new Date(),
-            PatientID: patient.Uuid,
-            Movementdate: new Date(),
-            IsDeactive: false,
-            IsTodoneed: false,
-            IsTodocompleted: false,
-            IsComplated: true,
-            Iswaitingactivation: false,
-            Isactive: true
+            Uuid: uuid(),
+            PatientID: PatientID,
+            Type: patientmovementtypes.Patientcasechange,
+            UserID: req?.identity?.user?.Uuid || username,
+            Info: '',
+            Occureddate: new Date()
         }, { transaction: t })
 
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
@@ -1295,56 +1343,21 @@ async function UpdatePatientscase(req, res, next) {
                 return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
             }
 
-            if (patient?.CaseID !== CaseID) {
-                let casedata = null
-                try {
-                    const caseresponse = await axios({
-                        method: 'GET',
-                        url: config.services.Setting + "Cases/" + CaseID,
-                        headers: {
-                            session_key: config.session.secret
-                        }
-                    })
-                    casedata = caseresponse?.data
-                } catch (error) {
-                    return next(requestErrorCatcher(error, 'Setting'))
-                }
+            await db.patientModel.update({
+                ...patient,
+                CaseID: CaseID,
+                Updateduser: username,
+                Updatetime: new Date(),
+            }, { where: { Uuid: PatientID } }, { transaction: t })
 
-
-                await db.patientModel.update({
-                    ...patient,
-                    CaseID: CaseID,
-                    Updateduser: username,
-                    Updatetime: new Date(),
-                }, { where: { Uuid: PatientID } }, { transaction: t })
-
-                const lastpatientmovement = await db.patientmovementModel.findOne({
-                    order: [['Id', 'DESC']],
-                    where: {
-                        PatientID: patient?.Uuid
-                    }
-                });
-
-                let patientmovementuuid = uuid()
-
-                await db.patientmovementModel.create({
-                    ...req.body,
-                    Uuid: patientmovementuuid,
-                    OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
-                    Patientmovementtype: casedata.Patientstatus,
-                    NewPatientmovementtype: casedata.Patientstatus,
-                    Createduser: username,
-                    Createtime: new Date(),
-                    PatientID: patient.Uuid,
-                    Movementdate: new Date(),
-                    IsDeactive: false,
-                    IsTodoneed: false,
-                    IsTodocompleted: false,
-                    IsComplated: true,
-                    Iswaitingactivation: false,
-                    Isactive: true
-                }, { transaction: t })
-            }
+            await db.patientmovementModel.create({
+                Uuid: uuid(),
+                PatientID: PatientID,
+                Type: patientmovementtypes.Patientcasechange,
+                UserID: req?.identity?.user?.Uuid || username,
+                Info: '',
+                Occureddate: new Date()
+            }, { transaction: t })
         }
 
         await CreateNotification({
@@ -1378,13 +1391,13 @@ async function UpdatePatientplace(req, res, next) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
     }
     if (!validator.isUUID(FloorID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FLOORNUMBER_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.FLOORID_REQUIRED)
     }
     if (!validator.isUUID(RoomID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROOMNUMBER_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.ROOMID_REQUIRED)
     }
     if (!validator.isUUID(BedID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.BEDNUMBER_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -1396,6 +1409,7 @@ async function UpdatePatientplace(req, res, next) {
 
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
+
         if (!patient) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
@@ -1403,57 +1417,136 @@ async function UpdatePatientplace(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
-        try {
-            await axios({
-                method: 'PUT',
-                url: config.services.Setting + "Beds/{ChangeBedstatus}",
-                headers: {
-                    session_key: config.session.secret
-                },
-                data: {
-                    OldUuid: patient.BedID,
-                    NewUuid: BedID
-                }
-            })
-        } catch (error) {
-            return next(requestErrorCatcher(error, 'Setting'))
+        const selectedPatientOldBed = patient?.BedID
+        const targetBedPatient = await db.patientModel.findOne({ where: { BedID: BedID } })
+
+        const newBed = {
+            Bed: BedID,
+            Room: RoomID,
+            Floor: FloorID
         }
 
-        await db.patientModel.update({
-            ...patient,
-            FloorID: FloorID,
-            BedID: BedID,
-            RoomID: RoomID,
-            Updateduser: username,
-            Updatetime: new Date(),
-        }, { where: { Uuid: PatientID } }, { transaction: t })
+        const oldBed = {
+            Bed: patient?.BedID,
+            Room: patient?.RoomID,
+            Floor: patient?.FloorID
+        }
 
-        const lastpatientmovement = await db.patientmovementModel.findOne({
-            order: [['Id', 'DESC']],
-            where: {
-                PatientID: patient?.Uuid
-            }
-        });
+        // Hedefte hasta var, Değişen hastanında yatağı var
+        // Hedef yataktaki hastayı, şuanki hastanın yatağına ata
+        // Değişen hastayı şuanki yatağa ata
+        if (validator.isUUID(selectedPatientOldBed) && validator.isUUID(targetBedPatient?.Uuid)) {
 
-        let patientmovementuuid = uuid()
+            DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
+                BedID: newBed.Bed,
+                PatientID: patient?.Uuid,
+                Isoccupied: true
+            })
 
-        await db.patientmovementModel.create({
-            ...req.body,
-            Uuid: patientmovementuuid,
-            OldPatientmovementtype: lastpatientmovement?.Patientmovementtype || 0,
-            Patientmovementtype: 7,
-            NewPatientmovementtype: 7,
-            Createduser: username,
-            Createtime: new Date(),
-            PatientID: patient.Uuid,
-            Movementdate: new Date(),
-            IsDeactive: false,
-            IsTodoneed: false,
-            IsTodocompleted: false,
-            IsComplated: true,
-            Iswaitingactivation: false,
-            Isactive: true
-        }, { transaction: t })
+            DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
+                BedID: oldBed?.Bed,
+                PatientID: targetBedPatient?.Uuid,
+                Isoccupied: true
+            })
+
+            await db.patientModel.update({
+                ...targetBedPatient,
+                FloorID: oldBed.Floor,
+                BedID: oldBed.Bed,
+                RoomID: oldBed.Room,
+                Updateduser: username,
+                Updatetime: new Date(),
+            }, { where: { Uuid: targetBedPatient?.Uuid } }, { transaction: t })
+
+            await db.patientModel.update({
+                ...patient,
+                FloorID: newBed.Floor,
+                BedID: newBed.Bed,
+                RoomID: newBed.Room,
+                Updateduser: username,
+                Updatetime: new Date(),
+            }, { where: { Uuid: PatientID } }, { transaction: t })
+        }
+
+        // Target dont have patient , patient has bed
+        // Hedef yatakta hasta yok 
+        // değişen hastanın şuanki yatağa ata, hastanın eski yatağını boşalt
+        if (validator.isUUID(selectedPatientOldBed) && !validator.isUUID(targetBedPatient?.Uuid)) {
+
+            DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
+                BedID: newBed.Bed,
+                PatientID: patient?.Uuid,
+                Isoccupied: true
+            })
+
+            DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
+                BedID: oldBed?.Bed,
+                Isoccupied: false
+            })
+
+            await db.patientModel.update({
+                ...patient,
+                FloorID: newBed.Floor,
+                BedID: newBed.Bed,
+                RoomID: newBed.Room,
+                Updateduser: username,
+                Updatetime: new Date(),
+            }, { where: { Uuid: PatientID } }, { transaction: t })
+
+        }
+
+        // Target has patient , patient dont have bed
+        // Hastanın Eski yatağı yok, hedefteki yatakta hasta var
+        // hedefteki hastayı boşa al
+        // hedefteki yatağı güncelle, hastayı güncelle
+        if (!validator.isUUID(selectedPatientOldBed) && validator.isUUID(targetBedPatient?.Uuid)) {
+
+            DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
+                BedID: newBed.Bed,
+                PatientID: patient?.Uuid,
+                Isoccupied: true
+            })
+
+            await db.patientModel.update({
+                ...targetBedPatient,
+                FloorID: null,
+                BedID: null,
+                RoomID: null,
+                Updateduser: username,
+                Updatetime: new Date(),
+            }, { where: { Uuid: targetBedPatient?.Uuid } }, { transaction: t })
+
+            await db.patientModel.update({
+                ...patient,
+                FloorID: newBed.Floor,
+                BedID: newBed.Bed,
+                RoomID: newBed.Room,
+                Updateduser: username,
+                Updatetime: new Date(),
+            }, { where: { Uuid: PatientID } }, { transaction: t })
+
+        }
+
+        // Target dont have patient, patient dont have bed
+        // Hastanın yatağı yok
+        // hedef yatakta hasta yok 
+        if (!validator.isUUID(selectedPatientOldBed) && !validator.isUUID(targetBedPatient?.Uuid)) {
+
+            DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
+                BedID: newBed.Bed,
+                PatientID: patient?.Uuid,
+                Isoccupied: true
+            })
+
+            await db.patientModel.update({
+                ...patient,
+                FloorID: newBed.Floor,
+                BedID: newBed.Bed,
+                RoomID: newBed.Room,
+                Updateduser: username,
+                Updatetime: new Date(),
+            }, { where: { Uuid: PatientID } }, { transaction: t })
+        }
 
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
 
@@ -1978,5 +2071,6 @@ module.exports = {
     CompletePatient,
     PatientsRemove,
     DeletePreregisrations,
-    PatientsDead
+    PatientsDead,
+    UpdatePatientDates
 }

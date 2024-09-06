@@ -117,10 +117,22 @@ const messages = {
                 tr: 'Bu işlem için isTransferstocks gerekli',
             }
         },
+        REGISTERDATE_REQUIRED: {
+            code: 'REGISTERDATE_REQUIRED', description: {
+                en: 'The Register date required',
+                tr: 'Bu işlem için kabul edilme tarihi gerekli',
+            }
+        },
         APPROVALDATE_REQUIRED: {
             code: 'APPROVALDATE_REQUIRED', description: {
                 en: 'The Approval date required',
-                tr: 'Bu işlem için kabul edilme tarihi gerekli',
+                tr: 'Bu işlem için giriş Tarihi tarihi gerekli',
+            }
+        },
+        HAPPENSDATE_REQUIRED: {
+            code: 'HAPPENSDATE_REQUIRED', description: {
+                en: 'The happens date required',
+                tr: 'Bu işlem için olur tarihi gerekli',
             }
         },
         STOCKDEFINEID_REQUIRED: {

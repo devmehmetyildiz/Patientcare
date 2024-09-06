@@ -11,10 +11,10 @@
 
 html {
   scroll-behavior: smooth;
-  font-family: 'Lato TR-light', sans-serif !important;
+  font-family: 'Lato TR', sans-serif !important;
 }
 * {
-  font-family: 'Lato TR-light', sans-serif !important;
+  font-family: 'Lato TR', sans-serif !important;
 }
 
 i {
@@ -22,7 +22,7 @@ i {
 }
 
 .ui {
-  font-family: 'Lato TR-light', sans-serif !important;
+  font-family: 'Lato TR', sans-serif !important;
 }
 
 body {

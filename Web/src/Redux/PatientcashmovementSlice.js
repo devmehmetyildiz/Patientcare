@@ -61,7 +61,7 @@ export const GetPatientcashmovement = createAsyncThunk(
 
 export const AddPatientcashmovements = createAsyncThunk(
     'Patientcashmovements/AddPatientcashmovements',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -73,6 +73,7 @@ export const AddPatientcashmovements = createAsyncThunk(
             }));
             clearForm && clearForm('PatientcashmovementsCreate')
             closeModal && closeModal()
+            onSuccess && onSuccess()
             history && (redirectUrl === 'GoBack' ? history.goBack() : history.push(redirectUrl ? redirectUrl : '/Patientcashmovements'));
             return response.data;
         } catch (error) {

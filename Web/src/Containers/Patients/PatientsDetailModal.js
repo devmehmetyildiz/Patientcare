@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import PatientsDetailModal from "../../Pages/Preregistrations/PatientsDetailModal"
+import PatientsDetailModal from "../../Pages/Patients/PatientsDetailModal"
 import { handleDetailmodal, handleSelectedPatient, fillPatientnotification } from '../../Redux/PatientSlice'
 import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
 import { GetStocks } from '../../Redux/StockSlice'

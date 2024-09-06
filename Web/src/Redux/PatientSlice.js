@@ -117,6 +117,33 @@ export const EditPatients = createAsyncThunk(
     }
 );
 
+export const EditPatientdates = createAsyncThunk(
+    'Patients/EditPatientdates',
+    async ({ data, history, redirectUrl, closeModal, clearForm, onSuccess }, { dispatch, getState }) => {
+        console.log('data: ', data);
+        try {
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            await instanse.put(config.services.Business, ROUTES.PATIENT + '/UpdatePatientDates', data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Update'),
+            }));
+            clearForm && clearForm('PatientsUpdate')
+            closeModal && closeModal()
+            onSuccess && onSuccess()
+            history && history.push(redirectUrl ? redirectUrl : '/Patients');
+            return null
+        } catch (error) {
+            console.log('error: ', error);
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const DeletePatients = createAsyncThunk(
     'Patients/DeletePatients',
     async (data, { dispatch, getState }) => {
@@ -338,18 +365,42 @@ export const DeletePatient = createAsyncThunk(
 
 export const Editpatientcase = createAsyncThunk(
     'Patients/Editpatientcase',
-    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
-            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientcase", data);
+            await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientcase", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
                 code: t('Common.Code.Update'),
                 description: t('Redux.Patients.Messages.Update'),
             }));
             history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
-            return response.data;
+            onSuccess && onSuccess()
+            return null;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const Editpatientplace = createAsyncThunk(
+    'Patients/Editpatientplace',
+    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID, onSuccess }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientplace", data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Update'),
+            }));
+            history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
+            onSuccess && onSuccess()
+            return null;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillPatientnotification(errorPayload));
@@ -365,28 +416,6 @@ export const Editpatientscase = createAsyncThunk(
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientscase", data);
-            dispatch(fillPatientnotification({
-                type: 'Success',
-                code: t('Common.Code.Update'),
-                description: t('Redux.Patients.Messages.Update'),
-            }));
-            history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
-export const Editpatientplace = createAsyncThunk(
-    'Patients/Editpatientplace',
-    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
-        try {
-            const state = getState()
-            const t = state?.Profile?.i18n?.t || null
-            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/UpdatePatientplace", data);
             dispatch(fillPatientnotification({
                 type: 'Success',
                 code: t('Common.Code.Update'),
@@ -468,32 +497,6 @@ export const UpdatePatientsupportplans = createAsyncThunk(
     }
 );
 
-export const EditPatientstocks = createAsyncThunk(
-    'Patients/EditPatientstocks',
-    async ({ data, history, redirectUrl, closeModal, clearForm, }, { dispatch, getState }) => {
-        try {
-            const state = getState()
-            const t = state?.Profile?.i18n?.t || null
-            const response = await instanse.put(config.services.Business, ROUTES.PATIENT + "/Preregistrations/Editpatientstocks", data);
-            dispatch(fillPatientnotification({
-                type: 'Success',
-                code: t('Common.Code.Update'),
-                description: t('Redux.Patients.Messages.Update'),
-            }));
-            dispatch(fillPatientnotification({
-                type: 'Clear',
-                code: 'PatientsUpdate',
-                description: '',
-            }));
-            history && history.push(redirectUrl ? redirectUrl : '/Patients')
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPatientnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
 
 export const PatientsSlice = createSlice({
     name: 'Patients',
@@ -515,7 +518,6 @@ export const PatientsSlice = createSlice({
         isCompletemodalopen: false,
         isCheckdeactive: false,
         isApprovedeactive: false,
-        isPlacemodalopen: false,
     },
     reducers: {
         handleSelectedPatient: (state, action) => {
@@ -550,9 +552,6 @@ export const PatientsSlice = createSlice({
         },
         handleDetailmodal: (state, action) => {
             state.isDetailmodalopen = action.payload
-        },
-        handlePlacemodal: (state, action) => {
-            state.isPlacemodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -628,6 +627,16 @@ export const PatientsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(EditPatients.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditPatientdates.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(EditPatientdates.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(EditPatientdates.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
@@ -730,17 +739,6 @@ export const PatientsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(EditPatientstocks.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(EditPatientstocks.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.list = action.payload;
-            })
-            .addCase(EditPatientstocks.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errMsg = action.error.message;
-            })
             .addCase(Editpatientcase.pending, (state) => {
                 state.isLoading = true;
             })
@@ -751,6 +749,16 @@ export const PatientsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(Editpatientplace.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(Editpatientplace.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(Editpatientplace.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(Editpatientscase.pending, (state) => {
                 state.isLoading = true;
             })
@@ -758,17 +766,6 @@ export const PatientsSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(Editpatientscase.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errMsg = action.error.message;
-            })
-            .addCase(Editpatientplace.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(Editpatientplace.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.selected_record = action.payload
-            })
-            .addCase(Editpatientplace.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
@@ -811,7 +808,6 @@ export const {
     fillPatientnotification,
     removePatientnotification,
     setPatient,
-    handlePlacemodal,
     handleDeletemodal,
     handleApprovemodal,
     handleCheckmodal,

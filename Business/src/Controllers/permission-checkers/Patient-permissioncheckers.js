@@ -19,6 +19,10 @@ async function UpdatePatient(req, res, next) {
     PermissionHandler(req, next, 'patientupdate')
 }
 
+async function UpdatePatientDates(req, res, next) {
+    PermissionHandler(req, next, 'patientupdate')
+}
+
 async function CheckPatient(req, res, next) {
     PermissionHandler(req, next, 'patientupdate')
 }
@@ -99,5 +103,6 @@ module.exports = {
     GetPatientByPlace,
     PatientsRemove,
     PatientsDead,
-    DeletePreregisrations
+    DeletePreregisrations,
+    UpdatePatientDates
 }

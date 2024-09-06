@@ -61,7 +61,7 @@ export const GetPatientcashregister = createAsyncThunk(
 
 export const AddPatientcashregisters = createAsyncThunk(
     'Patientcashregisters/AddPatientcashregisters',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -74,6 +74,7 @@ export const AddPatientcashregisters = createAsyncThunk(
             clearForm && clearForm('PatientcashregistersCreate')
             closeModal && closeModal()
             history && (redirectUrl === 'GoBack' ? history.goBack() : history.push(redirectUrl ? redirectUrl : '/Patientcashregisters'));
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

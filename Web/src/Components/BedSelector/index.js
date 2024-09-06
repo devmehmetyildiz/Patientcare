@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Card, Icon, Image, Label, Loader, Modal, Popup, Segment, Tab } from 'semantic-ui-react'
-import Literals from './Literals'
+import React, { useState } from 'react'
+import { Button, Card, Icon, Modal, Label, Popup, Segment, Tab } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { GetPatientByPlace } from '../../Redux/PatientSlice'
 import validator from '../../Utils/Validator'
@@ -12,7 +11,9 @@ function BedSelector({
     Profile,
     setSelectedBed,
     fillNotification,
-    selectedBed
+    selectedBed,
+    Patients,
+    Patientdefines
 }) {
     const [open, setOpen] = useState(false)
     const [record, setRecord] = useState(selectedBed);
@@ -23,9 +24,11 @@ function BedSelector({
     const getViewbase = (list) => {
         return (list || []).length > 0 ?
             <div key={Math.random()} className='
-                grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8  
+                grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8   overflow-y-auto max-h-[60vh]
                 '>
                 {list.map((option, index) => {
+                    const patient = (Patients?.list || []).find(u => u.BedID === option?.BedID)
+                    const patientdefine = (Patientdefines?.list || []).find(u => u.Uuid === patient?.PatientdefineID)
                     return <div
                         key={index}
                         className={`!cursor-pointer !hover:shadow-lg`}
@@ -42,18 +45,28 @@ function BedSelector({
 
                         }}
                     >
-                        <Segment>
+                        <Segment className='!p-1'>
+                            <div className='mb-1 flex flex-row justify-between items-start max-w-[150px]'>
+                                <Icon name='mail' />
+                                {option?.Isoccupied
+                                    ? <Popup
+                                        on={'hover'}
+                                        content={`${patientdefine?.Firstname} ${patientdefine?.Lastname}  - ${patientdefine?.CountryID}`}
+                                        trigger={<div className=' overflow-hidden whitespace-nowrap text-ellipsis'>{`${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`}</div>}
+                                    />
+                                    : null
+                                }
+                            </div>
                             <Label
                                 size='large'
                                 color={option?.BedID === record ? 'blue' : option?.Isoccupied ? 'green' : 'red'}
                                 className='!flex !flex-col !justify-start !items-start'
                             >
-                                <Icon name='mail' />
                                 {option?.Bedname}
-                                <Label.Detail>
+                                <Label.Detail className='!ml-0'>
                                     {option?.Floorname}
                                 </Label.Detail>
-                                <Label.Detail >
+                                <Label.Detail className='!ml-0'>
                                     {option?.Roomname}
                                 </Label.Detail>
                             </Label>
@@ -116,11 +129,12 @@ function BedSelector({
                 onClose={() => setOpen(false)}
                 onOpen={() => setOpen(true)}
                 open={open}
+                centered={false}
                 size='large'
             >
                 <Modal.Header>{t('Components.BedSelector.Page.Header')}</Modal.Header>
                 <Modal.Content image>
-                    <div className='w-full flex flex-col justify-center items-center'>
+                    <div className='w-full flex flex-col justify-center items-center gap-2'>
                         <div className='w-full flex justify-end items-end'>
                             <Card
                                 link

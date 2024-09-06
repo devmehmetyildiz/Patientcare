@@ -21,7 +21,7 @@ export default function PatientsDetailProfile(props) {
   const Happensdate = patient?.Happensdate ? Formatdate(patient?.Happensdate, true) : t('Common.NoDataFound')
 
   return (
-    <div className='bg-white shadow-lg w-full  rounded-lg flex flex-col justify-center items-center  p-4 m-4 mt-0 min-w-[250px]'>
+    <div className='relative bg-white shadow-lg w-full  rounded-lg flex flex-col justify-center items-center  p-4 m-4 mt-0 min-w-[250px]'>
       {files
         ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${files?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
         : <Header className='!m-0 !p-0' as='h2' icon textAlign='center'><Icon name='users' circular /></Header>
@@ -37,6 +37,12 @@ export default function PatientsDetailProfile(props) {
           onClick={() => { history.push(`/Patientdefines/${patientdefine?.Uuid}/edit`, { redirectUrl: "/Patients/" + patient?.Uuid }) }}>
           {t('Pages.Patients.PatientsDetail.PatientDetailProfile.DefineUpdate')}
         </Button>
+      </div>
+      <div
+        onClick={() => { history.push(`/Patients`) }}
+        className='absolute left-0 top-0 p-2 rotate-180 cursor-pointer'
+      >
+        <Icon className='!text-[#2355a0]' size='large' name='sign-out alternate' />
       </div>
     </div>
   )

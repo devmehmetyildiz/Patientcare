@@ -57,7 +57,6 @@ export default function PreregistrationsComplete(props) {
     Isoninstitution
   } = selected_record
 
-  const [fileDownloading, setfileDownloading] = useState(false)
   const [selectedcase, setSelectedcase] = useState(CaseID)
   const [selectedregisterdate, setSelectedregisterdate] = useState(Formatdate(Registerdate))
   const [selectedinfo, setSelectedinfo] = useState(null)
@@ -80,8 +79,7 @@ export default function PreregistrationsComplete(props) {
     Usagetypes.isLoading ||
     Floors.isLoading ||
     Rooms.isLoading ||
-    Beds.isLoading ||
-    fileDownloading
+    Beds.isLoading 
 
   useEffect(() => {
     if (isCompletemodalopen && !Users.isLoading) {
@@ -209,6 +207,8 @@ export default function PreregistrationsComplete(props) {
                   selectedBed={selectedbed}
                   setSelectedBed={setSelectedbed}
                   fillNotification={fillPatientnotification}
+                  Patients={Patients}
+                  Patientdefines={Patientdefines}
                 />
               </div>
               <Form.Group widths={'equal'}>

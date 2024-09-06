@@ -1,4 +1,3 @@
-import cogoToast from "@successtar/cogo-toast";
 import { toast } from 'react-toastify';
 import validator from "./Validator";
 

@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Checkbox, Grid, GridColumn, Icon, Loader, Tab } from 'semantic-ui-react'
+import { Breadcrumb, Button, Checkbox, Feed, Grid, GridColumn, Icon, List, Loader, Popup, Tab } from 'semantic-ui-react'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
 import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT, GENDER_OPTION_MEN, ROUTES, getInitialconfig } from '../../Utils/Constants'
 import config from '../../Config'
 import Formatdate from '../../Utils/Formatdate'
 import PatientsLeftModal from '../../Containers/Patients/PatientsLeftModal'
 import PatientsDeadModal from '../../Containers/Patients/PatientsDeadModal'
-
+import PatientsDetailModal from '../../Containers/Patients/PatientsDetailModal'
+import PatientsEntercashModal from '../../Containers/Patients/PatientsEntercashModal'
+import PatientsEditstatus from '../../Containers/Patients/PatientsEditstatusModal'
+import PatientsEditcaseModal from '../../Containers/Patients/PatientsEditcaseModal'
+import PatientsEditplaceModal from '../../Containers/Patients/PatientsEditplaceModal'
 
 export default function Patients(props) {
 
@@ -168,12 +172,6 @@ export default function Patients(props) {
                   </Link>
                 </Breadcrumb>
               </GridColumn>
-              <Settings
-                Profile={Profile}
-                Pagecreateheader={t('Pages.Patients.Page.CreateHeader')}
-                Pagecreatelink={"/Patients/Create"}
-                Showcreatebutton
-              />
             </Grid>
           </Headerwrapper>
           <Pagedivider />
@@ -189,6 +187,8 @@ export default function Patients(props) {
                       Profile={Profile}
                       list={passList}
                       Columns={Columns}
+                      handleSelectedPatient={handleSelectedPatient}
+                      handleDetailmodal={handleDetailmodal}
                     />
                   }
                 },
@@ -223,16 +223,20 @@ export default function Patients(props) {
             />
           </Contentwrapper>
         </Pagewrapper>
+        <PatientsDetailModal />
       </React.Fragment >
   )
 }
 
-
-function PassPatientList({ Profile, Columns, list }) {
+function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handleDetailmodal }) {
 
   const [selectedRecords, setSelectedRecords] = useState([])
   const [openMulti, setOpenMulti] = useState(false)
   const [openplace, setOpenplace] = useState(false)
+  const [openeditplace, setOpeneditplace] = useState(false)
+  const [openeditcase, setOpeneditcase] = useState(false)
+  const [openentercash, setOpenentercash] = useState(false)
+  const [openstatus, setOpenstatus] = useState(false)
   const [opendead, setOpendead] = useState(false)
   const [openleft, setOpenleft] = useState(false)
   const [record, setRecord] = useState(null)
@@ -251,9 +255,7 @@ function PassPatientList({ Profile, Columns, list }) {
   const columns = [
     { Header: t('Common.Column.Empty'), accessor: 'select', disableProps: true, hidden: !openMulti },
     ...filteredColumns.filter(u => u.key ? u.key === 'pass' : true),
-    { Header: t('Pages.Patients.Column.changeplace'), accessor: 'changeplace', disableProps: true, hidden: openMulti },
-    { Header: t('Pages.Patients.Column.deadpatient'), accessor: 'deadpatient', disableProps: true, hidden: openMulti },
-    { Header: t('Pages.Patients.Column.leftpatient'), accessor: 'leftpatient', disableProps: true, hidden: openMulti },
+    { Header: t('Common.Column.process'), accessor: 'process', disableProps: true, hidden: openMulti },
     { Header: t('Common.Column.detail'), accessor: 'actions', disableProps: true, hidden: openMulti }
   ].filter(u => !u.hidden).map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
@@ -270,33 +272,98 @@ function PassPatientList({ Profile, Columns, list }) {
         className='flex justify-center items-center'>
         <Checkbox checked={selectedRecords.includes(item?.Uuid)} />
       </div>,
-      deadpatient: <div
-        className='cursor-pointer'
-        onClick={() => {
-          setRecord(item)
-          setOpendead(true)
-        }}
-      >
-        <Icon size='large' color='black' className='row-edit' name='tag' />
-      </div>,
-      leftpatient: <div
-        className='cursor-pointer'
-        onClick={() => {
-          setRecord(item)
-          setOpenleft(true)
-        }}
-      >
-        <Icon size='large' color='blue' className='row-edit' name='external share' />
-      </div>,
-      changeplace: <div
-        className='cursor-pointer'
-        onClick={() => {
-          setRecord(item)
-          setOpenplace(true)
-        }}
-      >
-        <Icon size='large' color='green' className='row-edit' name='exchange' />
-      </div>,
+      process: <Popup
+        content={
+          <List>
+            <List.Item>
+              <Button
+                size='small'
+                onClick={() => {
+                  setRecord(item)
+                  setOpeneditplace(true)
+                }}
+                fluid color='red'>
+                <Icon name='exchange' /> {t('Pages.Patients.Column.Editplace')}
+              </Button>
+            </List.Item>
+            <List.Item>
+              <Button
+                size='small'
+                onClick={() => {
+                  setRecord(item)
+                  setOpeneditcase(true)
+                }}
+                fluid color='teal'>
+                <Icon name='exchange' /> {t('Pages.Patients.Column.Editcase')}
+              </Button>
+            </List.Item>
+            <List.Item>
+              <Button
+                size='small'
+                onClick={() => {
+                  setRecord(item)
+                  setOpenstatus(true)
+                }}
+                fluid color='google plus'>
+                <Icon name='exchange' /> {t('Pages.Patients.Column.Editstatus')}
+              </Button>
+            </List.Item>
+            <List.Item>
+              <Button
+                size='small'
+                onClick={() => {
+                  setRecord(item)
+                  setOpenentercash(true)
+                }}
+                fluid color='instagram'>
+                <Icon name='exchange' /> {t('Pages.Patients.Column.Insertcash')}
+              </Button>
+            </List.Item>
+            <List.Item>
+              <Button
+                size='small'
+                onClick={() => {
+                  setRecord(item)
+                  setOpenplace(true)
+                }}
+                fluid color='green'>
+                <Icon name='exchange' /> {t('Pages.Patients.Column.changeplace')}
+              </Button>
+            </List.Item>
+            <List.Item>
+              <Button
+                size='small'
+                onClick={() => {
+                  setRecord(item)
+                  setOpendead(true)
+                }}
+                fluid color='black'>
+                <Icon name='tag' /> {t('Pages.Patients.Column.deadpatient')}
+              </Button>
+            </List.Item>
+            <List.Item>
+              <Button
+                size='small'
+                onClick={() => {
+                  setRecord(item)
+                  setOpenleft(true)
+                }}
+                fluid color='blue'>
+                <Icon name='external share' /> {t('Pages.Patients.Column.leftpatient')}
+              </Button>
+            </List.Item>
+          </List >
+        }
+        on='click'
+        position='bottom right'
+        trigger={<div className='cursor-pointer' >
+          <Icon size='large' color='purple' className='row-edit' name='random' />
+        </div>}
+      />,
+      detail: <Icon link size='large' color='grey' name='history' onClick={() => {
+        handleSelectedPatient(item)
+        handleDetailmodal(true)
+      }} />,
       actions: <Link key={item?.Uuid} to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
     }
   })
@@ -335,6 +402,34 @@ function PassPatientList({ Profile, Columns, list }) {
       <PatientsDeadModal
         open={opendead}
         setOpen={setOpendead}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PatientsEntercashModal
+        isPatientspage
+        open={openentercash}
+        setOpen={setOpenentercash}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PatientsEditstatus
+        isPatientspage
+        open={openstatus}
+        setOpen={setOpenstatus}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PatientsEditcaseModal
+        isPatientspage
+        open={openeditcase}
+        setOpen={setOpeneditcase}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PatientsEditplaceModal
+        isPatientspage
+        open={openeditplace}
+        setOpen={setOpeneditplace}
         record={record}
         setRecord={setRecord}
       />
