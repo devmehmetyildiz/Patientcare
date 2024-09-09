@@ -1384,20 +1384,23 @@ async function UpdatePatientplace(req, res, next) {
         PatientID,
         FloorID,
         RoomID,
-        BedID
+        BedID,
+        Willempty
     } = req.body
 
     if (!validator.isUUID(PatientID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
     }
-    if (!validator.isUUID(FloorID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FLOORID_REQUIRED)
-    }
-    if (!validator.isUUID(RoomID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROOMID_REQUIRED)
-    }
-    if (!validator.isUUID(BedID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
+    if (!Willempty) {
+        if (!validator.isUUID(FloorID)) {
+            validationErrors.push(messages.VALIDATION_ERROR.FLOORID_REQUIRED)
+        }
+        if (!validator.isUUID(RoomID)) {
+            validationErrors.push(messages.VALIDATION_ERROR.ROOMID_REQUIRED)
+        }
+        if (!validator.isUUID(BedID)) {
+            validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
+        }
     }
 
     if (validationErrors.length > 0) {
@@ -1418,7 +1421,7 @@ async function UpdatePatientplace(req, res, next) {
         }
 
         const selectedPatientOldBed = patient?.BedID
-        const targetBedPatient = await db.patientModel.findOne({ where: { BedID: BedID } })
+        const targetBedPatient = await db.patientModel.findOne({ where: { BedID: BedID || '' } })
 
         const newBed = {
             Bed: BedID,
@@ -1432,53 +1435,7 @@ async function UpdatePatientplace(req, res, next) {
             Floor: patient?.FloorID
         }
 
-        // Hedefte hasta var, Değişen hastanında yatağı var
-        // Hedef yataktaki hastayı, şuanki hastanın yatağına ata
-        // Değişen hastayı şuanki yatağa ata
-        if (validator.isUUID(selectedPatientOldBed) && validator.isUUID(targetBedPatient?.Uuid)) {
-
-            DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
-                BedID: newBed.Bed,
-                PatientID: patient?.Uuid,
-                Isoccupied: true
-            })
-
-            DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
-                BedID: oldBed?.Bed,
-                PatientID: targetBedPatient?.Uuid,
-                Isoccupied: true
-            })
-
-            await db.patientModel.update({
-                ...targetBedPatient,
-                FloorID: oldBed.Floor,
-                BedID: oldBed.Bed,
-                RoomID: oldBed.Room,
-                Updateduser: username,
-                Updatetime: new Date(),
-            }, { where: { Uuid: targetBedPatient?.Uuid } }, { transaction: t })
-
-            await db.patientModel.update({
-                ...patient,
-                FloorID: newBed.Floor,
-                BedID: newBed.Bed,
-                RoomID: newBed.Room,
-                Updateduser: username,
-                Updatetime: new Date(),
-            }, { where: { Uuid: PatientID } }, { transaction: t })
-        }
-
-        // Target dont have patient , patient has bed
-        // Hedef yatakta hasta yok 
-        // değişen hastanın şuanki yatağa ata, hastanın eski yatağını boşalt
-        if (validator.isUUID(selectedPatientOldBed) && !validator.isUUID(targetBedPatient?.Uuid)) {
-
-            DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
-                BedID: newBed.Bed,
-                PatientID: patient?.Uuid,
-                Isoccupied: true
-            })
-
+        if (Willempty) {
             DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
                 BedID: oldBed?.Bed,
                 Isoccupied: false
@@ -1486,67 +1443,130 @@ async function UpdatePatientplace(req, res, next) {
 
             await db.patientModel.update({
                 ...patient,
-                FloorID: newBed.Floor,
-                BedID: newBed.Bed,
-                RoomID: newBed.Room,
-                Updateduser: username,
-                Updatetime: new Date(),
-            }, { where: { Uuid: PatientID } }, { transaction: t })
-
-        }
-
-        // Target has patient , patient dont have bed
-        // Hastanın Eski yatağı yok, hedefteki yatakta hasta var
-        // hedefteki hastayı boşa al
-        // hedefteki yatağı güncelle, hastayı güncelle
-        if (!validator.isUUID(selectedPatientOldBed) && validator.isUUID(targetBedPatient?.Uuid)) {
-
-            DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
-                BedID: newBed.Bed,
-                PatientID: patient?.Uuid,
-                Isoccupied: true
-            })
-
-            await db.patientModel.update({
-                ...targetBedPatient,
                 FloorID: null,
                 BedID: null,
                 RoomID: null,
                 Updateduser: username,
                 Updatetime: new Date(),
-            }, { where: { Uuid: targetBedPatient?.Uuid } }, { transaction: t })
-
-            await db.patientModel.update({
-                ...patient,
-                FloorID: newBed.Floor,
-                BedID: newBed.Bed,
-                RoomID: newBed.Room,
-                Updateduser: username,
-                Updatetime: new Date(),
             }, { where: { Uuid: PatientID } }, { transaction: t })
+        } else {
+            // Hedefte hasta var, Değişen hastanında yatağı var
+            // Hedef yataktaki hastayı, şuanki hastanın yatağına ata
+            // Değişen hastayı şuanki yatağa ata
+            if (validator.isUUID(selectedPatientOldBed) && validator.isUUID(targetBedPatient?.Uuid)) {
 
+                DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
+                    BedID: newBed.Bed,
+                    PatientID: patient?.Uuid,
+                    Isoccupied: true
+                })
+
+                DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
+                    BedID: oldBed?.Bed,
+                    PatientID: targetBedPatient?.Uuid,
+                    Isoccupied: true
+                })
+
+                await db.patientModel.update({
+                    ...targetBedPatient,
+                    FloorID: oldBed.Floor,
+                    BedID: oldBed.Bed,
+                    RoomID: oldBed.Room,
+                    Updateduser: username,
+                    Updatetime: new Date(),
+                }, { where: { Uuid: targetBedPatient?.Uuid } }, { transaction: t })
+
+                await db.patientModel.update({
+                    ...patient,
+                    FloorID: newBed.Floor,
+                    BedID: newBed.Bed,
+                    RoomID: newBed.Room,
+                    Updateduser: username,
+                    Updatetime: new Date(),
+                }, { where: { Uuid: PatientID } }, { transaction: t })
+            }
+
+            // Target dont have patient , patient has bed
+            // Hedef yatakta hasta yok 
+            // değişen hastanın şuanki yatağa ata, hastanın eski yatağını boşalt
+            if (validator.isUUID(selectedPatientOldBed) && !validator.isUUID(targetBedPatient?.Uuid)) {
+
+                DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
+                    BedID: newBed.Bed,
+                    PatientID: patient?.Uuid,
+                    Isoccupied: true
+                })
+
+                DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
+                    BedID: oldBed?.Bed,
+                    Isoccupied: false
+                })
+
+                await db.patientModel.update({
+                    ...patient,
+                    FloorID: newBed.Floor,
+                    BedID: newBed.Bed,
+                    RoomID: newBed.Room,
+                    Updateduser: username,
+                    Updatetime: new Date(),
+                }, { where: { Uuid: PatientID } }, { transaction: t })
+
+            }
+
+            // Target has patient , patient dont have bed
+            // Hastanın Eski yatağı yok, hedefteki yatakta hasta var
+            // hedefteki hastayı boşa al
+            // hedefteki yatağı güncelle, hastayı güncelle
+            if (!validator.isUUID(selectedPatientOldBed) && validator.isUUID(targetBedPatient?.Uuid)) {
+
+                DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
+                    BedID: newBed.Bed,
+                    PatientID: patient?.Uuid,
+                    Isoccupied: true
+                })
+
+                await db.patientModel.update({
+                    ...targetBedPatient,
+                    FloorID: null,
+                    BedID: null,
+                    RoomID: null,
+                    Updateduser: username,
+                    Updatetime: new Date(),
+                }, { where: { Uuid: targetBedPatient?.Uuid } }, { transaction: t })
+
+                await db.patientModel.update({
+                    ...patient,
+                    FloorID: newBed.Floor,
+                    BedID: newBed.Bed,
+                    RoomID: newBed.Room,
+                    Updateduser: username,
+                    Updatetime: new Date(),
+                }, { where: { Uuid: PatientID } }, { transaction: t })
+
+            }
+
+            // Target dont have patient, patient dont have bed
+            // Hastanın yatağı yok
+            // hedef yatakta hasta yok 
+            if (!validator.isUUID(selectedPatientOldBed) && !validator.isUUID(targetBedPatient?.Uuid)) {
+
+                DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
+                    BedID: newBed.Bed,
+                    PatientID: patient?.Uuid,
+                    Isoccupied: true
+                })
+
+                await db.patientModel.update({
+                    ...patient,
+                    FloorID: newBed.Floor,
+                    BedID: newBed.Bed,
+                    RoomID: newBed.Room,
+                    Updateduser: username,
+                    Updatetime: new Date(),
+                }, { where: { Uuid: PatientID } }, { transaction: t })
+            }
         }
 
-        // Target dont have patient, patient dont have bed
-        // Hastanın yatağı yok
-        // hedef yatakta hasta yok 
-        if (!validator.isUUID(selectedPatientOldBed) && !validator.isUUID(targetBedPatient?.Uuid)) {
-
-            DoPut(config.services.Setting, "Beds/ChangeBedOccupied", {
-                BedID: newBed.Bed,
-                PatientID: patient?.Uuid,
-                Isoccupied: true
-            })
-
-            await db.patientModel.update({
-                ...patient,
-                FloorID: newBed.Floor,
-                BedID: newBed.Bed,
-                RoomID: newBed.Room,
-                Updateduser: username,
-                Updatetime: new Date(),
-            }, { where: { Uuid: PatientID } }, { transaction: t })
-        }
 
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
 

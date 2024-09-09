@@ -62,7 +62,7 @@ export default function PatientsDetailCard(props) {
               <Popup
                 on={'hover'}
                 content={patientplace}
-                trigger={<span className='overflow-hidden block text-ellipsis whitespace-nowrap'>{patientplace}</span>}
+                trigger={<span className='cursor-pointer overflow-hidden block text-ellipsis whitespace-nowrap'>{patientplace}</span>}
               />
             </div>
           </div>

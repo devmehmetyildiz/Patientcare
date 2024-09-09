@@ -20,23 +20,15 @@ export default class StocksCreate extends Component {
   }
 
   render() {
-    const { Stocks, Warehouses, Stocktypes, Stocktypegroups, Stockdefines, Profile, history, closeModal } = this.props
+    const { Stocks, Warehouses, Stocktypes, Stockdefines, Profile, history, closeModal } = this.props
 
     const selectedstockdefineId = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
-    const selectedwarehouseId = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
     const stockdefine = (Stockdefines.list || []).find(item => item.Uuid === selectedstockdefineId)
     const selectedstocktypeId = stockdefine?.StocktypeID
     const stocktype = (Stocktypes.list || []).find(item => item.Uuid === selectedstocktypeId)
     const Issktneeded = stocktype?.Issktneed
 
-    const warehousestocktypes = ((Warehouses.list || [])
-      .find(u => u?.Uuid === selectedwarehouseId)?.Stocktypegroups || '')
-      .split(',')
-      .filter(u => validator.isUUID(u))
-      .flatMap(groupId => ((Stocktypegroups.list || []).find(group => group?.Uuid === groupId)?.Stocktypes || '').split(',').filter(u => validator.isUUID(u)) || [])
-      .filter(u => validator.isUUID(u))
-
-    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && (warehousestocktypes || []).includes(u.StocktypeID)).map(item => {
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive).map(item => {
       return { key: item.Uuid, text: item.Name, value: item.Uuid }
     })
 
@@ -67,7 +59,7 @@ export default class StocksCreate extends Component {
               </Form.Group>
               <Form.Group widths='equal'>
                 {Issktneeded ? <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' /> : null}
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' min={0} max={9999}/>
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" step="0.01" type='number' min={0} max={9999} />
               </Form.Group>
               <Form.Group widths='equal'>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />

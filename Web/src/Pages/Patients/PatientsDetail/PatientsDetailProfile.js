@@ -39,7 +39,7 @@ export default function PatientsDetailProfile(props) {
         </Button>
       </div>
       <div
-        onClick={() => { history.push(`/Patients`) }}
+        onClick={() => { history.length > 1 ? history.goBack() : history.push(`/Patients`) }}
         className='absolute left-0 top-0 p-2 rotate-180 cursor-pointer'
       >
         <Icon className='!text-[#2355a0]' size='large' name='sign-out alternate' />

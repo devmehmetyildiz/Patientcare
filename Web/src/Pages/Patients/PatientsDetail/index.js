@@ -16,6 +16,8 @@ import PatientsEntercashModal from '../../../Containers/Patients/PatientsEnterca
 import PatientsEditstatus from '../../../Containers/Patients/PatientsEditstatusModal'
 import PatientsEditcaseModal from '../../../Containers/Patients/PatientsEditcaseModal'
 import PatientsEditplaceModal from '../../../Containers/Patients/PatientsEditplaceModal'
+import PatientsInsertstockModal from '../../../Containers/Patients/PatientsInsertstockModal'
+import PatientsReducestockModal from '../../../Containers/Patients/PatientsReducestockModal'
 
 export default function Patientsdetail(props) {
 
@@ -23,7 +25,7 @@ export default function Patientsdetail(props) {
         GetPatient, handleSelectedPatient, fillPatientnotification, GetPatienttypes, GetCostumertypes,
         GetPatientdefines, GetFiles, GetUsagetypes, GetCases, GetDepartments, GetFloors, GetRooms, GetBeds,
         GetPatientcashmovements, GetPatientcashregisters, GetStocks, GetStockdefines, GetStockmovements, GetUsers,
-        GetStocktypes, GetStocktypegroups, GetUnits
+        GetStocktypes, GetStocktypegroups, GetUnits, AddStockmovements
     } = props
 
     const { Patients, Patientdefines, Files, Cases, Departments, Usagetypes, Floors, Beds, Rooms,
@@ -31,6 +33,8 @@ export default function Patientsdetail(props) {
         Stockmovements, Users, Stocktypes, Stocktypegroups, Units,
         PatientID, Profile } = props
 
+    const [openreducestock, setOpenreducestock] = useState(false)
+    const [openinsertstock, setOpeninsertstock] = useState(false)
     const [openeditplace, setOpeneditplace] = useState(false)
     const [openeditcase, setOpeneditcase] = useState(false)
     const [openentercash, setOpenentercash] = useState(false)
@@ -149,13 +153,22 @@ export default function Patientsdetail(props) {
                                 <Dropdown.Menu>
                                     <Dropdown.Header icon='tags' content={t('Pages.Patients.PatientsDetail.Button.Processtag')} />
                                     <Dropdown.Divider />
-                                    <Dropdown.Item onClick={() => { alert("Important") }}>
+                                    <Dropdown.Item
+                                        onClick={() => {
+                                            setRecord(patient)
+                                            setOpeninsertstock(true)
+                                        }}>
                                         <Icon name='attention' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Insertstock')}
                                     </Dropdown.Item>
-                                    <Dropdown.Item>
+                                    <Dropdown.Item
+                                        onClick={() => {
+                                            setRecord(patient)
+                                            setOpenreducestock(true)
+                                        }}
+                                    >
                                         <Icon name='comment' className='right floated' />
-                                        {t('Pages.Patients.PatientsDetail.Button.Removestock')}
+                                        {t('Pages.Patients.PatientsDetail.Button.Reducestock')}
                                     </Dropdown.Item>
                                     <Dropdown.Item
                                         onClick={() => {
@@ -262,6 +275,9 @@ export default function Patientsdetail(props) {
                             Stockdefines={Stockdefines}
                             Units={Units}
                             Stockmovements={Stockmovements}
+                            AddStockmovements={AddStockmovements}
+                            GetPatient={GetPatient}
+                            fillPatientnotification={fillPatientnotification}
                             Profile={Profile}
                         />
                     </div>
@@ -304,6 +320,21 @@ export default function Patientsdetail(props) {
                 isPatientdetailpage
                 open={openeditplace}
                 setOpen={setOpeneditplace}
+                record={record}
+                setRecord={setRecord}
+                canTransfer
+            />
+            <PatientsInsertstockModal
+                isPatientdetailpage
+                open={openinsertstock}
+                setOpen={setOpeninsertstock}
+                record={record}
+                setRecord={setRecord}
+            />
+            <PatientsReducestockModal
+                isPatientdetailpage
+                open={openreducestock}
+                setOpen={setOpenreducestock}
                 record={record}
                 setRecord={setRecord}
             />

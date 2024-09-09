@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom'
 import { Icon, Loader, Breadcrumb, Grid, GridColumn, Label } from 'semantic-ui-react'
 import Literals from './Literals'
 import CompanycashmovementsDelete from '../../Containers/Companycashmovements/CompanycashmovementsDelete'
-import { CASHYPES, getInitialconfig } from '../../Utils/Constants'
+import { CASHYPES } from '../../Utils/Constants'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 
 export default class Companycashmovements extends Component {
 
@@ -39,7 +40,7 @@ export default class Companycashmovements extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "companycashmovement"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Companycashmovements.list || []).map(item => {
       return {

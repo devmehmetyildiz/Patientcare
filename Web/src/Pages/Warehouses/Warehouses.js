@@ -5,7 +5,7 @@ import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import WarehousesList from './WarehousesList'
 import WarehousesDelete from '../../Containers/Warehouses/WarehousesDelete'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 
 export default class Warehouses extends Component {
 
@@ -34,7 +34,6 @@ export default class Warehouses extends Component {
       { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
-      { Header: Literals.Columns.Stocktypegroups[Profile.Language], accessor: row => this.stocktypegroupsCellhandler(row?.Stocktypegroups), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info', },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
@@ -45,7 +44,7 @@ export default class Warehouses extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "warehouse"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Warehouses.list || []).filter(u => u.Isactive).map(item => {
       return {
@@ -112,15 +111,6 @@ export default class Warehouses extends Component {
   boolCellhandler = (value) => {
     const { Profile } = this.props
     return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
-  }
-
-  stocktypegroupsCellhandler = (value) => {
-    const { Stocktypegroups } = this.props
-    if (Stocktypegroups.isLoading) {
-      return <Loader size='small' active inline='centered' ></Loader>
-    } else {
-      return (value || '').split(',').map(type => (Stocktypegroups.list || []).find(u => u.Uuid === type)?.Name).join(',')
-    }
   }
 
   expandCellhandler = (col) => {

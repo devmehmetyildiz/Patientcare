@@ -4,7 +4,7 @@ import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import UnitsDelete from '../../Containers/Units/UnitsDelete'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 export default class Units extends Component {
 
   constructor(props) {
@@ -51,7 +51,7 @@ export default class Units extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "unit"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Units.list || []).map(item => {
       return {

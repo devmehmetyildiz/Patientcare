@@ -20,6 +20,10 @@ const Literals = {
             tr: 'Tekil ID',
             en: 'Unique ID'
         },
+        Parent: {
+            tr: 'Bağlı Olduğu Konum',
+            en: 'Attacted To'
+        },
         Stockdefine: {
             tr: 'Ürün Adı',
             en: 'Stock Name'

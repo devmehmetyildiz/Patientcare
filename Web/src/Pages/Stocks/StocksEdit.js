@@ -19,7 +19,6 @@ export default class StocksEdit extends Component {
     }
   }
 
-
   componentDidMount() {
     const { StockID, GetStock, GetWarehouses, match, history, GetStockdefines, GetStocktypes, GetStocktypegroups } = this.props
     let Id = StockID || match.params.StockID
@@ -33,7 +32,6 @@ export default class StocksEdit extends Component {
       history.push("/Stocks")
     }
   }
-
 
   componentDidUpdate() {
     const { Stockdefines, Stocks, Warehouses, Stocktypes, Stocktypegroups } = this.props
@@ -53,20 +51,12 @@ export default class StocksEdit extends Component {
     const { Stocks, Warehouses, Stockdefines, Profile, history, Stocktypes, Stocktypegroups } = this.props
 
     const selectedstockdefineId = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
-    const selectedwarehouseId = this.context.formstates[`${this.PAGE_NAME}/WarehouseID`]
     const stockdefine = (Stockdefines.list || []).find(item => item.Uuid === selectedstockdefineId)
     const selectedstocktypeId = stockdefine?.StocktypeID
     const stocktype = (Stocktypes.list || []).find(item => item.Uuid === selectedstocktypeId)
     const Issktneeded = stocktype?.Issktneed
 
-    const warehousestocktypes = ((Warehouses.list || [])
-      .find(u => u?.Uuid === selectedwarehouseId)?.Stocktypegroups || '')
-      .split(',')
-      .filter(u => validator.isUUID(u))
-      .flatMap(groupId => ((Stocktypegroups.list || []).find(group => group?.Uuid === groupId)?.Stocktypes || '').split(',').filter(u => validator.isUUID(u)) || [])
-      .filter(u => validator.isUUID(u))
-
-    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive && (warehousestocktypes || []).includes(u.StocktypeID)).map(item => {
+    const Stockdefineoptions = (Stockdefines.list || []).filter(u => u.Isactive).map(item => {
       return { key: item.Uuid, text: item.Name, value: item.Uuid }
     })
 

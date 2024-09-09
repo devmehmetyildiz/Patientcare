@@ -4,7 +4,7 @@ import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import StockdefinesDelete from '../../Containers/Stockdefines/StockdefinesDelete'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 
 export default class Stockdefines extends Component {
 
@@ -43,7 +43,7 @@ export default class Stockdefines extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "stockdefine"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Stockdefines.list || []).map(item => {
       return {

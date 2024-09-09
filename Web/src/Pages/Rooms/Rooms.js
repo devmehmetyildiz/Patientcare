@@ -4,7 +4,7 @@ import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import RoomsDelete from '../../Containers/Rooms/RoomsDelete'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 
 export default class Rooms extends Component {
 
@@ -39,7 +39,7 @@ export default class Rooms extends Component {
 
     const metaKey = "room"
 
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Rooms.list || []).filter(u => u.Isactive).map(item => {
       return {

@@ -4,7 +4,7 @@ import { Breadcrumb, Grid, GridColumn, Icon } from 'semantic-ui-react'
 import Literals from './Literals'
 import FloorsDelete from '../../Containers/Floors/FloorsDelete'
 import FloorsFastcreate from '../../Containers/Floors/FloorsFastcreate'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 
 export default class Floors extends Component {
@@ -38,7 +38,7 @@ export default class Floors extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "floor"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Floors.list || []).filter(u => u.Isactive).map(item => {
       return {

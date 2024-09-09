@@ -14,6 +14,18 @@ const messages = {
         },
     },
     VALIDATION_ERROR: {
+        AMOUNT_LIMIT_ERROR: {
+            code: 'AMOUNT_LIMIT_ERROR', description: {
+                en: 'The amount is too low',
+                tr: 'Bu işlem yeterli ürün yok',
+            }
+        },
+        STOCKS_REQUIRED: {
+            code: 'STOCKS_REQUIRED', description: {
+                en: 'The stocks required',
+                tr: 'Bu işlem için ürünler gerekli',
+            }
+        },
         TYPE_REQUIRED: {
             code: 'TYPE_REQUIRED', description: {
                 en: 'The type required',
@@ -42,6 +54,12 @@ const messages = {
             code: 'WAREHOUSEID_REQUIRED', description: {
                 en: 'The warehouseid required',
                 tr: 'Bu işlem için ambar id gerekli',
+            }
+        },
+        PARENTID_REQUIRED: {
+            code: 'PARENTID_REQUIRED', description: {
+                en: 'The parent id required',
+                tr: 'Bu işlem için bağlı id gerekli',
             }
         },
         STOCKID_REQUIRED: {

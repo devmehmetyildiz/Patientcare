@@ -10,9 +10,6 @@ module.exports = sequelize.define('warehouseModel', {
     Name: {
         type: Sequelize.STRING
     },
-    Stocktypegroups: {
-        type: Sequelize.STRING
-    },
     Info: {
         type: Sequelize.TEXT
     },

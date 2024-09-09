@@ -5,7 +5,7 @@ import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import StocksDelete from '../../Containers/Stocks/StocksDelete'
 import StocksApprove from '../../Containers/Stocks/StocksApprove'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 export default class Stocks extends Component {
 
   componentDidMount() {
@@ -49,9 +49,9 @@ export default class Stocks extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "stock"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Stocks.list || []).filter(u => u.Isactive && u.Iscompleted && u.Type === 0).map(item => {
+    const list = (Stocks.list || []).filter(u => u.Isactive  && u.Type === 0).map(item => {
       return {
         ...item,
         change: <Link to={`/Stockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,

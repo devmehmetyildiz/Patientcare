@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Loader, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import Literals from './Literals'
 import MainteanciesDelete from '../../Containers/Mainteancies/MainteanciesDelete'
 import MainteanciesComplete from '../../Containers/Mainteancies/MainteanciesComplete'
@@ -47,7 +47,7 @@ export default class Mainteancies extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "mainteance"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Mainteancies.list || []).filter(u => u.Isactive).map(item => {
       return {

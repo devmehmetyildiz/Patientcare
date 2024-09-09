@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Checkbox, Feed, Grid, GridColumn, Icon, List, Loader, Popup, Tab } from 'semantic-ui-react'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
-import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT, GENDER_OPTION_MEN, ROUTES, getInitialconfig } from '../../Utils/Constants'
+import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT, GENDER_OPTION_MEN, ROUTES } from '../../Utils/Constants'
 import config from '../../Config'
 import Formatdate from '../../Utils/Formatdate'
 import PatientsLeftModal from '../../Containers/Patients/PatientsLeftModal'
@@ -12,6 +12,9 @@ import PatientsEntercashModal from '../../Containers/Patients/PatientsEntercashM
 import PatientsEditstatus from '../../Containers/Patients/PatientsEditstatusModal'
 import PatientsEditcaseModal from '../../Containers/Patients/PatientsEditcaseModal'
 import PatientsEditplaceModal from '../../Containers/Patients/PatientsEditplaceModal'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
+import PatientsInsertstockModal from '../../Containers/Patients/PatientsInsertstockModal'
+import PatientsReducestockModal from '../../Containers/Patients/PatientsReducestockModal'
 
 export default function Patients(props) {
 
@@ -232,7 +235,8 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
 
   const [selectedRecords, setSelectedRecords] = useState([])
   const [openMulti, setOpenMulti] = useState(false)
-  const [openplace, setOpenplace] = useState(false)
+  const [openinsertstock, setOpeninsertstock] = useState(false)
+  const [openreducestock, setOpenreducestock] = useState(false)
   const [openeditplace, setOpeneditplace] = useState(false)
   const [openeditcase, setOpeneditcase] = useState(false)
   const [openentercash, setOpenentercash] = useState(false)
@@ -248,13 +252,14 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
   }
 
   const metaKey = "patients"
-  let initialConfig = getInitialconfig(Profile, metaKey)
+  let initialConfig = GetInitialconfig(Profile, metaKey)
   const t = Profile?.i18n?.t || null
 
   const filteredColumns = openMulti ? (Columns || []).filter(u => u.accessor !== 'define') : Columns
   const columns = [
     { Header: t('Common.Column.Empty'), accessor: 'select', disableProps: true, hidden: !openMulti },
     ...filteredColumns.filter(u => u.key ? u.key === 'pass' : true),
+    { Header: t('Common.Column.summary'), accessor: 'summary', disableProps: true, hidden: openMulti },
     { Header: t('Common.Column.process'), accessor: 'process', disableProps: true, hidden: openMulti },
     { Header: t('Common.Column.detail'), accessor: 'actions', disableProps: true, hidden: openMulti }
   ].filter(u => !u.hidden).map(u => { return u.disableProps ? u : { ...u, ...colProps } })
@@ -280,9 +285,31 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
                 size='small'
                 onClick={() => {
                   setRecord(item)
+                  setOpeninsertstock(true)
+                }}
+                fluid color='instagram'>
+                <Icon name='exchange' /> {t('Pages.Patients.Column.Insertstock')}
+              </Button>
+            </List.Item>
+            <List.Item>
+              <Button
+                size='small'
+                onClick={() => {
+                  setRecord(item)
+                  setOpenreducestock(true)
+                }}
+                fluid color='instagram'>
+                <Icon name='exchange' /> {t('Pages.Patients.Column.Reducestock')}
+              </Button>
+            </List.Item>
+            <List.Item>
+              <Button
+                size='small'
+                onClick={() => {
+                  setRecord(item)
                   setOpeneditplace(true)
                 }}
-                fluid color='red'>
+                fluid color='instagram'>
                 <Icon name='exchange' /> {t('Pages.Patients.Column.Editplace')}
               </Button>
             </List.Item>
@@ -293,7 +320,7 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
                   setRecord(item)
                   setOpeneditcase(true)
                 }}
-                fluid color='teal'>
+                fluid color='instagram'>
                 <Icon name='exchange' /> {t('Pages.Patients.Column.Editcase')}
               </Button>
             </List.Item>
@@ -304,7 +331,7 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
                   setRecord(item)
                   setOpenstatus(true)
                 }}
-                fluid color='google plus'>
+                fluid color='instagram'>
                 <Icon name='exchange' /> {t('Pages.Patients.Column.Editstatus')}
               </Button>
             </List.Item>
@@ -324,20 +351,9 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
                 size='small'
                 onClick={() => {
                   setRecord(item)
-                  setOpenplace(true)
-                }}
-                fluid color='green'>
-                <Icon name='exchange' /> {t('Pages.Patients.Column.changeplace')}
-              </Button>
-            </List.Item>
-            <List.Item>
-              <Button
-                size='small'
-                onClick={() => {
-                  setRecord(item)
                   setOpendead(true)
                 }}
-                fluid color='black'>
+                fluid color='instagram'>
                 <Icon name='tag' /> {t('Pages.Patients.Column.deadpatient')}
               </Button>
             </List.Item>
@@ -348,7 +364,7 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
                   setRecord(item)
                   setOpenleft(true)
                 }}
-                fluid color='blue'>
+                fluid color='instagram'>
                 <Icon name='external share' /> {t('Pages.Patients.Column.leftpatient')}
               </Button>
             </List.Item>
@@ -360,7 +376,7 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
           <Icon size='large' color='purple' className='row-edit' name='random' />
         </div>}
       />,
-      detail: <Icon link size='large' color='grey' name='history' onClick={() => {
+      summary: <Icon link size='large' color='grey' name='history' onClick={() => {
         handleSelectedPatient(item)
         handleDetailmodal(true)
       }} />,
@@ -432,6 +448,21 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
         setOpen={setOpeneditplace}
         record={record}
         setRecord={setRecord}
+        canTransfer
+      />
+      <PatientsInsertstockModal
+        isPatientspage
+        open={openinsertstock}
+        setOpen={setOpeninsertstock}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PatientsReducestockModal
+        isPatientspage
+        open={openreducestock}
+        setOpen={setOpenreducestock}
+        record={record}
+        setRecord={setRecord}
       />
     </>
   )
@@ -446,12 +477,12 @@ function LeftPatientList({ Profile, Columns, list, handleSelectedPatient, handle
   }
 
   const metaKey = "patients"
-  let initialConfig = getInitialconfig(Profile, metaKey)
+  let initialConfig = GetInitialconfig(Profile, metaKey)
   const t = Profile?.i18n?.t || null
 
   const columns = [
     ...Columns.filter(u => u.key ? u.key === 'left' : true),
-    { Header: t('Common.Column.detail'), accessor: 'actions', disableProps: true }
+    { Header: t('Common.Column.summary'), accessor: 'actions', disableProps: true }
   ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
   const decoratedList = list.map(item => {
@@ -500,12 +531,12 @@ function DeadPatientList({ Profile, Columns, list, handleSelectedPatient, handle
   }
 
   const metaKey = "patients"
-  let initialConfig = getInitialconfig(Profile, metaKey)
+  let initialConfig = GetInitialconfig(Profile, metaKey)
   const t = Profile?.i18n?.t || null
 
   const columns = [
     ...Columns.filter(u => u.key ? u.key === 'dead' : true),
-    { Header: t('Common.Column.detail'), accessor: 'actions', disableProps: true }
+    { Header: t('Common.Column.summary'), accessor: 'actions', disableProps: true }
   ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
   const decoratedList = list.map(item => {

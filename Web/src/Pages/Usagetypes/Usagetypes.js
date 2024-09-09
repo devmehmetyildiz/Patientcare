@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Icon } from 'semantic-ui-react'
 import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import UsagetypesDelete from '../../Containers/Usagetypes/UsagetypesDelete'
 
@@ -39,7 +39,7 @@ export default class Usagetypes extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "usagetype"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Usagetypes.list || []).filter(u => u.Isactive).map(item => {
       return {

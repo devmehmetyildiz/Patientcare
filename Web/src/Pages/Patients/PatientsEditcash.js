@@ -5,8 +5,9 @@ import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Settings, MobileTable, NoDataScreen, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, DataTable } from '../../Components'
-import { CASHYPES, getInitialconfig } from '../../Utils/Constants'
+import { CASHYPES } from '../../Utils/Constants'
 import PatientcashmovementsDelete from '../../Containers/Patientcashmovements/PatientcashmovementsDelete'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 
 export default class PatientsEditcash extends Component {
 
@@ -96,7 +97,7 @@ export default class PatientsEditcash extends Component {
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
         const metaKey = 'PatientsEditcash'
-        const initialConfig = getInitialconfig(Profile, metaKey)
+        const initialConfig = GetInitialconfig(Profile, metaKey)
 
         const patient = (Patients.list || []).find(u => u.Uuid === Id)
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)

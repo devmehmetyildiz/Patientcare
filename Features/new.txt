@@ -1,9 +1,9 @@
 hasta tanımlarına sabıka kaydı eklenecek
 okur yazarlık eklenecek
-iletişim noyu kontrol et isimker hatalı
+iletişim noyu kontrol et isimker hatalı ++
 
 hasta yerleşimlerinde kadın erkek diye ayrım kat oda diye ayrım eklenecek
-stok tanımlarında patientID hatası veriyor ona bak
+stok tanımlarında patientID hatası veriyor ona bak ++
 
 dosya yüklemeler eklenecek
 hasta yerleşimleri detaylanacak

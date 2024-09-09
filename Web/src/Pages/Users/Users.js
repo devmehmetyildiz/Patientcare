@@ -4,9 +4,10 @@ import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import UsersDelete from '../../Containers/Users/UsersDelete'
-import { getInitialconfig, getSidebarroutes } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import validator from '../../Utils/Validator'
 import Formatdate from '../../Utils/Formatdate'
+import { getSidebarroutes } from '../../Components/Sidebar'
 export default class Users extends Component {
 
   constructor(props) {
@@ -73,7 +74,7 @@ export default class Users extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "user"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Users.list || []).map(item => {
       return {

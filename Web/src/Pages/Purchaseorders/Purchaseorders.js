@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn, Loader, Tab } from 'semantic-ui-react'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
 import PurchaseordersDelete from '../../Containers/Purchaseorders/PurchaseordersDelete'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import validator from '../../Utils/Validator'
 import PurchaseordersCheck from '../../Containers/Purchaseorders/PurchaseordersCheck'
 import PurchaseordersApprove from '../../Containers/Purchaseorders/PurchaseordersApprove'
@@ -217,7 +217,7 @@ export default class Purchaseorders extends Component {
 function Purchaseorderscreated({ Profile, Columns, list }) {
 
   const metaKey = "purchaseorder"
-  let initialConfig = getInitialconfig(Profile, metaKey)
+  let initialConfig = GetInitialconfig(Profile, metaKey)
 
   return (
     <>
@@ -249,7 +249,7 @@ function Purchaseorderscreated({ Profile, Columns, list }) {
 function Purchaseorderschecked({ Profile, Columns, list }) {
 
   const metaKey = "purchaseorder"
-  let initialConfig = getInitialconfig(Profile, metaKey)
+  let initialConfig = GetInitialconfig(Profile, metaKey)
 
   return (
     <>
@@ -281,7 +281,7 @@ function Purchaseorderschecked({ Profile, Columns, list }) {
 function Purchaseordersapproved({ Profile, Columns, list }) {
 
   const metaKey = "purchaseorder"
-  let initialConfig = getInitialconfig(Profile, metaKey)
+  let initialConfig = GetInitialconfig(Profile, metaKey)
 
   return (
     <>
@@ -313,7 +313,7 @@ function Purchaseordersapproved({ Profile, Columns, list }) {
 function Purchaseorderscompleted({ Profile, Columns, list }) {
 
   const metaKey = "purchaseorder"
-  let initialConfig = getInitialconfig(Profile, metaKey)
+  let initialConfig = GetInitialconfig(Profile, metaKey)
 
   return (
     <>

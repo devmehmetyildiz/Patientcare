@@ -4,7 +4,7 @@ import { Icon, Breadcrumb, Grid, GridColumn, Tab, Label } from 'semantic-ui-reac
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
 import PersonelsDelete from '../../Containers/Personels/PersonelsDelete'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 export default class Periods extends Component {
 
 
@@ -43,7 +43,7 @@ export default class Periods extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "personel"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Personels.list || []).map(item => {
       return {

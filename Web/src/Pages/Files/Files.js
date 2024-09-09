@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon, Loader } from 'semantic-ui-react'
 import FilesDelete from '../../Containers/Files/FilesDelete'
 import Literals from './Literals'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 export class Files extends Component {
 
@@ -42,7 +42,7 @@ export class Files extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "file"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Files.list || []).map(item => {
       return {

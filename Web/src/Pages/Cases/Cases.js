@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
 import CasesDelete from '../../Containers/Cases/CasesDelete'
-import { PATIENTMOVEMENTTYPE, getInitialconfig } from '../../Utils/Constants'
+import { PATIENTMOVEMENTTYPE } from '../../Utils/Constants'
 import {
   DataTable, Headerwrapper, LoadingPage,
   MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings
 } from '../../Components'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 
 export default class Cases extends Component {
 
@@ -59,7 +60,7 @@ export default class Cases extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "case"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Cases.list || []).map(item => {
       return {

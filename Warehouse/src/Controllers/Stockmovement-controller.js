@@ -84,6 +84,11 @@ async function AddStockmovement(req, res, next) {
         movements.forEach(movement => {
             amount += (movement.Amount * movement.Movementtype);
         });
+
+        if (Movementtype === -1 && Amount > amount) {
+            return next(createValidationError([messages.VALIDATION_ERROR.AMOUNT_LIMIT_ERROR], req.language))
+        }
+
         await db.stockmovementModel.create({
             ...req.body,
             Uuid: stockmovementuuid,

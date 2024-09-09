@@ -21,6 +21,7 @@ const Routes = [
   { method: 'get', path: '/Stocks', controller: 'Stock', action: 'GetStocks' },
   { method: 'post', path: '/Stocks/Approve/:stockId', controller: 'Stock', action: 'ApproveStock' },
   { method: 'post', path: '/Stocks/Approve', controller: 'Stock', action: 'ApproveStocks' },
+  { method: 'post', path: '/Stocks/CreateStockFromStock', controller: 'Stock', action: 'CreateStockFromStock' },
   { method: 'post', path: '/Stocks/AddStockWithoutMovement', controller: 'Stock', action: 'AddStockWithoutMovement' },
   { method: 'post', path: '/Stocks', controller: 'Stock', action: 'AddStock' },
   { method: 'put', path: '/Stocks', controller: 'Stock', action: 'UpdateStock' },

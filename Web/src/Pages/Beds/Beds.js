@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Confirm, Icon, Loader } from 'semantic-ui-react'
 import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import { getInitialconfig } from '../../Utils/Constants'
 import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import BedsDelete from '../../Containers/Beds/BedsDelete'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 export default class Beds extends Component {
 
   constructor(props) {
@@ -51,7 +51,7 @@ export default class Beds extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "bed"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Beds.list || []).filter(u => u.Isactive).map(item => {
       return {

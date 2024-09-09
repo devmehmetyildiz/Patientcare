@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
 import CostumertypesDelete from "../../Containers/Costumertypes/CostumertypesDelete"
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 export default class Costumertypes extends Component {
 
@@ -45,7 +45,7 @@ export default class Costumertypes extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "costumertype"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Costumertypes.list || []).map(item => {
       var text = (item.Departmentuuids || []).map(u => {

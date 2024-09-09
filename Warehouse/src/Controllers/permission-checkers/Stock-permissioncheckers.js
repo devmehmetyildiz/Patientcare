@@ -16,6 +16,10 @@ async function AddStock(req, res, next) {
     PermissionHandler(req, next, 'stockadd', 'medicineadd', 'supplyadd')
 }
 
+async function CreateStockFromStock(req, res, next) {
+    PermissionHandler(req, next, 'stockadd', 'medicineadd', 'supplyadd')
+}
+
 async function AddStockWithoutMovement(req, res, next) {
     PermissionHandler(req, next, 'stockadd', 'medicineadd', 'supplyadd')
 }
@@ -50,5 +54,6 @@ module.exports = {
     ApproveStock,
     ApproveStocks,
     DeleteStockByWarehouseID,
-    AddStockWithoutMovement
+    AddStockWithoutMovement,
+    CreateStockFromStock
 }

@@ -44,7 +44,6 @@ export default class WarehousesCreate extends Component {
             <Form>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stocktypegroups[Profile.Language]} options={Stocktypegroupsoption} name="Stocktypegroups" formtype='dropdown' multiple modal={StocktypegroupsCreate} />
               </Form.Group>
               <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
             </Form>
@@ -75,7 +74,6 @@ export default class WarehousesCreate extends Component {
     if (!validator.isString(data.Name)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
     }
-    data.Stocktypegroups = (data.Stocktypegroups || []).join(',')
 
     if (errors.length > 0) {
       errors.forEach(error => {

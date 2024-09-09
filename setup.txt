@@ -1,0 +1,19 @@
+1. Windows Özelliklerinden Aşağıdaki Özellikleri Aktif Et 
+    - IIS 
+    - FTP
+    - SMTP
+
+2. Aşağıdaki Kurulumları Yap
+    - Node.js lts
+    - MySQL
+    - MySQL Workbench
+
+3. MySQL için default root kullanıcı ile server kur, bilgiler aşağıdaki gibi olmalıdır.
+    - Username : root
+    - Password : My.5079115294
+
+4. MySQL Workbench kullanarak patientcare adı altında bir database oluştur
+    - Shema adı : patientcare
+    
+5.
+

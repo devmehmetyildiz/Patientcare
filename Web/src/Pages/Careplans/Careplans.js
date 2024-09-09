@@ -4,7 +4,7 @@ import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import CareplansDelete from '../../Containers/Careplans/CareplansDelete'
 import CareplansApprove from '../../Containers/Careplans/CareplansApprove'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import {
   DataTable, Headerwrapper, LoadingPage,
   MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings
@@ -48,7 +48,7 @@ export default class Careplans extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "careplan"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Careplans.list || []).map(item => {
       return {

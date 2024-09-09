@@ -34,9 +34,12 @@ export default function PatientsDetailCard(props) {
         stocks,
         files
     } = props
+    console.log('stocks: ', stocks);
+    console.log('files: ', files);
     const t = Profile?.i18n?.t || null
     const context = useContext(FormContext)
     const selected_record = usecontext ? context.getForm(PAGE_NAME) : Patients?.selected_record
+    console.log('selected_record: ', selected_record);
     const {
         Uuid,
         PatientdefineID,
@@ -66,7 +69,7 @@ export default function PatientsDetailCard(props) {
 
     const Notfound = t('Common.NoDataFound')
 
-    const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === PatientdefineID)
+    const patientdefine = usecontext ? context.getForm(`${PAGE_NAME}-Patientdefine`) : (Patientdefines.list || []).find(u => u.Uuid === PatientdefineID)
     const patientName = `${patientdefine?.Firstname || Notfound} ${patientdefine?.Lastname || Notfound}`
 
     const department = (Departments.list || []).find(u => u.Uuid === DepartmentID)
@@ -76,7 +79,9 @@ export default function PatientsDetailCard(props) {
     const patienttype = (Patienttypes.list || []).find(u => u.Uuid === patientdefine?.PatienttypeID)
 
     const usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
-    const patientPP = (Files.list || []).find(u => u.ParentID === Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
+    const patientPP = usecontext
+        ? (files || []).find(u => (u.Usagetypevalues || []).includes(usagetypePP))
+        : (Files.list || []).find(u => u.ParentID === Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
     const Movementtypes = [
         { name: t('Common.Patient.Movementtypes.Createduser'), value: PATIENTS_MOVEMENTTYPES_CREATE },
@@ -130,6 +135,30 @@ export default function PatientsDetailCard(props) {
         });
     }
 
+    const downloadFileFromContext = (file, fileName, fileType,) => {
+        try {
+            const blob = new Blob([file], {
+                type: fileType
+            });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            if (fileType.includes('pdf')) {
+                window.open(url)
+                a.href = null;
+                window.URL.revokeObjectURL(url);
+            }
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            fillnotification([{ type: 'Error', code: t('Pages.Preregistrations.Page.Header'), description: error.message }])
+            console.log(error.message)
+        }
+    }
+
+
+
     return (
         <Modal.Content image>
             {isLoadingstatus
@@ -146,7 +175,9 @@ export default function PatientsDetailCard(props) {
                                         floated='right'
                                         size='tiny'
                                         rounded
-                                        src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPP?.Uuid}`}
+                                        src={usecontext
+                                            ? URL.createObjectURL(patientPP?.File)
+                                            : `${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPP?.Uuid}`}
                                     />
                                     : <Image
                                         floated='right'
@@ -204,7 +235,13 @@ export default function PatientsDetailCard(props) {
                                         <Card.Description>
                                             <div className='w-full gap-2 justify-start items-start flex flex-col'>
                                                 {files.map(file => {
-                                                    return <div className='cursor-pointer flex flex-row' onClick={() => { downloadFile(file.Uuid, file.Name, Profile) }}>
+                                                    return <div className='cursor-pointer flex flex-row'
+                                                        onClick={() => {
+                                                            usecontext
+                                                                ? downloadFileFromContext(file?.File, file?.Name, file?.File?.type)
+                                                                : downloadFile(file.Uuid, file.Name, Profile)
+                                                        }}
+                                                    >
                                                         <p>{`${file?.Name || Notfound} (${file?.Usagetype || Notfound})`}</p> <Icon color='blue' name='download' />
                                                     </div>
                                                 })}

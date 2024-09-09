@@ -44,7 +44,6 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
         headerGroups,
         prepareRow,
         page,
-        globalFilter,
         canPreviousPage,
         setGlobalFilter,
         canNextPage,
@@ -63,6 +62,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
             filters,
             hiddenColumns: tableHiddenColumns,
             columnOrder: tableOrderColumns,
+            globalFilter
         },
     } = useTable(
         {
@@ -72,11 +72,11 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
             defaultColumn,
             autoResetGlobalFilter: false,
             autoResetFilters: false,
-            autoResetSortBy:false,
-            autoResetHiddenColumns:false,
-            autoResetExpanded:false,
-            autoResetGroupBy:false,
-            autoResetPage:false,
+            autoResetSortBy: false,
+            autoResetHiddenColumns: false,
+            autoResetExpanded: false,
+            autoResetGroupBy: false,
+            autoResetPage: false,
             sortTypes: {
                 alphanumeric: (rowA, rowB, columnId) => {
                     const valueA = parseFloat(rowA.values[columnId]);
@@ -101,6 +101,10 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
     )
 
 
+    useEffect(() => {
+        gotoPage(0)
+    }, [globalFilter])
+    
     useEffect(() => {
         if (Config?.hiddenColumns) {
             let isEqual = true

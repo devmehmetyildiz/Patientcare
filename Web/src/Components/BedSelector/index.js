@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Card, Icon, Modal, Label, Popup, Segment, Tab } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { GetPatientByPlace } from '../../Redux/PatientSlice'
@@ -13,13 +13,18 @@ function BedSelector({
     fillNotification,
     selectedBed,
     Patients,
-    Patientdefines
+    Patientdefines,
+    canTransfer
 }) {
     const [open, setOpen] = useState(false)
     const [record, setRecord] = useState(selectedBed);
     const FLOOR_MEN = "0"
     const FLOOR_WOMEN = "1"
     const t = Profile?.i18n?.t || null
+
+    useEffect(() => {
+        setRecord(selectedBed)
+    }, [open])
 
     const getViewbase = (list) => {
         return (list || []).length > 0 ?
@@ -33,21 +38,24 @@ function BedSelector({
                         key={index}
                         className={`!cursor-pointer !hover:shadow-lg`}
                         onClick={() => {
-                            if (option?.Isoccupied) {
+                            if (
+                                !canTransfer &&
+                                option?.Isoccupied
+                            ) {
                                 fillNotification({
                                     type: 'Information',
                                     code: t('Pages.Beds.Page.Header'),
                                     description: t('Pages.Beds.Messages.Filled'),
                                 })
                             } else {
-                                setRecord(option?.BedID)
+                                setRecord(record === option?.BedID ? null : option?.BedID)
                             }
 
                         }}
                     >
                         <Segment className='!p-1'>
                             <div className='mb-1 flex flex-row justify-between items-start max-w-[150px]'>
-                                <Icon name='mail' />
+                                <Icon name='bed' />
                                 {option?.Isoccupied
                                     ? <Popup
                                         on={'hover'}
@@ -59,7 +67,7 @@ function BedSelector({
                             </div>
                             <Label
                                 size='large'
-                                color={option?.BedID === record ? 'blue' : option?.Isoccupied ? 'green' : 'red'}
+                                color={option?.BedID === record ? 'blue' : option?.Isoccupied ? 'red' : 'green'}
                                 className='!flex !flex-col !justify-start !items-start'
                             >
                                 {option?.Bedname}

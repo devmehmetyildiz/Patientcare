@@ -493,6 +493,112 @@ async function DeleteStockByWarehouseID(req, res, next) {
     GetStocks(req, res, next)
 }
 
+async function CreateStockFromStock(req, res, next) {
+
+    let validationErrors = []
+    const {
+        ParentID,
+        Stocks,
+        Type
+    } = req.body
+
+    if (!validator.isUUID(ParentID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PARENTID_REQUIRED)
+    }
+    if (!validator.isArray(Stocks)) {
+        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED)
+    }
+    if (!validator.isNumber(Type)) {
+        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+
+        for (const stock of Stocks) {
+
+            const sourcestock = await db.stockModel.findOne({ where: { Uuid: stock?.Uuid } });
+
+            let amount = 0.0;
+            let fullamount = 0.0;
+            const movements = await db.stockmovementModel.findAll({ where: { StockID: sourcestock?.Uuid, Isactive: true } });
+            movements.forEach(movement => {
+                if (movement?.Isapproved) {
+                    amount += (movement.Amount * movement.Movementtype);
+                }
+                fullamount += (movement.Amount * movement.Movementtype);
+            });
+
+            if (stock?.Value > amount) {
+                return next(createValidationError([messages.VALIDATION_ERROR.AMOUNT_LIMIT_ERROR], req.language))
+            } else {
+
+                let stockuuid = uuid()
+                await db.stockModel.create({
+                    Type: Type,
+                    StocktypeID: sourcestock?.StocktypeID,
+                    StockgrouptypeID: sourcestock?.StockgrouptypeID,
+                    StockdefineID: sourcestock?.StockdefineID,
+                    Isapproved: true,
+                    Skt: sourcestock?.Skt,
+                    Info: sourcestock?.Info,
+                    WarehouseID: ParentID,
+                    Amount: 0,
+                    Uuid: stockuuid,
+                    Createduser: username,
+                    Iscompleted: false,
+                    Createtime: new Date(),
+                    Isactive: true
+                }, { transaction: t })
+
+                await db.stockmovementModel.create({
+                    Uuid: uuid(),
+                    StockID: stockuuid,
+                    Amount: stock?.Value,
+                    Movementdate: new Date(),
+                    Movementtype: 1,
+                    Isapproved: false,
+                    Createduser: username,
+                    Createtime: new Date(),
+                    Isactive: true
+                }, { transaction: t })
+
+                await db.stockmovementModel.create({
+                    Uuid: uuid(),
+                    StockID: sourcestock?.Uuid,
+                    Amount: stock?.Value,
+                    Movementdate: new Date(),
+                    Movementtype: -1,
+                    Isapproved: false,
+                    Createduser: username,
+                    Createtime: new Date(),
+                    Isactive: true
+                }, { transaction: t })
+            }
+        }
+
+        await CreateNotification({
+            type: types.Create,
+            service: 'Stoklar',
+            role: 'stocknotification',
+            message: `Stok transfer işlemi ${username} tarafından yapıldı.`,
+            pushurl: '/Stocks'
+        })
+
+        await t.commit()
+    } catch (err) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(err))
+    }
+    GetStocks(req, res, next)
+}
+
 module.exports = {
     GetStocks,
     GetStock,
@@ -503,5 +609,6 @@ module.exports = {
     ApproveStocks,
     DeleteStockByWarehouseID,
     GetStocksByWarehouseID,
-    AddStockWithoutMovement
+    AddStockWithoutMovement,
+    CreateStockFromStock
 }

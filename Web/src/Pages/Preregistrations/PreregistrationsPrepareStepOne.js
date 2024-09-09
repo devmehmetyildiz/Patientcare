@@ -233,16 +233,16 @@ export default function PreregistrationsPrepareStepOne({
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Budgetstatus')} name="Budgetstatus" />
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.City')} name="City" />
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Town')} name="Town" />
-                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Address1')} name="Address1" />
-                        </Form.Group>
-                        <Form.Group widths='equal'>
-                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Address2')} name="Address2" />
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Country')} name="Country" />
-                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Contactnumber1')} name="Contactnumber1" />
-                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Contactnumber2')} name="Contactnumber2" />
                         </Form.Group>
                         <Form.Group widths='equal'>
+                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Address1')} name="Address1" />
+                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Address2')} name="Address2" />
+                        </Form.Group>
+                        <Form.Group widths='equal'>
+                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Contactnumber1')} name="Contactnumber1" />
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Contactname1')} name="Contactname1" />
+                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Contactnumber2')} name="Contactnumber2" />
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Contactname2')} name="Contactname2" />
                         </Form.Group>
                       </div>

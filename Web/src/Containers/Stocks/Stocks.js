@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Stocks from '../../Pages/Stocks/Stocks'
-import { GetStocks, DeleteStocks, DeactivateStocks, fillStocknotification, handleDeletemodal, handleSelectedStock, handleApprovemodal } from "../../Redux/StockSlice"
+import { GetStocks, DeleteStocks, fillStocknotification, handleDeletemodal, handleSelectedStock, handleApprovemodal } from "../../Redux/StockSlice"
 import { GetStockdefines } from "../../Redux/StockdefineSlice"
 import { GetDepartments } from "../../Redux/DepartmentSlice"
 import { GetStockmovements } from "../../Redux/StockmovementSlice"
@@ -20,7 +20,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  GetStocks, DeleteStocks, DeactivateStocks, GetWarehouses,
+  GetStocks, DeleteStocks, GetWarehouses,
   fillStocknotification, handleDeletemodal, handleSelectedStock, GetStockmovements,
   GetStockdefines, GetDepartments, handleApprovemodal, GetUnits, GetStocktypes
 }

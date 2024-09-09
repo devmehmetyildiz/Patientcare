@@ -180,6 +180,12 @@ const messages = {
         tr: 'Bu işlem için miktar gerekli',
       }
     },
+    AMOUNT_LIMIT_ERROR: {
+      code: 'AMOUNT_LIMIT_ERROR', description: {
+          en: 'The amount is too low',
+          tr: 'Bu işlem yeterli ürün yok',
+      }
+  },
     PREVVALUE_REQUIRED: {
       code: 'PREVVALUE_REQUIRED', description: {
         en: 'The previous value required',

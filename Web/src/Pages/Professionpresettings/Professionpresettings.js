@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Icon, Loader } from 'semantic-ui-react'
 import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import ProfessionpresettingsDelete from '../../Containers/Professionpresettings/ProfessionpresettingsDelete'
 import Formatdate, { Getdateoptions } from '../../Utils/Formatdate'
@@ -50,7 +50,7 @@ export default class Professionpresettings extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "professionpresetting"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Professionpresettings.list || []).filter(u => u.Isactive).map(item => {
       return {

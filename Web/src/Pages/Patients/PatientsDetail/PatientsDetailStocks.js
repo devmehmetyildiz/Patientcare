@@ -1,10 +1,11 @@
-import React from 'react'
-import { Icon, Tab, Table } from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
+import { Button, Confirm, Icon, Input, Modal, Tab, Table } from 'semantic-ui-react'
 import Formatdate from '../../../Utils/Formatdate'
+import validator from '../../../Utils/Validator'
 
 export default function PatientsDetailStocks(props) {
 
-    const { Stocks, Stockdefines, Units, Stockmovements, Stocktypegroups, Stocktypes, patient, Profile } = props
+    const { Stocks, Stockdefines, Units, Stockmovements, Stocktypegroups, Stocktypes, patient, Profile, AddStockmovements, GetPatient, fillPatientnotification } = props
 
     const t = Profile?.i18n?.t
 
@@ -16,12 +17,22 @@ export default function PatientsDetailStocks(props) {
         const stocktypegroup = (Stocktypegroups.list || []).find(u => u.Uuid === item?.StockgrouptypeID)
         const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === item?.StockdefineID)
         const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
+        let amount = 0.0;
+        let fullamount = 0.0;
+        let movements = (Stockmovements.list || []).filter(u => u.StockID === item?.Uuid && u.Isactive)
+        movements.forEach(movement => {
+            if (movement?.Isapproved) {
+                amount += (movement.Amount * movement.Movementtype);
+            }
+            fullamount += (movement.Amount * movement.Movementtype);
+        });
 
         return {
+            Uuid: item?.Uuid,
             stockdefine: stockdefine,
             stocktype: stocktype,
             stocktypegroup: stocktypegroup,
-            amount: item?.Amount || 0,
+            amount: `${amount} ${unit?.Name || 'tanımsız birim'} ${amount !== fullamount ? `( Toplam ${fullamount} ${unit?.Name || 'tanımsız birim'})` : ''}`,
             skt: item?.Skt || null,
             unit: unit
         }
@@ -51,7 +62,6 @@ export default function PatientsDetailStocks(props) {
                                                 isHaveskt = true
                                             }
                                         });
-                                        console.log('isHaveskt: ', isHaveskt);
 
                                         return {
                                             menuItem: `${typegroup?.Name} (${filteredList.length})`,
@@ -64,6 +74,7 @@ export default function PatientsDetailStocks(props) {
                                                             {isHaveskt ? <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Skt')}</Table.HeaderCell> : null}
                                                             <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Stocktype')}</Table.HeaderCell>
                                                             <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Amount')}</Table.HeaderCell>
+                                                            <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Use')}</Table.HeaderCell>
                                                         </Table.Row>
                                                     </Table.Header>
                                                     <Table.Body>
@@ -84,7 +95,18 @@ export default function PatientsDetailStocks(props) {
                                                                         {stocktype?.Name || t('Common.NoDataFound')}
                                                                     </Table.Cell>
                                                                     <Table.Cell>
-                                                                        {`${stock?.amount} ${unit?.Name || t('Common.NoDataFound')}`}
+                                                                        {`${stock?.amount}`}
+                                                                    </Table.Cell>
+                                                                    <Table.Cell>
+                                                                        <PatientsDetailStocksReduceModal
+                                                                            Profile={Profile}
+                                                                            AddStockmovements={AddStockmovements}
+                                                                            Stockmovements={Stockmovements}
+                                                                            stock={stock}
+                                                                            GetPatient={GetPatient}
+                                                                            patient={patient}
+                                                                            fillPatientnotification={fillPatientnotification}
+                                                                        />
                                                                     </Table.Cell>
                                                                 </Table.Row>
                                                             })
@@ -98,20 +120,6 @@ export default function PatientsDetailStocks(props) {
                                             }
                                         }
                                     })
-
-                                    /*    [
-                                       {
-                                           menuItem: `${t('Pages.Preregistrations.Page.Tab.CreateHeader')} (${(createList || []).length})`,
-                                           pane: {
-                                               key: 'created',
-                                               content: <Preregistrationscreated
-                                                   Profile={Profile}
-                                                   list={createList}
-                                                   Columns={Columns.filter(u => u.key === 'created' || !u.key)}
-                                               />
-                                           }
-                                       },
-                                   ] */
                                 }
                                 renderActiveOnly={false}
                             />
@@ -120,5 +128,124 @@ export default function PatientsDetailStocks(props) {
                 </div>
             </div>
         </div>
+    )
+}
+
+
+
+function PatientsDetailStocksReduceModal(props) {
+
+    const {
+        Profile,
+        stock,
+        Stockmovements,
+        AddStockmovements,
+        GetPatient,
+        patient,
+        fillPatientnotification
+    } = props
+
+    const t = Profile?.i18n?.t
+    const [open, setOpen] = useState(false)
+    const [confirm, setConfirm] = useState(false)
+    const [requestamount, setRequestamount] = useState(1)
+
+    useEffect(() => {
+        if (open) {
+            setRequestamount(0)
+        }
+    }, [open])
+
+
+    const stockdefine = stock?.stockdefine
+
+    let amount = 0.0;
+    let fullamount = 0.0;
+    let movements = (Stockmovements.list || []).filter(u => u.StockID === stock?.Uuid && u.Isactive)
+    movements.forEach(movement => {
+        if (movement?.Isapproved) {
+            amount += (movement.Amount * movement.Movementtype);
+        }
+        fullamount += (movement.Amount * movement.Movementtype);
+    });
+
+    return (<React.Fragment>
+        <div
+            className='cursor-pointer'
+            onClick={() => { setOpen(true) }}
+        >
+            <Icon className='text-[#2355a0]' name='object ungroup' />
+        </div>
+        <Modal
+            onClose={() => {
+                setOpen(false)
+            }}
+            onOpen={() => {
+                setOpen(true)
+            }}
+            open={open}
+        >
+            <Modal.Header>{`${t('Pages.Patients.PatientsDetail.PatientDetailStocks.ReduceHeader')}`}</Modal.Header>
+            <Modal.Content>
+                {`${stockdefine?.Name} ${t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Stockprefix')}`}
+            </Modal.Content>
+            <Modal.Content>
+                <Input
+                    label={t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Amount')}
+                    fluid
+                    min={0}
+                    max={amount}
+                    value={requestamount}
+                    onChange={(e) => { setRequestamount(Number(e?.target?.value)) }}
+                    type='number'
+                />
+            </Modal.Content>
+            <Modal.Actions>
+                <Button color='black' onClick={() => {
+                    setOpen(false)
+                }}>
+                    {t('Common.Button.Goback')}
+                </Button>
+                <Button
+                    content={t('Common.Button.Update')}
+                    labelPosition='right'
+                    className='!bg-[#2355a0] !text-white'
+                    icon='checkmark'
+                    onClick={() => {
+                        if (!validator.isNumber(requestamount) && requestamount > 0) {
+                            fillPatientnotification(
+                                { type: 'Error', code: t('Pages.Patients.PatientsDetail.PatientDetailStocks.ReduceHeader'), description: t('Pages.Patients.PatientsDetail.PatientDetailStocks.Messages.AmountRequired') }
+                            )
+                        } else {
+                            setConfirm(true)
+                        }
+                    }}
+                    positive
+                />
+            </Modal.Actions>
+        </Modal>
+        <Confirm
+            cancelButton={t('Common.Button.Giveup')}
+            confirmButton={t('Common.Button.Update')}
+            content={`${requestamount} ${t('Pages.Patients.PatientsDetail.PatientDetailStocks.Messages.ReduceConfirm')}`}
+            open={confirm}
+            onCancel={() => { setConfirm(false) }}
+            onConfirm={() => {
+                let body = {
+                    data: {
+                        StockID: stock?.Uuid,
+                        Movementtype: -1,
+                        Amount: requestamount,
+                        Movementdate: new Date(),
+                    },
+                    onSuccess: () => {
+                        GetPatient(patient?.Uuid)
+                        setOpen(false)
+                    }
+                }
+                AddStockmovements(body)
+            }}
+        />
+    </React.Fragment>
     )
 }

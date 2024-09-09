@@ -4,7 +4,7 @@ import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import SupportplanlistsDelete from '../../Containers/Supportplanlists/SupportplanlistsDelete'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 
 export default class Supportplanlists extends Component {
 
@@ -47,7 +47,7 @@ export default class Supportplanlists extends Component {
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
         const metaKey = "supportplanlist"
-        let initialConfig = getInitialconfig(Profile, metaKey)
+        let initialConfig = GetInitialconfig(Profile, metaKey)
 
         const list = (Supportplanlists.list || []).map(item => {
             return {

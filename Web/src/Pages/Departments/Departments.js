@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon } from 'semantic-ui-react'
 import DepartmentDelete from "../../Containers/Departments/DepartmentsDelete"
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 
 export default function Departments(props) {
@@ -57,7 +57,7 @@ export default function Departments(props) {
   ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
   const metaKey = "department"
-  const initialConfig = getInitialconfig(Profile, metaKey)
+  const initialConfig = GetInitialconfig(Profile, metaKey)
 
   return (
     isLoading ? <LoadingPage /> :

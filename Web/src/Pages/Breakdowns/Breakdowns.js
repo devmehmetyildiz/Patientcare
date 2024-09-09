@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon, Loader } from 'semantic-ui-react'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import Literals from './Literals'
 import BreakdownsDelete from '../../Containers/Breakdowns/BreakdownsDelete'
 import BreakdownsComplete from '../../Containers/Breakdowns/BreakdownsComplete'
@@ -47,7 +47,7 @@ export default class Breakdowns extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "breakdown"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Breakdowns.list || []).filter(u => u.Isactive).map(item => {
       return {

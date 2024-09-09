@@ -5,7 +5,7 @@ import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import RulesDelete from '../../Containers/Rules/RulesDelete'
 import RulesLog from '../../Containers/Rules/RulesLog'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 export class Rules extends Component {
 
   componentDidMount() {
@@ -40,7 +40,7 @@ export class Rules extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "rule"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Rules.list || []).filter(u => u.Isactive).map(item => {
       return {

@@ -160,6 +160,7 @@ export default function PreregistrationsPrepare({ PAGE_NAME, Preparestatus, sele
             {step === STEPFOUR ?
                 <PreregistrationsPrepareStepFour
                     PAGE_NAME={PAGE_NAME}
+                    selectedStocks={selectedStocks}
                     selectedFiles={selectedFiles}
                     setselectedFiles={setselectedFiles}
                     setCompletedSteps={setCompletedSteps}

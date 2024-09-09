@@ -2,31 +2,7 @@ import React, { Component } from 'react'
 import { Accordion, Breadcrumb, Button, Grid, GridColumn, Header, Icon, Segment, Transition } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Headerbredcrump, Pagewrapper, Headerwrapper, Pagedivider } from '../../Components'
-import {
-    version1_0_0_0,
-    version1_0_0_1,
-    version1_0_0_10,
-    version1_0_0_11,
-    version1_0_0_12,
-    version1_0_0_13,
-    version1_0_0_14,
-    version1_0_0_15,
-    version1_0_0_16,
-    version1_0_0_17,
-    version1_0_0_18,
-    version1_0_0_19,
-    version1_0_1_0,
-    version1_0_0_2,
-    version1_0_0_3,
-    version1_0_0_4,
-    version1_0_0_5,
-    version1_0_0_6,
-    version1_0_0_7,
-    version1_0_0_8,
-    version1_0_0_9,
-    version1_0_1_1,
-    version1_0_1_2,
-} from './Changelogs'
+
 import './About.css'
 
 export default class About extends Component {
@@ -41,29 +17,7 @@ export default class About extends Component {
 
     render() {
         const Changelogs = [
-            version1_0_1_2,
-            version1_0_1_1,
-            version1_0_1_0,
-            version1_0_0_19,
-            version1_0_0_18,
-            version1_0_0_17,
-            version1_0_0_16,
-            version1_0_0_15,
-            version1_0_0_14,
-            version1_0_0_13,
-            version1_0_0_12,
-            version1_0_0_11,
-            version1_0_0_10,
-            version1_0_0_9,
-            version1_0_0_8,
-            version1_0_0_7,
-            version1_0_0_6,
-            version1_0_0_5,
-            version1_0_0_4,
-            version1_0_0_3,
-            version1_0_0_2,
-            version1_0_0_1,
-            version1_0_0_0
+          
         ]
 
         return (
@@ -126,7 +80,7 @@ export default class About extends Component {
 
                                             </div>)
                                         }
-                                        ) : 'There is no release'
+                                        ) : null
                                 }
                             </div>
                         </Segment>

@@ -95,67 +95,21 @@ export const AddStocks = createAsyncThunk(
     }
 );
 
-export const TransfertoPatient = createAsyncThunk(
-    'Stocks/TransfertoPatient',
-    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
+export const CreateStockFromStock = createAsyncThunk(
+    'Stocks/CreateStockFromStock',
+    async ({ data, history, redirectUrl, closeModal, clearForm, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Warehouse, ROUTES.STOCK + '/TransfertoPatient', data);
+            const response = await instanse.post(config.services.Warehouse, ROUTES.STOCK + '/CreateStockFromStock', data);
             dispatch(fillStocknotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: Literals.addcode[Language],
+                description: Literals.adddescription[Language],
             }));
-            clearForm && clearForm('PatientsAddstock')
+            clearForm && clearForm('StocksCreate')
             closeModal && closeModal()
-            history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStocknotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
-export const TransferfromPatient = createAsyncThunk(
-    'Stocks/TransferfromPatient',
-    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
-        try {
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Warehouse, ROUTES.STOCK + '/TransferfromPatient', data);
-            dispatch(fillStocknotification({
-                type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
-            }));
-            clearForm && clearForm('PatientsAddmedicine')
-            closeModal && closeModal()
-            history && history.push(redirectUrl ? redirectUrl : (redirectID ? '../' + redirectID : '/Patients'));
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStocknotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
-export const MoveStocks = createAsyncThunk(
-    'Stocks/MoveStocks',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
-        try {
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Warehouse, ROUTES.STOCK + "/Movestock", data);
-            dispatch(fillStocknotification({
-                type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.movedescription[Language],
-            }));
-            closeModal && closeModal()
+            onSuccess && onSuccess()
             history && history.push(redirectUrl ? redirectUrl : '/Stocks');
             return response.data;
         } catch (error) {
@@ -166,27 +120,8 @@ export const MoveStocks = createAsyncThunk(
     }
 );
 
-export const DeactivateStocks = createAsyncThunk(
-    'Stocks/DeactivateStocks',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
-        try {
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Warehouse, ROUTES.STOCK + "/Deactivestocks", data);
-            dispatch(fillStocknotification({
-                type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.deactivedescription[Language],
-            }));
-            history && history.push(redirectUrl ? redirectUrl : '/Stocks');
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillStocknotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
+
+
 
 export const EditStocks = createAsyncThunk(
     'Stocks/EditStocks',
@@ -347,14 +282,14 @@ export const StocksSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(MoveStocks.pending, (state) => {
+            .addCase(CreateStockFromStock.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(MoveStocks.fulfilled, (state, action) => {
+            .addCase(CreateStockFromStock.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(MoveStocks.rejected, (state, action) => {
+            .addCase(CreateStockFromStock.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
@@ -380,17 +315,6 @@ export const StocksSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeactivateStocks.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(DeactivateStocks.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.list = action.payload;
-            })
-            .addCase(DeactivateStocks.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errMsg = action.error.message;
-            })
             .addCase(EditStocks.pending, (state) => {
                 state.isLoading = true;
             })
@@ -399,26 +323,6 @@ export const StocksSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(EditStocks.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errMsg = action.error.message;
-            })
-            .addCase(TransferfromPatient.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(TransferfromPatient.fulfilled, (state, action) => {
-                state.isLoading = false;
-            })
-            .addCase(TransferfromPatient.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errMsg = action.error.message;
-            })
-            .addCase(TransfertoPatient.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(TransfertoPatient.fulfilled, (state, action) => {
-                state.isLoading = false;
-            })
-            .addCase(TransfertoPatient.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

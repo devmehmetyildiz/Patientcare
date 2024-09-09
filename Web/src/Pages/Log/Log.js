@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form, Grid, GridColumn, Icon, Modal } from 'semantic-ui-react'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper, FormInput } from '../../Components'
 import { FormContext } from '../../Provider/FormProvider'
-import { Formatfulldate } from '../../Utils/Formatdate'
+import Formatdate, { Formatfulldate } from '../../Utils/Formatdate'
 
 export default function Log(props) {
-    const { GetLogsByQuerry, Reports, Profile, } = props
+    const { GetLogsByQuerry, Reports, Profile, GetUsers, Users } = props
     const [modal, setModal] = useState(false)
     const [record, setRecord] = useState(null)
     const PAGE_NAME = 'Log'
@@ -15,6 +15,23 @@ export default function Log(props) {
     const context = useContext(FormContext)
     const data = context.getForm(PAGE_NAME)
 
+
+    useEffect(() => {
+        GetUsers()
+        const start = new Date()
+        const end = new Date()
+        start.setMinutes(start.getMinutes() - 5)
+        end.setMinutes(end.getMinutes() + 2)
+        const starttime = start.toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit' })
+        const endtime = end.toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit' })
+        context.setFormstates({
+            ...context.formstates,
+            [`${PAGE_NAME}/Startdate`]: Formatdate(start),
+            [`${PAGE_NAME}/Enddate`]: Formatdate(end),
+            [`${PAGE_NAME}/Starttime`]: starttime,
+            [`${PAGE_NAME}/Endtime`]: endtime
+        })
+    }, [])
 
     const dateCellhandler = (value) => {
         return Formatfulldate(value, true)
@@ -80,6 +97,27 @@ export default function Log(props) {
 
     const { isLoading, logs } = Reports
 
+    const Useroptions = (Users.list || []).filter(u => u.Isactive).map(personel => {
+        return { key: personel.Username, text: personel.Username, value: personel.Username }
+    })
+
+    const ReqOptions = [
+        { key: "GET", text: "GET", value: "GET" },
+        { key: "POST", text: "POST", value: "POST" },
+        { key: "PUT", text: "PUT", value: "PUT" },
+        { key: "DELETE", text: "DELETE", value: "DELETE" },
+    ]
+
+    const ServiceOptions = [
+        { key: "Auth", text: "Auth", value: "Auth" },
+        { key: "Business", text: "Business", value: "Business" },
+        { key: "Setting", text: "Setting", value: "Setting" },
+        { key: "System", text: "System", value: "System" },
+        { key: "Userrole", text: "Userrole", value: "Userrole" },
+        { key: "Warehouse", text: "Warehouse", value: "Warehouse" },
+        { key: "File", text: "File", value: "File" },
+    ]
+
     const list = (logs || []).map(u => {
         return {
             ...u,
@@ -138,12 +176,12 @@ export default function Log(props) {
                             </Form.Group>
                             <Form.Group widths='equal'>
                                 <FormInput page={PAGE_NAME} placeholder={t('Pages.Log.Label.Status')} name="Status" />
-                                <FormInput page={PAGE_NAME} placeholder={t('Pages.Log.Label.Service')} name="Service" />
-                                <FormInput page={PAGE_NAME} placeholder={t('Pages.Log.Label.User')} name="UserID" />
+                                <FormInput page={PAGE_NAME} placeholder={t('Pages.Log.Label.Service')} name="Service" options={ServiceOptions} formtype='dropdown' />
+                                <FormInput page={PAGE_NAME} placeholder={t('Pages.Log.Label.User')} name="UserID" options={Useroptions} formtype='dropdown' />
                                 <FormInput page={PAGE_NAME} placeholder={t('Pages.Log.Label.Targeturl')} name="Targeturl" />
                             </Form.Group>
                             <Form.Group widths='equal'>
-                                <FormInput page={PAGE_NAME} placeholder={t('Pages.Log.Label.Requesttype')} name="Requesttype" />
+                                <FormInput page={PAGE_NAME} placeholder={t('Pages.Log.Label.Requesttype')} name="Requesttype" options={ReqOptions} formtype='dropdown' />
                             </Form.Group>
                             <Form.Group widths={'equal'}>
                                 <Form.Field>

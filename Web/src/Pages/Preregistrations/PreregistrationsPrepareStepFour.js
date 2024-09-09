@@ -66,6 +66,9 @@ export default function PreregistrationsPrepareStepFour(props) {
         return {
             ...element,
             key: Math.random(),
+            Usagetypevalues: (Array.isArray(element.Usagetype) ? element.Usagetype : ((element?.Usagetype || '').split(',') || [])).map(u => {
+                return (Usagetypes.list || []).find(type => type.Uuid === u)?.Uuid
+            }),
             Usagetype: (Array.isArray(element.Usagetype) ? element.Usagetype : ((element?.Usagetype || '').split(',') || [])).map(u => {
                 return (Usagetypes.list || []).find(type => type.Uuid === u)?.Name
             })

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon, Loader, Tab } from 'semantic-ui-react'
-import { ROUTES, getInitialconfig } from '../../Utils/Constants'
+import { ROUTES} from '../../Utils/Constants'
 import config from '../../Config'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
 import PreregistrationsDelete from '../../Containers/Preregistrations/PreregistrationsDelete'
@@ -9,6 +9,7 @@ import PreregistrationsCheck from '../../Containers/Preregistrations/Preregistra
 import PreregistrationsApprove from '../../Containers/Preregistrations/PreregistrationsApprove'
 import PreregistrationsComplete from '../../Containers/Preregistrations/PreregistrationsComplete'
 import PreregistrationsDetail from '../../Containers/Preregistrations/PreregistrationsDetail'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 
 export default class Preregistrations extends Component {
 
@@ -264,7 +265,7 @@ export default class Preregistrations extends Component {
 
 function Preregistrationscreated({ Profile, Columns, list }) {
   const metaKey = "preregisrations"
-  let initialConfig = getInitialconfig(Profile, metaKey)
+  let initialConfig = GetInitialconfig(Profile, metaKey)
   const t = Profile?.i18n?.t || null
   return (
     <>
@@ -295,7 +296,7 @@ function Preregistrationscreated({ Profile, Columns, list }) {
 
 function Preregistrationschecked({ Profile, Columns, list }) {
   const metaKey = "preregisrations"
-  let initialConfig = getInitialconfig(Profile, metaKey)
+  let initialConfig = GetInitialconfig(Profile, metaKey)
   const t = Profile?.i18n?.t || null
   return (
     <>
@@ -326,7 +327,7 @@ function Preregistrationschecked({ Profile, Columns, list }) {
 
 function Preregistrationsapproved({ Profile, Columns, list }) {
   const metaKey = "preregisrations"
-  let initialConfig = getInitialconfig(Profile, metaKey)
+  let initialConfig = GetInitialconfig(Profile, metaKey)
   const t = Profile?.i18n?.t || null
   return (
     <>
@@ -357,7 +358,7 @@ function Preregistrationsapproved({ Profile, Columns, list }) {
 
 function Preregistrationscompleted({ Profile, Columns, list }) {
   const metaKey = "preregisrations"
-  let initialConfig = getInitialconfig(Profile, metaKey)
+  let initialConfig = GetInitialconfig(Profile, metaKey)
   const t = Profile?.i18n?.t || null
   return (
     <>

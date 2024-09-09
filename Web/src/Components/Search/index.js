@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Search } from 'semantic-ui-react'
-import { getSidebarroutes } from '../../Utils/Constants'
 import { connect } from 'react-redux'
 import { GetPatientforsearch } from '../../Redux/PatientSlice'
 import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
+import { getSidebarroutes } from '../Sidebar'
 
 export class index extends Component {
 

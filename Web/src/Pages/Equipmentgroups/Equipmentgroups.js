@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon, Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import EquipmentgroupsDelete from "../../Containers/Equipmentgroups/EquipmentgroupsDelete"
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import {
   DataTable, Headerwrapper, LoadingPage, MobileTable,
   NoDataScreen, Pagedivider, Pagewrapper, Settings
@@ -50,7 +50,7 @@ export default class Equipmentgroups extends Component {
 
 
     const metaKey = "equipmentgroup"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Equipmentgroups.list || []).map(item => {
       return {

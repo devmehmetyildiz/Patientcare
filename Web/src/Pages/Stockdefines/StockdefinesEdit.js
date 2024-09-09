@@ -74,7 +74,7 @@ export default class StockdefinesEdit extends Component {
             <Form>
               <Form.Group widths={"equal"}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Brand[Profile.Language]} name="Brand" />
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Brand[Profile.Language]} name="Brand" />
               </Form.Group>
               <Form.Group widths={"equal"}>
                 <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stocktype[Profile.Language]} options={Stocktypesoption} name="StocktypeID" formtype='dropdown' modal={StocktypesCreate} />

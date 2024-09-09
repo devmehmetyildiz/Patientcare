@@ -5,11 +5,10 @@ import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
-import StationsCreate from '../../Containers/Stations/StationsCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import RolesCreate from '../../Containers/Roles/RolesCreate'
-import { getSidebarroutes } from '../../Utils/Constants'
 import Fileupload from '../../Components/Fileupload'
+import { getSidebarroutes } from '../../Components/Sidebar'
 
 export default class UsersCreate extends Component {
 

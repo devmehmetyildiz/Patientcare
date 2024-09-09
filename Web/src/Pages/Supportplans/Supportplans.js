@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
-import { getInitialconfig } from '../../Utils/Constants'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
 import SupportplansDelete from '../../Containers/Supportplans/SupportplansDelete'
 
 export default class Supportplans extends Component {
@@ -40,7 +40,7 @@ export default class Supportplans extends Component {
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "supportplan"
-    let initialConfig = getInitialconfig(Profile, metaKey)
+    let initialConfig = GetInitialconfig(Profile, metaKey)
 
     const list = (Supportplans.list || []).map(item => {
       return {
