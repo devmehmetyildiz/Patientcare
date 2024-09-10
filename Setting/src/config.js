@@ -8,7 +8,7 @@ const config = {
     name: process.env.APP_SESSION_NAME,
     secret: process.env.APP_SESSION_SECRET,
     corsdomains: parseDomain(process.env.CORS_DOMAINS),
-    logger: process.env.APP_SESSION_LOGGER === 'true' ? true : false
+    logger: process.env.APP_SESSION_LOGGER
   },
   database: {
     host: process.env.APP_MYSQL_DB_SERVER,
