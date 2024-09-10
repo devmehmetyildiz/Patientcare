@@ -6,7 +6,8 @@ const config = {
   session: {
     name: process.env.APP_SESSION_NAME,
     secret: process.env.APP_SESSION_SECRET,
-    corsdomains: parseDomain(process.env.CORS_DOMAINS)
+    corsdomains: parseDomain(process.env.CORS_DOMAINS),
+    logger: process.env.APP_SESSION_LOGGER
   },
   database: {
     host: process.env.APP_MYSQL_DB_SERVER,
@@ -23,7 +24,7 @@ const config = {
     Warehouse: process.env.WAREHOUSE_URL,
     File: process.env.FILE_URL,
     Log: process.env.LOG_URL,
-    Web : process.env.WEB_URL
+    Web: process.env.WEB_URL
   }
 }
 

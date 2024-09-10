@@ -39,4 +39,5 @@
 
 11. npm install yapılır, npm run build yapılır
 
+**  0x80070021 deny hatası için iisden yapılandırmaya girilir, host bölüm kilidi açılır
 
