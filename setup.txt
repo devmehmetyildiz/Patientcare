@@ -1,12 +1,13 @@
 1. Windows Özelliklerinden Aşağıdaki Özellikleri Aktif Et 
     - IIS 
     - FTP
-    - SMTP
 
 2. Aşağıdaki Kurulumları Yap
-    - Node.js lts
+    - Node.js 18.20.4
     - MySQL
     - MySQL Workbench
+    - Python 3.12.6
+    - VS installer 2022 ile c++ geliştirme araçları ve framework 4.6.1 kur 
 
 3. MySQL için default root kullanıcı ile server kur, bilgiler aşağıdaki gibi olmalıdır.
     - Username : root
@@ -15,5 +16,27 @@
 4. MySQL Workbench kullanarak patientcare adı altında bir database oluştur
     - Shema adı : patientcare
     
-5.
+5.IIS için aşağıdaki paketleri indir kur
+    - iisnode : https://github.com/azure/iisnode/releases/download/v0.2.21/iisnode-full-v0.2.21-x64.msi
+    - url rewrite : https://download.microsoft.com/download/1/2/8/128E2E22-C1B9-44A4-BE2A-5859ED1D4592/rewrite_amd64_en-US.msi
+
+6.IIS içerisinde Uygulama Havuzu Ekle, .Net CLR sürümü için Yönetilen Kod Yok seç
+
+7.Patientcare dosya yolu için IIS_IUSERS kullanıcısına tam denetim ver
+
+8.IIS üzerinden FTP Ekle
+    - Ftp Dosya Yolunu Gitignoreda yer alan Ftpserver olarak Ekle
+    - SSL Yok Olarak Seç 
+    - Kimlik Doğrulaması Temel
+    - Erişim Yok
+
+9.Bilgisayar Yönetimi Yerek kullanıcı ve grup yönetimi kullanıcılardan yeni kullanıcı ekle 
+    - username : ftpuser
+    - parola : TP5SA4QNJCcYn8BVzvaWj7
+    - sadece parola her zaman geçerli olsun seçili
+
+10. Projeleri npm install yaptıktan sonra .env güncellenir
+
+11. npm install yapılır, npm run build yapılır
+
 
