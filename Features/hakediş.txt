@@ -10,12 +10,27 @@ hakediş devlet için
 kurumda kaç devlet hastası var
 günlük ücret kaç tl o belirlenecek
 
+hasta kaç gün kurumdaydı (gece 12de kurumdamı)
+günlük ücret (parametrik olucak)
+
+üstteki iki için hesap var onun sonucunu alıcam
+kdv değeri(parametrik girilecek)
+tvkifatı hesapla (kdv/2)
+
+hesaplanan 3 değeri ekle tutar bul 
+
 
 ------------------------------------
 bhks  devlet için
 
-1 ay  içerisinde 1 gün yatan hasta sayısı
+1 ay  içerisinde 1 gün yatan hasta olacak
 aylık ücret tutarı parametrik 
+kdv hesaplicam
+
+kdv aylık ücreti toplicam 
+tevfikatı bölücem (kdv/2)
+
+hesaplanan 3 değeri topla tutarı bul 
 
 
 ------------------------------------
@@ -43,5 +58,6 @@ hasta basına su kadar tl ( aylık )
 
 olur tarihlerine göre calısıyor 
 
+bjks ile aynı hesaplanıo
 
-134 130 
+

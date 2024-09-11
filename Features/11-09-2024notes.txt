@@ -1,14 +1,27 @@
 hasta detayda 
 
-    sosyal güvencesi 
-    bağımlıkık durumu
+    sosyal güvencesi -
+    bağımlıkık durumu+
     iletişim bilgi 1 lazım 
-    vasi notu
-    açıklama
+    vasi notu+
+    açıklama+
 
+isim numara olsun
+bilgiler alt alta olsun
+ölümleri kaldır
 
 
 satın almalarda
 hasta detayı ürün tüketimi onaysız olacak
 sıfır kalan ürünleri kaldır
 hasta durum türlerinde izinde ekle
+ayrılma ve vefat durumuna tarih saat girdir
+
+hakediş claimpayment
+
+
+bireysel bakım planı en sonucunu
+personelleri güncelle pdksa falan ekle
+hastanın giriş çıkış tarihlerine
+kurumda bulunma durumları
+personel tesvisi hariç hakediş yap
