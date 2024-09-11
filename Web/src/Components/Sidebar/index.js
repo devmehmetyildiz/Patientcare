@@ -261,7 +261,7 @@ export const getSidebarroutes = (Profile) => {
             icon: <MdSettings className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: Literals.Roles.Page.Pageheader[Profile.Language], url: "/Roles", permission: checkAuth('roleview') },
-                { id: 2, subtitle: Literals.Departments.Page.Pageheader[Profile.Language], url: "/Departments", permission: checkAuth('departmentview') },
+                { id: 2, subtitle: t('Pages.Departments.Page.Header'), url: "/Departments", permission: checkAuth('departmentview') },
                 { id: 3, subtitle: Literals.Users.Page.Pageheader[Profile.Language], url: "/Users", permission: checkAuth('userview') },
                 { id: 4, subtitle: Literals.Cases.Page.Pageheader[Profile.Language], url: "/Cases", permission: checkAuth('caseview') },
                 { id: 5, subtitle: Literals.Units.Page.Pageheader[Profile.Language], url: "/Units", permission: checkAuth('unitview') },

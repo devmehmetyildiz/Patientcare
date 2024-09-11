@@ -54,7 +54,7 @@ export const Changepassword = createAsyncThunk(
     'Profile/Changepassword',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Userrole, 'Users/Changepassword', data);
+            const response = await instanse.post(config.services.Userrole, 'Profile/Changepassword', data);
             dispatch(fillnotification({
                 type: 'Success',
                 code: 'Elder Camp',
@@ -94,7 +94,7 @@ export const GetActiveUser = createAsyncThunk(
     'Profile/GetActiveUser',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Userrole, 'Users/GetActiveUsername');
+            const response = await instanse.get(config.services.Userrole, 'Profile/Getusername');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -122,7 +122,7 @@ export const GetUserMeta = createAsyncThunk(
     'Profile/GetUserMeta',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Userrole, 'Users/GetActiveUserMeta');
+            const response = await instanse.get(config.services.Userrole, 'Profile/Getmeta');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -150,7 +150,7 @@ export const GetTableMeta = createAsyncThunk(
     'Profile/GetTableMeta',
     async (_, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Userrole, ROUTES.USER + '/GetTableMeta');
+            const response = await instanse.get(config.services.Userrole, 'Profile/Gettablemeta');
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -164,7 +164,7 @@ export const ResetTableMeta = createAsyncThunk(
     'Profile/ResetTableMeta',
     async (metaKey, { dispatch }) => {
         try {
-            const response = await instanse.delete(config.services.Userrole, ROUTES.USER + `/Resettablemeta/${metaKey}`);
+            const response = await instanse.delete(config.services.Userrole, `Profile/Resettablemeta/${metaKey}`);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -178,7 +178,7 @@ export const SaveTableMeta = createAsyncThunk(
     'Profile/SaveTableMeta',
     async ({ data, history }, { dispatch }) => {
         try {
-            const response = await instanse.post(config.services.Userrole, ROUTES.USER + '/SaveTableMeta', data);
+            const response = await instanse.post(config.services.Userrole, 'Profile/Savetablemeta', data);
             dispatch(fillnotification({
                 type: 'Success',
                 code: 'Veri Güncelleme',

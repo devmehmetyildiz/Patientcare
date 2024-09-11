@@ -92,7 +92,7 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
     try {
         const userresponse = await axios({
             method: 'GET',
-            url: config.services.Userrole + `Users/Getbyusername/${req.body.Username}`,
+            url: config.services.Userrole + `Profile/Getuserbyusername/${req.body.Username}`,
             headers: {
                 session_key: config.session.secret
             }
@@ -105,7 +105,7 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
     try {
         const usersaltreponse = await axios({
             method: 'GET',
-            url: config.services.Userrole + `Users/Getusersalt/${user.Uuid}`,
+            url: config.services.Userrole + `Profile/Getusersalt/${user.Uuid}`,
             headers: {
                 session_key: config.session.secret
             }

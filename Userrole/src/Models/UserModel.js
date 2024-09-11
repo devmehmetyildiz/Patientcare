@@ -8,6 +8,7 @@ module.exports = sequelize.define('userModel', {
     Uuid: {
         type: Sequelize.STRING
     },
+
     Username: {
         type: Sequelize.STRING
     },
@@ -23,32 +24,46 @@ module.exports = sequelize.define('userModel', {
     PasswordHash: {
         type: Sequelize.STRING
     },
+
     Language: {
         type: Sequelize.STRING
     },
     Config: {
         type: Sequelize.TEXT
     },
-    Defaultdepartment: {
-        type: Sequelize.STRING
-    },
     Defaultpage: {
         type: Sequelize.STRING
     },
-    ProfessionID: {
-        type: Sequelize.STRING
-    },
-    Includeshift: {
+
+    Isworker: {
         type: Sequelize.BOOLEAN
-    },
-    CountryID: {
-        type: Sequelize.STRING
     },
     Workstarttime: {
         type: Sequelize.DATE
     },
     Workendtime: {
         type: Sequelize.DATE
+    },
+
+    CaseID: {
+        type: Sequelize.STRING
+    },
+    Isworking: {
+        type: Sequelize.BOOLEAN
+    },
+    ShiftdefineID: {
+        type: Sequelize.STRING
+    },
+
+    ProfessionID: {
+        type: Sequelize.STRING
+    },
+    Includeshift: {
+        type: Sequelize.BOOLEAN
+    },
+
+    CountryID: {
+        type: Sequelize.STRING
     },
     Gender: {
         type: Sequelize.STRING
@@ -80,6 +95,8 @@ module.exports = sequelize.define('userModel', {
     Covid: {
         type: Sequelize.STRING
     },
+
+
     Createduser: {
         type: Sequelize.STRING
     },

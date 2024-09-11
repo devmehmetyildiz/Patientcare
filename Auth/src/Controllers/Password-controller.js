@@ -228,7 +228,7 @@ async function Resetpassword(req, res, next) {
       })
       const usersaltresponse = await axios({
         method: 'GET',
-        url: config.services.Userrole + 'Users/Getusersalt/' + request.UserID,
+        url: config.services.Userrole + 'Profile/Getusersalt/' + request.UserID,
         headers: {
           session_key: config.session.secret
         }
@@ -243,7 +243,7 @@ async function Resetpassword(req, res, next) {
     try {
       await axios({
         method: 'PUT',
-        url: config.services.Userrole + 'Users/UpdateUsermeta',
+        url: config.services.Userrole + 'Profile/Changepasswordbyrequest',
         headers: {
           session_key: config.session.secret
         },

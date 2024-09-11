@@ -10,12 +10,20 @@ module.exports = sequelize.define('departmentModel', {
     Name: {
         type: Sequelize.STRING
     },
+
     Ishavepatients: {
         type: Sequelize.BOOLEAN
     },
     Isdefaultpatientdepartment: {
         type: Sequelize.BOOLEAN
     },
+    Ishavepersonels: {
+        type: Sequelize.BOOLEAN
+    },
+    Isdefaultpersoneldepartment: {
+        type: Sequelize.BOOLEAN
+    },
+
     Createduser: {
         type: Sequelize.STRING
     },

@@ -1,6 +1,5 @@
 import Cases from "../Pages/Cases/Literals"
 import Costumertypes from "../Pages/Costumertypes/Literals"
-import Departments from "../Pages/Departments/Literals"
 import Files from "../Pages/Files/Literals"
 import Mailsettings from "../Pages/Mailsettings/Literals"
 import Patients from "../Pages/Patients/Literals"
@@ -55,7 +54,6 @@ import Personelshifts from "../Pages/Personelshifts/Literals"
 const Literals = {
     Cases,
     Costumertypes,
-    Departments,
     Files,
     Patients,
     Mailsettings,

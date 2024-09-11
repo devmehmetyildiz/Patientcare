@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Form } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
-import StationsCreate from '../../Containers/Stations/StationsCreate'
 import {
   Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump,
   Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
@@ -18,7 +16,7 @@ export default function DepartmentsEdit(props) {
   const PAGE_NAME = "DepartmentsEdit"
   const [isDatafetched, setisDatafetched] = useState(false)
   const context = useContext(FormContext)
-
+  const t = Profile?.i18n?.t
 
   useEffect(() => {
     let Id = DepartmentID || match?.params?.DepartmentID
@@ -42,11 +40,10 @@ export default function DepartmentsEdit(props) {
     e.preventDefault()
 
     const data = context.getForm(PAGE_NAME)
-    data.Isdefaultpatientdepartment = data.Ishavepatients ? true : false
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Departments.Page.Header'), description: t('Pages.Departments.Messages.NameRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
@@ -58,35 +55,46 @@ export default function DepartmentsEdit(props) {
   }
 
   return (
-    Departments.isLoading  ? <LoadingPage /> :
+    Departments.isLoading ? <LoadingPage /> :
       <Pagewrapper>
         <Headerwrapper>
           <Headerbredcrump>
             <Link to={"/Departments"}>
-              <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section >{t('Pages.Departments.Page.Header')}</Breadcrumb.Section>
             </Link>
             <Breadcrumb.Divider icon='right chevron' />
-            <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+            <Breadcrumb.Section>{t('Pages.Departments.Page.EditHeader')}</Breadcrumb.Section>
           </Headerbredcrump>
         </Headerwrapper>
         <Pagedivider />
         <Contentwrapper>
           <Form>
-            <FormInput page={PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-            <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Ishavepatients[Profile.Language]} name="Ishavepatients" formtype="checkbox" />
-            {context.formstates[`${PAGE_NAME}/Ishavepatients`] ?
-              <FormInput page={PAGE_NAME} placeholder={Literals.Columns.Isdefaultpatientdepartment[Profile.Language]} name="Isdefaultpatientdepartment" formtype="checkbox" /> : null}
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Departments.Columns.Name')} name="Name" />
+            <Form.Group widths={'equal'}>
+              <FormInput page={PAGE_NAME} placeholder={t('Pages.Departments.Columns.Ishavepatients')} name="Ishavepatients" formtype="checkbox" />
+              {context.formstates[`${PAGE_NAME}/Ishavepatients`]
+                ? <FormInput page={PAGE_NAME} placeholder={t('Pages.Departments.Columns.Isdefaultpatientdepartment')} name="Isdefaultpatientdepartment" formtype="checkbox" />
+                : null
+              }
+            </Form.Group>
+            <Form.Group widths={'equal'}>
+              <FormInput page={PAGE_NAME} placeholder={t('Pages.Departments.Columns.Ishavepersonels')} name="Ishavepersonels" formtype="checkbox" />
+              {context.formstates[`${PAGE_NAME}/Ishavepersonels`]
+                ? <FormInput page={PAGE_NAME} placeholder={t('Pages.Departments.Columns.Isdefaultpersoneldepartment')} name="Isdefaultpersoneldepartment" formtype="checkbox" />
+                : null
+              }
+            </Form.Group>
           </Form>
         </Contentwrapper>
         <Footerwrapper>
           <Gobackbutton
             history={history}
             redirectUrl={"/Departments"}
-            buttonText={Literals.Button.Goback[Profile.Language]}
+            buttonText={t('Common.Button.Goback')}
           />
           <Submitbutton
             isLoading={Departments.isLoading}
-            buttonText={Literals.Button.Update[Profile.Language]}
+            buttonText={t('Common.Button.Update')}
             submitFunction={handleSubmit}
           />
         </Footerwrapper>
