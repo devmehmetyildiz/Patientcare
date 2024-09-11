@@ -1,0 +1,14 @@
+hasta detayda 
+
+    sosyal güvencesi 
+    bağımlıkık durumu
+    iletişim bilgi 1 lazım 
+    vasi notu
+    açıklama
+
+
+
+satın almalarda
+hasta detayı ürün tüketimi onaysız olacak
+sıfır kalan ürünleri kaldır
+hasta durum türlerinde izinde ekle

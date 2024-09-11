@@ -24,6 +24,18 @@ async function GetPatients(req, res, next) {
         const patients = await db.patientModel.findAll()
         for (const patient of patients) {
             patient.Movements = await db.patientmovementModel.findAll({ where: { PatientID: patient?.Uuid } });
+            patient.Tododefineuuids = await db.patienttododefineModel.findAll({
+                where: {
+                    PatientID: patient.Uuid,
+                },
+                attributes: ['TododefineID']
+            });
+            patient.Supportplanuuids = await db.patientsupportplanModel.findAll({
+                where: {
+                    PatientID: patient.Uuid,
+                },
+                attributes: ['PlanID']
+            });
         }
         if (req?.Uuid) {
             data = await db.patientModel.findOne({ where: { Uuid: req?.Uuid } });
