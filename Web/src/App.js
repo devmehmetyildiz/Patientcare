@@ -7,7 +7,7 @@ import NotificationHandler from './Utils/NotificationHandler';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { setI18n } from './Redux/ProfileSlice';
 
 const App = (props) => {
@@ -15,11 +15,17 @@ const App = (props) => {
   const location = useLocation();
   const formContext = useContext(FormContext);
 
+  const [visible, setVisible] = useState(false)
   const [iconstate, setIconstate] = useState(false);
   const [isFullPageLayout, setIsFullPageLayout] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [hideMobile, setHideMobile] = useState(false);
   const [mediaQuery, setMediaQuery] = useState(window.matchMedia('(max-width: 768px)'));
+  const dispatch = useDispatch()
+
+  const handleVisibilityChange = () => {
+    setVisible(!document.hidden)
+  }
 
   useEffect(() => {
     props.setI18n({ t: t, i18n: i18n })
@@ -47,6 +53,25 @@ const App = (props) => {
     formContext.setFormstates({});
     onRouteChanged();
   }, [location]);
+
+  useEffect(() => {
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      window.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (visible) {
+      dispatch({
+        type: 'START_MIDDLEWARES'
+      })
+    } else {
+      dispatch({
+        type: 'STOP_MIDDLEWARES'
+      })
+    }
+  }, [visible])
 
   const onRouteChanged = () => {
     window.scrollTo(0, 0);

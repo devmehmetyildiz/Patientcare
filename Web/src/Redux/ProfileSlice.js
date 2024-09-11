@@ -250,6 +250,7 @@ export const ProfileSlice = createSlice({
         Istokenchecking: false,
         isFocusedpage: false,
         scroll: false,
+        tokenInterval: null,
         i18n: {
             i18n: null,
             t: null
@@ -281,6 +282,9 @@ export const ProfileSlice = createSlice({
         },
         setI18n: (state, action) => {
             state.i18n = action.payload
+        },
+        handleTokeninterval: (state, action) => {
+            state.tokenInterval = action.payload
         },
         logOut: () => {
             localStorage.removeItem('patientcare')
@@ -464,6 +468,7 @@ export const {
     handlemobile,
     handleFocus,
     handleScroll,
+    handleTokeninterval,
     setI18n
 } = ProfileSlice.actions;
 

@@ -1,7 +1,7 @@
 import config from "../Config";
 import instanse from "../Redux/axios";
 import validator from "./Validator";
-import { fillnotification } from "../Redux/ProfileSlice";
+import { fillnotification, handleTokeninterval } from "../Redux/ProfileSlice";
 
 const TOKENINTERVAL = 1000 * 60 * 1
 const NOTIFICATIONINTERVAL = 1000 * 60 * 5
@@ -26,9 +26,12 @@ const tokenMiddleware = store => next => action => {
 
         }, TOKENINTERVAL);
 
+        store.dispatch(handleTokeninterval(intervalId))
         next({ ...action, meta: { ...action.meta, intervalId } });
     } else if (action.type === 'STOP_MIDDLEWARES') {
-        clearInterval(action.meta.intervalId);
+        const state = store.getState()
+        const Profile = state?.Profile
+        clearInterval(Profile?.tokenInterval);
     } else {
         next(action);
     }
@@ -79,9 +82,12 @@ const notificationMiddleware = store => next => action => {
 
         }, NOTIFICATIONINTERVAL);
 
+        store.dispatch(handleTokeninterval(intervalId))
         next({ ...action, meta: { ...action.meta, intervalId } });
     } else if (action.type === 'STOP_MIDDLEWARES') {
-        clearInterval(action.meta.intervalId);
+        const state = store.getState()
+        const Profile = state?.Profile
+        clearInterval(Profile?.tokenInterval);
     } else {
         next(action);
     }
