@@ -417,7 +417,6 @@ async function GetUsersforshift(req, res, next) {
     }
 }
 
-
 function GetUserByEmail(next, Email, language) {
     return new Promise((resolve, reject) => {
         db.userModel.findOne({ where: { Email: Email } })

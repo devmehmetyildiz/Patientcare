@@ -1,34 +1,28 @@
-import React, { Component } from 'react'
+import React, { Component, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Form, Breadcrumb } from 'semantic-ui-react'
-import Literals from './Literals'
+import { Breadcrumb } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
-import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
-import RolesCreate from '../../Containers/Roles/RolesCreate'
+import { Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import Formatdate from '../../Utils/Formatdate'
-import Fileupload from '../../Components/Fileupload'
-import { getSidebarroutes } from '../../Components/Sidebar'
+import UsersPrepare from './UsersPrepare'
+
+
 export default class UsersEdit extends Component {
 
   PAGE_NAME = "UsersEdit"
-
   constructor(props) {
     super(props)
-    this.state = {
-      isDatafetched: false,
-      selectedFiles: []
-    }
+    this.state = { isDatafetched: false, selectedFiles: [] }
   }
 
   componentDidMount() {
-    const { UserID, GetUser, GetRoles, GetUsagetypes, GetFiles, GetProfessions, GetDepartments, match, history } = this.props
-    let Id = UserID || match?.params?.UserID
+    const { GetUser, GetRoles, GetUsagetypes, GetProfessions, GetFiles, UserID, history, match, } = this.props
+    const Id = UserID || match?.params?.UserID
+
     if (validator.isUUID(Id)) {
-      GetUser(match.params.UserID)
+      GetUser(Id)
       GetRoles()
-      GetDepartments()
       GetProfessions()
       GetUsagetypes()
       GetFiles()
@@ -38,11 +32,17 @@ export default class UsersEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Departments, Roles, Users, Files, Usagetypes } = this.props
-    const { selected_record, isLoading } = Users
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 &&
-      !Departments.isLoading && !Roles.isLoading && !Files.isLoading && !Usagetypes.isLoading &&
-      !isLoading && !this.state.isDatafetched) {
+    const { Users, Roles, Usagetypes, Professions, Files } = this.props
+
+    const isLoadingstatus =
+      Users.isLoading ||
+      Roles.isLoading ||
+      Files.isLoading ||
+      Usagetypes.isLoading ||
+      Professions.isLoading
+
+    const { selected_record } = Users
+    if (!isLoadingstatus && !this.state.isDatafetched && validator.isUUID(selected_record?.Uuid)) {
       var response = (Files.list || []).filter(u => u.ParentID === selected_record?.Uuid).map(element => {
         return {
           ...element,
@@ -52,143 +52,77 @@ export default class UsersEdit extends Component {
           })
         }
       });
+      this.context.setForm(this.PAGE_NAME,
+        {
+          ...selected_record,
+          Roles: selected_record.Roleuuids.map(u => { return u.RoleID }),
+          Workstarttime: validator.isISODate(selected_record?.Workstarttime) ? Formatdate(selected_record?.Workstarttime) : null,
+          Workendtime: validator.isISODate(selected_record?.Workendtime) ? Formatdate(selected_record?.Workendtime) : null,
+        })
       this.setState({
         isDatafetched: true,
         selectedFiles: [...response] || []
       })
-      this.context.setForm(this.PAGE_NAME,
-        {
-          ...selected_record,
-          Departments: selected_record.Departmentuuids.map(u => { return u.DepartmentID }),
-          Roles: selected_record.Roleuuids.map(u => { return u.RoleID }),
-          Workstarttime: Formatdate(selected_record?.Workstarttime),
-          Workendtime: Formatdate(selected_record?.Workendtime),
-        })
     }
   }
 
-  setselectedFiles = (files) => {
-    this.setState({ selectedFiles: [...files] })
-  }
-
   render() {
-
-    const { Departments, Users, Roles, Files, Usagetypes, fillUsernotification, Professions, Profile, history } = this.props
-
-    const Roleoptions = (Roles.list || []).filter(u => u.Isactive).map(roles => {
-      return { key: roles.Uuid, text: roles.Name, value: roles.Uuid }
-    })
-    const Departmentoptions = (Departments.list || []).map(department => {
-      return { key: department.Uuid, text: department.Name, value: department.Uuid }
-    })
-    const Professionoptions = (Professions.list || []).filter(u => u.Isactive).map(profession => {
-      return { key: profession.Uuid, text: profession.Name, value: profession.Uuid }
-    })
-    const Languageoptions = [
-      { key: 1, text: 'EN', value: 'en' },
-      { key: 2, text: 'TR', value: 'tr' },
-    ]
-
-    const Sidebaroption = (getSidebarroutes(Profile) || []).flatMap(section => {
-      return section.items.filter(u => u.permission)
-    }).map(item => {
-      return { text: item.subtitle, value: item.url, key: item.subtitle }
-    })
-
-    const Includeshift = validator.isUUID(this.context.formstates[`${this.PAGE_NAME}/ProfessionID`])
-
-    const Genderoptions = [
-      { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
-      { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
-    ]
-
+    const { history, Users, Roles, Usagetypes, Professions, Files, Profile, fillUsernotification } = this.props
+    const t = Profile?.i18n?.t
     const isLoadingstatus =
       Users.isLoading ||
-      Departments.isLoading ||
       Roles.isLoading ||
       Files.isLoading ||
       Usagetypes.isLoading ||
       Professions.isLoading
 
-    return (
-      isLoadingstatus ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Users"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
-            </Headerbredcrump>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Surname[Profile.Language]} name="Surname" />
-              </Form.Group>
-              <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Email[Profile.Language]} name="Email" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Username[Profile.Language]} name="Username" />
-              </Form.Group>
-              <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departments[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Roles[Profile.Language]} name="Roles" multiple options={Roleoptions} formtype='dropdown' modal={RolesCreate} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Defaultpage[Profile.Language]} name="Defaultpage" options={Sidebaroption} formtype='dropdown' />
-              </Form.Group>
-              <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Profession[Profile.Language]} name="ProfessionID" options={Professionoptions} formtype='dropdown' />
-                {Includeshift && <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Includeshift[Profile.Language]} name="Includeshift" formtype='checkbox' />}
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Language[Profile.Language]} name="Language" options={Languageoptions} formtype='dropdown' />
-              </Form.Group>
-              <Pagedivider />
-              <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CountryID[Profile.Language]} name="CountryID" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Workstarttime[Profile.Language]} name="Workstarttime" type='date' />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Workendtime[Profile.Language]} name="Workendtime" type='date' />
-              </Form.Group>
-              <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Gender[Profile.Language]} name="Gender" options={Genderoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Phonenumber[Profile.Language]} name="Phonenumber" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Adress[Profile.Language]} name="Adress" />
-              </Form.Group>
-            </Form>
-            <Fileupload
-              fillnotification={fillUsernotification}
-              Usagetypes={Usagetypes}
-              selectedFiles={this.state.selectedFiles}
-              setselectedFiles={this.setselectedFiles}
-              Literals={Literals}
-              Profile={Profile}
-            />
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Users"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
-            />
-            <Submitbutton
-              isLoading={Users.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
-    )
+    return isLoadingstatus ? <LoadingPage /> :
+      <Pagewrapper>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Users"}>
+              <Breadcrumb.Section >{t('Pages.Users.Page.Header')}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{t('Pages.Users.Page.EditHeader')}</Breadcrumb.Section>
+          </Headerbredcrump>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <UsersPrepare
+            isEditpage
+            selectedFiles={this.state.selectedFiles}
+            setselectedFiles={this.setselectedFiles}
+            fillnotification={fillUsernotification}
+            Usagetypes={Usagetypes}
+            Roles={Roles}
+            Professions={Professions}
+            PAGE_NAME={this.PAGE_NAME}
+            Profile={Profile}
+          />
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Users"}
+            buttonText={t('Common.Button.Goback')}
+          />
+          <Submitbutton
+            isLoading={Users.isLoading}
+            buttonText={t('Common.Button.Update')}
+            submitFunction={this.handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
   }
+
   handleSubmit = (e) => {
     e.preventDefault()
-    const { EditUsers, history, fillUsernotification, Roles, Departments, Users, Profile } = this.props
+    const { history, Users, Roles, Profile, EditUsers, fillUsernotification, } = this.props
+    const t = Profile?.i18n?.t
     const data = this.context.getForm(this.PAGE_NAME)
-    data.UserID = parseInt(data.UserID, 10)
-    data.Roles = data.Roles.map(id => {
+    data.Roles = (data?.Roles || []).map(id => {
       return (Roles.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
-    }).filter(u => u)
-    data.Departments = data.Departments.map(id => {
-      return (Departments.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
     }).filter(u => u)
     data.Includeshift = validator.isUUID(data.ProfessionID) ? validator.isBoolean(data?.Includeshift) ? data?.Includeshift : false : false
     if (!validator.isISODate(data.Workstarttime)) {
@@ -199,25 +133,27 @@ export default class UsersEdit extends Component {
     }
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Users.Page.Header'), description: t('Pages.Users.Messages.NameRequired') })
     }
     if (!validator.isString(data.Surname)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.SurnameRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Users.Page.Header'), description: t('Pages.Users.Messages.SurnameRequired') })
     }
     if (!validator.isString(data.Username)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.UsernameRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Users.Page.Header'), description: t('Pages.Users.Messages.UsernameRequired') })
     }
     if (!validator.isString(data.Email)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.EmailRequired[Profile.Language] })
-    }
-    if (!validator.isArray(data.Departments)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentsRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Users.Page.Header'), description: t('Pages.Users.Messages.EmailRequired') })
     }
     if (!validator.isArray(data.Roles)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.RolesRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Users.Page.Header'), description: t('Pages.Users.Messages.RolesRequired') })
     }
     if (!validator.isString(data.Language)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.LanguageRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Users.Page.Header'), description: t('Pages.Users.Messages.LanguageRequired') })
+    }
+    if (data.Isworker) {
+      if (!validator.isISODate(data.Workstarttime)) {
+        errors.push({ type: 'Error', code: t('Pages.Users.Page.Header'), description: t('Pages.Users.Messages.WorkstarttimeRequired') })
+      }
     }
     if (errors.length > 0) {
       errors.forEach(error => {
@@ -227,5 +163,12 @@ export default class UsersEdit extends Component {
       EditUsers({ data: { ...Users.selected_record, ...data }, history, files: this.state.selectedFiles })
     }
   }
+
+  setselectedFiles = (prev) => {
+    this.setState({
+      selectedFiles: [...prev]
+    })
+  }
+
 }
 UsersEdit.contextType = FormContext

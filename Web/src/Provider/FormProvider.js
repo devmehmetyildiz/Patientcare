@@ -6,6 +6,7 @@ export const FormContext = React.createContext()
 const FormProvider = ({ children }) => {
 
     const [formstates, setFormstates] = useState({})
+    
     const [buffer, setBuffer] = useState([])
 
     useEffect(() => {

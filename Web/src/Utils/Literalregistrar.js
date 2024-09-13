@@ -18,7 +18,6 @@ import Stocks from "../Pages/Stocks/Literals"
 import Tododefines from "../Pages/Tododefines/Literals"
 import Todogroupdefines from "../Pages/Todogroupdefines/Literals"
 import Units from "../Pages/Units/Literals"
-import Users from "../Pages/Users/Literals"
 import Warehouses from "../Pages/Warehouses/Literals"
 import Rules from "../Pages/Rules/Literals"
 import Beds from "../Pages/Beds/Literals"
@@ -71,7 +70,6 @@ const Literals = {
     Tododefines,
     Todogroupdefines,
     Units,
-    Users,
     Warehouses,
     Rules,
     Rooms,

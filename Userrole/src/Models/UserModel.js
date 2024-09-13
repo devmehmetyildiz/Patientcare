@@ -34,10 +34,10 @@ module.exports = sequelize.define('userModel', {
     Defaultpage: {
         type: Sequelize.STRING
     },
-
     Isworker: {
         type: Sequelize.BOOLEAN
     },
+
     Workstarttime: {
         type: Sequelize.DATE
     },
@@ -62,20 +62,11 @@ module.exports = sequelize.define('userModel', {
         type: Sequelize.BOOLEAN
     },
 
-    CountryID: {
-        type: Sequelize.STRING
-    },
-    Gender: {
-        type: Sequelize.STRING
-    },
-    Adress: {
-        type: Sequelize.TEXT
+    Dateofbirth: {
+        type: Sequelize.DATE
     },
     Phonenumber: {
         type: Sequelize.STRING
-    },
-    Dateofbirth: {
-        type: Sequelize.DATE
     },
     Bloodgroup: {
         type: Sequelize.STRING
@@ -93,6 +84,21 @@ module.exports = sequelize.define('userModel', {
         type: Sequelize.STRING
     },
     Covid: {
+        type: Sequelize.STRING
+    },
+    City: {
+        type: Sequelize.TEXT
+    },
+    Town: {
+        type: Sequelize.TEXT
+    },
+    Adress: {
+        type: Sequelize.TEXT
+    },
+    CountryID: {
+        type: Sequelize.STRING
+    },
+    Gender: {
         type: Sequelize.STRING
     },
 

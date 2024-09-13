@@ -206,7 +206,7 @@ async function Getmeta(req, res, next) {
         return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
     }
     res.status(200)
-    return res.send(req?.identity?.user?.Username || '')
+    return res.send(req.identity.user)
 }
 
 async function Gettablemeta(req, res, next) {

@@ -27,6 +27,7 @@ const UnitsCreate = lazy(() => import('./Containers/Units/UnitsCreate'));
 const UnitsEdit = lazy(() => import('./Containers/Units/UnitsEdit'));
 
 const Users = lazy(() => import('./Containers/Users/Users'));
+const UsersDetail = lazy(() => import('./Containers/Users/UsersDetail'));
 const UsersCreate = lazy(() => import('./Containers/Users/UsersCreate'));
 const UsersEdit = lazy(() => import('./Containers/Users/UsersEdit'));
 
@@ -275,6 +276,7 @@ class Routes extends Component {
       { exact: true, path: "/Stockmovements/:StockmovementID/Edit", auth: true, component: StockmovementsEdit, permission: 'stockmovementupdate' },
 
       { exact: true, path: "/Users", auth: true, component: Users, permission: 'userview' },
+      { exact: true, path: "/Users/:UserID", auth: true, component: UsersDetail, permission: 'userview' },
       { exact: true, path: "/Users/Create", auth: true, component: UsersCreate, permission: 'useradd' },
       { exact: true, path: "/Users/:UserID/Edit", auth: true, component: UsersEdit, permission: 'userupdate' },
 

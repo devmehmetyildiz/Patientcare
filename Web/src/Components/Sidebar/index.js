@@ -247,11 +247,12 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <TbGauge className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: Literals.Rules.Page.Pageheader[Profile.Language], url: "/Rules", permission: checkAuth('ruleview') },
-                { id: 2, subtitle: Literals.Mailsettings.Page.Pageheader[Profile.Language], url: "/Mailsettings", permission: checkAuth('mailsettingview') },
-                { id: 3, subtitle: Literals.Printtemplates.Page.Pageheader[Profile.Language], url: "/Printtemplates", permission: checkAuth('printtemplateview') },
-                { id: 4, subtitle: Literals.Appreports.Page.Pageheader[Profile.Language], url: "/Appreports", permission: checkAuth('admin') },
-                { id: 5, subtitle: t('Pages.Log.Page.Header'), url: "/Logs", permission: checkAuth('admin') },
+                { id: 1, subtitle: Literals.Files.Page.Pageheader[Profile.Language], url: "/Files", permission: checkAuth('fileview') },
+                { id: 2, subtitle: Literals.Rules.Page.Pageheader[Profile.Language], url: "/Rules", permission: checkAuth('ruleview') },
+                { id: 3, subtitle: Literals.Mailsettings.Page.Pageheader[Profile.Language], url: "/Mailsettings", permission: checkAuth('mailsettingview') },
+                { id: 4, subtitle: Literals.Printtemplates.Page.Pageheader[Profile.Language], url: "/Printtemplates", permission: checkAuth('printtemplateview') },
+                { id: 5, subtitle: Literals.Appreports.Page.Pageheader[Profile.Language], url: "/Appreports", permission: checkAuth('admin') },
+                { id: 6, subtitle: t('Pages.Log.Page.Header'), url: "/Logs", permission: checkAuth('admin') },
             ]
         },
         {
@@ -262,13 +263,12 @@ export const getSidebarroutes = (Profile) => {
             items: [
                 { id: 1, subtitle: Literals.Roles.Page.Pageheader[Profile.Language], url: "/Roles", permission: checkAuth('roleview') },
                 { id: 2, subtitle: t('Pages.Departments.Page.Header'), url: "/Departments", permission: checkAuth('departmentview') },
-                { id: 3, subtitle: Literals.Users.Page.Pageheader[Profile.Language], url: "/Users", permission: checkAuth('userview') },
+                { id: 3, subtitle: t('Pages.Users.Page.Header'), url: "/Users", permission: checkAuth('userview') },
                 { id: 4, subtitle: Literals.Cases.Page.Pageheader[Profile.Language], url: "/Cases", permission: checkAuth('caseview') },
                 { id: 5, subtitle: Literals.Units.Page.Pageheader[Profile.Language], url: "/Units", permission: checkAuth('unitview') },
                 { id: 5, subtitle: Literals.Stocktypes.Page.Pageheader[Profile.Language], url: "/Stocktypes", permission: checkAuth('stocktypeview') },
                 { id: 5, subtitle: Literals.Stocktypegroups.Page.Pageheader[Profile.Language], url: "/Stocktypegroups", permission: checkAuth('stocktypegroupview') },
                 { id: 6, subtitle: Literals.Stockdefines.Page.Pageheader[Profile.Language], url: "/Stockdefines", permission: checkAuth('stockdefineview') },
-                { id: 7, subtitle: Literals.Files.Page.Pageheader[Profile.Language], url: "/Files", permission: checkAuth('fileview') },
                 { id: 8, subtitle: Literals.Floors.Page.Pageheader[Profile.Language], url: "/Floors", permission: checkAuth('floorview') },
                 { id: 9, subtitle: Literals.Rooms.Page.Pageheader[Profile.Language], url: "/Rooms", permission: checkAuth('roomview') },
                 { id: 10, subtitle: Literals.Beds.Page.Pageheader[Profile.Language], url: "/Beds", permission: checkAuth('bedview') },

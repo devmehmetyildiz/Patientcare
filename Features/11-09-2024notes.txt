@@ -25,3 +25,6 @@ personelleri güncelle pdksa falan ekle
 hastanın giriş çıkış tarihlerine
 kurumda bulunma durumları
 personel tesvisi hariç hakediş yap
+
+
+yaş hesaplama hatalı model değiş

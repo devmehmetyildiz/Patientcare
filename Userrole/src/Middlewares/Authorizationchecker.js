@@ -72,36 +72,6 @@ async function authorizationChecker(req, res, next) {
                             if (!user.Isactive) {
                                 return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
                             }
-                            let departments = []
-                            try {
-                                const departmentsresponse = await axios({
-                                    method: 'GET',
-                                    url: config.services.Setting + `Departments`,
-                                    headers: {
-                                        session_key: config.session.secret
-                                    }
-                                })
-                                departments = departmentsresponse.data
-                            } catch (error) {
-                                return next(requestErrorCatcher(error, 'Setting'))
-                            }
-                            try {
-                                const fileresponse = await axios({
-                                    method: 'GET',
-                                    url: config.services.File + `Files/GetbyparentID/${user.Uuid}`,
-                                    headers: {
-                                        session_key: config.session.secret
-                                    }
-                                })
-                                user.Files = fileresponse.data
-                            } catch (error) {
-                                return next(requestErrorCatcher(error, 'File'))
-                            }
-                            let departmentuuids = await db.userdepartmentModel.findAll({
-                                where: {
-                                    UserID: user.Uuid,
-                                }
-                            });
                             let rolesuuids = await db.userroleModel.findAll({
                                 where: {
                                     UserID: user.Uuid
@@ -110,12 +80,6 @@ async function authorizationChecker(req, res, next) {
                             user.Roles = await db.roleModel.findAll({
                                 where: {
                                     Uuid: rolesuuids.map(u => { return u.RoleID })
-                                }
-                            })
-                            user.Departments = departmentuuids.map(userdepartment => {
-                                let data = departments.find(u => u.Uuid === userdepartment.DepartmentID)
-                                if (data) {
-                                    return data
                                 }
                             })
                             user.PasswordHash && delete user.PasswordHash
