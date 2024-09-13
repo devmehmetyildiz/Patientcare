@@ -27,14 +27,14 @@ export default function UsersDetailInfo(props) {
     const Graduation = user?.Graduation || t('Common.NoDataFound')
 
     const Columns = [
-        { label: t('Pages.Users.Detail.Label.Age'), value: Age },
-        { label: t('Pages.Users.Detail.Label.Gender'), value: Gender },
-        { label: t('Pages.Users.Detail.Label.CountryID'), value: CountryID },
-        { label: t('Pages.Users.Detail.Label.Dateofbirth'), value: Dateofbirth },
-        { label: t('Pages.Users.Detail.Label.Phonenumber'), value: Phonenumber },
-        { label: t('Pages.Users.Detail.Label.Bloodgroup'), value: Bloodgroup },
-        { label: t('Pages.Users.Detail.Label.Foreignlanguage'), value: Foreignlanguage },
-        { label: t('Pages.Users.Detail.Label.Graduation'), value: Graduation },
+        { label: t('Pages.Users.Detail.Info.Label.Age'), value: Age },
+        { label: t('Pages.Users.Detail.Info.Label.Gender'), value: Gender },
+        { label: t('Pages.Users.Detail.Info.Label.CountryID'), value: CountryID },
+        { label: t('Pages.Users.Detail.Info.Label.Dateofbirth'), value: Dateofbirth },
+        { label: t('Pages.Users.Detail.Info.Label.Phonenumber'), value: Phonenumber },
+        { label: t('Pages.Users.Detail.Info.Label.Bloodgroup'), value: Bloodgroup },
+        { label: t('Pages.Users.Detail.Info.Label.Foreignlanguage'), value: Foreignlanguage },
+        { label: t('Pages.Users.Detail.Info.Label.Graduation'), value: Graduation },
     ]
 
     return (

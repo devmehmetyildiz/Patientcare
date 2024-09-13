@@ -8,7 +8,6 @@ import Formatdate from '../../../Utils/Formatdate'
 export default function UserDetailProfile(props) {
 
     const { user, Files, Usagetypes, Roles, Profile } = props
-    console.log('user: ', user);
 
     const history = useHistory()
     const t = Profile?.i18n?.t

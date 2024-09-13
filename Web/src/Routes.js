@@ -10,6 +10,8 @@ const RolesEdit = lazy(() => import('./Containers/Roles/RolesEdit'));
 
 const About = lazy(() => import('./Components/About'));
 
+const Approve = lazy(() => import('./Containers/Approve/Approve'));
+
 const Rules = lazy(() => import('./Containers/Rules/Rules'));
 const RulesCreate = lazy(() => import('./Containers/Rules/RulesCreate'));
 const RulesEdit = lazy(() => import('./Containers/Rules/RulesEdit'));
@@ -139,7 +141,6 @@ const Floors = lazy(() => import('./Containers/Floors/Floors'));
 const FloorsCreate = lazy(() => import('./Containers/Floors/FloorsCreate'));
 const FloorsEdit = lazy(() => import('./Containers/Floors/FloorsEdit'));
 
-
 const Breakdowns = lazy(() => import('./Containers/Breakdowns/Breakdowns'));
 const BreakdownsCreate = lazy(() => import('./Containers/Breakdowns/BreakdownsCreate'));
 const BreakdownsEdit = lazy(() => import('./Containers/Breakdowns/BreakdownsEdit'));
@@ -238,6 +239,8 @@ class Routes extends Component {
       { exact: true, path: "/Home", auth: true, component: Home, permission: '' },
       { exact: true, path: "/", auth: true, component: Home, permission: '' },
 
+      { exact: true, path: "/Approve", auth: true, component: Approve, permission: 'roleview' },
+      
       { exact: true, path: "/Roles", auth: true, component: Roles, permission: 'roleview' },
       { exact: true, path: "/Roles/Create", auth: true, component: RolesCreate, permission: 'roleadd' },
       { exact: true, path: "/Roles/:RoleID/Edit", auth: true, component: RolesEdit, permission: 'roleupdate' },

@@ -60,9 +60,9 @@ export default function UserDetailFiles(props) {
                 <Table >
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>{t('Pages.Users.Detail.Label.Name')}</Table.HeaderCell>
-                            <Table.HeaderCell>{t('Pages.Users.Detail.Label.Usagetype')}</Table.HeaderCell>
-                            <Table.HeaderCell>{t('Pages.Users.Detail.Label.Download')}</Table.HeaderCell>
+                            <Table.HeaderCell>{t('Pages.Users.Detail.File.Label.Name')}</Table.HeaderCell>
+                            <Table.HeaderCell>{t('Pages.Users.Detail.File.Label.Usagetype')}</Table.HeaderCell>
+                            <Table.HeaderCell>{t('Pages.Users.Detail.File.Label.Download')}</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
