@@ -16,6 +16,9 @@ const personelpresettingModel = require('./PersonelpresettingModel')
 const personelshiftdetailModel = require('./PersonelshiftdetailModel')
 const personelshiftModel = require('./PersonelshiftModel')
 const professionpresettingModel = require('./ProfessionpresettingModel')
+const claimpaymentModel = require('./ClaimpaymentModel')
+const claimpaymentdetailModel = require('./ClaimpaymentdetailModel')
+const claimpaymentparameterModel = require('./ClaimpaymentparameterModel')
 
 module.exports = {
     applog_businessModel,
@@ -35,5 +38,8 @@ module.exports = {
     personelshiftdetailModel,
     personelshiftModel,
     professionpresettingModel,
-    shiftdefineModel
+    shiftdefineModel,
+    claimpaymentModel,
+    claimpaymentdetailModel,
+    claimpaymentparameterModel
 }
