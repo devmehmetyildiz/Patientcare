@@ -107,8 +107,10 @@ export const PATIENTS_MOVEMENTTYPES_APPROVE = 'patientapprove'
 export const PATIENTS_MOVEMENTTYPES_COMPLETE = 'patientcomplete'
 export const PATIENTS_MOVEMENTTYPES_CANCELCHECK = 'patientcancelcheck'
 export const PATIENTS_MOVEMENTTYPES_CANCELAPPROVE = 'patientcancelapprove'
-
-
+export const PATIENTS_MOVEMENTTYPES_LEFT = 'patientleft'
+export const PATIENTS_MOVEMENTTYPES_DEAD = 'patientdead'
+export const PATIENTS_MOVEMENTTYPES_CASECHANGE = 'patientcasechange'
+export const PATIENTS_MOVEMENTTYPES_PLACECHANGE = 'patientplacechange'
 
 export const ANNUALTYPES = [
     { Name: "Çalışıyor", value: 0, color: 'green' },

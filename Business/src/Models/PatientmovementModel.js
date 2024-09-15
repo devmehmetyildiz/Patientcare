@@ -10,6 +10,9 @@ module.exports = sequelize.define('patientmovementModel', {
     PatientID: {
         type: Sequelize.STRING
     },
+    CaseID: {
+        type: Sequelize.STRING
+    },
     Type: {
         type: Sequelize.STRING
     },

@@ -12,11 +12,7 @@ const uuid = require('uuid').v4
 const axios = require('axios')
 const { patientmovementtypes } = require('../Constants/Patientmovementypes')
 const DoDelete = require("../Utilities/DoDelete")
-const Createlog = require("../Utilities/Createlog")
 const DoPut = require("../Utilities/DoPut")
-
-const DELIVERY_TYPE_PATIENT = 0
-const DELIVERY_TYPE_WAREHOUSE = 1
 
 async function GetPatients(req, res, next) {
     try {
@@ -149,11 +145,10 @@ async function AddPatient(req, res, next) {
             Isactive: true
         }, { transaction: t })
 
-        let patientmovementuuid = uuid()
-
         await db.patientmovementModel.create({
-            Uuid: patientmovementuuid,
+            Uuid: uuid(),
             Type: patientmovementtypes.Patientcreate,
+            CaseID: CaseID,
             PatientID: patientuuid,
             UserID: req?.identity?.user?.Uuid || username,
             Info: '',
@@ -278,6 +273,7 @@ async function UpdatePatient(req, res, next) {
         await db.patientmovementModel.create({
             Uuid: uuid(),
             Type: patientmovementtypes.Patientupdate,
+            CaseID: CaseID,
             PatientID: Uuid,
             UserID: req?.identity?.user?.Uuid || username,
             Info: '',
@@ -413,6 +409,7 @@ async function UpdatePatientDates(req, res, next) {
         await db.patientmovementModel.create({
             Uuid: uuid(),
             Type: patientmovementtypes.Patientupdate,
+            CaseID: patient?.CaseID,
             PatientID: Uuid,
             UserID: req?.identity?.user?.Uuid || username,
             Info: '',
@@ -516,6 +513,7 @@ async function CheckPatient(req, res, next) {
             Uuid: uuid(),
             PatientID: Uuid,
             Type: patientmovementtypes.Patientcheck,
+            CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Checkinfo || '',
             Occureddate: new Date()
@@ -609,6 +607,7 @@ async function ApprovePatient(req, res, next) {
         await db.patientmovementModel.create({
             Uuid: uuid(),
             PatientID: Uuid,
+            CaseID: CaseID,
             Type: patientmovementtypes.Patientapprove,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Approveinfo || '',
@@ -702,6 +701,7 @@ async function CancelCheckPatient(req, res, next) {
         await db.patientmovementModel.create({
             Uuid: uuid(),
             PatientID: Uuid,
+            CaseID: CaseID,
             Type: patientmovementtypes.Patientcancelcheck,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Cancelcheckinfo || '',
@@ -796,6 +796,7 @@ async function CancelApprovePatient(req, res, next) {
             Uuid: uuid(),
             PatientID: Uuid,
             Type: patientmovementtypes.Patientcancelapprove,
+            CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Cancelapproveinfo || '',
             Occureddate: new Date()
@@ -944,6 +945,7 @@ async function CompletePatient(req, res, next) {
             Uuid: uuid(),
             PatientID: Uuid,
             Type: patientmovementtypes.Patientcomplete,
+            CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Completeinfo || '',
             Occureddate: new Date()
@@ -1121,6 +1123,7 @@ async function PatientsRemove(req, res, next) {
             Uuid: uuid(),
             PatientID: Uuid,
             Type: patientmovementtypes.Patientleft,
+            CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Leftinfo || '',
             Occureddate: new Date()
@@ -1243,6 +1246,7 @@ async function PatientsDead(req, res, next) {
             Uuid: uuid(),
             PatientID: Uuid,
             Type: patientmovementtypes.Patientdead,
+            CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Deadinfo || '',
             Occureddate: new Date()
@@ -1300,6 +1304,7 @@ async function UpdatePatientcase(req, res, next) {
             Uuid: uuid(),
             PatientID: PatientID,
             Type: patientmovementtypes.Patientcasechange,
+            CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: '',
             Occureddate: new Date()
@@ -1365,6 +1370,7 @@ async function UpdatePatientscase(req, res, next) {
             await db.patientmovementModel.create({
                 Uuid: uuid(),
                 PatientID: PatientID,
+                CaseID: CaseID,
                 Type: patientmovementtypes.Patientcasechange,
                 UserID: req?.identity?.user?.Uuid || username,
                 Info: '',
@@ -1461,6 +1467,17 @@ async function UpdatePatientplace(req, res, next) {
                 Updateduser: username,
                 Updatetime: new Date(),
             }, { where: { Uuid: PatientID } }, { transaction: t })
+
+            await db.patientmovementModel.create({
+                Uuid: uuid(),
+                PatientID: patient?.Uuid,
+                CaseID: patient?.CaseID,
+                Type: patientmovementtypes.Patientplacechange,
+                UserID: req?.identity?.user?.Uuid || username,
+                Info: '',
+                Occureddate: new Date()
+            }, { transaction: t })
+
         } else {
             // Hedefte hasta var, Değişen hastanında yatağı var
             // Hedef yataktaki hastayı, şuanki hastanın yatağına ata
@@ -1488,6 +1505,16 @@ async function UpdatePatientplace(req, res, next) {
                     Updatetime: new Date(),
                 }, { where: { Uuid: targetBedPatient?.Uuid } }, { transaction: t })
 
+                await db.patientmovementModel.create({
+                    Uuid: uuid(),
+                    PatientID: targetBedPatient?.Uuid,
+                    CaseID: targetBedPatient?.CaseID,
+                    Type: patientmovementtypes.Patientplacechange,
+                    UserID: req?.identity?.user?.Uuid || username,
+                    Info: '',
+                    Occureddate: new Date()
+                }, { transaction: t })
+
                 await db.patientModel.update({
                     ...patient,
                     FloorID: newBed.Floor,
@@ -1496,6 +1523,16 @@ async function UpdatePatientplace(req, res, next) {
                     Updateduser: username,
                     Updatetime: new Date(),
                 }, { where: { Uuid: PatientID } }, { transaction: t })
+
+                await db.patientmovementModel.create({
+                    Uuid: uuid(),
+                    PatientID: patient?.Uuid,
+                    CaseID: patient?.CaseID,
+                    Type: patientmovementtypes.Patientplacechange,
+                    UserID: req?.identity?.user?.Uuid || username,
+                    Info: '',
+                    Occureddate: new Date()
+                }, { transaction: t })
             }
 
             // Target dont have patient , patient has bed
@@ -1523,6 +1560,16 @@ async function UpdatePatientplace(req, res, next) {
                     Updatetime: new Date(),
                 }, { where: { Uuid: PatientID } }, { transaction: t })
 
+                await db.patientmovementModel.create({
+                    Uuid: uuid(),
+                    PatientID: patient?.Uuid,
+                    CaseID: patient?.CaseID,
+                    Type: patientmovementtypes.Patientplacechange,
+                    UserID: req?.identity?.user?.Uuid || username,
+                    Info: '',
+                    Occureddate: new Date()
+                }, { transaction: t })
+
             }
 
             // Target has patient , patient dont have bed
@@ -1546,6 +1593,16 @@ async function UpdatePatientplace(req, res, next) {
                     Updatetime: new Date(),
                 }, { where: { Uuid: targetBedPatient?.Uuid } }, { transaction: t })
 
+                await db.patientmovementModel.create({
+                    Uuid: uuid(),
+                    PatientID: targetBedPatient?.Uuid,
+                    CaseID: targetBedPatient?.CaseID,
+                    Type: patientmovementtypes.Patientplacechange,
+                    UserID: req?.identity?.user?.Uuid || username,
+                    Info: '',
+                    Occureddate: new Date()
+                }, { transaction: t })
+
                 await db.patientModel.update({
                     ...patient,
                     FloorID: newBed.Floor,
@@ -1555,6 +1612,15 @@ async function UpdatePatientplace(req, res, next) {
                     Updatetime: new Date(),
                 }, { where: { Uuid: PatientID } }, { transaction: t })
 
+                await db.patientmovementModel.create({
+                    Uuid: uuid(),
+                    PatientID: patient?.Uuid,
+                    CaseID: patient?.CaseID,
+                    Type: patientmovementtypes.Patientplacechange,
+                    UserID: req?.identity?.user?.Uuid || username,
+                    Info: '',
+                    Occureddate: new Date()
+                }, { transaction: t })
             }
 
             // Target dont have patient, patient dont have bed
@@ -1576,6 +1642,16 @@ async function UpdatePatientplace(req, res, next) {
                     Updateduser: username,
                     Updatetime: new Date(),
                 }, { where: { Uuid: PatientID } }, { transaction: t })
+
+                await db.patientmovementModel.create({
+                    Uuid: uuid(),
+                    PatientID: patient?.Uuid,
+                    CaseID: patient?.CaseID,
+                    Type: patientmovementtypes.Patientplacechange,
+                    UserID: req?.identity?.user?.Uuid || username,
+                    Info: '',
+                    Occureddate: new Date()
+                }, { transaction: t })
             }
         }
 

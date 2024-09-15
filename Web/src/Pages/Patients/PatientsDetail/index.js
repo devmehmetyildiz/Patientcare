@@ -4,11 +4,12 @@ import PatientsDetailInfo from './PatientsDetailInfo'
 import PatientsDetailCard from './PatientsDetailCard'
 import PatientsDetailFiles from './PatientsDetailFiles'
 import PatientsDetailCase from './PatientsDetailCase'
+import PatientDetailMovements from './PatientDetailMovements'
+import PatientsDetailStocks from './PatientsDetailStocks'
+import PatientDetailTimeline from './PatientDetailTimeline'
 import Pagewrapper from '../../../Components/Pagewrapper'
 import { useLocation, useParams, useHistory } from 'react-router-dom'
 import validator from '../../../Utils/Validator'
-import PatientDetailMovements from './PatientDetailMovements'
-import PatientsDetailStocks from './PatientsDetailStocks'
 import { Dimmer, DimmerDimmable, Dropdown, Icon, Loader } from 'semantic-ui-react'
 import PatientsLeftModal from '../../../Containers/Patients/PatientsLeftModal'
 import PatientsDeadModal from '../../../Containers/Patients/PatientsDeadModal'
@@ -112,7 +113,7 @@ export default function Patientsdetail(props) {
                     <Loader>Yükleniyor</Loader>
                 </Dimmer>
                 <div className='w-full flex flex-col md:flex-row lg:flex-row justify-center items-center md:items-start lg:items-start'>
-                    <div className=' w-[30%] flex flex-col justify-start items-center'>
+                    <div className='!w-[400px] flex flex-col justify-start items-center'>
                         <PatientsDetailProfile
                             patient={patient}
                             patientdefine={patientdefine}
@@ -278,6 +279,13 @@ export default function Patientsdetail(props) {
                             AddStockmovements={AddStockmovements}
                             GetPatient={GetPatient}
                             fillPatientnotification={fillPatientnotification}
+                            Profile={Profile}
+                        />
+                        <PatientDetailTimeline
+                            patient={patient}
+                            Cases={Cases}
+                            Users={Users}
+                            Departments={Departments}
                             Profile={Profile}
                         />
                     </div>
