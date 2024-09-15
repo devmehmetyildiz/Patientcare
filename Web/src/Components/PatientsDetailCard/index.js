@@ -34,12 +34,9 @@ export default function PatientsDetailCard(props) {
         stocks,
         files
     } = props
-    console.log('stocks: ', stocks);
-    console.log('files: ', files);
     const t = Profile?.i18n?.t || null
     const context = useContext(FormContext)
     const selected_record = usecontext ? context.getForm(PAGE_NAME) : Patients?.selected_record
-    console.log('selected_record: ', selected_record);
     const {
         Uuid,
         PatientdefineID,

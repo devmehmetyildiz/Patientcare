@@ -12,6 +12,7 @@ import 'moment/locale/tr';
 import 'react-calendar-timeline/lib/Timeline.css';
 import '../../../Assets/css/react-calender-timeline.css'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import { Formatfulldate } from '../../../Utils/Formatdate';
 
 export default function PatientDetailTimeline(props) {
 
@@ -134,7 +135,7 @@ export default function PatientDetailTimeline(props) {
                                                 backgroundColor: 'red'
                                             }
                                         })}
-                                        className='text-ellipsis whitespace-nowrap overflow-hidden'
+                                            className='text-ellipsis whitespace-nowrap overflow-hidden'
                                         >
                                             {itemContext.title}
                                         </div>}
@@ -142,7 +143,7 @@ export default function PatientDetailTimeline(props) {
                                             <Card.Content>
                                                 <Card.Header>{`${t('Pages.Patients.PatientsDetail.PatientDetailTimeline.Label.Type')} : ${type}`}</Card.Header>
                                                 <Card.Meta>
-                                                    <span className='date'>{`${t('Pages.Patients.PatientsDetail.PatientDetailTimeline.Label.Occureddate')} : ${moment(new Date(movement?.Occureddate)).format('DD.MM.YYYY')}`}</span>
+                                                    <span className='date'>{`${t('Pages.Patients.PatientsDetail.PatientDetailTimeline.Label.Occureddate')} : ${Formatfulldate(movement?.Occureddate, true)}`}</span>
                                                 </Card.Meta>
                                                 <Card.Description>
                                                     {`${t('Pages.Patients.PatientsDetail.PatientDetailTimeline.Label.Case')} : ${casedata?.Name || t('Common.NoDataFound')}`}
