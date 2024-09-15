@@ -40,16 +40,7 @@ module.exports = sequelize.define('patientdefineModel', {
     Placeofbirth: {
         type: Sequelize.STRING
     },
-    Dateofdeath: {
-        type: Sequelize.DATE
-    },
-    Placeofdeath: {
-        type: Sequelize.STRING
-    },
     Medicalboardreport: {
-        type: Sequelize.STRING
-    },
-    Deathinfo: {
         type: Sequelize.STRING
     },
     Gender: {

@@ -68,6 +68,10 @@ export default function PatientsEditstatus(props) {
                         <Form.Group widths={'equal'}>
                             <FormInput page={PAGE_NAME} placeholder={t('Pages.Patients.PatientsEditstatus.Label.Happensdate')} name="Happensdate" type="date" />
                         </Form.Group>
+                        <Form.Group widths={'equal'}>
+                            <FormInput page={PAGE_NAME} placeholder={t('Pages.Patients.PatientsEditstatus.Label.Info')} name="Info" />
+                            <FormInput page={PAGE_NAME} placeholder={t('Pages.Patients.PatientsEditstatus.Label.Guardiannote')} name="Guardiannote" />
+                        </Form.Group>
                     </Form>
                 </Contentwrapper>
             </Modal.Content>
@@ -101,6 +105,8 @@ export default function PatientsEditstatus(props) {
                                     Registerdate: data?.Registerdate,
                                     Approvaldate: data?.Approvaldate,
                                     Happensdate: data?.Happensdate,
+                                    Info: data?.Info,
+                                    Guardiannote: data?.Guardiannote
                                 },
                                 onSuccess: () => {
                                     if (isPatientspage) {

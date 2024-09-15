@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon, Loader, Tab } from 'semantic-ui-react'
-import { ROUTES} from '../../Utils/Constants'
+import { ROUTES } from '../../Utils/Constants'
 import config from '../../Config'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
 import PreregistrationsDelete from '../../Containers/Preregistrations/PreregistrationsDelete'
@@ -26,7 +26,7 @@ export default class Preregistrations extends Component {
 
   render() {
 
-    const { Profile, Patients,Patientdefines, handleDeletemodal, handleSelectedPatient, handleCompletemodal, handleApprovemodal, handleCheckmodal, handleDetailmodal } = this.props
+    const { Profile, Patients, Patientdefines, handleDeletemodal, handleSelectedPatient, handleCompletemodal, handleApprovemodal, handleCheckmodal, handleDetailmodal } = this.props
     const { isLoading } = Patients
     const t = Profile?.i18n?.t || null
 
@@ -44,6 +44,8 @@ export default class Preregistrations extends Component {
       { Header: t('Pages.Preregistrations.Column.Happensdate'), accessor: row => this.dateCellhandler(row?.Happensdate), Lowtitle: true, Withtext: true },
       { Header: t('Pages.Preregistrations.Column.Approvaldate'), accessor: row => this.dateCellhandler(row?.Approvaldate), Lowtitle: true, Withtext: true },
       { Header: t('Pages.Preregistrations.Column.Case'), accessor: row => this.caseCellhandler(row?.CaseID), Lowtitle: true, Withtext: true },
+      { Header: t('Pages.Preregistrations.Column.Info'), accessor: 'Info' },
+      { Header: t('Pages.Preregistrations.Column.Guardiannote'), accessor: 'Guardiannote' },
       { Header: t('Pages.Preregistrations.Column.Patientcreatetime'), accessor: row => this.dateCellhandler(row?.Patientcreatetime), key: 'created' },
       { Header: t('Pages.Preregistrations.Column.Createduser'), accessor: row => this.userCellhandler(row?.CreateduserID), key: 'created' },
       { Header: t('Pages.Preregistrations.Column.Patientchecktime'), accessor: row => this.dateCellhandler(row?.Patientchecktime), key: 'checked' },

@@ -297,6 +297,27 @@ export const RemovePatients = createAsyncThunk(
         }
     }
 );
+export const MakeactivePatients = createAsyncThunk(
+    'Patients/MakeactivePatients',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PATIENT}/PatientsMakeactive`, data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Makeactive'),
+            }));
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
 
 export const DeadPatients = createAsyncThunk(
     'Patients/DeadPatients',
@@ -692,6 +713,17 @@ export const PatientsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(RemovePatients.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(MakeactivePatients.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(MakeactivePatients.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(MakeactivePatients.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

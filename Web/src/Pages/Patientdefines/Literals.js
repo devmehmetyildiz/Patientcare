@@ -260,7 +260,7 @@ const Literals = {
             en: "Last Name Required"
         },
         CountryIDrequired: {
-            tr: "TC Kimlik No Gerekli",
+            tr: "Geçerli bir TC Kimlik No Gerekli",
             en: "Country ID Required"
         },
         Costumertyperequired: {

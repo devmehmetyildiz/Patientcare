@@ -2,6 +2,7 @@ import React from 'react'
 import { GENDER_OPTION } from '../../../Utils/Constants'
 import { Header } from 'semantic-ui-react'
 import Formatdate from '../../../Utils/Formatdate'
+import { Pagedivider } from '../../../Components'
 
 export default function PatientsDetailInfo(props) {
 
@@ -26,7 +27,12 @@ export default function PatientsDetailInfo(props) {
   const CountryID = patientdefine?.CountryID || t('Common.NoDataFound')
   const Dateofbirth = patientdefine?.Dateofbirth ? Formatdate(patientdefine?.Dateofbirth, true) : t('Common.NoDataFound')
   const Placeofbirth = patientdefine?.Placeofbirth || t('Common.NoDataFound')
+  const Sgkstatus = patientdefine?.Sgkstatus || t('Common.NoDataFound')
+  const Contact1 = `${patientdefine?.Contactnumber1 || ''} ${patientdefine?.Contactname1 || ''}`
+  const Contact2 = `${patientdefine?.Contactnumber2 || ''} ${patientdefine?.Contactname2 || ''}`
 
+  const Info = patient?.Info || ''
+  const Guardiannote = patient?.Guardiannote || ''
 
   const Columns = [
     { label: t('Pages.Patients.PatientsDetail.PatientDetailInfo.Age'), value: Age },
@@ -37,6 +43,7 @@ export default function PatientsDetailInfo(props) {
     { label: t('Pages.Patients.PatientsDetail.PatientDetailInfo.Placeofbirth'), value: Placeofbirth },
     { label: t('Pages.Patients.PatientsDetail.PatientDetailInfo.Patienttype'), value: PatienttypeName },
     { label: t('Pages.Patients.PatientsDetail.PatientDetailInfo.Costumertype'), value: CostumertypeName },
+    { label: t('Pages.Patients.PatientsDetail.PatientDetailInfo.Sgkstatus'), value: Sgkstatus },
   ]
 
   return (
@@ -54,6 +61,39 @@ export default function PatientsDetailInfo(props) {
           </div>
         </div>
       })}
+      <Pagedivider />
+      <div className='w-full flex justify-start items-start gap-2'>
+        <div className='font-bold'>
+          {`${t('Pages.Patients.PatientsDetail.PatientDetailInfo.Contact1')}:`}
+        </div>
+        <div className=' font-semibold text-[#777777dd]'>
+          {Contact1}
+        </div>
+      </div>
+      <div className='w-full flex justify-start items-start gap-2'>
+        <div className='font-bold'>
+          {`${t('Pages.Patients.PatientsDetail.PatientDetailInfo.Contact2')}:`}
+        </div>
+        <div className=' font-semibold text-[#777777dd]'>
+          {Contact2}
+        </div>
+      </div>
+      <div className='w-full flex justify-start items-start gap-2'>
+        <div className='font-bold'>
+          {`${t('Pages.Patients.PatientsDetail.PatientDetailInfo.Info')}:`}
+        </div>
+        <div className=' font-semibold text-[#777777dd]'>
+          {Info}
+        </div>
+      </div>
+      <div className='w-full flex justify-start items-start gap-2'>
+        <div className='font-bold'>
+          {`${t('Pages.Patients.PatientsDetail.PatientDetailInfo.Guardiannote')}:`}
+        </div>
+        <div className=' font-semibold text-[#777777dd]'>
+          {Guardiannote}
+        </div>
+      </div>
     </div>
   )
 }

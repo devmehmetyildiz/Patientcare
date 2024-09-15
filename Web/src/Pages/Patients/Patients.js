@@ -15,6 +15,7 @@ import PatientsEditplaceModal from '../../Containers/Patients/PatientsEditplaceM
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import PatientsInsertstockModal from '../../Containers/Patients/PatientsInsertstockModal'
 import PatientsReducestockModal from '../../Containers/Patients/PatientsReducestockModal'
+import PatientsMakeactiveModal from '../../Containers/Patients/PatientsMakeactiveModal'
 
 export default function Patients(props) {
 
@@ -38,6 +39,8 @@ export default function Patients(props) {
     { Header: t('Pages.Patients.Column.Room'), accessor: row => roomCellhandler(row?.RoomID), Lowtitle: true, Withtext: true, key: 'pass' },
     { Header: t('Pages.Patients.Column.Bed'), accessor: row => bedCellhandler(row?.BedID), Lowtitle: true, Withtext: true, key: 'pass' },
     { Header: t('Pages.Patients.Column.Case'), accessor: row => caseCellhandler(row?.CaseID), Subtitle: true },
+    { Header: t('Pages.Patients.Column.Info'), accessor: 'Info' },
+    { Header: t('Pages.Patients.Column.Guardiannote'), accessor: 'Guardiannote' },
     { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
@@ -470,6 +473,9 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
 
 function LeftPatientList({ Profile, Columns, list, handleSelectedPatient, handleDetailmodal }) {
 
+  const [openactive, setOpenactive] = useState(false)
+  const [record, setRecord] = useState(null)
+
   const colProps = {
     sortable: true,
     canGroupBy: true,
@@ -482,6 +488,7 @@ function LeftPatientList({ Profile, Columns, list, handleSelectedPatient, handle
 
   const columns = [
     ...Columns.filter(u => u.key ? u.key === 'left' : true),
+    { Header: t('Common.Column.activate'), accessor: 'activate', disableProps: true },
     { Header: t('Common.Column.summary'), accessor: 'actions', disableProps: true }
   ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
@@ -491,6 +498,10 @@ function LeftPatientList({ Profile, Columns, list, handleSelectedPatient, handle
       actions: <Icon link size='large' color='grey' name='history' onClick={() => {
         handleSelectedPatient(item)
         handleDetailmodal(true)
+      }} />,
+      activate: <Icon link size='large' color='green' name='sync' onClick={() => {
+        setOpenactive(true)
+        setRecord(item)
       }} />,
     }
   })
@@ -518,11 +529,21 @@ function LeftPatientList({ Profile, Columns, list, handleSelectedPatient, handle
             <DataTable Columns={columns} Data={decoratedList} Config={initialConfig} />}
         </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
       }
+      <PatientsMakeactiveModal
+        isPatientspage
+        open={openactive}
+        setOpen={setOpenactive}
+        record={record}
+        setRecord={setRecord}
+      />
     </>
   )
 }
 
 function DeadPatientList({ Profile, Columns, list, handleSelectedPatient, handleDetailmodal }) {
+
+  const [openactive, setOpenactive] = useState(false)
+  const [record, setRecord] = useState(null)
 
   const colProps = {
     sortable: true,
@@ -536,6 +557,7 @@ function DeadPatientList({ Profile, Columns, list, handleSelectedPatient, handle
 
   const columns = [
     ...Columns.filter(u => u.key ? u.key === 'dead' : true),
+    { Header: t('Common.Column.activate'), accessor: 'activate', disableProps: true },
     { Header: t('Common.Column.summary'), accessor: 'actions', disableProps: true }
   ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
@@ -545,6 +567,10 @@ function DeadPatientList({ Profile, Columns, list, handleSelectedPatient, handle
       actions: <Icon link size='large' color='grey' name='history' onClick={() => {
         handleSelectedPatient(item)
         handleDetailmodal(true)
+      }} />,
+      activate: <Icon link size='large' color='green' name='sync' onClick={() => {
+        setOpenactive(true)
+        setRecord(item)
       }} />,
     }
   })
@@ -572,6 +598,13 @@ function DeadPatientList({ Profile, Columns, list, handleSelectedPatient, handle
             <DataTable Columns={columns} Data={decoratedList} Config={initialConfig} />}
         </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
       }
+      <PatientsMakeactiveModal
+        isPatientspage
+        open={openactive}
+        setOpen={setOpenactive}
+        record={record}
+        setRecord={setRecord}
+      />
     </>
   )
 }

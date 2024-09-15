@@ -362,6 +362,8 @@ async function UpdatePatientDates(req, res, next) {
         Happensdate,
         Approvaldate,
         Registerdate,
+        Info,
+        Guardiannote,
     } = req.body
 
 
@@ -402,6 +404,8 @@ async function UpdatePatientDates(req, res, next) {
             Registerdate: Registerdate,
             Approvaldate: Approvaldate,
             Happensdate: Happensdate,
+            Info: Info,
+            Guardiannote: Guardiannote,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
@@ -1088,20 +1092,22 @@ async function PatientsRemove(req, res, next) {
             validationErrors.push(messages.VALIDATION_ERROR.PATIENT_ALREADY_DEAD)
         }
 
-        try {
-            await axios({
-                method: 'PUT',
-                url: config.services.Setting + "Beds/ChangeBedOccupied",
-                headers: {
-                    session_key: config.session.secret
-                },
-                data: {
-                    BedID: patient?.BedID,
-                    Isoccupied: false
-                }
-            })
-        } catch (error) {
-            return next(requestErrorCatcher(error, 'Setting'))
+        if (validator.isUUID(patient?.BedID)) {
+            try {
+                await axios({
+                    method: 'PUT',
+                    url: config.services.Setting + "Beds/ChangeBedOccupied",
+                    headers: {
+                        session_key: config.session.secret
+                    },
+                    data: {
+                        BedID: patient?.BedID,
+                        Isoccupied: false
+                    }
+                })
+            } catch (error) {
+                return next(requestErrorCatcher(error, 'Setting'))
+            }
         }
 
         await db.patientModel.update({
@@ -1212,20 +1218,22 @@ async function PatientsDead(req, res, next) {
             validationErrors.push(messages.VALIDATION_ERROR.PATIENT_ALREADY_DEAD)
         }
 
-        try {
-            await axios({
-                method: 'PUT',
-                url: config.services.Setting + "Beds/ChangeBedOccupied",
-                headers: {
-                    session_key: config.session.secret
-                },
-                data: {
-                    BedID: patient?.BedID,
-                    Isoccupied: false
-                }
-            })
-        } catch (error) {
-            return next(requestErrorCatcher(error, 'Setting'))
+        if (validator.isUUID(patient?.BedID)) {
+            try {
+                await axios({
+                    method: 'PUT',
+                    url: config.services.Setting + "Beds/ChangeBedOccupied",
+                    headers: {
+                        session_key: config.session.secret
+                    },
+                    data: {
+                        BedID: patient?.BedID,
+                        Isoccupied: false
+                    }
+                })
+            } catch (error) {
+                return next(requestErrorCatcher(error, 'Setting'))
+            }
         }
 
         await db.patientModel.update({
@@ -1249,6 +1257,111 @@ async function PatientsDead(req, res, next) {
             CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Deadinfo || '',
+            Occureddate: new Date()
+        }, { transaction: t })
+
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    req.Uuid = Uuid
+    GetPatients(req, res, next)
+}
+
+async function PatientsMakeactive(req, res, next) {
+    let validationErrors = []
+
+    const {
+        Uuid,
+        CaseID
+    } = req.body
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTID)
+    }
+    if (!validator.isUUID(CaseID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const patient = await db.patientModel.findOne({ where: { Uuid: Uuid } })
+        if (!patient) {
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
+        }
+        if (patient.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+        }
+        if (patient.Ischecked === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENT_IS_CHECKED], req.language))
+        }
+        if (patient.Isapproved === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENT_IS_APPROVED], req.language))
+        }
+        if (patient.Ispreregistration === true) {
+            return next(createAccessDenied([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
+        }
+
+        const {
+            Approvaldate,
+            DepartmentID,
+            PatientdefineID,
+            Isleft,
+            Isalive
+        } = patient
+
+        if (!validator.isISODate(Approvaldate)) {
+            validationErrors.push(messages.ERROR.APPROVALDATE_REQUIRED3)
+        }
+        if (!validator.isUUID(PatientdefineID)) {
+            validationErrors.push(messages.ERROR.PATIENTDEFINE_NOT_FOUND)
+        }
+        if (!validator.isUUID(DepartmentID)) {
+            validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
+        }
+        if (!validator.isBoolean(Isleft)) {
+            validationErrors.push(messages.VALIDATION_ERROR.ISLEFT_REQUIRED)
+        }
+        if (!validator.isBoolean(Isalive)) {
+            validationErrors.push(messages.VALIDATION_ERROR.ISALIVE_REQUIRED)
+        }
+        if (!(Isleft === false || Isleft === false)) {
+            validationErrors.push(messages.VALIDATION_ERROR.PATIENT_IS_NOT_LEFT_OR_DEAD)
+        }
+
+        await db.patientModel.update({
+            ...patient,
+            CaseID: CaseID,
+            Isoninstitution: true,
+            Isalive: true,
+            BedID: null,
+            RoomID: null,
+            FloorID: null,
+            Deadinfo: null,
+            Deathdate: null,
+            Leftinfo: null,
+            Leavedate: null,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await db.patientmovementModel.create({
+            Uuid: uuid(),
+            PatientID: Uuid,
+            Type: patientmovementtypes.Patientcasechange,
+            CaseID: CaseID,
+            UserID: req?.identity?.user?.Uuid || username,
+            Info: '',
             Occureddate: new Date()
         }, { transaction: t })
 
@@ -2180,5 +2293,6 @@ module.exports = {
     PatientsRemove,
     DeletePreregisrations,
     PatientsDead,
-    UpdatePatientDates
+    UpdatePatientDates,
+    PatientsMakeactive
 }

@@ -11,6 +11,7 @@ const Routes = [
     { method: 'put', path: '/Patients/Complete', controller: 'Patient', action: 'CompletePatient' },
     { method: 'put', path: '/Patients/PatientsRemove', controller: 'Patient', action: 'PatientsRemove' },
     { method: 'put', path: '/Patients/PatientsDead', controller: 'Patient', action: 'PatientsDead' },
+    { method: 'put', path: '/Patients/PatientsMakeactive', controller: 'Patient', action: 'PatientsMakeactive' },
     { method: 'put', path: '/Patients/UpdatePatientcase', controller: 'Patient', action: 'UpdatePatientcase' },
     { method: 'put', path: '/Patients/UpdatePatientscase', controller: 'Patient', action: 'UpdatePatientscase' },
     { method: 'put', path: '/Patients/UpdatePatientplace', controller: 'Patient', action: 'UpdatePatientplace' },

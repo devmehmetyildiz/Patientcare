@@ -125,7 +125,7 @@ export default class PatientdefinesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Mothername[Profile.Language]} name="Mothername" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.CountryID[Profile.Language]} name="CountryID" />
+                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.CountryID[Profile.Language]} name="CountryID" validationfunc={validator.isCountryID} validationmessage={"Geçerli Bir Tc Giriniz!"} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CostumertypeName[Profile.Language]} name="CostumertypeID" options={Costumertypeoptions} formtype="dropdown" modal={CostumertypesCreate} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.PatienttypeName[Profile.Language]} name="PatienttypeID" options={Patienttypeoptions} formtype="dropdown" modal={PatienttypesCreate} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Medicalboardreport[Profile.Language]} name="Medicalboardreport" options={Medicalboardreportoptions} formtype="dropdown" />
@@ -149,18 +149,13 @@ export default class PatientdefinesEdit extends Component {
                   <Form.Group widths='equal'>
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Dateofbirth[Profile.Language]} name="Dateofbirth" type='date' />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Placeofbirth[Profile.Language]} name="Placeofbirth" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Dateofdeath[Profile.Language]} name="Dateofdeath" type='date' />
-                  </Form.Group>
-                  <Form.Group widths='equal'>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Placeofdeath[Profile.Language]} name="Placeofdeath" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Deathinfo[Profile.Language]} name="Deathinfo" />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Gender[Profile.Language]} name="Gender" options={Genderoptions} formtype="dropdown" />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Marialstatus[Profile.Language]} name="Marialstatus" />
                   </Form.Group>
                   <Form.Group widths='equal'>
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Childnumber[Profile.Language]} name="Childnumber" type='number' min={0} max={99} />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Disabledchildnumber[Profile.Language]} name="Disabledchildnumber" type='number' min={0} max={99}/>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Siblingstatus[Profile.Language]} name="Siblingstatus" min={0} max={99}/>
+                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Disabledchildnumber[Profile.Language]} name="Disabledchildnumber" type='number' min={0} max={99} />
+                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Siblingstatus[Profile.Language]} name="Siblingstatus" min={0} max={99} />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Sgkstatus[Profile.Language]} name="Sgkstatus" />
                   </Form.Group>
                   <Form.Group widths='equal'>
@@ -174,10 +169,12 @@ export default class PatientdefinesEdit extends Component {
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Address2[Profile.Language]} name="Address2" />
                   </Form.Group>
                   <Form.Group widths='equal'>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactnumber1[Profile.Language]} name="Contactnumber1" />
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactname1[Profile.Language]} name="Contactname1" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactnumber2[Profile.Language]} name="Contactnumber2" />
+                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactnumber1[Profile.Language]} name="Contactnumber1" />
+                  </Form.Group>
+                  <Form.Group widths='equal'>
                     <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactname2[Profile.Language]} name="Contactname2" />
+                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactnumber2[Profile.Language]} name="Contactnumber2" />
                   </Form.Group>
                 </Accordion.Content>
               </Accordion>
@@ -208,9 +205,6 @@ export default class PatientdefinesEdit extends Component {
     if (!data.Dateofbirth || data.Dateofbirth === '') {
       data.Dateofbirth = null
     }
-    if (!data.Dateofdeath || data.Dateofdeath === '') {
-      data.Dateofdeath = null
-    }
     if (!data.Childnumber || data.Childnumber === '') {
       data.Childnumber = 0
     }
@@ -222,7 +216,7 @@ export default class PatientdefinesEdit extends Component {
     data.Childnumber && (data.Childnumber = parseInt(data.Childnumber))
     let errors = []
 
-    if (!validator.isString(data.CountryID)) {
+    if (!validator.isString(data.CountryID) || !validator.isCountryID(data.CountryID)) {
       errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CountryIDrequired[Profile.Language] })
     }
     if (errors.length > 0) {

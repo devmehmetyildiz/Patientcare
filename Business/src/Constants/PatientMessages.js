@@ -189,6 +189,12 @@ const messages = {
                 tr: 'Hasta zaten kurumdan ayrılmış',
             }
         },
+        PATIENT_IS_NOT_LEFT_OR_DEAD: {
+            code: 'PATIENT_IS_NOT_LEFT_OR_DEAD', description: {
+                en: 'Patient already left or dead from organiztion',
+                tr: 'Hasta zaten kurumdan ayrılmamış veya vefat etmemiş',
+            }
+        },
         PATIENT_ALREADY_DEAD: {
             code: 'PATIENT_ALREADY_DEAD', description: {
                 en: 'Patient already dead from organiztion',

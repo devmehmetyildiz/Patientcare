@@ -99,13 +99,13 @@ export default function PatientDetailTimeline(props) {
     }, [Cases.isLoading])
 
     return (
-        <div className='w-full px-4 mt-4'>
+        <div className='w-full px-4 mt-4 z-10'>
             <div className='py-4 px-4 bg-white shadow-lg w-full font-poppins rounded-lg flex flex-col gap-4 justify-center items-center   min-w-[250px]'>
                 <div className='w-full flex justify-start items-start'>
                     <div className='font-bold text-xl font-poppins'>{t('Pages.Patients.PatientsDetail.PatientDetailTimeline.Header')}</div>
                 </div>
                 {visible
-                    ? <div className='flex justify-start items-start w-full jusyz-10'>
+                    ? <div className='flex justify-start items-start w-full '>
                         <Timeline
                             className='w-[80vmax] md:w-[35vmax] lg:w-[60vw] '
                             groups={groups}

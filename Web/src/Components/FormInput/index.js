@@ -132,6 +132,26 @@ export default function FormInput(props) {
                             onKeyPress={(e) => { handleKeyPress(e) }}
                             onKeyUp={onKeyUpinput}
                             fluid />
+                    case 'datetime-local':
+                        return <Form.Input
+                            {...contextProp}
+                            icon={display ? true : false}
+                            defaultValue={formdata[name] ? formdata[name] : ''}
+                            onChange={(e) => {
+                                e.preventDefault()
+                                if (disableOnchange) {
+                                    return
+                                }
+                                if (validationfunc) {
+                                    const res = validationfunc(e.target.value)
+                                    setIsvalidate(res)
+                                }
+                                context.setFormstates(prev => ({ ...prev, [name]: props.type === 'number' ? parseFloat(e.target.value) : e.target.value }))
+                                effect && effect()
+                            }}
+                            onKeyPress={(e) => { handleKeyPress(e) }}
+                            onKeyUp={onKeyUpinput}
+                            fluid />
                     default:
                         return <Form.Input
                             {...contextProp}

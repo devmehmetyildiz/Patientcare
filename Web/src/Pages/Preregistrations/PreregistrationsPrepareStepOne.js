@@ -215,11 +215,6 @@ export default function PreregistrationsPrepareStepOne({
                         <Form.Group widths='equal'>
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Dateofbirth')} name="Dateofbirth" type='date' />
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Placeofbirth')} name="Placeofbirth" />
-                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Dateofdeath')} name="Dateofdeath" type='date' />
-                        </Form.Group>
-                        <Form.Group widths='equal'>
-                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Placeofbirth')} name="Placeofdeath" />
-                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Deathinfo')} name="Deathinfo" />
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Gender')} name="Gender" options={GENDER_OPTION.map(u => ({ ...u, text: u.text[Profile.Language] }))} formtype="dropdown" />
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Marialstatus')} name="Marialstatus" />
                         </Form.Group>
@@ -240,10 +235,12 @@ export default function PreregistrationsPrepareStepOne({
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Address2')} name="Address2" />
                         </Form.Group>
                         <Form.Group widths='equal'>
-                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Contactnumber1')} name="Contactnumber1" />
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Contactname1')} name="Contactname1" />
-                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Contactnumber2')} name="Contactnumber2" />
+                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Contactnumber1')} name="Contactnumber1" />
+                        </Form.Group>
+                        <Form.Group widths={'equal'}>
                           <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Contactname2')} name="Contactname2" />
+                          <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Contactnumber2')} name="Contactnumber2" />
                         </Form.Group>
                       </div>
                     </Transition>
@@ -259,6 +256,10 @@ export default function PreregistrationsPrepareStepOne({
             <Form.Group widths={'equal'}>
               <FormInput page={PAGE_NAME} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Registerdate')} name="Registerdate" type='date' />
               <FormInput page={PAGE_NAME} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Case')} name="CaseID" formtype='dropdown' required options={Casesoptions} modal={CasesCreate} />
+            </Form.Group>
+            <Form.Group widths={'equal'}>
+              <FormInput page={PAGE_NAME} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Info')} name="Info" />
+              <FormInput page={PAGE_NAME} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Guardiannote')} name="Guardiannote" />
             </Form.Group>
             <Form.Group widths={'equal'}>
               <FormInput page={PAGE_NAME} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Deparment')} name="DepartmentID" formtype='dropdown' required options={Departmentoptions} modal={DepartmentsCreate} />

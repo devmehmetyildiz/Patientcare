@@ -8,7 +8,7 @@ import PatientDetailMovements from './PatientDetailMovements'
 import PatientsDetailStocks from './PatientsDetailStocks'
 import PatientDetailTimeline from './PatientDetailTimeline'
 import Pagewrapper from '../../../Components/Pagewrapper'
-import { useLocation, useParams, useHistory } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import validator from '../../../Utils/Validator'
 import { Dimmer, DimmerDimmable, Dropdown, Icon, Loader } from 'semantic-ui-react'
 import PatientsLeftModal from '../../../Containers/Patients/PatientsLeftModal'
@@ -43,7 +43,6 @@ export default function Patientsdetail(props) {
     const [opendead, setOpendead] = useState(false)
     const [openleft, setOpenleft] = useState(false)
     const [record, setRecord] = useState(null)
-    const location = useLocation()
     const params = useParams()
     const history = useHistory()
     const patientID = params?.PatientID || PatientID

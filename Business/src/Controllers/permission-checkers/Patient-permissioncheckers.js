@@ -48,7 +48,9 @@ async function PatientsRemove(req, res, next) {
 async function PatientsDead(req, res, next) {
     PermissionHandler(req, next, 'patientupdate')
 }
-
+async function PatientsMakeactive(req, res, next) {
+    PermissionHandler(req, next, 'patientupdate')
+}
 async function Createfromtemplate(req, res, next) {
     PermissionHandler(req, next, 'patientadd')
 }
@@ -104,5 +106,6 @@ module.exports = {
     PatientsRemove,
     PatientsDead,
     DeletePreregisrations,
-    UpdatePatientDates
+    UpdatePatientDates,
+    PatientsMakeactive
 }
