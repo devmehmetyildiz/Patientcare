@@ -133,9 +133,11 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
             Deleteduser: "System",
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Userid: user.Uuid } }, { transaction: t })
+        }, { where: { Userid: user.Uuid } })
+
         req.identity = {}
         req.identity.user = user
+
         await db.accesstokenModel.create({
             Userid: user.Uuid,
             Accesstoken: accessToken.accessToken,
@@ -211,7 +213,7 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
             Deleteduser: "System",
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Userid: user.Uuid } }, { transaction: t })
+        }, { where: { Userid: user.Uuid } })
 
         await db.accesstokenModel.create({
             Userid: user.Uuid,
