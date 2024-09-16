@@ -12,6 +12,12 @@ const messages = {
                 tr: 'hakediş parametresi bulunamadı',
             }
         },
+        CLAIMPAYMENTPARAMETER_ALREADY_APPROVED: {
+            code: 'CLAIMPAYMENTPARAMETER_ALREADY_APPROVED', description: {
+                en: 'claim payment parameter already approve',
+                tr: 'hakediş parametresi zaten onaylı',
+            }
+        },
     },
     VALIDATION_ERROR: {
         TYPE_REQUIRED: {

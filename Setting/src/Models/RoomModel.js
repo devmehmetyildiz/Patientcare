@@ -1,4 +1,4 @@
-module.exports = sequelize.define('caseModel', {
+module.exports = sequelize.define('roomModel', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,

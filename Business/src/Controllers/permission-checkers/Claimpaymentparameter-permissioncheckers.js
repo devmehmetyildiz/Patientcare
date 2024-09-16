@@ -1,0 +1,34 @@
+const PermissionHandler = require("../../Utilities/PermissionHandler")
+
+async function GetClaimpaymentparameters(req, res, next) {
+    PermissionHandler(req, next, 'claimpaymentparameterscreen')
+}
+
+async function GetClaimpaymentparameter(req, res, next) {
+    PermissionHandler(req, next, 'claimpaymentparameterscreen')
+}
+
+async function AddClaimpaymentparameter(req, res, next) {
+    PermissionHandler(req, next, 'claimpaymentparameteradd')
+}
+
+async function UpdateClaimpaymentparameter(req, res, next) {
+    PermissionHandler(req, next, 'claimpaymentparameterupdate')
+}
+
+async function ApproveClaimpaymentparameter(req, res, next) {
+    PermissionHandler(req, next, 'claimpaymentparameterupdate')
+}
+
+async function DeleteClaimpaymentparameter(req, res, next) {
+    PermissionHandler(req, next, 'claimpaymentparameterdelete')
+}
+
+module.exports = {
+    GetClaimpaymentparameters,
+    GetClaimpaymentparameter,
+    AddClaimpaymentparameter,
+    ApproveClaimpaymentparameter,
+    UpdateClaimpaymentparameter,
+    DeleteClaimpaymentparameter,
+}

@@ -161,7 +161,11 @@ async function DeletePatientcashregister(req, res, next) {
             return next(createAccessDenied([messages.ERROR.CASHREGISTER_NOT_ACTIVE], req.language))
         }
 
-        await db.patientcashregisterModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.patientcashregisterModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

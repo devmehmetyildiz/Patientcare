@@ -1,4 +1,3 @@
-const config = require("../Config")
 const messages = require("../Constants/ClaimpaymentparameterMessages")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
@@ -7,6 +6,7 @@ const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
+const { claimpaymenttypes } = require('../Constants/Claimpaymenttypes')
 
 async function GetClaimpaymentparameters(req, res, next) {
     try {
@@ -21,17 +21,17 @@ async function GetClaimpaymentparameter(req, res, next) {
 
     let validationErrors = []
     if (!req.params.claimpaymentparameterId) {
-        validationErrors.push(messages.VALIDATION_ERROR.CAREPLANID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTPARAMETERID_REQUIRED)
     }
-    if (!validator.isUUID(req.params.careplanId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CAREPLANID)
+    if (!validator.isUUID(req.params.claimpaymentparameterId)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTPARAMETERID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
     try {
-        const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Uuid: req.params.careplanId } });
+        const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Uuid: req.params.claimpaymentparameterId } });
         res.status(200).json(claimpaymentparameter)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -46,39 +46,53 @@ async function AddClaimpaymentparameter(req, res, next) {
         Type,
         CostumertypeID,
         Patientclaimpaymentperpayment,
-        Issettingactive
     } = req.body
 
     if (!validator.isNumber(Type)) {
         validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
         return next(createValidationError(validationErrors, req.language))
     }
+    if (Type !== claimpaymenttypes.Personel) {
+        if (!validator.isUUID(CostumertypeID)) {
+            return next(createValidationError([messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED], req.language))
+        }
+    }
+    if (!validator.isUUID(CostumertypeID)) {
+        return next(createValidationError([messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED], req.language))
+    }
+    if (!validator.isNumber(Patientclaimpaymentperpayment)) {
+        return next(createValidationError([messages.VALIDATION_ERROR.PERPAYMENT_REQUIRED], req.language))
+    }
 
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
 
-    let careplanuuid = uuid()
+    let parameteruuid = uuid()
 
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
 
     try {
+
         await db.claimpaymentparameterModel.create({
             ...req.body,
-            Uuid: careplanuuid,
+            Uuid: parameteruuid,
+            Issettingactive: false,
             Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
+
         await CreateNotification({
             type: types.Create,
-            service: 'Bireysel Bakım Planları',
-            role: 'careplannotification',
-            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Eklendi.`,
-            pushurl: '/Careplans'
+            service: 'Hakediş Parametreleri',
+            role: 'claimpaymentparameternotification',
+            message: `${parameteruuid} numaralı parametre ${username} tarafından Eklendi.`,
+            pushurl: '/Claimpaymentparameters'
         })
+
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -91,59 +105,34 @@ async function UpdateClaimpaymentparameter(req, res, next) {
 
     let validationErrors = []
     const {
-        Startdate,
-        Enddate,
-        PatientID,
-        Createdate,
-        Careplanservices,
+        Type,
+        CostumertypeID,
+        Patientclaimpaymentperpayment,
         Uuid
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CAREPLANID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTPARAMETERID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CAREPLANID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTPARAMETERID)
     }
-    if (!validator.isISODate(Startdate)) {
+    if (!validator.isNumber(Type)) {
         validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
+        return next(createValidationError(validationErrors, req.language))
     }
-    if (!validator.isISODate(Enddate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ENDDATE_REQUIRED)
-    }
-    if (!validator.isString(PatientID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
-    }
-    if (!validator.isISODate(Createdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CREATEDATE_REQUIRED)
-    }
-    if (!validator.isArray(Careplanservices)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CAREPLANSERVICES_REQUIRED)
-    } else {
-        for (const careplanservice of Careplanservices) {
-            if (!careplanservice?.Uuid) {
-                validationErrors.push(messages.VALIDATION_ERROR.CAREPLANSERVICEID_REQUIRED)
-            }
-            if (!validator.isUUID(careplanservice?.Uuid)) {
-                validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CAREPLANSERVICEID)
-            }
-            if (!validator.isUUID(careplanservice?.SupportplanID)) {
-                validationErrors.push(messages.VALIDATION_ERROR.SUPPORTPLANID_REQUIRED)
-            }
-            if (!validator.isString(careplanservice?.Helpstatus)) {
-                validationErrors.push(messages.VALIDATION_ERROR.HELPSTATUS_REQUIRED)
-            }
-            if (!validator.isString(careplanservice?.Requiredperiod)) {
-                validationErrors.push(messages.VALIDATION_ERROR.REQUIREDPERIOD_REQUIRED)
-            }
-            if (!validator.isString(careplanservice?.Makingtype)) {
-                validationErrors.push(messages.VALIDATION_ERROR.MAKINGTYPE_REQUIRED)
-            }
-            if (!validator.isString(careplanservice?.Rating)) {
-                validationErrors.push(messages.VALIDATION_ERROR.RATING_REQUIRED)
-            }
+    if (Type !== claimpaymenttypes.Personel) {
+        if (!validator.isUUID(CostumertypeID)) {
+            return next(createValidationError([messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED], req.language))
         }
     }
+    if (!validator.isUUID(CostumertypeID)) {
+        return next(createValidationError([messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED], req.language))
+    }
+    if (!validator.isNumber(Patientclaimpaymentperpayment)) {
+        return next(createValidationError([messages.VALIDATION_ERROR.PERPAYMENT_REQUIRED], req.language))
+    }
+
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
     }
@@ -152,57 +141,46 @@ async function UpdateClaimpaymentparameter(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const careplan = await db.careplanModel.findOne({ where: { Uuid: Uuid } })
-        if (!careplan) {
-            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
+        const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Uuid: Uuid } })
+        if (!claimpaymentparameter) {
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
         }
-        if (careplan.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
+        if (claimpaymentparameter.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
         }
 
-        await db.careplanModel.update({
+        await db.claimpaymentparameterModel.update({
             ...req.body,
+            Issettingactive: false,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
-        for (const careplanservice of Careplanservices) {
-            await db.careplanserviceModel.update({
-                ...careplanservice,
-                Updateduser: username,
-                Updatetime: new Date(),
-            }, { where: { Uuid: careplanservice?.Uuid } }, { transaction: t })
-        }
-
-        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } });
-        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
-
         await CreateNotification({
             type: types.Update,
-            service: 'Bireysel Bakım Planları',
-            role: 'careplannotification',
-            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Güncellendi.`,
-            pushurl: '/Careplans'
+            service: 'Hakediş Parametreleri',
+            role: 'claimpaymentparameternotification',
+            message: `${Uuid} numaralı hakediş parametresi ${username} tarafından Güncellendi.`,
+            pushurl: '/Claimpaymentparameters'
         })
 
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
-    GetCareplans(req, res, next)
-
+    GetClaimpaymentparameters(req, res, next)
 }
 
 async function ApproveClaimpaymentparameter(req, res, next) {
 
     let validationErrors = []
-    const Uuid = req.params.careplanId
+    const Uuid = req.params.claimpaymentparameterId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CAREPLANID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTPARAMETERID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CAREPLANID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTPARAMETERID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -212,53 +190,60 @@ async function ApproveClaimpaymentparameter(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const careplan = await db.careplanModel.findOne({ where: { Uuid: Uuid } })
-        if (!careplan) {
-            return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_FOUND], req.language))
+        const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Uuid: Uuid } })
+        if (!claimpaymentparameter) {
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
         }
-        if (careplan.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CAREPLAN_NOT_ACTIVE], req.language))
+        if (claimpaymentparameter.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
         }
-        if (careplan.Needapprove === false) {
-            return next(createAccessDenied([messages.ERROR.CAREPLAN_DONTNEEDAPPROVE], req.language))
+        if (claimpaymentparameter.Isapproved === true) {
+            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_ALREADY_APPROVED], req.language))
         }
 
-        await db.careplanModel.update({
-            ...careplan,
+        if (claimpaymentparameter?.Issettingactive) {
+            await db.careplanModel.update({
+                Issettingactive: false,
+                Updateduser: username,
+                Updatetime: new Date(),
+            }, { where: { Issettingactive: true } }, { transaction: t })
+        }
+
+        await db.claimpaymentparameterModel.update({
+            ...claimpaymentparameter,
             Isapproved: true,
+            Issettingactive: true,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
-        const patient = await db.patientModel.findOne({ where: { Uuid: careplan?.PatientID } });
-        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
 
         await CreateNotification({
             type: types.Update,
-            service: 'Bireysel Bakım Planları',
-            role: 'careplannotification',
-            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Onaylandı.`,
-            pushurl: '/Careplans'
+            service: 'Hakediş Parametreleri',
+            role: 'claimpaymentparameternotification',
+            message: `${Uuid} numaralı hakediş parametresi ${username} tarafından Onaylandı.`,
+            pushurl: '/Claimpaymentparameters'
         })
 
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
-    GetCareplans(req, res, next)
+    GetClaimpaymentparameters(req, res, next)
 }
 
 
 async function DeleteClaimpaymentparameter(req, res, next) {
 
     let validationErrors = []
-    const Uuid = req.params.careplanId
+    const Uuid = req.params.claimpaymentparameterId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CAREPLANID_REQUIRED)
+        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTPARAMETERID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CAREPLANID)
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTPARAMETERID)
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -268,26 +253,29 @@ async function DeleteClaimpaymentparameter(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const careplan = await db.careplanModel.findOne({ where: { Uuid: Uuid } })
-        if (!careplan) {
-            return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_FOUND], req.language))
+        const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Uuid: Uuid } })
+        if (!claimpaymentparameter) {
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
         }
-        if (careplan.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CARE], req.language))
+        if (claimpaymentparameter.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
         }
 
-        await db.careplanModel.destroy({ where: { Uuid: Uuid }, transaction: t });
-        await db.careplanserviceModel.destroy({ where: { CareplanID: Uuid }, transaction: t });
-
-        const patient = await db.patientModel.findOne({ where: { Uuid: careplan?.PatientID } });
-        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
+        await db.claimpaymentparameterModel.update({
+            ...claimpaymentparameter,
+            Isapproved: true,
+            Issettingactive: false,
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Bireysel Bakım Planları',
-            role: 'careplannotification',
-            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Silindi.`,
-            pushurl: '/Careplans'
+            service: 'Hakediş Parametreleri',
+            role: 'claimpaymentparameternotification',
+            message: `${Uuid} numaralı hakediş parametresi ${username} tarafından Silindi.`,
+            pushurl: '/Claimpaymentparameters'
         })
 
         await t.commit();
@@ -295,7 +283,7 @@ async function DeleteClaimpaymentparameter(req, res, next) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
-    GetCareplans(req, res, next)
+    GetClaimpaymentparameters(req, res, next)
 }
 
 module.exports = {

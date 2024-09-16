@@ -90,6 +90,12 @@ export const PATIENTMOVEMENTTYPE = [
     { Name: "Yer değişikliği", value: 7 },
 ]
 
+export const PERSONEL_CASE_TYPE_PASSIVE = 0
+export const PERSONEL_CASE_TYPE_START = 1
+export const PERSONEL_CASE_TYPE_WORK = 2
+export const PERSONEL_CASE_TYPE_PERMIT = 3
+export const PERSONEL_CASE_TYPE_ANNUALPERMIT = 4
+
 export const PURCHASEORDER_MOVEMENTTYPES_CREATE = 'create'
 export const PURCHASEORDER_MOVEMENTTYPES_UPDATE = 'update'
 export const PURCHASEORDER_MOVEMENTTYPES_DELETE = 'delete'

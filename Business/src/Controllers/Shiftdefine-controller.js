@@ -195,7 +195,11 @@ async function DeleteShiftdefine(req, res, next) {
             return next(createAccessDenied([messages.ERROR.SHIFTDEFINE_NOT_ACTIVE], req.language))
         }
 
-        await db.shiftdefineModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.shiftdefineModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

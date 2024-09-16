@@ -122,7 +122,7 @@ async function UpdateCompanycashmovement(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const companycashmovement =await db.companycashmovementModel.findOne({ where: { Uuid: Uuid } })
+        const companycashmovement = await db.companycashmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!companycashmovement) {
             return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
         }
@@ -170,7 +170,7 @@ async function DeleteCompanycashmovement(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const companycashmovement =await db.companycashmovementModel.findOne({ where: { Uuid: Uuid } })
+        const companycashmovement = await db.companycashmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!companycashmovement) {
             return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
         }
@@ -178,7 +178,11 @@ async function DeleteCompanycashmovement(req, res, next) {
             return next(createAccessDenied([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
         }
 
-        await db.companycashmovementModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.companycashmovementModel.update({
+            Deleteduser: "System",
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

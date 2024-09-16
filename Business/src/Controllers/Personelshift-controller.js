@@ -220,7 +220,11 @@ async function UpdatePersonelshift(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
 
-        await db.personelshiftdetailModel.destroy({ where: { PersonelshiftID: Uuid }, transaction: t });
+        await db.personelshiftdetailModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { PersonelshiftID: Uuid } }, { transaction: t })
 
         for (const personelshiftdetail of Personelshiftdetails) {
 
@@ -458,8 +462,18 @@ async function DeletePersonelshift(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
         }
 
-        await db.personelshiftModel.destroy({ where: { Uuid: Uuid }, transaction: t });
-        await db.personelshiftdetailModel.destroy({ where: { PersonelshiftID: Uuid }, transaction: t });
+        await db.personelshiftModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await db.personelshiftdetailModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { PersonelshiftID: Uuid } }, { transaction: t })
+
 
         await CreateNotification({
             type: types.Delete,

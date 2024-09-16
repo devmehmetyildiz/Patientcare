@@ -30,6 +30,13 @@ const Routes = [
     { method: 'put', path: '/Careplans', controller: 'Careplan', action: 'UpdateCareplan' },
     { method: 'delete', path: '/Careplans/:careplanId', controller: 'Careplan', action: 'DeleteCareplan' },
 
+    { method: 'get', path: '/Claimpaymentparameters/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'GetClaimpaymentparameter' },
+    { method: 'get', path: '/Claimpaymentparameters', controller: 'Claimpaymentparameter', action: 'GetClaimpaymentparameters' },
+    { method: 'post', path: '/Claimpaymentparameters', controller: 'Claimpaymentparameter', action: 'AddClaimpaymentparameter' },
+    { method: 'put', path: '/Claimpaymentparameters/Approve/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'ApproveClaimpaymentparameter' },
+    { method: 'put', path: '/Claimpaymentparameters', controller: 'Claimpaymentparameter', action: 'UpdateClaimpaymentparameter' },
+    { method: 'delete', path: '/Claimpaymentparameters/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'DeleteClaimpaymentparameter' },
+
     { method: 'get', path: '/Professions/:professionId', controller: 'Profession', action: 'GetProfession' },
     { method: 'get', path: '/Professions', controller: 'Profession', action: 'GetProfessions' },
     { method: 'post', path: '/Professions', controller: 'Profession', action: 'AddProfession' },

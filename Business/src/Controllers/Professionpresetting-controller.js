@@ -214,7 +214,11 @@ async function DeleteProfessionpresetting(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PROFESSIONPRESETTING_NOT_ACTIVE], req.language))
         }
 
-        await db.professionpresettingModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.professionpresettingModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

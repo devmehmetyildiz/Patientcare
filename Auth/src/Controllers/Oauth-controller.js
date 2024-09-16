@@ -123,13 +123,17 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
         token_type: 'bearer',
         accessToken: uuid(),
         refreshToken: uuid(),
-        ExpiresAt: new Date(new Date().getTime() + 5 * 60000),
-        RefreshtokenexpiresAt: new Date(new Date().getTime() + 5 * 60000),
+        ExpiresAt: new Date(new Date().getTime() + 10 * 60000),
+        RefreshtokenexpiresAt: new Date(new Date().getTime() + 10 * 60000),
         redirect: user.Defaultpage
     }
 
     try {
-        await db.accesstokenModel.destroy({ where: { Userid: user.Uuid } })
+        await db.accesstokenModel.update({
+            Deleteduser: "System",
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Userid: user.Uuid } }, { transaction: t })
         req.identity = {}
         req.identity.user = user
         await db.accesstokenModel.create({
@@ -198,12 +202,16 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
         token_type: 'bearer',
         accessToken: uuid(),
         refreshToken: uuid(),
-        ExpiresAt: new Date(new Date().getTime() + 5 * 60000),
-        RefreshtokenexpiresAt: new Date(new Date().getTime() + 5 * 60000),
+        ExpiresAt: new Date(new Date().getTime() + 10 * 60000),
+        RefreshtokenexpiresAt: new Date(new Date().getTime() + 10 * 60000),
     }
 
     try {
-        await db.accesstokenModel.destroy({ where: { Userid: user.Uuid } })
+        await db.accesstokenModel.update({
+            Deleteduser: "System",
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Userid: user.Uuid } }, { transaction: t })
 
         await db.accesstokenModel.create({
             Userid: user.Uuid,

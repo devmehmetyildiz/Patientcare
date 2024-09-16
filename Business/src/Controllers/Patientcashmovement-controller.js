@@ -219,7 +219,12 @@ async function DeletePatientcashmovement(req, res, next) {
             return next(createAccessDenied([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
         }
 
-        await db.patientcashmovementModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.patientcashmovementModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+
 
         const patient = await db.patientModel.findOne({ where: { Uuid: patientcashmovement?.PatientID } });
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });

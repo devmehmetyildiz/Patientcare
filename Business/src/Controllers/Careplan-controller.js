@@ -204,7 +204,7 @@ async function UpdateCareplan(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const careplan =await db.careplanModel.findOne({ where: { Uuid: Uuid } })
+        const careplan = await db.careplanModel.findOne({ where: { Uuid: Uuid } })
         if (!careplan) {
             return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
         }
@@ -320,7 +320,7 @@ async function DeleteCareplan(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const careplan =await db.careplanModel.findOne({ where: { Uuid: Uuid } })
+        const careplan = await db.careplanModel.findOne({ where: { Uuid: Uuid } })
         if (!careplan) {
             return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_FOUND], req.language))
         }
@@ -328,8 +328,17 @@ async function DeleteCareplan(req, res, next) {
             return next(createAccessDenied([messages.ERROR.CARE], req.language))
         }
 
-        await db.careplanModel.destroy({ where: { Uuid: Uuid }, transaction: t });
-        await db.careplanserviceModel.destroy({ where: { CareplanID: Uuid }, transaction: t });
+        await db.careplanModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
+       
+        await db.careplanserviceModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { CareplanID: Uuid } }, { transaction: t })
 
         const patient = await db.patientModel.findOne({ where: { Uuid: careplan?.PatientID } });
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });

@@ -216,7 +216,11 @@ async function UpdatePurchaseorder(req, res, next) {
             Occureddate: new Date(),
         }, { transaction: t })
 
-        await db.stockModel.destroy({ where: { WarehouseID: Uuid }, transaction: t });
+        await db.stockModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { WarehouseID: Uuid } }, { transaction: t })
 
         for (const stock of Stocks) {
             let stockuuid = uuid()

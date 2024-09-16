@@ -209,7 +209,11 @@ async function DeletePersonelpresetting(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PERSONELPRESETTING_NOT_ACTIVE], req.language))
         }
 
-        await db.personelpresettingModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.personelpresettingModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

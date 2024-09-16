@@ -222,7 +222,11 @@ async function DeletePersonelshiftdetail(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PERSONELSHIIFTDETAIL_NOT_ACTIVE], req.language))
         }
 
-        await db.personelshiftdetailModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.personelshiftdetailModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,

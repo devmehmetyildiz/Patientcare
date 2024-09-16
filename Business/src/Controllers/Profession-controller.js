@@ -164,7 +164,11 @@ async function DeleteProfession(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PROFESSION_NOT_FOUND], req.language))
         }
 
-        await db.professionModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+        await db.professionModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,
