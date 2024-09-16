@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Headerbredcrump, Pagewrapper, Headerwrapper, Pagedivider } from '../../Components'
 
 import './About.css'
+import { version1_1_0_1 } from './Changelogs'
 
 export default class About extends Component {
 
@@ -17,7 +18,7 @@ export default class About extends Component {
 
     render() {
         const Changelogs = [
-          
+            version1_1_0_1
         ]
 
         return (
