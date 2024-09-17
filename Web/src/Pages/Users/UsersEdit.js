@@ -56,6 +56,7 @@ export default class UsersEdit extends Component {
         {
           ...selected_record,
           Roles: selected_record.Roleuuids.map(u => { return u.RoleID }),
+          Dateofbirth: validator.isISODate(selected_record?.Dateofbirth) ? Formatdate(selected_record?.Dateofbirth) : null,
           Workstarttime: validator.isISODate(selected_record?.Workstarttime) ? Formatdate(selected_record?.Workstarttime) : null,
           Workendtime: validator.isISODate(selected_record?.Workendtime) ? Formatdate(selected_record?.Workendtime) : null,
         })

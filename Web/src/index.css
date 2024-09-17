@@ -13,12 +13,25 @@ html {
   scroll-behavior: smooth;
   font-family: 'Lato TR', sans-serif !important;
 }
+
 * {
   font-family: 'Lato TR', sans-serif !important;
 }
 
 i {
   font-family: 'icons' !important;
+}
+
+.monaco-editor {
+  font-family: Consolas, "Courier New", monospace !important;
+}
+
+.monaco-editor>* {
+  font-family: Consolas, "Courier New", monospace !important;
+}
+
+.cldr.codicon {
+  font: normal normal normal 16px/1 codicon !important
 }
 
 .ui {

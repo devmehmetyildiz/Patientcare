@@ -532,5 +532,81 @@ setInterval(() => {
 }, interval)
 `
 
+const usercreaterule = `
 
-export { breakdownmainteanciesrule, patienttodoccreaterule,personelshifteditorrule }
+const axios = require('axios')
+const secret = process.env.APP_SESSION_SECRET
+const userroleurl = process.env.USERROLE_URL
+
+const users = [
+
+]
+
+const usercreaterule = async () => {
+  try {
+    console.log("/////// JOB BAŞLADI ///////")
+
+    for (const user of users) {
+      const body = {
+        Username: user.Username,
+        Name: user.Name,
+        Surname: user.Surname,
+        Email: user.Email,
+        Password: String(user.Password),
+        Language: 'tr',
+        Isworker: true,
+        Workstarttime: new Date(user.Workstarttime),
+        Isworking: true,
+        ProfessionID: user.ProfessionID,
+        Dateofbirth: new Date(user.Dateofbirth),
+        Phonenumber: user.Phonenumber,
+        Bloodgroup: user.Bloodgroup,
+        Foreignlanguage: user.Foreignlanguage,
+        Graduation: user.Graduation,
+        Contactnumber: user.Contactnumber,
+        Chronicillness: user.Chronicillness,
+        Covid: user.Covid,
+        City: user.City,
+        Town: user.Town,
+        Adress: user.Adress,
+        Includeshift: false,
+        CountryID: String(user.CountryID),
+        Gender: String(user.Gender),
+        Roles: [
+          { Uuid: "" }
+        ]
+      }
+      await postUsers(body)
+      console.log("Kullanıcı Eklendi" + user.Username)
+    }
+  }
+  catch (error) {
+    console.log("error", error)
+  }
+}
+
+
+
+const postUsers = async (data) => {
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: userroleurl + 'Users',
+      headers: {
+        session_key: secret
+      },
+      data: data
+    })
+    return response.data
+  }
+  catch (error) {
+    throw error?.response?.data
+  }
+}
+
+
+usercreaterule()
+
+`
+
+export { breakdownmainteanciesrule, patienttodoccreaterule, personelshifteditorrule, usercreaterule }

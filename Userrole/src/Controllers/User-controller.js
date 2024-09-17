@@ -419,7 +419,7 @@ async function GetUsersforshift(req, res, next) {
 
 function GetUserByEmail(next, Email, language) {
     return new Promise((resolve, reject) => {
-        db.userModel.findOne({ where: { Email: Email } })
+        db.userModel.findOne({ where: { Email: Email, Isactive: true } })
             .then(user => {
                 resolve(user)
             })
@@ -430,7 +430,7 @@ function GetUserByEmail(next, Email, language) {
 
 function GetUserByUsername(next, Username, language) {
     return new Promise((resolve, reject) => {
-        db.userModel.findOne({ where: { Username: Username } })
+        db.userModel.findOne({ where: { Username: Username, Isactive: true } })
             .then(user => {
                 resolve(user)
             })
