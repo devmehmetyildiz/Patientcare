@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
@@ -7,19 +7,83 @@ import { Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwra
 import UsersPrepare from './UsersPrepare'
 
 
-export default function UsersCreate(props) {
-  const PAGE_NAME = "UsersCreate"
+export default class UsersCreate extends Component {
+  PAGE_NAME = "UsersCreate"
 
-  const { GetRoles, GetProfessions, GetUsagetypes, AddUsers } = props
-  const { Users, Roles, Usagetypes, fillUsernotification, Professions, Profile, history, closeModal } = props
+  constructor(props) {
+    super(props)
+    this.state = {
+      selectedFiles: []
+    }
+  }
 
-  const context = useContext(FormContext)
-  const t = Profile?.i18n?.t
-  const [selectedFiles, setselectedFiles] = useState([])
+  componentDidMount() {
+    const { GetRoles, GetProfessions, GetUsagetypes } = this.props
+    GetRoles()
+    GetProfessions()
+    GetUsagetypes()
+  }
 
-  const handleSubmit = (e) => {
+  render() {
+    const { Users, Roles, Usagetypes, fillUsernotification, Professions, Profile, history, closeModal } = this.props
+
+    const t = Profile?.i18n?.t
+
+    const isLoadingstatus =
+      Users.isLoading ||
+      Roles.isLoading ||
+      Usagetypes.isLoading ||
+      Professions.isLoading
+
+    return (
+      isLoadingstatus ? <LoadingPage /> :
+        <Pagewrapper>
+          <Headerwrapper>
+            <Headerbredcrump>
+              <Link to={"/Users"}>
+                <Breadcrumb.Section >{t('Pages.Users.Page.Header')}</Breadcrumb.Section>
+              </Link>
+              <Breadcrumb.Divider icon='right chevron' />
+              <Breadcrumb.Section>{t('Pages.Users.Page.CreateHeader')}</Breadcrumb.Section>
+            </Headerbredcrump>
+            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <UsersPrepare
+              selectedFiles={this.state.selectedFiles}
+              setselectedFiles={this.setselectedFiles}
+              fillnotification={fillUsernotification}
+              Usagetypes={Usagetypes}
+              Roles={Roles}
+              Professions={Professions}
+              PAGE_NAME={this.PAGE_NAME}
+              Profile={Profile}
+            />
+          </Contentwrapper>
+          <Footerwrapper>
+            <Gobackbutton
+              history={history}
+              redirectUrl={"/Users"}
+              buttonText={t('Common.Button.Goback')}
+            />
+            <Submitbutton
+              isLoading={Users.isLoading}
+              buttonText={t('Common.Button.Create')}
+              submitFunction={this.handleSubmit}
+            />
+          </Footerwrapper>
+        </Pagewrapper >
+    )
+  }
+
+  handleSubmit = (e) => {
     e.preventDefault()
-    const data = context.getForm(PAGE_NAME)
+    const { history, Roles, Profile, AddUsers, fillUsernotification, closeModal } = this.props
+
+    const t = Profile?.i18n?.t
+
+    const data = this.context.getForm(this.PAGE_NAME)
     data.Roles = (data?.Roles || []).map(id => {
       return (Roles.list || []).find(u => u.Uuid === id)
     })
@@ -62,62 +126,14 @@ export default function UsersCreate(props) {
         fillUsernotification(error)
       })
     } else {
-      AddUsers({ data, history, closeModal, files: selectedFiles })
+      AddUsers({ data, history, closeModal, files: this.state.selectedFiles })
     }
   }
 
-  useEffect(() => {
-    GetRoles()
-    GetProfessions()
-    GetUsagetypes()
-  }, [])
-
-
-  const isLoadingstatus =
-    Users.isLoading ||
-    Roles.isLoading ||
-    Usagetypes.isLoading ||
-    Professions.isLoading
-
-
-  return (
-    isLoadingstatus ? <LoadingPage /> :
-      <Pagewrapper>
-        <Headerwrapper>
-          <Headerbredcrump>
-            <Link to={"/Users"}>
-              <Breadcrumb.Section >{t('Pages.Users.Page.Header')}</Breadcrumb.Section>
-            </Link>
-            <Breadcrumb.Divider icon='right chevron' />
-            <Breadcrumb.Section>{t('Pages.Users.Page.CreateHeader')}</Breadcrumb.Section>
-          </Headerbredcrump>
-          {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
-        </Headerwrapper>
-        <Pagedivider />
-        <Contentwrapper>
-          <UsersPrepare
-            selectedFiles={selectedFiles}
-            setselectedFiles={setselectedFiles}
-            fillnotification={fillUsernotification}
-            Usagetypes={Usagetypes}
-            Roles={Roles}
-            Professions={Professions}
-            PAGE_NAME={PAGE_NAME}
-            Profile={Profile}
-          />
-        </Contentwrapper>
-        <Footerwrapper>
-          <Gobackbutton
-            history={history}
-            redirectUrl={"/Users"}
-            buttonText={t('Common.Button.Goback')}
-          />
-          <Submitbutton
-            isLoading={Users.isLoading}
-            buttonText={t('Common.Button.Create')}
-            submitFunction={handleSubmit}
-          />
-        </Footerwrapper>
-      </Pagewrapper >
-  )
+  setselectedFiles = (prev) => {
+    this.setState({
+      selectedFiles: [...prev]
+    })
+  }
 }
+UsersCreate.contextType = FormContext

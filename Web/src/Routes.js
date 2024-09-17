@@ -279,8 +279,8 @@ class Routes extends Component {
       { exact: true, path: "/Stockmovements/:StockmovementID/Edit", auth: true, component: StockmovementsEdit, permission: 'stockmovementupdate' },
 
       { exact: true, path: "/Users", auth: true, component: Users, permission: 'userview' },
-      { exact: true, path: "/Users/:UserID", auth: true, component: UsersDetail, permission: 'userview' },
       { exact: true, path: "/Users/Create", auth: true, component: UsersCreate, permission: 'useradd' },
+      { exact: true, path: "/Users/:UserID", auth: true, component: UsersDetail, permission: 'userview' },
       { exact: true, path: "/Users/:UserID/Edit", auth: true, component: UsersEdit, permission: 'userupdate' },
 
       { exact: true, path: "/Files", auth: true, component: Files, permission: 'fileview' },

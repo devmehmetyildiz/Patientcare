@@ -7,10 +7,10 @@ import UserDetailFiles from './UserDetailFiles'
 import UserDetailCase from './UserDetailCase'
 import UsersDetailInfo from './UsersDetailInfo'
 
-export default function Patientsdetail(props) {
+export default function UsersDetail(props) {
 
     const { GetUser, fillUsernotification, UserID, match, history, Profile,
-        Cases, Users, Professions, Files, Departments, Roles, Usagetypes, GetFiles,
+        Cases, Users, Files, Departments, Roles, Usagetypes, GetFiles,
         GetCases, GetRoles, GetProfessions, GetUsagetypes, GetDepartments } = props
 
     const Id = match?.params?.UserID || UserID
