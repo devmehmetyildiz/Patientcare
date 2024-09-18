@@ -54,6 +54,8 @@ import { removePersonelshiftdetailnotification } from "../Redux/Personelshiftdet
 import { removeStocktypenotification } from "../Redux/StocktypeSlice"
 import { removeStocktypegroupnotification } from "../Redux/StocktypegroupSlice"
 import { removePurchaseordernotification } from "../Redux/PurchaseorderSlice"
+import { removeClaimpaymentparameternotification } from "../Redux/ClaimpaymentparameterSlice"
+import { removeClaimpaymentnotification } from "../Redux/ClaimpaymentSlice"
 import Notificationwrapper from './Notification'
 
 export function NotificationHandler(props) {
@@ -78,7 +80,7 @@ export function NotificationHandler(props) {
             removeSupportplannotification, removeSupportplanlistnotification, removeCareplannotification, removeHelpstatunotification,
             removeMakingtypenotification, removeRatingnotification, removeRequiredperiodnotification, removeProfessionnotification, removePersonelpresettingnotification,
             removeProfessionpresettingnotification, removePersonelshiftdetailnotification, removeStocktypenotification,
-            removeStocktypegroupnotification, removePurchaseordernotification
+            removeStocktypegroupnotification, removePurchaseordernotification, removeClaimpaymentparameternotification, removeClaimpaymentnotification
         } = props
 
         const {
@@ -92,7 +94,7 @@ export function NotificationHandler(props) {
             Patientcashregisters, Usernotifications, Reports, Usagetypes, Professions,
             Supportplanlists, Supportplans, Careplans, Helpstatus, Makingtypes, Ratings, Requiredperiods,
             Personelshiftdetails, Personelpresettings, Professionpresettings, Personelshifts, Stocktypes,
-            Stocktypegroups, Purchaseorders
+            Stocktypegroups, Purchaseorders, Claimpaymentparameters, Claimpayments
         } = props.states
 
         Notification(Warehouses.notifications, removeWarehousenotification)
@@ -149,6 +151,8 @@ export function NotificationHandler(props) {
         Notification(Stocktypes.notifications, removeStocktypenotification)
         Notification(Stocktypegroups.notifications, removeStocktypegroupnotification)
         Notification(Purchaseorders.notifications, removePurchaseordernotification)
+        Notification(Claimpaymentparameters.notifications, removeClaimpaymentparameternotification)
+        Notification(Claimpayments.notifications, removeClaimpaymentnotification)
     })
 
     return null
@@ -173,7 +177,8 @@ const mapDispatchToProps = {
     removeSupportplanlistnotification, removeSupportplannotification, removeCareplannotification, removeHelpstatunotification, removeRequiredperiodnotification,
     removeRatingnotification, removeMakingtypenotification, removeProfessionnotification, removePersonelshiftnotification,
     removePersonelpresettingnotification, removeProfessionpresettingnotification, removePersonelshiftdetailnotification,
-    removeStocktypenotification, removeStocktypegroupnotification, removePurchaseordernotification
+    removeStocktypenotification, removeStocktypegroupnotification, removePurchaseordernotification, removeClaimpaymentparameternotification,
+    removeClaimpaymentnotification
 
 }
 

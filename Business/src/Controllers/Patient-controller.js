@@ -361,7 +361,6 @@ async function UpdatePatientDates(req, res, next) {
         Uuid,
         Happensdate,
         Approvaldate,
-        Registerdate,
         Info,
         Guardiannote,
     } = req.body
@@ -369,9 +368,6 @@ async function UpdatePatientDates(req, res, next) {
 
     if (!validator.isISODate(Approvaldate)) {
         validationErrors.push(messages.VALIDATION_ERROR.APPROVALDATE_REQUIRED)
-    }
-    if (!validator.isISODate(Registerdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.REGISTERDATE_REQUIRED)
     }
     if (!validator.isISODate(Happensdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.HAPPENSDATE_REQUIRED)
@@ -401,7 +397,6 @@ async function UpdatePatientDates(req, res, next) {
 
         await db.patientModel.update({
             ...patient,
-            Registerdate: Registerdate,
             Approvaldate: Approvaldate,
             Happensdate: Happensdate,
             Info: Info,
@@ -825,7 +820,6 @@ async function CompletePatient(req, res, next) {
         Completeinfo,
         isTransferstocks,
         Isoninstitution,
-        Registerdate,
         FloorID,
         RoomID,
         BedID
@@ -842,9 +836,6 @@ async function CompletePatient(req, res, next) {
     }
     if (!validator.isBoolean(Isoninstitution)) {
         validationErrors.push(messages.VALIDATION_ERROR.ISONINSTITUTION_REQUIRED)
-    }
-    if (!validator.isISODate(Registerdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.REGISTERDATE_REQUIRED)
     }
     if (!validator.isUUID(FloorID)) {
         validationErrors.push(messages.VALIDATION_ERROR.FLOORID_REQUIRED)
@@ -2192,75 +2183,107 @@ async function DeletePreregisrations(req, res, next) {
 async function Createfromtemplate(req, res, next) {
 
     const body = req.body
+    const {
+        list,
+        external
+    } = body
+
     const t = await db.sequelize.transaction();
 
     try {
 
-        for (const patientdata of body) {
+        const currentDate = new Date()
 
-            let patientdefineuuid = uuid()
+        for (const patientdata of list) {
+
+            const patientdefineuuid = uuid()
+            const patientuuid = uuid()
 
             await db.patientdefineModel.create({
                 Uuid: patientdefineuuid,
                 Firstname: patientdata.Firstname,
                 Lastname: patientdata.Lastname,
-                PatienttypeID: patientdata.PatienttypeID,
+                Fathername: patientdata.Fathername,
+                Mothername: patientdata.Mothername,
+                Motherbiologicalaffinity: patientdata.Motherbiologicalaffinity,
+                Ismotheralive: patientdata.Ismotheralive,
+                Fatherbiologicalaffinity: patientdata.Fatherbiologicalaffinity,
+                Isfatheralive: patientdata.Isfatheralive,
+                CountryID: patientdata.CountryID,
+                Dateofbirth: new Date(patientdata.Dateofbirth),
+                Placeofbirth: patientdata.Placeofbirth,
+                Medicalboardreport: patientdata.Medicalboardreport,
+                Gender: patientdata.Gender,
+                Marialstatus: patientdata.Marialstatus,
+                Criminalrecord: patientdata.Criminalrecord,
+                Childnumber: patientdata.Childnumber,
+                Disabledchildnumber: patientdata.Disabledchildnumber,
+                Siblingstatus: patientdata.Siblingstatus,
+                Sgkstatus: patientdata.Sgkstatus,
+                Budgetstatus: patientdata.Budgetstatus,
+                Town: patientdata.Town,
+                City: patientdata.City,
+                Address1: patientdata.Address1,
+                Address2: patientdata.Address2,
+                Country: patientdata.Country,
+                Contactnumber1: patientdata.Contactnumber1,
+                Contactnumber2: patientdata.Contactnumber2,
+                Contactname1: patientdata.Contactname1,
+                Contactname2: patientdata.Contactname2,
                 CostumertypeID: patientdata.CostumertypeID,
-                Gender: String(patientdata.Gender),
-                CountryID: String(patientdata.CountryID),
+                PatienttypeID: patientdata.PatienttypeID,
                 Createduser: "System",
-                Createtime: new Date(),
+                Createtime: currentDate,
                 Isactive: true
             }, { transaction: t })
 
-            let patientuuid = uuid()
             await db.patientModel.create({
-                PatientdefineID: patientdefineuuid,
-                Approvaldate: "2023-11-01 00:00:00",
-                Registerdate: "2023-11-01 00:00:00",
-                Happensdate: patientdata.Happensdate,
-                DepartmentID: "f276eb15-0c06-4367-b075-30150c520d2a",
-                CaseID: "e599c0e3-5a87-4612-bb1c-6733466643c5",
-                Iswaitingactivation: 0,
                 Uuid: patientuuid,
+                PatientdefineID: patientdefineuuid,
+                Patientstatus: null,
+                Approvaldate: new Date(patientdata.Approvaldate),
+                Releasedate: null,
+                Info: patientdata.Info,
+                Guardiannote: patientdata.Guardiannote,
+                Happensdate: new Date(patientdata.Happensdate),
+                Leavedate: null,
+                Deathdate: null,
+                RoomID: null,
+                FloorID: null,
+                BedID: null,
+                DepartmentID: external.DepartmentID,
+                Patientcreatetime: currentDate,
+                Patientchecktime: currentDate,
+                Patientapprovetime: currentDate,
+                Patientcompletetime: currentDate,
+                CreateduserID: "System",
+                CheckeduserID: "System",
+                ApproveduserID: "System",
+                CompleteduserID: "System",
+                Ischecked: true,
+                Isapproved: true,
+                Ispreregistration: false,
+                Isalive: true,
+                Isoninstitution: true,
+                Isleft: false,
+                Leftinfo: null,
+                Deadinfo: null,
+                CaseID: external.CaseID,
                 Createduser: "System",
-                Createtime: new Date(),
+                Createtime: currentDate,
                 Isactive: true
             }, { transaction: t })
 
             await db.patientmovementModel.create({
                 Uuid: uuid(),
-                OldPatientmovementtype: 0,
-                Patientmovementtype: 2,
-                NewPatientmovementtype: 2,
-                Createduser: "System",
-                Createtime: "2023-11-01 00:00:00",
+                Type: patientmovementtypes.Patientcreate,
+                CaseID: external.CaseID,
                 PatientID: patientuuid,
-                Movementdate: new Date(),
-                IsDeactive: false,
-                IsTodoneed: false,
-                IsTodocompleted: false,
-                IsComplated: true,
-                Iswaitingactivation: false,
-                Isactive: true
+                UserID: "System",
+                Info: '',
+                Occureddate: external.Occureddate
             }, { transaction: t })
 
-            await db.patientmovementModel.create({
-                Uuid: uuid(),
-                OldPatientmovementtype: 2,
-                Patientmovementtype: 1,
-                NewPatientmovementtype: 1,
-                Createduser: "System",
-                Createtime: "2023-11-01 00:00:00",
-                PatientID: patientuuid,
-                Movementdate: new Date(),
-                IsDeactive: false,
-                IsTodoneed: false,
-                IsTodocompleted: false,
-                IsComplated: true,
-                Iswaitingactivation: false,
-                Isactive: true
-            }, { transaction: t })
         }
 
         await t.commit();

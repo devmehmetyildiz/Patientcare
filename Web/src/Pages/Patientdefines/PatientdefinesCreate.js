@@ -7,6 +7,7 @@ import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import CostumertypesCreate from '../../Containers/Costumertypes/CostumertypesCreate'
 import PatienttypesCreate from '../../Containers/Patienttypes/PatienttypesCreate'
+import { MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL } from '../../Utils/Constants'
 export default class PatientdefinesCreate extends Component {
 
   PAGE_NAME = "PatientdefinesCreate"
@@ -71,9 +72,9 @@ export default class PatientdefinesCreate extends Component {
     ]
 
     const Medicalboardreportoptions = [
-      { key: 0, text: "Ruhsal", value: "Ruhsal" },
-      { key: 1, text: "Bedensel", value: "Bedensel" },
-      { key: 2, text: "Zihinsel", value: "Zihinsel" }
+      { key: 0, text: "Ruhsal", value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
+      { key: 1, text: "Bedensel", value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
+      { key: 2, text: "Zihinsel", value: MEDICALBOARDREPORT_OPTION_MENTAL }
     ]
 
     return (

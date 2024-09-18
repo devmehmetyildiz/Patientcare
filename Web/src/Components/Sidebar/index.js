@@ -7,7 +7,7 @@ import config from '../../Config';
 import { Link } from 'react-router-dom';
 import Pagedivider from '../Pagedivider';
 import Literals from '../../Utils/Literalregistrar';
-import { Tb3DRotate, TbActivity, TbGauge, TbCalendar } from "react-icons/tb"
+import { Tb3DRotate, TbActivity, TbGauge, TbCalendar, TbReportMoney } from "react-icons/tb"
 import { MdSettings } from "react-icons/md"
 
 export function Sidebar(props) {
@@ -165,6 +165,10 @@ export const getSidebarroutes = (Profile) => {
             en: "Warehouse Management",
             tr: "Ambar Yönetimi"
         },
+        Claimpayments: {
+            en: "Claim Payments",
+            tr: "Hakedişler"
+        },
         Orders: {
             en: "Orders",
             tr: "Siparişler"
@@ -205,6 +209,16 @@ export const getSidebarroutes = (Profile) => {
         },
         {
             id: 2,
+            title: Sidebarliterals.Claimpayments[Profile.Language],
+            isOpened: false,
+            icon: <TbReportMoney className=' text-[#2355a0]' />,
+            items: [
+                { id: 1, subtitle: t('Pages.Claimpayments.Page.Header'), url: "/Claimpayments", permission: checkAuth('claimpaymentview') },
+                { id: 2, subtitle: t('Pages.Claimpaymentparameters.Page.Header'), url: "/Claimpaymentparameters", permission: checkAuth('claimpaymentparameterview') },
+            ]
+        },
+        {
+            id: 3,
             title: Sidebarliterals.Shifts[Profile.Language],
             isOpened: false,
             icon: <TbCalendar className=' text-[#2355a0]' />,
@@ -216,7 +230,7 @@ export const getSidebarroutes = (Profile) => {
             ]
         },
         {
-            id: 3,
+            id: 4,
             title: Sidebarliterals.Patients[Profile.Language],
             isOpened: false,
             icon: <Tb3DRotate className=' text-[#2355a0]' />,

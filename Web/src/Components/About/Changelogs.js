@@ -36,6 +36,31 @@ const version1_1_0_1 = {
     ]
 }
 
+const version1_1_0_2 = {
+    version: "1.1.0.2",
+    features: [
+        {
+            title: "Hakedişler", commits: [
+                "Parametre oluşturma sayfası eklendi",
+                "Hakediş oluşturma sayfası eklendi, geliştirmeler devam ediyor",
+            ],
+        },
+        {
+            title: "Hastalar", commits: [
+                "Otomatik hasta ekleme fonksiyonu geliştirildi",
+            ],
+        },
+    ],
+    changes: [
+        {
+            title: "Hastalar", commits: [
+                "Kuruma giriş tarihi kaldırıldı, gerekli zorunluluklar kabul tarihine eklendi",
+            ],
+        },
+    ],
+}
+
 export {
-    version1_1_0_1
+    version1_1_0_1,
+    version1_1_0_2
 }

@@ -16,7 +16,6 @@ export default function PatientsDetailProfile(props) {
   const files = (Files.list || []).find(u => u.ParentID === patient?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
   const patientname = `${patientdefine?.Firstname} ${patientdefine?.Lastname}` || t('Common.NoDataFound')
-  const Registerdate = patient?.Registerdate ? Formatdate(patient?.Registerdate, true) : t('Common.NoDataFound')
   const Approvaldate = patient?.Approvaldate ? Formatdate(patient?.Approvaldate, true) : t('Common.NoDataFound')
   const Happensdate = patient?.Happensdate ? Formatdate(patient?.Happensdate, true) : t('Common.NoDataFound')
 
@@ -27,7 +26,6 @@ export default function PatientsDetailProfile(props) {
         : <Header className='!m-0 !p-0' as='h2' icon textAlign='center'><Icon name='users' circular /></Header>
       }
       <div className='mt-4 !text-[#2355a0] text-2xl font-extrabold' >{patientname}</div>
-      <Header className='!m-0 !p-0 !mt-1 !text-[#bebebe]' as='h4'>{`${t('Pages.Patients.PatientsDetail.PatientDetailProfile.Registerdate')}${Registerdate}`}</Header>
       <Header className='!m-0 !p-0 !mt-1 !text-[#bebebe]' as='h4'>{`${t('Pages.Patients.PatientsDetail.PatientDetailProfile.Approvaldate')}${Approvaldate}`}</Header>
       <Header className='!m-0 !p-0 !mt-1 !text-[#bebebe]' as='h4'>{`${t('Pages.Patients.PatientsDetail.PatientDetailProfile.Happensdate')}${Happensdate}`}</Header>
       <div className='mt-4'>

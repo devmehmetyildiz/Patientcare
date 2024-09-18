@@ -18,9 +18,6 @@ module.exports = sequelize.define('patientModel', {
     Approvaldate: {
         type: Sequelize.DATE
     },
-    Registerdate: {
-        type: Sequelize.DATE
-    },
     Releasedate: {
         type: Sequelize.DATE
     },

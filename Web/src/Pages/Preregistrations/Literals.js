@@ -122,10 +122,6 @@ const Literals = {
             tr: 'Hasta Türü',
             en: 'Patient Type'
         },
-        Registerdate: {
-            tr: 'Kuruma Giriş Tarihi',
-            en: 'Register Date'
-        },
         Happensdate: {
             tr: 'Olur Tarihi',
             en: 'Happens Date'
@@ -615,10 +611,6 @@ const Literals = {
             tr: "Hasta ID'si tespit edilemedi, lütfen sayfayı yenileyiniz",
             en: "Patient Id didint catch please refresh page"
         },
-        Registerdaterequired: {
-            tr: "Kabul Tarihi Gerekli",
-            en: "Register date Required"
-        },
         Approvaldaterequired: {
             tr: "Kuruma Giriş tarihi Gerekli",
             en: "Approval date required"
@@ -642,10 +634,6 @@ const Literals = {
         Amountrequired: {
             tr: "Miktar Gerekli",
             en: "Amount required"
-        },
-        Registerdaterequired: {
-            tr: "Kuruma Giriş Tarihi Gerekli",
-            en: "Register Date required"
         },
         Approvaldaterequired: {
             tr: "Kuruma Alınma Tarihi Gerekli",

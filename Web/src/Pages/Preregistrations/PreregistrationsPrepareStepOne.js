@@ -45,7 +45,7 @@ export default function PreregistrationsPrepareStepOne({
     GetCases()
     context.setFormstates(prev => ({
       ...prev,
-      [`${PAGE_NAME}/Registerdate`]: Formatdate(new Date()),
+      [`${PAGE_NAME}/Approvaldate`]: Formatdate(new Date()),
     }))
   }, [])
 
@@ -254,15 +254,12 @@ export default function PreregistrationsPrepareStepOne({
               <FormInput page={PAGE_NAME} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Happensdate')} name="Happensdate" type='date' />
             </Form.Group>
             <Form.Group widths={'equal'}>
-              <FormInput page={PAGE_NAME} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Registerdate')} name="Registerdate" type='date' />
-              <FormInput page={PAGE_NAME} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Case')} name="CaseID" formtype='dropdown' required options={Casesoptions} modal={CasesCreate} />
-            </Form.Group>
-            <Form.Group widths={'equal'}>
               <FormInput page={PAGE_NAME} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Info')} name="Info" />
               <FormInput page={PAGE_NAME} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Guardiannote')} name="Guardiannote" />
             </Form.Group>
             <Form.Group widths={'equal'}>
               <FormInput page={PAGE_NAME} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Deparment')} name="DepartmentID" formtype='dropdown' required options={Departmentoptions} modal={DepartmentsCreate} />
+              <FormInput page={PAGE_NAME} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Case')} name="CaseID" formtype='dropdown' required options={Casesoptions} modal={CasesCreate} />
             </Form.Group>
             <div className='w-full flex justify-center items-center'>
               <Button

@@ -219,6 +219,13 @@ const Personelshifts = lazy(() => import('./Containers/Personelshifts/Personelsh
 const PersonelshiftsCreate = lazy(() => import('./Containers/Personelshifts/PersonelshiftsCreate'));
 const PersonelshiftsEdit = lazy(() => import('./Containers/Personelshifts/PersonelshiftsEdit'));
 
+const Claimpaymentparameters = lazy(() => import('./Containers/Claimpaymentparameters/Claimpaymentparameters'));
+const ClaimpaymentparametersCreate = lazy(() => import('./Containers/Claimpaymentparameters/ClaimpaymentparametersCreate'));
+const ClaimpaymentparametersEdit = lazy(() => import('./Containers/Claimpaymentparameters/ClaimpaymentparametersEdit'));
+
+const Claimpayments = lazy(() => import('./Containers/Claimpayments/Claimpayments'));
+const ClaimpaymentsCreate = lazy(() => import('./Containers/Claimpayments/ClaimpaymentsCreate'));
+
 const Patientfollowup = lazy(() => import('./Containers/Patientfollowup/Patientfollowup'));
 
 const Log = lazy(() => import('./Containers/Log/Log'));
@@ -240,7 +247,7 @@ class Routes extends Component {
       { exact: true, path: "/", auth: true, component: Home, permission: '' },
 
       { exact: true, path: "/Approve", auth: true, component: Approve, permission: 'roleview' },
-      
+
       { exact: true, path: "/Roles", auth: true, component: Roles, permission: 'roleview' },
       { exact: true, path: "/Roles/Create", auth: true, component: RolesCreate, permission: 'roleadd' },
       { exact: true, path: "/Roles/:RoleID/Edit", auth: true, component: RolesEdit, permission: 'roleupdate' },
@@ -444,6 +451,13 @@ class Routes extends Component {
       { exact: true, path: "/Preregistrations", auth: true, component: Preregistrations, permission: 'preregistrationview' },
       { exact: true, path: "/Preregistrations/Create", auth: true, component: PreregistrationsCreate, permission: 'preregistrationadd' },
       { exact: true, path: "/Preregistrations/:PatientID/Edit", auth: true, component: PreregistrationsEdit, permission: 'preregistrationupdate' },
+
+      { exact: true, path: "/Claimpaymentparameters", auth: true, component: Claimpaymentparameters, permission: 'claimpaymentparameterview' },
+      { exact: true, path: "/Claimpaymentparameters/Create", auth: true, component: ClaimpaymentparametersCreate, permission: 'claimpaymentparameteradd' },
+      { exact: true, path: "/Claimpaymentparameters/:ClaimpaymentparameterID/Edit", auth: true, component: ClaimpaymentparametersEdit, permission: 'claimpaymentparameterupdate' },
+
+      { exact: true, path: "/Claimpayments", auth: true, component: Claimpayments, permission: 'claimpaymentview' },
+      { exact: true, path: "/Claimpayments/Create", auth: true, component: ClaimpaymentsCreate, permission: 'claimpaymentadd' },
 
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit, permission: 'basic' },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange, permission: 'basic' },

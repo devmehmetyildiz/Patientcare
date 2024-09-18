@@ -18,6 +18,12 @@ const messages = {
                 tr: 'hakediş parametresi zaten onaylı',
             }
         },
+        CLAIMPAYMENTPARAMETER_IS_NOT_APPROVED: {
+            code: 'CLAIMPAYMENTPARAMETER_IS_NOT_APPROVED', description: {
+                en: 'claim payment parameter is not approved',
+                tr: 'hakediş parametresi onaylı değil',
+            }
+        },
     },
     VALIDATION_ERROR: {
         TYPE_REQUIRED: {

@@ -34,8 +34,16 @@ const Routes = [
     { method: 'get', path: '/Claimpaymentparameters', controller: 'Claimpaymentparameter', action: 'GetClaimpaymentparameters' },
     { method: 'post', path: '/Claimpaymentparameters', controller: 'Claimpaymentparameter', action: 'AddClaimpaymentparameter' },
     { method: 'put', path: '/Claimpaymentparameters/Approve/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'ApproveClaimpaymentparameter' },
+    { method: 'put', path: '/Claimpaymentparameters/Activate/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'ActivateClaimpaymentparameter' },
+    { method: 'put', path: '/Claimpaymentparameters/Deactivate/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'DeactivateClaimpaymentparameter' },
     { method: 'put', path: '/Claimpaymentparameters', controller: 'Claimpaymentparameter', action: 'UpdateClaimpaymentparameter' },
     { method: 'delete', path: '/Claimpaymentparameters/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'DeleteClaimpaymentparameter' },
+
+    { method: 'get', path: '/Claimpayments/:claimpaymentId', controller: 'Claimpayment', action: 'GetClaimpayment' },
+    { method: 'get', path: '/Claimpayments', controller: 'Claimpayment', action: 'GetClaimpayments' },
+    { method: 'post', path: '/Claimpayments', controller: 'Claimpayment', action: 'AddClaimpayment' },
+    { method: 'put', path: '/Claimpayments/Approve/:claimpaymentId', controller: 'Claimpayment', action: 'ApproveClaimpayment' },
+    { method: 'delete', path: '/Claimpayments/:claimpaymentId', controller: 'Claimpayment', action: 'DeleteClaimpayment' },
 
     { method: 'get', path: '/Professions/:professionId', controller: 'Profession', action: 'GetProfession' },
     { method: 'get', path: '/Professions', controller: 'Profession', action: 'GetProfessions' },

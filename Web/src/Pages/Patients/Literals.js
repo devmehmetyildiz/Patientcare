@@ -90,10 +90,6 @@ const Literals = {
             tr: 'Hasta',
             en: 'Hasta'
         },
-        Registerdate: {
-            tr: 'Kabul Tarihi',
-            en: 'Register Date'
-        },
         Happensdate: {
             tr: 'Olur Tarihi',
             en: 'Happens Date'
@@ -667,10 +663,6 @@ const Literals = {
             tr: "Yatak Gerekli",
             en: "Bed Required"
         },
-        Registerdaterequired: {
-            tr: "Kabul Tarihi Gerekli",
-            en: "Register date Required"
-        },
         Approvaldaterequired: {
             tr: "Kuruma Giriş tarihi Gerekli",
             en: "Approval date required"
@@ -900,10 +892,6 @@ const Literals = {
                 tr: 'Hasta Türü',
                 en: 'Patient Type'
             },
-            Registerdate: {
-                tr: 'Kabul Tarihi',
-                en: 'Register Date'
-            },
             Happensdate: {
                 tr: 'Olur Tarihi',
                 en: 'Happens Date'
@@ -1079,10 +1067,6 @@ const Literals = {
             Departmentrequired: {
                 tr: 'Departman Gerekli',
                 en: 'Departemnt Required'
-            },
-            Registerdaterequired: {
-                tr: 'Kabul Tarihi Gerekli',
-                en: 'Register Date Required'
             },
             Patientdefinerequired: {
                 tr: 'Hasta Tanımı Gerekli',

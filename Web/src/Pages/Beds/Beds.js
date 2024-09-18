@@ -146,10 +146,11 @@ export default class Beds extends Component {
   }
 
   patientCellhandler = (value, bedID) => {
-    const { Patients, Patientdefines } = this.props
+    const { Patients, Patientdefines, Beds } = this.props
     if (Patients.isLoading || Patientdefines.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
+      const bed = (Beds.list || []).find(u => u.Uuid === bedID)
       const patient = (Patients.list || []).find(u => u.Uuid === value)
       const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
       return patientdefine
@@ -168,7 +169,20 @@ export default class Beds extends Component {
             <Icon color='red' name='delete' />
           </div>
         </div>
-        : null
+        : bed
+          ? bed?.Isoccupied ? <div
+            onClick={() => {
+              this.setState({
+                bedID: bedID,
+                openConfirm: true
+              })
+            }}
+            className='cursor-pointer'
+          >
+            <Icon color='red' name='delete' />
+          </div>
+            : null
+          : null
     }
   }
 

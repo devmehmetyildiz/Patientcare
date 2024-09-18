@@ -40,7 +40,6 @@ export default function PatientsEditstatus(props) {
                     ...patient,
                     [`Happensdate`]: Formatdate(patient?.Happensdate),
                     [`Approvaldate`]: Formatdate(patient?.Approvaldate),
-                    [`Registerdate`]: Formatdate(patient?.Registerdate),
                 })
         }
     }, [open])
@@ -62,7 +61,6 @@ export default function PatientsEditstatus(props) {
                 <Contentwrapper>
                     <Form>
                         <Form.Group widths={'equal'}>
-                            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Patients.PatientsEditstatus.Label.Registerdate')} name="Registerdate" type="date" />
                             <FormInput page={PAGE_NAME} placeholder={t('Pages.Patients.PatientsEditstatus.Label.Approvaldate')} name="Approvaldate" type="date" />
                         </Form.Group>
                         <Form.Group widths={'equal'}>
@@ -91,8 +89,8 @@ export default function PatientsEditstatus(props) {
                         const data = context.getForm(PAGE_NAME)
 
                         let errors = []
-                        if (!validator.isISODate(patient?.Registerdate)) {
-                            errors.push({ type: 'Error', code: t('Pages.Patients.PatientsEditstatus.Page.Header'), description: t('Pages.Patients.PatientsEditstatus.Messages.RegisterdateRequired') })
+                        if (!validator.isISODate(patient?.Approvaldate)) {
+                            errors.push({ type: 'Error', code: t('Pages.Patients.PatientsEditstatus.Page.Header'), description: t('Pages.Patients.PatientsEditstatus.Messages.ApprovaldateRequired') })
                         }
                         if (errors.length > 0) {
                             errors.forEach(error => {
@@ -102,7 +100,6 @@ export default function PatientsEditstatus(props) {
                             EditPatientdates({
                                 data: {
                                     Uuid: patient?.Uuid,
-                                    Registerdate: data?.Registerdate,
                                     Approvaldate: data?.Approvaldate,
                                     Happensdate: data?.Happensdate,
                                     Info: data?.Info,

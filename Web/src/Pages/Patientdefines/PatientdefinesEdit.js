@@ -8,6 +8,7 @@ import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump
 import CostumertypesCreate from '../../Containers/Costumertypes/CostumertypesCreate'
 import PatienttypesCreate from '../../Containers/Patienttypes/PatienttypesCreate'
 import Formatdate from '../../Utils/Formatdate'
+import { MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL } from '../../Utils/Constants'
 export default class PatientdefinesEdit extends Component {
 
   PAGE_NAME = "PatientdefinesEdit"
@@ -98,9 +99,9 @@ export default class PatientdefinesEdit extends Component {
     ]
 
     const Medicalboardreportoptions = [
-      { key: 0, text: "Ruhsal", value: "Ruhsal" },
-      { key: 1, text: "Bedensel", value: "Bedensel" },
-      { key: 2, text: "Zihinsel", value: "Zihinsel" }
+      { key: 0, text: "Ruhsal", value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
+      { key: 1, text: "Bedensel", value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
+      { key: 2, text: "Zihinsel", value: MEDICALBOARDREPORT_OPTION_MENTAL }
     ]
 
     return (

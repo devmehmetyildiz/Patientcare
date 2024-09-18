@@ -64,9 +64,8 @@ export default class PreregistrationsEdit extends Component {
       this.context.setForm(this.PAGE_NAME,
         {
           ...selected_record,
-          [`Happensdate`]: Formatdate(selected_record?.Registerdate),
+          [`Happensdate`]: Formatdate(selected_record?.Happensdate),
           [`Approvaldate`]: Formatdate(selected_record?.Approvaldate),
-          [`Registerdate`]: Formatdate(selected_record?.Registerdate),
         })
     }
   }
@@ -130,9 +129,6 @@ export default class PreregistrationsEdit extends Component {
     data.Patientdefine = patientdata
     data.Stocks = this.state.selectedStocks
 
-    if (!validator.isISODate(data.Registerdate)) {
-      data.Registerdate = null
-    }
     if (!validator.isISODate(data.Approvaldate)) {
       data.Approvaldate = null
     }

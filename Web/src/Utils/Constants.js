@@ -10,6 +10,8 @@ export const ROUTES = {
     PATIENT: 'Patients',
     TODO: 'Todos',
 
+    CLAIMPAYMENT: 'Claimpayments',
+    CLAIMPAYMENTPARAMETER: 'Claimpaymentparameters',
     PATIENTTYPE: 'Patienttypes',
     PATIENTREPORT: 'Patientreport',
     PATIENTDEFINE: 'Patientdefines',
@@ -152,13 +154,13 @@ export const AFFINITY_OPTION = [
     { key: 1, text: { en: "Step", tr: 'Üvey' }, value: AFFINITY_OPTION_STEP },
 ]
 
-export const MEDICALBOARDREPORT_OPTION_SPIRITUAL = "Ruhsal"
-export const MEDICALBOARDREPORT_OPTION_PHYSICAL = "Bedensel"
-export const MEDICALBOARDREPORT_OPTION_MENTAL = "Zihinsel"
+export const MEDICALBOARDREPORT_OPTION_SPIRITUAL = "0"
+export const MEDICALBOARDREPORT_OPTION_PHYSICAL = "1"
+export const MEDICALBOARDREPORT_OPTION_MENTAL = "2"
 export const MEDICALBOARDREPORT_OPTION = [
-    { key: 0, text: { tr: "Ruhsal", en: 'Spiritual' }, value: AFFINITY_OPTION_OWN },
-    { key: 1, text: { tr: "Bedensel", en: 'Physical' }, value: AFFINITY_OPTION_STEP },
-    { key: 2, text: { tr: "Zihinsel", en: 'Mental' }, value: AFFINITY_OPTION_STEP },
+    { key: 0, text: { tr: "Ruhsal", en: 'Spiritual' }, value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
+    { key: 1, text: { tr: "Bedensel", en: 'Physical' }, value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
+    { key: 2, text: { tr: "Zihinsel", en: 'Mental' }, value: MEDICALBOARDREPORT_OPTION_MENTAL },
 ]
 
 export const CASE_STATUS_DEACTIVE = -1
@@ -178,3 +180,8 @@ export const CASE_PATIENT_STATUS_PLACE_CHANGE = 7
 export const STOCK_TYPE_WAREHOUSE = 0
 export const STOCK_TYPE_PURCHASEORDER = 1
 export const STOCK_TYPE_PATIENT = 2
+
+export const CLAIMPAYMENT_TYPE_PATIENT = 0
+export const CLAIMPAYMENT_TYPE_BHKS = 1
+export const CLAIMPAYMENT_TYPE_KYS = 2
+export const CLAIMPAYMENT_TYPE_PERSONEL = 3

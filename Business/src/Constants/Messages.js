@@ -436,12 +436,6 @@ const messages = {
         tr: 'Bu işlem için kabul edilme tarihi gerekli',
       }
     },
-    REGISTERDATE_REQUIRED: {
-      code: 'REGISTERDATE_REQUIRED', description: {
-        en: 'The Register date required',
-        tr: 'Bu işlem için kayıt tarihi gerekli',
-      }
-    },
     RELEASEDATE_REQUIRED: {
       code: 'RELEASEDATE_REQUIRED', description: {
         en: 'The Release date required',

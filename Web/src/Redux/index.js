@@ -53,6 +53,8 @@ import ProfessionpresettingSlice from "./ProfessionpresettingSlice";
 import StocktypeSlice from "./StocktypeSlice";
 import StocktypegroupSlice from "./StocktypegroupSlice";
 import PurchaseorderSlice from "./PurchaseorderSlice";
+import ClaimpaymentparameterSlice from "./ClaimpaymentparameterSlice";
+import ClaimpaymentSlice from "./ClaimpaymentSlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -106,9 +108,11 @@ const Slices = combineReducers({
     Personelshiftdetails: PersonelshiftdetailSlice,
     Professionpresettings: ProfessionpresettingSlice,
     Personelpresettings: PersonelpresettingSlice,
-    Stocktypes:StocktypeSlice,
-    Stocktypegroups:StocktypegroupSlice,
-    Purchaseorders:PurchaseorderSlice,
+    Stocktypes: StocktypeSlice,
+    Stocktypegroups: StocktypegroupSlice,
+    Purchaseorders: PurchaseorderSlice,
+    Claimpaymentparameters: ClaimpaymentparameterSlice,
+    Claimpayments: ClaimpaymentSlice,
 });
 
 export default Slices;

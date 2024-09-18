@@ -53,12 +53,12 @@ export default function PreregistrationsComplete(props) {
   const {
     CaseID,
     Uuid,
-    Registerdate,
+    Approvaldate,
     Isoninstitution
   } = selected_record
 
   const [selectedcase, setSelectedcase] = useState(CaseID)
-  const [selectedregisterdate, setSelectedregisterdate] = useState(Formatdate(Registerdate))
+  const [selectedapprovaldate, setSelectedapprovaldate] = useState(Formatdate(Approvaldate))
   const [selectedinfo, setSelectedinfo] = useState(null)
   const [selectedbed, setSelectedbed] = useState(null)
   const [selectedIsoninstitution, setSelectedIsoninstitution] = useState(Isoninstitution)
@@ -213,11 +213,11 @@ export default function PreregistrationsComplete(props) {
               </div>
               <Form.Group widths={'equal'}>
                 <Form.Input
-                  label={t('Pages.Preregistrations.Complete.Label.Registerdate')}
+                  label={t('Pages.Preregistrations.Complete.Label.Approvaldate')}
                   type='date'
-                  defaultValue={selectedregisterdate}
+                  defaultValue={selectedapprovaldate}
                   onChange={(e) => {
-                    setSelectedregisterdate(e.target.value)
+                    setSelectedapprovaldate(e.target.value)
                   }}
                   fluid
                 />
@@ -281,8 +281,8 @@ export default function PreregistrationsComplete(props) {
             if (!validator.isUUID(selectedcase)) {
               errors.push({ type: 'Error', code: t('Pages.Preregistrations.Complete.Page.ModalHeader'), description: t('Pages.Preregistrations.Complete.Messages.CaseRequired') })
             }
-            if (!validator.isISODate(selectedregisterdate)) {
-              errors.push({ type: 'Error', code: t('Pages.Preregistrations.Complete.Page.ModalHeader'), description: t('Pages.Preregistrations.Complete.Messages.RegisterdateRequired') })
+            if (!validator.isISODate(selectedapprovaldate)) {
+              errors.push({ type: 'Error', code: t('Pages.Preregistrations.Complete.Page.ModalHeader'), description: t('Pages.Preregistrations.Complete.Messages.ApprovaldateRequired') })
             }
             if (!validator.isUUID(floor?.Uuid)) {
               errors.push({ type: 'Error', code: t('Pages.Preregistrations.Complete.Page.ModalHeader'), description: t('Pages.Preregistrations.Complete.Messages.FloorRequired') })
@@ -306,7 +306,7 @@ export default function PreregistrationsComplete(props) {
                 Completeinfo: selectedinfo,
                 CaseID: selectedcase,
                 Isoninstitution: selectedIsoninstitution,
-                Registerdate: selectedregisterdate,
+                Approvaldate: selectedapprovaldate,
                 FloorID: floor?.Uuid,
                 RoomID: room?.Uuid,
                 BedID: bed?.Uuid,

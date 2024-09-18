@@ -81,12 +81,6 @@ const messages = {
                 tr: 'Bu işlem için Oda gerekli',
             }
         },
-        REGISTERDATE_REQUIRED: {
-            code: 'REGISTERDATE_REQUIRED', description: {
-                en: 'The Registerdate required',
-                tr: 'Bu işlem için kuruma giriş tarihi gerekli',
-            }
-        },
         PATIENTDEFINE_NOT_FOUND: {
             code: 'PATIENTDEFINE_NOT_FOUND', description: {
                 en: 'patient define not found',
@@ -115,12 +109,6 @@ const messages = {
             code: 'ISTRANSFERSTOCKS_REQUIRED', description: {
                 en: 'The isTransferstocks required',
                 tr: 'Bu işlem için isTransferstocks gerekli',
-            }
-        },
-        REGISTERDATE_REQUIRED: {
-            code: 'REGISTERDATE_REQUIRED', description: {
-                en: 'The Register date required',
-                tr: 'Bu işlem için kabul edilme tarihi gerekli',
             }
         },
         APPROVALDATE_REQUIRED: {

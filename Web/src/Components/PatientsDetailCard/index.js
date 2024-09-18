@@ -44,7 +44,6 @@ export default function PatientsDetailCard(props) {
         CaseID,
         Movements,
         Approvaldate,
-        Registerdate,
         Happensdate,
         Isoninstitution
     } = selected_record
@@ -251,9 +250,6 @@ export default function PatientsDetailCard(props) {
                     </Card.Content>
                     <Card.Content className='w-full flex flex-row justify-between items-center'>
                         <Card.Content className='flex flex-col justify-start items-start'>
-                            <Label basic ribbon>
-                                {`${t('Pages.Preregistrations.DetailCard.Label.Registerdate')} : ${Formatdate(Registerdate, true) || Notfound}`}
-                            </Label>
                             <Label basic ribbon>
                                 {`${t('Pages.Preregistrations.DetailCard.Label.Approvaldate')} : ${Formatdate(Approvaldate, true) || Notfound}`}
                             </Label>

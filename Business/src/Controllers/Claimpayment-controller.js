@@ -74,18 +74,26 @@ async function AddClaimpayment(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
     let CalculationResponse = null
     try {
+        const config = {
+            ClaimpaymentID: ClaimpaymentID,
+            Type: Type,
+            Starttime: new Date(Starttime),
+            Endtime: new Date(Endtime),
+            next: next
+        }
+
         switch (Type) {
             case claimpaymenttypes.Patient:
-                CalculationResponse = await CreateClaimpaymentByPatient(ClaimpaymentID, Type, Starttime, Endtime, next)
+                CalculationResponse = await CreateClaimpaymentByPatient(config)
                 break;
             case claimpaymenttypes.Bhks:
-                CalculationResponse = await CreateClaimpaymentByBhks(ClaimpaymentID, Type, Starttime, Endtime, next)
+                CalculationResponse = await CreateClaimpaymentByBhks(config)
                 break;
             case claimpaymenttypes.Kys:
-                CalculationResponse = await CreateClaimpaymentByKys(ClaimpaymentID, Type, Starttime, Endtime, next)
+                CalculationResponse = await CreateClaimpaymentByKys(config)
                 break;
             case claimpaymenttypes.Personel:
-                CalculationResponse = await CreateClaimpaymentByPersonel(ClaimpaymentID, Type, Starttime, Endtime, next)
+                CalculationResponse = await CreateClaimpaymentByPersonel(config)
                 break;
             default:
                 return next(createValidationError([messages.VALIDATION_ERROR.UNSUPPORTED_TYPE], req.language))
@@ -219,7 +227,7 @@ async function DeleteClaimpayment(req, res, next) {
     GetClaimpayments(req, res, next)
 }
 
-async function CreateClaimpaymentByPatient(ClaimpaymentID, Type, Starttime, Endtime, next) {
+async function CreateClaimpaymentByPatient({ ClaimpaymentID, Type, Starttime, Endtime, next }) {
 
     let details = []
     let Totaldaycount = 0
@@ -239,19 +247,26 @@ async function CreateClaimpaymentByPatient(ClaimpaymentID, Type, Starttime, Endt
     if (!selectedcostumertype) {
         return next(createValidationError([messages.ERROR.PARAMETERCOSTUMERTYPE_NOT_FOUND], req.language))
     }
-    const patients = await db.patientModel.findAll(
-        {
-            where:
+    const patients = await db.patientModel.findAll({
+        include: [
             {
-                CostumertypeID: selectedcostumertype?.Uuid || '',
-                Isactive: true,
-                Ischecked: true,
-                Isapproved: true,
-                Isalive: true,
-                Ispreregistration: false,
-                Isleft: false
+                model: db.patientdefineModel,
+                where: {
+                    CostumertypeID: selectedcostumertype?.Uuid || ''
+                },
+                required: true 
             }
-        })
+        ],
+        where: Sequelize.literal(
+            '`patientModel`.`PatientdefineID` = `patientdefineModel`.`Uuid` AND ' +
+            '`patientModel`.`Isactive` = true AND ' +
+            '`patientModel`.`Ischecked` = true AND ' +
+            '`patientModel`.`Isapproved` = true AND ' +
+            '`patientModel`.`Isalive` = true AND ' +
+            '`patientModel`.`Ispreregistration` = false AND ' +
+            '`patientModel`.`Isleft` = false'
+        )
+    });
     if ((patients || []).length <= 0) {
         return next(createValidationError([messages.ERROR.NO_PATIENT_FOUND], req.language))
     }
