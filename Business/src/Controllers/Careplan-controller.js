@@ -216,14 +216,14 @@ async function UpdateCareplan(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         for (const careplanservice of Careplanservices) {
             await db.careplanserviceModel.update({
                 ...careplanservice,
                 Updateduser: username,
                 Updatetime: new Date(),
-            }, { where: { Uuid: careplanservice?.Uuid } }, { transaction: t })
+            }, { where: { Uuid: careplanservice?.Uuid }, transaction: t })
         }
 
         const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } });
@@ -280,7 +280,7 @@ async function ApproveCareplan(req, res, next) {
             Isapproved: true,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         const patient = await db.patientModel.findOne({ where: { Uuid: careplan?.PatientID } });
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
@@ -332,13 +332,13 @@ async function DeleteCareplan(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
-       
+        }, { where: { Uuid: Uuid }, transaction: t })
+
         await db.careplanserviceModel.update({
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { CareplanID: Uuid } }, { transaction: t })
+        }, { where: { CareplanID: Uuid }, transaction: t })
 
         const patient = await db.patientModel.findOne({ where: { Uuid: careplan?.PatientID } });
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });

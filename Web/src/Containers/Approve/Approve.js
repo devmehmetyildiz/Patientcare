@@ -13,8 +13,14 @@ import { GetStockdefines } from '../../Redux/StockdefineSlice'
 import { GetWarehouses } from '../../Redux/WarehouseSlice'
 import { GetPurchaseorders } from '../../Redux/PurchaseorderSlice'
 import { GetUsers } from '../../Redux/UserSlice'
+import { GetClaimpaymentparameters } from '../../Redux/ClaimpaymentparameterSlice'
+import { GetClaimpayments } from '../../Redux/ClaimpaymentSlice'
+import { GetCostumertypes } from '../../Redux/CostumertypeSlice'
 
 const mapStateToProps = (state) => ({
+    Claimpayments: state.Claimpayments,
+    Claimpaymentparameters: state.Claimpaymentparameters,
+    Costumertypes: state.Costumertypes,
     Stocks: state.Stocks,
     Stockmovements: state.Stockmovements,
     Warehouses: state.Warehouses,
@@ -32,8 +38,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetStocks, GetStockmovements, GetPatients, GetCases, GetStockdefines, GetPurchaseorders,
-    GetFiles, GetUsagetypes, GetUsers, GetStocktypes, GetUnits, GetPatientdefines, GetWarehouses,
+    GetStocks, GetStockmovements, GetPatients, GetCases, GetStockdefines, GetPurchaseorders, GetClaimpaymentparameters,
+    GetFiles, GetUsagetypes, GetUsers, GetStocktypes, GetUnits, GetPatientdefines, GetWarehouses, GetClaimpayments,
+    GetCostumertypes,
     ApproveStockmovements, ApprovePatients
 }
 

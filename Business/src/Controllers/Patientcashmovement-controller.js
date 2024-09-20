@@ -171,7 +171,7 @@ async function UpdatePatientcashmovement(req, res, next) {
             ...req.body,
             Updateduser: "System",
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } });
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
@@ -223,7 +223,7 @@ async function DeletePatientcashmovement(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
 
         const patient = await db.patientModel.findOne({ where: { Uuid: patientcashmovement?.PatientID } });

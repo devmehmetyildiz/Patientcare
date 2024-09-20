@@ -268,7 +268,7 @@ async function UpdatePatient(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.patientmovementModel.create({
             Uuid: uuid(),
@@ -403,7 +403,7 @@ async function UpdatePatientDates(req, res, next) {
             Guardiannote: Guardiannote,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.patientmovementModel.create({
             Uuid: uuid(),
@@ -506,7 +506,7 @@ async function CheckPatient(req, res, next) {
             Isoninstitution: Isoninstitution || false,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.patientmovementModel.create({
             Uuid: uuid(),
@@ -601,7 +601,7 @@ async function ApprovePatient(req, res, next) {
             Isoninstitution: Isoninstitution || false,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.patientmovementModel.create({
             Uuid: uuid(),
@@ -695,7 +695,7 @@ async function CancelCheckPatient(req, res, next) {
             Isoninstitution: Isoninstitution || false,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.patientmovementModel.create({
             Uuid: uuid(),
@@ -789,7 +789,7 @@ async function CancelApprovePatient(req, res, next) {
             Isoninstitution: Isoninstitution || false,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.patientmovementModel.create({
             Uuid: uuid(),
@@ -934,7 +934,7 @@ async function CompletePatient(req, res, next) {
             Isoninstitution: Isoninstitution || false,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.patientmovementModel.create({
             Uuid: uuid(),
@@ -1113,7 +1113,7 @@ async function PatientsRemove(req, res, next) {
             Leavedate: new Date(),
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
 
         await db.patientmovementModel.create({
@@ -1239,7 +1239,7 @@ async function PatientsDead(req, res, next) {
             Deathdate: new Date(),
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.patientmovementModel.create({
             Uuid: uuid(),
@@ -1344,7 +1344,7 @@ async function PatientsMakeactive(req, res, next) {
             Leavedate: null,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.patientmovementModel.create({
             Uuid: uuid(),
@@ -1402,7 +1402,7 @@ async function UpdatePatientcase(req, res, next) {
             CaseID: CaseID,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: PatientID } }, { transaction: t })
+        }, { where: { Uuid: PatientID }, transaction: t })
 
         await db.patientmovementModel.create({
             Uuid: uuid(),
@@ -1469,7 +1469,7 @@ async function UpdatePatientscase(req, res, next) {
                 CaseID: CaseID,
                 Updateduser: username,
                 Updatetime: new Date(),
-            }, { where: { Uuid: PatientID } }, { transaction: t })
+            }, { where: { Uuid: PatientID }, transaction: t })
 
             await db.patientmovementModel.create({
                 Uuid: uuid(),
@@ -1570,7 +1570,7 @@ async function UpdatePatientplace(req, res, next) {
                 RoomID: null,
                 Updateduser: username,
                 Updatetime: new Date(),
-            }, { where: { Uuid: PatientID } }, { transaction: t })
+            }, { where: { Uuid: PatientID }, transaction: t })
 
             await db.patientmovementModel.create({
                 Uuid: uuid(),
@@ -1607,7 +1607,7 @@ async function UpdatePatientplace(req, res, next) {
                     RoomID: oldBed.Room,
                     Updateduser: username,
                     Updatetime: new Date(),
-                }, { where: { Uuid: targetBedPatient?.Uuid } }, { transaction: t })
+                }, { where: { Uuid: targetBedPatient?.Uuid }, transaction: t })
 
                 await db.patientmovementModel.create({
                     Uuid: uuid(),
@@ -1626,7 +1626,7 @@ async function UpdatePatientplace(req, res, next) {
                     RoomID: newBed.Room,
                     Updateduser: username,
                     Updatetime: new Date(),
-                }, { where: { Uuid: PatientID } }, { transaction: t })
+                }, { where: { Uuid: PatientID }, transaction: t })
 
                 await db.patientmovementModel.create({
                     Uuid: uuid(),
@@ -1662,7 +1662,7 @@ async function UpdatePatientplace(req, res, next) {
                     RoomID: newBed.Room,
                     Updateduser: username,
                     Updatetime: new Date(),
-                }, { where: { Uuid: PatientID } }, { transaction: t })
+                }, { where: { Uuid: PatientID }, transaction: t })
 
                 await db.patientmovementModel.create({
                     Uuid: uuid(),
@@ -1695,7 +1695,7 @@ async function UpdatePatientplace(req, res, next) {
                     RoomID: null,
                     Updateduser: username,
                     Updatetime: new Date(),
-                }, { where: { Uuid: targetBedPatient?.Uuid } }, { transaction: t })
+                }, { where: { Uuid: targetBedPatient?.Uuid }, transaction: t })
 
                 await db.patientmovementModel.create({
                     Uuid: uuid(),
@@ -1714,7 +1714,7 @@ async function UpdatePatientplace(req, res, next) {
                     RoomID: newBed.Room,
                     Updateduser: username,
                     Updatetime: new Date(),
-                }, { where: { Uuid: PatientID } }, { transaction: t })
+                }, { where: { Uuid: PatientID }, transaction: t })
 
                 await db.patientmovementModel.create({
                     Uuid: uuid(),
@@ -1745,7 +1745,7 @@ async function UpdatePatientplace(req, res, next) {
                     RoomID: newBed.Room,
                     Updateduser: username,
                     Updatetime: new Date(),
-                }, { where: { Uuid: PatientID } }, { transaction: t })
+                }, { where: { Uuid: PatientID }, transaction: t })
 
                 await db.patientmovementModel.create({
                     Uuid: uuid(),
@@ -1852,7 +1852,7 @@ async function TransferPatientplace(req, res, next) {
             RoomID: RoomID || '',
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: PatientID } }, { transaction: t })
+        }, { where: { Uuid: PatientID }, transaction: t })
 
 
         const lastpatientmovement = await db.patientmovementModel.findOne({
@@ -1891,7 +1891,7 @@ async function TransferPatientplace(req, res, next) {
                 RoomID: OtherRoomID,
                 Updateduser: username,
                 Updatetime: new Date(),
-            }, { where: { Uuid: OtherPatientID } }, { transaction: t })
+            }, { where: { Uuid: OtherPatientID }, transaction: t })
 
             const Otherlastpatientmovement = await db.patientmovementModel.findOne({
                 order: [['Id', 'DESC']],
@@ -2161,7 +2161,7 @@ async function DeletePreregisrations(req, res, next) {
             Updateduser: username,
             Updatetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: patient?.Uuid } }, { transaction: t })
+        }, { where: { Uuid: patient?.Uuid }, transaction: t })
 
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
 

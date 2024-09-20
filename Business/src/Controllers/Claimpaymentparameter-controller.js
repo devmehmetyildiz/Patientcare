@@ -175,7 +175,7 @@ async function UpdateClaimpaymentparameter(req, res, next) {
             Issettingactive: false,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -226,7 +226,7 @@ async function ApproveClaimpaymentparameter(req, res, next) {
             Issettingactive: false,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Isactive: true, Type: claimpaymentparameter?.Type || -1, } }, { transaction: t })
+        }, { where: { Isactive: true, Type: claimpaymentparameter?.Type || -1, }, transaction: t })
 
         await db.claimpaymentparameterModel.update({
             ...claimpaymentparameter,
@@ -235,7 +235,7 @@ async function ApproveClaimpaymentparameter(req, res, next) {
             Approveduser: username,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
 
         await CreateNotification({

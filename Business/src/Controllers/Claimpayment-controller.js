@@ -217,7 +217,7 @@ async function ApproveClaimpayment(req, res, next) {
             Approvetime: new Date(),
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
 
         await CreateNotification({
@@ -239,7 +239,6 @@ async function SavepreviewClaimpayment(req, res, next) {
 
     let validationErrors = []
     const Uuid = req.params.claimpaymentId
-    console.log('Uuid: ', Uuid);
 
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTID_REQUIRED)
@@ -319,13 +318,13 @@ async function DeleteClaimpayment(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.claimpaymentdetailModel.update({
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { ParentID: Uuid } }, { transaction: t })
+        }, { where: { ParentID: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

@@ -5,13 +5,16 @@ import { Link } from 'react-router-dom'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import validator from '../../Utils/Validator'
 import Formatdate, { Formatfulldate } from '../../Utils/Formatdate'
-import { STOCK_TYPE_PATIENT, STOCK_TYPE_PURCHASEORDER } from '../../Utils/Constants'
+import { CLAIMPAYMENT_TYPE_BHKS, CLAIMPAYMENT_TYPE_KYS, CLAIMPAYMENT_TYPE_PATIENT, CLAIMPAYMENT_TYPE_PERSONEL, STOCK_TYPE_PATIENT, STOCK_TYPE_PURCHASEORDER } from '../../Utils/Constants'
 
 export default function Approve(props) {
 
-    const { GetStocks, GetUsers, GetStockmovements, GetPurchaseorders, GetWarehouses, GetPatients, GetStockdefines, GetCases, GetFiles, GetUsagetypes, GetStocktypes, GetUnits, GetPatientdefines } = props
+    const { GetStocks, GetUsers, GetStockmovements, GetPurchaseorders, GetWarehouses, GetPatients, GetStockdefines,
+        GetCases, GetFiles, GetUsagetypes, GetStocktypes, GetUnits, GetPatientdefines, GetClaimpayments, GetClaimpaymentparameters, GetCostumertypes } = props
     const { ApproveStockmovements, ApprovePatients } = props
-    const { Stocks, Stockmovements, Warehouses, Purchaseorders, Stockdefines, Stocktypes, Units, Cases, Usagetypes, Files, Users, Patients, Patientdefines, Profile } = props
+    const { Stocks, Stockmovements, Warehouses, Purchaseorders, Stockdefines, Stocktypes,
+        Units, Cases, Usagetypes, Files, Users, Patients, Patientdefines, Claimpayments, Claimpaymentparameters,
+        Costumertypes, Profile } = props
 
     const t = Profile?.i18n?.t
 
@@ -32,6 +35,9 @@ export default function Approve(props) {
         GetStocktypes()
         GetUnits()
         GetPatientdefines()
+        GetClaimpayments()
+        GetClaimpaymentparameters()
+        GetCostumertypes()
     }, [])
 
     const isLoading =
@@ -47,7 +53,10 @@ export default function Approve(props) {
         Users.isLoading ||
         Files.isLoading ||
         Patients.isLoading ||
-        Patientdefines.isLoading
+        Patientdefines.isLoading ||
+        Claimpayments.isLoading ||
+        Claimpaymentparameters.isLoading ||
+        Costumertypes.isLoading
 
     const createStockmovement = () => {
         return (Stockmovements.list || []).filter(u => u.Isactive && !u.Isapproved).map(stockmovement => {
@@ -138,10 +147,91 @@ export default function Approve(props) {
         })
     }
 
+    const createClaimpaymentparameterlist = () => {
+        return (Claimpaymentparameters.list || []).filter(u => u.Isactive && !u.Isonpreview && !u.Isapproved).map(paymentparameter => {
+
+            const {
+                Type,
+                CostumertypeID,
+            } = paymentparameter
+
+            const createduser = (Users.list || []).find(u => u.Uuid === validator.isUUID(paymentparameter?.Updateduser) ? paymentparameter?.Updateduser : paymentparameter?.Createduser)
+            const createDate = validator.isISODate(paymentparameter?.Updatetime)
+                ? Formatfulldate(paymentparameter?.Updatetime, true)
+                : Formatfulldate(paymentparameter?.Createtime, true)
+
+            const Claimpaymenttypes = [
+                { key: 1, text: t('Common.Claimpayments.Type.Patient'), value: CLAIMPAYMENT_TYPE_PATIENT },
+                { key: 2, text: t('Common.Claimpayments.Type.Bhks'), value: CLAIMPAYMENT_TYPE_BHKS },
+                { key: 3, text: t('Common.Claimpayments.Type.Kys'), value: CLAIMPAYMENT_TYPE_KYS },
+                { key: 4, text: t('Common.Claimpayments.Type.Personel'), value: CLAIMPAYMENT_TYPE_PERSONEL },
+            ]
+
+            const typename = Claimpaymenttypes.find(u => u.value === Type)?.text || t('Common.NoDataFound')
+            const costumertypename = (Costumertypes.list || []).find(u => u.Uuid === CostumertypeID)?.Name || t('Common.NoDataFound')
+
+            const name = `${typename} - ${costumertypename}}`
+
+            return ({
+                Name: Type ? name : t('Common.NoDataFound'),
+                Parent: t('Pages.Claimpaymentparameters.Page.Header'),
+                Createdate: createDate,
+                Createuser: createduser?.Username || t('Common.NoDataFound'),
+                Approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+                    setRecord({
+                        type: 'preregistration',
+                        item: paymentparameter,
+                        name: name
+                    })
+                    setConfirmopen(true)
+                }} />,
+                Approvefunction: ApprovePatients,
+                Detail: <Link to={`/Claimpaymentparameters`} ><Icon size='large' color='red' className='row-edit' name='address book' /> </Link>,
+            })
+        })
+    }
+
+    const createClaimpaymentlist = () => {
+        return (Claimpayments.list || []).filter(u => u.Isactive && !u.Isonpreview && !u.Isapproved).map(payment => {
+
+            const {
+                Name,
+                Starttime,
+                Endtime
+            } = payment
+
+            const createduser = (Users.list || []).find(u => u.Uuid === validator.isUUID(payment?.Updateduser) ? payment?.Updateduser : payment?.Createduser)
+            const createDate = validator.isISODate(payment?.Updatetime)
+                ? Formatfulldate(payment?.Updatetime, true)
+                : Formatfulldate(payment?.Createtime, true)
+
+            const name = `${Name}  ${Formatfulldate(Starttime, true)} - ${Formatfulldate(Endtime, true)}`
+
+            return ({
+                Name: Name ? name : t('Common.NoDataFound'),
+                Parent: t('Pages.Claimpayments.Page.Header'),
+                Createdate: createDate,
+                Createuser: createduser?.Username || t('Common.NoDataFound'),
+                Approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+                    setRecord({
+                        type: 'preregistration',
+                        item: payment,
+                        name: name
+                    })
+                    setConfirmopen(true)
+                }} />,
+                Approvefunction: ApprovePatients,
+                Detail: <Link to={`/Claimpayments`} ><Icon size='large' color='red' className='row-edit' name='address book' /> </Link>,
+            })
+        })
+    }
+
     const createList = () => {
         let list = [];
         list = list.concat(createStockmovement())
         list = list.concat(createPreregistrationlist())
+        list = list.concat(createClaimpaymentlist())
+        list = list.concat(createClaimpaymentparameterlist())
         return list
     }
 
