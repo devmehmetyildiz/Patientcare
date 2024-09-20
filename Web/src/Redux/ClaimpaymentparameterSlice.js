@@ -42,7 +42,7 @@ export const AddClaimpaymentparameters = createAsyncThunk(
             dispatch(fillClaimpaymentparameternotification({
                 type: 'Success',
                 code: t('Common.Code.Add'),
-                description: t('Redux.Claimpaymentparameters.Messages.Add'),
+                description: t('Redux.Claimpaymentparameters.Messages.Savepreview'),
             }));
             clearForm && clearForm('ClaimpaymentparametersCreate')
             closeModal && closeModal()
@@ -92,6 +92,28 @@ export const ApproveClaimpaymentparameters = createAsyncThunk(
                 type: 'Success',
                 code: t('Common.Code.Update'),
                 description: t('Redux.Claimpaymentparameters.Messages.Approve'),
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillClaimpaymentparameternotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const SavepreviewClaimpaymentparameters = createAsyncThunk(
+    'Claimpaymentparameters/SavepreviewClaimpaymentparameters',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.CLAIMPAYMENTPARAMETER}/Savepreview/${data.Uuid}`);
+            dispatch(fillClaimpaymentparameternotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Claimpaymentparameters.Messages.Add'),
             }));
             return response.data;
         } catch (error) {
@@ -180,6 +202,7 @@ export const ClaimpaymentparametersSlice = createSlice({
         isApprovemodalopen: false,
         isActivatemodalopen: false,
         isDeactivatemodalopen: false,
+        isSavepreviewmodalopen: false,
     },
     reducers: {
         handleSelectedClaimpaymentparameter: (state, action) => {
@@ -204,6 +227,9 @@ export const ClaimpaymentparametersSlice = createSlice({
         },
         handleDeactivatemodal: (state, action) => {
             state.isDeactivatemodalopen = action.payload
+        },
+        handleSavepreviewmodal: (state, action) => {
+            state.isSavepreviewmodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -267,6 +293,17 @@ export const ClaimpaymentparametersSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(SavepreviewClaimpaymentparameters.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(SavepreviewClaimpaymentparameters.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(SavepreviewClaimpaymentparameters.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(ActivateClaimpaymentparameters.pending, (state) => {
                 state.isLoading = true;
             })
@@ -310,7 +347,8 @@ export const {
     handleDeletemodal,
     handleApprovemodal,
     handleActivatemodal,
-    handleDeactivatemodal
+    handleDeactivatemodal,
+    handleSavepreviewmodal
 } = ClaimpaymentparametersSlice.actions;
 
 export default ClaimpaymentparametersSlice.reducer;

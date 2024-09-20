@@ -27,6 +27,9 @@ module.exports = sequelize.define('claimpaymentparameterModel', {
     Issettingactive: {
         type: Sequelize.BOOLEAN
     },
+    Isonpreview: {
+        type: Sequelize.BOOLEAN
+    },
     Isapproved: {
         type: Sequelize.BOOLEAN
     },

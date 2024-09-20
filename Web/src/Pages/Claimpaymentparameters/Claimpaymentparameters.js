@@ -10,6 +10,7 @@ import { CLAIMPAYMENT_TYPE_BHKS, CLAIMPAYMENT_TYPE_KYS, CLAIMPAYMENT_TYPE_PATIEN
 import validator from '../../Utils/Validator'
 import ClaimpaymentparametersActivate from '../../Containers/Claimpaymentparameters/ClaimpaymentparametersActivate'
 import ClaimpaymentparametersDeactivate from '../../Containers/Claimpaymentparameters/ClaimpaymentparametersDeactivate'
+import ClaimpaymentparametersSavepreview from '../../Containers/Claimpaymentparameters/ClaimpaymentparametersSavepreview'
 
 export default class Claimpaymentparameters extends Component {
 
@@ -20,7 +21,7 @@ export default class Claimpaymentparameters extends Component {
     }
 
     render() {
-        const { Claimpaymentparameters, Profile, handleDeletemodal, handleSelectedClaimpaymentparameter, handleApprovemodal, handleActivatemodal, handleDeactivatemodal, } = this.props
+        const { Claimpaymentparameters, Profile, handleDeletemodal, handleSelectedClaimpaymentparameter, handleApprovemodal, handleActivatemodal, handleDeactivatemodal, handleSavepreviewmodal } = this.props
         const t = Profile?.i18n?.t
         const { isLoading } = Claimpaymentparameters
 
@@ -38,17 +39,16 @@ export default class Claimpaymentparameters extends Component {
             { Header: t('Pages.Claimpaymentparameters.Column.Patientclaimpaymentperpayment'), accessor: 'Patientclaimpaymentperpayment' },
             { Header: t('Pages.Claimpaymentparameters.Column.Perpaymentkdvpercent'), accessor: 'Perpaymentkdvpercent' },
             { Header: t('Pages.Claimpaymentparameters.Column.Perpaymentkdvwithholdingpercent'), accessor: 'Perpaymentkdvwithholdingpercent' },
-            { Header: t('Pages.Claimpaymentparameters.Column.Issettingactive'), accessor: row => this.boolCellhandler(row?.Issettingactive) },
-            { Header: t('Pages.Claimpaymentparameters.Column.Isapproved'), accessor: row => this.boolCellhandler(row?.Isapproved) },
-            { Header: t('Pages.Claimpaymentparameters.Column.Approveduser'), accessor: 'Approveduser' },
+            { Header: t('Pages.Claimpaymentparameters.Column.Approveduser'), accessor: 'Approveduser', key: 'working', key1: 'nonworking' },
             { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
             { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
             { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
             { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-            { Header: t('Common.Column.activate'), accessor: 'activate', disableProps: true },
-            { Header: t('Common.Column.deactivate'), accessor: 'deactivate', disableProps: true },
-            { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true },
-            { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+            { Header: t('Common.Column.activate'), accessor: 'activate', disableProps: true, key: 'nonworking' },
+            { Header: t('Common.Column.deactivate'), accessor: 'deactivate', disableProps: true, key: 'working' },
+            { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, key: 'onpreview' },
+            { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, key: 'waitingapprove' },
+            { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, key: 'onpreview' },
             { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
@@ -58,27 +58,34 @@ export default class Claimpaymentparameters extends Component {
         const list = (Claimpaymentparameters.list || []).filter(u => u.Isactive).map(item => {
             return {
                 ...item,
-                edit: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Link to={`/Claimpaymentparameters/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+                edit: <Link to={`/Claimpaymentparameters/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
                 delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
                     handleSelectedClaimpaymentparameter(item)
                     handleDeletemodal(true)
                 }} />,
-                approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+                approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
                     handleSelectedClaimpaymentparameter(item)
                     handleApprovemodal(true)
                 }} />,
-                activate: item.Issettingactive || !item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+                activate: <Icon link size='large' color='blue' name='hand point left' onClick={() => {
                     handleSelectedClaimpaymentparameter(item)
                     handleActivatemodal(true)
                 }} />,
-                deactivate: !item.Issettingactive ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+                deactivate: <Icon link size='large' color='blue' name='hand point right' onClick={() => {
                     handleSelectedClaimpaymentparameter(item)
                     handleDeactivatemodal(true)
+                }} />,
+                savepreview: <Icon link size='large' color='green' name='save' onClick={() => {
+                    handleSelectedClaimpaymentparameter(item)
+                    handleSavepreviewmodal(true)
                 }} />,
             }
         })
 
-        const workingList = list.filter(u => u.Issettingactive && u.Isactive)
+        const workingList = list.filter(u => u.Issettingactive && u.Isapproved && !u.Isonpreview)
+        const nonworkingList = list.filter(u => !u.Issettingactive && u.Isapproved && !u.Isonpreview)
+        const waitingapproveList = list.filter(u => !u.Isapproved && !u.Isonpreview)
+        const onpreviewList = list.filter(u => !u.Isapproved && u.Isonpreview)
 
         return (
             isLoading ? <LoadingPage /> :
@@ -113,33 +120,31 @@ export default class Claimpaymentparameters extends Component {
                                 className="w-full !bg-transparent"
                                 panes={[
                                     {
-                                        menuItem: `${t('Pages.Claimpaymentparameters.Tab.Onlyactive')} (${(workingList || []).length})`,
+                                        menuItem: `${t('Pages.Claimpaymentparameters.Tab.Working')} (${(workingList || []).length})`,
                                         pane: {
-                                            key: 'onlyactive',
-                                            content: <React.Fragment>
-                                                {workingList.length > 0 ?
-                                                    <div className='w-full mx-auto '>
-                                                        {Profile.Ismobile ?
-                                                            <MobileTable Columns={Columns} Data={workingList} Config={initialConfig} Profile={Profile} /> :
-                                                            <DataTable Columns={Columns} Data={workingList} Config={initialConfig} />}
-                                                    </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
-                                                }
-                                            </React.Fragment>
+                                            key: 'working',
+                                            content: this.renderView(workingList, Columns.filter(u => u.key === 'working' || u.key1 === 'working' || !u.key), initialConfig)
                                         }
                                     },
                                     {
-                                        menuItem: `${t('Pages.Claimpaymentparameters.Tab.All')} (${(list || []).length})`,
+                                        menuItem: `${t('Pages.Claimpaymentparameters.Tab.Nonworking')} (${(nonworkingList || []).length})`,
                                         pane: {
-                                            key: 'all',
-                                            content: <React.Fragment>
-                                                {list.length > 0 ?
-                                                    <div className='w-full mx-auto '>
-                                                        {Profile.Ismobile ?
-                                                            <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                                                            <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-                                                    </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
-                                                }
-                                            </React.Fragment>
+                                            key: 'nonworking',
+                                            content: this.renderView(nonworkingList, Columns.filter(u => u.key === 'nonworking' || u.key1 === 'nonworking' || !u.key), initialConfig)
+                                        }
+                                    },
+                                    {
+                                        menuItem: `${t('Pages.Claimpaymentparameters.Tab.Waitingapprove')} (${(waitingapproveList || []).length})`,
+                                        pane: {
+                                            key: 'waitingapprove',
+                                            content: this.renderView(waitingapproveList, Columns.filter(u => u.key === 'waitingapprove' || !u.key), initialConfig)
+                                        }
+                                    },
+                                    {
+                                        menuItem: `${t('Pages.Claimpaymentparameters.Tab.Onpreview')} (${(onpreviewList || []).length})`,
+                                        pane: {
+                                            key: 'onpreview',
+                                            content: this.renderView(onpreviewList, Columns.filter(u => u.key === 'onpreview' || !u.key), initialConfig)
                                         }
                                     },
                                 ]}
@@ -151,8 +156,21 @@ export default class Claimpaymentparameters extends Component {
                     <ClaimpaymentparametersApprove />
                     <ClaimpaymentparametersActivate />
                     <ClaimpaymentparametersDeactivate />
+                    <ClaimpaymentparametersSavepreview />
                 </React.Fragment>
         )
+    }
+
+    renderView = (list, Columns, initialConfig) => {
+        const { Profile } = this.props
+        const t = Profile?.i18n?.t
+
+        return list.length > 0 ?
+            <div className='w-full mx-auto '>
+                {Profile.Ismobile ?
+                    <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                    <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+            </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
     }
 
     costumertypeCellhandler = (value) => {

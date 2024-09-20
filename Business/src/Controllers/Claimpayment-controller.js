@@ -84,7 +84,8 @@ async function AddClaimpayment(req, res, next) {
             Type: Type,
             Starttime: new Date(Starttime),
             Endtime: new Date(Endtime),
-            next: next
+            next: next,
+            req: req
         }
 
         switch (Type) {
@@ -342,7 +343,7 @@ async function DeleteClaimpayment(req, res, next) {
     GetClaimpayments(req, res, next)
 }
 
-async function CreateClaimpaymentByPatient({ Starttime, Endtime, next }) {
+async function CreateClaimpaymentByPatient({ Starttime, Endtime, req, next, }) {
 
     let details = []
     let Totaldaycount = 0
@@ -452,7 +453,7 @@ async function CreateClaimpaymentByPatient({ Starttime, Endtime, next }) {
     }
 }
 
-async function CreateClaimpaymentByBhks({ Starttime, Endtime, next }) {
+async function CreateClaimpaymentByBhks({ Starttime, Endtime, req, next, }) {
     let details = []
     let Totaldaycount = 0
     let Totalcalculatedpayment = 0
@@ -567,7 +568,7 @@ async function CreateClaimpaymentByBhks({ Starttime, Endtime, next }) {
     }
 }
 
-async function CreateClaimpaymentByKys({ Starttime, Endtime, next }) {
+async function CreateClaimpaymentByKys({ Starttime, Endtime, req, next, }) {
     let details = []
     let Totaldaycount = 0
     let Totalcalculatedpayment = 0
@@ -683,7 +684,7 @@ async function CreateClaimpaymentByKys({ Starttime, Endtime, next }) {
     }
 }
 
-async function CreateClaimpaymentByPersonel({ Starttime, Endtime, next }) {
+async function CreateClaimpaymentByPersonel({ Starttime, Endtime, req, next, }) {
 
 }
 

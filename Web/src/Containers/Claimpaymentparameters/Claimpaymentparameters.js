@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import Claimpaymentparameters from '../../Pages/Claimpaymentparameters/Claimpaymentparameters'
 import {
     GetClaimpaymentparameters, handleDeletemodal, handleActivatemodal, handleDeactivatemodal,
-    handleSelectedClaimpaymentparameter, handleApprovemodal,
+    handleSelectedClaimpaymentparameter, handleApprovemodal, handleSavepreviewmodal
 } from '../../Redux/ClaimpaymentparameterSlice'
 import { GetCostumertypes } from '../../Redux/CostumertypeSlice'
 
@@ -14,7 +14,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     GetClaimpaymentparameters, handleDeletemodal, handleSelectedClaimpaymentparameter, GetCostumertypes, handleApprovemodal,
-    handleActivatemodal, handleDeactivatemodal,
+    handleActivatemodal, handleDeactivatemodal, handleSavepreviewmodal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Claimpaymentparameters)

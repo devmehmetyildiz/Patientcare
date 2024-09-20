@@ -19,10 +19,16 @@ async function UpdateClaimpaymentparameter(req, res, next) {
 async function ApproveClaimpaymentparameter(req, res, next) {
     PermissionHandler(req, next, 'claimpaymentparameterupdate')
 }
+
 async function DeactivateClaimpaymentparameter(req, res, next) {
     PermissionHandler(req, next, 'claimpaymentparameterupdate')
 }
+
 async function ActivateClaimpaymentparameter(req, res, next) {
+    PermissionHandler(req, next, 'claimpaymentparameterupdate')
+}
+
+async function SavepreviewClaimpaymentparameter(req, res, next) {
     PermissionHandler(req, next, 'claimpaymentparameterupdate')
 }
 
@@ -39,4 +45,5 @@ module.exports = {
     DeleteClaimpaymentparameter,
     ActivateClaimpaymentparameter,
     DeactivateClaimpaymentparameter,
+    SavepreviewClaimpaymentparameter
 }

@@ -42,7 +42,7 @@ export const AddClaimpayments = createAsyncThunk(
             dispatch(fillClaimpaymentnotification({
                 type: 'Success',
                 code: t('Common.Code.Add'),
-                description: t('Redux.Claimpayments.Messages.Add'),
+                description: t('Redux.Claimpayments.Messages.Savepreview'),
             }));
             clearForm && clearForm('ClaimpaymentsCreate')
             closeModal && closeModal()
@@ -88,7 +88,7 @@ export const SavepreviewClaimpayments = createAsyncThunk(
             dispatch(fillClaimpaymentnotification({
                 type: 'Success',
                 code: t('Common.Code.Update'),
-                description: t('Redux.Claimpayments.Messages.Savepreview'),
+                description: t('Redux.Claimpayments.Messages.Add'),
             }));
             history && history.push(redirectUrl ? redirectUrl : '/Claimpayments');
             return response.data;
@@ -132,6 +132,7 @@ export const ClaimpaymentsSlice = createSlice({
         isLoading: false,
         isDeletemodalopen: false,
         isApprovemodalopen: false,
+        isSavepreviewmodalopen: false,
     },
     reducers: {
         handleSelectedClaimpayment: (state, action) => {
@@ -150,6 +151,9 @@ export const ClaimpaymentsSlice = createSlice({
         },
         handleApprovemodal: (state, action) => {
             state.isApprovemodalopen = action.payload
+        },
+        handleSavepreviewmodal: (state, action) => {
+            state.isSavepreviewmodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -233,6 +237,7 @@ export const {
     removeClaimpaymentnotification,
     handleDeletemodal,
     handleApprovemodal,
+    handleSavepreviewmodal
 } = ClaimpaymentsSlice.actions;
 
 export default ClaimpaymentsSlice.reducer;

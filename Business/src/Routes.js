@@ -36,6 +36,7 @@ const Routes = [
     { method: 'put', path: '/Claimpaymentparameters/Approve/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'ApproveClaimpaymentparameter' },
     { method: 'put', path: '/Claimpaymentparameters/Activate/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'ActivateClaimpaymentparameter' },
     { method: 'put', path: '/Claimpaymentparameters/Deactivate/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'DeactivateClaimpaymentparameter' },
+    { method: 'put', path: '/Claimpaymentparameters/Savepreview/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'SavepreviewClaimpaymentparameter' },
     { method: 'put', path: '/Claimpaymentparameters', controller: 'Claimpaymentparameter', action: 'UpdateClaimpaymentparameter' },
     { method: 'delete', path: '/Claimpaymentparameters/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'DeleteClaimpaymentparameter' },
 
@@ -57,12 +58,6 @@ const Routes = [
     { method: 'post', path: '/Patientdefines', controller: 'Patientdefine', action: 'AddPatientdefine' },
     { method: 'put', path: '/Patientdefines', controller: 'Patientdefine', action: 'UpdatePatientdefine' },
     { method: 'delete', path: '/Patientdefines/:patientdefineId', controller: 'Patientdefine', action: 'DeletePatientdefine' },
-
-    { method: 'get', path: '/Patientmovements/:patientmovementId', controller: 'Patientmovement', action: 'GetPatientmovement' },
-    { method: 'get', path: '/Patientmovements', controller: 'Patientmovement', action: 'GetPatientmovements' },
-    { method: 'post', path: '/Patientmovements', controller: 'Patientmovement', action: 'AddPatientmovement' },
-    { method: 'put', path: '/Patientmovements', controller: 'Patientmovement', action: 'UpdatePatientmovement' },
-    { method: 'delete', path: '/Patientmovements/:patientmovementId', controller: 'Patientmovement', action: 'DeletePatientmovement' },
 
     { method: 'get', path: '/Companycashmovements/:movementId', controller: 'Companycashmovement', action: 'GetCompanycashmovement' },
     { method: 'get', path: '/Companycashmovements', controller: 'Companycashmovement', action: 'GetCompanycashmovements' },

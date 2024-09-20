@@ -61,7 +61,7 @@ export default class ClaimpaymentsCreate extends Component {
                         />
                         <Submitbutton
                             isLoading={Claimpayments.isLoading}
-                            buttonText={t('Common.Button.Create')}
+                            buttonText={t('Common.Button.Savepreview')}
                             submitFunction={this.handleSubmit}
                         />
                     </Footerwrapper>

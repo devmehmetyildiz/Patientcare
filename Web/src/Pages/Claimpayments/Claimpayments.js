@@ -39,10 +39,8 @@ export default class Claimpayments extends Component {
             { Header: t('Pages.Claimpayments.Column.Totalcalculatedkdv'), accessor: row => this.currencyCellhandler(row?.Totalcalculatedkdv) },
             { Header: t('Pages.Claimpayments.Column.Totalcalculatedfinal'), accessor: row => this.currencyCellhandler(row?.Totalcalculatedfinal) },
             { Header: t('Pages.Claimpayments.Column.Totalcalculatedwithholding'), accessor: row => this.currencyCellhandler(row?.Totalcalculatedwithholding) },
-            { Header: t('Pages.Claimpayments.Column.Isonpreview'), accessor: row => this.boolCellhandler(row?.Isonpreview) },
-            { Header: t('Pages.Claimpayments.Column.Isapproved'), accessor: row => this.boolCellhandler(row?.Isapproved) },
-            { Header: t('Pages.Claimpayments.Column.Approveduser'), accessor: 'Approveduser' },
-            { Header: t('Pages.Claimpayments.Column.Approvetime'), accessor: row => this.dateCellhandler(row?.Approvetime) },
+            { Header: t('Pages.Claimpayments.Column.Approveduser'), accessor: 'Approveduser', key: 'approved' },
+            { Header: t('Pages.Claimpayments.Column.Approvetime'), accessor: row => this.dateCellhandler(row?.Approvetime), key: 'approved' },
             { Header: t('Pages.Claimpayments.Column.Starttime'), accessor: row => this.dateCellhandler(row?.Starttime) },
             { Header: t('Pages.Claimpayments.Column.Endtime'), accessor: row => this.dateCellhandler(row?.Endtime) },
             { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
@@ -50,8 +48,8 @@ export default class Claimpayments extends Component {
             { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
             { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
             { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
-            { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true },
-            { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+            { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, key: 'waitingapprove' },
+            { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, key: 'waitingapprove', key1: 'onpreview' }
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
         const metaKey = "claimpayment"
@@ -112,28 +110,21 @@ export default class Claimpayments extends Component {
                                         menuItem: `${t('Pages.Claimpayments.Tab.Approved')} (${(approvedList || []).length})`,
                                         pane: {
                                             key: 'onlyactive',
-                                            content: this.renderView(approvedList, Columns, initialConfig)
+                                            content: this.renderView(approvedList, Columns.filter(u => u.key === 'approved' || u.key1 === 'approved' || !u.key), initialConfig)
                                         }
                                     },
                                     {
                                         menuItem: `${t('Pages.Claimpayments.Tab.Waitingapprove')} (${(waitingapproveList || []).length})`,
                                         pane: {
                                             key: 'onlyactive',
-                                            content: this.renderView(waitingapproveList, Columns, initialConfig)
+                                            content: this.renderView(waitingapproveList, Columns.filter(u => u.key === 'waitingapprove' || u.key1 === 'waitingapprove' || !u.key), initialConfig)
                                         }
                                     },
                                     {
                                         menuItem: `${t('Pages.Claimpayments.Tab.Preview')} (${(onpreviewList || []).length})`,
                                         pane: {
                                             key: 'onlyactive',
-                                            content: this.renderView(onpreviewList, Columns, initialConfig)
-                                        }
-                                    },
-                                    {
-                                        menuItem: `${t('Pages.Claimpayments.Tab.All')} (${(list || []).length})`,
-                                        pane: {
-                                            key: 'onlyactive',
-                                            content: this.renderView(list, Columns, initialConfig)
+                                            content: this.renderView(onpreviewList, Columns.filter(u => u.key === 'onpreview' || u.key1 === 'onpreview' || !u.key), initialConfig)
                                         }
                                     },
                                 ]}
@@ -157,7 +148,6 @@ export default class Claimpayments extends Component {
                     <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                     <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
             </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
-
     }
 
     boolCellhandler = (value) => {

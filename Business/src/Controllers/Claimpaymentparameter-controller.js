@@ -38,7 +38,6 @@ async function GetClaimpaymentparameter(req, res, next) {
     }
 }
 
-
 async function AddClaimpaymentparameter(req, res, next) {
 
     let validationErrors = []
@@ -87,6 +86,7 @@ async function AddClaimpaymentparameter(req, res, next) {
             ...req.body,
             Uuid: parameteruuid,
             Issettingactive: false,
+            Isonpreview: true,
             Isapproved: false,
             Approveduser: null,
             Createduser: username,
@@ -99,7 +99,7 @@ async function AddClaimpaymentparameter(req, res, next) {
             type: types.Create,
             service: 'Hakediş Parametreleri',
             role: 'claimpaymentparameternotification',
-            message: `${parameteruuid} numaralı parametre ${username} tarafından Eklendi.`,
+            message: `${parameteruuid} numaralı parametre ${username} tarafından Taslak olarak Eklendi.`,
             pushurl: '/Claimpaymentparameters'
         })
 
@@ -243,6 +243,60 @@ async function ApproveClaimpaymentparameter(req, res, next) {
             service: 'Hakediş Parametreleri',
             role: 'claimpaymentparameternotification',
             message: `${Uuid} numaralı hakediş parametresi ${username} tarafından Onaylandı.`,
+            pushurl: '/Claimpaymentparameters'
+        })
+
+        await t.commit()
+    } catch (error) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetClaimpaymentparameters(req, res, next)
+}
+
+async function SavepreviewClaimpaymentparameter(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.claimpaymentparameterId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTPARAMETERID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTPARAMETERID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Uuid: Uuid } })
+        if (!claimpaymentparameter) {
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
+        }
+        if (claimpaymentparameter.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+        }
+        if (claimpaymentparameter.Isapproved === true) {
+            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_ALREADY_APPROVED], req.language))
+        }
+
+        await db.claimpaymentparameterModel.update({
+            ...claimpaymentparameter,
+            Isonpreview: false,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hakediş Parametreleri',
+            role: 'claimpaymentparameternotification',
+            message: `${Uuid} numaralı hakediş parametresi ${username} tarafından Kaydedildi.`,
             pushurl: '/Claimpaymentparameters'
         })
 
@@ -433,4 +487,5 @@ module.exports = {
     DeleteClaimpaymentparameter,
     ActivateClaimpaymentparameter,
     DeactivateClaimpaymentparameter,
+    SavepreviewClaimpaymentparameter
 }

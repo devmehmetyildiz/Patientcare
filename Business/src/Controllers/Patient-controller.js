@@ -19,7 +19,7 @@ async function GetPatients(req, res, next) {
         let data = null
         const patients = await db.patientModel.findAll()
         for (const patient of patients) {
-            patient.Movements = await db.patientmovementModel.findAll({ where: { PatientID: patient?.Uuid } });
+            patient.Movements = await db.patientmovementModel.findAll({ where: { PatientID: patient?.Uuid, Isactive: true } });
             patient.Tododefineuuids = await db.patienttododefineModel.findAll({
                 where: {
                     PatientID: patient.Uuid,
@@ -57,7 +57,7 @@ async function GetPatient(req, res, next) {
 
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: req.params.patientId } });
-        patient.Movements = await db.patientmovementModel.findAll({ where: { PatientID: patient?.Uuid } });
+        patient.Movements = await db.patientmovementModel.findAll({ where: { PatientID: patient?.Uuid, Isactive: true } });
         patient.Tododefineuuids = await db.patienttododefineModel.findAll({
             where: {
                 PatientID: patient.Uuid,
@@ -152,7 +152,10 @@ async function AddPatient(req, res, next) {
             PatientID: patientuuid,
             UserID: req?.identity?.user?.Uuid || username,
             Info: '',
-            Occureddate: new Date()
+            Occureddate: new Date(),
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
         }, { transaction: t })
 
 
@@ -277,7 +280,10 @@ async function UpdatePatient(req, res, next) {
             PatientID: Uuid,
             UserID: req?.identity?.user?.Uuid || username,
             Info: '',
-            Occureddate: new Date()
+            Occureddate: new Date(),
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
         }, { transaction: t })
 
         const stockdefines = await DoGet(config.services.Warehouse, `Stockdefines`)
@@ -412,7 +418,10 @@ async function UpdatePatientDates(req, res, next) {
             PatientID: Uuid,
             UserID: req?.identity?.user?.Uuid || username,
             Info: '',
-            Occureddate: new Date()
+            Occureddate: new Date(),
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
         }, { transaction: t })
 
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
@@ -515,7 +524,10 @@ async function CheckPatient(req, res, next) {
             CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Checkinfo || '',
-            Occureddate: new Date()
+            Occureddate: new Date(),
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
         }, { transaction: t })
 
         await t.commit();
@@ -610,7 +622,10 @@ async function ApprovePatient(req, res, next) {
             Type: patientmovementtypes.Patientapprove,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Approveinfo || '',
-            Occureddate: new Date()
+            Occureddate: new Date(),
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
         }, { transaction: t })
 
         await t.commit();
@@ -704,7 +719,10 @@ async function CancelCheckPatient(req, res, next) {
             Type: patientmovementtypes.Patientcancelcheck,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Cancelcheckinfo || '',
-            Occureddate: new Date()
+            Occureddate: new Date(),
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
         }, { transaction: t })
 
         await t.commit();
@@ -798,7 +816,10 @@ async function CancelApprovePatient(req, res, next) {
             CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Cancelapproveinfo || '',
-            Occureddate: new Date()
+            Occureddate: new Date(),
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
         }, { transaction: t })
 
         await t.commit();
@@ -943,7 +964,10 @@ async function CompletePatient(req, res, next) {
             CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Completeinfo || '',
-            Occureddate: new Date()
+            Occureddate: new Date(),
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
         }, { transaction: t })
 
         await t.commit();
@@ -1123,7 +1147,10 @@ async function PatientsRemove(req, res, next) {
             CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Leftinfo || '',
-            Occureddate: new Date()
+            Occureddate: new Date(),
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
         }, { transaction: t })
 
         await t.commit();
@@ -1248,7 +1275,10 @@ async function PatientsDead(req, res, next) {
             CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Deadinfo || '',
-            Occureddate: new Date()
+            Occureddate: new Date(),
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
         }, { transaction: t })
 
         await t.commit();
@@ -1353,7 +1383,10 @@ async function PatientsMakeactive(req, res, next) {
             CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: '',
-            Occureddate: new Date()
+            Occureddate: new Date(),
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
         }, { transaction: t })
 
         await t.commit();
@@ -1411,7 +1444,10 @@ async function UpdatePatientcase(req, res, next) {
             CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: '',
-            Occureddate: new Date()
+            Occureddate: new Date(),
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
         }, { transaction: t })
 
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
@@ -1478,7 +1514,10 @@ async function UpdatePatientscase(req, res, next) {
                 Type: patientmovementtypes.Patientcasechange,
                 UserID: req?.identity?.user?.Uuid || username,
                 Info: '',
-                Occureddate: new Date()
+                Occureddate: new Date(),
+                Createduser: username,
+                Createtime: new Date(),
+                Isactive: true
             }, { transaction: t })
         }
 
@@ -1579,7 +1618,10 @@ async function UpdatePatientplace(req, res, next) {
                 Type: patientmovementtypes.Patientplacechange,
                 UserID: req?.identity?.user?.Uuid || username,
                 Info: '',
-                Occureddate: new Date()
+                Occureddate: new Date(),
+                Createduser: username,
+                Createtime: new Date(),
+                Isactive: true
             }, { transaction: t })
 
         } else {
@@ -1616,7 +1658,10 @@ async function UpdatePatientplace(req, res, next) {
                     Type: patientmovementtypes.Patientplacechange,
                     UserID: req?.identity?.user?.Uuid || username,
                     Info: '',
-                    Occureddate: new Date()
+                    Occureddate: new Date(),
+                    Createduser: username,
+                    Createtime: new Date(),
+                    Isactive: true
                 }, { transaction: t })
 
                 await db.patientModel.update({
@@ -1635,7 +1680,10 @@ async function UpdatePatientplace(req, res, next) {
                     Type: patientmovementtypes.Patientplacechange,
                     UserID: req?.identity?.user?.Uuid || username,
                     Info: '',
-                    Occureddate: new Date()
+                    Occureddate: new Date(),
+                    Createduser: username,
+                    Createtime: new Date(),
+                    Isactive: true
                 }, { transaction: t })
             }
 
@@ -1671,7 +1719,10 @@ async function UpdatePatientplace(req, res, next) {
                     Type: patientmovementtypes.Patientplacechange,
                     UserID: req?.identity?.user?.Uuid || username,
                     Info: '',
-                    Occureddate: new Date()
+                    Occureddate: new Date(),
+                    Createduser: username,
+                    Createtime: new Date(),
+                    Isactive: true
                 }, { transaction: t })
 
             }
@@ -1704,7 +1755,10 @@ async function UpdatePatientplace(req, res, next) {
                     Type: patientmovementtypes.Patientplacechange,
                     UserID: req?.identity?.user?.Uuid || username,
                     Info: '',
-                    Occureddate: new Date()
+                    Occureddate: new Date(),
+                    Createduser: username,
+                    Createtime: new Date(),
+                    Isactive: true
                 }, { transaction: t })
 
                 await db.patientModel.update({
@@ -1723,7 +1777,10 @@ async function UpdatePatientplace(req, res, next) {
                     Type: patientmovementtypes.Patientplacechange,
                     UserID: req?.identity?.user?.Uuid || username,
                     Info: '',
-                    Occureddate: new Date()
+                    Occureddate: new Date(),
+                    Createduser: username,
+                    Createtime: new Date(),
+                    Isactive: true
                 }, { transaction: t })
             }
 
@@ -1754,7 +1811,10 @@ async function UpdatePatientplace(req, res, next) {
                     Type: patientmovementtypes.Patientplacechange,
                     UserID: req?.identity?.user?.Uuid || username,
                     Info: '',
-                    Occureddate: new Date()
+                    Occureddate: new Date(),
+                    Createduser: username,
+                    Createtime: new Date(),
+                    Isactive: true
                 }, { transaction: t })
             }
         }
@@ -2281,7 +2341,10 @@ async function Createfromtemplate(req, res, next) {
                 PatientID: patientuuid,
                 UserID: "System",
                 Info: '',
-                Occureddate: external.Occureddate
+                Occureddate: external.Occureddate,
+                Createduser: username,
+                Createtime: new Date(),
+                Isactive: true
             }, { transaction: t })
 
         }

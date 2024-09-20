@@ -239,7 +239,7 @@ export default class ClaimpaymentsDetail extends Component {
                         {Isonpreview ?
                             <Submitbutton
                                 isLoading={Claimpayments.isLoading}
-                                buttonText={t('Common.Button.Savepreview')}
+                                buttonText={t('Common.Button.Save')}
                                 submitFunction={this.handleSubmit}
                             />
                             : null}
