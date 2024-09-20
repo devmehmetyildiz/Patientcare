@@ -154,7 +154,7 @@ async function UpdateEquipment(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const equipment =await db.equipmentModel.findOne({ where: { Uuid: Uuid } })
+        const equipment = await db.equipmentModel.findOne({ where: { Uuid: Uuid } })
         if (!equipment) {
             return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
         }
@@ -166,7 +166,7 @@ async function UpdateEquipment(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
         await db.equipmentpropertyModel.destroy({ where: { EquipmentID: Uuid }, transaction: t });
         for (const equipmentproperty of (Equipmentproperties || [])) {
             await db.equipmentpropertyModel.create({
@@ -221,7 +221,7 @@ async function DeleteEquipment(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

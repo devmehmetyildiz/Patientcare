@@ -97,7 +97,7 @@ async function UpdateStocktype(req, res, next) {
         Name,
         Uuid
     } = req.body
-    
+
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
     }
@@ -128,7 +128,7 @@ async function UpdateStocktype(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
 
         await CreateNotification({
@@ -178,7 +178,7 @@ async function DeleteStocktype(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

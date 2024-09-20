@@ -165,7 +165,7 @@ async function UpdateSupportplanlist(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.supportplanlistsupportplanModel.destroy({ where: { ListID: Uuid }, transaction: t });
         for (const supportplan of Supportplans) {
@@ -225,7 +225,7 @@ async function DeleteSupportplanlist(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

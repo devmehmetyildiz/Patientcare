@@ -152,7 +152,7 @@ async function UpdateTodogroupdefine(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const todogroupdefine =await db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
+        const todogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!todogroupdefine) {
             return next(createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language))
         }
@@ -165,7 +165,7 @@ async function UpdateTodogroupdefine(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.todogroupdefinetododefineModel.destroy({ where: { GroupID: Uuid }, transaction: t });
         for (const tododefine of Tododefines) {
@@ -212,7 +212,7 @@ async function DeleteTodogroupdefine(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const todogroupdefine =await db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
+        const todogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!todogroupdefine) {
             return next(createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language))
         }
@@ -224,7 +224,7 @@ async function DeleteTodogroupdefine(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid, transaction: t } })
 
         await CreateNotification({
             type: types.Delete,

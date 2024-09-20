@@ -112,7 +112,7 @@ async function UpdateRequiredperiod(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const requiredperiod =await db.requiredperiodModel.findOne({ where: { Uuid: Uuid } })
+        const requiredperiod = await db.requiredperiodModel.findOne({ where: { Uuid: Uuid } })
         if (!requiredperiod) {
             return next(createNotfounderror([messages.ERROR.REQUIREDPERIOD_NOT_FOUND], req.language))
         }
@@ -124,7 +124,7 @@ async function UpdateRequiredperiod(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -158,7 +158,7 @@ async function DeleteRequiredperiod(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const requiredperiod =await db.requiredperiodModel.findOne({ where: { Uuid: Uuid } })
+        const requiredperiod = await db.requiredperiodModel.findOne({ where: { Uuid: Uuid } })
         if (!requiredperiod) {
             return next(createNotfounderror([messages.ERROR.REQUIREDPERIOD_NOT_FOUND], req.language))
         }
@@ -170,7 +170,7 @@ async function DeleteRequiredperiod(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,

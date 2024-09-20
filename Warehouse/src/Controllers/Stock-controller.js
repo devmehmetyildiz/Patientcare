@@ -268,7 +268,7 @@ async function UpdateStock(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
 
         await CreateNotification({
@@ -319,7 +319,7 @@ async function ApproveStock(req, res, next) {
             Isapproved: true,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock?.StockdefineID } });
 
@@ -372,7 +372,7 @@ async function ApproveStocks(req, res, next) {
                 Isapproved: true,
                 Updateduser: username,
                 Updatetime: new Date(),
-            }, { where: { Uuid: data } }, { transaction: t })
+            }, { where: { Uuid: data }, transaction: t })
         }
 
         await CreateNotification({
@@ -422,13 +422,13 @@ async function DeleteStock(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.stockmovementModel.update({
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { StockID: Uuid } }, { transaction: t })
+        }, { where: { StockID: Uuid }, transaction: t })
 
         const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock?.Uuid } })
 
@@ -475,13 +475,13 @@ async function DeleteStockByWarehouseID(req, res, next) {
                     Deleteduser: username,
                     Deletetime: new Date(),
                     Isactive: false
-                }, { where: { Uuid: stock?.Uuid } }, { transaction: t })
+                }, { where: { Uuid: stock?.Uuid }, transaction: t })
 
                 await db.stockmovementModel.update({
                     Deleteduser: username,
                     Deletetime: new Date(),
                     Isactive: false
-                }, { where: { StockID: stock?.Uuid } }, { transaction: t })
+                }, { where: { StockID: stock?.Uuid }, transaction: t })
             }
         }
 

@@ -253,7 +253,7 @@ async function UpdateStockmovement(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         const stock = await db.stockModel.findOne({ where: { Uuid: StockID } });
         const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock?.StockdefineID } });
@@ -305,7 +305,7 @@ async function ApproveStockmovement(req, res, next) {
             Isapproved: true,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         const stock = await db.stockModel.findOne({ where: { Uuid: stockmovement?.StockID } });
         const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock?.StockdefineID } });
@@ -357,7 +357,7 @@ async function ApproveStockmovements(req, res, next) {
                 Isapproved: true,
                 Updateduser: username,
                 Updatetime: new Date(),
-            }, { where: { Uuid: data } }, { transaction: t })
+            }, { where: { Uuid: data }, transaction: t })
         }
 
         await CreateNotification({
@@ -406,7 +406,7 @@ async function DeleteStockmovement(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         const stock = await db.stockModel.findOne({ where: { Uuid: stockmovement?.StockID } });
         const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: stock?.StockdefineID } });

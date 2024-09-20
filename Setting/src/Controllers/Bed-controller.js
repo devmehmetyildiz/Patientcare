@@ -128,7 +128,7 @@ async function UpdateBed(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -181,7 +181,7 @@ async function ChangeBedstatus(req, res, next) {
                 Isoccupied: false,
                 Updateduser: username,
                 Updatetime: new Date(),
-            }, { where: { Uuid: OldUuid } }, { transaction: t })
+            }, { where: { Uuid: OldUuid }, transaction: t })
         }
         const newBed = await db.bedModel.findOne({ where: { Uuid: NewUuid } })
         if (!newBed) {
@@ -196,7 +196,7 @@ async function ChangeBedstatus(req, res, next) {
             Isoccupied: validator.isBoolean(Status) ? Status : true,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: NewUuid } }, { transaction: t })
+        }, { where: { Uuid: NewUuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -253,7 +253,7 @@ async function ChangeBedOccupied(req, res, next) {
             PatientID: Isoccupied ? PatientID : null,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: BedID } }, { transaction: t })
+        }, { where: { Uuid: BedID }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -304,7 +304,7 @@ async function DeleteBed(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

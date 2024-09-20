@@ -307,7 +307,7 @@ async function UpdateUser(req, res, next) {
             PasswordHash: user?.PasswordHash,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.userroleModel.destroy({ where: { UserID: Uuid }, transaction: t });
 
@@ -368,7 +368,7 @@ async function DeleteUser(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

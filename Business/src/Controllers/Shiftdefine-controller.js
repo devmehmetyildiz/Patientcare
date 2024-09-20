@@ -73,7 +73,7 @@ async function AddShiftdefine(req, res, next) {
         if (Isjoker) {
             await db.shiftdefineModel.update({
                 Isjoker: false
-            }, { where: { Isactive: true } }, { transaction: t })
+            }, { where: { Isactive: true }, transaction: t })
         }
 
         await db.shiftdefineModel.create({
@@ -145,14 +145,14 @@ async function UpdateShiftdefine(req, res, next) {
         if (Isjoker) {
             await db.shiftdefineModel.update({
                 Isjoker: false
-            }, { where: { Isactive: true } }, { transaction: t })
+            }, { where: { Isactive: true }, transaction: t })
         }
 
         await db.shiftdefineModel.update({
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -199,7 +199,7 @@ async function DeleteShiftdefine(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

@@ -227,7 +227,7 @@ async function UpdateCase(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.casedepartmentModel.destroy({ where: { CaseID: Uuid }, transaction: t });
         for (const department of Departments) {
@@ -285,7 +285,7 @@ async function DeleteCase(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

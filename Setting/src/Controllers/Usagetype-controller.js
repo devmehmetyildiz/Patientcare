@@ -110,7 +110,7 @@ async function UpdateUsagetype(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const usagetype =await db.usagetypeModel.findOne({ where: { Uuid: Uuid } })
+        const usagetype = await db.usagetypeModel.findOne({ where: { Uuid: Uuid } })
         if (!usagetype) {
             return next(createNotfounderror([messages.ERROR.USAGETYPE_NOT_FOUND], req.language))
         }
@@ -122,7 +122,7 @@ async function UpdateUsagetype(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -159,7 +159,7 @@ async function DeleteUsagetype(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const usagetype =await db.usagetypeModel.findOne({ where: { Uuid: Uuid } })
+        const usagetype = await db.usagetypeModel.findOne({ where: { Uuid: Uuid } })
         if (!usagetype) {
             return next(createNotfounderror([messages.ERROR.USAGETYPE_NOT_FOUND], req.language))
         }
@@ -171,7 +171,7 @@ async function DeleteUsagetype(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

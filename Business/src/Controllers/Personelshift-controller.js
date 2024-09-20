@@ -218,13 +218,13 @@ async function UpdatePersonelshift(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.personelshiftdetailModel.update({
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { PersonelshiftID: Uuid } }, { transaction: t })
+        }, { where: { PersonelshiftID: Uuid }, transaction: t })
 
         for (const personelshiftdetail of Personelshiftdetails) {
 
@@ -310,7 +310,7 @@ async function ApprovePersonelshift(req, res, next) {
             Isapproved: true,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -363,7 +363,7 @@ async function CompletePersonelshift(req, res, next) {
             Iscompleted: true,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -417,7 +417,7 @@ async function DeactivePersonelshift(req, res, next) {
             Isworking: false,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -466,13 +466,13 @@ async function DeletePersonelshift(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.personelshiftdetailModel.update({
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { PersonelshiftID: Uuid } }, { transaction: t })
+        }, { where: { PersonelshiftID: Uuid }, transaction: t })
 
 
         await CreateNotification({

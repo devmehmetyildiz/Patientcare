@@ -113,7 +113,7 @@ async function UpdateMakingtype(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const makingtype =await db.makingtypeModel.findOne({ where: { Uuid: Uuid } })
+        const makingtype = await db.makingtypeModel.findOne({ where: { Uuid: Uuid } })
         if (!makingtype) {
             return next(createNotfounderror([messages.ERROR.MAKINGTYPE_NOT_FOUND], req.language))
         }
@@ -125,7 +125,7 @@ async function UpdateMakingtype(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -160,7 +160,7 @@ async function DeleteMakingtype(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const makingtype =await db.makingtypeModel.findOne({ where: { Uuid: Uuid } })
+        const makingtype = await db.makingtypeModel.findOne({ where: { Uuid: Uuid } })
         if (!makingtype) {
             return next(createNotfounderror([messages.ERROR.MAKINGTYPE_NOT_FOUND], req.language))
         }
@@ -172,7 +172,7 @@ async function DeleteMakingtype(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

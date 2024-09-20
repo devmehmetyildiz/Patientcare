@@ -119,7 +119,7 @@ async function Changepasswordbyrequest(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await t.commit()
         res.status(200).send('success')
@@ -177,11 +177,11 @@ async function Changepassword(req, res, next) {
             PasswordHash: hash,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: req.identity?.user?.Uuid } }, { transaction: t })
+        }, { where: { Uuid: req.identity?.user?.Uuid }, transaction: t })
         await db.usersaltModel.update({
             ...usersalt,
             Salt: newSalt,
-        }, { where: { UserID: req.identity?.user?.Uuid } }, { transaction: t })
+        }, { where: { UserID: req.identity?.user?.Uuid }, transaction: t })
 
         await t.commit()
     } catch (error) {

@@ -144,7 +144,7 @@ async function UpdateCostumertype(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const costumertype =await db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
+        const costumertype = await db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
         if (!costumertype) {
             return next(createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND], req.language))
         }
@@ -156,7 +156,7 @@ async function UpdateCostumertype(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.costumertypedepartmentModel.destroy({ where: { CostumertypeID: Uuid }, transaction: t });
         for (const department of Departments) {
@@ -201,19 +201,19 @@ async function DeleteCostumertype(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const costumertype =await db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
+        const costumertype = await db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
         if (!costumertype) {
             return next(createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND], req.language))
         }
         if (costumertype.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.COSTUMERTYPE_NOT_ACTIVE], req.language))
         }
-       
+
         await db.costumertypeModel.update({
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

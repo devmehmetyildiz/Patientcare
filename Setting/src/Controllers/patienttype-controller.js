@@ -109,7 +109,7 @@ async function UpdatePatienttype(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const patienttype =await db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
+        const patienttype = await db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
         if (!patienttype) {
             return next(createNotfounderror([messages.ERROR.PATIENTTYPE_NOT_FOUND], req.language))
         }
@@ -121,7 +121,7 @@ async function UpdatePatienttype(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -157,7 +157,7 @@ async function DeletePatienttype(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const patienttype =await db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
+        const patienttype = await db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
         if (!patienttype) {
             return next(createNotfounderror([messages.ERROR.PATIENTTYPE_NOT_FOUND], req.language))
         }
@@ -169,7 +169,7 @@ async function DeletePatienttype(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

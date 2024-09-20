@@ -10,7 +10,7 @@ async function Getnumerator(next, transaction) {
             const newnumerator = await Createnewnumerator(previous.Current, next)
             await db.filenumeratorModel.update({
                 Current: newnumerator
-            }, { where: { Id: previous.Id } }, { transaction })
+            }, { where: { Id: previous.Id }, transaction })
             return newnumerator
         } else {
             const newnumerator = await Createnewnumerator(_, next)

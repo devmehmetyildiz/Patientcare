@@ -205,7 +205,7 @@ async function UpdatePurchaseorder(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
@@ -220,7 +220,7 @@ async function UpdatePurchaseorder(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { WarehouseID: Uuid } }, { transaction: t })
+        }, { where: { WarehouseID: Uuid }, transaction: t })
 
         for (const stock of Stocks) {
             let stockuuid = uuid()
@@ -366,7 +366,7 @@ async function CheckPurchaseorder(req, res, next) {
             Iscompleted: false,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
@@ -481,7 +481,7 @@ async function ApprovePurchaseorder(req, res, next) {
             Iscompleted: false,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
@@ -599,7 +599,7 @@ async function CompletePurchaseorder(req, res, next) {
             Iscompleted: true,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
@@ -723,7 +723,7 @@ async function CancelCheckPurchaseorder(req, res, next) {
             Iscompleted: false,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
@@ -799,7 +799,7 @@ async function CancelApprovePurchaseorder(req, res, next) {
             Iscompleted: false,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
@@ -849,19 +849,19 @@ async function DeletePurchaseorder(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
-      
+        }, { where: { Uuid: Uuid }, transaction: t })
+
         await db.purchaseordermovementModel.update({
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { PurchaseorderID: Uuid } }, { transaction: t })
-      
+        }, { where: { PurchaseorderID: Uuid }, transaction: t })
+
         await db.stockModel.update({
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { WarehouseID: Uuid } }, { transaction: t })
+        }, { where: { WarehouseID: Uuid }, transaction: t })
 
         await t.commit();
     } catch (error) {

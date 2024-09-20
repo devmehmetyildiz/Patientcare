@@ -108,7 +108,7 @@ async function UpdateSupportplan(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const supportplan =await db.supportplanModel.findOne({ where: { Uuid: Uuid } })
+        const supportplan = await db.supportplanModel.findOne({ where: { Uuid: Uuid } })
         if (!supportplan) {
             return next(createNotfounderror([messages.ERROR.SUPPORTPLAN_NOT_FOUND], req.language))
         }
@@ -120,7 +120,7 @@ async function UpdateSupportplan(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -156,7 +156,7 @@ async function DeleteSupportplan(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const supportplan =await db.supportplanModel.findOne({ where: { Uuid: Uuid } })
+        const supportplan = await db.supportplanModel.findOne({ where: { Uuid: Uuid } })
         if (!supportplan) {
             return next(createNotfounderror([messages.ERROR.SUPPORTPLAN_NOT_FOUND], req.language))
         }
@@ -168,7 +168,7 @@ async function DeleteSupportplan(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

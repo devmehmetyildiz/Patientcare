@@ -111,7 +111,7 @@ async function UpdateHelpstatu(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const helpstatu =await db.helpstatuModel.findOne({ where: { Uuid: Uuid } })
+        const helpstatu = await db.helpstatuModel.findOne({ where: { Uuid: Uuid } })
         if (!helpstatu) {
             return next(createNotfounderror([messages.ERROR.HELPSTATU_NOT_FOUND], req.language))
         }
@@ -123,7 +123,7 @@ async function UpdateHelpstatu(req, res, next) {
             ...req.body,
             Updateduser: username,
             Updatetime: new Date(),
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -158,7 +158,7 @@ async function DeleteHelpstatu(req, res, next) {
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
     try {
-        const helpstatu =await db.helpstatuModel.findOne({ where: { Uuid: Uuid } })
+        const helpstatu = await db.helpstatuModel.findOne({ where: { Uuid: Uuid } })
         if (!helpstatu) {
             return next(createNotfounderror([messages.ERROR.HELPSTATU_NOT_FOUND], req.language))
         }
@@ -170,7 +170,7 @@ async function DeleteHelpstatu(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,
@@ -179,7 +179,7 @@ async function DeleteHelpstatu(req, res, next) {
             message: `${helpstatu?.Name} bakıma ihtiyaç durumu ${username} tarafından Silindi.`,
             pushurl: '/Helpstatus'
         })
-        
+
         await t.commit();
     } catch (error) {
         await t.rollback();

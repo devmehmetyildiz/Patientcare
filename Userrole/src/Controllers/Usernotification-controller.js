@@ -152,7 +152,7 @@ async function UpdateUsernotification(req, res, next) {
             ...req.body,
             Updateduser: "System",
             Updatetime: new Date(),
-        }, { where: { Uuid: req.body?.Uuid } }, { transaction: t })
+        }, { where: { Uuid: req.body?.Uuid }, transaction: t })
 
         await t.commit()
     } catch (error) {
@@ -179,7 +179,7 @@ async function UpdateUsernotifications(req, res, next) {
                 ...data,
                 Updateduser: "System",
                 Updatetime: new Date(),
-            }, { where: { Uuid: data?.Uuid } }, { transaction: t })
+            }, { where: { Uuid: data?.Uuid }, transaction: t })
         }
 
         await t.commit()
@@ -218,7 +218,7 @@ async function DeleteUsernotification(req, res, next) {
             Updateduser: "System",
             Updatetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid } }, { transaction: t })
+        }, { where: { Uuid: Uuid }, transaction: t })
         req.params.userId = notification?.UserID
         await t.commit();
     } catch (error) {
@@ -249,7 +249,7 @@ async function DeleteUsernotificationbyid(req, res, next) {
             Updateduser: "System",
             Updatetime: new Date(),
             Isactive: false
-        }, { where: { UserID: Uuid } }, { transaction: t })
+        }, { where: { UserID: Uuid }, transaction: t })
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -279,7 +279,7 @@ async function DeleteUsernotificationbyidreaded(req, res, next) {
             Updateduser: "System",
             Updatetime: new Date(),
             Isactive: false
-        }, { where: { UserID: Uuid, Isreaded: true } }, { transaction: t })
+        }, { where: { UserID: Uuid, Isreaded: true }, transaction: t })
         await t.commit();
     } catch (error) {
         await t.rollback();
