@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon } from 'semantic-ui-react'
+import { Icon, Tab } from 'semantic-ui-react'
 import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
+import { Contentwrapper, DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import validator from '../../Utils/Validator'
 import { Formatfulldate } from '../../Utils/Formatdate'
 import { CLAIMPAYMENT_TYPE_BHKS, CLAIMPAYMENT_TYPE_KYS, CLAIMPAYMENT_TYPE_PATIENT, CLAIMPAYMENT_TYPE_PERSONEL } from '../../Utils/Constants'
+import ClaimpaymentsApprove from '../../Containers/Claimpayments/ClaimpaymentsApprove'
+import ClaimpaymentsDelete from '../../Containers/Claimpayments/ClaimpaymentsDelete'
 
 export default class Claimpayments extends Component {
 
@@ -29,12 +31,15 @@ export default class Claimpayments extends Component {
         const Columns = [
             { Header: t('Common.Column.Id'), accessor: 'Id' },
             { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+            { Header: t('Pages.Claimpayments.Column.Name'), accessor: 'Name' },
+            { Header: t('Pages.Claimpayments.Column.Info'), accessor: 'Info' },
             { Header: t('Pages.Claimpayments.Column.Type'), accessor: row => this.typeCellhandler(row?.Type) },
             { Header: t('Pages.Claimpayments.Column.Totaldaycount'), accessor: 'Totaldaycount' },
-            { Header: t('Pages.Claimpayments.Column.Totalcalculatedpayment'), accessor: 'Totalcalculatedpayment' },
-            { Header: t('Pages.Claimpayments.Column.Totalcalculatedkdv'), accessor: 'Totalcalculatedkdv' },
-            { Header: t('Pages.Claimpayments.Column.Totalcalculatedfinal'), accessor: 'Totalcalculatedfinal' },
-            { Header: t('Pages.Claimpayments.Column.Totalcalculatedwithholding'), accessor: 'Totalcalculatedwithholding' },
+            { Header: t('Pages.Claimpayments.Column.Totalcalculatedpayment'), accessor: row => this.currencyCellhandler(row?.Totalcalculatedpayment) },
+            { Header: t('Pages.Claimpayments.Column.Totalcalculatedkdv'), accessor: row => this.currencyCellhandler(row?.Totalcalculatedkdv) },
+            { Header: t('Pages.Claimpayments.Column.Totalcalculatedfinal'), accessor: row => this.currencyCellhandler(row?.Totalcalculatedfinal) },
+            { Header: t('Pages.Claimpayments.Column.Totalcalculatedwithholding'), accessor: row => this.currencyCellhandler(row?.Totalcalculatedwithholding) },
+            { Header: t('Pages.Claimpayments.Column.Isonpreview'), accessor: row => this.boolCellhandler(row?.Isonpreview) },
             { Header: t('Pages.Claimpayments.Column.Isapproved'), accessor: row => this.boolCellhandler(row?.Isapproved) },
             { Header: t('Pages.Claimpayments.Column.Approveduser'), accessor: 'Approveduser' },
             { Header: t('Pages.Claimpayments.Column.Approvetime'), accessor: row => this.dateCellhandler(row?.Approvetime) },
@@ -44,8 +49,8 @@ export default class Claimpayments extends Component {
             { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
             { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
             { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+            { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
             { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true },
-            { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
             { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
@@ -55,17 +60,21 @@ export default class Claimpayments extends Component {
         const list = (Claimpayments.list || []).filter(u => u.Isactive).map(item => {
             return {
                 ...item,
-                edit: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Link to={`/Claimpayments/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-                delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+                delete: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='alternate trash' onClick={() => {
                     handleSelectedClaimpayment(item)
                     handleDeletemodal(true)
                 }} />,
-                approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+                approve: item.Isonpreview || item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
                     handleSelectedClaimpayment(item)
                     handleApprovemodal(true)
                 }} />,
+                detail: <Link key={item?.Uuid} to={`/Claimpayments/${item?.Uuid}`} ><Icon size='large' color='red' className='row-edit' name='address book' /> </Link>,
             }
         })
+
+        const approvedList = list.filter(u => u.Isapproved && !u.Isonpreview)
+        const waitingapproveList = list.filter(u => !u.Isapproved && !u.Isonpreview)
+        const onpreviewList = list.filter(u => !u.Isapproved && u.Isonpreview)
 
         return (
             isLoading ? <LoadingPage /> :
@@ -95,16 +104,60 @@ export default class Claimpayments extends Component {
                             </Grid>
                         </Headerwrapper>
                         <Pagedivider />
-                        {list.length > 0 ?
-                            <div className='w-full mx-auto '>
-                                {Profile.Ismobile ?
-                                    <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                                    <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-                            </div> : <NoDataScreen message={t('Common.NoDataFound')} />
-                        }
+                        <Contentwrapper>
+                            <Tab
+                                className="w-full !bg-transparent"
+                                panes={[
+                                    {
+                                        menuItem: `${t('Pages.Claimpayments.Tab.Approved')} (${(approvedList || []).length})`,
+                                        pane: {
+                                            key: 'onlyactive',
+                                            content: this.renderView(approvedList, Columns, initialConfig)
+                                        }
+                                    },
+                                    {
+                                        menuItem: `${t('Pages.Claimpayments.Tab.Waitingapprove')} (${(waitingapproveList || []).length})`,
+                                        pane: {
+                                            key: 'onlyactive',
+                                            content: this.renderView(waitingapproveList, Columns, initialConfig)
+                                        }
+                                    },
+                                    {
+                                        menuItem: `${t('Pages.Claimpayments.Tab.Preview')} (${(onpreviewList || []).length})`,
+                                        pane: {
+                                            key: 'onlyactive',
+                                            content: this.renderView(onpreviewList, Columns, initialConfig)
+                                        }
+                                    },
+                                    {
+                                        menuItem: `${t('Pages.Claimpayments.Tab.All')} (${(list || []).length})`,
+                                        pane: {
+                                            key: 'onlyactive',
+                                            content: this.renderView(list, Columns, initialConfig)
+                                        }
+                                    },
+                                ]}
+                                renderActiveOnly={false}
+                            />
+                        </Contentwrapper>
+                        <ClaimpaymentsApprove />
+                        <ClaimpaymentsDelete />
                     </Pagewrapper>
                 </React.Fragment>
         )
+    }
+
+    renderView = (list, Columns, initialConfig) => {
+        const { Profile } = this.props
+        const t = Profile?.i18n?.t
+
+        return list.length > 0 ?
+            <div className='w-full mx-auto '>
+                {Profile.Ismobile ?
+                    <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                    <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+            </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
+
     }
 
     boolCellhandler = (value) => {
@@ -123,6 +176,23 @@ export default class Claimpayments extends Component {
         }
         return value
     }
+
+    currencyCellhandler = (value) => {
+        if (value) {
+            return this.CurrencyLabel({ value: value })
+        }
+        return value
+    }
+
+    CurrencyLabel = ({ value, locale = 'tr-TR', currency = 'TRY' }) => {
+        const formatter = new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency: currency,
+            minimumFractionDigits: 2,
+        });
+
+        return <span>{formatter.format(value)}</span>;
+    };
 
     typeCellhandler = (value) => {
         const { Profile } = this.props

@@ -22,7 +22,6 @@ export default class ClaimpaymentsCreate extends Component {
             { key: 1, text: t('Common.Claimpayments.Type.Patient'), value: CLAIMPAYMENT_TYPE_PATIENT },
             { key: 2, text: t('Common.Claimpayments.Type.Bhks'), value: CLAIMPAYMENT_TYPE_BHKS },
             { key: 3, text: t('Common.Claimpayments.Type.Kys'), value: CLAIMPAYMENT_TYPE_KYS },
-            { key: 4, text: t('Common.Claimpayments.Type.Personel'), value: CLAIMPAYMENT_TYPE_PERSONEL },
         ]
 
         return (
@@ -42,11 +41,15 @@ export default class ClaimpaymentsCreate extends Component {
                     <Contentwrapper>
                         <Form>
                             <Form.Group widths={'equal'}>
+                                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Claimpayments.Label.Name')} name="Name" />
                                 <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Claimpayments.Label.Type')} name="Type" formtype='dropdown' options={Claimpaymenttypes} />
                             </Form.Group>
                             <Form.Group widths={'equal'}>
-                                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Claimpayments.Label.Startdate')} name="Startdate" type='datetime-local' />
-                                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Claimpayments.Label.Enddate')} name="Enddate" type='datetime-local' />
+                                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Claimpayments.Label.Starttime')} name="Starttime" type='datetime-local' />
+                                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Claimpayments.Label.Endtime')} name="Endtime" type='datetime-local' />
+                            </Form.Group>
+                            <Form.Group widths={'equal'}>
+                                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Claimpayments.Label.Info')} name="Info" />
                             </Form.Group>
                         </Form>
                     </Contentwrapper>
@@ -73,14 +76,17 @@ export default class ClaimpaymentsCreate extends Component {
         const t = Profile?.i18n?.t
         const data = this.context.getForm(this.PAGE_NAME)
         let errors = []
+        if (!validator.isString(data.Name)) {
+            errors.push({ type: 'Error', code: t('Pages.Claimpayments.Page.Header'), description: t('Pages.Claimpayments.Messages.NameRequired') })
+        }
         if (!validator.isNumber(data.Type)) {
             errors.push({ type: 'Error', code: t('Pages.Claimpayments.Page.Header'), description: t('Pages.Claimpayments.Messages.TypeRequired') })
         }
-        if (!validator.isISODate(data.Startdate)) {
-            errors.push({ type: 'Error', code: t('Pages.Claimpayments.Page.Header'), description: t('Pages.Claimpayments.Messages.StartdateRequired') })
+        if (!validator.isISODate(data.Starttime)) {
+            errors.push({ type: 'Error', code: t('Pages.Claimpayments.Page.Header'), description: t('Pages.Claimpayments.Messages.StarttimeRequired') })
         }
-        if (!validator.isISODate(data.Enddate)) {
-            errors.push({ type: 'Error', code: t('Pages.Claimpayments.Page.Header'), description: t('Pages.Claimpayments.Messages.EnddateRequired') })
+        if (!validator.isISODate(data.Endtime)) {
+            errors.push({ type: 'Error', code: t('Pages.Claimpayments.Page.Header'), description: t('Pages.Claimpayments.Messages.EndtimeRequired') })
         }
         if (errors.length > 0) {
             errors.forEach(error => {

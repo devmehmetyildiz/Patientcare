@@ -8,6 +8,14 @@ module.exports = sequelize.define('claimpaymentModel', {
         type: Sequelize.STRING
     },
 
+
+    Name: {
+        type: Sequelize.STRING
+    },
+    Info: {
+        type: Sequelize.TEXT
+    },
+
     Type: {
         type: Sequelize.INTEGER
     },
@@ -28,6 +36,9 @@ module.exports = sequelize.define('claimpaymentModel', {
         type: Sequelize.FLOAT
     },
 
+    Isonpreview: {
+        type: Sequelize.BOOLEAN
+    },
     Isapproved: {
         type: Sequelize.BOOLEAN
     },

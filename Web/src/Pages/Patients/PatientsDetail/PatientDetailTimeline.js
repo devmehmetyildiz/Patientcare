@@ -152,7 +152,7 @@ export default function PatientDetailTimeline(props) {
                                             <Card.Content extra>
                                                 <a>
                                                     <Icon name='user' />
-                                                    <Link to={`Users/${user?.Uuid}`}>{user ? username : t('Common.NoDataFound')}</Link>
+                                                    {user ? <Link to={`Users/${user?.Uuid}`}>{user ? username : t('Common.NoDataFound')}</Link> : movement?.UserID}
                                                 </a>
                                             </Card.Content>
                                         </Card>}

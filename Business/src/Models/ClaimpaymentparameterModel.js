@@ -17,6 +17,12 @@ module.exports = sequelize.define('claimpaymentparameterModel', {
     Patientclaimpaymentperpayment: {
         type: Sequelize.FLOAT
     },
+    Perpaymentkdvpercent: {
+        type: Sequelize.FLOAT
+    },
+    Perpaymentkdvwithholdingpercent: {
+        type: Sequelize.FLOAT
+    },
 
     Issettingactive: {
         type: Sequelize.BOOLEAN

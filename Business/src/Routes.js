@@ -43,6 +43,7 @@ const Routes = [
     { method: 'get', path: '/Claimpayments', controller: 'Claimpayment', action: 'GetClaimpayments' },
     { method: 'post', path: '/Claimpayments', controller: 'Claimpayment', action: 'AddClaimpayment' },
     { method: 'put', path: '/Claimpayments/Approve/:claimpaymentId', controller: 'Claimpayment', action: 'ApproveClaimpayment' },
+    { method: 'put', path: '/Claimpayments/Savepreview/:claimpaymentId', controller: 'Claimpayment', action: 'SavepreviewClaimpayment' },
     { method: 'delete', path: '/Claimpayments/:claimpaymentId', controller: 'Claimpayment', action: 'DeleteClaimpayment' },
 
     { method: 'get', path: '/Professions/:professionId', controller: 'Profession', action: 'GetProfession' },

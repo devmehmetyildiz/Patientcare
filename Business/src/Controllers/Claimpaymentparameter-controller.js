@@ -46,6 +46,8 @@ async function AddClaimpaymentparameter(req, res, next) {
         Type,
         CostumertypeID,
         Patientclaimpaymentperpayment,
+        Perpaymentkdvpercent,
+        Perpaymentkdvwithholdingpercent
     } = req.body
 
     if (!validator.isNumber(Type)) {
@@ -62,6 +64,12 @@ async function AddClaimpaymentparameter(req, res, next) {
     }
     if (!validator.isNumber(Patientclaimpaymentperpayment)) {
         return next(createValidationError([messages.VALIDATION_ERROR.PERPAYMENT_REQUIRED], req.language))
+    }
+    if (!validator.isNumber(Perpaymentkdvpercent)) {
+        return next(createValidationError([messages.VALIDATION_ERROR.KDVPERCENT_REQUIRED], req.language))
+    }
+    if (!validator.isNumber(Perpaymentkdvwithholdingpercent)) {
+        return next(createValidationError([messages.VALIDATION_ERROR.KDVWITHHOLDINGPERCENT_REQUIRED], req.language))
     }
 
     if (validationErrors.length > 0) {
@@ -110,7 +118,9 @@ async function UpdateClaimpaymentparameter(req, res, next) {
         Type,
         CostumertypeID,
         Patientclaimpaymentperpayment,
-        Uuid
+        Uuid,
+        Perpaymentkdvpercent,
+        Perpaymentkdvwithholdingpercent
     } = req.body
 
     if (!Uuid) {
@@ -133,6 +143,12 @@ async function UpdateClaimpaymentparameter(req, res, next) {
     }
     if (!validator.isNumber(Patientclaimpaymentperpayment)) {
         return next(createValidationError([messages.VALIDATION_ERROR.PERPAYMENT_REQUIRED], req.language))
+    }
+    if (!validator.isNumber(Perpaymentkdvpercent)) {
+        return next(createValidationError([messages.VALIDATION_ERROR.KDVPERCENT_REQUIRED], req.language))
+    }
+    if (!validator.isNumber(Perpaymentkdvwithholdingpercent)) {
+        return next(createValidationError([messages.VALIDATION_ERROR.KDVWITHHOLDINGPERCENT_REQUIRED], req.language))
     }
 
     if (validationErrors.length > 0) {

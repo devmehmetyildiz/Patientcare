@@ -30,7 +30,7 @@ export default function PatientDetailMovements(props) {
 
     const DecoratedMovements = ((patient?.Movements || []).map(movement => {
         const user = (Users.list || []).find(u => u.Uuid === movement?.UserID)
-        const username = `${user?.Name || Notfound} ${user?.Surname || Notfound}`
+        const username = user ? `${user?.Name || Notfound} ${user?.Surname || Notfound}` : null
         const type = Movementtypes.find(u => u.value === movement?.Type)?.name || Notfound
 
         return {
@@ -59,7 +59,7 @@ export default function PatientDetailMovements(props) {
                                 <Feed.Content>
                                     <Feed.Date content={Formatdate(movement.value, true)} />
                                     <Feed.Summary>
-                                        {movement.label} : <Link to={`Users/${movement.userID}`}>{movement.user}</Link>
+                                        {movement.label} :{movement.user ? <Link to={`Users/${movement.userID}`}>{movement.user}</Link> : movement.userID}
                                     </Feed.Summary>
                                     <Feed.Summary className='!font-semibold !text-[#8a8a8add]'>
                                         {movement.info}

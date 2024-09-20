@@ -16,6 +16,10 @@ async function ApproveClaimpayment(req, res, next) {
     PermissionHandler(req, next, 'claimpaymentupdate')
 }
 
+async function SavepreviewClaimpayment(req, res, next) {
+    PermissionHandler(req, next, 'claimpaymentupdate')
+}
+
 async function DeleteClaimpayment(req, res, next) {
     PermissionHandler(req, next, 'claimpaymentdelete')
 }
@@ -25,5 +29,6 @@ module.exports = {
     GetClaimpayment,
     AddClaimpayment,
     ApproveClaimpayment,
-    DeleteClaimpayment
+    DeleteClaimpayment,
+    SavepreviewClaimpayment
 }

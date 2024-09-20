@@ -36,6 +36,12 @@ const messages = {
                 tr: 'hakediş zaten onaylı',
             }
         },
+        CLAIMPAYMENT_DID_NOT_CALCULATE: {
+            code: 'CLAIMPAYMENT_DID_NOT_CALCULATE', description: {
+                en: 'claim payment did not calculate',
+                tr: 'hakediş hesaplanamadı',
+            }
+        },
     },
     VALIDATION_ERROR: {
         TYPE_REQUIRED: {
@@ -48,6 +54,12 @@ const messages = {
             code: 'UNSUPPORTED_TYPE', description: {
                 en: 'The claim payment type is unsupported',
                 tr: 'hakediş türü desteklenmiyor',
+            }
+        },
+        NAME_REQUIRED: {
+            code: 'NAME_REQUIRED', description: {
+                en: 'The name required',
+                tr: 'Bu işlem için isim gerekli',
             }
         },
         STARTTIME_REQUIRED: {

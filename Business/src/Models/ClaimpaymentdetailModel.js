@@ -10,11 +10,17 @@ module.exports = sequelize.define('claimpaymentdetailModel', {
     ParentID: {
         type: Sequelize.STRING
     },
-   
+    PatientID: {
+        type: Sequelize.STRING
+    },
+
     Daycount: {
         type: Sequelize.INTEGER
     },
     Unitpayment: {
+        type: Sequelize.FLOAT
+    },
+    Calculatedpayment: {
         type: Sequelize.FLOAT
     },
     Calculatedkdv: {

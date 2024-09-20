@@ -5,7 +5,7 @@ import { ROUTES } from '../../Utils/Constants'
 import config from '../../Config'
 import Literals from './Literals'
 import { Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
-import Fileupload from '../../Components/Fileupload'
+import Fileupload, { FileuploadPrepare } from '../../Components/Fileupload'
 
 export default function PatientsFiles(props) {
     const { GetPatient, match, Patientdefines, history, Usagetypes, GetFiles, GetPatientdefines, PatientID, GetUsagetypes, fillFilenotification,
@@ -46,59 +46,14 @@ export default function PatientsFiles(props) {
         }
     })
 
-    const DataCleaner = (data) => {
-        if (data.Id !== undefined) {
-            delete data.Id;
-        }
-        if (data.Createduser !== undefined) {
-            delete data.Createduser;
-        }
-        if (data.Createtime !== undefined) {
-            delete data.Createtime;
-        }
-        if (data.Updateduser !== undefined) {
-            delete data.Updateduser;
-        }
-        if (data.Updatetime !== undefined) {
-            delete data.Updatetime;
-        }
-        if (data.Deleteduser !== undefined) {
-            delete data.Deleteduser;
-        }
-        if (data.Deletetime !== undefined) {
-            delete data.Deletetime;
-        }
-        return data
-    }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        const uncleanfiles = [...selectedFiles]
 
-        let errors = []
-        selectedFiles.forEach(data => {
-            if (!data.Name || data.Name === '') {
-                errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Filenamerequired[Profile.Language] })
-            }
-        });
-        if (errors.length > 0) {
-            errors.forEach(error => {
-                fillFilenotification(error)
-            })
-        } else {
-            const files = uncleanfiles.map(data => {
-                return DataCleaner({ ...data, Usagetype: (data.Usagetype || []).join(',') })
-            });
+        const Id = match?.params?.PatientID || PatientID
+        const reqFiles = FileuploadPrepare(selectedFiles.map(u => ({ ...u, ParentID: Id })), fillFilenotification, Literals, Profile)
 
-            const formData = new FormData();
-            files.forEach((data, index) => {
-                Object.keys(data).forEach(element => {
-                    formData.append(`list[${index}].${element}`, data[element])
-                });
-            })
-            const Id = match?.params?.PatientID || PatientID
-            EditFiles({ data: formData, history, url: Id ? `/Patients/${Id}` : "/Patients" })
-        }
+        EditFiles({ data: reqFiles, history, url: Id ? `/Patients/${Id}` : "/Patients" })
     }
 
     const { isLoading } = Patients

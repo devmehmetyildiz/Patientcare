@@ -225,6 +225,7 @@ const ClaimpaymentparametersEdit = lazy(() => import('./Containers/Claimpaymentp
 
 const Claimpayments = lazy(() => import('./Containers/Claimpayments/Claimpayments'));
 const ClaimpaymentsCreate = lazy(() => import('./Containers/Claimpayments/ClaimpaymentsCreate'));
+const ClaimpaymentsDetail = lazy(() => import('./Containers/Claimpayments/ClaimpaymentsDetail'));
 
 const Patientfollowup = lazy(() => import('./Containers/Patientfollowup/Patientfollowup'));
 
@@ -458,6 +459,7 @@ class Routes extends Component {
 
       { exact: true, path: "/Claimpayments", auth: true, component: Claimpayments, permission: 'claimpaymentview' },
       { exact: true, path: "/Claimpayments/Create", auth: true, component: ClaimpaymentsCreate, permission: 'claimpaymentadd' },
+      { exact: true, path: "/Claimpayments/:ClaimpaymentID", auth: true, component: ClaimpaymentsDetail, permission: 'claimpaymentadd' },
 
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit, permission: 'basic' },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange, permission: 'basic' },

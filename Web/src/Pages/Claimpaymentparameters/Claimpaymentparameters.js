@@ -36,6 +36,8 @@ export default class Claimpaymentparameters extends Component {
             { Header: t('Pages.Claimpaymentparameters.Column.Type'), accessor: row => this.typeCellhandler(row?.Type), Title: true },
             { Header: t('Pages.Claimpaymentparameters.Column.Costumertype'), accessor: row => this.costumertypeCellhandler(row?.CostumertypeID), Subtitle: true, Withtext: true },
             { Header: t('Pages.Claimpaymentparameters.Column.Patientclaimpaymentperpayment'), accessor: 'Patientclaimpaymentperpayment' },
+            { Header: t('Pages.Claimpaymentparameters.Column.Perpaymentkdvpercent'), accessor: 'Perpaymentkdvpercent' },
+            { Header: t('Pages.Claimpaymentparameters.Column.Perpaymentkdvwithholdingpercent'), accessor: 'Perpaymentkdvwithholdingpercent' },
             { Header: t('Pages.Claimpaymentparameters.Column.Issettingactive'), accessor: row => this.boolCellhandler(row?.Issettingactive) },
             { Header: t('Pages.Claimpaymentparameters.Column.Isapproved'), accessor: row => this.boolCellhandler(row?.Isapproved) },
             { Header: t('Pages.Claimpaymentparameters.Column.Approveduser'), accessor: 'Approveduser' },

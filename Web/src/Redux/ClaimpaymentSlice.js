@@ -78,6 +78,28 @@ export const ApproveClaimpayments = createAsyncThunk(
     }
 );
 
+export const SavepreviewClaimpayments = createAsyncThunk(
+    'Claimpayments/SavepreviewClaimpayments',
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.CLAIMPAYMENT}/Savepreview/${data?.Uuid}`);
+            dispatch(fillClaimpaymentnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Claimpayments.Messages.Savepreview'),
+            }));
+            history && history.push(redirectUrl ? redirectUrl : '/Claimpayments');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillClaimpaymentnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const DeleteClaimpayments = createAsyncThunk(
     'Claimpayments/DeleteClaimpayments',
     async (data, { dispatch, getState }) => {
@@ -177,6 +199,17 @@ export const ClaimpaymentsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(ApproveClaimpayments.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(SavepreviewClaimpayments.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(SavepreviewClaimpayments.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(SavepreviewClaimpayments.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

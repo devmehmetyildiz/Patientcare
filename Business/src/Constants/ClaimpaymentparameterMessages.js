@@ -44,6 +44,18 @@ const messages = {
                 tr: 'Bu işlem için hakediş parametre birim ücret gerekli',
             }
         },
+        KDVPERCENT_REQUIRED: {
+            code: 'KDVPERCENT_REQUIRED', description: {
+                en: 'The claim payment parameter kdv percent required',
+                tr: 'Bu işlem için hakediş parametre kdv yüzdesi gerekli',
+            }
+        },
+        KDVWITHHOLDINGPERCENT_REQUIRED: {
+            code: 'KDVWITHHOLDINGPERCENT_REQUIRED', description: {
+                en: 'The claim payment parameter kdvwithholding percent required',
+                tr: 'Bu işlem için hakediş parametre tevkifat yüzdesi gerekli',
+            }
+        },
         CLAIMPAYMENTPARAMETERID_REQUIRED: {
             code: 'CLAIMPAYMENTPARAMETERID_REQUIRED', description: {
                 en: 'The claim payment parameter id required',

@@ -48,6 +48,8 @@ async function AddClaimpayment(req, res, next) {
 
     let validationErrors = []
     const {
+        Name,
+        Info,
         Type,
         Starttime,
         Endtime,
@@ -56,6 +58,9 @@ async function AddClaimpayment(req, res, next) {
     if (!validator.isNumber(Type)) {
         validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
         return next(createValidationError(validationErrors, req.language))
+    }
+    if (!validator.isString(Name)) {
+        return next(createValidationError([messages.VALIDATION_ERROR.NAME_REQUIRED], req.language))
     }
     if (!validator.isISODate(Starttime)) {
         return next(createValidationError([messages.VALIDATION_ERROR.STARTTIME_REQUIRED], req.language))
@@ -99,14 +104,66 @@ async function AddClaimpayment(req, res, next) {
                 return next(createValidationError([messages.VALIDATION_ERROR.UNSUPPORTED_TYPE], req.language))
         }
 
+        if (!CalculationResponse) {
+            return next(createValidationError([messages.ERROR.CLAIMPAYMENT_DID_NOT_CALCULATE], req.language))
+        }
+
+        const {
+            details,
+            Totaldaycount,
+            Totalcalculatedpayment,
+            Totalcalculatedkdv,
+            Totalcalculatedfinal,
+            Totalcalculatedwithholding
+        } = CalculationResponse
+
         await db.claimpaymentModel.create({
-            ...CalculationResponse,
+            Name: Name,
+            Info: Info,
+            Type: Type,
+            Starttime: Starttime,
+            Endtime: Endtime,
             Uuid: ClaimpaymentID,
+            Totaldaycount: Totaldaycount,
+            Totalcalculatedpayment: Totalcalculatedpayment,
+            Totalcalculatedkdv: Totalcalculatedkdv,
+            Totalcalculatedfinal: Totalcalculatedfinal,
+            Totalcalculatedwithholding: Totalcalculatedwithholding,
+            Isonpreview: true,
             Isapproved: false,
             Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
+
+        for (const detail of details) {
+
+            const {
+                PatientID,
+                Daycount,
+                Unitpayment,
+                Calculatedpayment,
+                Calculatedkdv,
+                Calculatedfinal,
+                Calculatedwithholding
+            } = detail
+
+            await db.claimpaymentdetailModel.create({
+                Uuid: uuid(),
+                ParentID: ClaimpaymentID,
+                PatientID: PatientID,
+                Daycount: Daycount,
+                Unitpayment: Unitpayment,
+                Calculatedpayment: Calculatedpayment,
+                Calculatedkdv: Calculatedkdv,
+                Calculatedfinal: Calculatedfinal,
+                Calculatedwithholding: Calculatedwithholding,
+                Createduser: username,
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+
+        }
 
         await CreateNotification({
             type: types.Create,
@@ -154,9 +211,10 @@ async function ApproveClaimpayment(req, res, next) {
             return next(createAccessDenied([messages.ERROR.CLAIMPAYMENT_ALREADY_APPROVED], req.language))
         }
 
-        await db.claimpaymentparameterModel.update({
-            ...claimpayment,
+        await db.claimpaymentModel.update({
             Isapproved: true,
+            Approveduser: username,
+            Approvetime: new Date(),
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid } }, { transaction: t })
@@ -167,6 +225,59 @@ async function ApproveClaimpayment(req, res, next) {
             service: 'Hakedişlet',
             role: 'claimpaymentnotification',
             message: `${Uuid} numaralı hakediş ${username} tarafından Onaylandı.`,
+            pushurl: '/Claimpayments'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetClaimpayments(req, res, next)
+}
+
+async function SavepreviewClaimpayment(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.claimpaymentId
+    console.log('Uuid: ', Uuid);
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const claimpayment = await db.claimpaymentModel.findOne({ where: { Uuid: Uuid } })
+        if (!claimpayment) {
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENT_NOT_FOUND], req.language))
+        }
+        if (claimpayment.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENT_NOT_ACTIVE], req.language))
+        }
+        if (claimpayment.Isapproved === true) {
+            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENT_ALREADY_APPROVED], req.language))
+        }
+
+        await db.claimpaymentModel.update({
+            Isonpreview: false,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid, }, transaction: t })
+
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hakedişler',
+            role: 'claimpaymentnotification',
+            message: `${Uuid} numaralı hakediş ${username} tarafından Kaydedildi.`,
             pushurl: '/Claimpayments'
         })
 
@@ -205,11 +316,16 @@ async function DeleteClaimpayment(req, res, next) {
         }
 
         await db.claimpaymentModel.update({
-            ...claimpayment,
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
         }, { where: { Uuid: Uuid } }, { transaction: t })
+
+        await db.claimpaymentdetailModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { ParentID: Uuid } }, { transaction: t })
 
         await CreateNotification({
             type: types.Delete,
@@ -227,7 +343,7 @@ async function DeleteClaimpayment(req, res, next) {
     GetClaimpayments(req, res, next)
 }
 
-async function CreateClaimpaymentByPatient({ ClaimpaymentID, Type, Starttime, Endtime, next }) {
+async function CreateClaimpaymentByPatient({ Starttime, Endtime, next }) {
 
     let details = []
     let Totaldaycount = 0
@@ -236,10 +352,18 @@ async function CreateClaimpaymentByPatient({ ClaimpaymentID, Type, Starttime, En
     let Totalcalculatedfinal = 0
     let Totalcalculatedwithholding = 0
 
-    Totaldaycount = GetDayCount(Starttime, Endtime)
     const costumertypes = await DoGet(config.services.Setting, 'Costumertypes')
     const cases = await DoGet(config.services.Setting, 'Cases')
-    const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Isactive: true, Issettingactive: true, Isapproved: true } })
+    const claimpaymentparameter = await db.claimpaymentparameterModel.findOne(
+        {
+            where:
+            {
+                Isactive: true,
+                Issettingactive: true,
+                Isapproved: true,
+                Type: claimpaymenttypes.Patient
+            }
+        })
     if (!claimpaymentparameter) {
         return next(createValidationError([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
     }
@@ -247,55 +371,321 @@ async function CreateClaimpaymentByPatient({ ClaimpaymentID, Type, Starttime, En
     if (!selectedcostumertype) {
         return next(createValidationError([messages.ERROR.PARAMETERCOSTUMERTYPE_NOT_FOUND], req.language))
     }
-    const patients = await db.patientModel.findAll({
-        include: [
-            {
-                model: db.patientdefineModel,
-                where: {
-                    CostumertypeID: selectedcostumertype?.Uuid || ''
-                },
-                required: true 
-            }
-        ],
-        where: Sequelize.literal(
-            '`patientModel`.`PatientdefineID` = `patientdefineModel`.`Uuid` AND ' +
-            '`patientModel`.`Isactive` = true AND ' +
-            '`patientModel`.`Ischecked` = true AND ' +
-            '`patientModel`.`Isapproved` = true AND ' +
-            '`patientModel`.`Isalive` = true AND ' +
-            '`patientModel`.`Ispreregistration` = false AND ' +
-            '`patientModel`.`Isleft` = false'
-        )
-    });
+    const patients = await db.sequelize.query(
+        `SELECT patients.* FROM patients
+         JOIN patientdefines ON patients.PatientdefineID = patientdefines.Uuid
+         WHERE patients.Isactive = true
+           AND patients.Ischecked = true
+           AND patients.Isapproved = true
+           AND patients.Isalive = true
+           AND patients.Ispreregistration = false
+           AND patients.Isleft = false
+           AND patientdefines.CostumertypeID = '${selectedcostumertype?.Uuid || ''}'
+           `,
+        {
+            model: db.patientModel,
+            mapToModel: true
+        }
+    );
     if ((patients || []).length <= 0) {
         return next(createValidationError([messages.ERROR.NO_PATIENT_FOUND], req.language))
     }
     const dates = getDateArray(Starttime, Endtime)
     for (const patient of patients) {
-        const patientmovements = await db.patientmovementModel.findAll({ where: { PatientID: patient?.Uuid, } });
+        const patientmovements = await db.patientmovementModel.findAll({ where: { PatientID: patient?.Uuid || '' } });
+
+        let daycount = 0
+
+        for (const date of dates) {
+
+            const filteredMovements = patientmovements.filter(movement => movement.Occureddate <= date);
+            const sortedMovements = filteredMovements.sort((a, b) => b.Occureddate - a.Occureddate);
+            const newestMovement = sortedMovements.length > 0 ? sortedMovements[0] : null;
+
+            if (newestMovement) {
+                const movementcase = cases.find(u => u.Uuid === newestMovement?.CaseID)
+                const isCalculateclaimpayment = movementcase?.Iscalculateprice || false
+
+                if (isCalculateclaimpayment) {
+                    daycount += 1
+                }
+            }
+        }
+
+        const perpayment = claimpaymentparameter?.Patientclaimpaymentperpayment || 0
+        const kdvpercent = claimpaymentparameter?.Perpaymentkdvpercent || 0
+        const kdvwithholdingpercent = claimpaymentparameter?.Perpaymentkdvwithholdingpercent || 0
+
+        const kdv = kdvpercent / 100
+        const kdvwithholding = kdvwithholdingpercent / 100
+
+        const totalpayment = daycount * perpayment
+
+        const calculatedkdv = totalpayment * kdv
+        const calculatedwithholding = calculatedkdv * kdvwithholding
+
+        const totalfinal = totalpayment + calculatedkdv
+
+        Totaldaycount += daycount
+        Totalcalculatedpayment += totalpayment
+        Totalcalculatedkdv += calculatedkdv
+        Totalcalculatedfinal += totalfinal
+        Totalcalculatedwithholding += calculatedwithholding
+
+        details.push({
+            PatientID: patient?.Uuid,
+            Daycount: daycount,
+            Unitpayment: perpayment,
+            Calculatedpayment: totalpayment,
+            Calculatedkdv: calculatedkdv,
+            Calculatedfinal: totalfinal,
+            Calculatedwithholding: calculatedwithholding
+        })
+    }
+
+    return {
+        details,
+        Totaldaycount,
+        Totalcalculatedpayment,
+        Totalcalculatedkdv,
+        Totalcalculatedfinal,
+        Totalcalculatedwithholding,
     }
 }
 
-async function CreateClaimpaymentByBhks(ClaimpaymentID, Type, Starttime, Endtime, next) {
+async function CreateClaimpaymentByBhks({ Starttime, Endtime, next }) {
+    let details = []
+    let Totaldaycount = 0
+    let Totalcalculatedpayment = 0
+    let Totalcalculatedkdv = 0
+    let Totalcalculatedfinal = 0
+    let Totalcalculatedwithholding = 0
 
+    const costumertypes = await DoGet(config.services.Setting, 'Costumertypes')
+    const cases = await DoGet(config.services.Setting, 'Cases')
+    const claimpaymentparameter = await db.claimpaymentparameterModel.findOne(
+        {
+            where:
+            {
+                Isactive: true,
+                Issettingactive: true,
+                Isapproved: true,
+                Type: claimpaymenttypes.Bhks
+            }
+        })
+    if (!claimpaymentparameter) {
+        return next(createValidationError([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
+    }
+    const selectedcostumertype = (costumertypes || []).find(u => u.Uuid === claimpaymentparameter?.CostumertypeID)
+    if (!selectedcostumertype) {
+        return next(createValidationError([messages.ERROR.PARAMETERCOSTUMERTYPE_NOT_FOUND], req.language))
+    }
+    const patients = await db.sequelize.query(
+        `SELECT patients.* FROM patients
+         JOIN patientdefines ON patients.PatientdefineID = patientdefines.Uuid
+         WHERE patients.Isactive = true
+           AND patients.Ischecked = true
+           AND patients.Isapproved = true
+           AND patients.Isalive = true
+           AND patients.Ispreregistration = false
+           AND patients.Isleft = false
+           AND patientdefines.CostumertypeID = '${selectedcostumertype?.Uuid || ''}'
+           `,
+        {
+            model: db.patientModel,
+            mapToModel: true
+        }
+    );
+    if ((patients || []).length <= 0) {
+        return next(createValidationError([messages.ERROR.NO_PATIENT_FOUND], req.language))
+    }
+    const dates = getDateArray(Starttime, Endtime)
+    for (const patient of patients) {
+        const patientmovements = await db.patientmovementModel.findAll({ where: { PatientID: patient?.Uuid || '' } });
+
+        let daycount = 0
+
+        for (const date of dates) {
+
+            const filteredMovements = patientmovements.filter(movement => movement.Occureddate <= date);
+            const sortedMovements = filteredMovements.sort((a, b) => b.Occureddate - a.Occureddate);
+            const newestMovement = sortedMovements.length > 0 ? sortedMovements[0] : null;
+
+            if (newestMovement) {
+                const movementcase = cases.find(u => u.Uuid === newestMovement?.CaseID)
+                const isCalculateclaimpayment = movementcase?.Iscalculateprice || false
+
+                if (isCalculateclaimpayment) {
+                    daycount += 1
+                }
+            }
+
+            if (daycount > 0) {
+                break;
+            }
+        }
+
+        if (daycount > 0) {
+            const perpayment = claimpaymentparameter?.Patientclaimpaymentperpayment || 0
+            const kdvpercent = claimpaymentparameter?.Perpaymentkdvpercent || 0
+            const kdvwithholdingpercent = claimpaymentparameter?.Perpaymentkdvwithholdingpercent || 0
+
+            const kdv = kdvpercent / 100
+            const kdvwithholding = kdvwithholdingpercent / 100
+
+            const totalpayment = 1 * perpayment
+
+            const calculatedkdv = totalpayment * kdv
+            const calculatedwithholding = calculatedkdv * kdvwithholding
+
+            const totalfinal = totalpayment + calculatedkdv
+
+            Totaldaycount += daycount
+            Totalcalculatedpayment += totalpayment
+            Totalcalculatedkdv += calculatedkdv
+            Totalcalculatedfinal += totalfinal
+            Totalcalculatedwithholding += calculatedwithholding
+
+            details.push({
+                PatientID: patient?.Uuid,
+                Daycount: daycount,
+                Unitpayment: perpayment,
+                Calculatedpayment: totalpayment,
+                Calculatedkdv: calculatedkdv,
+                Calculatedfinal: totalfinal,
+                Calculatedwithholding: calculatedwithholding
+            })
+        }
+    }
+
+    return {
+        details,
+        Totaldaycount,
+        Totalcalculatedpayment,
+        Totalcalculatedkdv,
+        Totalcalculatedfinal,
+        Totalcalculatedwithholding,
+    }
 }
 
-async function CreateClaimpaymentByKys(ClaimpaymentID, Type, Starttime, Endtime, next) {
+async function CreateClaimpaymentByKys({ Starttime, Endtime, next }) {
+    let details = []
+    let Totaldaycount = 0
+    let Totalcalculatedpayment = 0
+    let Totalcalculatedkdv = 0
+    let Totalcalculatedfinal = 0
+    let Totalcalculatedwithholding = 0
 
+    const costumertypes = await DoGet(config.services.Setting, 'Costumertypes')
+    const cases = await DoGet(config.services.Setting, 'Cases')
+    const claimpaymentparameter = await db.claimpaymentparameterModel.findOne(
+        {
+            where:
+            {
+                Isactive: true,
+                Issettingactive: true,
+                Isapproved: true,
+                Type: claimpaymenttypes.Kys
+            }
+        })
+    if (!claimpaymentparameter) {
+        return next(createValidationError([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
+    }
+    const selectedcostumertype = (costumertypes || []).find(u => u.Uuid === claimpaymentparameter?.CostumertypeID)
+    if (!selectedcostumertype) {
+        return next(createValidationError([messages.ERROR.PARAMETERCOSTUMERTYPE_NOT_FOUND], req.language))
+    }
+    const patients = await db.sequelize.query(
+        `SELECT patients.* FROM patients
+         JOIN patientdefines ON patients.PatientdefineID = patientdefines.Uuid
+         WHERE patients.Isactive = true
+           AND patients.Ischecked = true
+           AND patients.Isapproved = true
+           AND patients.Isalive = true
+           AND patients.Ispreregistration = false
+           AND patients.Isleft = false
+           AND patientdefines.CostumertypeID = '${selectedcostumertype?.Uuid || ''}'
+           `,
+        {
+            model: db.patientModel,
+            mapToModel: true
+        }
+    );
+    if ((patients || []).length <= 0) {
+        return next(createValidationError([messages.ERROR.NO_PATIENT_FOUND], req.language))
+    }
+    const dates = getDateArray(Starttime, Endtime)
+    for (const patient of patients) {
+        const patientmovements = await db.patientmovementModel.findAll({ where: { PatientID: patient?.Uuid || '' } });
+
+        let daycount = 0
+
+        for (const date of dates) {
+
+            const filteredMovements = patientmovements.filter(movement => movement.Occureddate <= date);
+            const sortedMovements = filteredMovements.sort((a, b) => b.Occureddate - a.Occureddate);
+            const newestMovement = sortedMovements.length > 0 ? sortedMovements[0] : null;
+
+            if (newestMovement) {
+                const movementcase = cases.find(u => u.Uuid === newestMovement?.CaseID)
+                const isCalculateclaimpayment = movementcase?.Iscalculateprice || false
+
+                if (isCalculateclaimpayment) {
+                    daycount += 1
+                }
+            }
+
+            if (daycount > 0) {
+                break;
+            }
+        }
+
+        if (daycount > 0) {
+            const perpayment = claimpaymentparameter?.Patientclaimpaymentperpayment || 0
+            const kdvpercent = claimpaymentparameter?.Perpaymentkdvpercent || 0
+            const kdvwithholdingpercent = claimpaymentparameter?.Perpaymentkdvwithholdingpercent || 0
+
+            const kdv = kdvpercent / 100
+            const kdvwithholding = kdvwithholdingpercent / 100
+
+            const totalpayment = 1 * perpayment
+
+            const calculatedkdv = totalpayment * kdv
+            const calculatedwithholding = calculatedkdv * kdvwithholding
+
+            const totalfinal = totalpayment + calculatedkdv
+
+            Totaldaycount += daycount
+            Totalcalculatedpayment += totalpayment
+            Totalcalculatedkdv += calculatedkdv
+            Totalcalculatedfinal += totalfinal
+            Totalcalculatedwithholding += calculatedwithholding
+
+            details.push({
+                PatientID: patient?.Uuid,
+                Daycount: daycount,
+                Unitpayment: perpayment,
+                Calculatedpayment: totalpayment,
+                Calculatedkdv: calculatedkdv,
+                Calculatedfinal: totalfinal,
+                Calculatedwithholding: calculatedwithholding
+            })
+        }
+
+    }
+
+    return {
+        details,
+        Totaldaycount,
+        Totalcalculatedpayment,
+        Totalcalculatedkdv,
+        Totalcalculatedfinal,
+        Totalcalculatedwithholding,
+    }
 }
 
-async function CreateClaimpaymentByPersonel(ClaimpaymentID, Type, Starttime, Endtime, next) {
+async function CreateClaimpaymentByPersonel({ Starttime, Endtime, next }) {
 
-}
-
-function GetDayCount(Starttime, Endtime) {
-    const oneDay = 1000 * 60 * 60 * 24;
-
-    const differenceInTime = Endtime.getTime() - Starttime.getTime();
-
-    const differenceInDays = Math.round(differenceInTime / oneDay);
-
-    return differenceInDays;
 }
 
 function getDateArray(Starttime, Endtime) {
@@ -303,7 +693,7 @@ function getDateArray(Starttime, Endtime) {
     let currentDate = new Date(Starttime);
 
     while (currentDate <= Endtime) {
-        dateArray.push(currentDate);
+        dateArray.push(new Date(currentDate))
         currentDate.setDate(currentDate.getDate() + 1);
     }
 
@@ -315,5 +705,6 @@ module.exports = {
     GetClaimpayment,
     AddClaimpayment,
     ApproveClaimpayment,
-    DeleteClaimpayment
+    DeleteClaimpayment,
+    SavepreviewClaimpayment
 }

@@ -83,6 +83,10 @@ export default class ClaimpaymentparametersEdit extends Component {
                     <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Claimpaymentparameters.Label.Costumertype')} name="CostumertypeID" options={Costumertypesoptions} formtype='dropdown' />
                     <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Claimpaymentparameters.Label.Patientclaimpaymentperpayment')} name="Patientclaimpaymentperpayment" type='number' min={0} max={999999} step="0.01" />
                   </Form.Group>
+                  <Form.Group widths={'equal'}>
+                    <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Claimpaymentparameters.Label.Perpaymentkdvpercent')} name="Perpaymentkdvpercent" type='number' min={0} max={999999} step="0.01" />
+                    <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Claimpaymentparameters.Label.Perpaymentkdvwithholdingpercent')} name="Perpaymentkdvwithholdingpercent" type='number' min={0} max={999999} step="0.01" />
+                  </Form.Group>
                 </React.Fragment>
                 : null}
             </Form>
@@ -118,6 +122,12 @@ export default class ClaimpaymentparametersEdit extends Component {
     }
     if (!validator.isNumber(data.Patientclaimpaymentperpayment)) {
       errors.push({ type: 'Error', code: t('Pages.Claimpaymentparameters.Page.Header'), description: t('Pages.Claimpaymentparameters.Messages.PerpaymentRequired') })
+    }
+    if (!validator.isNumber(data.Perpaymentkdvpercent)) {
+      errors.push({ type: 'Error', code: t('Pages.Claimpaymentparameters.Page.Header'), description: t('Pages.Claimpaymentparameters.Messages.KdvpercentRequired') })
+    }
+    if (!validator.isNumber(data.Perpaymentkdvwithholdingpercent)) {
+      errors.push({ type: 'Error', code: t('Pages.Claimpaymentparameters.Page.Header'), description: t('Pages.Claimpaymentparameters.Messages.KdvwithholdingRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
