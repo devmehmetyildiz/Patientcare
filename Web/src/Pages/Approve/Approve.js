@@ -170,7 +170,7 @@ export default function Approve(props) {
             const typename = Claimpaymenttypes.find(u => u.value === Type)?.text || t('Common.NoDataFound')
             const costumertypename = (Costumertypes.list || []).find(u => u.Uuid === CostumertypeID)?.Name || t('Common.NoDataFound')
 
-            const name = `${typename} - ${costumertypename}}`
+            const name = `${typename} - ${costumertypename}`
 
             return ({
                 Name: Type ? name : t('Common.NoDataFound'),

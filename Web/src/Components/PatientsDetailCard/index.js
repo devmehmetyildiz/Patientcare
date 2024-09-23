@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Card, Dimmer, Feed, Icon, Image, Label, Loader, Modal, Transition } from 'semantic-ui-react'
-import { PATIENTS_MOVEMENTTYPES_APPROVE, PATIENTS_MOVEMENTTYPES_CANCELAPPROVE, PATIENTS_MOVEMENTTYPES_CANCELCHECK, PATIENTS_MOVEMENTTYPES_CHECK, PATIENTS_MOVEMENTTYPES_COMPLETE, PATIENTS_MOVEMENTTYPES_CREATE, PATIENTS_MOVEMENTTYPES_UPDATE, ROUTES } from '../../Utils/Constants'
+import { PATIENTS_MOVEMENTTYPES_APPROVE, PATIENTS_MOVEMENTTYPES_CANCELAPPROVE, PATIENTS_MOVEMENTTYPES_CANCELCHECK, PATIENTS_MOVEMENTTYPES_CASECHANGE, PATIENTS_MOVEMENTTYPES_CHECK, PATIENTS_MOVEMENTTYPES_COMPLETE, PATIENTS_MOVEMENTTYPES_CREATE, PATIENTS_MOVEMENTTYPES_DEAD, PATIENTS_MOVEMENTTYPES_LEFT, PATIENTS_MOVEMENTTYPES_PLACECHANGE, PATIENTS_MOVEMENTTYPES_UPDATE, ROUTES } from '../../Utils/Constants'
 import config from '../../Config'
 import Formatdate from '../../Utils/Formatdate'
 import axios from 'axios'
@@ -79,15 +79,21 @@ export default function PatientsDetailCard(props) {
         ? (files || []).find(u => (u.Usagetypevalues || []).includes(usagetypePP))
         : (Files.list || []).find(u => u.ParentID === Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
+
     const Movementtypes = [
-        { name: t('Common.Patient.Movementtypes.Createduser'), value: PATIENTS_MOVEMENTTYPES_CREATE },
-        { name: t('Common.Patient.Movementtypes.Updateduser'), value: PATIENTS_MOVEMENTTYPES_UPDATE },
-        { name: t('Common.Patient.Movementtypes.Checkeduser'), value: PATIENTS_MOVEMENTTYPES_CHECK },
-        { name: t('Common.Patient.Movementtypes.Approveduser'), value: PATIENTS_MOVEMENTTYPES_APPROVE },
-        { name: t('Common.Patient.Movementtypes.Completeduser'), value: PATIENTS_MOVEMENTTYPES_COMPLETE },
-        { name: t('Common.Patient.Movementtypes.Cancelcheckeduser'), value: PATIENTS_MOVEMENTTYPES_CANCELCHECK },
-        { name: t('Common.Patient.Movementtypes.Cancelapproveduser'), value: PATIENTS_MOVEMENTTYPES_CANCELAPPROVE },
+        { name: t('Common.Patient.Movementtypes.Create'), value: PATIENTS_MOVEMENTTYPES_CREATE },
+        { name: t('Common.Patient.Movementtypes.Update'), value: PATIENTS_MOVEMENTTYPES_UPDATE },
+        { name: t('Common.Patient.Movementtypes.Check'), value: PATIENTS_MOVEMENTTYPES_CHECK },
+        { name: t('Common.Patient.Movementtypes.Approve'), value: PATIENTS_MOVEMENTTYPES_APPROVE },
+        { name: t('Common.Patient.Movementtypes.Complete'), value: PATIENTS_MOVEMENTTYPES_COMPLETE },
+        { name: t('Common.Patient.Movementtypes.Cancelcheck'), value: PATIENTS_MOVEMENTTYPES_CANCELCHECK },
+        { name: t('Common.Patient.Movementtypes.Cancelapprove'), value: PATIENTS_MOVEMENTTYPES_CANCELAPPROVE },
+        { name: t('Common.Patient.Movementtypes.Left'), value: PATIENTS_MOVEMENTTYPES_LEFT },
+        { name: t('Common.Patient.Movementtypes.Dead'), value: PATIENTS_MOVEMENTTYPES_DEAD },
+        { name: t('Common.Patient.Movementtypes.Casechange'), value: PATIENTS_MOVEMENTTYPES_CASECHANGE },
+        { name: t('Common.Patient.Movementtypes.Placechange'), value: PATIENTS_MOVEMENTTYPES_PLACECHANGE },
     ]
+
 
     const DecoratedMovements = ((Movements || []).map(movement => {
         const user = (Users.list || []).find(u => u.Uuid === movement?.UserID)

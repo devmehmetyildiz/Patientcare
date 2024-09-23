@@ -24,13 +24,15 @@ export default function Log(props) {
         end.setMinutes(end.getMinutes() + 2)
         const starttime = start.toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit' })
         const endtime = end.toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit' })
-        context.setFormstates({
-            ...context.formstates,
-            [`${PAGE_NAME}/Startdate`]: Formatdate(start),
-            [`${PAGE_NAME}/Enddate`]: Formatdate(end),
-            [`${PAGE_NAME}/Starttime`]: starttime,
-            [`${PAGE_NAME}/Endtime`]: endtime
-        })
+        setTimeout(() => {
+            context.setFormstates({
+                ...context.formstates,
+                [`${PAGE_NAME}/Startdate`]: Formatdate(start),
+                [`${PAGE_NAME}/Enddate`]: Formatdate(end),
+                [`${PAGE_NAME}/Starttime`]: starttime,
+                [`${PAGE_NAME}/Endtime`]: endtime
+            })
+        }, 1000);
     }, [])
 
     const dateCellhandler = (value) => {

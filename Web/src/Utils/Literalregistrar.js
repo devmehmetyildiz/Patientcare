@@ -22,7 +22,6 @@ import Rules from "../Pages/Rules/Literals"
 import Beds from "../Pages/Beds/Literals"
 import Rooms from "../Pages/Rooms/Literals"
 import Floors from "../Pages/Floors/Literals"
-import Todos from "../Pages/Todos/Literals"
 import Shiftdefines from "../Pages/Shiftdefines/Literals"
 import Equipmentgroups from "../Pages/Equipmentgroups/Literals"
 import Equipments from "../Pages/Equipments/Literals"
@@ -73,7 +72,6 @@ const Literals = {
     Rooms,
     Beds,
     Floors,
-    Todos,
     Shiftdefines,
     Equipmentgroups,
     Equipments,

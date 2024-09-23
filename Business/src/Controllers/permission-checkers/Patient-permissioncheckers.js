@@ -63,6 +63,9 @@ async function UpdatePatientscase(req, res, next) {
 async function UpdatePatientplace(req, res, next) {
     PermissionHandler(req, next, 'patientupdate')
 }
+async function UpdatePatientmovements(req, res, next) {
+    PermissionHandler(req, next, 'patientupdate')
+}
 
 async function TransferPatientplace(req, res, next) {
     PermissionHandler(req, next, 'patientupdate')
@@ -77,6 +80,10 @@ async function UpdatePatientsupportplans(req, res, next) {
 }
 
 async function DeletePatient(req, res, next) {
+    PermissionHandler(req, next, 'patientdelete')
+}
+
+async function DeletePatientmovement(req, res, next) {
     PermissionHandler(req, next, 'patientdelete')
 }
 
@@ -107,5 +114,7 @@ module.exports = {
     PatientsDead,
     DeletePreregisrations,
     UpdatePatientDates,
-    PatientsMakeactive
+    PatientsMakeactive,
+    DeletePatientmovement,
+    UpdatePatientmovements
 }

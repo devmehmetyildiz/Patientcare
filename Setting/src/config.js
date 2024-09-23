@@ -1,6 +1,5 @@
 require("dotenv").config()
 
-console.log('process.env.CORS_DOMAINS: ', process.env.CORS_DOMAINS);
 const config = {
   env: process.env.APP_ENV,
   port: process.env.APP_PUBLIC_PORT,

@@ -1,5 +1,17 @@
 const messages = {
     ERROR: {
+        PATIENTMOVEMENT_NOT_FOUND: {
+            code: 'PATIENTMOVEMENT_NOT_FOUND', description: {
+                en: 'patient movement not found',
+                tr: 'hasta hareketi bulunamadı',
+            }
+        },
+        PATIENTMOVEMENT_NOT_ACTIVE: {
+            code: 'PATIENTMOVEMENT_NOT_ACTIVE', description: {
+                en: 'patient movement not active',
+                tr: 'hasta hareketi bulunamadı',
+            }
+        },
         PATIENT_NOT_FOUND: {
             code: 'PATIENT_NOT_FOUND', description: {
                 en: 'patient not found',
@@ -57,6 +69,24 @@ const messages = {
 
     },
     VALIDATION_ERROR: {
+        MOVEMENT_END_DATE_TOO_BIG: {
+            code: 'MOVEMENT_END_DATE_TOO_BIG', description: {
+                en: 'The movement end date is too big, you should enter lower date before next movement start',
+                tr: 'Hareket sona erme tarihi çok güncel, geçmiş tarihli hareketlerde bir sonraki hareket tarihinden daha geçmiş hareket tarihi girmen gerekli',
+            }
+        },
+        MOVEMENT_END_DATE_REQUIRED: {
+            code: 'MOVEMENT_END_DATE_REQUIRED', description: {
+                en: 'The movement end date required, system should know end date when you enter past dated movement',
+                tr: 'Bu işlem için hareket sona erme tarihi gerekli, geçmiş tarihli hareket girişlerinde sistem bitiş tarihi bilmeli',
+            }
+        },
+        OCCUREDDATE_REQUIRED: {
+            code: 'OCCUREDDATE_REQUIRED', description: {
+                en: 'The Occured date required',
+                tr: 'Bu işlem için gerçekleşme tarihi gerekli',
+            }
+        },
         COUNTRYID_REQUIRED: {
             code: 'COUNTRYID_REQUIRED', description: {
                 en: 'The CountryID required',
@@ -151,6 +181,18 @@ const messages = {
             code: 'PATIENTID_REQUIRED', description: {
                 en: 'The PatientID required',
                 tr: 'Bu işlem için PatientID gerekli',
+            }
+        },
+        PATIENTMOVEMENTID_REQUIRED: {
+            code: 'PATIENTMOVEMENTID_REQUIRED', description: {
+                en: 'The PatientmovementID required',
+                tr: 'Bu işlem için Hasta Hareket Uuid gerekli',
+            }
+        },
+        UNSUPPORTED_PATIENTMOVEMENTID: {
+            code: 'UNSUPPORTED_PATIENTMOVEMENTID', description: {
+                en: 'The patient movement id is unsupported',
+                tr: 'Tanımsız hasta hareket uuid değeri',
             }
         },
         UNSUPPORTED_PATIENTID: {

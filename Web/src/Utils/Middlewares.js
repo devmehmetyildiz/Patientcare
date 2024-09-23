@@ -3,7 +3,7 @@ import instanse from "../Redux/axios";
 import validator from "./Validator";
 import { fillnotification, handleTokeninterval } from "../Redux/ProfileSlice";
 
-const TOKENINTERVAL = 1000 * 60 * 1
+const TOKENINTERVAL = 1000 * 60 * 5
 const NOTIFICATIONINTERVAL = 1000 * 60 * 5
 
 const tokenMiddleware = store => next => action => {

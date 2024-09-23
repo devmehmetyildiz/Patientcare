@@ -208,6 +208,10 @@ export default function Patientsdetail(props) {
                                     </Dropdown.Item>
                                     <Dropdown.Header icon='setting' content={t('Pages.Patients.PatientsDetail.Button.Settingtag')} />
                                     <Dropdown.Divider />
+                                    <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Movements`) }}>
+                                        <Icon name='conversation' className='right floated' />
+                                        {t('Pages.Patients.PatientsDetail.Button.Editmovements')}
+                                    </Dropdown.Item>
                                     <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Editcash`) }}>
                                         <Icon name='conversation' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editcash')}

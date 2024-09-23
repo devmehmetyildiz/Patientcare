@@ -19,7 +19,13 @@ async function GetPatients(req, res, next) {
         let data = null
         const patients = await db.patientModel.findAll()
         for (const patient of patients) {
-            patient.Movements = await db.patientmovementModel.findAll({ where: { PatientID: patient?.Uuid, Isactive: true } });
+            patient.Movements = await db.patientmovementModel.findAll({
+                where: {
+                    PatientID: patient?.Uuid,
+                    Isactive: true
+                },
+                order: [['Occureddate', 'ASC']]
+            });
             patient.Tododefineuuids = await db.patienttododefineModel.findAll({
                 where: {
                     PatientID: patient.Uuid,
@@ -57,7 +63,13 @@ async function GetPatient(req, res, next) {
 
     try {
         const patient = await db.patientModel.findOne({ where: { Uuid: req.params.patientId } });
-        patient.Movements = await db.patientmovementModel.findAll({ where: { PatientID: patient?.Uuid, Isactive: true } });
+        patient.Movements = await db.patientmovementModel.findAll({
+            where: {
+                PatientID: patient?.Uuid,
+                Isactive: true
+            },
+            order: [['Occureddate', 'ASC']]
+        });
         patient.Tododefineuuids = await db.patienttododefineModel.findAll({
             where: {
                 PatientID: patient.Uuid,
@@ -431,6 +443,66 @@ async function UpdatePatientDates(req, res, next) {
             service: 'Hastalar',
             role: 'patientnotification',
             message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastası ${username} tarafından güncellendi.`,
+            pushurl: '/Patients'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    req.Uuid = Uuid
+    GetPatients(req, res, next)
+}
+
+async function UpdatePatientmovements(req, res, next) {
+
+    let validationErrors = []
+    const {
+        Uuid,
+        Occureddate
+    } = req.body
+
+
+    if (!validator.isISODate(Occureddate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDDATE_REQUIRED)
+    }
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTMOVEMENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTMOVEMENTID)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const patientmovement = await db.patientmovementModel.findOne({ where: { Uuid: Uuid } })
+        if (!patientmovement) {
+            return next(createNotfounderror([messages.ERROR.PATIENTMOVEMENT_NOT_FOUND], req.language))
+        }
+        if (patientmovement.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENTMOVEMENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.patientmovementModel.update({
+            Occureddate: Occureddate,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: patientmovement?.PatientID } })
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait hareket ${username} tarafından güncellendi.`,
             pushurl: '/Patients'
         })
 
@@ -1404,6 +1476,9 @@ async function UpdatePatientcase(req, res, next) {
     const {
         PatientID,
         CaseID,
+        Occureddate,
+        Occuredenddate,
+        Ispastdate
     } = req.body
 
     if (!validator.isUUID(PatientID)) {
@@ -1430,21 +1505,59 @@ async function UpdatePatientcase(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
-        await db.patientModel.update({
-            ...patient,
-            CaseID: CaseID,
-            Updateduser: username,
-            Updatetime: new Date(),
-        }, { where: { Uuid: PatientID }, transaction: t })
+        if (!Ispastdate) {
+            await db.patientModel.update({
+                ...patient,
+                CaseID: CaseID,
+                Updateduser: username,
+                Updatetime: new Date(),
+            }, { where: { Uuid: PatientID }, transaction: t })
+        }
+
+        if (validator.isISODate(Occureddate)) {
+            const patientmovements = await db.patientmovementModel.findAll({
+                where: {
+                    PatientID: patient?.Uuid,
+                    Isactive: true,
+                    Occureddate: {
+                        [Sequelize.Op.gte]: Occureddate
+                    }
+                },
+                order: [['Occureddate', 'ASC']]
+            });
+
+            if ((patientmovements || []).length > 0) {
+
+                const isHaveenddate = validator.isISODate(Occuredenddate)
+                if (!isHaveenddate) {
+                    return next(createAccessDenied([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_REQUIRED], req.language))
+                }
+
+                const nextmovement = patientmovements[0]
+
+                const isEnddatelowerthanfirstmovement = Checkdatelowerthanother(Occuredenddate, patientmovements[0]?.Occureddate)
+                if (!isEnddatelowerthanfirstmovement) {
+                    return next(createAccessDenied([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_TOO_BIG], req.language))
+                }
+
+                if (isEnddatelowerthanfirstmovement) {
+                    await db.patientmovementModel.update({
+                        Occureddate: Occuredenddate,
+                        Updateduser: username,
+                        Updatetime: new Date(),
+                    }, { where: { Uuid: nextmovement?.Uuid || '' }, transaction: t })
+                }
+            }
+        }
 
         await db.patientmovementModel.create({
             Uuid: uuid(),
             PatientID: PatientID,
-            Type: patientmovementtypes.Patientcasechange,
             CaseID: CaseID,
+            Type: patientmovementtypes.Patientcasechange,
             UserID: req?.identity?.user?.Uuid || username,
             Info: '',
-            Occureddate: new Date(),
+            Occureddate: Occureddate,
             Createduser: username,
             Createtime: new Date(),
             Isactive: true
@@ -1479,6 +1592,8 @@ async function UpdatePatientscase(req, res, next) {
             const {
                 PatientID,
                 CaseID,
+                Occureddate,
+                Occuredenddate
             } = data
 
             if (!validator.isUUID(PatientID)) {
@@ -1507,6 +1622,43 @@ async function UpdatePatientscase(req, res, next) {
                 Updatetime: new Date(),
             }, { where: { Uuid: PatientID }, transaction: t })
 
+            if (validator.isUUID(Occureddate)) {
+                const patientmovements = await db.patientmovementModel.findAll({
+                    where: {
+                        PatientID: patient?.Uuid,
+                        Isactive: true,
+                        Occureddate: {
+                            [Sequelize.Op.gte]: Occureddate
+                        }
+                    },
+                    order: [['Occureddate', 'ASC']]
+                });
+
+                if ((patientmovements || []).length > 0) {
+
+                    const isHaveenddate = validator.isUUID(Occuredenddate)
+                    if (!isHaveenddate) {
+                        return next(createAccessDenied([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_REQUIRED], req.language))
+                    }
+
+                    const nextmovement = patientmovements[0]
+
+                    const isEnddatelowerthanfirstmovement = Checkdatelowerthanother(Occuredenddate, patientmovements[0]?.Occureddate)
+                    if (!isEnddatelowerthanfirstmovement) {
+                        return next(createAccessDenied([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_TOO_BIG], req.language))
+                    }
+
+
+                    if (isEnddatelowerthanfirstmovement) {
+                        await db.patientmovementModel.update({
+                            Occureddate: Occuredenddate,
+                            Updateduser: username,
+                            Updatetime: new Date(),
+                        }, { where: { Uuid: nextmovement?.Uuid || '' }, transaction: t })
+                    }
+                }
+            }
+
             await db.patientmovementModel.create({
                 Uuid: uuid(),
                 PatientID: PatientID,
@@ -1514,7 +1666,7 @@ async function UpdatePatientscase(req, res, next) {
                 Type: patientmovementtypes.Patientcasechange,
                 UserID: req?.identity?.user?.Uuid || username,
                 Info: '',
-                Occureddate: new Date(),
+                Occureddate: Occureddate,
                 Createduser: username,
                 Createtime: new Date(),
                 Isactive: true
@@ -2240,6 +2392,58 @@ async function DeletePreregisrations(req, res, next) {
     GetPatients(req, res, next)
 }
 
+async function DeletePatientmovement(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.patientmovementId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTMOVEMENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTMOVEMENTID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const patientmovement = await db.patientmovementModel.findOne({ where: { Uuid: Uuid } })
+        if (!patientmovement) {
+            return next(createNotfounderror([messages.ERROR.PATIENTMOVEMENT_NOT_FOUND], req.language))
+        }
+        if (patientmovement.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENTMOVEMENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.patientmovementModel.update({
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: patientmovement?.PatientID } })
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait hareket ${username} tarafından silindi.`,
+            pushurl: '/Patients'
+        })
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatients(req, res, next)
+}
+
 async function Createfromtemplate(req, res, next) {
 
     const body = req.body
@@ -2342,7 +2546,7 @@ async function Createfromtemplate(req, res, next) {
                 UserID: "System",
                 Info: '',
                 Occureddate: external.Occureddate,
-                Createduser: username,
+                Createduser: "System",
                 Createtime: new Date(),
                 Isactive: true
             }, { transaction: t })
@@ -2355,6 +2559,19 @@ async function Createfromtemplate(req, res, next) {
         return next(sequelizeErrorCatcher(error))
     }
     return res.status(200).json({ message: "success" })
+}
+
+function Checkdatelowerthanother(startDate, endDate) {
+
+    const StartDate = new Date(startDate)
+    const EndDate = new Date(endDate)
+
+    if (StartDate.getTime() >= EndDate.getTime()) {
+        return false
+    } else {
+        return true
+    }
+
 }
 
 module.exports = {
@@ -2380,5 +2597,7 @@ module.exports = {
     DeletePreregisrations,
     PatientsDead,
     UpdatePatientDates,
-    PatientsMakeactive
+    PatientsMakeactive,
+    DeletePatientmovement,
+    UpdatePatientmovements
 }

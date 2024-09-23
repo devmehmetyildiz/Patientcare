@@ -17,11 +17,9 @@ import PatientSlice from "./PatientSlice";
 import WarehouseSlice from "./WarehouseSlice"
 import TododefineSlice from "./TododefineSlice";
 import TodogroupdefineSlice from "./TodogroupdefineSlice";
-import PatientmovementSlice from "./PatientmovementSlice";
 import PeriodSlice from "./PeriodSlice";
 import MailsettingSlice from "./MailsettingSlice";
 import PrinttemplateSlice from "./PrinttemplateSlice";
-import TodoSlice from "./TodoSlice";
 import RuleSlice from "./RuleSlice";
 import RoomSlice from "./RoomSlice";
 import BedSlice from "./BedSlice";
@@ -78,11 +76,9 @@ const Slices = combineReducers({
     Warehouses: WarehouseSlice,
     Tododefines: TododefineSlice,
     Todogroupdefines: TodogroupdefineSlice,
-    Patientmovements: PatientmovementSlice,
     Periods: PeriodSlice,
     Mailsettings: MailsettingSlice,
     Printtemplates: PrinttemplateSlice,
-    Todos: TodoSlice,
     Shiftdefines: ShiftdefineSlice,
     Rules: RuleSlice,
     Equipments: EquipmentSlice,

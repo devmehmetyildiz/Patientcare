@@ -44,6 +44,7 @@ const CostumertypesEdit = lazy(() => import('./Containers/Costumertypes/Costumer
 const Patients = lazy(() => import('./Containers/Patients/Patients'));
 const PatientsDetail = lazy(() => import('./Containers/Patients/PatientsDetail'));
 const PatientsEditcash = lazy(() => import('./Containers/Patients/PatientsEditcash'));
+const PatientsMovements = lazy(() => import('./Containers/Patients/PatientMovements'));
 const PatientsEditsupportplan = lazy(() => import('./Containers/Patients/PatientsEditsupportplan'));
 const PatientsEditroutine = lazy(() => import('./Containers/Patients/PatientsEditroutine'));
 const PatientsFiles = lazy(() => import('./Containers/Patients/PatientsFiles'));
@@ -114,8 +115,6 @@ const TodogroupdefinesEdit = lazy(() => import('./Containers/Todogroupdefines/To
 const Periods = lazy(() => import('./Containers/Periods/Periods'));
 const PeriodsCreate = lazy(() => import('./Containers/Periods/PeriodsCreate'));
 const PeriodsEdit = lazy(() => import('./Containers/Periods/PeriodsEdit'));
-
-const Todos = lazy(() => import('./Containers/Todos/Todos'));
 
 const Mailsettings = lazy(() => import('./Containers/Mailsettings/Mailsettings'));
 const MailsettingsCreate = lazy(() => import('./Containers/Mailsettings/MailsettingsCreate'));
@@ -310,6 +309,7 @@ class Routes extends Component {
       { exact: true, path: "/Patients", auth: true, component: Patients, permission: 'patientview' },
       { exact: true, path: "/Patients/:PatientID", auth: true, component: PatientsDetail, permission: 'patientview' },
       { exact: true, path: "/Patients/:PatientID/Editcash", auth: true, component: PatientsEditcash, permission: 'patientupdate' },
+      { exact: true, path: "/Patients/:PatientID/Movements", auth: true, component: PatientsMovements, permission: 'patientupdate' },
       { exact: true, path: "/Patients/:PatientID/Editsupportplan", auth: true, component: PatientsEditsupportplan, permission: 'patientupdate' },
       { exact: true, path: "/Patients/:PatientID/Editroutine", auth: true, component: PatientsEditroutine, permission: 'patientupdate' },
       { exact: true, path: "/Patients/:PatientID/Editfile", auth: true, component: PatientsFiles, permission: 'patientupdate' },
@@ -336,8 +336,6 @@ class Routes extends Component {
       { exact: true, path: "/Mailsettings", auth: true, component: Mailsettings, permission: 'mailsettingview' },
       { exact: true, path: "/Mailsettings/Create", auth: true, component: MailsettingsCreate, permission: 'mailsettingadd' },
       { exact: true, path: "/Mailsettings/:MailsettingID/Edit", auth: true, component: MailsettingsEdit, permission: 'mailsettingupdate' },
-
-      { exact: true, path: "/Todos", auth: true, component: Todos, permission: 'todoscreen' },
 
       { exact: true, path: "/Printtemplates", auth: true, component: Printtemplates, permission: 'printtemplateview' },
       { exact: true, path: "/Printtemplates/Create", auth: true, component: PrinttemplatesCreate, permission: 'printtemplateadd' },

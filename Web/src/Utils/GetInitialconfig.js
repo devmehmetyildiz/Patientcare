@@ -3,7 +3,7 @@ const GetInitialconfig = (Profile, metaKey) => {
     const initialConfig = {
         hiddenColumns: tableMeta ? JSON.parse(tableMeta.Config).filter(u => u.isVisible === false).map(item => {
             return item.key
-        }) : ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
+        }) : ["Id", "Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"],
         columnOrder: tableMeta ? JSON.parse(tableMeta.Config).sort((a, b) => a.order - b.order).map(item => {
             return item.key
         }) : [],
