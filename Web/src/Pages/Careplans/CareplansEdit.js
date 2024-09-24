@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Card, Dropdown, Form, Icon, Image, Label, Table } from 'semantic-ui-react'
+import { Breadcrumb, Button, Card, Dropdown, Form, Image, Label, Table } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
-import { ROUTES } from '../../Utils/Constants'
 import {
   Contentwrapper, Footerwrapper, FormInput, Gobackbutton,
-  Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
+  Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Profilephoto, Submitbutton
 } from '../../Components'
-import config from '../../Config'
 import Formatdate from '../../Utils/Formatdate'
 export default class CareplansEdit extends Component {
 
@@ -86,7 +84,7 @@ export default class CareplansEdit extends Component {
   render() {
     const {
       Careplans, Supportplans, Supportplanlists, Files, Patients, Helpstatus, Makingtypes, Ratings, Requiredperiods,
-      Patientdefines, Usagetypes, Profile, history, closeModal } = this.props
+      Patientdefines, Usagetypes, Profile, history, closeModal, fillCareplannotification } = this.props
 
     const isloadingStatus =
       Supportplans.isLoading ||
@@ -217,12 +215,11 @@ export default class CareplansEdit extends Component {
                       </div>
                     </div>
                     {patientPP
-                      ? <Image
-                        alt='pp'
-                        floated='right'
-                        size='tiny'
-                        rounded
-                        src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPP?.Uuid}`}
+                      ? <Profilephoto
+                        fileID={patientPP?.Uuid}
+                        fillnotification={fillCareplannotification}
+                        Profile={Profile}
+                        Imgheigth="40px"
                       />
                       : <Image
                         floated='right'

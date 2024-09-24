@@ -69,7 +69,7 @@ export const AddFiles = createAsyncThunk(
             const response = await axios({
                 method: `post`,
                 url: config.services.File + `${ROUTES.FILE}`,
-                headers: { Authorization: "Bearer  " + localStorage.getItem('patientcare'), contentType: 'mime/form-data' },
+                headers: { Authorization: "Bearer " + localStorage.getItem('patientcare'), contentType: 'mime/form-data' },
                 data: data
             })
             dispatch(fillFilenotification({
@@ -102,7 +102,7 @@ export const EditFiles = createAsyncThunk(
             const response = await axios({
                 method: `put`,
                 url: config.services.File + `${ROUTES.FILE}`,
-                headers: { Authorization: "Bearer  " + localStorage.getItem('patientcare'), contentType: 'mime/form-data' },
+                headers: { Authorization: "Bearer " + localStorage.getItem('patientcare'), contentType: 'mime/form-data' },
                 data: data
             })
             dispatch(fillFilenotification({

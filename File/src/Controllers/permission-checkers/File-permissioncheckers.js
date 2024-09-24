@@ -1,5 +1,6 @@
 const PermissionHandler = require("../../Utilities/PermissionHandler")
 
+
 async function GetFiles(req, res, next) {
     PermissionHandler(req, next, 'filescreen')
 }

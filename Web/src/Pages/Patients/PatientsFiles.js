@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Header, Icon } from 'semantic-ui-react'
-import { ROUTES } from '../../Utils/Constants'
-import config from '../../Config'
 import Literals from './Literals'
-import { Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Profilephoto, Submitbutton } from '../../Components'
 import Fileupload, { FileuploadPrepare } from '../../Components/Fileupload'
 
 export default function PatientsFiles(props) {
@@ -58,7 +56,8 @@ export default function PatientsFiles(props) {
 
     const { isLoading } = Patients
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
-    const patientPp = (Files.list || []).find(u => u.ParentID === patient?.Uuid && u.Usagetype === 'PP' && u.Isactive)
+    const usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
+    const file = (Files.list || []).find(u => u.ParentID === patient?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
     const Id = match?.params?.PatientID || PatientID
 
 
@@ -81,8 +80,12 @@ export default function PatientsFiles(props) {
                 <Pagedivider />
                 <Contentwrapper>
                     <Header as='h2' icon textAlign='center'>
-                        {patientPp
-                            ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPp?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
+                        {file
+                            ? <Profilephoto
+                                fileID={file?.Uuid}
+                                fillnotification={fillFilenotification}
+                                Profile={Profile}
+                            />
                             : <Icon name='users' circular />}
                         <Header.Content>{`${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`}</Header.Content>
                     </Header>

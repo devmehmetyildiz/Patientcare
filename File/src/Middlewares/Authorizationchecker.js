@@ -1,6 +1,5 @@
 const config = require('../Config')
-const messages = require('../Constants/Messages')
-const { sequelizeErrorCatcher, createAutherror, requestErrorCatcher } = require('../Utilities/Error')
+const { requestErrorCatcher } = require('../Utilities/Error')
 const createValidationError = require('../Utilities/Error').createValidation
 const createErrorList = require('../Utilities/Error').createList
 const axios = require('axios')
@@ -14,9 +13,8 @@ const INVALID_ACCESS_TOKEN = createErrorList('FORBIDDEN', 'INVALID_ACCESS_TOKEN'
     tr: 'Erişim reddedildi. Geçersiz erişim anahtarı',
 })
 
-
 const PUBLIC_URLS = [
-    { method: 'get', url: 'Files/Downloadfile' }
+
 ]
 
 async function authorizationChecker(req, res, next) {
@@ -135,12 +133,6 @@ function getBearerToken(headers) {
 }
 
 function isPublicUrlRequest(method, url) {
-    if (url.includes('Files/Downloadfile')) {
-        if (url.split('/').length > 3) {
-            let parsedurl = url.split('/')
-            url = parsedurl[1] + '/' + parsedurl[2]
-        }
-    }
     let res = false
     let route = PUBLIC_URLS.find(u => u.method === method.toLowerCase() && u.url === url)
     if (route) {

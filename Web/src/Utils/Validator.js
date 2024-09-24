@@ -1,3 +1,7 @@
+const isFile = function (value) {
+  return value instanceof File;
+}
+
 const isUUID = function (value) {
   return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(value);
 }
@@ -94,7 +98,8 @@ const validator = {
   isNumber,
   isObject,
   isUUID,
-  isCountryID
+  isCountryID,
+  isFile
 }
 
 export default validator

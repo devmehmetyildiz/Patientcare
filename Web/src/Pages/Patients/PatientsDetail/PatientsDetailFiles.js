@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
-import { Dimmer, Icon, Loader, Table } from 'semantic-ui-react'
+import { Icon, Table } from 'semantic-ui-react'
 import validator from '../../../Utils/Validator'
-import axios from 'axios'
-import config from '../../../Config'
-import { ROUTES } from '../../../Utils/Constants'
+import { Filepreview } from '../../../Components'
 
 export default function PatientsDetailFiles(props) {
   const { patient, Files, Usagetypes, Profile, fillnotification } = props
-  const [fileDownloading, setfileDownloading] = useState(false)
+  const [selectedfile, setSelectedfile] = useState(null)
+
   const t = Profile?.i18n?.t
 
   const patientfiles = (Files.list || []).filter(u => u.ParentID === patient?.Uuid)
@@ -20,39 +19,14 @@ export default function PatientsDetailFiles(props) {
     return { label: file?.Name, link: file?.Uuid, usagetype: usagetype }
   })
 
-  const downloadFile = (fileID, fileName) => {
-    setfileDownloading(true)
-    axios.get(`${config.services.File}${ROUTES.FILE}/Downloadfile/${fileID}`, {
-      responseType: 'blob'
-    }).then((res) => {
-      setfileDownloading(false)
-      const fileType = res.headers['content-type']
-      const blob = new Blob([res.data], {
-        type: fileType
-      });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      if (fileType.includes('pdf')) {
-        window.open(url)
-        a.href = null;
-        window.URL.revokeObjectURL(url);
-      }
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    }).catch((err) => {
-      setfileDownloading(false)
-      fillnotification([{ type: 'Error', code: t('Pages.Patients.PatientsDetail.PatientDetailFiles.Header'), description: err.message }])
-      console.log(err.message)
-    });
-  }
-
   return (
     <div className='w-full px-4 mt-4'>
-      <Dimmer active={fileDownloading}>
-        <Loader />
-      </Dimmer>
+      <Filepreview
+        fileurl={selectedfile}
+        setFileurl={setSelectedfile}
+        Profile={Profile}
+        fillnotification={fillnotification}
+      />
       <div className='py-4 px-4 bg-white shadow-lg w-full font-poppins rounded-lg flex flex-col gap-4 justify-center items-center   min-w-[250px]'>
         <div className='w-full flex justify-start items-start'>
           <div className='font-bold text-xl font-poppins'> {t('Pages.Patients.PatientsDetail.PatientDetailFiles.Header')}</div>
@@ -76,7 +50,7 @@ export default function PatientsDetailFiles(props) {
                   <Table.Cell>{file?.usagetype}</Table.Cell>
                   <Table.Cell>
                     {validator.isUUID(file.link) &&
-                      <div className='cursor-pointer' onClick={() => { downloadFile(file.link, file.label) }}>
+                      <div className='cursor-pointer' onClick={() => { setSelectedfile(file.link) }}>
                         <Icon color='blue' name='download' />
                       </div>
                     }

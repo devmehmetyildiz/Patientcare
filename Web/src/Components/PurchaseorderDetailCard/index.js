@@ -1,11 +1,15 @@
 import React, { useContext, useState } from 'react'
 import { Card, Dimmer, Feed, Icon, Label, Loader, Modal, Transition } from 'semantic-ui-react'
-import axios from 'axios'
-import config from '../../Config'
-import { DELIVERY_TYPE_PATIENT, DELIVERY_TYPE_WAREHOUSE, PURCHASEORDER_MOVEMENTTYPES_APPROVE, PURCHASEORDER_MOVEMENTTYPES_CANCELAPPROVE, PURCHASEORDER_MOVEMENTTYPES_CANCELCHECK, PURCHASEORDER_MOVEMENTTYPES_CHECK, PURCHASEORDER_MOVEMENTTYPES_COMPLETE, PURCHASEORDER_MOVEMENTTYPES_CREATE, PURCHASEORDER_MOVEMENTTYPES_UPDATE, ROUTES } from '../../Utils/Constants'
+import {
+    DELIVERY_TYPE_PATIENT, DELIVERY_TYPE_WAREHOUSE, PURCHASEORDER_MOVEMENTTYPES_APPROVE,
+    PURCHASEORDER_MOVEMENTTYPES_CANCELAPPROVE, PURCHASEORDER_MOVEMENTTYPES_CANCELCHECK,
+    PURCHASEORDER_MOVEMENTTYPES_CHECK, PURCHASEORDER_MOVEMENTTYPES_COMPLETE,
+    PURCHASEORDER_MOVEMENTTYPES_CREATE, PURCHASEORDER_MOVEMENTTYPES_UPDATE
+} from '../../Utils/Constants'
 import Formatdate from '../../Utils/Formatdate'
 import { FormContext } from '../../Provider/FormProvider'
 import { Link } from 'react-router-dom'
+import Filepreview from '../Filepreview'
 
 export default function PurchaseorderDetailCard(props) {
 
@@ -36,8 +40,8 @@ export default function PurchaseorderDetailCard(props) {
 
     const selected_record = usecontext ? context.getForm(PAGE_NAME) : Purchaseorders?.selected_record
 
-    const [fileDownloading, setfileDownloading] = useState(false)
     const [movementsOpen, setMovementsOpen] = useState(false)
+    const [selectedfile, setSelectedfile] = useState(null)
 
     const isLoadingstatus =
         Users.isLoading ||
@@ -50,8 +54,7 @@ export default function PurchaseorderDetailCard(props) {
         Patients.isLoading ||
         Patientdefines.isLoading ||
         Cases.isLoading ||
-        Departments.isLoading ||
-        fileDownloading
+        Departments.isLoading
 
     const {
         Purchaseno,
@@ -72,34 +75,6 @@ export default function PurchaseorderDetailCard(props) {
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
 
     const revieveruser = (Users.list || []).find(u => u.Uuid === ReceiveruserID)
-
-    const downloadFile = (fileID, fileName, Profile) => {
-        setfileDownloading(true)
-        axios.get(`${config.services.File}${ROUTES.FILE}/Downloadfile/${fileID}`, {
-            responseType: 'blob'
-        }).then((res) => {
-            setfileDownloading(false)
-            const fileType = res.headers['content-type']
-            const blob = new Blob([res.data], {
-                type: fileType
-            });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            if (fileType.includes('pdf')) {
-                window.open(url)
-                a.href = null;
-                window.URL.revokeObjectURL(url);
-            }
-            a.href = url;
-            a.download = fileName;
-            a.click();
-            window.URL.revokeObjectURL(url);
-        }).catch((err) => {
-            setfileDownloading(false)
-            fillnotification([{ type: 'Error', code: t('Pages.Purchaseorder.Page.Header'), description: err.message }])
-            console.log(err.message)
-        });
-    }
 
     const Movementtypes = [
         { name: t('Pages.PurchaseorderDetailCard.Label.Createduser'), value: PURCHASEORDER_MOVEMENTTYPES_CREATE },
@@ -126,6 +101,12 @@ export default function PurchaseorderDetailCard(props) {
 
     return (
         <Modal.Content image>
+            <Filepreview
+                fileurl={selectedfile}
+                setFileurl={setSelectedfile}
+                Profile={Profile}
+                fillnotification={fillnotification}
+            />
             {isLoadingstatus
                 ? <Dimmer active inverted>
                     <Loader inverted />
@@ -166,8 +147,14 @@ export default function PurchaseorderDetailCard(props) {
                                         <Card.Description>
                                             <div className='w-full gap-2 justify-start items-start flex flex-col'>
                                                 {files.map(file => {
-                                                    return <div className='cursor-pointer flex flex-row' onClick={() => { downloadFile(file.Uuid, file.Name, Profile) }}>
-                                                        <p>{`${file?.Name || Notfound} (${file?.Usagetype || Notfound})`}</p> <Icon color='blue' name='download' />
+                                                    return <div className='cursor-pointer flex flex-row'
+                                                        onClick={() => {
+                                                            if (!usecontext) {
+                                                                setSelectedfile(file?.Uuid)
+                                                            }
+                                                        }}
+                                                    >
+                                                        <p>{`${file?.Name || Notfound} (${file?.Usagetype || Notfound})`}</p> {!usecontext ? <Icon color='blue' name='download' /> : null}
                                                     </div>
                                                 })}
                                             </div>

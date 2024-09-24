@@ -1,19 +1,17 @@
 import React from 'react'
-import config from '../../../Config'
-import { ROUTES } from '../../../Utils/Constants'
 import { Button, Header, Icon } from 'semantic-ui-react'
 import { useHistory } from 'react-router-dom'
-import Formatdate from '../../../Utils/Formatdate'
+import { Profilephoto } from '../../../Components'
 
 export default function UserDetailProfile(props) {
 
-    const { user, Files, Usagetypes, Roles, Profile } = props
+    const { user, Files, Usagetypes, Roles, Profile, fillnotification } = props
 
     const history = useHistory()
     const t = Profile?.i18n?.t
 
     const usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
-    const files = (Files.list || []).find(u => u.ParentID === user?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
+    const ppFile = (Files.list || []).find(u => u.ParentID === user?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
     const userName = `${user?.Name} ${user?.Surname}` || t('Common.NoDataFound')
     const Isworker = user?.Isworker ? true : false
@@ -21,10 +19,15 @@ export default function UserDetailProfile(props) {
         return (Roles?.list || []).find(role => role?.Uuid === u)?.Name || t('Common.NoDataFound')
     }).join(',')
 
+
     return (
         <div className='relative bg-white shadow-lg w-full  rounded-lg flex flex-col justify-center items-center  p-4 m-4 mt-0 min-w-[250px]'>
-            {files
-                ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${files?.Uuid}`} className="rounded-full" style={{ width: '100px', height: '100px' }} />
+            {ppFile
+                ? <Profilephoto
+                    fileID={ppFile?.Uuid}
+                    fillnotification={fillnotification}
+                    Profile={Profile}
+                />
                 : <Header className='!m-0 !p-0' as='h2' icon textAlign='center'><Icon name='users' circular /></Header>
             }
             <div className='mt-4 !text-[#2355a0] text-2xl font-extrabold' >{userName}</div>

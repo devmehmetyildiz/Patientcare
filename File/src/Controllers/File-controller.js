@@ -218,6 +218,8 @@ async function UpdateFile(req, res, next) {
     }
 
     //  const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
 
         for (const filedata of requestArray) {
@@ -235,10 +237,9 @@ async function UpdateFile(req, res, next) {
                 }
                 await db.fileModel.create({
                     ...filedata,
-                    Createduser: "System",
+                    Createduser: username,
                     Createtime: new Date(),
                     Isactive: true
-                    //  }, { transaction: t })
                 })
             } else {
 
@@ -250,29 +251,42 @@ async function UpdateFile(req, res, next) {
                     return next(createAccessDenied([messages.ERROR.FILE_NOT_ACTIVE], req.language))
                 }
                 if (filedata.WillDelete) {
-                    const isFileremoved = await Removefileandfolderfromftp(filedata)
-                    if (!isFileremoved) {
-                        return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
-                    }
-                    // await db.fileModel.destroy({ where: { Uuid: file.Uuid }, transaction: t });
-                    await db.fileModel.destroy({ where: { Uuid: file.Uuid } });
+                    await db.fileModel.update({
+                        Deleteduser: username,
+                        Deletetime: new Date(),
+                        Isactive: false
+                    }, { where: { Uuid: filedata.Uuid } })
                 } else {
                     if (filedata.fileChanged) {
-                        const isFileremoved = await Removefileandfolderfromftp(file)
-                        if (!isFileremoved) {
-                            return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
-                        }
-                        await Uploadfiletoftp(filedata)
+                        await db.fileModel.update({
+                            ...filedata,
+                            Deleteduser: username,
+                            Deletetime: new Date(),
+                        }, { where: { Uuid: filedata.Uuid } })
+                        let newfileuuid = uuid()
+                        filedata.Filefolder = newfileuuid
+                        filedata.Uuid = newfileuuid
                         filedata.Filetype = filedata.File.type
                         filedata.Filename = filedata.File.name
+                        const fileuploaded = await Uploadfiletoftp(filedata)
+                        if (!fileuploaded) {
+                            return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
+                        }
+                        await db.fileModel.create({
+                            ...filedata,
+                            Createduser: username,
+                            Createtime: new Date(),
+                            Isactive: true
+                        })
+
+                    } else {
+                        delete filedata.Id
+                        await db.fileModel.update({
+                            ...filedata,
+                            Updateduser: username,
+                            Updatetime: new Date(),
+                        }, { where: { Uuid: filedata.Uuid } })
                     }
-                    delete filedata.Id
-                    await db.fileModel.update({
-                        ...filedata,
-                        Updateduser: "System",
-                        Updatetime: new Date(),
-                        //  }, { where: { Uuid: filedata.Uuid } }, { transaction: t })
-                    }, { where: { Uuid: filedata.Uuid } })
                 }
             }
         }
@@ -299,6 +313,8 @@ async function DeleteFile(req, res, next) {
     }
 
     const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
     try {
         const file = await db.fileModel.findOne({ where: { Uuid: req.params.fileId } });
         if (!file) {
@@ -307,11 +323,11 @@ async function DeleteFile(req, res, next) {
         if (file.Isactive === false) {
             return next(createAccessDenied([messages.ERROR.FILE_NOT_ACTIVE], req.language))
         }
-        const isremoved = await Removefileandfolderfromftp(file)
-        if (!isremoved) {
-            return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
-        }
-        await db.fileModel.destroy({ where: { Uuid: Uuid }, transaction: t });
+
+        await db.fileModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+        }, { where: { Uuid: Uuid }, transaction: t })
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -342,8 +358,8 @@ async function DeleteFileByParentID(req, res, next) {
         if ((files || []).length > 0) {
             for (const file of files) {
                 await db.fileModel.update({
-                    Updateduser: username,
-                    Updatetime: new Date(),
+                    Deleteduser: username,
+                    Deletetime: new Date(),
                     Isactive: false
                 }, { where: { Uuid: file?.Uuid } }, { transaction: t })
             }

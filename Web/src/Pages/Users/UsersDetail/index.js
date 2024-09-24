@@ -53,6 +53,7 @@ export default function UsersDetail(props) {
                             Files={Files}
                             Usagetypes={Usagetypes}
                             Profile={Profile}
+                            fillnotification={fillUsernotification}
                         />
                         <UserDetailCase
                             user={user}

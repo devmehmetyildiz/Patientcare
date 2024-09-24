@@ -1,8 +1,7 @@
 import React, { useState } from "react"
 import { Button, Card, Form, Icon, Image, Label, Popup, Table } from "semantic-ui-react"
-import config from "../../Config";
-import { ANNUALTYPES, ROUTES } from "../../Utils/Constants";
-import { FormInput } from "../../Components";
+import { ANNUALTYPES } from "../../Utils/Constants";
+import { FormInput, Profilephoto } from "../../Components";
 import Literals from "./Literals";
 import validator from "../../Utils/Validator";
 
@@ -68,12 +67,11 @@ export default function PersonelshiftsPrepareShiftsdetailDaycell({ personelshift
                 <Card>
                     <Card.Content>
                         {ishavePP
-                            ? <Image
-                                floated='right'
-                                size='mini'
-                                className="rounded-full"
-                                alt='pp'
-                                src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${ishavePP?.Uuid}`}
+                            ? <Profilephoto
+                                fileID={ishavePP?.Uuid}
+                                fillnotification={fillPersonelshiftnotification}
+                                Profile={Profile}
+                                Imgheigth="40px"
                             />
                             : <Image
                                 floated='right'

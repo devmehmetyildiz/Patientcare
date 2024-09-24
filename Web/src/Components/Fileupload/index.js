@@ -1,11 +1,9 @@
 import React, { useState, useCallback } from 'react'
-import { Button, Dimmer, Dropdown, Form, Icon, Label, Loader, Table } from 'semantic-ui-react'
-import { ROUTES } from '../../Utils/Constants'
-import config from '../../Config'
+import { Button, Dropdown, Form, Icon, Label, Table } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { useDropzone } from 'react-dropzone';
-import axios from 'axios'
 import Literals from './Literals'
+import { Filepreview } from '..'
 
 export const FileuploadPrepare = (files, notification, _Literals, Profile) => {
 
@@ -35,8 +33,6 @@ export const FileuploadPrepare = (files, notification, _Literals, Profile) => {
         }
         return data
     }
-
-
 
     const uncleanfiles = [...files]
 
@@ -73,7 +69,7 @@ export const FileuploadPrepare = (files, notification, _Literals, Profile) => {
 export default function Fileupload(props) {
 
     const { fillnotification, Usagetypes, Profile, _Literals, selectedFiles, setselectedFiles } = props
-    const [fileDownloading, setfileDownloading] = useState(false)
+    const [selectedfile, setSelectedfile] = useState(null)
 
     const AddNewFile = () => {
         setselectedFiles([...selectedFiles, {
@@ -88,7 +84,7 @@ export default function Fileupload(props) {
             File: {},
             key: Math.random(),
             WillDelete: false,
-            fileChanged: true,
+            fileChanged: false,
             Order: selectedFiles.length,
         }])
     }
@@ -97,7 +93,7 @@ export default function Fileupload(props) {
         const index = selectedFiles.findIndex(file => file.key === key)
         let selectedfiles = selectedFiles
 
-        if (selectedfiles[index].Uuid) {
+        if (validator.isUUID(selectedfiles[index].Uuid)) {
             selectedfiles[index].WillDelete = !(selectedfiles[index].WillDelete)
             setselectedFiles([...selectedfiles])
         } else {
@@ -105,20 +101,6 @@ export default function Fileupload(props) {
             files.filter(file => file.Order > order).forEach(file => file.Order--)
             setselectedFiles([...files])
         }
-    }
-
-    const handleFilechange = (key) => {
-        const index = selectedFiles.findIndex(file => file.key === key)
-        let selectedfiles = selectedFiles
-        if (selectedfiles[index].WillDelete) {
-            return
-        }
-        if (selectedfiles[index].fileChanged) {
-            return
-        }
-        selectedfiles[index].fileChanged = !(selectedfiles[index].fileChanged)
-        selectedfiles[index].File = {}
-        setselectedFiles([...selectedfiles])
     }
 
     const selectedFilesChangeHandler = (key, property, value) => {
@@ -133,7 +115,6 @@ export default function Fileupload(props) {
                 selectedfiles[index][property] = value.target.files[0]
                 selectedfiles[index].Filename = selectedfiles[index].File?.name
                 selectedfiles[index].Name = selectedfiles[index].File?.name
-                selectedfiles[index].fileChanged = false
             }
         } else {
             selectedfiles[index][property] = value
@@ -163,34 +144,6 @@ export default function Fileupload(props) {
         setselectedFiles([...selectedFiles, ...files])
     }, []);
 
-    const downloadFile = (fileID, fileName, Profile) => {
-        setfileDownloading(true)
-        axios.get(`${config.services.File}${ROUTES.FILE}/Downloadfile/${fileID}`, {
-            responseType: 'blob'
-        }).then((res) => {
-            setfileDownloading(false)
-            const fileType = res.headers['content-type']
-            const blob = new Blob([res.data], {
-                type: fileType
-            });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            if (fileType.includes('pdf')) {
-                window.open(url)
-                a.href = null;
-                window.URL.revokeObjectURL(url);
-            }
-            a.href = url;
-            a.download = fileName;
-            a.click();
-            window.URL.revokeObjectURL(url);
-        }).catch((err) => {
-            setfileDownloading(false)
-            fillnotification([{ type: 'Error', code: Literals.Code[Profile.Language], description: err.message }])
-            console.log(err.message)
-        });
-    }
-
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, multiple: true, noClick: true });
 
     const usagetypes = (Usagetypes.list || []).filter(u => u.Isactive).map(type => {
@@ -198,9 +151,12 @@ export default function Fileupload(props) {
     })
 
     return <React.Fragment>
-        <Dimmer active={fileDownloading}>
-            <Loader />
-        </Dimmer>
+        <Filepreview
+            fileurl={selectedfile}
+            setFileurl={setSelectedfile}
+            Profile={Profile}
+            fillnotification={fillnotification}
+        />
         <div {...getRootProps()} className={isDragActive ? `opacity-50 shadow-blue-700 shadow-lg transition-all ease-in-out duration-300` : null}>
             <input {...getInputProps()} />
             <Table celled className='list-table' key='product-create-type-conversion-table' >
@@ -249,7 +205,7 @@ export default function Fileupload(props) {
                                 />
                             </Table.Cell>
                             <Table.Cell>
-                                {file.fileChanged
+                                {!validator.isFile(file.File) && !validator.isUUID(file.Uuid)
                                     ? <Form.Field>
                                         <Form.Input
                                             disabled={file.WillDelete}
@@ -262,16 +218,16 @@ export default function Fileupload(props) {
                                     : <div className='flex flex-row'>
                                         <Label color='blue'>{file.Filename}</Label>
                                         {validator.isUUID(file.Uuid) &&
-                                            <div className='cursor-pointer' onClick={() => { downloadFile(file.Uuid, file.Name, Profile) }}>
+                                            <div className='cursor-pointer' onClick={() => { setSelectedfile(file?.Uuid) }}>
                                                 <Icon color='blue' name='download' />
                                             </div>
                                         }
                                     </div>}
                             </Table.Cell>
                             <Table.Cell>
-                                {file.fileChanged
-                                    ? <Icon disabled={!file.WillDelete} onClick={() => { handleFilechange(file.key, file.fileChanged) }} className='cursor-pointer' color='red' name='times circle' />
-                                    : <Icon onClick={() => { handleFilechange(file.key, file.fileChanged) }} className='cursor-pointer' color='green' name='checkmark' />
+                                {validator.isUUID(file.Uuid)
+                                    ? <Icon color='green' name='checkmark' />
+                                    : <Icon color='red' name='times circle' />
                                 }
                             </Table.Cell>
                             <Table.Cell className='table-last-section'>

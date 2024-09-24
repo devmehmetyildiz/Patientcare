@@ -2,10 +2,8 @@ import React, { Component } from 'react'
 import { FaUserAlt } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { Button, Dropdown, Header, Icon, Modal } from 'semantic-ui-react'
-import { ROUTES } from '../../Utils/Constants'
-import config from '../../Config'
 import Search from '../Search'
-
+import { Profilephoto } from '..'
 const navbarLiterals = {
   editProfile: {
     en: "Edit Profile",
@@ -53,12 +51,18 @@ export class Navbar extends Component {
   }
 
   render() {
-    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, Usagetypes, history, onlyTitle, handleNotification } = this.props
-    const ishavePP = (Profile?.meta?.Files || []).find(u => (u.Usagetype.split(',') || []).map(uuids => { return (Usagetypes.list || []).find(type => type.Uuid === uuids)?.Value || '' }).includes('PP'))
+    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, Usagetypes, history, onlyTitle, handleNotification, fillnotification, Files } = this.props
+    let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
+    let file = (Files.list || []).filter(u => u.ParentID === Profile?.meta?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
 
     const trigger = (
       <div className='flex flex-row justify-center items-center select-none'>
-        {ishavePP ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${ishavePP?.Uuid}`} className="rounded-full" style={{ width: '30px', height: '30px' }} /> : <FaUserAlt className='text-white' />}
+        {file ? <Profilephoto
+          fileID={file?.Uuid}
+          fillnotification={fillnotification}
+          Profile={Profile}
+          Imgheigth="30px"
+        /> : <FaUserAlt className='text-white' />}
         <div className={`h-[58.61px] text-white mx-4 my-auto transition-all ease-in-out duration-500  text-center flex flex-col justify-center items-center `}>
           <p className='m-0 text-sm font-semibold tracking-wider font-Common '>{Profile.username}</p>
           <p className='m-0 text-xs text-white dark:text-TextColor  '>
@@ -86,7 +90,7 @@ export class Navbar extends Component {
             <div className='h-[2px] group-hover:bg-[#747474] bg-white dark:bg-[#3d3d3d]  w-[20px]' />
           </div>
           <div onClick={this.handleOpendefaultpage} className={`absolute left-0 right-0 -z-10 flex flex-row justify-center items-center group cursor-pointer`}   >
-            <div  className='flex flex-row justify-center items-center group cursor-pointer'>
+            <div className='flex flex-row justify-center items-center group cursor-pointer'>
               <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-white dark:text-TextColor'>ELDER</p>
               <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-[#7eabc5] dark:text-TextColor'>CAMP</p>
             </div>
@@ -105,7 +109,7 @@ export class Navbar extends Component {
               <Dropdown icon={null} trigger={trigger} basic className="h-full block">
                 <Dropdown.Menu className='!right-[1%] !left-auto '>
                   <Dropdown.Item>
-                    <Link to='/Profile/Edit' className='text-[#3d3d3d] hover:text-[#3d3d3d]'><Icon className='id card ' />{navbarLiterals.editProfile[Profile.Language]}</Link>
+                    <Link to={`/Users/${Profile?.meta?.Uuid}`} className='text-[#3d3d3d] hover:text-[#3d3d3d]'><Icon className='id card ' />{navbarLiterals.editProfile[Profile.Language]}</Link>
                   </Dropdown.Item>
                   <Dropdown.Item>
                     <Link to='/profile/change-password' className='text-[#3d3d3d] hover:text-[#3d3d3d]'> <Icon className='lock' />{navbarLiterals.changePassword[Profile.Language]}</Link>

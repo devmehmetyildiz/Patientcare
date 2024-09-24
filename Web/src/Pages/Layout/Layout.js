@@ -63,7 +63,7 @@ export default class Layout extends Component {
 
   render() {
 
-    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal, Istokenchecking, Usagetypes, handleOpen } = this.props
+    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal, Istokenchecking, Usagetypes, handleOpen, fillnotification } = this.props
 
     return (
       Istokenchecking || Profile.isLogging || Profile.isFetching ?
@@ -84,6 +84,7 @@ export default class Layout extends Component {
                 sethideMobile={sethideMobile}
                 hideMobile={hideMobile}
                 handleViewmodal={handleViewmodal}
+                fillnotification={fillnotification}
                 history={history}
                 handleNotification={handleOpen}
                 setVisible={() => { this.setState({ visible: !this.state.visible }) }}

@@ -119,6 +119,7 @@ export default function Patientsdetail(props) {
                             Files={Files}
                             Usagetypes={Usagetypes}
                             Profile={Profile}
+                            fillPatientnotification={fillPatientnotification}
                         />
                         <PatientsDetailCase
                             patient={patient}

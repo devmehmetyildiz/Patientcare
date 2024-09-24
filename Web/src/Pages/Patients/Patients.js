@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Checkbox, Feed, Grid, GridColumn, Icon, List, Loader, Popup, Tab } from 'semantic-ui-react'
-import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
-import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT, GENDER_OPTION_MEN, ROUTES } from '../../Utils/Constants'
-import config from '../../Config'
+import { Breadcrumb, Button, Checkbox, Grid, GridColumn, Icon, List, Loader, Popup, Tab } from 'semantic-ui-react'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper, Profilephoto } from '../../Components'
+import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT, GENDER_OPTION_MEN } from '../../Utils/Constants'
 import Formatdate from '../../Utils/Formatdate'
 import PatientsLeftModal from '../../Containers/Patients/PatientsLeftModal'
 import PatientsDeadModal from '../../Containers/Patients/PatientsDeadModal'
@@ -19,7 +18,7 @@ import PatientsMakeactiveModal from '../../Containers/Patients/PatientsMakeactiv
 
 export default function Patients(props) {
 
-  const { Patients, Profile, Cases, Patientdefines, Files, Usagetypes, Floors, Rooms, Beds, handleSelectedPatient, handleDetailmodal } = props
+  const { Patients, Profile, Cases, Patientdefines, Files, Usagetypes, Floors, Rooms, Beds, handleSelectedPatient, handleDetailmodal, fillPatientnotification } = props
   const t = Profile?.i18n?.t || null
 
   const { isLoading } = Patients
@@ -110,7 +109,12 @@ export default function Patients(props) {
       let file = (Files.list || []).filter(u => u.ParentID === patient?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
       return <div className='flex justify-start items-center flex-row flex-wrap whitespace-nowrap'>
         {file
-          ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file?.Uuid}`} className="rounded-full" style={{ width: '30px', height: '30px' }} />
+          ? <Profilephoto
+            fileID={file?.Uuid}
+            fillnotification={fillPatientnotification}
+            Profile={Profile}
+            Imgheigth="30px"
+          />
           : null}
         {patientdefine?.Firstname ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}` : `${patientdefine?.CountryID}`}
       </div>

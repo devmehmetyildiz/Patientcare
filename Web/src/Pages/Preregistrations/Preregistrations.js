@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon, Loader, Tab } from 'semantic-ui-react'
-import { ROUTES } from '../../Utils/Constants'
-import config from '../../Config'
-import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper, Profilephoto } from '../../Components'
 import PreregistrationsDelete from '../../Containers/Preregistrations/PreregistrationsDelete'
 import PreregistrationsCheck from '../../Containers/Preregistrations/PreregistrationsCheck'
 import PreregistrationsApprove from '../../Containers/Preregistrations/PreregistrationsApprove'
@@ -204,7 +202,7 @@ export default class Preregistrations extends Component {
   }
 
   imageCellhandler = (col, row) => {
-    const { Files, Patientdefines, Usagetypes, Profile } = this.props
+    const { Files, Patientdefines, Usagetypes, Profile, fillPatientnotification } = this.props
     if (!col?.cell?.isGrouped && !Profile.Ismobile) {
       const patient = col?.row?.original || row
       if (!patient?.Uuid) {
@@ -213,9 +211,13 @@ export default class Preregistrations extends Component {
       const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
       let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
       let file = (Files.list || []).filter(u => u.ParentID === patient?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
-      return <div className='flex justify-start items-center flex-row flex-nowrap whitespace-nowrap'>
+      return <div className='flex justify-start items-center flex-row flex-wrap whitespace-nowrap'>
         {file
-          ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${file?.Uuid}`} className="rounded-full" style={{ width: '30px', height: '30px' }} />
+          ? <Profilephoto
+            fileID={file?.Uuid}
+            fillnotification={fillPatientnotification}
+            Profile={Profile}
+          />
           : null}
         {patientdefine?.Firstname ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}` : `${patientdefine?.CountryID}`}
       </div>

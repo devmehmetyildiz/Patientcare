@@ -1,16 +1,19 @@
 import React, { useContext, useState } from 'react'
 import { Card, Dimmer, Feed, Icon, Image, Label, Loader, Modal, Transition } from 'semantic-ui-react'
-import { PATIENTS_MOVEMENTTYPES_APPROVE, PATIENTS_MOVEMENTTYPES_CANCELAPPROVE, PATIENTS_MOVEMENTTYPES_CANCELCHECK, PATIENTS_MOVEMENTTYPES_CASECHANGE, PATIENTS_MOVEMENTTYPES_CHECK, PATIENTS_MOVEMENTTYPES_COMPLETE, PATIENTS_MOVEMENTTYPES_CREATE, PATIENTS_MOVEMENTTYPES_DEAD, PATIENTS_MOVEMENTTYPES_LEFT, PATIENTS_MOVEMENTTYPES_PLACECHANGE, PATIENTS_MOVEMENTTYPES_UPDATE, ROUTES } from '../../Utils/Constants'
-import config from '../../Config'
+import {
+    PATIENTS_MOVEMENTTYPES_APPROVE, PATIENTS_MOVEMENTTYPES_CANCELAPPROVE, PATIENTS_MOVEMENTTYPES_CANCELCHECK,
+    PATIENTS_MOVEMENTTYPES_CASECHANGE, PATIENTS_MOVEMENTTYPES_CHECK, PATIENTS_MOVEMENTTYPES_COMPLETE,
+    PATIENTS_MOVEMENTTYPES_CREATE, PATIENTS_MOVEMENTTYPES_DEAD, PATIENTS_MOVEMENTTYPES_LEFT,
+    PATIENTS_MOVEMENTTYPES_PLACECHANGE, PATIENTS_MOVEMENTTYPES_UPDATE
+} from '../../Utils/Constants'
 import Formatdate from '../../Utils/Formatdate'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { FormContext } from '../../Provider/FormProvider'
 import validator from '../../Utils/Validator'
+import { Filepreview, Profilephoto } from '..'
 
 export default function PatientsDetailCard(props) {
 
-    const [fileDownloading, setfileDownloading] = useState(false)
     const [movementsOpen, setMovementsOpen] = useState(false)
     const {
         usecontext,
@@ -36,6 +39,7 @@ export default function PatientsDetailCard(props) {
     } = props
     const t = Profile?.i18n?.t || null
     const context = useContext(FormContext)
+    const [selectedfile, setSelectedfile] = useState(null)
     const selected_record = usecontext ? context.getForm(PAGE_NAME) : Patients?.selected_record
     const {
         Uuid,
@@ -60,8 +64,7 @@ export default function PatientsDetailCard(props) {
         Stocktypegroups.isLoading ||
         Users.isLoading ||
         Files.isLoading ||
-        Usagetypes.isLoading ||
-        fileDownloading
+        Usagetypes.isLoading
 
     const Notfound = t('Common.NoDataFound')
 
@@ -109,60 +112,14 @@ export default function PatientsDetailCard(props) {
         }
     }))
 
-    const downloadFile = (fileID, fileName, Profile) => {
-        setfileDownloading(true)
-        axios.get(`${config.services.File}${ROUTES.FILE}/Downloadfile/${fileID}`, {
-            responseType: 'blob'
-        }).then((res) => {
-            setfileDownloading(false)
-            const fileType = res.headers['content-type']
-            const blob = new Blob([res.data], {
-                type: fileType
-            });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            if (fileType.includes('pdf')) {
-                window.open(url)
-                a.href = null;
-                window.URL.revokeObjectURL(url);
-            }
-            a.href = url;
-            a.download = fileName;
-            a.click();
-            window.URL.revokeObjectURL(url);
-        }).catch((err) => {
-            setfileDownloading(false)
-            fillnotification([{ type: 'Error', code: t('Pages.Preregistrations.Page.Header'), description: err.message }])
-            console.log(err.message)
-        });
-    }
-
-    const downloadFileFromContext = (file, fileName, fileType,) => {
-        try {
-            const blob = new Blob([file], {
-                type: fileType
-            });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            if (fileType.includes('pdf')) {
-                window.open(url)
-                a.href = null;
-                window.URL.revokeObjectURL(url);
-            }
-            a.href = url;
-            a.download = fileName;
-            a.click();
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            fillnotification([{ type: 'Error', code: t('Pages.Preregistrations.Page.Header'), description: error.message }])
-            console.log(error.message)
-        }
-    }
-
-
-
     return (
         <Modal.Content image>
+            <Filepreview
+                fileurl={selectedfile}
+                setFileurl={setSelectedfile}
+                Profile={Profile}
+                fillnotification={fillnotification}
+            />
             {isLoadingstatus
                 ? <Dimmer active inverted>
                     <Loader inverted />
@@ -171,15 +128,18 @@ export default function PatientsDetailCard(props) {
                     <Card.Content className='flex w-full justify-between items-center'>
                         <Card fluid>
                             <Card.Content>
-                                {patientPP
-                                    ? <Image
+                                {patientPP ?
+                                    usecontext ? <Image
                                         alt='pp'
                                         floated='right'
                                         size='tiny'
                                         rounded
-                                        src={usecontext
-                                            ? URL.createObjectURL(patientPP?.File)
-                                            : `${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPP?.Uuid}`}
+                                        src={URL.createObjectURL(patientPP?.File)}
+                                    /> : <Profilephoto
+                                        fileID={patientPP?.Uuid}
+                                        fillnotification={fillnotification}
+                                        Profile={Profile}
+                                        Imgheigth="40px"
                                     />
                                     : <Image
                                         floated='right'
@@ -239,12 +199,12 @@ export default function PatientsDetailCard(props) {
                                                 {files.map(file => {
                                                     return <div className='cursor-pointer flex flex-row'
                                                         onClick={() => {
-                                                            usecontext
-                                                                ? downloadFileFromContext(file?.File, file?.Name, file?.File?.type)
-                                                                : downloadFile(file.Uuid, file.Name, Profile)
+                                                            if (!usecontext) {
+                                                                setSelectedfile(file?.Uuid)
+                                                            }
                                                         }}
                                                     >
-                                                        <p>{`${file?.Name || Notfound} (${file?.Usagetype || Notfound})`}</p> <Icon color='blue' name='download' />
+                                                        <p>{`${file?.Name || Notfound} (${file?.Usagetype || Notfound})`}</p>{!usecontext ? <Icon color='blue' name='download' /> : null}
                                                     </div>
                                                 })}
                                             </div>

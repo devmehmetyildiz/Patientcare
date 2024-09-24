@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Preregistrations from "../../Pages/Preregistrations/Preregistrations"
-import { GetPatients, handleDeletemodal, handleSelectedPatient, handleCompletemodal, handleApprovemodal, handleCheckmodal, handleDetailmodal } from "../../Redux/PatientSlice"
+import { GetPatients, handleDeletemodal, handleSelectedPatient, handleCompletemodal, handleApprovemodal, handleCheckmodal, handleDetailmodal, fillPatientnotification } from "../../Redux/PatientSlice"
 import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
 import { GetCases } from '../../Redux/CaseSlice'
 import { GetUsers } from '../../Redux/UserSlice'

@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Card, Dropdown, Form, Icon, Image, Label, Table } from 'semantic-ui-react'
+import { Breadcrumb, Button, Card, Dropdown, Form, Image, Label, Table } from 'semantic-ui-react'
 import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
-import { ROUTES } from '../../Utils/Constants'
 import {
   Contentwrapper, Footerwrapper, FormInput, Gobackbutton,
-  Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
+  Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Profilephoto, Submitbutton
 } from '../../Components'
-import config from '../../Config'
 import Formatdate from '../../Utils/Formatdate'
+
 export default class CareplansCreate extends Component {
 
   PAGE_NAME = 'CareplansCreate'
@@ -80,7 +79,7 @@ export default class CareplansCreate extends Component {
   render() {
     const {
       Careplans, Supportplans, Supportplanlists, Files, Patients, Helpstatus, Makingtypes, Ratings, Requiredperiods,
-      Patientdefines, Usagetypes, Profile, history, closeModal } = this.props
+      Patientdefines, Usagetypes, Profile, history, closeModal, fillCareplannotification } = this.props
     const Patientoptions = (Patients.list || []).filter(u => u.Isactive).map(patient => {
       const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient.PatientdefineID)
       return { key: patient.Uuid, text: `${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`, value: patient.Uuid }
@@ -217,12 +216,11 @@ export default class CareplansCreate extends Component {
                       </div>
                     </div>
                     {patientPP
-                      ? <Image
-                        alt='pp'
-                        floated='right'
-                        size='tiny'
-                        rounded
-                        src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPP?.Uuid}`}
+                      ? <Profilephoto
+                        fileID={patientPP?.Uuid}
+                        fillnotification={fillCareplannotification}
+                        Profile={Profile}
+                        Imgheigth="40px"
                       />
                       : <Image
                         floated='right'
