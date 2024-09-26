@@ -108,7 +108,7 @@ export default function Approve(props) {
                     setRecord({
                         type: 'stockmovement',
                         item: stockmovement,
-                        name: stockName
+                        text: `${stockName}`,
                     })
                     setConfirmopen(true)
                 }} />,

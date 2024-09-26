@@ -117,6 +117,10 @@ export default function UsersDetail(props) {
                                             <Icon name='attention' className='right floated' />
                                             {t('Pages.Users.Detail.Button.Editcase')}
                                         </Dropdown.Item>
+                                        <Dropdown.Item onClick={() => { history.push(`/Users/${Id}/Movements`) }}>
+                                            <Icon name='conversation' className='right floated' />
+                                            {t('Pages.Users.Detail.Button.Editmovements')}
+                                        </Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
                             </div>

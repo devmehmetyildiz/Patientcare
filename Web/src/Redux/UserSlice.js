@@ -110,6 +110,29 @@ export const DeleteUsers = createAsyncThunk(
     }
 );
 
+export const DeleteUsermovements = createAsyncThunk(
+    'Users/DeleteUsermovements',
+    async ({ data, onSuccess }, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.delete(config.services.Userrole, `${ROUTES.USER}/DeleteUsermovement/${data.Uuid}`);
+            dispatch(fillUsernotification({
+                type: 'Success',
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Users.Messages.Deletemovement'),
+            }));
+            onSuccess && onSuccess()
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillUsernotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const EditUsercase = createAsyncThunk(
     'Users/EditUsercase',
     async ({ data, onSuccess }, { dispatch, getState }) => {
@@ -124,6 +147,28 @@ export const EditUsercase = createAsyncThunk(
             }));
             onSuccess && onSuccess()
             return null;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillUsernotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditUsermovements = createAsyncThunk(
+    'Users/EditUsermovements',
+    async ({ data, onSuccess }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            await instanse.put(config.services.Userrole, ROUTES.USER + '/UpdateUsermovement', data);
+            dispatch(fillUsernotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Users.Messages.Updatemovements'),
+            }));
+            onSuccess && onSuccess()
+            return null
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillUsernotification(errorPayload));
@@ -215,6 +260,26 @@ export const UsersSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(EditUsercase.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditUsermovements.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(EditUsermovements.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(EditUsermovements.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeleteUsermovements.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(DeleteUsermovements.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(DeleteUsermovements.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

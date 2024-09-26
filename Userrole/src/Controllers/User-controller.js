@@ -399,6 +399,115 @@ async function DeleteUser(req, res, next) {
     GetUsers(req, res, next)
 }
 
+async function DeleteUsermovement(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.usermovementId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.USERMOVEMENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const usermovement = await db.usermovementModel.findOne({ where: { Uuid: Uuid } })
+        if (!usermovement) {
+            return next(createNotfounderror([messages.ERROR.USERMOVEMENT_NOT_FOUND], req.language))
+        }
+        if (usermovement.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.USERMOVEMENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.usermovementModel.update({
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        const user = await db.userModel.findOne({ where: { Uuid: usermovement?.MovementuserID } })
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Kullanıcılar',
+            role: 'usernotification',
+            message: `${user?.Name} ${user?.Surname} kullanıcısına ait hareket ${username} tarafından silindi.`,
+            pushurl: '/Users'
+        })
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetUsers(req, res, next)
+}
+
+async function UpdateUsermovement(req, res, next) {
+
+    let validationErrors = []
+    const {
+        Uuid,
+        Occureddate
+    } = req.body
+
+
+    if (!validator.isISODate(Occureddate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDDATE_REQUIRED)
+    }
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.USERMOVEMENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERMOVEMENTID)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const usermovement = await db.usermovementModel.findOne({ where: { Uuid: Uuid } })
+        if (!usermovement) {
+            return next(createNotfounderror([messages.ERROR.USERMOVEMENT_NOT_FOUND], req.language))
+        }
+        if (usermovement.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.USERMOVEMENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.usermovementModel.update({
+            Occureddate: Occureddate,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        const user = await db.userModel.findOne({ where: { Uuid: usermovement?.MovementuserID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Kullanıcılar',
+            role: 'usernotification',
+            message: `${user?.Name} ${user?.Surname} kullanıcısına ait hareket ${username} tarafından güncellendi.`,
+            pushurl: '/Users'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    req.Uuid = Uuid
+    GetUsers(req, res, next)
+}
+
 async function UpdateUsercase(req, res, next) {
 
     let validationErrors = []
@@ -570,5 +679,7 @@ module.exports = {
     DeleteUser,
     Register,
     GetUsersforshift,
-    UpdateUsercase
+    UpdateUsercase,
+    UpdateUsermovement,
+    DeleteUsermovement
 }

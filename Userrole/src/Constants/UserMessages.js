@@ -18,6 +18,18 @@ const messages = {
                 tr: 'Kullanıcı aktif değil',
             }
         },
+        USERMOVEMENT_NOT_FOUND: {
+            code: 'USERMOVEMENT_NOT_FOUND', description: {
+                en: 'user movement not found',
+                tr: 'kullanıcı hareketi bulunamadı',
+            }
+        },
+        USERMOVEMENT_NOT_ACTIVE: {
+            code: 'USERMOVEMENT_NOT_ACTIVE', description: {
+                en: 'user movement not active',
+                tr: 'kullanıcı hareketi bulunamadı',
+            }
+        },
     },
     VALIDATION_ERROR: {
         NAME_REQUIRED: {
@@ -108,6 +120,18 @@ const messages = {
             code: 'MOVEMENT_END_DATE_TOO_BIG', description: {
                 en: 'The movement end date is too big, you should enter lower date before next movement start',
                 tr: 'Hareket sona erme tarihi çok güncel, geçmiş tarihli hareketlerde bir sonraki hareket tarihinden daha geçmiş hareket tarihi girmen gerekli',
+            }
+        },
+        USERMOVEMENTID_REQUIRED: {
+            code: 'USERMOVEMENTID_REQUIRED', description: {
+                en: 'The UsermovementID required',
+                tr: 'Bu işlem için Kullanıcı Hareket Uuid gerekli',
+            }
+        },
+        UNSUPPORTED_USERMOVEMENTID: {
+            code: 'UNSUPPORTED_USERMOVEMENTID', description: {
+                en: 'The user movement id is unsupported',
+                tr: 'Tanımsız kullanıcı hareket uuid değeri',
             }
         },
     }

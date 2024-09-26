@@ -24,6 +24,14 @@ async function UpdateUsercase(req, res, next) {
     PermissionHandler(req, next, 'userupdate')
 }
 
+async function UpdateUsermovement(req, res, next) {
+    PermissionHandler(req, next, 'userupdate')
+}
+
+async function DeleteUsermovement(req, res, next) {
+    PermissionHandler(req, next, 'userdelete')
+}
+
 async function DeleteUser(req, res, next) {
     PermissionHandler(req, next, 'userdelete')
 }
@@ -40,5 +48,7 @@ module.exports = {
     DeleteUser,
     Register,
     GetUsersforshift,
-    UpdateUsercase
+    UpdateUsercase,
+    UpdateUsermovement,
+    DeleteUsermovement
 }

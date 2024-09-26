@@ -147,7 +147,6 @@ export const EditPatientdates = createAsyncThunk(
 export const EditPatientmovements = createAsyncThunk(
     'Patients/EditPatientmovements',
     async ({ data, history, redirectUrl, closeModal, clearForm, onSuccess }, { dispatch, getState }) => {
-        console.log('data: ', data);
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
@@ -813,7 +812,6 @@ export const PatientsSlice = createSlice({
             })
             .addCase(DeletePatientmovements.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.list = action.payload;
             })
             .addCase(DeletePatientmovements.rejected, (state, action) => {
                 state.isLoading = false;

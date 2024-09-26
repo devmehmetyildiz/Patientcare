@@ -30,6 +30,7 @@ const UnitsEdit = lazy(() => import('./Containers/Units/UnitsEdit'));
 
 const Users = lazy(() => import('./Containers/Users/Users'));
 const UsersDetail = lazy(() => import('./Containers/Users/UsersDetail'));
+const UsersMovements = lazy(() => import('./Containers/Users/UsersMovements'));
 const UsersCreate = lazy(() => import('./Containers/Users/UsersCreate'));
 const UsersEdit = lazy(() => import('./Containers/Users/UsersEdit'));
 
@@ -48,8 +49,6 @@ const PatientsMovements = lazy(() => import('./Containers/Patients/PatientMoveme
 const PatientsEditsupportplan = lazy(() => import('./Containers/Patients/PatientsEditsupportplan'));
 const PatientsEditroutine = lazy(() => import('./Containers/Patients/PatientsEditroutine'));
 const PatientsFiles = lazy(() => import('./Containers/Patients/PatientsFiles'));
-
-const Patientscases = lazy(() => import('./Containers/Patientscases/Patientscases'));
 
 const Preregistrations = lazy(() => import('./Containers/Preregistrations/Preregistrations'));
 const PreregistrationsCreate = lazy(() => import('./Containers/Preregistrations/PreregistrationsCreate'));
@@ -283,6 +282,7 @@ class Routes extends Component {
 
       { exact: true, path: "/Users", auth: true, component: Users, permission: 'userview' },
       { exact: true, path: "/Users/Create", auth: true, component: UsersCreate, permission: 'useradd' },
+      { exact: true, path: "/Users/:UserID/Movements", auth: true, component: UsersMovements, permission: 'userupdate' },
       { exact: true, path: "/Users/:UserID", auth: true, component: UsersDetail, permission: 'userview' },
       { exact: true, path: "/Users/:UserID/Edit", auth: true, component: UsersEdit, permission: 'userupdate' },
 
@@ -310,7 +310,6 @@ class Routes extends Component {
       { exact: true, path: "/Patients/:PatientID/Editroutine", auth: true, component: PatientsEditroutine, permission: 'patientupdate' },
       { exact: true, path: "/Patients/:PatientID/Editfile", auth: true, component: PatientsFiles, permission: 'patientupdate' },
 
-      { exact: true, path: "/Patientscases", auth: true, component: Patientscases, permission: 'patientview' },
       { exact: true, path: "/Patientfollowup", auth: true, component: Patientfollowup, permission: 'patientview' },
 
       { exact: true, path: "/Purchaseorders", auth: true, component: Purchaseorders, permission: 'purchaseorderview' },
