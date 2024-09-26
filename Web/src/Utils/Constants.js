@@ -98,6 +98,10 @@ export const PERSONEL_CASE_TYPE_WORK = 2
 export const PERSONEL_CASE_TYPE_PERMIT = 3
 export const PERSONEL_CASE_TYPE_ANNUALPERMIT = 4
 
+export const PERSONEL_MOVEMENTTYPES_WORKSTART = 'userworkstart'
+export const PERSONEL_MOVEMENTTYPES_WORKEND = 'userworkend'
+export const PERSONEL_MOVEMENTTYPES_CASECHANGE = 'usercasechange'
+
 export const PURCHASEORDER_MOVEMENTTYPES_CREATE = 'create'
 export const PURCHASEORDER_MOVEMENTTYPES_UPDATE = 'update'
 export const PURCHASEORDER_MOVEMENTTYPES_DELETE = 'delete'
@@ -119,6 +123,8 @@ export const PATIENTS_MOVEMENTTYPES_LEFT = 'patientleft'
 export const PATIENTS_MOVEMENTTYPES_DEAD = 'patientdead'
 export const PATIENTS_MOVEMENTTYPES_CASECHANGE = 'patientcasechange'
 export const PATIENTS_MOVEMENTTYPES_PLACECHANGE = 'patientplacechange'
+
+
 
 export const ANNUALTYPES = [
     { Name: "Çalışıyor", value: 0, color: 'green' },

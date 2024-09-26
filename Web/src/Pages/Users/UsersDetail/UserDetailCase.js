@@ -37,7 +37,11 @@ export default function UserDetailCase(props) {
     return (
         <div className='relative bg-white shadow-lg w-full font-poppins rounded-lg flex flex-col justify-center items-center  p-4 m-4 mt-0 min-w-[250px]'>
             <div className='my-4 !text-[#2355a0] text-lg font-extrabold' >{(t('Pages.Users.Detail.Case.Header'))}</div>
-            <Label size='large' className='!text-white' basic style={{ backgroundColor: activecase?.Casecolor }}>{activecase?.Name}</Label>
+            {activecase
+                ? <Label size='large' className='!text-white' basic style={{ backgroundColor: activecase?.Casecolor }}>{activecase?.Name}</Label>
+                : <div className=' font-semibold text-[#777777dd]'>
+                    {t('Pages.Users.Detail.Case.Messages.NoCaseFound')}
+                </div>}
             <Popup
                 on={'hover'}
                 content={

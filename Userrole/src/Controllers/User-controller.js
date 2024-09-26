@@ -1,14 +1,13 @@
-const messages = require("../Constants/Messages")
+const messages = require("../Constants/UserMessages")
 const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const bcrypt = require('bcrypt')
-const axios = require('axios')
-const config = require("../Config")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { types } = require("../Constants/Defines")
+const { usermovementypes } = require("../Constants/Usermovementypes")
 
 async function Register(req, res, next) {
 
@@ -115,6 +114,13 @@ async function GetUsers(req, res, next) {
                 },
                 attributes: ['RoleID']
             })
+            user.Movements = await db.usermovementModel.findAll({
+                where: {
+                    MovementuserID: user?.Uuid,
+                    Isactive: true
+                },
+                order: [['Occureddate', 'ASC']]
+            });
         }
         users.forEach(element => {
             element.PasswordHash && delete element.PasswordHash
@@ -154,6 +160,13 @@ async function GetUser(req, res, next) {
             },
             attributes: ['RoleID']
         })
+        user.Movements = await db.usermovementModel.findAll({
+            where: {
+                MovementuserID: user?.Uuid,
+                Isactive: true
+            },
+            order: [['Occureddate', 'ASC']]
+        });
         user.PasswordHash && delete user.PasswordHash
         res.status(200).json(user)
     } catch (error) {
@@ -386,6 +399,114 @@ async function DeleteUser(req, res, next) {
     GetUsers(req, res, next)
 }
 
+async function UpdateUsercase(req, res, next) {
+
+    let validationErrors = []
+    const {
+        UserID,
+        CaseID,
+        Occureddate,
+        Occuredenddate,
+        Ispastdate
+    } = req.body
+
+    if (!validator.isUUID(UserID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+    }
+    if (!validator.isUUID(CaseID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+
+        const user = await db.userModel.findOne({ where: { Uuid: UserID } })
+        if (!user) {
+            return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+        }
+        if (!user.Isactive) {
+            return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+        }
+
+        if (!Ispastdate) {
+            await db.userModel.update({
+                ...user,
+                CaseID: CaseID,
+                Updateduser: username,
+                Updatetime: new Date(),
+            }, { where: { Uuid: UserID }, transaction: t })
+        }
+
+        if (validator.isISODate(Occureddate)) {
+            const usermovements = await db.usermovementModel.findAll({
+                where: {
+                    MovementuserID: user?.Uuid,
+                    Isactive: true,
+                    Occureddate: {
+                        [Sequelize.Op.gte]: Occureddate
+                    }
+                },
+                order: [['Occureddate', 'ASC']]
+            });
+
+            if ((usermovements || []).length > 0) {
+
+                const isHaveenddate = validator.isISODate(Occuredenddate)
+                if (!isHaveenddate) {
+                    return next(createAccessDenied([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_REQUIRED], req.language))
+                }
+
+                const nextmovement = usermovements[0]
+
+                const isEnddatelowerthanfirstmovement = Checkdatelowerthanother(Occuredenddate, usermovements[0]?.Occureddate)
+                if (!isEnddatelowerthanfirstmovement) {
+                    return next(createAccessDenied([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_TOO_BIG], req.language))
+                }
+
+                if (isEnddatelowerthanfirstmovement) {
+                    await db.usermovementModel.update({
+                        Occureddate: Occuredenddate,
+                        Updateduser: username,
+                        Updatetime: new Date(),
+                    }, { where: { Uuid: nextmovement?.Uuid || '' }, transaction: t })
+                }
+            }
+        }
+
+        await db.usermovementModel.create({
+            Uuid: uuid(),
+            MovementuserID: UserID,
+            CaseID: CaseID,
+            Type: usermovementypes.Usercasechange,
+            UserID: req?.identity?.user?.Uuid || username,
+            Info: '',
+            Occureddate: Occureddate,
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
+        }, { transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Kullanıcılar',
+            role: 'usernotification',
+            message: `${user?.Name} ${user?.Surname} personel durumu ${username} tarafından güncellendi.`,
+            pushurl: '/Users'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetUsers(req, res, next)
+}
+
 async function GetUsersforshift(req, res, next) {
     try {
         const {
@@ -449,4 +570,5 @@ module.exports = {
     DeleteUser,
     Register,
     GetUsersforshift,
+    UpdateUsercase
 }

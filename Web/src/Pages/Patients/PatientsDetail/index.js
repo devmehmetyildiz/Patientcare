@@ -23,7 +23,7 @@ import PatientsReducestockModal from '../../../Containers/Patients/PatientsReduc
 export default function Patientsdetail(props) {
 
     const {
-        GetPatient, handleSelectedPatient, fillPatientnotification, GetPatienttypes, GetCostumertypes,
+        GetPatient, fillPatientnotification, GetPatienttypes, GetCostumertypes,
         GetPatientdefines, GetFiles, GetUsagetypes, GetCases, GetDepartments, GetFloors, GetRooms, GetBeds,
         GetPatientcashmovements, GetPatientcashregisters, GetStocks, GetStockdefines, GetStockmovements, GetUsers,
         GetStocktypes, GetStocktypegroups, GetUnits, AddStockmovements
@@ -112,7 +112,7 @@ export default function Patientsdetail(props) {
                     <Loader>Yükleniyor</Loader>
                 </Dimmer>
                 <div className='w-full flex flex-col md:flex-row lg:flex-row justify-center items-center md:items-start lg:items-start'>
-                    <div className='!w-[400px] flex flex-col justify-start items-center'>
+                    <div className='lg:w-[30%] md:w-[30%] w-[80%] min-w-[250px] flex flex-col justify-start items-center'>
                         <PatientsDetailProfile
                             patient={patient}
                             patientdefine={patientdefine}
@@ -140,10 +140,10 @@ export default function Patientsdetail(props) {
                             Profile={Profile}
                         />
                     </div>
-                    <div className=' w-full mx-4 flex flex-col justify-start items-center'>
+                    <div className=' w-full min-w-0 mx-4 flex flex-col justify-start items-center'>
                         <div className='px-4 pb-2 w-full'>
                             <Dropdown
-                                text='İşlemler'
+                                text={t('Pages.Users.Detail.Label.Process')}
                                 icon='filter'
                                 floating
                                 fluid

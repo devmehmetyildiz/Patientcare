@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Timeline, { DateHeader, TimelineHeaders, TimelineMarkers, TodayMarker } from 'react-calendar-timeline';
 import {
-    PATIENTS_MOVEMENTTYPES_APPROVE, PATIENTS_MOVEMENTTYPES_CANCELAPPROVE, PATIENTS_MOVEMENTTYPES_CANCELCHECK,
-    PATIENTS_MOVEMENTTYPES_CASECHANGE, PATIENTS_MOVEMENTTYPES_CHECK, PATIENTS_MOVEMENTTYPES_COMPLETE,
-    PATIENTS_MOVEMENTTYPES_CREATE, PATIENTS_MOVEMENTTYPES_DEAD, PATIENTS_MOVEMENTTYPES_LEFT,
-    PATIENTS_MOVEMENTTYPES_PLACECHANGE, PATIENTS_MOVEMENTTYPES_UPDATE
+    PERSONEL_MOVEMENTTYPES_CASECHANGE,
+    PERSONEL_MOVEMENTTYPES_WORKEND,
+    PERSONEL_MOVEMENTTYPES_WORKSTART
 } from '../../../Utils/Constants';
-import { Card, Container, Icon, Loader, Popup } from 'semantic-ui-react';
+import { Card, Icon, Loader, Popup } from 'semantic-ui-react';
 import moment from 'moment';
 import 'moment/locale/tr';
 import 'react-calendar-timeline/lib/Timeline.css';
@@ -14,7 +13,7 @@ import '../../../Assets/css/react-calender-timeline.css'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import { Formatfulldate } from '../../../Utils/Formatdate';
 
-export default function PatientDetailTimeline(props) {
+export default function UserDetailTimeline(props) {
 
     moment.locale('tr');
 
@@ -23,10 +22,10 @@ export default function PatientDetailTimeline(props) {
     const defaultTimeStart = moment(new Date().setHours(-0))
     const defaultTimeEnd = moment(new Date().setHours(24))
 
-    const { patient, Cases, Users, Departments, Profile } = props
+    const { user, Cases, Users, Departments, Profile } = props
     const t = Profile?.i18n?.t
 
-    const Patientcases = (Cases.list || []).filter(u => u.Isactive).map(cases => {
+    const Personelcases = (Cases.list || []).filter(u => u.Isactive).map(cases => {
         let departments = (cases.Departmentuuids || [])
             .map(u => {
                 const department = (Departments.list || []).find(department => department.Uuid === u.DepartmentID)
@@ -37,44 +36,36 @@ export default function PatientDetailTimeline(props) {
                 }
             })
             .filter(u => u !== null);
-        let ishavepatients = false;
+        let Ishavepersonels = false;
         (departments || []).forEach(department => {
-            if (department?.Ishavepatients) {
-                ishavepatients = true
+            if (department?.Ishavepersonels) {
+                Ishavepersonels = true
             }
         });
 
-        if (ishavepatients) {
+        if (Ishavepersonels) {
             return cases
         } else {
             return null
         }
     }).filter(u => u !== null);
 
-    const groups = Patientcases.map(patientcase => {
-        return { id: patientcase?.Uuid, title: patientcase?.Name || t('Common.NoDataFound') }
+    const groups = Personelcases.map(personelcase => {
+        return { id: personelcase?.Uuid, title: personelcase?.Name || t('Common.NoDataFound') }
     })
 
     const Movementtypes = [
-        { name: t('Common.Patient.Movementtypes.Create'), value: PATIENTS_MOVEMENTTYPES_CREATE },
-        { name: t('Common.Patient.Movementtypes.Update'), value: PATIENTS_MOVEMENTTYPES_UPDATE },
-        { name: t('Common.Patient.Movementtypes.Check'), value: PATIENTS_MOVEMENTTYPES_CHECK },
-        { name: t('Common.Patient.Movementtypes.Approve'), value: PATIENTS_MOVEMENTTYPES_APPROVE },
-        { name: t('Common.Patient.Movementtypes.Complete'), value: PATIENTS_MOVEMENTTYPES_COMPLETE },
-        { name: t('Common.Patient.Movementtypes.Cancelcheck'), value: PATIENTS_MOVEMENTTYPES_CANCELCHECK },
-        { name: t('Common.Patient.Movementtypes.Cancelapprove'), value: PATIENTS_MOVEMENTTYPES_CANCELAPPROVE },
-        { name: t('Common.Patient.Movementtypes.Left'), value: PATIENTS_MOVEMENTTYPES_LEFT },
-        { name: t('Common.Patient.Movementtypes.Dead'), value: PATIENTS_MOVEMENTTYPES_DEAD },
-        { name: t('Common.Patient.Movementtypes.Casechange'), value: PATIENTS_MOVEMENTTYPES_CASECHANGE },
-        { name: t('Common.Patient.Movementtypes.Placechange'), value: PATIENTS_MOVEMENTTYPES_PLACECHANGE },
+        { name: t('Common.Personels.Movementtypes.Workstart'), value: PERSONEL_MOVEMENTTYPES_WORKSTART },
+        { name: t('Common.Personels.Movementtypes.Workend'), value: PERSONEL_MOVEMENTTYPES_WORKEND },
+        { name: t('Common.Personels.Movementtypes.Casechange'), value: PERSONEL_MOVEMENTTYPES_CASECHANGE },
     ]
 
-    const items = (patient?.Movements || []).map((movement, index) => {
+    const items = (user?.Movements || []).map((movement, index) => {
 
         const nextIndex = index + 1;
-        const calculatedEndtime = (patient?.Movements || []).length - 1 < nextIndex
+        const calculatedEndtime = (user?.Movements || []).length - 1 < nextIndex
             ? new Date()
-            : new Date((patient.Movements[nextIndex])?.Occureddate)
+            : new Date((user.Movements[nextIndex])?.Occureddate)
 
         const casedata = (Cases.list || []).find(u => u.Uuid === movement?.CaseID)
 
@@ -103,7 +94,7 @@ export default function PatientDetailTimeline(props) {
         <div className='w-full px-4 mt-4 z-10'>
             <div className='py-4 px-4 bg-white shadow-lg w-full font-poppins rounded-lg flex flex-col gap-4 justify-center items-center   min-w-[250px]'>
                 <div className='w-full flex justify-start items-start'>
-                    <div className='font-bold text-xl font-poppins'>{t('Pages.Patients.PatientsDetail.PatientDetailTimeline.Header')}</div>
+                    <div className='font-bold text-xl font-poppins'>{t('Pages.Users.Detail.Timeline.Header')}</div>
                 </div>
                 {visible
                     ? <div className='flex justify-start items-start w-full '>
@@ -121,37 +112,33 @@ export default function PatientDetailTimeline(props) {
                             defaultTimeEnd={defaultTimeEnd}
                             locale='tr'
                             itemRenderer={({ item, itemContext, getItemProps }) => {
-                                const movement = (patient?.Movements || []).find(u => u.Uuid === item.id)
+                                const movement = (user?.Movements || []).find(u => u.Uuid === item.id)
                                 const type = Movementtypes.find(u => u.value === movement?.Type)?.name || t('Common.NoDataFound')
-                                const user = (Users.list || []).find(u => u.Uuid === movement?.UserID)
+                                const saveduser = (Users.list || []).find(u => u.Uuid === movement?.UserID)
                                 const casedata = (Cases.list || []).find(u => u.Uuid === movement?.CaseID)
                                 const username = `${user?.Name} ${user?.Surname} (${user?.Username})`
                                 return (
                                     <Popup
                                         on={'hover'}
-                                        trigger={<div {...getItemProps({
-                                            style: casedata?.Iscalculateprice ? null : {
-                                                backgroundColor: 'red'
-                                            }
-                                        })}
+                                        trigger={<div {...getItemProps()}
                                             className='text-ellipsis whitespace-nowrap overflow-hidden'
                                         >
                                             {itemContext.title}
                                         </div>}
                                         content={<Card>
                                             <Card.Content>
-                                                <Card.Header>{`${t('Pages.Patients.PatientsDetail.PatientDetailTimeline.Label.Type')} : ${type}`}</Card.Header>
+                                                <Card.Header>{`${t('Pages.Users.Detail.Timeline.Label.Type')} : ${type}`}</Card.Header>
                                                 <Card.Meta>
-                                                    <span className='date'>{`${t('Pages.Patients.PatientsDetail.PatientDetailTimeline.Label.Occureddate')} : ${Formatfulldate(movement?.Occureddate, true)}`}</span>
+                                                    <span className='date'>{`${t('Pages.Users.Detail.Timeline.Label.Occureddate')} : ${Formatfulldate(movement?.Occureddate, true)}`}</span>
                                                 </Card.Meta>
                                                 <Card.Description>
-                                                    {`${t('Pages.Patients.PatientsDetail.PatientDetailTimeline.Label.Case')} : ${casedata?.Name || t('Common.NoDataFound')}`}
+                                                    {`${t('Pages.Users.Detail.Timeline.Label.Case')} : ${casedata?.Name || t('Common.NoDataFound')}`}
                                                 </Card.Description>
                                             </Card.Content>
                                             <Card.Content extra>
                                                 <a>
                                                     <Icon name='user' />
-                                                    {user ? <Link to={`Users/${user?.Uuid}`}>{user ? username : t('Common.NoDataFound')}</Link> : movement?.UserID}
+                                                    {saveduser ? <Link to={`Users/${saveduser?.Uuid}`}>{saveduser ? username : t('Common.NoDataFound')}</Link> : movement?.UserID}
                                                 </a>
                                             </Card.Content>
                                         </Card>}

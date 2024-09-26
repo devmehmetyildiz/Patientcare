@@ -110,6 +110,7 @@ async function AddStock(req, res, next) {
             ...req.body,
             Uuid: stockuuid,
             Createduser: username,
+            Isapproved: true,
             Iscompleted: true,
             Createtime: new Date(),
             Isactive: true
@@ -121,7 +122,7 @@ async function AddStock(req, res, next) {
             Amount: Amount,
             Movementdate: new Date(),
             Movementtype: 1,
-            Isapproved: true,
+            Isapproved: false,
             Createduser: username,
             Createtime: new Date(),
             Isactive: true
@@ -189,6 +190,7 @@ async function AddStockWithoutMovement(req, res, next) {
             ...req.body,
             Uuid: stockuuid,
             Createduser: username,
+            Isapproved: true,
             Iscompleted: true,
             Createtime: new Date(),
             Isactive: true

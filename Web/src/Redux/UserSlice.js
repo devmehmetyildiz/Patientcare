@@ -5,33 +5,6 @@ import instanse from "./axios";
 import config from "../Config";
 import { FileuploadPrepare } from '../Components/Fileupload';
 
-const Literals = {
-    addcode: {
-        en: 'Data Save',
-        tr: 'Veri Kaydetme'
-    },
-    adddescription: {
-        en: 'User added successfully',
-        tr: 'Kullanıcı Başarı ile eklendi'
-    },
-    updatecode: {
-        en: 'Data Update',
-        tr: 'Veri Güncelleme'
-    },
-    updatedescription: {
-        en: 'User updated successfully',
-        tr: 'Kullanıcı Başarı ile güncellendi'
-    },
-    deletecode: {
-        en: 'Data Delete',
-        tr: 'Veri Silme'
-    },
-    deletedescription: {
-        en: 'User Deleted successfully',
-        tr: 'Kullanıcı Başarı ile Silindi'
-    },
-}
-
 export const GetUsers = createAsyncThunk(
     'Users/GetUsers',
     async (_, { dispatch }) => {
@@ -65,18 +38,18 @@ export const AddUsers = createAsyncThunk(
     async ({ data, history, files, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.post(config.services.Userrole, ROUTES.USER, data);
             dispatch(fillUsernotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language] + ` : ${data?.Username}`,
+                code: t('Common.Code.Add'),
+                description: t('Redux.Users.Messages.Add'),
             }));
             clearForm && clearForm('UsersCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Users');
             if (files && files?.length > 0) {
-                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillUsernotification, Literals, state.Profile)
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillUsernotification, null, state.Profile)
                 await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
             }
             return response?.data?.list || [];
@@ -93,18 +66,18 @@ export const EditUsers = createAsyncThunk(
     async ({ data, history, files, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Userrole, ROUTES.USER, data);
             dispatch(fillUsernotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language] + ` : ${data?.Username}`,
+                code: t('Common.Code.Update'),
+                description: t('Redux.Users.Messages.Update'),
             }));
             clearForm && clearForm('UsersEdit')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Users');
             if (files && files?.length > 0) {
-                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillUsernotification, Literals, state.Profile)
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillUsernotification, null, state.Profile)
                 await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
             }
             return response?.data?.list || [];
@@ -121,15 +94,36 @@ export const DeleteUsers = createAsyncThunk(
     async (data, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
-
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.Userrole, `${ROUTES.USER}/${data.Uuid}`);
             dispatch(fillUsernotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language] + ` : ${data?.Username}`,
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Users.Messages.Delete'),
             }));
             return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillUsernotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditUsercase = createAsyncThunk(
+    'Users/EditUsercase',
+    async ({ data, onSuccess }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            await instanse.put(config.services.Userrole, ROUTES.USER + "/UpdateUsercase", data);
+            dispatch(fillUsernotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Users.Messages.Updatecase'),
+            }));
+            onSuccess && onSuccess()
+            return null;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillUsernotification(errorPayload));
@@ -211,6 +205,16 @@ export const UsersSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(EditUsers.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(EditUsercase.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(EditUsercase.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(EditUsercase.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

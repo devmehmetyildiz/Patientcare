@@ -63,7 +63,6 @@ const Patienttypes = lazy(() => import('./Containers/Patienttypes/Patienttypes')
 const PatienttypesCreate = lazy(() => import('./Containers/Patienttypes/PatienttypesCreate'));
 const PatienttypesEdit = lazy(() => import('./Containers/Patienttypes/PatienttypesEdit'));
 
-//-----------------------------Warehouse-----------------------------
 const Purchaseorders = lazy(() => import('./Containers/Purchaseorders/Purchaseorders'));
 const PurchaseordersCreate = lazy(() => import('./Containers/Purchaseorders/PurchaseordersCreate'));
 const PurchaseordersEdit = lazy(() => import('./Containers/Purchaseorders/PurchaseordersEdit'));
@@ -100,9 +99,6 @@ const EquipmentgroupsEdit = lazy(() => import('./Containers/Equipmentgroups/Equi
 const Equipments = lazy(() => import('./Containers/Equipments/Equipments'));
 const EquipmentsCreate = lazy(() => import('./Containers/Equipments/EquipmentsCreate'));
 const EquipmentsEdit = lazy(() => import('./Containers/Equipments/EquipmentsEdit'));
-
-
-//-----------------------------END-----------------------------
 
 const Tododefines = lazy(() => import('./Containers/Tododefines/Tododefines'));
 const TododefinesCreate = lazy(() => import('./Containers/Tododefines/TododefinesCreate'));

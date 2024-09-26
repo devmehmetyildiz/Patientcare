@@ -32,7 +32,8 @@ function BedSelector({
                 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8   overflow-y-auto max-h-[60vh]
                 '>
                 {list.map((option, index) => {
-                    const patient = (Patients?.list || []).find(u => u.BedID === option?.BedID)
+                
+                const patient = (Patients?.list || []).find(u => u.BedID === option?.BedID)
                     const patientdefine = (Patientdefines?.list || []).find(u => u.Uuid === patient?.PatientdefineID)
                     return <div
                         key={index}

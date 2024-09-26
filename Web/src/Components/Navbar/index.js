@@ -5,9 +5,10 @@ import { Button, Dropdown, Header, Icon, Modal } from 'semantic-ui-react'
 import Search from '../Search'
 import { Profilephoto } from '..'
 const navbarLiterals = {
+
   editProfile: {
-    en: "Edit Profile",
-    tr: "Profil Düzenle"
+    en: "Profile",
+    tr: "Profilim"
   },
   changePassword: {
     en: "Change Password",
@@ -33,6 +34,7 @@ const navbarLiterals = {
     en: "You gonna exit from program!",
     tr: "Uygulamadan çıkış yapmak üzeresiniz"
   }
+  
 }
 export class Navbar extends Component {
   state = { open: false, searchWord: '' }
