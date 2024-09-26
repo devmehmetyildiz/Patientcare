@@ -60,7 +60,46 @@ const version1_1_0_2 = {
     ],
 }
 
+const version1_1_0_3 = {
+    version: "1.1.0.3",
+    features: [
+        {
+            title: "Hakedişler", commits: [
+                "Parameterler Sayfasında Güncellemeler Yapıldı",
+                "Personel Teşviki Hariç Hakedişler Aktif Edildi",
+            ],
+        },
+        {
+            title: "Hastalar", commits: [
+                "Geçmiş Tarihli Durum Girişi Eklendi",
+                "Hareketleri Düzenle Ekranı Eklendi, Hareketler Silinebilir, Güncellenebilir",
+            ],
+        },
+        {
+            title: "Kullanıcılar", commits: [
+                "Kullanıcı Detay Sayfası Güncellendi, Detay Tablolar Eklendi",
+                "Kullanıcılar için Durum Değiştirme, Geçmiş Tarihli Durum, Durum Düzenleme Sayfası Eklendi",
+            ],
+        },
+    ],
+    changes: [
+        {
+            title: "Dosya", commits: [
+                "Dosya Yükleme Fonksiyonlarında Düzenlemeler Yapıldı",
+                "Dosyalar Artık Önizleme Olarak Görüntülenecek, Talep Edilirse İndirilecek (Sadece PDF Ve PNG)",
+            ],
+        },
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Arıza ve Bakım Talepleri Sayfaları Ambarlar Ana Menusune Taşındı",
+                "Hasta Durumları Sayfası Kaldırıldı, Hastalar Ekranına Çoklu İşlemler Menusunde Gerçekleştirilecek (Daha Aktif Değil)",
+            ],
+        },
+    ],
+}
+
 export {
     version1_1_0_1,
-    version1_1_0_2
+    version1_1_0_2,
+    version1_1_0_3
 }
