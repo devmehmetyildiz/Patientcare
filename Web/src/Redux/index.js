@@ -53,6 +53,7 @@ import StocktypegroupSlice from "./StocktypegroupSlice";
 import PurchaseorderSlice from "./PurchaseorderSlice";
 import ClaimpaymentparameterSlice from "./ClaimpaymentparameterSlice";
 import ClaimpaymentSlice from "./ClaimpaymentSlice";
+import TrainingSlice from "./TrainingSlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -109,6 +110,7 @@ const Slices = combineReducers({
     Purchaseorders: PurchaseorderSlice,
     Claimpaymentparameters: ClaimpaymentparameterSlice,
     Claimpayments: ClaimpaymentSlice,
+    Trainings: TrainingSlice,
 });
 
 export default Slices;

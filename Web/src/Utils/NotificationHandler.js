@@ -54,6 +54,7 @@ import { removeStocktypegroupnotification } from "../Redux/StocktypegroupSlice"
 import { removePurchaseordernotification } from "../Redux/PurchaseorderSlice"
 import { removeClaimpaymentparameternotification } from "../Redux/ClaimpaymentparameterSlice"
 import { removeClaimpaymentnotification } from "../Redux/ClaimpaymentSlice"
+import { removeTrainingnotification } from "../Redux/TrainingSlice"
 import Notificationwrapper from './Notification'
 
 export function NotificationHandler(props) {
@@ -64,7 +65,7 @@ export function NotificationHandler(props) {
 
     useEffect(() => {
         const {
-            removeWarehousenotification, removeUsernotification, removeUnitnotification, 
+            removeWarehousenotification, removeUsernotification, removeUnitnotification,
             removeTodogroupdefinenotification, removeTododefinenotification, removeStocknotification,
             removeStockmovementnotification, removeStockdefinenotification, removeStationnotification,
             removeRulenotification, removePrinttemplatenotification, removeRoomnotification, removeRolenotification,
@@ -77,11 +78,12 @@ export function NotificationHandler(props) {
             removeSupportplannotification, removeSupportplanlistnotification, removeCareplannotification, removeHelpstatunotification,
             removeMakingtypenotification, removeRatingnotification, removeRequiredperiodnotification, removeProfessionnotification, removePersonelpresettingnotification,
             removeProfessionpresettingnotification, removePersonelshiftdetailnotification, removeStocktypenotification,
-            removeStocktypegroupnotification, removePurchaseordernotification, removeClaimpaymentparameternotification, removeClaimpaymentnotification
+            removeStocktypegroupnotification, removePurchaseordernotification, removeClaimpaymentparameternotification, removeClaimpaymentnotification,
+            removeTrainingnotification
         } = props
 
         const {
-            Warehouses, Users, Units, 
+            Warehouses, Users, Units,
             Todogroupdefines, Tododefines, Stocks, Stockmovements,
             Stockdefines, Stations, Rules, Printtemplates, Rooms,
             Roles, Profile, Patienttypes, Patients, Patientdefines, Mailsettings,
@@ -91,7 +93,7 @@ export function NotificationHandler(props) {
             Patientcashregisters, Usernotifications, Reports, Usagetypes, Professions,
             Supportplanlists, Supportplans, Careplans, Helpstatus, Makingtypes, Ratings, Requiredperiods,
             Personelshiftdetails, Personelpresettings, Professionpresettings, Personelshifts, Stocktypes,
-            Stocktypegroups, Purchaseorders, Claimpaymentparameters, Claimpayments
+            Stocktypegroups, Purchaseorders, Claimpaymentparameters, Claimpayments, Trainings
         } = props.states
 
         Notification(Warehouses.notifications, removeWarehousenotification)
@@ -148,6 +150,7 @@ export function NotificationHandler(props) {
         Notification(Purchaseorders.notifications, removePurchaseordernotification)
         Notification(Claimpaymentparameters.notifications, removeClaimpaymentparameternotification)
         Notification(Claimpayments.notifications, removeClaimpaymentnotification)
+        Notification(Trainings.notifications, removeTrainingnotification)
     })
 
     return null
@@ -158,7 +161,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    removeWarehousenotification, removeUsernotification, removeUnitnotification, 
+    removeWarehousenotification, removeUsernotification, removeUnitnotification,
     removeTodogroupdefinenotification, removeTododefinenotification, removeStocknotification,
     removeStockmovementnotification, removeStockdefinenotification, removeStationnotification,
     removeRulenotification, removePrinttemplatenotification, removeRoomnotification, removeRolenotification,
@@ -173,7 +176,7 @@ const mapDispatchToProps = {
     removeRatingnotification, removeMakingtypenotification, removeProfessionnotification, removePersonelshiftnotification,
     removePersonelpresettingnotification, removeProfessionpresettingnotification, removePersonelshiftdetailnotification,
     removeStocktypenotification, removeStocktypegroupnotification, removePurchaseordernotification, removeClaimpaymentparameternotification,
-    removeClaimpaymentnotification
+    removeClaimpaymentnotification, removeTrainingnotification
 
 }
 

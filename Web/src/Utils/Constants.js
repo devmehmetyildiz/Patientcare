@@ -10,6 +10,7 @@ export const ROUTES = {
     PATIENT: 'Patients',
     TODO: 'Todos',
 
+    TRAINING: 'Trainings',
     CLAIMPAYMENT: 'Claimpayments',
     CLAIMPAYMENTPARAMETER: 'Claimpaymentparameters',
     PATIENTTYPE: 'Patienttypes',
@@ -90,6 +91,7 @@ export const PATIENTMOVEMENTTYPE = [
     { Name: "Kontrol", value: 5 },
     { Name: "Ayrılmış", value: 6 },
     { Name: "Yer değişikliği", value: 7 },
+    { Name: "İzinde", value: 8 },
 ]
 
 export const PERSONEL_CASE_TYPE_PASSIVE = 0
@@ -182,6 +184,7 @@ export const CASE_PATIENT_STATUS_DEATH = 4
 export const CASE_PATIENT_STATUS_CHECK = 5
 export const CASE_PATIENT_STATUS_LEFT = 6
 export const CASE_PATIENT_STATUS_PLACE_CHANGE = 7
+export const CASE_PATIENT_STATUS_NOTONORGANIZATION = 8
 
 export const STOCK_TYPE_WAREHOUSE = 0
 export const STOCK_TYPE_PURCHASEORDER = 1
@@ -191,3 +194,6 @@ export const CLAIMPAYMENT_TYPE_PATIENT = 0
 export const CLAIMPAYMENT_TYPE_BHKS = 1
 export const CLAIMPAYMENT_TYPE_KYS = 2
 export const CLAIMPAYMENT_TYPE_PERSONEL = 3
+
+export const TRAINING_TYPE_ORGANIZATION = 0
+export const TRAINING_TYPE_COMPANY = 1

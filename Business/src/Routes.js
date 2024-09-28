@@ -32,6 +32,15 @@ const Routes = [
     { method: 'put', path: '/Careplans', controller: 'Careplan', action: 'UpdateCareplan' },
     { method: 'delete', path: '/Careplans/:careplanId', controller: 'Careplan', action: 'DeleteCareplan' },
 
+    { method: 'get', path: '/Trainings/:trainingId', controller: 'Training', action: 'GetTraining' },
+    { method: 'get', path: '/Trainings', controller: 'Training', action: 'GetTrainings' },
+    { method: 'post', path: '/Trainings', controller: 'Training', action: 'AddTraining' },
+    { method: 'put', path: '/Trainings/Savepreview/:trainingId', controller: 'Training', action: 'SavepreviewTraining' },
+    { method: 'put', path: '/Trainings/Complete/:trainingId', controller: 'Training', action: 'CompleteTraining' },
+    { method: 'put', path: '/Trainings/Approve/:trainingId', controller: 'Training', action: 'ApproveTraining' },
+    { method: 'put', path: '/Trainings', controller: 'Training', action: 'UpdateTraining' },
+    { method: 'delete', path: '/Trainings/:trainingId', controller: 'Training', action: 'DeleteTraining' },
+
     { method: 'get', path: '/Claimpaymentparameters/:claimpaymentparameterId', controller: 'Claimpaymentparameter', action: 'GetClaimpaymentparameter' },
     { method: 'get', path: '/Claimpaymentparameters', controller: 'Claimpaymentparameter', action: 'GetClaimpaymentparameters' },
     { method: 'post', path: '/Claimpaymentparameters', controller: 'Claimpaymentparameter', action: 'AddClaimpaymentparameter' },
