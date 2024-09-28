@@ -36,7 +36,7 @@ export default class TrainingsApprove extends Component {
                         labelPosition='right'
                         icon='checkmark'
                         onClick={() => {
-                            ApproveTrainings(selected_record)
+                            ApproveTrainings({ data: selected_record })
                             handleApprovemodal(false)
                             handleSelectedTraining({})
                         }}

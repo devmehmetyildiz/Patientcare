@@ -12,7 +12,8 @@ const axios = require('axios')
 
 async function GetTrainings(req, res, next) {
     try {
-        const trainings = await db.trainingModel.findAll({ where: { Isactive: true } })
+        let data = null
+        const trainings = await db.trainingModel.findAll()
         for (const training of trainings) {
             training.Trainingusers = await db.trainingusersModel.findAll({
                 where: {
@@ -20,7 +21,10 @@ async function GetTrainings(req, res, next) {
                 },
             });
         }
-        res.status(200).json(trainings)
+        if (req?.Uuid) {
+            data = await db.trainingModel.findOne({ where: { Uuid: req?.Uuid } });
+        }
+        res.status(200).json({ list: trainings, data: data })
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
@@ -60,7 +64,6 @@ async function AddTraining(req, res, next) {
         Type,
         Name,
         Trainingdate,
-        Place,
         Companyname,
         Duration,
         Educator,
@@ -77,9 +80,6 @@ async function AddTraining(req, res, next) {
     if (!validator.isISODate(Trainingdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.TRAININGDATE_REQUIRED)
     }
-    if (!validator.isString(Place)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PLACE_REQUIRED)
-    }
     if (!validator.isString(Duration)) {
         validationErrors.push(messages.VALIDATION_ERROR.DURATION_REQUIRED)
     }
@@ -95,7 +95,7 @@ async function AddTraining(req, res, next) {
     if (Type === trainingtypes.Organization && !validator.isUUID(EducatoruserID)) {
         validationErrors.push(messages.VALIDATION_ERROR.EDUCATORUSERID_REQUIRED)
     }
-    if (!validator.isArray(Trainingusers) || (Trainingusers || []).length > 0) {
+    if (!validator.isArray(Trainingusers) || (Trainingusers || []).length <= 0) {
         validationErrors.push(messages.VALIDATION_ERROR.TRAININGUSERS_REQUIRED)
     } else {
         for (const user of Trainingusers) {
@@ -118,6 +118,9 @@ async function AddTraining(req, res, next) {
         await db.trainingModel.create({
             ...req.body,
             Uuid: traininguuid,
+            Isonpreview: true,
+            Isapproved: false,
+            Iscompleted: false,
             Createduser: username,
             Createtime: new Date(),
             Isactive: true
@@ -148,6 +151,7 @@ async function AddTraining(req, res, next) {
         await t.rollback()
         return next(sequelizeErrorCatcher(err))
     }
+    req.Uuid = traininguuid
     GetTrainings(req, res, next)
 }
 
@@ -167,7 +171,7 @@ async function UpdateTraining(req, res, next) {
         Trainingusers
     } = req.body
 
-    if (!Type) {
+    if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.TRAININGID_REQUIRED)
     }
     if (!validator.isUUID(Uuid)) {
@@ -181,9 +185,6 @@ async function UpdateTraining(req, res, next) {
     }
     if (!validator.isISODate(Trainingdate)) {
         validationErrors.push(messages.VALIDATION_ERROR.TRAININGDATE_REQUIRED)
-    }
-    if (!validator.isString(Place)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PLACE_REQUIRED)
     }
     if (!validator.isString(Duration)) {
         validationErrors.push(messages.VALIDATION_ERROR.DURATION_REQUIRED)
@@ -200,7 +201,7 @@ async function UpdateTraining(req, res, next) {
     if (Type === trainingtypes.Organization && !validator.isUUID(EducatoruserID)) {
         validationErrors.push(messages.VALIDATION_ERROR.EDUCATORUSERID_REQUIRED)
     }
-    if (!validator.isArray(Trainingusers) || (Trainingusers || []).length > 0) {
+    if (!validator.isArray(Trainingusers) || (Trainingusers || []).length <= 0) {
         validationErrors.push(messages.VALIDATION_ERROR.TRAININGUSERS_REQUIRED)
     } else {
         for (const user of Trainingusers) {
@@ -257,6 +258,7 @@ async function UpdateTraining(req, res, next) {
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
+    req.Uuid = Uuid
     GetTrainings(req, res, next)
 
 }
@@ -312,6 +314,7 @@ async function DeleteTraining(req, res, next) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
+    req.Uuid = Uuid
     GetTrainings(req, res, next)
 }
 
@@ -343,7 +346,7 @@ async function SavepreviewTraining(req, res, next) {
         }
 
         await db.trainingModel.update({
-            Isonpreview: true,
+            Isonpreview: false,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
@@ -360,6 +363,7 @@ async function SavepreviewTraining(req, res, next) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
+    req.Uuid = Uuid
     GetTrainings(req, res, next)
 }
 
@@ -410,6 +414,7 @@ async function ApproveTraining(req, res, next) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
+    req.Uuid = Uuid
     GetTrainings(req, res, next)
 }
 
@@ -460,6 +465,7 @@ async function CompleteTraining(req, res, next) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
+    req.Uuid = Uuid
     GetTrainings(req, res, next)
 }
 

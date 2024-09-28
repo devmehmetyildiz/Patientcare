@@ -36,7 +36,7 @@ export default class TrainingsComplete extends Component {
             labelPosition='right'
             icon='checkmark'
             onClick={() => {
-              CompleteTrainings(selected_record)
+              CompleteTrainings({ data: selected_record })
               handleCompletemodal(false)
               handleSelectedTraining({})
             }}

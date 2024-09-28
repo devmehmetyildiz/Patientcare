@@ -221,6 +221,10 @@ const Claimpayments = lazy(() => import('./Containers/Claimpayments/Claimpayment
 const ClaimpaymentsCreate = lazy(() => import('./Containers/Claimpayments/ClaimpaymentsCreate'));
 const ClaimpaymentsDetail = lazy(() => import('./Containers/Claimpayments/ClaimpaymentsDetail'));
 
+const Trainings = lazy(() => import('./Containers/Trainings/Trainings'));
+const TrainingsCreate = lazy(() => import('./Containers/Trainings/TrainingsCreate'));
+const TrainingsEdit = lazy(() => import('./Containers/Trainings/TrainingsEdit'));
+
 const Patientfollowup = lazy(() => import('./Containers/Patientfollowup/Patientfollowup'));
 
 const Log = lazy(() => import('./Containers/Log/Log'));
@@ -453,6 +457,10 @@ class Routes extends Component {
       { exact: true, path: "/Claimpayments", auth: true, component: Claimpayments, permission: 'claimpaymentview' },
       { exact: true, path: "/Claimpayments/Create", auth: true, component: ClaimpaymentsCreate, permission: 'claimpaymentadd' },
       { exact: true, path: "/Claimpayments/:ClaimpaymentID", auth: true, component: ClaimpaymentsDetail, permission: 'claimpaymentadd' },
+
+      { exact: true, path: "/Trainings", auth: true, component: Trainings, permission: 'trainingview' },
+      { exact: true, path: "/Trainings/Create", auth: true, component: TrainingsCreate, permission: 'trainingadd' },
+      { exact: true, path: "/Trainings/:TrainingID/Edit", auth: true, component: TrainingsEdit, permission: 'trainingupdate' },
 
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit, permission: 'basic' },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange, permission: 'basic' },

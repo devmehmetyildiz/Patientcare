@@ -36,7 +36,7 @@ export default class TrainingsSavepreview extends Component {
             labelPosition='right'
             icon='checkmark'
             onClick={() => {
-              SavepreviewTrainings(selected_record)
+              SavepreviewTrainings({ data: selected_record })
               handleSavepreviewmodal(false)
               handleSelectedTraining({})
             }}

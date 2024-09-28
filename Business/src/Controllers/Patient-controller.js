@@ -2545,7 +2545,7 @@ async function Createfromtemplate(req, res, next) {
                 PatientID: patientuuid,
                 UserID: "System",
                 Info: '',
-                Occureddate: external.Occureddate,
+                Occureddate: new Date(patientdata.Approvaldate),
                 Createduser: "System",
                 Createtime: new Date(),
                 Isactive: true

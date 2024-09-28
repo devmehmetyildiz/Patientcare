@@ -3,13 +3,14 @@ import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
+import { FileuploadPrepare } from '../Components/Fileupload';
 
 export const GetTrainings = createAsyncThunk(
     'Trainings/GetTrainings',
     async (_, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Business, ROUTES.TRAINING);
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillTrainingnotification(errorPayload));
@@ -34,7 +35,7 @@ export const GetTraining = createAsyncThunk(
 
 export const AddTrainings = createAsyncThunk(
     'Trainings/AddTrainings',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, files, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
@@ -47,7 +48,11 @@ export const AddTrainings = createAsyncThunk(
             clearForm && clearForm('TrainingsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Trainings');
-            return response.data;
+            if (files && files?.length > 0) {
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillTrainingnotification, null, state.Profile)
+                await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
+            }
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillTrainingnotification(errorPayload));
@@ -58,7 +63,7 @@ export const AddTrainings = createAsyncThunk(
 
 export const EditTrainings = createAsyncThunk(
     'Trainings/EditTrainings',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, files, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
@@ -71,7 +76,11 @@ export const EditTrainings = createAsyncThunk(
             clearForm && clearForm('TrainingsEdit')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Trainings');
-            return response.data;
+            if (files && files?.length > 0) {
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillTrainingnotification, null, state.Profile)
+                await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
+            }
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillTrainingnotification(errorPayload));
@@ -82,7 +91,7 @@ export const EditTrainings = createAsyncThunk(
 
 export const ApproveTrainings = createAsyncThunk(
     'Trainings/ApproveTrainings',
-    async (data, { dispatch, getState }) => {
+    async ({ data }, { dispatch, getState }) => {
         try {
 
             const state = getState()
@@ -93,7 +102,7 @@ export const ApproveTrainings = createAsyncThunk(
                 code: t('Common.Code.Update'),
                 description: t('Redux.Trainings.Messages.Approve'),
             }));
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillTrainingnotification(errorPayload));
@@ -115,7 +124,7 @@ export const SavepreviewTrainings = createAsyncThunk(
                 description: t('Redux.Trainings.Messages.Savepreview'),
             }));
             history && history.push(redirectUrl ? redirectUrl : '/Trainings');
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillTrainingnotification(errorPayload));
@@ -137,7 +146,7 @@ export const CompleteTrainings = createAsyncThunk(
                 description: t('Redux.Trainings.Messages.Complete'),
             }));
             history && history.push(redirectUrl ? redirectUrl : '/Trainings');
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillTrainingnotification(errorPayload));
@@ -159,7 +168,7 @@ export const DeleteTrainings = createAsyncThunk(
                 code: t('Common.Code.Add'),
                 description: t('Redux.Trainings.Messages.Delete'),
             }));
-            return response.data;
+            return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillTrainingnotification(errorPayload));

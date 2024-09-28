@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Tab } from 'semantic-ui-react'
+import { Icon, Loader, Tab } from 'semantic-ui-react'
 import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import { Contentwrapper, DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
@@ -22,8 +22,10 @@ export default class Trainings extends Component {
 
     render() {
         const { Trainings, handleDeletemodal, handleCompletemodal, handleSavepreviewmodal,
-            handleApprovemodal, handleSelectedTraining, } = this.props
+            handleApprovemodal, handleSelectedTraining, Profile } = this.props
+
         const t = Profile?.i18n?.t
+
         const { isLoading } = Trainings
 
         const colProps = {
@@ -35,23 +37,27 @@ export default class Trainings extends Component {
         const Columns = [
             { Header: t('Common.Column.Id'), accessor: 'Id' },
             { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
-            { Header: t('Pages.Trainings.Column.Type'), accessor: 'Type' },
             { Header: t('Pages.Trainings.Column.Name'), accessor: 'Name' },
-            { Header: t('Pages.Trainings.Column.Trainingdate'), accessor: 'Trainingdate' },
+            { Header: t('Pages.Trainings.Column.Trainingdate'), accessor: row => this.dateCellhandler(row?.Trainingdate), },
             { Header: t('Pages.Trainings.Column.Description'), accessor: 'Description' },
             { Header: t('Pages.Trainings.Column.Place'), accessor: 'Place' },
             { Header: t('Pages.Trainings.Column.Duration'), accessor: 'Duration' },
-            { Header: t('Pages.Trainings.Column.Companyname'), accessor: 'Companyname' },
-            { Header: t('Pages.Trainings.Column.Educator'), accessor: 'Educator' },
-            { Header: t('Pages.Trainings.Column.EducatoruserID'), accessor: 'EducatoruserID' },
-            { Header: t('Pages.Trainings.Column.Approvetime'), accessor: 'Approvetime' },
-            { Header: t('Pages.Trainings.Column.Completedtime'), accessor: 'Completedtime' },
-            { Header: t('Pages.Trainings.Column.Approveduser'), accessor: 'Approveduser' },
-            { Header: t('Pages.Trainings.Column.Completeduser'), accessor: 'Completeduser' },
+            { Header: t('Pages.Trainings.Column.Companyname'), accessor: 'Companyname', keys: ['company'] },
+            { Header: t('Pages.Trainings.Column.Educator'), accessor: 'Educator', keys: ['company'] },
+            { Header: t('Pages.Trainings.Column.EducatoruserID'), accessor: row => this.userCellhandler(row?.EducatoruserID), keys: ['organization'] },
+            { Header: t('Pages.Trainings.Column.Approvetime'), accessor: row => this.dateCellhandler(row?.Approvetime), keys: ['approved'] },
+            { Header: t('Pages.Trainings.Column.Completedtime'), accessor: row => this.dateCellhandler(row?.Completedtime), keys: ['completed'] },
+            { Header: t('Pages.Trainings.Column.Approveduser'), accessor: 'Approveduser', keys: ['approved'] },
+            { Header: t('Pages.Trainings.Column.Completeduser'), accessor: 'Completeduser', keys: ['completed'] },
             { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
             { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
             { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
             { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+            { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'] },
+            { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'] },
+            { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
+            { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview', 'waitingapprove'] },
+            { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'] }
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
         const metaKey = "traning"
@@ -60,7 +66,23 @@ export default class Trainings extends Component {
         const list = (Trainings.list || []).filter(u => u.Isactive).map(item => {
             return {
                 ...item,
-
+                edit: <Link to={`/Trainings/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+                delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+                    handleSelectedTraining(item)
+                    handleDeletemodal(true)
+                }} />,
+                approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+                    handleSelectedTraining(item)
+                    handleApprovemodal(true)
+                }} />,
+                complete: <Icon link size='large' color='blue' name='hand point left' onClick={() => {
+                    handleSelectedTraining(item)
+                    handleCompletemodal(true)
+                }} />,
+                savepreview: <Icon link size='large' color='green' name='save' onClick={() => {
+                    handleSelectedTraining(item)
+                    handleSavepreviewmodal(true)
+                }} />,
             }
         })
 
@@ -79,7 +101,6 @@ export default class Trainings extends Component {
             waitingapprove: companyPrelist.filter(u => !u.Iscompleted && !u.Isapproved && !u.Isonpreview),
             onpreview: companyPrelist.filter(u => !u.Iscompleted && !u.Isapproved && u.Isonpreview),
         }
-
         return (
             isLoading ? <LoadingPage /> :
                 <React.Fragment>
@@ -123,28 +144,28 @@ export default class Trainings extends Component {
                                                         menuItem: `${t('Pages.Trainings.Tab.Completed')} (${(organizationlist.completed || []).length})`,
                                                         pane: {
                                                             key: 'completed_organization',
-                                                            content: this.renderView(organizationlist.completed, Columns.filter(u => u.key === 'approved' || u.key1 === 'approved' || !u.key), initialConfig)
+                                                            content: this.renderView({ list: organizationlist.completed, Columns, keys: ['completed', 'organization'], initialConfig })
                                                         }
                                                     },
                                                     {
                                                         menuItem: `${t('Pages.Trainings.Tab.Approved')} (${(organizationlist.approved || []).length})`,
                                                         pane: {
                                                             key: 'approved_organization',
-                                                            content: this.renderView(organizationlist.approved, Columns.filter(u => u.key === 'approved' || u.key1 === 'approved' || !u.key), initialConfig)
+                                                            content: this.renderView({ list: organizationlist.approved, Columns, keys: ['approved', 'organization'], initialConfig })
                                                         }
                                                     },
                                                     {
                                                         menuItem: `${t('Pages.Trainings.Tab.Waitingapprove')} (${(organizationlist.waitingapprove || []).length})`,
                                                         pane: {
                                                             key: 'waitingapprove_organization',
-                                                            content: this.renderView(organizationlist.waitingapprove, Columns.filter(u => u.key === 'approved' || u.key1 === 'approved' || !u.key), initialConfig)
+                                                            content: this.renderView({ list: organizationlist.waitingapprove, Columns, keys: ['waitingapprove', 'organization'], initialConfig })
                                                         }
                                                     },
                                                     {
                                                         menuItem: `${t('Pages.Trainings.Tab.Onpreview')} (${(organizationlist.onpreview || []).length})`,
                                                         pane: {
                                                             key: 'onpreview_organization',
-                                                            content: this.renderView(organizationlist.onpreview, Columns.filter(u => u.key === 'approved' || u.key1 === 'approved' || !u.key), initialConfig)
+                                                            content: this.renderView({ list: organizationlist.onpreview, Columns, keys: ['onpreview', 'organization'], initialConfig })
                                                         }
                                                     },
 
@@ -162,31 +183,31 @@ export default class Trainings extends Component {
                                                 className="w-full !bg-transparent"
                                                 panes={[
                                                     {
-                                                        menuItem: `${t('Pages.Trainings.Tab.Completed')} (${(companyPrelist.completed || []).length})`,
+                                                        menuItem: `${t('Pages.Trainings.Tab.Completed')} (${(companylist.completed || []).length})`,
                                                         pane: {
                                                             key: 'completed_organization',
-                                                            content: this.renderView(companyPrelist.completed, Columns.filter(u => u.key === 'approved' || u.key1 === 'approved' || !u.key), initialConfig)
+                                                            content: this.renderView({ list: companylist.completed, Columns, keys: ['completed', 'company'], initialConfig })
                                                         }
                                                     },
                                                     {
-                                                        menuItem: `${t('Pages.Trainings.Tab.Approved')} (${(companyPrelist.approved || []).length})`,
+                                                        menuItem: `${t('Pages.Trainings.Tab.Approved')} (${(companylist.approved || []).length})`,
                                                         pane: {
                                                             key: 'approved_organization',
-                                                            content: this.renderView(companyPrelist.approved, Columns.filter(u => u.key === 'approved' || u.key1 === 'approved' || !u.key), initialConfig)
+                                                            content: this.renderView({ list: companylist.approved, Columns, keys: ['approved', 'company'], initialConfig })
                                                         }
                                                     },
                                                     {
-                                                        menuItem: `${t('Pages.Trainings.Tab.Waitingapprove')} (${(companyPrelist.waitingapprove || []).length})`,
+                                                        menuItem: `${t('Pages.Trainings.Tab.Waitingapprove')} (${(companylist.waitingapprove || []).length})`,
                                                         pane: {
                                                             key: 'waitingapprove_organization',
-                                                            content: this.renderView(companyPrelist.waitingapprove, Columns.filter(u => u.key === 'approved' || u.key1 === 'approved' || !u.key), initialConfig)
+                                                            content: this.renderView({ list: companylist.waitingapprove, Columns, keys: ['waitingapprove', 'company'], initialConfig })
                                                         }
                                                     },
                                                     {
-                                                        menuItem: `${t('Pages.Trainings.Tab.Onpreview')} (${(companyPrelist.onpreview || []).length})`,
+                                                        menuItem: `${t('Pages.Trainings.Tab.Onpreview')} (${(companylist.onpreview || []).length})`,
                                                         pane: {
                                                             key: 'onpreview_organization',
-                                                            content: this.renderView(companyPrelist.onpreview, Columns.filter(u => u.key === 'approved' || u.key1 === 'approved' || !u.key), initialConfig)
+                                                            content: this.renderView({ list: companylist.onpreview, Columns, keys: ['onpreview', 'company'], initialConfig })
                                                         }
                                                     },
 
@@ -209,15 +230,31 @@ export default class Trainings extends Component {
         )
     }
 
-    renderView = (list, Columns, initialConfig) => {
+    renderView = ({ list, Columns, keys, initialConfig }) => {
         const { Profile } = this.props
         const t = Profile?.i18n?.t
+
+        const searchbykey = (data, searchkeys) => {
+            let ok = false
+            searchkeys.forEach(key => {
+
+                if (!ok) {
+                    if (data.includes(key)) {
+                        ok = true
+                    }
+                }
+            });
+
+            return ok
+        }
+
+        const columns = Columns.filter(u => searchbykey((u?.keys || []), keys) || !(u?.keys))
 
         return list.length > 0 ?
             <div className='w-full mx-auto '>
                 {Profile.Ismobile ?
-                    <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                    <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+                    <MobileTable Columns={columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                    <DataTable Columns={columns} Data={list} Config={initialConfig} />}
             </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
     }
 
@@ -238,10 +275,13 @@ export default class Trainings extends Component {
         return value
     }
 
-    currencyCellhandler = (value) => {
-        if (value) {
-            return this.CurrencyLabel({ value: value })
+    userCellhandler = (value) => {
+        const { Users } = this.props
+        if (Users.isLoading) {
+            return <Loader size='small' active inline='centered' ></Loader>
+        } else {
+            const user = (Users.list || []).find(u => u.Uuid === value)
+            return user ? `${user?.Name} ${user?.Surname}` : ''
         }
-        return value
     }
 }

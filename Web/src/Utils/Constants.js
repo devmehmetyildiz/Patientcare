@@ -71,27 +71,27 @@ export const ROUTES = {
 }
 
 export const MOVEMENTTYPES = [
-    { Name: "Stokdan düşme", value: -1, color: 'gray' },
-    { Name: "Transfer", value: 0, color: 'green' },
-    { Name: "Stok Ekleme", value: 1, color: 'orange' },
+    { Name: "STOKTAN DÜŞME", value: -1, color: 'gray' },
+    { Name: "TRANSFER", value: 0, color: 'green' },
+    { Name: "STOK EKLEMESİ", value: 1, color: 'orange' },
 ]
 
 export const CASHYPES = [
-    { Name: "Cüzdandan Çıkartma", value: -1, color: 'gray' },
-    { Name: "Pasif", value: 0, color: 'green' },
-    { Name: "Cüzdana Ekleme", value: 1, color: 'orange' },
+    { Name: "CÜZDANDAN ÇIKARTMA", value: -1, color: 'gray' },
+    { Name: "PASİF", value: 0, color: 'green' },
+    { Name: "CÜZDANA EKLEME", value: 1, color: 'orange' },
 ]
 
 export const PATIENTMOVEMENTTYPE = [
-    { Name: "İşlem Yok", value: 0 },
-    { Name: "Kurumda", value: 1 },
-    { Name: "İlk Kayıtta", value: 2 },
-    { Name: "Hastanede", value: 3 },
-    { Name: "Ölüm", value: 4 },
-    { Name: "Kontrol", value: 5 },
-    { Name: "Ayrılmış", value: 6 },
-    { Name: "Yer değişikliği", value: 7 },
-    { Name: "İzinde", value: 8 },
+    { Name: "İŞLEM YOK", value: 0 },
+    { Name: "KURUMDA", value: 1 },
+    { Name: "İLK KAYITTA", value: 2 },
+    { Name: "HASTANEDE", value: 3 },
+    { Name: "ÖLÜM", value: 4 },
+    { Name: "KONTROL", value: 5 },
+    { Name: "AYRILMIŞ", value: 6 },
+    { Name: "YER DEĞİŞİKLİĞİ", value: 7 },
+    { Name: "İZİNDE", value: 8 },
 ]
 
 export const PERSONEL_CASE_TYPE_PASSIVE = 0
@@ -129,22 +129,22 @@ export const PATIENTS_MOVEMENTTYPES_PLACECHANGE = 'patientplacechange'
 
 
 export const ANNUALTYPES = [
-    { Name: "Çalışıyor", value: 0, color: 'green' },
-    { Name: "İzinli", value: 1, color: 'red' },
+    { Name: "ÇALIŞIYOR", value: 0, color: 'green' },
+    { Name: "İZİNLİ", value: 1, color: 'red' },
 ]
 
 export const DELIVERY_TYPE_PATIENT = 0
 export const DELIVERY_TYPE_WAREHOUSE = 1
 export const DELIVERY_TYPES = [
-    { Name: { tr: 'Hastaya', en: 'To Patient' }, value: DELIVERY_TYPE_PATIENT, key: DELIVERY_TYPE_PATIENT },
-    { Name: { tr: 'Ambara', en: 'To Warehouse' }, value: DELIVERY_TYPE_WAREHOUSE, key: DELIVERY_TYPE_WAREHOUSE },
+    { Name: { tr: 'HASTAYA', en: 'TO PATIENT' }, value: DELIVERY_TYPE_PATIENT, key: DELIVERY_TYPE_PATIENT },
+    { Name: { tr: 'AMBARA', en: 'TO WAREHOUSE' }, value: DELIVERY_TYPE_WAREHOUSE, key: DELIVERY_TYPE_WAREHOUSE },
 ]
 
 export const LIVE_OPTION_LIVING = false
 export const LIVE_OPTION_NOT_LIVING = true
 export const LIVE_OPTION = [
-    { key: 0, text: { en: "No, Not Living", tr: 'Hayır, Yaşamıyor' }, value: LIVE_OPTION_NOT_LIVING },
-    { key: 1, text: { en: "Yes, Living", tr: 'Evet, Yaşıyor' }, value: LIVE_OPTION_LIVING },
+    { key: 0, text: { en: "NO, NOT LIVING", tr: 'HAYIR, YAŞAMIYOR' }, value: LIVE_OPTION_NOT_LIVING },
+    { key: 1, text: { en: "YES, LIVING", tr: 'EVET, YAŞIYOR' }, value: LIVE_OPTION_LIVING },
 ]
 
 
@@ -158,17 +158,17 @@ export const GENDER_OPTION = [
 export const AFFINITY_OPTION_OWN = "0"
 export const AFFINITY_OPTION_STEP = "1"
 export const AFFINITY_OPTION = [
-    { key: 0, text: { en: "Own", tr: 'Öz' }, value: AFFINITY_OPTION_OWN },
-    { key: 1, text: { en: "Step", tr: 'Üvey' }, value: AFFINITY_OPTION_STEP },
+    { key: 0, text: { en: "OWN", tr: 'ÖZ' }, value: AFFINITY_OPTION_OWN },
+    { key: 1, text: { en: "STEP", tr: 'ÜVEY' }, value: AFFINITY_OPTION_STEP },
 ]
 
 export const MEDICALBOARDREPORT_OPTION_SPIRITUAL = "0"
 export const MEDICALBOARDREPORT_OPTION_PHYSICAL = "1"
 export const MEDICALBOARDREPORT_OPTION_MENTAL = "2"
 export const MEDICALBOARDREPORT_OPTION = [
-    { key: 0, text: { tr: "Ruhsal", en: 'Spiritual' }, value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
-    { key: 1, text: { tr: "Bedensel", en: 'Physical' }, value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
-    { key: 2, text: { tr: "Zihinsel", en: 'Mental' }, value: MEDICALBOARDREPORT_OPTION_MENTAL },
+    { key: 0, text: { tr: "RUHSAL", en: 'SPIRITUAL' }, value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
+    { key: 1, text: { tr: "BEDENSEL", en: 'PHYSICAL' }, value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
+    { key: 2, text: { tr: "ZİHİNSEL", en: 'MENTAL' }, value: MEDICALBOARDREPORT_OPTION_MENTAL },
 ]
 
 export const CASE_STATUS_DEACTIVE = -1
