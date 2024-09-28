@@ -6,6 +6,7 @@ import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, DataTable, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import Formatdate from '../../Utils/Formatdate'
+import { MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL } from '../../Utils/Constants'
 
 export default class Patientfollowup extends Component {
 
@@ -36,6 +37,16 @@ export default class Patientfollowup extends Component {
             .filter(u => u.Isactive && !u.Iswaitingactivation)
             .filter(u => !((disbandedCases || []).includes(u?.CaseID)))
 
+        const medicalboardreportoptions = [
+            { key: 0, text: "RUHSAL", value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
+            { key: 1, text: "BEDENSEL", value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
+            { key: 2, text: "ZİHİNSEL", value: MEDICALBOARDREPORT_OPTION_MENTAL }
+        ]
+
+        const genderoptions = [
+            { key: 0, text: "ERKEK", value: "0" },
+            { key: 1, text: "KADIN", value: "1" }
+        ]
         const patienttypes = (Patienttypes.list || []).filter(u => u.Isactive)
         const costumertypes = (Costumertypes.list || []).filter(u => u.Isactive)
 
@@ -67,6 +78,42 @@ export default class Patientfollowup extends Component {
                                             content: <PatienttypeTab
                                                 patients={patients}
                                                 patienttypes={patienttypes}
+                                                Patientdefines={Patientdefines}
+                                                Profile={Profile}
+                                            />
+                                        }
+                                    },
+                                    {
+                                        menuItem: 'Durumlarına Göre',
+                                        pane: {
+                                            key: 'patientcases',
+                                            content: <PatientcasesTab
+                                                patients={patients}
+                                                cases={Cases}
+                                                Patientdefines={Patientdefines}
+                                                Profile={Profile}
+                                            />
+                                        }
+                                    },
+                                    {
+                                        menuItem: 'Sağlık Kurul Raporuna Göre',
+                                        pane: {
+                                            key: 'patientreporttype',
+                                            content: <PatientmedicalboardreportTab
+                                                patients={patients}
+                                                medicalboardreportoptions={medicalboardreportoptions}
+                                                Patientdefines={Patientdefines}
+                                                Profile={Profile}
+                                            />
+                                        }
+                                    },
+                                    {
+                                        menuItem: 'Cinsiyetlerine Göre',
+                                        pane: {
+                                            key: 'patientgenders',
+                                            content: <PatientgenderTab
+                                                patients={patients}
+                                                genderoptions={genderoptions}
                                                 Patientdefines={Patientdefines}
                                                 Profile={Profile}
                                             />
@@ -110,6 +157,69 @@ Patientfollowup.contextType = FormContext
 
 
 
+
+function PatientcasesTab({ patients, cases, Patientdefines, Profile }) {
+
+
+    const colProps = {
+        sortable: true,
+        canGroupBy: true,
+        canFilter: true
+    }
+
+    const nameCellhandler = (row) => {
+        const patient = row
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        return `${patientdefine?.Firstname} ${patientdefine?.Lastname}`
+    }
+
+    const countryIDCellhandler = (row) => {
+        const patient = row
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        return patientdefine?.CountryID
+    }
+
+    const dateCellhandler = (value) => {
+        if (value) {
+            return value.split('T')[0]
+        }
+        return null
+    }
+
+    const Columns = [
+        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
+        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+
+
+    return <div className='grid grid-cols-1 md:grid-cols-2 w-full'>
+        {(cases.list || []).map(casedata => {
+            const decoratedpatients = patients.map(patient => {
+                return patient?.CaseID === casedata?.Uuid ? patient : null
+            })
+                .filter(u => u)
+                .map(item => {
+                    return {
+                        ...item,
+                        actions: <Link to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
+                    }
+                });
+
+            return decoratedpatients.length > 0 ? <div className='w-full gap-2'>
+                <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{casedata?.Name}</Label>
+
+                <div className='w-full mx-auto '>
+                    {Profile.Ismobile ?
+                        <MobileTable Columns={Columns} Data={decoratedpatients} Profile={Profile} /> :
+                        <DataTable Columns={Columns} Data={decoratedpatients} />}
+                </div>
+                <Pagedivider />
+            </div > : null
+        })}
+    </div>
+}
 
 function PatienttypeTab({ patients, patienttypes, Patientdefines, Profile }) {
 
@@ -163,6 +273,133 @@ function PatienttypeTab({ patients, patienttypes, Patientdefines, Profile }) {
 
             return decoratedpatients.length > 0 ? <div className='w-full gap-2'>
                 <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{patienttype?.Name}</Label>
+
+                <div className='w-full mx-auto '>
+                    {Profile.Ismobile ?
+                        <MobileTable Columns={Columns} Data={decoratedpatients} Profile={Profile} /> :
+                        <DataTable Columns={Columns} Data={decoratedpatients} />}
+                </div>
+                <Pagedivider />
+            </div > : null
+        })}
+    </div>
+}
+
+function PatientmedicalboardreportTab({ patients, medicalboardreportoptions, Patientdefines, Profile }) {
+
+
+    const colProps = {
+        sortable: true,
+        canGroupBy: true,
+        canFilter: true
+    }
+
+    const nameCellhandler = (row) => {
+        const patient = row
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        return `${patientdefine?.Firstname} ${patientdefine?.Lastname}`
+    }
+
+    const countryIDCellhandler = (row) => {
+        const patient = row
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        return patientdefine?.CountryID
+    }
+
+    const dateCellhandler = (value) => {
+        if (value) {
+            return value.split('T')[0]
+        }
+        return null
+    }
+
+    const Columns = [
+        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
+        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+
+
+    return <div className='grid grid-cols-1 md:grid-cols-2 w-full'>
+        {medicalboardreportoptions.map(report => {
+            const decoratedpatients = patients.map(patient => {
+                const patientdefine = (Patientdefines.list || []).find(define => define?.Uuid === patient?.PatientdefineID)
+                return patientdefine?.Medicalboardreport === report?.value ? patient : null
+            })
+                .filter(u => u)
+                .map(item => {
+                    return {
+                        ...item,
+                        actions: <Link to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
+                    }
+                });
+
+            return decoratedpatients.length > 0 ? <div className='w-full gap-2'>
+                <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{report?.text}</Label>
+
+                <div className='w-full mx-auto '>
+                    {Profile.Ismobile ?
+                        <MobileTable Columns={Columns} Data={decoratedpatients} Profile={Profile} /> :
+                        <DataTable Columns={Columns} Data={decoratedpatients} />}
+                </div>
+                <Pagedivider />
+            </div > : null
+        })}
+    </div>
+}
+
+function PatientgenderTab({ patients, genderoptions, Patientdefines, Profile }) {
+
+
+    const colProps = {
+        sortable: true,
+        canGroupBy: true,
+        canFilter: true
+    }
+
+    const nameCellhandler = (row) => {
+        const patient = row
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        return `${patientdefine?.Firstname} ${patientdefine?.Lastname}`
+    }
+
+    const countryIDCellhandler = (row) => {
+        const patient = row
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        return patientdefine?.CountryID
+    }
+
+    const dateCellhandler = (value) => {
+        if (value) {
+            return value.split('T')[0]
+        }
+        return null
+    }
+
+    const Columns = [
+        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
+        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+
+    return <div className='grid grid-cols-1 md:grid-cols-2 w-full'>
+        {genderoptions.map(gender => {
+            const decoratedpatients = patients.map(patient => {
+                const patientdefine = (Patientdefines.list || []).find(define => define?.Uuid === patient?.PatientdefineID)
+                return patientdefine?.Gender === gender?.value ? patient : null
+            })
+                .filter(u => u)
+                .map(item => {
+                    return {
+                        ...item,
+                        actions: <Link to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
+                    }
+                });
+
+            return decoratedpatients.length > 0 ? <div className='w-full gap-2'>
+                <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{gender?.text}</Label>
 
                 <div className='w-full mx-auto '>
                     {Profile.Ismobile ?
