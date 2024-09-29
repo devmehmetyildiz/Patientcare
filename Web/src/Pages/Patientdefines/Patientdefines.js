@@ -60,6 +60,7 @@ export default class Patientdefines extends Component {
       { Header: Literals.Columns.CostumertypeName[Profile.Language], accessor: row => this.costumertypeCellhandler(row?.CostumertypeID), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.PatienttypeName[Profile.Language], accessor: row => this.patienttypeCellhandler(row?.PatienttypeID), Subtitle: true, Withtext: true },
       { Header: Literals.Columns.Medicalboardreport[Profile.Language], accessor: 'Medicalboardreport' },
+      { Header: Literals.Columns.Dependency[Profile.Language], accessor: 'Dependency' },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
       { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },

@@ -1,33 +1,33 @@
 const Literals = {
     Options: {
-        Liveoptions:{
-            value0:{
-                tr:"Hayır Yaşamıyor",
-                en:"No, Not Living"
+        Liveoptions: {
+            value0: {
+                tr: "Hayır Yaşamıyor",
+                en: "No, Not Living"
             },
-            value1:{
-                tr:"Evet Yaşıyor",
-                en:"Yes, living"
-            },
-        },
-        Genderoptions:{
-            value0:{
-                tr:"Erkek",
-                en:"Men"
-            },
-            value1:{
-                tr:"Kadın",
-                en:"Women"
+            value1: {
+                tr: "Evet Yaşıyor",
+                en: "Yes, living"
             },
         },
-        Affinityoptions:{
-            value0:{
-                tr:"Öz",
-                en:"Own"
+        Genderoptions: {
+            value0: {
+                tr: "Erkek",
+                en: "Men"
             },
-            value1:{
-                tr:"Üvey",
-                en:"Step"
+            value1: {
+                tr: "Kadın",
+                en: "Women"
+            },
+        },
+        Affinityoptions: {
+            value0: {
+                tr: "Öz",
+                en: "Own"
+            },
+            value1: {
+                tr: "Üvey",
+                en: "Step"
             },
         }
     },
@@ -63,6 +63,10 @@ const Literals = {
         Medicalboardreport: {
             tr: 'Sağlık Kurul Raporu',
             en: 'Medical Baord Report'
+        },
+        Dependency: {
+            tr: 'Bağımlılık Derecesi',
+            en: 'Dependency'
         },
         Ismotheralive: {
             tr: 'Anne Hayatta mı?',

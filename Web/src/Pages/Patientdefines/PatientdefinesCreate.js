@@ -7,7 +7,7 @@ import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import CostumertypesCreate from '../../Containers/Costumertypes/CostumertypesCreate'
 import PatienttypesCreate from '../../Containers/Patienttypes/PatienttypesCreate'
-import { MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL } from '../../Utils/Constants'
+import { MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL, DEPENDENCY_OPTION_FULLY, DEPENDENCY_OPTION_PARTIAL, DEPENDENCY_OPTION_NON } from '../../Utils/Constants'
 export default class PatientdefinesCreate extends Component {
 
   PAGE_NAME = "PatientdefinesCreate"
@@ -72,9 +72,15 @@ export default class PatientdefinesCreate extends Component {
     ]
 
     const Medicalboardreportoptions = [
-      { key: 0, text: "Ruhsal", value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
-      { key: 1, text: "Bedensel", value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
-      { key: 2, text: "Zihinsel", value: MEDICALBOARDREPORT_OPTION_MENTAL }
+      { key: 0, text: "RUHSAL", value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
+      { key: 1, text: "BEDENSEL", value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
+      { key: 2, text: "ZİHİNSEL", value: MEDICALBOARDREPORT_OPTION_MENTAL }
+    ]
+
+    const Dependencyoptions = [
+      { key: 0, text: "TAM BAĞIMLI", value: DEPENDENCY_OPTION_FULLY },
+      { key: 1, text: "KISMİ BAĞIMLI", value: DEPENDENCY_OPTION_PARTIAL },
+      { key: 2, text: "BAĞIMSIZ", value: DEPENDENCY_OPTION_NON }
     ]
 
     return (
@@ -104,6 +110,9 @@ export default class PatientdefinesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CostumertypeName[Profile.Language]} name="CostumertypeID" options={Costumertypeoptions} formtype="dropdown" modal={CostumertypesCreate} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.PatienttypeName[Profile.Language]} name="PatienttypeID" options={Patienttypeoptions} formtype="dropdown" modal={PatienttypesCreate} />
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Medicalboardreport[Profile.Language]} name="Medicalboardreport" options={Medicalboardreportoptions} formtype="dropdown" />
+              </Form.Group>
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Dependency[Profile.Language]} name="Dependency" options={Dependencyoptions} formtype="dropdown" />
               </Form.Group>
               <div className='my-4 h-[1px] w-full' />
               <Accordion>

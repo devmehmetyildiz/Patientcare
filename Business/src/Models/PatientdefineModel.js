@@ -43,6 +43,9 @@ module.exports = sequelize.define('patientdefineModel', {
     Medicalboardreport: {
         type: Sequelize.STRING
     },
+    Dependency: {
+        type: Sequelize.STRING
+    },
     Gender: {
         type: Sequelize.STRING
     },

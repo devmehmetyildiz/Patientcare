@@ -166,6 +166,7 @@
         "Pages.Preregistrations.PrepareStepOne.Label.Costumertype": "Müşteri Türü",
         "Pages.Preregistrations.PrepareStepOne.Label.Patienttype": "Hasta Türü",
         "Pages.Preregistrations.PrepareStepOne.Label.Medicalboardreport": "Sağlık Kurul Raporu",
+        "Pages.Preregistrations.PrepareStepOne.Label.Dependency": "Bağımlılık Derecesi",
         "Pages.Preregistrations.PrepareStepOne.Label.Motherbiologicalaffinity": "Anne Biyolojik Yakınlık",
         "Pages.Preregistrations.PrepareStepOne.Label.Fatherbiologicalaffinity": "Baba Biyolojik Yakınlık",
         "Pages.Preregistrations.PrepareStepOne.Label.Ismotheralive": "Anne Hayatta mı?",

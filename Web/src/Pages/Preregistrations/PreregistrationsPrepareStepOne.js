@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { FormContext } from '../../Provider/FormProvider'
 import CostumertypesCreate from '../../Containers/Costumertypes/CostumertypesCreate'
 import PatienttypesCreate from '../../Containers/Patienttypes/PatienttypesCreate'
-import { AFFINITY_OPTION, GENDER_OPTION, LIVE_OPTION, MEDICALBOARDREPORT_OPTION } from '../../Utils/Constants'
+import { AFFINITY_OPTION, GENDER_OPTION, LIVE_OPTION, MEDICALBOARDREPORT_OPTION, DEPENDENCY_OPTION } from '../../Utils/Constants'
 import CasesCreate from '../../Containers/Cases/CasesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import Formatdate from '../../Utils/Formatdate'
@@ -191,6 +191,9 @@ export default function PreregistrationsPrepareStepOne({
                       <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Costumertype')} name="CostumertypeID" options={Costumertypeoptions} formtype="dropdown" modal={CostumertypesCreate} />
                       <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Patienttype')} name="PatienttypeID" options={Patienttypeoptions} formtype="dropdown" modal={PatienttypesCreate} />
                       <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Medicalboardreport')} name="Medicalboardreport" options={MEDICALBOARDREPORT_OPTION.map(u => ({ ...u, text: u.text[Profile.Language] }))} formtype="dropdown" />
+                    </Form.Group>
+                    <Form.Group widths={'equal'}>
+                      <FormInput page={PatientdefinePagename} placeholder={t('Pages.Preregistrations.PrepareStepOne.Label.Dependency')} name="Dependency" options={DEPENDENCY_OPTION.map(u => ({ ...u, text: u.text[Profile.Language] }))} formtype="dropdown" />
                     </Form.Group>
                     <div className='my-4 h-[1px] w-full' />
                     <Accordion>

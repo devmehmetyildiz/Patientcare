@@ -6,7 +6,7 @@ import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, DataTable, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import Formatdate from '../../Utils/Formatdate'
-import { MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL } from '../../Utils/Constants'
+import { DEPENDENCY_OPTION_FULLY, DEPENDENCY_OPTION_NON, DEPENDENCY_OPTION_PARTIAL, MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL } from '../../Utils/Constants'
 
 export default class Patientfollowup extends Component {
 
@@ -41,6 +41,12 @@ export default class Patientfollowup extends Component {
             { key: 0, text: "RUHSAL", value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
             { key: 1, text: "BEDENSEL", value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
             { key: 2, text: "ZİHİNSEL", value: MEDICALBOARDREPORT_OPTION_MENTAL }
+        ]
+
+        const dependencyoptions = [
+            { key: 0, text: "TAM BAĞIMLI", value: DEPENDENCY_OPTION_FULLY },
+            { key: 1, text: "KISMİ BAĞIMLI", value: DEPENDENCY_OPTION_PARTIAL },
+            { key: 2, text: "BAĞIMSIZ", value: DEPENDENCY_OPTION_NON }
         ]
 
         const genderoptions = [
@@ -102,6 +108,18 @@ export default class Patientfollowup extends Component {
                                             content: <PatientmedicalboardreportTab
                                                 patients={patients}
                                                 medicalboardreportoptions={medicalboardreportoptions}
+                                                Patientdefines={Patientdefines}
+                                                Profile={Profile}
+                                            />
+                                        }
+                                    },
+                                    {
+                                        menuItem: 'Bağımlılık Derecesine Göre',
+                                        pane: {
+                                            key: 'patientreporttype',
+                                            content: <PatientdependencyTab
+                                                patients={patients}
+                                                dependencyoptions={dependencyoptions}
                                                 Patientdefines={Patientdefines}
                                                 Profile={Profile}
                                             />
@@ -337,6 +355,70 @@ function PatientmedicalboardreportTab({ patients, medicalboardreportoptions, Pat
 
             return decoratedpatients.length > 0 ? <div className='w-full gap-2'>
                 <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{report?.text}</Label>
+
+                <div className='w-full mx-auto '>
+                    {Profile.Ismobile ?
+                        <MobileTable Columns={Columns} Data={decoratedpatients} Profile={Profile} /> :
+                        <DataTable Columns={Columns} Data={decoratedpatients} />}
+                </div>
+                <Pagedivider />
+            </div > : null
+        })}
+    </div>
+}
+
+function PatientdependencyTab({ patients, dependencyoptions, Patientdefines, Profile }) {
+
+
+    const colProps = {
+        sortable: true,
+        canGroupBy: true,
+        canFilter: true
+    }
+
+    const nameCellhandler = (row) => {
+        const patient = row
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        return `${patientdefine?.Firstname} ${patientdefine?.Lastname}`
+    }
+
+    const countryIDCellhandler = (row) => {
+        const patient = row
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        return patientdefine?.CountryID
+    }
+
+    const dateCellhandler = (value) => {
+        if (value) {
+            return value.split('T')[0]
+        }
+        return null
+    }
+
+    const Columns = [
+        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
+        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+
+
+    return <div className='grid grid-cols-1 md:grid-cols-2 w-full'>
+        {dependencyoptions.map(dependency => {
+            const decoratedpatients = patients.map(patient => {
+                const patientdefine = (Patientdefines.list || []).find(define => define?.Uuid === patient?.PatientdefineID)
+                return patientdefine?.Dependency === dependency?.value ? patient : null
+            })
+                .filter(u => u)
+                .map(item => {
+                    return {
+                        ...item,
+                        actions: <Link to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
+                    }
+                });
+
+            return decoratedpatients.length > 0 ? <div className='w-full gap-2'>
+                <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{dependency?.text}</Label>
 
                 <div className='w-full mx-auto '>
                     {Profile.Ismobile ?

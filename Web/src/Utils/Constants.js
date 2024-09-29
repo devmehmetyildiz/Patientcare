@@ -171,6 +171,15 @@ export const MEDICALBOARDREPORT_OPTION = [
     { key: 2, text: { tr: "ZİHİNSEL", en: 'MENTAL' }, value: MEDICALBOARDREPORT_OPTION_MENTAL },
 ]
 
+export const DEPENDENCY_OPTION_FULLY = "0"
+export const DEPENDENCY_OPTION_PARTIAL = "1"
+export const DEPENDENCY_OPTION_NON = "2"
+export const DEPENDENCY_OPTION = [
+    { key: 0, text: { tr: "TAM BAĞIMLI", en: 'FULLY DEPENDENCY' }, value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
+    { key: 1, text: { tr: "KISMİ BAĞIMLI", en: 'PARTIAL DEPENDENCY' }, value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
+    { key: 2, text: { tr: "BAĞIMSIZ", en: 'NON DEPENDENCY' }, value: MEDICALBOARDREPORT_OPTION_MENTAL },
+]
+
 export const CASE_STATUS_DEACTIVE = -1
 export const CASE_STATUS_PASSIVE = 0
 export const CASE_STATUS_COMPLETE = 1
