@@ -2477,6 +2477,7 @@ async function Createfromtemplate(req, res, next) {
                 Dateofbirth: new Date(patientdata.Dateofbirth),
                 Placeofbirth: patientdata.Placeofbirth,
                 Medicalboardreport: patientdata.Medicalboardreport,
+                Dependency: patientdata.Dependency,
                 Gender: patientdata.Gender,
                 Marialstatus: patientdata.Marialstatus,
                 Criminalrecord: patientdata.Criminalrecord,
