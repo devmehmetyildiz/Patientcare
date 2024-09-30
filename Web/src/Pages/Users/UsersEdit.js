@@ -52,6 +52,7 @@ export default class UsersEdit extends Component {
           })
         }
       });
+      const config = selected_record?.Config ? JSON.parse(selected_record?.Config) : null
       this.context.setForm(this.PAGE_NAME,
         {
           ...selected_record,
@@ -59,6 +60,8 @@ export default class UsersEdit extends Component {
           Dateofbirth: validator.isISODate(selected_record?.Dateofbirth) ? Formatdate(selected_record?.Dateofbirth) : null,
           Workstarttime: validator.isISODate(selected_record?.Workstarttime) ? Formatdate(selected_record?.Workstarttime) : null,
           Workendtime: validator.isISODate(selected_record?.Workendtime) ? Formatdate(selected_record?.Workendtime) : null,
+          Duration: config?.autoClose,
+          Position: config?.position
         })
       this.setState({
         isDatafetched: true,
@@ -122,6 +125,11 @@ export default class UsersEdit extends Component {
     const { history, Users, Roles, Profile, EditUsers, fillUsernotification, } = this.props
     const t = Profile?.i18n?.t
     const data = this.context.getForm(this.PAGE_NAME)
+    data.Config = {
+      autoClose: data.Duration || 0,
+      position: data.Position || 'right',
+    }
+    data.Config = data.Config ? JSON.stringify(data.Config) : ''
     data.Roles = (data?.Roles || []).map(id => {
       return (Roles.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
     }).filter(u => u)

@@ -9,6 +9,7 @@ import {
 } from '../../Components'
 import { TRAINING_TYPE_COMPANY, TRAINING_TYPE_ORGANIZATION } from '../../Utils/Constants'
 import Fileupload from '../../Components/Fileupload'
+import TrainingsFastAdd from './TrainingsFastAdd'
 
 export default class TrainingsCreate extends Component {
 
@@ -17,7 +18,8 @@ export default class TrainingsCreate extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedFiles: []
+      selectedFiles: [],
+      open: false
     }
   }
 
@@ -32,12 +34,16 @@ export default class TrainingsCreate extends Component {
     this.setState({ selectedFiles: [...files] })
   }
 
+  setOpen = (value) => {
+    this.setState({ open: value })
+  }
+
   render() {
     const { Trainings, Users, Usagetypes, Professions, Profile, history, closeModal, fillTrainingnotification } = this.props
 
     const t = Profile?.i18n?.t
 
-    const Useroptions = (Users.list || []).filter(u => u.Isactive).map(user => {
+    const Useroptions = (Users.list || []).filter(u => u.Isactive && u.Isworker).map(user => {
       return { key: user.Uuid, text: `${user?.Name} ${user?.Surname}`, value: user.Uuid }
     })
 
@@ -69,6 +75,13 @@ export default class TrainingsCreate extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
+            <div className='w-full flex justify-end items-center'>
+              <Button
+                className=' !bg-[#2355a0] !text-white'
+                content={t('Pages.Trainings.Column.Fastadd')}
+                onClick={() => { this.setOpen(true) }}
+              />
+            </div>
             <Form>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Trainings.Column.Type')} name="Type" formtype='dropdown' options={Trainingtypeoptions} />
@@ -115,6 +128,16 @@ export default class TrainingsCreate extends Component {
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
+          <TrainingsFastAdd
+            context={this.context}
+            PAGE_NAME={this.PAGE_NAME}
+            open={this.state.open}
+            setOpen={this.setOpen}
+            fillTrainingnotification={fillTrainingnotification}
+            Users={Users}
+            Professions={Professions}
+            Profile={Profile}
+          />
         </Pagewrapper >
     )
   }

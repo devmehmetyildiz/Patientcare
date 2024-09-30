@@ -48,7 +48,7 @@ export default class StocksEdit extends Component {
   }
 
   render() {
-    const { Stocks, Warehouses, Stockdefines, Profile, history, Stocktypes, Stocktypegroups } = this.props
+    const { Stocks, Warehouses, Stockdefines, Profile, history, Stocktypes, } = this.props
 
     const selectedstockdefineId = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
     const stockdefine = (Stockdefines.list || []).find(item => item.Uuid === selectedstockdefineId)
@@ -110,14 +110,18 @@ export default class StocksEdit extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { EditStocks, history, fillStocknotification, Stocks, Profile, Stockdefines, Stocktypes } = this.props
+    const { EditStocks, history, fillStocknotification, Stocks, Profile, Stockdefines, Stocktypes, Stocktypegroups } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
 
     const selectedstockdefineId = data?.StockdefineID
     const stockdefine = (Stockdefines.list || []).find(item => item.Uuid === selectedstockdefineId)
     const selectedstocktypeId = stockdefine?.StocktypeID
     const stocktype = (Stocktypes.list || []).find(item => item.Uuid === selectedstocktypeId)
+    const stocktypegroup = (Stocktypegroups.list || []).find(item => (((item.Stocktypes || '').split(',')) || []).includes(stocktype?.Uuid))
     const Issktneeded = stocktype?.Issktneed
+
+    data.StocktypeID = stocktype?.Uuid
+    data.StockgrouptypeID = stocktypegroup?.Uuid
 
     let errors = []
     if (!validator.isUUID(data.WarehouseID)) {

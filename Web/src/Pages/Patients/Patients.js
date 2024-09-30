@@ -15,6 +15,7 @@ import GetInitialconfig from '../../Utils/GetInitialconfig'
 import PatientsInsertstockModal from '../../Containers/Patients/PatientsInsertstockModal'
 import PatientsReducestockModal from '../../Containers/Patients/PatientsReducestockModal'
 import PatientsMakeactiveModal from '../../Containers/Patients/PatientsMakeactiveModal'
+import PatientsEntereventModal from '../../Containers/Patients/PatientsEntereventModal'
 
 export default function Patients(props) {
 
@@ -241,6 +242,7 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
 
   const [selectedRecords, setSelectedRecords] = useState([])
   const [openMulti, setOpenMulti] = useState(false)
+  const [openaddmovement, setOpenaddmovement] = useState(false)
   const [openinsertstock, setOpeninsertstock] = useState(false)
   const [openreducestock, setOpenreducestock] = useState(false)
   const [openeditplace, setOpeneditplace] = useState(false)
@@ -286,6 +288,17 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
       process: <Popup
         content={
           <List>
+            <List.Item>
+              <Button
+                size='small'
+                onClick={() => {
+                  setRecord(item)
+                  setOpenaddmovement(true)
+                }}
+                fluid color='instagram'>
+                <Icon name='exchange' /> {t('Pages.Patients.Column.Enterevent')}
+              </Button>
+            </List.Item>
             <List.Item>
               <Button
                 size='small'
@@ -467,6 +480,13 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
         isPatientspage
         open={openreducestock}
         setOpen={setOpenreducestock}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PatientsEntereventModal
+        isPatientspage
+        open={openaddmovement}
+        setOpen={setOpenaddmovement}
         record={record}
         setRecord={setRecord}
       />

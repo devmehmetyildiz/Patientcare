@@ -52,8 +52,8 @@ export default function PatientsDetailInfo(props) {
         <div className='font-bold text-xl '> {t('Pages.Patients.PatientsDetail.PatientDetailInfo.Header')}</div>
       </div>
       {Columns.map((item, index) => {
-        return <div key={index} className='w-full flex justify-center items-center gap-2'>
-          <div className='w-full text-right font-bold'>
+        return <div key={index} className='w-full flex justify-start items-center gap-2'>
+          <div className='w-48 text-left font-bold'>
             {`${item.label}:`}
           </div>
           <div className='w-full text-left font-semibold text-[#777777dd]'>

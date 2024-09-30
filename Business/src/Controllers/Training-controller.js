@@ -418,6 +418,58 @@ async function ApproveTraining(req, res, next) {
     GetTrainings(req, res, next)
 }
 
+async function CompleteTraininguser(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.traininguserId
+    console.log('Uuid: ', Uuid);
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.TRAININGUSERID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TRAININGUSERID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const traininguser = await db.trainingusersModel.findOne({ where: { Uuid: Uuid } })
+        console.log('traininguser: ', traininguser);
+        if (!traininguser) {
+            return next(createNotfounderror([messages.ERROR.TRAININGUSER_NOT_FOUND], req.language))
+        }
+        if (traininguser.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.TRAININGUSER_NOT_ACTIVE], req.language))
+        }
+
+        await db.trainingusersModel.update({
+            Iscompleted: true,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        const training = await db.trainingModel.findOne({ where: { Uuid: traininguser?.TrainingID || '' } });
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Eğitimler',
+            role: 'trainingnotification',
+            message: `${training?.Name} isimli Eğitim  ${username} tarafından Katıldı Olarak Tamamlandı.`,
+            pushurl: '/Trainings'
+        })
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetTrainings(req, res, next)
+}
+
 async function CompleteTraining(req, res, next) {
 
     let validationErrors = []
@@ -477,5 +529,6 @@ module.exports = {
     DeleteTraining,
     SavepreviewTraining,
     ApproveTraining,
-    CompleteTraining
+    CompleteTraining,
+    CompleteTraininguser
 }

@@ -20,6 +20,7 @@ import { GetUsers } from "../../Redux/UserSlice"
 import { GetStocktypes } from "../../Redux/StocktypeSlice"
 import { GetStocktypegroups } from "../../Redux/StocktypegroupSlice"
 import { GetUnits } from "../../Redux/UnitSlice"
+import { GetPatienteventdefines } from '../../Redux/PatienteventdefineSlice'
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -41,6 +42,7 @@ const mapStateToProps = (state) => ({
     Users: state.Users,
     Stocktypes: state.Stocktypes,
     Stocktypegroups: state.Stocktypegroups,
+    Patienteventdefines: state.Patienteventdefines,
     Units: state.Units,
     Profile: state.Profile
 })
@@ -49,7 +51,7 @@ const mapDispatchToProps = {
     GetPatient, handleSelectedPatient, fillPatientnotification, GetPatienttypes, GetCostumertypes,
     GetPatientdefines, GetFiles, GetUsagetypes, GetCases, GetDepartments, GetFloors, GetRooms, GetBeds,
     GetPatientcashmovements, GetPatientcashregisters, GetStocks, GetStockdefines, GetStockmovements,
-    GetUsers, GetStocktypes, GetStocktypegroups, GetUnits, AddStockmovements
+    GetUsers, GetStocktypes, GetStocktypegroups, GetUnits, GetPatienteventdefines, AddStockmovements,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsDetail)

@@ -16,6 +16,7 @@ import { GetShiftdefines } from '../../Redux/ShiftdefineSlice'
 import { GetFloors } from '../../Redux/FloorSlice'
 import { GetRooms } from '../../Redux/RoomSlice'
 import { GetBeds } from '../../Redux/BedSlice'
+import { GetTrainings, CompleteTrainingusers } from '../../Redux/TrainingSlice'
 
 const mapStateToProps = (state) => ({
     Users: state.Users,
@@ -34,6 +35,7 @@ const mapStateToProps = (state) => ({
     Floors: state.Floors,
     Rooms: state.Rooms,
     Beds: state.Beds,
+    Trainings: state.Trainings,
     Profile: state.Profile
 })
 
@@ -41,7 +43,7 @@ const mapDispatchToProps = {
     GetUsers, fillUsernotification, GetFiles, GetDepartments,
     GetCases, GetRoles, GetProfessions, GetUsagetypes, GetEquipmentgroups,
     GetEquipments, GetPurchaseorders, GetBreakdowns, GetMainteancies, GetShiftdefines,
-    GetFloors, GetRooms, GetBeds
+    GetFloors, GetRooms, GetBeds, GetTrainings, CompleteTrainingusers
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UsersDetail)

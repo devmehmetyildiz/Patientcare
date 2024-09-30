@@ -31,17 +31,17 @@ export default function PatientsDetailFiles(props) {
         <div className='w-full flex justify-start items-start'>
           <div className='font-bold text-xl font-poppins'> {t('Pages.Patients.PatientsDetail.PatientDetailFiles.Header')}</div>
         </div>
-        <Table >
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailFiles.Label.Name')}</Table.HeaderCell>
-              <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailFiles.Label.Usagetype')}</Table.HeaderCell>
-              <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailFiles.Label.Download')}</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {(decoratedList || []).length > 0
-              ? decoratedList.map((file, index) => {
+        {(decoratedList || []).length > 0 ?
+          <Table >
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailFiles.Label.Name')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailFiles.Label.Usagetype')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailFiles.Label.Download')}</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {decoratedList.map((file, index) => {
                 return <Table.Row key={index}>
                   <Table.Cell>
                     <Icon className='text-[#2355a0]' name='file alternate' size='large' />
@@ -56,14 +56,10 @@ export default function PatientsDetailFiles(props) {
                     }
                   </Table.Cell>
                 </Table.Row>
-              })
-              : <Table.Row>
-                <Table.Cell>
-                  <div className='font-bold font-poppins'>{t('Common.NoDataFound')}</div>
-                </Table.Cell>
-              </Table.Row>}
-          </Table.Body>
-        </Table>
+              })}
+            </Table.Body>
+          </Table>
+          : <div className='font-bold font-poppins'>{t('Common.NoDataFound')}</div>}
       </div>
     </div>
   )

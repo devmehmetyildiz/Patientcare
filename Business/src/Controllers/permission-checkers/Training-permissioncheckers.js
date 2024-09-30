@@ -24,6 +24,10 @@ async function SavepreviewTraining(req, res, next) {
     PermissionHandler(req, next, 'trainingupdate')
 }
 
+async function CompleteTraininguser(req, res, next) {
+    PermissionHandler(req, next, 'trainingupdate')
+}
+
 async function CompleteTraining(req, res, next) {
     PermissionHandler(req, next, 'trainingupdate')
 }
@@ -40,5 +44,6 @@ module.exports = {
     DeleteTraining,
     SavepreviewTraining,
     ApproveTraining,
-    CompleteTraining
+    CompleteTraining,
+    CompleteTraininguser
 }

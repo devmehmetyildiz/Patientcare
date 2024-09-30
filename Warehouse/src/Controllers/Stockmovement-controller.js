@@ -54,6 +54,7 @@ async function AddStockmovement(req, res, next) {
         Movementtype,
         Amount,
         Movementdate,
+        Approved
     } = req.body
 
     if (!validator.isUUID(StockID)) {
@@ -80,7 +81,7 @@ async function AddStockmovement(req, res, next) {
 
     try {
         let amount = 0.0;
-        let movements = await db.stockmovementModel.findAll({ where: { StockID: StockID } })
+        let movements = await db.stockmovementModel.findAll({ where: { StockID: StockID, Isactive: true, Isapproved: true } })
         movements.forEach(movement => {
             amount += (movement.Amount * movement.Movementtype);
         });
@@ -92,7 +93,7 @@ async function AddStockmovement(req, res, next) {
         await db.stockmovementModel.create({
             ...req.body,
             Uuid: stockmovementuuid,
-            Isapproved: false,
+            Isapproved: Approved ? Approved : false,
             Createduser: username,
             Createtime: new Date(),
             Isactive: true
@@ -172,7 +173,7 @@ async function AddStockmovements(req, res, next) {
 
             let stockmovementuuid = uuid()
             let amount = 0.0;
-            let movements = await db.stockmovementModel.findAll({ where: { StockID: StockID } })
+            let movements = await db.stockmovementModel.findAll({ where: { StockID: StockID, Isactive: true } })
             movements.forEach(movement => {
                 amount += (movement.Amount * movement.Movementtype);
             });

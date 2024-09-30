@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import Fileupload from '../../Components/Fileupload'
 import { TRAINING_TYPE_COMPANY, TRAINING_TYPE_ORGANIZATION } from '../../Utils/Constants'
 import { Formatfulldate } from '../../Utils/Formatdate'
+import TrainingsFastAdd from './TrainingsFastAdd'
 
 export default class TrainingsEdit extends Component {
 
@@ -16,6 +17,7 @@ export default class TrainingsEdit extends Component {
     super(props)
     this.state = {
       isDatafetched: false,
+      open: false,
       selectedFiles: []
     }
   }
@@ -65,12 +67,16 @@ export default class TrainingsEdit extends Component {
     this.setState({ selectedFiles: [...files] })
   }
 
+  setOpen = (value) => {
+    this.setState({ open: value })
+  }
+
   render() {
     const { Trainings, Users, Usagetypes, Professions, Profile, history, fillTrainingnotification } = this.props
 
     const t = Profile?.i18n?.t
 
-    const Useroptions = (Users.list || []).filter(u => u.Isactive).map(user => {
+    const Useroptions = (Users.list || []).filter(u => u.Isactive && u.Isworker).map(user => {
       return { key: user.Uuid, text: `${user?.Name} ${user?.Surname}`, value: user.Uuid }
     })
 
@@ -102,6 +108,13 @@ export default class TrainingsEdit extends Component {
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
+            <div className='w-full flex justify-end items-center'>
+              <Button
+                className=' !bg-[#2355a0] !text-white'
+                content={t('Pages.Trainings.Column.Fastadd')}
+                onClick={() => { this.setOpen(true) }}
+              />
+            </div>
             <Form>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Trainings.Column.Type')} name="Type" formtype='dropdown' options={Trainingtypeoptions} />
@@ -148,6 +161,16 @@ export default class TrainingsEdit extends Component {
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
+          <TrainingsFastAdd
+            context={this.context}
+            PAGE_NAME={this.PAGE_NAME}
+            open={this.state.open}
+            setOpen={this.setOpen}
+            fillTrainingnotification={fillTrainingnotification}
+            Users={Users}
+            Professions={Professions}
+            Profile={Profile}
+          />
         </Pagewrapper >
     )
   }

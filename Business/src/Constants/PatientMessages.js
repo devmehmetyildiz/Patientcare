@@ -1,5 +1,17 @@
 const messages = {
     ERROR: {
+        PATIENTEVENTMOVEMENT_NOT_FOUND: {
+            code: 'PATIENTEVENTMOVEMENT_NOT_FOUND', description: {
+                en: 'patient event movement not found',
+                tr: 'hasta vaka hareketi bulunamadı',
+            }
+        },
+        PATIENTEVENTMOVEMENT_NOT_ACTIVE: {
+            code: 'PATIENTEVENTMOVEMENT_NOT_ACTIVE', description: {
+                en: 'patient event movement not active',
+                tr: 'hasta vaka hareketi bulunamadı',
+            }
+        },
         PATIENTMOVEMENT_NOT_FOUND: {
             code: 'PATIENTMOVEMENT_NOT_FOUND', description: {
                 en: 'patient movement not found',
@@ -79,6 +91,18 @@ const messages = {
             code: 'MOVEMENT_END_DATE_REQUIRED', description: {
                 en: 'The movement end date required, system should know end date when you enter past dated movement',
                 tr: 'Bu işlem için hareket sona erme tarihi gerekli, geçmiş tarihli hareket girişlerinde sistem bitiş tarihi bilmeli',
+            }
+        },
+        USERID_REQUIRED: {
+            code: 'USERID_REQUIRED', description: {
+                en: 'The User ID required',
+                tr: 'Bu işlem için Giriş Yapan Kullanıcı gerekli',
+            }
+        },
+        EVENTID_REQUIRED: {
+            code: 'EVENTID_REQUIRED', description: {
+                en: 'The Event ID required',
+                tr: 'Bu işlem için vaka gerekli',
             }
         },
         OCCUREDDATE_REQUIRED: {
@@ -181,6 +205,18 @@ const messages = {
             code: 'PATIENTID_REQUIRED', description: {
                 en: 'The PatientID required',
                 tr: 'Bu işlem için PatientID gerekli',
+            }
+        },
+        PATIENTEVENTMOVEMENTID_REQUIRED: {
+            code: 'PATIENTEVENTMOVEMENTID_REQUIRED', description: {
+                en: 'The PatienteventmovementID required',
+                tr: 'Bu işlem için Hasta Vaka Hareket Uuid gerekli',
+            }
+        },
+        UNSUPPORTED_PATIENTEVENTMOVEMENTID: {
+            code: 'UNSUPPORTED_PATIENTEVENTMOVEMENTID', description: {
+                en: 'The patient event movement id is unsupported',
+                tr: 'Tanımsız hasta vaka hareket uuid değeri',
             }
         },
         PATIENTMOVEMENTID_REQUIRED: {

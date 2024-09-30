@@ -45,6 +45,7 @@ export default class Trainings extends Component {
             { Header: t('Pages.Trainings.Column.Companyname'), accessor: 'Companyname', keys: ['company'] },
             { Header: t('Pages.Trainings.Column.Educator'), accessor: 'Educator', keys: ['company'] },
             { Header: t('Pages.Trainings.Column.EducatoruserID'), accessor: row => this.userCellhandler(row?.EducatoruserID), keys: ['organization'] },
+            { Header: t('Pages.Trainings.Column.Completedusers'), accessor: row => this.traininguserCellhandler(row?.Trainingusers), keys: ['completed', 'approved'] },
             { Header: t('Pages.Trainings.Column.Approvetime'), accessor: row => this.dateCellhandler(row?.Approvetime), keys: ['approved'] },
             { Header: t('Pages.Trainings.Column.Completedtime'), accessor: row => this.dateCellhandler(row?.Completedtime), keys: ['completed'] },
             { Header: t('Pages.Trainings.Column.Approveduser'), accessor: 'Approveduser', keys: ['approved'] },
@@ -282,6 +283,18 @@ export default class Trainings extends Component {
         } else {
             const user = (Users.list || []).find(u => u.Uuid === value)
             return user ? `${user?.Name} ${user?.Surname}` : ''
+        }
+    }
+
+    traininguserCellhandler = (users) => {
+        if (validator.isArray(users)) {
+            const fullcount = (users || []).filter(u => u.Isactive).length
+            const completedcount = (users || []).filter(u => u.Isactive && u.Iscompleted).length
+            return <div>
+                {`${completedcount} / ${fullcount}`}
+            </div>
+        } else {
+            return ""
         }
     }
 }

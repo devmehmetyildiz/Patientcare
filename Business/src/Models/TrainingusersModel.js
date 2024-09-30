@@ -17,7 +17,7 @@ module.exports = sequelize.define('trainingusersModel', {
     },
 
     Iscompleted: {
-        type: Sequelize.STRING
+        type: Sequelize.BOOLEAN
     },
 
     Createduser: {

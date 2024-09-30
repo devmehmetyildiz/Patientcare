@@ -89,6 +89,28 @@ export const AddPatients = createAsyncThunk(
     }
 );
 
+export const AddPatienteventmovements = createAsyncThunk(
+    'Patients/AddPatienteventmovements',
+    async ({ data, onSuccess }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.post(config.services.Business, `${ROUTES.PATIENT}/AddPatienteventmovement`, data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Add'),
+                description: t('Redux.Patients.Messages.Addeventmovements'),
+            }));
+            onSuccess && onSuccess()
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const EditPatients = createAsyncThunk(
     'Patients/EditPatients',
     async ({ data, files, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
@@ -163,6 +185,28 @@ export const EditPatientmovements = createAsyncThunk(
             return null
         } catch (error) {
             console.log('error: ', error);
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const EditPatienteventmovements = createAsyncThunk(
+    'Patients/EditPatienteventmovements',
+    async ({ data, onSuccess }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            await instanse.put(config.services.Business, ROUTES.PATIENT + '/UpdatePatienteventmovements', data);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Patients.Messages.Updateeventmovements'),
+            }));
+            onSuccess && onSuccess()
+            return null
+        } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
             dispatch(fillPatientnotification(errorPayload));
             throw errorPayload;
@@ -378,6 +422,29 @@ export const DeletePatientmovements = createAsyncThunk(
                 type: 'Success',
                 code: t('Common.Code.Delete'),
                 description: t('Redux.Patients.Messages.Deletemovement'),
+            }));
+            onSuccess && onSuccess()
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeletePatienteventmovements = createAsyncThunk(
+    'Patients/DeletePatienteventmovements',
+    async ({ data, onSuccess }, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.delete(config.services.Business, `${ROUTES.PATIENT}/DeletePatienteventmovement/${data.Uuid}`);
+            dispatch(fillPatientnotification({
+                type: 'Success',
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Patients.Messages.Deleteeventmovement'),
             }));
             onSuccess && onSuccess()
             return response?.data?.list || [];
@@ -719,6 +786,26 @@ export const PatientsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(EditPatienteventmovements.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(EditPatienteventmovements.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(EditPatienteventmovements.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(AddPatienteventmovements.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(AddPatienteventmovements.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(AddPatienteventmovements.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(CheckPatients.pending, (state) => {
                 state.isLoading = true;
             })
@@ -814,6 +901,16 @@ export const PatientsSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(DeletePatientmovements.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeletePatienteventmovements.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(DeletePatienteventmovements.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(DeletePatienteventmovements.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

@@ -111,6 +111,9 @@ export default function UserDetailTimeline(props) {
                             defaultTimeStart={defaultTimeStart}
                             defaultTimeEnd={defaultTimeEnd}
                             locale='tr'
+                            minZoom={24 * 60 * 60 * 1000}
+                            maxZoom={365 * 24 * 60 * 60 * 1000}
+                            zoomSpeed={0.05}
                             itemRenderer={({ item, itemContext, getItemProps }) => {
                                 const movement = (user?.Movements || []).find(u => u.Uuid === item.id)
                                 const type = Movementtypes.find(u => u.value === movement?.Type)?.name || t('Common.NoDataFound')

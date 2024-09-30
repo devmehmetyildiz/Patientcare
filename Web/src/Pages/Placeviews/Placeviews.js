@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Card, Grid, GridColumn, Icon, Loader, Tab } from 'semantic-ui-react'
+import { Breadcrumb, Card, Grid, GridColumn, Icon, Label, Loader, Tab } from 'semantic-ui-react'
 import Literals from './Literals'
 import { Contentwrapper, Headerwrapper, LoadingPage, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import { ROUTES } from '../../Utils/Constants'
@@ -36,75 +36,74 @@ export default function Placeviews(props) {
         const patientPP = (Files.list || []).find(u => u.ParentID === patient?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
         return {
-            header: <div className='w-full flex flex-row justify-between items-start'>
+            header: <div className='w-full flex flex-row justify-between items-start '>
                 <div className='flex flex-col justify-start items-start'>
-                    <div className='font-bold'>{floor?.Name}</div>
-                    <div>{`${room?.Name} ${bed?.Name}`}</div>
+                    <div className='font-bold'>{`${floor?.Name}-${room?.Name}-${bed?.Name}`}</div>
                 </div>
                 {patientPP
                     ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPP?.Uuid}`} className="rounded-full" style={{ width: '30px', height: '30px' }} />
                     : <Icon name='users' circular />}
             </div>,
-            meta: bed.Isoccupied ? <div>{`${patientdefine?.Firstname || ''} ${patientdefine?.Lastname || ''}-${patientdefine?.CountryID || ''}`}</div> : null,
-            description: bed.Isoccupied ? <div className='w-full flex flex-row flex-nowrap justify-between items-center'>
-                <div className='font-bold'>{cases?.Name}</div>
+            meta: bed.Isoccupied ?
                 <Link to={`/Patients/${patient?.Uuid}`}>
-                    <Icon name='magnify' color='black' circular />
+                    <Label
+                        className=' !flex !flex-col !justify-start !items-start !text-left'
+                        color='blue'
+                    >
+                        {`${patientdefine?.Firstname || ''} ${patientdefine?.Lastname || ''}`}
+                        <Label.Detail >
+                            {patientdefine?.CountryID || ''}
+                        </Label.Detail>
+                    </Label>
                 </Link>
-            </div> : null,
+                : null,
+            description: bed.Isoccupied ? <Label size='large' className='!text-white' basic style={{ backgroundColor: cases?.Casecolor }}>{cases?.Name}</Label> : null,
             color: bed.Isoccupied ? cases?.Casecolor : '',
-            filled: bed.Isoccupied
+            filled: bed.Isoccupied,
+            floorID: floor?.Uuid,
+            roomID: room?.Uuid
         }
     })
 
-    const panes = [
-        {
+    const renderView = () => {
+        let panes = [];
+
+        panes.push({
             menuItem: Literals.Columns.Onlyfilled[Profile.Language], render: () => <Tab.Pane>
-                {(list || []).filter(u => u.filled).length > 0
-                    ? <div className='w-full mx-auto '>
-                        <div className='flex flex-row justify-start items-start flex-wrap w-full'>
-                            {(((list || []).filter(u => u.filled) || []) || []).map((card, index) => {
-                                return <div
-                                    key={index}
-                                    style={{ backgroundColor: card.color }}
-                                    className='border-2 p-2 rounded-lg m-2  w-[300px] h-[160px] flex flex-col justify-start items-start'>
-                                    {card.header && card.header}
-                                    <Pagedivider />
-                                    {card.meta && <div>{card.meta}</div>}
-                                    <Pagedivider />
-                                    {card.description && card.description}
-                                </div>
-                            })}
-                        </div>
-                    </div>
-                    : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
-                }
+                <Viewrender
+                    list={(list || []).filter(u => u.filled)}
+                    Profile={Profile}
+                />
             </Tab.Pane>
-        },
-        {
+        })
+
+        const floors = (Floors.list || []).filter(u => u.Isactive)
+
+        floors.forEach(floor => {
+
+
+            panes.push({
+                menuItem: floor?.Name, render: () => <Tab.Pane>
+                    <Viewrender
+                        list={(list || []).filter(u => u.floorID === floor?.Uuid)}
+                        Profile={Profile}
+                    />
+                </Tab.Pane>
+            })
+        });
+
+        panes.push({
             menuItem: Literals.Columns.All[Profile.Language], render: () => <Tab.Pane>
-                {list.length > 0
-                    ? <div className='w-full mx-auto '>
-                        <div className='flex flex-row justify-start items-start flex-wrap w-full'>
-                            {(list || []).map((card, index) => {
-                                return <div
-                                    key={index}
-                                    style={{ backgroundColor: card.color }}
-                                    className='border-2 p-2 rounded-lg m-2  w-[300px] h-[160px] flex flex-col justify-start items-start'>
-                                    {card.header && card.header}
-                                    <Pagedivider />
-                                    {card.meta && <div>{card.meta}</div>}
-                                    <Pagedivider />
-                                    {card.description && card.description}
-                                </div>
-                            })}
-                        </div>
-                    </div>
-                    : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
-                }
+                <Viewrender
+                    list={(list || [])}
+                    Profile={Profile}
+                />
             </Tab.Pane>
-        },
-    ]
+        })
+
+        return panes
+    }
+
 
     return (
         Patients.isLoading ? <LoadingPage /> :
@@ -119,19 +118,54 @@ export default function Placeviews(props) {
                                     </Link>
                                 </Breadcrumb>
                             </GridColumn>
-                            <Settings
-                                Profile={Profile}
-                                Pagecreateheader={Literals.Page.Pagetransferheader[Profile.Language]}
-                                Pagecreatelink={"/Placeviews/Transfer"}
-                                Showcreatebutton
-                            />
                         </Grid>
                     </Headerwrapper>
                     <Pagedivider />
-                    <Contentwrapper additionalStyle={'max-h-[90vh]'}>
-                        <Tab panes={panes} />
+                    <Contentwrapper >
+                        <Tab panes={renderView()} />
                     </Contentwrapper>
                 </Pagewrapper>
             </React.Fragment >
+    )
+}
+
+
+function Viewrender(props) {
+    const { list, Profile } = props
+
+    const roomList = [...new Set([...(list || []).map(u => u.roomID)])]
+
+    return list.length > 0 ?
+        <div className='w-full mx-auto '>
+            {(roomList || []).map((room, roomIndex) => {
+                return <React.Fragment key={roomIndex}>
+                    <div className='flex flex-row justify-start items-start flex-wrap w-full'>
+                        {list.filter(u => u.roomID === room).map((card, index) => {
+                            return <Patientcard
+                                header={card.header}
+                                meta={card.meta}
+                                description={card.description}
+                                key={index}
+                            />
+                        })}
+                    </div>
+                    <Pagedivider />
+                </React.Fragment>
+            })}
+        </div>
+        : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+}
+
+function Patientcard(props) {
+    const { header, meta, description, key } = props
+
+    return (
+        <div
+            key={key}
+            className='border-2 p-2  rounded-lg m-2  w-[300px] h-[130px] flex flex-col justify-start items-start gap-2'>
+            {header && header}
+            {meta && <div>{meta}</div>}
+            {description && description}
+        </div>
     )
 }

@@ -91,6 +91,18 @@ async function DeletePreregisrations(req, res, next) {
     PermissionHandler(req, next, 'patientdelete')
 }
 
+async function AddPatienteventmovement(req, res, next) {
+    PermissionHandler(req, next, 'patientadd')
+}
+
+async function UpdatePatienteventmovements(req, res, next) {
+    PermissionHandler(req, next, 'patientupdate')
+}
+
+async function DeletePatienteventmovement(req, res, next) {
+    PermissionHandler(req, next, 'patientdelete')
+}
+
 module.exports = {
     GetPatients,
     GetPatient,
@@ -116,5 +128,8 @@ module.exports = {
     UpdatePatientDates,
     PatientsMakeactive,
     DeletePatientmovement,
-    UpdatePatientmovements
+    UpdatePatientmovements,
+    AddPatienteventmovement,
+    UpdatePatienteventmovements,
+    DeletePatienteventmovement
 }

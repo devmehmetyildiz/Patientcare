@@ -21,6 +21,8 @@ const claimpaymentdetailModel = require('./ClaimpaymentdetailModel')
 const claimpaymentparameterModel = require('./ClaimpaymentparameterModel')
 const trainingModel = require('./TrainingModel')
 const trainingusersModel = require('./TrainingusersModel')
+const patienteventdefineModel = require('./PatienteventdefineModel')
+const patienteventmovementModel = require('./PatienteventmovementModel')
 
 module.exports = {
     applog_businessModel,
@@ -45,5 +47,7 @@ module.exports = {
     claimpaymentdetailModel,
     claimpaymentparameterModel,
     trainingModel,
-    trainingusersModel
+    trainingusersModel,
+    patienteventdefineModel,
+    patienteventmovementModel
 }

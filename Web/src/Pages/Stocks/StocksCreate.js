@@ -85,18 +85,24 @@ export default class StocksCreate extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { AddStocks, history, fillStocknotification, Profile, closeModal, Stockdefines, Stocktypes } = this.props
+    const { AddStocks, history, fillStocknotification, Profile, closeModal, Stockdefines, Stocktypes, Stocktypegroups } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
     data.Type = 0
     data.Isapproved = false
     data.Isdeactivated = false
     data.Deactivateinfo = ""
 
+
+
     const selectedstockdefineId = data?.StockdefineID
     const stockdefine = (Stockdefines.list || []).find(item => item.Uuid === selectedstockdefineId)
     const selectedstocktypeId = stockdefine?.StocktypeID
     const stocktype = (Stocktypes.list || []).find(item => item.Uuid === selectedstocktypeId)
+    const stocktypegroup = (Stocktypegroups.list || []).find(item => (((item.Stocktypes || '').split(',')) || []).includes(stocktype?.Uuid))
     const Issktneeded = stocktype?.Issktneed
+
+    data.StocktypeID = stocktype?.Uuid
+    data.StockgrouptypeID = stocktypegroup?.Uuid
 
     let errors = []
     if (!validator.isUUID(data.WarehouseID)) {

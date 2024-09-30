@@ -5,7 +5,7 @@ export default function UsersDetailEquipments(props) {
 
   const { user, Equipmentgroups, Equipments, Floors, Rooms, Beds, Profile } = props
 
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
 
   const t = Profile?.i18n?.t
 

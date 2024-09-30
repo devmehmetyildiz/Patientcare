@@ -13,15 +13,16 @@ import UserDetailShift from './UserDetailShift'
 import UsersDetailPurchaseorders from './UsersDetailPurchaseorders'
 import UserDetailTimeline from './UserDetailTimeline'
 import UsersEditcaseModal from '../../../Containers/Users/UsersEditcaseModal'
+import UsersDetailTrainings from './UsersDetailTrainings'
 
 export default function UsersDetail(props) {
 
     const { fillUsernotification, GetUsers, GetFiles, GetEquipmentgroups,
         GetEquipments, GetPurchaseorders, GetBreakdowns, GetMainteancies, GetShiftdefines,
-        GetCases, GetRoles, GetProfessions, GetUsagetypes, GetDepartments,
-        GetFloors, GetRooms, GetBeds } = props
+        GetCases, GetRoles, GetProfessions, GetUsagetypes, GetDepartments, GetTrainings,
+        GetFloors, GetRooms, GetBeds, CompleteTrainingusers } = props
 
-    const { Profile, Cases, Users, Files, Departments, Roles, Usagetypes, Equipmentgroups,
+    const { Profile, Cases, Users, Files, Departments, Roles, Usagetypes, Equipmentgroups, Trainings,
         Equipments, Purchaseorders, Breakdowns, Mainteancies, Shiftdefines, Floors, Rooms, Beds } = props
 
     const { UserID, match, history, } = props
@@ -51,6 +52,7 @@ export default function UsersDetail(props) {
             GetFloors()
             GetRooms()
             GetBeds()
+            GetTrainings()
         } else {
             fillUsernotification({
                 type: 'Success',
@@ -136,6 +138,13 @@ export default function UsersDetail(props) {
                                 Cases={Cases}
                                 Users={Users}
                                 Departments={Departments}
+                                Profile={Profile}
+                            />
+                            <UsersDetailTrainings
+                                user={user}
+                                Trainings={Trainings}
+                                GetUsers={GetUsers}
+                                CompleteTrainingusers={CompleteTrainingusers}
                                 Profile={Profile}
                             />
                             <UsersDetailEquipments

@@ -46,6 +46,7 @@ const Patients = lazy(() => import('./Containers/Patients/Patients'));
 const PatientsDetail = lazy(() => import('./Containers/Patients/PatientsDetail'));
 const PatientsEditcash = lazy(() => import('./Containers/Patients/PatientsEditcash'));
 const PatientsMovements = lazy(() => import('./Containers/Patients/PatientMovements'));
+const PatientEventmovements = lazy(() => import('./Containers/Patients/PatientEventmovements'));
 const PatientsEditsupportplan = lazy(() => import('./Containers/Patients/PatientsEditsupportplan'));
 const PatientsEditroutine = lazy(() => import('./Containers/Patients/PatientsEditroutine'));
 const PatientsFiles = lazy(() => import('./Containers/Patients/PatientsFiles'));
@@ -130,6 +131,10 @@ const ShiftdefinesEdit = lazy(() => import('./Containers/Shiftdefines/Shiftdefin
 const Beds = lazy(() => import('./Containers/Beds/Beds'));
 const BedsCreate = lazy(() => import('./Containers/Beds/BedsCreate'));
 const BedsEdit = lazy(() => import('./Containers/Beds/BedsEdit'));
+
+const Patienteventdefines = lazy(() => import('./Containers/Patienteventdefines/Patienteventdefines'));
+const PatienteventdefinesCreate = lazy(() => import('./Containers/Patienteventdefines/PatienteventdefinesCreate'));
+const PatienteventdefinesEdit = lazy(() => import('./Containers/Patienteventdefines/PatienteventdefinesEdit'));
 
 const Floors = lazy(() => import('./Containers/Floors/Floors'));
 const FloorsCreate = lazy(() => import('./Containers/Floors/FloorsCreate'));
@@ -229,6 +234,8 @@ const Patientfollowup = lazy(() => import('./Containers/Patientfollowup/Patientf
 
 const Log = lazy(() => import('./Containers/Log/Log'));
 
+const Overview = lazy(() => import('./Containers/Overview/Overview'));
+
 const Home = lazy(() => import('./Pages/Home'));
 const Notfoundpage = lazy(() => import('./Components/Notfoundpage'));
 
@@ -310,6 +317,7 @@ class Routes extends Component {
       { exact: true, path: "/Patients/:PatientID", auth: true, component: PatientsDetail, permission: 'patientview' },
       { exact: true, path: "/Patients/:PatientID/Editcash", auth: true, component: PatientsEditcash, permission: 'patientupdate' },
       { exact: true, path: "/Patients/:PatientID/Movements", auth: true, component: PatientsMovements, permission: 'patientupdate' },
+      { exact: true, path: "/Patients/:PatientID/Eventmovements", auth: true, component: PatientEventmovements, permission: 'patientupdate' },
       { exact: true, path: "/Patients/:PatientID/Editsupportplan", auth: true, component: PatientsEditsupportplan, permission: 'patientupdate' },
       { exact: true, path: "/Patients/:PatientID/Editroutine", auth: true, component: PatientsEditroutine, permission: 'patientupdate' },
       { exact: true, path: "/Patients/:PatientID/Editfile", auth: true, component: PatientsFiles, permission: 'patientupdate' },
@@ -443,6 +451,10 @@ class Routes extends Component {
       { exact: true, path: "/Personelshifts/Create", auth: true, component: PersonelshiftsCreate, permission: 'personelshiftadd' },
       { exact: true, path: "/Personelshifts/:PersonelshiftID/Edit", auth: true, component: PersonelshiftsEdit, permission: 'personelshiftupdate' },
 
+      { exact: true, path: "/Patienteventdefines", auth: true, component: Patienteventdefines, permission: 'patienteventdefineview' },
+      { exact: true, path: "/Patienteventdefines/Create", auth: true, component: PatienteventdefinesCreate, permission: 'patienteventdefineadd' },
+      { exact: true, path: "/Patienteventdefines/:PatienteventdefineID/Edit", auth: true, component: PatienteventdefinesEdit, permission: 'patienteventdefineupdate' },
+
       { exact: true, path: "/Appreports", auth: true, component: Appreports, permission: 'admin' },
       { exact: true, path: "/Logs", auth: true, component: Log, permission: 'admin' },
 
@@ -461,6 +473,8 @@ class Routes extends Component {
       { exact: true, path: "/Trainings", auth: true, component: Trainings, permission: 'trainingview' },
       { exact: true, path: "/Trainings/Create", auth: true, component: TrainingsCreate, permission: 'trainingadd' },
       { exact: true, path: "/Trainings/:TrainingID/Edit", auth: true, component: TrainingsEdit, permission: 'trainingupdate' },
+
+      { exact: true, path: "/Overview", auth: true, component: Overview, permission: 'overviewview' },
 
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit, permission: 'basic' },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange, permission: 'basic' },

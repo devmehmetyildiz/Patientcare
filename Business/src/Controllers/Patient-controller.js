@@ -19,6 +19,13 @@ async function GetPatients(req, res, next) {
         let data = null
         const patients = await db.patientModel.findAll()
         for (const patient of patients) {
+            patient.Events = await db.patienteventmovementModel.findAll({
+                where: {
+                    PatientID: patient?.Uuid,
+                    Isactive: true
+                },
+                order: [['Occureddate', 'ASC']]
+            });
             patient.Movements = await db.patientmovementModel.findAll({
                 where: {
                     PatientID: patient?.Uuid,
@@ -81,6 +88,13 @@ async function GetPatient(req, res, next) {
                 PatientID: patient.Uuid,
             },
             attributes: ['PlanID']
+        });
+        patient.Events = await db.patienteventmovementModel.findAll({
+            where: {
+                PatientID: patient?.Uuid,
+                Isactive: true
+            },
+            order: [['Occureddate', 'ASC']]
         });
         res.status(200).json(patient)
     } catch (error) {
@@ -228,6 +242,66 @@ async function AddPatient(req, res, next) {
         return next(sequelizeErrorCatcher(err))
     }
     req.Uuid = patientuuid
+    GetPatients(req, res, next)
+}
+
+async function AddPatienteventmovement(req, res, next) {
+
+    let validationErrors = []
+    const {
+        PatientID,
+        EventID,
+        Info,
+        Occureddate,
+    } = req.body
+
+    if (!validator.isUUID(PatientID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+    }
+    if (!validator.isUUID(EventID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.EVENTID_REQUIRED)
+    }
+    if (!validator.isISODate(Occureddate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDDATE_REQUIRED)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    let eventmovementuuid = uuid()
+    try {
+        await db.patienteventmovementModel.create({
+            Uuid: eventmovementuuid,
+            PatientID: PatientID,
+            EventID: EventID,
+            UserID: req?.identity?.user?.Uuid || username,
+            Info: Info,
+            Occureddate: Occureddate,
+            Createduser: username,
+            Createtime: new Date(),
+            Isactive: true
+        }, { transaction: t })
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } })
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait vaka hareketi ${username} tarafından Eklendi.`,
+            pushurl: '/Patients'
+        })
+
+        await t.commit()
+    } catch (err) {
+        await t.rollback()
+        return next(sequelizeErrorCatcher(err))
+    }
     GetPatients(req, res, next)
 }
 
@@ -503,6 +577,73 @@ async function UpdatePatientmovements(req, res, next) {
             service: 'Hastalar',
             role: 'patientnotification',
             message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait hareket ${username} tarafından güncellendi.`,
+            pushurl: '/Patients'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    req.Uuid = Uuid
+    GetPatients(req, res, next)
+}
+
+async function UpdatePatienteventmovements(req, res, next) {
+
+    let validationErrors = []
+    const {
+        Uuid,
+        EventID,
+        Occureddate,
+        Info
+    } = req.body
+
+
+    if (!validator.isUUID(EventID)) {
+        validationErrors.push(messages.VALIDATION_ERROR.EVENTID_REQUIRED)
+    }
+    if (!validator.isISODate(Occureddate)) {
+        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDDATE_REQUIRED)
+    }
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTEVENTMOVEMENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTEVENTMOVEMENTID)
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const patienteventmovement = await db.patienteventmovementModel.findOne({ where: { Uuid: Uuid } })
+        if (!patienteventmovement) {
+            return next(createNotfounderror([messages.ERROR.PATIENTEVENTMOVEMENT_NOT_FOUND], req.language))
+        }
+        if (patienteventmovement.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENTEVENTMOVEMENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.patienteventmovementModel.update({
+            EventID: EventID,
+            Occureddate: Occureddate,
+            Info: Info,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: patienteventmovement?.PatientID } })
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Update,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait vaka hareket ${username} tarafından güncellendi.`,
             pushurl: '/Patients'
         })
 
@@ -2444,6 +2585,58 @@ async function DeletePatientmovement(req, res, next) {
     GetPatients(req, res, next)
 }
 
+async function DeletePatienteventmovement(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.patienteventmovementId
+
+    if (!Uuid) {
+        validationErrors.push(messages.VALIDATION_ERROR.PATIENTEVENTMOVEMENTID_REQUIRED)
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTEVENTMOVEMENTID)
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const patienteventmovement = await db.patienteventmovementModel.findOne({ where: { Uuid: Uuid } })
+        if (!patienteventmovement) {
+            return next(createNotfounderror([messages.ERROR.PATIENTEVENTMOVEMENT_NOT_FOUND], req.language))
+        }
+        if (patienteventmovement.Isactive === false) {
+            return next(createAccessDenied([messages.ERROR.PATIENTEVENTMOVEMENT_NOT_ACTIVE], req.language))
+        }
+
+        await db.patienteventmovementModel.update({
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: patienteventmovement?.PatientID } })
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } })
+
+        await CreateNotification({
+            type: types.Delete,
+            service: 'Hastalar',
+            role: 'patientnotification',
+            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait vaka hareketi ${username} tarafından silindi.`,
+            pushurl: '/Patients'
+        })
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatients(req, res, next)
+}
+
 async function Createfromtemplate(req, res, next) {
 
     const body = req.body
@@ -2600,5 +2793,8 @@ module.exports = {
     UpdatePatientDates,
     PatientsMakeactive,
     DeletePatientmovement,
-    UpdatePatientmovements
+    UpdatePatientmovements,
+    AddPatienteventmovement,
+    UpdatePatienteventmovements,
+    DeletePatienteventmovement
 }

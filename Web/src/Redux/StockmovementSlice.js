@@ -65,7 +65,7 @@ export const GetStockmovement = createAsyncThunk(
 
 export const AddStockmovements = createAsyncThunk(
     'Stockmovements/AddStockmovements',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
@@ -78,6 +78,7 @@ export const AddStockmovements = createAsyncThunk(
             clearForm && clearForm('StockmovementsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Stockmovements');
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -159,7 +160,7 @@ export const ApprovemultipleStockmovements = createAsyncThunk(
     'Stockmovements/ApprovemultipleStockmovements',
     async (data, { dispatch, getState }) => {
         try {
-            
+
             const state = getState()
             const Language = state.Profile.Language || 'en'
             const response = await instanse.post(config.services.Warehouse, `${ROUTES.STOCKMOVEMENT}/Approve`, data);

@@ -98,8 +98,50 @@ const version1_1_0_3 = {
     ],
 }
 
+const version1_1_0_5 = {
+    version: "1.1.0.5",
+    features: [
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Hasta Yerleşimleri Ekran Tasarımı Düzenlendi",
+                "Genel Kurum Takip Ekranı Eklendi",
+                "Eğitimler Sayfasında Tamamlanma Durumu Eklendi, Eğitime Katılan Kullanıcılar Belirli Olacak.",
+                "Eğitimler Ekleme Ve Güncelleme Ekranlarına Hızlı Personel Ekleme Fonksiyonu Eklendi.",
+            ],
+        },
+        {
+            title: "Hastalar", commits: [
+                "Hastalar için Işlemlerde Vaka Gir Eklendi",
+                "Hastalar için Vaka Düzenleme Ve Silme Fonksiyonları Eklendi",
+            ],
+        },
+        {
+            title: "Kullanıcılar", commits: [
+                "Bildirim Süresi, Bildirim Pozisyonu Kullanıcı Ayarlarına Eklendi.",
+                "Kullanıcılar Detay Ekranına Bekleyen Eğitimlerim Tablosu Eklendi, Eğitime Katıldım Onayladım Yapılabilir",
+            ],
+        },
+    ],
+    changes: [
+        {
+            title: "Stok Hareketleri", commits: [
+                "Hastalarda Yaşanan Stok Tüketimi Işlemlerinde Onay Istenilmeyecek",
+            ],
+        },
+    ],
+    bugs: [
+        {
+            title: "Stoklar ve Stok Hareketleri", commits: [
+                "Stok Tüketimlerindeki Negatife Düşme Sorunu Giderildi",
+                "Ambarlardan Stok Girişi Yapılırken Stok Eklemede Stok Tür Grubu Eklenmeme Problemi Giderildi.",
+            ],
+        },
+    ],
+}
+
 export {
     version1_1_0_1,
     version1_1_0_2,
-    version1_1_0_3
+    version1_1_0_3,
+    version1_1_0_5
 }

@@ -25,6 +25,12 @@ export default function UsersPrepareApp(props) {
     { key: 2, text: 'TR', value: 'tr' },
   ]
 
+  const Notificaitonoptions = [
+    { key: 1, text: 'Sol', value: 'left' },
+    { key: 2, text: 'Orta', value: 'center' },
+    { key: 3, text: 'Sağ', value: 'right' },
+  ]
+
   return (
     <React.Fragment>
       <Form.Group widths={'equal'}>
@@ -34,6 +40,10 @@ export default function UsersPrepareApp(props) {
       <Form.Group widths={'equal'}>
         <FormInput page={PAGE_NAME} placeholder={t('Pages.Users.Prepare.Label.Defaultpage')} name="Defaultpage" options={Sidebaroption} formtype='dropdown' />
         <FormInput page={PAGE_NAME} placeholder={t('Pages.Users.Prepare.Label.Isworker')} name="Isworker" formtype='checkbox' />
+      </Form.Group>
+      <Form.Group widths={'equal'}>
+        <FormInput page={PAGE_NAME} placeholder={t('Pages.Users.Prepare.Label.Position')} name="Position" formtype='dropdown' options={Notificaitonoptions} />
+        <FormInput page={PAGE_NAME} placeholder={t('Pages.Users.Prepare.Label.Duration')} name="Duration" type='number' min={0} max={9999} />
       </Form.Group>
     </React.Fragment>
   )

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Icon, Label, Popup } from 'semantic-ui-react';
+import { Card, Icon, } from 'semantic-ui-react';
 
 export default function PatientsDetailCard(props) {
 
@@ -58,12 +58,8 @@ export default function PatientsDetailCard(props) {
             <div className='font-bold font-poppins text-xl'>
               {t('Pages.Patients.PatientsDetail.PatientDetailCard.Place')}
             </div>
-            <div className=' w-full  font-poppins text-lg'>
-              <Popup
-                on={'hover'}
-                content={patientplace}
-                trigger={<span className='cursor-pointer overflow-hidden block text-ellipsis whitespace-nowrap'>{patientplace}</span>}
-              />
+            <div className='font-poppins text-lg'>
+              {patientplace}
             </div>
           </div>
         </Card.Content>

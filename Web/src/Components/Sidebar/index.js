@@ -198,11 +198,12 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <TbGauge className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: t('Pages.Approve.Page.Header'), url: "/Approve", permission: checkAuth('roleview') },
-                { id: 2, subtitle: t('Pages.Trainings.Page.Header'), url: "/Trainings", permission: checkAuth('roleview') },
+                { id: 1, subtitle: t('Pages.Overview.Page.Header'), url: "/Overview", permission: checkAuth('overviewview') },
+                { id: 5, subtitle: Literals.Patientfollowup.Page.Pageheader[Profile.Language], url: "/Patientfollowup", permission: checkAuth('patientview') },
                 { id: 3, subtitle: Literals.Placeviews.Page.Pageheader[Profile.Language], url: "/Placeviews", permission: checkAuth('placeviewview') },
                 { id: 4, subtitle: Literals.Companycashmovements.Page.Pageheader[Profile.Language], url: "/Companycashmovements", permission: checkAuth('companycashmovementview') },
-                { id: 5, subtitle: Literals.Patientfollowup.Page.Pageheader[Profile.Language], url: "/Patientfollowup", permission: checkAuth('patientview') },
+                { id: 1, subtitle: t('Pages.Approve.Page.Header'), url: "/Approve", permission: checkAuth('roleview') },
+                { id: 2, subtitle: t('Pages.Trainings.Page.Header'), url: "/Trainings", permission: checkAuth('roleview') },
             ]
         },
         {
@@ -280,6 +281,7 @@ export const getSidebarroutes = (Profile) => {
                 { id: 2, subtitle: t('Pages.Departments.Page.Header'), url: "/Departments", permission: checkAuth('departmentview') },
                 { id: 3, subtitle: t('Pages.Users.Page.Header'), url: "/Users", permission: checkAuth('userview') },
                 { id: 4, subtitle: t('Pages.Cases.Page.Header'), url: "/Cases", permission: checkAuth('caseview') },
+                { id: 4, subtitle: t('Pages.Patienteventdefines.Page.Header'), url: "/Patienteventdefines", permission: checkAuth('patienteventdefineview') },
                 { id: 5, subtitle: Literals.Units.Page.Pageheader[Profile.Language], url: "/Units", permission: checkAuth('unitview') },
                 { id: 6, subtitle: Literals.Stocktypes.Page.Pageheader[Profile.Language], url: "/Stocktypes", permission: checkAuth('stocktypeview') },
                 { id: 7, subtitle: Literals.Stocktypegroups.Page.Pageheader[Profile.Language], url: "/Stocktypegroups", permission: checkAuth('stocktypegroupview') },

@@ -84,6 +84,11 @@ export default class UsersCreate extends Component {
     const t = Profile?.i18n?.t
 
     const data = this.context.getForm(this.PAGE_NAME)
+    data.Config = {
+      autoClose: data.Duration || 0,
+      position: data.Position || 'right',
+    }
+    data.Config = data.Config ? JSON.stringify(data.Config) : ''
     data.Roles = (data?.Roles || []).map(id => {
       return (Roles.list || []).find(u => u.Uuid === id)
     })

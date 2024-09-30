@@ -12,6 +12,18 @@ const messages = {
                 tr: 'Eğitim aktif değil',
             }
         },
+        TRAININGUSER_NOT_FOUND: {
+            code: 'TRAININGUSER_NOT_FOUND', description: {
+                en: 'training user not found',
+                tr: 'Eğitim Kullanıcısı Bulunamadı',
+            }
+        },
+        TRAININGUSER_NOT_ACTIVE: {
+            code: 'TRAININGUSER_NOT_ACTIVE', description: {
+                en: 'training user is not active',
+                tr: 'Eğitim Kullanıcısı aktif değil',
+            }
+        },
 
     },
     VALIDATION_ERROR: {
@@ -25,6 +37,18 @@ const messages = {
             code: 'UNSUPPORTED_TRAININGID', description: {
                 en: 'Traning id unsupported',
                 tr: 'Eğitim numarası geçersiz',
+            }
+        },
+        TRAININGUSERID_REQUIRED: {
+            code: 'TRAININGUSERID_REQUIRED', description: {
+                en: 'training user id required',
+                tr: 'Eğitim Kullanıcı numarası gerekli',
+            }
+        },
+        UNSUPPORTED_TRAININGUSERID: {
+            code: 'UNSUPPORTED_TRAININGUSERID', description: {
+                en: 'Traning user id unsupported',
+                tr: 'Eğitim Kullanıcı numarası geçersiz',
             }
         },
         TYPE_REQUIRED: {

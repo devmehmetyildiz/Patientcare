@@ -31,16 +31,94 @@ export default function PatientsDetailStocks(props) {
             Uuid: item?.Uuid,
             stockdefine: stockdefine,
             stocktype: stocktype,
+            amount: amount,
+            fullamount: fullamount,
             stocktypegroup: stocktypegroup,
-            amount: `${amount} ${unit?.Name || 'tanımsız birim'} ${amount !== fullamount ? `( Toplam ${fullamount} ${unit?.Name || 'tanımsız birim'})` : ''}`,
+            amounttxt: `${amount} ${unit?.Name || 'tanımsız birim'} ${amount !== fullamount ? `( Toplam ${fullamount} ${unit?.Name || 'tanımsız birim'})` : ''}`,
             skt: item?.Skt || null,
             unit: unit
         }
+    }).filter(u => {
+
+        return u.amount > 0 || u.amount !== u.fullamount
     })
 
     const stocktypegroups = [...new Set(List.map(u => u.stocktypegroup?.Uuid))].map(typegroup => {
         return (Stocktypegroups.list || []).find(u => u.Uuid === typegroup)
     })
+
+    let panes = []
+
+    stocktypegroups.forEach((typegroup, index) => {
+        const filteredList = (List.filter(item => item?.stocktypegroup?.Uuid === typegroup?.Uuid) || [])
+
+        if ((filteredList || []).length > 0) {
+
+            let isHaveskt = false
+            filteredList.forEach(item => {
+                if (!isHaveskt && item?.stocktype?.Issktneed === true || 1) {
+                    isHaveskt = true
+                }
+            });
+
+            panes.push({
+                menuItem: `${typegroup?.Name} (${filteredList.length})`,
+                pane: {
+                    key: index,
+                    content: <Table key={index}>
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Name')}</Table.HeaderCell>
+                                {isHaveskt ? <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Skt')}</Table.HeaderCell> : null}
+                                <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Stocktype')}</Table.HeaderCell>
+                                <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Amount')}</Table.HeaderCell>
+                                <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Use')}</Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                            {(filteredList || []).length > 0
+                                ? filteredList.map((stock, i) => {
+                                    const { stockdefine, stocktype, unit } = stock
+                                    const name = stockdefine?.Name || t('Common.NoDataFound')
+                                    return <Table.Row key={i}>
+                                        <Table.Cell>
+                                            {`${name}${stocktype?.Isbarcodeneed ? ` (${stockdefine?.Barcode})` : ''}`}
+                                        </Table.Cell>
+                                        {isHaveskt
+                                            ? <Table.Cell>
+                                                {stock?.skt ? Formatdate(stock?.skt, true) : '-'}
+                                            </Table.Cell>
+                                            : null}
+                                        <Table.Cell>
+                                            {stocktype?.Name || t('Common.NoDataFound')}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            {`${stock?.amounttxt}`}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <PatientsDetailStocksReduceModal
+                                                Profile={Profile}
+                                                AddStockmovements={AddStockmovements}
+                                                Stockmovements={Stockmovements}
+                                                stock={stock}
+                                                GetPatient={GetPatient}
+                                                patient={patient}
+                                                fillPatientnotification={fillPatientnotification}
+                                            />
+                                        </Table.Cell>
+                                    </Table.Row>
+                                })
+                                : <Table.Row>
+                                    <Table.Cell>
+                                        <div className='font-bold font-poppins'>{t('Common.NoDataFound')}</div>
+                                    </Table.Cell>
+                                </Table.Row>}
+                        </Table.Body>
+                    </Table>
+                }
+            })
+        }
+    });
 
     return (
         <div className='w-full px-4 mt-4'>
@@ -53,74 +131,7 @@ export default function PatientsDetailStocks(props) {
                         ? <div className='w-full'>
                             <Tab
                                 className="w-full !bg-transparent"
-                                panes={
-                                    stocktypegroups.map((typegroup, index) => {
-                                        const filteredList = (List.filter(item => item?.stocktypegroup?.Uuid === typegroup?.Uuid) || [])
-                                        let isHaveskt = false
-                                        filteredList.forEach(item => {
-                                            if (!isHaveskt && item?.stocktype?.Issktneed === true || 1) {
-                                                isHaveskt = true
-                                            }
-                                        });
-
-                                        return {
-                                            menuItem: `${typegroup?.Name} (${filteredList.length})`,
-                                            pane: {
-                                                key: index,
-                                                content: <Table key={index}>
-                                                    <Table.Header>
-                                                        <Table.Row>
-                                                            <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Name')}</Table.HeaderCell>
-                                                            {isHaveskt ? <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Skt')}</Table.HeaderCell> : null}
-                                                            <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Stocktype')}</Table.HeaderCell>
-                                                            <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Amount')}</Table.HeaderCell>
-                                                            <Table.HeaderCell>{t('Pages.Patients.PatientsDetail.PatientDetailStocks.Label.Use')}</Table.HeaderCell>
-                                                        </Table.Row>
-                                                    </Table.Header>
-                                                    <Table.Body>
-                                                        {(filteredList || []).length > 0
-                                                            ? filteredList.map((stock, i) => {
-                                                                const { stockdefine, stocktype, unit } = stock
-                                                                const name = stockdefine?.Name || t('Common.NoDataFound')
-                                                                return <Table.Row key={i}>
-                                                                    <Table.Cell>
-                                                                        {`${name}${stocktype?.Isbarcodeneed ? ` (${stockdefine?.Barcode})` : ''}`}
-                                                                    </Table.Cell>
-                                                                    {isHaveskt
-                                                                        ? <Table.Cell>
-                                                                            {stock?.skt ? Formatdate(stock?.skt, true) : '-'}
-                                                                        </Table.Cell>
-                                                                        : null}
-                                                                    <Table.Cell>
-                                                                        {stocktype?.Name || t('Common.NoDataFound')}
-                                                                    </Table.Cell>
-                                                                    <Table.Cell>
-                                                                        {`${stock?.amount}`}
-                                                                    </Table.Cell>
-                                                                    <Table.Cell>
-                                                                        <PatientsDetailStocksReduceModal
-                                                                            Profile={Profile}
-                                                                            AddStockmovements={AddStockmovements}
-                                                                            Stockmovements={Stockmovements}
-                                                                            stock={stock}
-                                                                            GetPatient={GetPatient}
-                                                                            patient={patient}
-                                                                            fillPatientnotification={fillPatientnotification}
-                                                                        />
-                                                                    </Table.Cell>
-                                                                </Table.Row>
-                                                            })
-                                                            : <Table.Row>
-                                                                <Table.Cell>
-                                                                    <div className='font-bold font-poppins'>{t('Common.NoDataFound')}</div>
-                                                                </Table.Cell>
-                                                            </Table.Row>}
-                                                    </Table.Body>
-                                                </Table>
-                                            }
-                                        }
-                                    })
-                                }
+                                panes={panes}
                                 renderActiveOnly={false}
                             />
                         </div>
@@ -237,10 +248,12 @@ function PatientsDetailStocksReduceModal(props) {
                         Movementtype: -1,
                         Amount: requestamount,
                         Movementdate: new Date(),
+                        Approved: true
                     },
                     onSuccess: () => {
                         GetPatient(patient?.Uuid)
                         setOpen(false)
+                        setConfirm(false)
                     }
                 }
                 AddStockmovements(body)
