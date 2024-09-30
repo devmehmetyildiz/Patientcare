@@ -98,7 +98,7 @@ export default function OverviewPatientevents(props) {
             </Dimmer>
             <Headerwrapper>
                 <Breadcrumb size='big'>
-                    <Breadcrumb.Section>{t('Pages.Overview.Tab.Patients')}</Breadcrumb.Section>
+                    <Breadcrumb.Section>{t('Pages.Overview.Tab.Patientevents')}</Breadcrumb.Section>
                 </Breadcrumb>
             </Headerwrapper>
             <Feed>
