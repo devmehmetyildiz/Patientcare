@@ -141,8 +141,6 @@ export default class PatientsEditsupportplan extends Component {
                                             <Table.Row>
                                                 <Table.HeaderCell width={7}>{Literals.Editsupportplancolumns.Name[Profile.Language]}</Table.HeaderCell>
                                                 <Table.HeaderCell width={1}>{Literals.Editsupportplancolumns.IsRequired[Profile.Language]}</Table.HeaderCell>
-                                                <Table.HeaderCell width={1}>{Literals.Editsupportplancolumns.IsNeedactivation[Profile.Language]}</Table.HeaderCell>
-                                                <Table.HeaderCell width={1}>{Literals.Editsupportplancolumns.Shortname[Profile.Language]}</Table.HeaderCell>
                                                 <Table.HeaderCell width={1}>{Literals.Editsupportplancolumns.Info[Profile.Language]}</Table.HeaderCell>
                                                 <Table.HeaderCell width={1}>{Literals.Editsupportplancolumns.Remove[Profile.Language]}</Table.HeaderCell>
                                             </Table.Row>
@@ -153,18 +151,6 @@ export default class PatientsEditsupportplan extends Component {
                                             return <Table.Row key={Math.random()}>
                                                 <Table.Cell className='table-last-section'>
                                                     {this.Cellwrapper(<Label>{`${supportplan?.Name}`}</Label>, Literals.Editsupportplancolumns.Name[Profile.Language])}
-                                                </Table.Cell>
-                                                <Table.Cell className='table-last-section'>
-                                                    {this.Cellwrapper(
-                                                        supportplan?.IsRequired
-                                                            ? <Icon className='cursor-pointer' color='green' name='checkmark' />
-                                                            : <Icon className='cursor-pointer' color='red' name='times circle' />, Literals.Editsupportplancolumns.IsRequired[Profile.Language])}
-                                                </Table.Cell>
-                                                <Table.Cell className='table-last-section'>
-                                                    {this.Cellwrapper(
-                                                        supportplan?.IsNeedactivation
-                                                            ? <Icon className='cursor-pointer' color='green' name='checkmark' />
-                                                            : <Icon className='cursor-pointer' color='red' name='times circle' />, Literals.Editsupportplancolumns.IsNeedactivation[Profile.Language])}
                                                 </Table.Cell>
                                                 <Table.Cell className='table-last-section'>
                                                     {this.Cellwrapper(<Label>{`${supportplan?.Shortname || ''}`}</Label>, Literals.Editsupportplancolumns.Shortname[Profile.Language])}
@@ -233,8 +219,6 @@ export default class PatientsEditsupportplan extends Component {
                                                     <Table.Header>
                                                         <Table.Row>
                                                             <Table.HeaderCell width={6}>{Literals.Editsupportplancolumns.Name[Profile.Language]}</Table.HeaderCell>
-                                                            <Table.HeaderCell width={1}>{Literals.Editsupportplancolumns.IsRequired[Profile.Language]}</Table.HeaderCell>
-                                                            <Table.HeaderCell width={1}>{Literals.Editsupportplancolumns.IsNeedactivation[Profile.Language]}</Table.HeaderCell>
                                                             <Table.HeaderCell width={1}>{Literals.Editsupportplancolumns.Shortname[Profile.Language]}</Table.HeaderCell>
                                                             <Table.HeaderCell width={1}>{Literals.Editsupportplancolumns.Info[Profile.Language]}</Table.HeaderCell>
                                                         </Table.Row>
@@ -244,18 +228,6 @@ export default class PatientsEditsupportplan extends Component {
                                                         return <Table.Row key={Math.random()}>
                                                             <Table.Cell >
                                                                 {this.Cellwrapper(<Label>{`${supportplan?.Name}`}</Label>, Literals.Editsupportplancolumns.Name[Profile.Language])}
-                                                            </Table.Cell>
-                                                            <Table.Cell >
-                                                                {this.Cellwrapper(
-                                                                    supportplan?.IsRequired
-                                                                        ? <Icon className='cursor-pointer' color='green' name='checkmark' />
-                                                                        : <Icon className='cursor-pointer' color='red' name='times circle' />, Literals.Editsupportplancolumns.IsRequired[Profile.Language])}
-                                                            </Table.Cell>
-                                                            <Table.Cell >
-                                                                {this.Cellwrapper(
-                                                                    supportplan?.IsNeedactivation
-                                                                        ? <Icon className='cursor-pointer' color='green' name='checkmark' />
-                                                                        : <Icon className='cursor-pointer' color='red' name='times circle' />, Literals.Editsupportplancolumns.IsNeedactivation[Profile.Language])}
                                                             </Table.Cell>
                                                             <Table.Cell >
                                                                 {this.Cellwrapper(<Label>{`${supportplan?.Shortname || ''}`}</Label>, Literals.Editsupportplancolumns.Shortname[Profile.Language])}

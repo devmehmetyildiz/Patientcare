@@ -16,12 +16,6 @@ module.exports = sequelize.define('supportplanModel', {
     Shortname: {
         type: Sequelize.STRING
     },
-    IsRequired: {
-        type: Sequelize.BOOLEAN
-    },
-    IsNeedactivation: {
-        type: Sequelize.BOOLEAN
-    },
     Createduser: {
         type: Sequelize.STRING
     },

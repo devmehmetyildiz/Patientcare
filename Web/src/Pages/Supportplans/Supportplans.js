@@ -28,8 +28,6 @@ export default class Supportplans extends Component {
       { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
       { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', },
       { Header: Literals.Columns.Shortname[Profile.Language], accessor: 'Shortname', Title: true },
-      { Header: Literals.Columns.IsRequired[Profile.Language], accessor: row => this.boolCellhandler(row?.IsRequired), Subtitle: true, Withtext: true },
-      { Header: Literals.Columns.IsNeedactivation[Profile.Language], accessor: row => this.boolCellhandler(row?.IsNeedactivation), Lowtitle: true, Withtext: true },
       { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info' },
       { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
       { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
@@ -92,11 +90,6 @@ export default class Supportplans extends Component {
           <SupportplansDelete />
         </React.Fragment>
     )
-  }
-
-  boolCellhandler = (value) => {
-    const { Profile } = this.props
-    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
   }
 }
 

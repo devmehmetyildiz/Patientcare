@@ -38,10 +38,6 @@ export default class SupportplansCreate extends Component {
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
               </Form.Group>
-              <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsRequired[Profile.Language]} name="IsRequired" formtype="checkbox" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsNeedactivation[Profile.Language]} name="IsNeedactivation" formtype="checkbox" />
-              </Form.Group>
             </Form>
           </Contentwrapper>
           <Footerwrapper>
