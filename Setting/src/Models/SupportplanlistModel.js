@@ -7,11 +7,14 @@ module.exports = sequelize.define('supportplanlistModel', {
     Uuid: {
         type: Sequelize.STRING
     },
+    Type: {
+        type: Sequelize.INTEGER
+    },
     Name: {
         type: Sequelize.STRING
     },
-    DepartmentID: {
-        type: Sequelize.STRING
+    Info: {
+        type: Sequelize.TEXT
     },
     Createduser: {
         type: Sequelize.STRING

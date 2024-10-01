@@ -85,7 +85,7 @@
         "Common.Personels.Movementtypes.Workstart": "İşe Başlama",
         "Common.Personels.Movementtypes.Workend": "İşten Ayrılma",
         "Common.Personels.Movementtypes.Casechange": "Durum Değişikliği",
-        "Common.Supportplan.Types.Careplan": "Bireysel Bakım PLanı",
+        "Common.Supportplan.Types.Careplan": "Bireysel Bakım Planı",
         "Common.Supportplan.Types.Rating": "Engelli Değerlendirme Formu",
         "Common.Supportplan.Types.Psychosocial": "Psikososyal Destek Hizmetleri",
         "Common.Training.Type.Organization": "Kurum İçi Eğitim",
@@ -946,6 +946,18 @@
         "Pages.Supportplans.Column.Type": "Tür",
         "Pages.Supportplans.Messages.NameRequired": "Plan Adı Gerekli",
         "Pages.Supportplans.Messages.TypeRequired": "Tür Gerekli",
-        "Pages.Supportplans.Delete.Label.Check": "Destek Planını silmek istediğinize emin misiniz?"
+        "Pages.Supportplans.Delete.Label.Check": "Destek Planını silmek istediğinize emin misiniz?",
+        "Pages.Supportplanlists.Page.Header": "Destek Plan Listeleri",
+        "Pages.Supportplanlists.Page.CreateHeader": "Oluştur",
+        "Pages.Supportplanlists.Page.EditHeader": "Güncelle",
+        "Pages.Supportplanlists.Page.DeleteHeader": "Destek Planı Liste Silme",
+        "Pages.Supportplanlists.Column.Name": "Plan Liste Adı",
+        "Pages.Supportplanlists.Column.Supportplans": "Destek Planları",
+        "Pages.Supportplanlists.Column.Info": "Açıklama",
+        "Pages.Supportplanlists.Column.Type": "Tür",
+        "Pages.Supportplanlists.Messages.NameRequired": "Liste Adı Gerekli",
+        "Pages.Supportplanlists.Messages.SupportplansRequired": "Destek Planları Gerekli",
+        "Pages.Supportplanlists.Messages.TypeRequired": "Tür Gerekli",
+        "Pages.Supportplanlists.Delete.Label.Check": "Destek Plan Listesini silmek istediğinize emin misiniz?"
     }
 }

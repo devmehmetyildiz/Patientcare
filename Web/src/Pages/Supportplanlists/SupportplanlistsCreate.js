@@ -1,33 +1,36 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import SupportplansCreate from '../../Containers/Supportplans/SupportplansCreate'
-import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
+import { SUPPORTPLAN_TYPE_CAREPLAN, SUPPORTPLAN_TYPE_PSYCHOSOCIAL, SUPPORTPLAN_TYPE_RATING } from '../../Utils/Constants'
 
 export default class SupportplanlistsCreate extends Component {
 
   PAGE_NAME = "SupportplanlistsCreate"
 
   componentDidMount() {
-    const { GetSupportplans, GetDepartments } = this.props
+    const { GetSupportplans, } = this.props
     GetSupportplans()
-    GetDepartments()
   }
 
 
   render() {
-    const { Supportplanlists, Departments, Supportplans, Profile, history, closeModal } = this.props
+    const { Supportplanlists, Supportplans, Profile, history, closeModal } = this.props
+
+    const t = Profile?.i18n?.t
 
     const Supportplanoptions = (Supportplans.list || []).filter(u => u.Isactive).map(plan => {
       return { key: plan.Uuid, text: plan.Name, value: plan.Uuid }
     })
-    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
-      return { key: department.Uuid, text: department.Name, value: department.Uuid }
-    })
+
+    const Supportplantypeoptions = [
+      { key: 1, text: t('Common.Supportplan.Types.Careplan'), value: SUPPORTPLAN_TYPE_CAREPLAN },
+      { key: 2, text: t('Common.Supportplan.Types.Psychosocial'), value: SUPPORTPLAN_TYPE_PSYCHOSOCIAL },
+      { key: 3, text: t('Common.Supportplan.Types.Rating'), value: SUPPORTPLAN_TYPE_RATING },
+    ]
 
     return (
       Supportplanlists.isLoading ? <LoadingPage /> :
@@ -35,20 +38,25 @@ export default class SupportplanlistsCreate extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Supportplanlists"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Supportplanlists.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Supportplanlists.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Supportplans[Profile.Language]} name="Supportplans" multiple options={Supportplanoptions} formtype='dropdown' modal={SupportplansCreate} />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Supportplanlists.Column.Type')} name="Type" formtype='dropdown' options={Supportplantypeoptions} />
+              </Form.Group>
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Supportplanlists.Column.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Supportplanlists.Column.Info')} name="Info" />
+              </Form.Group>
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Supportplanlists.Column.Supportplans')} name="Supportplans" multiple options={Supportplanoptions} formtype='dropdown' modal={SupportplansCreate} />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -56,11 +64,11 @@ export default class SupportplanlistsCreate extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Supportplanlists"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Supportplanlists.isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -74,19 +82,22 @@ export default class SupportplanlistsCreate extends Component {
 
     const { AddSupportplanlists, history, fillSupportplanlistnotification, Supportplans, Profile, closeModal } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
+
+    const t = Profile?.i18n?.t
+
     data.Supportplans = data.Supportplans.map(id => {
       return (Supportplans.list || []).find(u => u.Uuid === id)
     })
 
     let errors = []
+    if (!validator.isNumber(data.Type)) {
+      errors.push({ type: 'Error', code: t('Pages.Supportplanlists.Page.Header'), description: t('Pages.Supportplanlists.Messages.TypeRequired') })
+    }
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Supportplanlists.Page.Header'), description: t('Pages.Supportplanlists.Messages.NameRequired') })
     }
     if (!validator.isArray(data.Supportplans)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.SupportplansRequired[Profile.Language] })
-    }
-    if (!validator.isUUID(data.DepartmentID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Supportplanlists.Page.Header'), description: t('Pages.Supportplanlists.Messages.SupportplansRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

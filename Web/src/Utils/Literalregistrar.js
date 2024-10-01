@@ -34,8 +34,6 @@ import Patientcashmovements from "../Pages/Patientcashmovements/Literals"
 import Appreports from "../Pages/Appreports/Literals"
 import Companycashmovements from "../Pages/Companycashmovements/Literals"
 import Usagetypes from "../Pages/Usagetypes/Literals"
-import Supportplans from "../Pages/Supportplans/Literals"
-import Supportplanlists from "../Pages/Supportplanlists/Literals"
 import Careplans from "../Pages/Careplans/Literals"
 import Helpstatus from "../Pages/Helpstatus/Literals"
 import Makingtypes from "../Pages/Makingtypes/Literals"
@@ -84,8 +82,6 @@ const Literals = {
     Appreports,
     Companycashmovements,
     Usagetypes,
-    Supportplans,
-    Supportplanlists,
     Careplans,
     Helpstatus,
     Makingtypes,

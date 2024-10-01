@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
-import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import SupportplanlistsDelete from '../../Containers/Supportplanlists/SupportplanlistsDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
+import { SUPPORTPLAN_TYPE_CAREPLAN, SUPPORTPLAN_TYPE_PSYCHOSOCIAL, SUPPORTPLAN_TYPE_RATING } from '../../Utils/Constants'
 
 export default class Supportplanlists extends Component {
 
@@ -16,15 +16,17 @@ export default class Supportplanlists extends Component {
     }
 
     componentDidMount() {
-        const { GetSupportplanlists, GetSupportplans, GetDepartments } = this.props
+        const { GetSupportplanlists, GetSupportplans } = this.props
         GetSupportplanlists()
         GetSupportplans()
-        GetDepartments()
     }
 
     render() {
         const { Supportplanlists, Profile, handleDeletemodal, handleSelectedSupportplanlist } = this.props
+
         const { isLoading } = Supportplanlists
+
+        const t = Profile?.i18n?.t
 
         const colProps = {
             sortable: true,
@@ -33,17 +35,18 @@ export default class Supportplanlists extends Component {
         }
 
         const Columns = [
-            { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
-            { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
-            { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
-            { Header: Literals.Columns.Supportplans[Profile.Language], accessor: (row, freeze) => this.supportplanCellhandler(row, freeze), },
-            { Header: Literals.Columns.Department[Profile.Language], accessor: row => this.departmentCellhandler(row?.DepartmentID), Subtitle: true, Withtext: true },
-            { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
-            { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
-            { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
-            { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', },
-            { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
-            { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+            { Header: t('Common.Column.Id'), accessor: 'Id' },
+            { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+            { Header: t('Pages.Supportplanlists.Column.Type'), accessor: row => this.typeCellhandler(row?.Type), },
+            { Header: t('Pages.Supportplanlists.Column.Name'), accessor: 'Name', Title: true },
+            { Header: t('Pages.Supportplanlists.Column.Supportplans'), accessor: (row, freeze) => this.supportplanCellhandler(row, freeze), },
+            { Header: t('Pages.Supportplanlists.Column.Info'), accessor: 'Info' },
+            { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+            { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+            { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+            { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+            { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+            { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
         const metaKey = "supportplanlist"
@@ -61,7 +64,7 @@ export default class Supportplanlists extends Component {
         })
 
         return (
-            isLoading  ? <LoadingPage /> :
+            isLoading ? <LoadingPage /> :
                 <React.Fragment>
                     <Pagewrapper>
                         <Headerwrapper>
@@ -69,13 +72,13 @@ export default class Supportplanlists extends Component {
                                 <GridColumn width={8}>
                                     <Breadcrumb size='big'>
                                         <Link to={"/Supportplanlists"}>
-                                            <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                                            <Breadcrumb.Section>{t('Pages.Supportplanlists.Page.Header')}</Breadcrumb.Section>
                                         </Link>
                                     </Breadcrumb>
                                 </GridColumn>
                                 <Settings
                                     Profile={Profile}
-                                    Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                                    Pagecreateheader={t('Pages.Supportplanlists.Page.CreateHeader')}
                                     Pagecreatelink={"/Supportplanlists/Create"}
                                     Columns={Columns}
                                     list={list}
@@ -93,7 +96,7 @@ export default class Supportplanlists extends Component {
                                 {Profile.Ismobile ?
                                     <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                                     <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-                            </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+                            </div> : <NoDataScreen message={t('Common.NoDataFound')} />
                         }
                     </Pagewrapper>
                     <SupportplanlistsDelete />
@@ -132,12 +135,15 @@ export default class Supportplanlists extends Component {
             ) : itemSupportplanstxt
     }
 
-    departmentCellhandler = (value) => {
-        const { Departments } = this.props
-        if (Departments.isLoading) {
-            return <Loader size='small' active inline='centered' ></Loader>
-        } else {
-            return (Departments.list || []).find(u => u.Uuid === value)?.Name
-        }
+    typeCellhandler = (value) => {
+        const { Profile } = this.props
+        const t = Profile?.i18n?.t
+        const Supportplantypeoptions = [
+            { key: 1, text: t('Common.Supportplan.Types.Careplan'), value: SUPPORTPLAN_TYPE_CAREPLAN },
+            { key: 2, text: t('Common.Supportplan.Types.Psychosocial'), value: SUPPORTPLAN_TYPE_PSYCHOSOCIAL },
+            { key: 3, text: t('Common.Supportplan.Types.Rating'), value: SUPPORTPLAN_TYPE_RATING },
+        ]
+
+        return Supportplantypeoptions.find(u => u.value === value)?.text || t('Common.NoDataFound')
     }
 }

@@ -7,6 +7,9 @@ module.exports = sequelize.define('supportplanModel', {
     Uuid: {
         type: Sequelize.STRING
     },
+    Type: {
+        type: Sequelize.INTEGER
+    },
     Name: {
         type: Sequelize.STRING
     },

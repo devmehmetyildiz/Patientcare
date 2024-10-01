@@ -64,14 +64,10 @@ async function AddSupportplanlist(req, res, next) {
     const {
         Name,
         Supportplans,
-        DepartmentID,
     } = req.body
 
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
-    }
-    if (!validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
     if (!validator.isArray(Supportplans)) {
         validationErrors.push(messages.VALIDATION_ERROR.SUPPORTPLANS_REQUIRED)
@@ -126,7 +122,6 @@ async function UpdateSupportplanlist(req, res, next) {
     const {
         Name,
         Supportplans,
-        DepartmentID,
         Uuid
     } = req.body
     if (!validator.isString(Name)) {
@@ -137,9 +132,6 @@ async function UpdateSupportplanlist(req, res, next) {
     }
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SUPPORTPLANLISTID)
-    }
-    if (!validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
     }
     if (!validator.isArray(Supportplans)) {
         validationErrors.push(messages.VALIDATION_ERROR.SUPPORTPLANS_REQUIRED)
