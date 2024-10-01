@@ -226,6 +226,12 @@ const messages = {
 
   },
   VALIDATION_ERROR: {
+    TYPE_REQUIRED: {
+      code: 'TYPE_REQUIRED', description: {
+        en: 'The type required',
+        tr: 'Bu işlem için tür gerekli',
+      }
+    },
     NAME_REQUIRED: {
       code: 'NAME_REQUIRED', description: {
         en: 'The name required',

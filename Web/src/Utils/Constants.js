@@ -127,7 +127,9 @@ export const PATIENTS_MOVEMENTTYPES_DEAD = 'patientdead'
 export const PATIENTS_MOVEMENTTYPES_CASECHANGE = 'patientcasechange'
 export const PATIENTS_MOVEMENTTYPES_PLACECHANGE = 'patientplacechange'
 
-
+export const SUPPORTPLAN_TYPE_CAREPLAN = 0
+export const SUPPORTPLAN_TYPE_PSYCHOSOCIAL = 1
+export const SUPPORTPLAN_TYPE_RATING = 2
 
 export const ANNUALTYPES = [
     { Name: "ÇALIŞIYOR", value: 0, color: 'green' },

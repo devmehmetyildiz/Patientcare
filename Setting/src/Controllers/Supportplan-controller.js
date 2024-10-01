@@ -43,10 +43,14 @@ async function AddSupportplan(req, res, next) {
     let validationErrors = []
     const {
         Name,
+        Type
     } = req.body
 
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+    }
+    if (!validator.isNumber(Type)) {
+        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
     }
 
     if (validationErrors.length > 0) {
@@ -88,11 +92,15 @@ async function UpdateSupportplan(req, res, next) {
     let validationErrors = []
     const {
         Name,
+        Type,
         Uuid,
     } = req.body
 
     if (!validator.isString(Name)) {
         validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+    }
+    if (!validator.isNumber(Type)) {
+        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
     }
     if (!Uuid) {
         validationErrors.push(messages.VALIDATION_ERROR.SUPPORTPLANID_REQUIRED)

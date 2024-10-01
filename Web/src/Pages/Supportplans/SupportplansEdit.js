@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { SUPPORTPLAN_TYPE_CAREPLAN, SUPPORTPLAN_TYPE_PSYCHOSOCIAL, SUPPORTPLAN_TYPE_RATING } from '../../Utils/Constants'
 
 export default class SupportplansEdit extends Component {
 
@@ -41,7 +41,16 @@ export default class SupportplansEdit extends Component {
   render() {
 
     const { Supportplans, Profile, history } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isLoading } = Supportplans
+
+    const Supportplantypeoptions = [
+      { key: 1, text: t('Common.Supportplan.Types.Careplan'), value: SUPPORTPLAN_TYPE_CAREPLAN },
+      { key: 2, text: t('Common.Supportplan.Types.Psychosocial'), value: SUPPORTPLAN_TYPE_PSYCHOSOCIAL },
+      { key: 3, text: t('Common.Supportplan.Types.Rating'), value: SUPPORTPLAN_TYPE_RATING },
+    ]
 
     return (
       isLoading ? <LoadingPage /> :
@@ -49,21 +58,24 @@ export default class SupportplansEdit extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Supportplans"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Supportplans.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Supportplans.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Shortname[Profile.Language]} name="Shortname" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Supportplans.Column.Type')} name="Type" formtype='dropdown' options={Supportplantypeoptions} />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Supportplans.Column.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Supportplans.Column.Shortname')} name="Shortname" />
+              </Form.Group>
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Supportplans.Column.Info')} name="Info" />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -71,11 +83,11 @@ export default class SupportplansEdit extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Supportplans"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Supportplans.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -87,11 +99,17 @@ export default class SupportplansEdit extends Component {
     e.preventDefault()
 
     const { EditSupportplans, history, fillSupportplannotification, Supportplans, Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Supportplans.Page.Header'), description: t('Pages.Supportplans.Messages.NameRequired') })
+    }
+    if (!validator.isNumber(data.Type)) {
+      errors.push({ type: 'Error', code: t('Pages.Supportplans.Page.Header'), description: t('Pages.Supportplans.Messages.TypeRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {
