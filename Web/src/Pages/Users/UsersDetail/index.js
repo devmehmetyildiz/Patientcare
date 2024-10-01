@@ -61,7 +61,7 @@ export default function UsersDetail(props) {
             });
             history.length > 1 ? history.goBack() : history.push('/Patients')
         }
-    }, [])
+    }, [Id])
 
     const isLoadingstatus = Users.isLoading
     const user = (Users.list || []).find(u => u.Uuid === Id)

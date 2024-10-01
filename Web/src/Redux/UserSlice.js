@@ -19,6 +19,20 @@ export const GetUsers = createAsyncThunk(
     }
 );
 
+export const GetUsersforsearch = createAsyncThunk(
+    'Users/GetUsersforsearch',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Userrole, ROUTES.USER);
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillUsernotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const GetUser = createAsyncThunk(
     'Users/GetUser',
     async (guid, { dispatch }) => {
@@ -181,10 +195,12 @@ export const UsersSlice = createSlice({
     name: 'Users',
     initialState: {
         list: [],
+        listsearch: [],
         selected_record: {},
         errMsg: null,
         notifications: [],
         isLoading: false,
+        isLoadingsearch: false,
         isDeletemodalopen: false
     },
     reducers: {
@@ -216,6 +232,19 @@ export const UsersSlice = createSlice({
             })
             .addCase(GetUsers.rejected, (state, action) => {
                 state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetUsersforsearch.pending, (state) => {
+                state.isLoadingsearch = true;
+                state.errMsg = null;
+                state.listsearch = [];
+            })
+            .addCase(GetUsersforsearch.fulfilled, (state, action) => {
+                state.isLoadingsearch = false;
+                state.listsearch = action.payload;
+            })
+            .addCase(GetUsersforsearch.rejected, (state, action) => {
+                state.isLoadingsearch = false;
                 state.errMsg = action.error.message;
             })
             .addCase(GetUser.pending, (state) => {

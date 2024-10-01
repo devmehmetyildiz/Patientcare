@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { GetPatientforsearch } from '../../Redux/PatientSlice'
 import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
 import { getSidebarroutes } from '../Sidebar'
-
+import { GetUsersforsearch } from '../../Redux/UserSlice'
 export class index extends Component {
 
     constructor(props) {
@@ -13,18 +13,24 @@ export class index extends Component {
     }
 
     componentDidMount() {
-        const { GetPatientforsearch, GetPatientdefines } = this.props
+        const { GetPatientforsearch, GetPatientdefines, GetUsersforsearch } = this.props
         GetPatientforsearch()
         GetPatientdefines()
+        GetUsersforsearch()
     }
 
     render() {
-        const { Profile, history, Patients, Patientdefines } = this.props
+        const { Profile, history, Patients, Patientdefines, Users } = this.props
 
         const patients = (Patients.listsearch || []).filter(u => u.Isactive).map(patient => {
             const patientdefine = (Patientdefines.list || []).find(define => define?.Uuid === patient?.PatientdefineID)
             const patientdefinetxt = `${patientdefine?.Firstname || ''} ${patientdefine?.Lastname || ''} - ${patientdefine?.CountryID || ''}`
             return { title: patientdefinetxt, url: `/Patients/${patient?.Uuid}`, key: Math.random() }
+        }).filter(u => (u.title || '').toLowerCase().includes(this.state.searchWord.toLowerCase()))
+
+        const users = (Users.listsearch || []).filter(u => u.Isactive).map(user => {
+            const usernametxt = `${user?.Name || ''} ${user?.Surname || ''}${user?.CountryID ? ` - ${user?.CountryID}` : ''}`
+            return { title: usernametxt, url: `/Users/${user?.Uuid}`, key: Math.random() }
         }).filter(u => (u.title || '').toLowerCase().includes(this.state.searchWord.toLowerCase()))
 
         const sidebarRoutes = (getSidebarroutes(Profile) || []).flatMap(section => {
@@ -33,7 +39,7 @@ export class index extends Component {
 
         const searchdata = sidebarRoutes.filter(u => (u.subtitle || '').toLowerCase().includes(this.state.searchWord.toLowerCase())).map(u => {
             return { title: u.subtitle, url: u.url, key: Math.random() }
-        }).concat(patients)
+        }).concat(patients).concat(users)
 
         return (!Profile.Ismobile && <Search
             input={{ icon: 'search', iconPosition: 'left' }}
@@ -58,12 +64,14 @@ export class index extends Component {
 const mapStateToProps = (state) => ({
     Profile: state.Profile,
     Patientdefines: state.Patientdefines,
-    Patients: state.Patients
+    Patients: state.Patients,
+    Users: state.Users
 })
 
 const mapDispatchToProps = {
     GetPatientforsearch,
-    GetPatientdefines
+    GetPatientdefines,
+    GetUsersforsearch
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(index)
