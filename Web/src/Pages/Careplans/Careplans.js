@@ -11,6 +11,7 @@ import {
 } from '../../Components'
 import CareplansSavepreview from '../../Containers/Careplans/CareplansSavepreview'
 import CareplansDetail from '../../Containers/Careplans/CareplansDetail'
+import { SUPPORTPLAN_TYPE_CAREPLAN, SUPPORTPLAN_TYPE_PSYCHOSOCIAL, SUPPORTPLAN_TYPE_RATING } from '../../Utils/Constants'
 
 export default class Careplans extends Component {
 
@@ -37,6 +38,7 @@ export default class Careplans extends Component {
     const Columns = [
       { Header: t('Common.Column.Id'), accessor: 'Id' },
       { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+      { Header: t('Pages.Careplans.Columns.Type'), accessor: row => this.typeCellhandler(row?.Type), },
       { Header: t('Pages.Careplans.Columns.Createdate'), accessor: row => this.dateCellhandler(row?.Createdate) },
       { Header: t('Pages.Careplans.Columns.Startdate'), accessor: row => this.dateCellhandler(row?.Startdate) },
       { Header: t('Pages.Careplans.Columns.Enddate'), accessor: row => this.dateCellhandler(row?.Enddate) },
@@ -204,6 +206,18 @@ export default class Careplans extends Component {
     const { Profile } = this.props
     const t = Profile?.i18n?.t
     return value !== null && (value ? t('Common.Yes') : t('Common.No'))
+  }
+
+  typeCellhandler = (value) => {
+    const { Profile } = this.props
+    const t = Profile?.i18n?.t
+    const Supportplantypeoptions = [
+      { key: 1, text: t('Common.Supportplan.Types.Careplan'), value: SUPPORTPLAN_TYPE_CAREPLAN },
+      { key: 2, text: t('Common.Supportplan.Types.Psychosocial'), value: SUPPORTPLAN_TYPE_PSYCHOSOCIAL },
+      { key: 3, text: t('Common.Supportplan.Types.Rating'), value: SUPPORTPLAN_TYPE_RATING },
+    ]
+
+    return Supportplantypeoptions.find(u => u.value === value)?.text || t('Common.NoDataFound')
   }
 
 }
