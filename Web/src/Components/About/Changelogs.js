@@ -139,9 +139,36 @@ const version1_1_0_5 = {
     ],
 }
 
+const version1_1_0_6 = {
+    version: "1.1.0.6",
+    changes: [
+        {
+            title: "Genel Arama", commits: [
+                "Kullanıcılar aranabilir hale getirildi",
+            ],
+        },
+        {
+            title: "Bireysel Bakım Planları", commits: [
+                "Destek Planlarına ve Destek Plan listelerine tür eklendi, İlgili bakım planı türüne göre plan eklenecek",
+                "Hastaların Destek Planlarını güncellemede tür eklendi",
+                "Bireysel Bakım Planlarına ait ekranlar yenilendi, tür eklendi",
+                "Bireysel Bakım Planlarının taslak onaylama ve detay ekranları eklendi",
+            ],
+        },
+    ],
+    bugs: [
+        {
+            title: "Genel Arama", commits: [
+                "Aynı Sayfa içerisinde yapılan hasta aramalarında ekran yenilenmeme sorunu giderildi",
+            ],
+        },
+    ],
+}
+
 export {
     version1_1_0_1,
     version1_1_0_2,
     version1_1_0_3,
-    version1_1_0_5
+    version1_1_0_5,
+    version1_1_0_6,
 }
