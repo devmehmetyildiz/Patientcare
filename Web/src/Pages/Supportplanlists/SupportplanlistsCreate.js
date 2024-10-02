@@ -22,7 +22,9 @@ export default class SupportplanlistsCreate extends Component {
 
     const t = Profile?.i18n?.t
 
-    const Supportplanoptions = (Supportplans.list || []).filter(u => u.Isactive).map(plan => {
+    const selectedtype = this.context.formstates[`${this.PAGE_NAME}/Type`]
+
+    const Supportplanoptions = (Supportplans.list || []).filter(u => u.Isactive && u.Type === selectedtype).map(plan => {
       return { key: plan.Uuid, text: plan.Name, value: plan.Uuid }
     })
 

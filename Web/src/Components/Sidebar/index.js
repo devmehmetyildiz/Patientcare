@@ -299,10 +299,7 @@ export const getSidebarroutes = (Profile) => {
                 { id: 19, subtitle: Literals.Professions.Page.Pageheader[Profile.Language], url: "/Professions", permission: checkAuth('professionview') },
                 { id: 20, subtitle: t('Pages.Supportplans.Page.Header'), url: "/Supportplans", permission: checkAuth('supportplanview') },
                 { id: 21, subtitle: t('Pages.Supportplanlists.Page.Header'), url: "/Supportplanlists", permission: checkAuth('supportplanlistview') },
-                { id: 22, subtitle: Literals.Helpstatus.Page.Pageheader[Profile.Language], url: "/Helpstatus", permission: checkAuth('helpstatuview') },
-                { id: 23, subtitle: Literals.Makingtypes.Page.Pageheader[Profile.Language], url: "/Makingtypes", permission: checkAuth('makingtypeview') },
-                { id: 24, subtitle: Literals.Ratings.Page.Pageheader[Profile.Language], url: "/Ratings", permission: checkAuth('ratingview') },
-                { id: 25, subtitle: Literals.Requiredperiods.Page.Pageheader[Profile.Language], url: "/Requiredperiods", permission: checkAuth('requiredperiodview') },
+                { id: 22, subtitle: t('Pages.Careplanparameters.Page.Header'), url: "/Careplanparameters", permission: checkAuth('helpstatuview') },
             ]
         },
     ]

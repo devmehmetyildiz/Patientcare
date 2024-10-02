@@ -1,364 +1,82 @@
-import React, { Component } from 'react'
+import React, { Component, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Card, Dropdown, Form, Image, Label, Table } from 'semantic-ui-react'
-import Literals from './Literals'
+import { Breadcrumb, Button, Dimmer, DimmerDimmable, Dropdown, Form, Header, Icon, Image, Label, Loader, Table } from 'semantic-ui-react'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
 import {
   Contentwrapper, Footerwrapper, FormInput, Gobackbutton,
-  Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Profilephoto, Submitbutton
+  Headerbredcrump, Headerwrapper, Pagedivider, Pagewrapper, Profilephoto, Submitbutton
 } from '../../Components'
+import { CAREPLANPARAMETER_TYPE_CURRENTSITUATIONRATİNG, CAREPLANPARAMETER_TYPE_HELPSTATU, CAREPLANPARAMETER_TYPE_PLANNEDSITUATIONRATİNG, CAREPLANPARAMETER_TYPE_PRESENTATIONMAKINGTYPE, CAREPLANPARAMETER_TYPE_PRESENTATIONPERIOD, CAREPLANPARAMETER_TYPE_PURPOSETARGET, CAREPLANPARAMETER_TYPE_PURPOSETARGETWORKS, CAREPLANPARAMETER_TYPE_RATING, SUPPORTPLAN_TYPE_CAREPLAN, SUPPORTPLAN_TYPE_PSYCHOSOCIAL, SUPPORTPLAN_TYPE_RATING } from '../../Utils/Constants'
 import Formatdate from '../../Utils/Formatdate'
-export default class CareplansEdit extends Component {
 
-  PAGE_NAME = 'CareplansEdit'
+export default function CareplansEdit(props) {
+  const PAGE_NAME = 'CareplansEdit'
+  const { GetSupportplans, GetSupportplanlists, GetCareplanparameters, EditCareplans,
+    GetPatients, GetPatientdefines, GetFiles, GetUsagetypes, GetCareplan, match, CareplanID } = props
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      Supportplans: [],
-      isDatafetched: false
-    }
-  }
+  const { Careplans, Supportplans, Supportplanlists, Files, Patients, Careplanparameters,
+    Patientdefines, Usagetypes, Profile, history, closeModal, fillCareplannotification } = props
 
-  componentDidMount() {
-    const { GetCareplan, match, history, CareplanID, GetSupportplans, GetSupportplanlists, GetHelpstatus, GetMakingtypes, GetRatings, GetRequiredperiods,
-      GetPatients, GetPatientdefines, GetFiles, GetUsagetypes } = this.props
-    let Id = CareplanID || match?.params?.CareplanID
-    if (validator.isUUID(Id)) {
-      GetCareplan(Id)
-      GetSupportplans()
-      GetSupportplanlists()
-      GetPatients()
-      GetPatientdefines()
-      GetFiles()
-      GetUsagetypes()
-      GetHelpstatus()
-      GetMakingtypes()
-      GetRatings()
-      GetRequiredperiods()
-    } else {
-      history && history.push("/Careplans")
-    }
-  }
+  const Id = match?.params?.CareplanID || CareplanID
 
-  componentDidUpdate() {
-    const { Careplans, Supportplans, Supportplanlists, Files, Usagetypes, Helpstatus, Makingtypes, Ratings, Requiredperiods, Patientdefines, Patients } = this.props
+  const { selected_record } = Careplans
 
-    const isloadingStatus =
-      Supportplans.isLoading ||
-      Supportplanlists.isLoading ||
-      Patients.isLoading ||
-      Files.isLoading ||
-      Usagetypes.isLoading ||
-      Helpstatus.isLoading ||
-      Makingtypes.isLoading ||
-      Ratings.isLoading ||
-      Careplans.isLoading ||
-      Requiredperiods.isLoading ||
-      Patientdefines.isLoading;
+  const [isDatafetched, setIsDatafetched] = useState(false)
+  const [isFetched, setIsFetched] = useState(false)
+  const [supportplans, setSupportplans] = useState([])
+  const context = useContext(FormContext)
+  const t = Profile?.i18n?.t
 
-    const { selected_record } = Careplans
+  const isloadingStatus =
+    Supportplans.isLoading ||
+    Supportplanlists.isLoading ||
+    Patients.isLoading ||
+    Files.isLoading ||
+    Usagetypes.isLoading ||
+    Careplans.isLoading ||
+    Careplanparameters.isLoading ||
+    Patientdefines.isLoading;
 
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !isloadingStatus && !this.state.isDatafetched) {
+  const Supportplantypeoptions = [
+    { key: 1, text: t('Common.Supportplan.Types.Careplan'), value: SUPPORTPLAN_TYPE_CAREPLAN },
+    { key: 2, text: t('Common.Supportplan.Types.Psychosocial'), value: SUPPORTPLAN_TYPE_PSYCHOSOCIAL },
+    { key: 3, text: t('Common.Supportplan.Types.Rating'), value: SUPPORTPLAN_TYPE_RATING },
+  ]
 
-      this.context.setForm(this.PAGE_NAME, {
-        ...selected_record,
-        Startdate: Formatdate(selected_record?.Startdate),
-        Enddate: Formatdate(selected_record?.Enddate),
-        Createdate: Formatdate(selected_record?.Createdate),
-      })
-      this.setState({
-        isDatafetched: true, Supportplans: (selected_record?.Careplanservices || []).map((careplan) => {
-          const supportplan = (Supportplans.list || []).find(plan => plan?.Uuid === careplan?.SupportplanID)
-          return {
-            ...careplan,
-            Supportplanname: supportplan?.Name,
-            key: Math.random(),
-          }
-        })
-      })
-    }
+  const patientID = context.formstates[`${PAGE_NAME}/PatientID`]
+  const typeID = context.formstates[`${PAGE_NAME}/Type`]
 
-  }
-  render() {
-    const {
-      Careplans, Supportplans, Supportplanlists, Files, Patients, Helpstatus, Makingtypes, Ratings, Requiredperiods,
-      Patientdefines, Usagetypes, Profile, history, closeModal, fillCareplannotification } = this.props
+  const isValid = validator.isUUID(patientID) && validator.isNumber(typeID)
 
-    const isloadingStatus =
-      Supportplans.isLoading ||
-      Supportplanlists.isLoading ||
-      Patients.isLoading ||
-      Files.isLoading ||
-      Usagetypes.isLoading ||
-      Helpstatus.isLoading ||
-      Makingtypes.isLoading ||
-      Ratings.isLoading ||
-      Careplans.isLoading ||
-      Requiredperiods.isLoading ||
-      Patientdefines.isLoading;
+  const patient = (Patients.list || []).find(u => u.Uuid === patientID)
+  const type = (Supportplantypeoptions || []).find(u => u.value === typeID)
 
-    const selectedPatient = this.context.formstates[`${this.PAGE_NAME}/PatientID`]
-    const selectedPatientmodel = (Patients.list || []).find(u => u.Uuid === selectedPatient)
-    const isPatientselected = validator.isUUID(selectedPatient)
-    const patientDefine = (Patientdefines.list || []).find(u => u.Uuid === selectedPatientmodel?.PatientdefineID)
-    let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
-    const patientPP = (Files.list || []).find(u => u.ParentID === selectedPatient && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
+  const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
 
-    const Helpstatusoption = (Helpstatus.list || []).filter(u => u.Isactive).map(helpstatu => {
-      return { key: helpstatu.Uuid, text: helpstatu.Name, value: helpstatu.Uuid }
-    })
+  const Patientoptions = (Patients.list || []).filter(u => u.Isactive).map(patient => {
+    const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient.PatientdefineID)
+    return { key: patient.Uuid, text: `${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`, value: patient.Uuid }
+  })
 
-    const Requiredperiodoption = (Requiredperiods.list || []).filter(u => u.Isactive).map(period => {
-      return { key: period.Uuid, text: period.Name, value: period.Uuid }
-    })
-
-    const Makingtypeoptions = (Makingtypes.list || []).filter(u => u.Isactive).map(makingtype => {
-      return { key: makingtype.Uuid, text: makingtype.Name, value: makingtype.Uuid }
-    })
-
-    const Ratingoptions = (Ratings.list || []).filter(u => u.Isactive).map(rating => {
-      return { key: rating.Uuid, text: rating.Name, value: rating.Uuid }
-    })
-
-    return (
-      isloadingStatus ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Careplans"}>
-                <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
-            </Headerbredcrump>
-            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Startdate[Profile.Language]} name="Startdate" type="date" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Enddate[Profile.Language]} name="Enddate" type="date" />
-              </Form.Group>
-              <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Createdate[Profile.Language]} name="Createdate" type="date" />
-              </Form.Group>
-              {isPatientselected && <React.Fragment>
-                <Pagedivider />
-                <Card fluid>
-                  <div className='p-4 flex flex-col-reverse justify-center md:flex-row md:justify-between items-start'>
-                    <div>
-                      <div className='my-2'>
-                        <Label
-                          image
-                          color='blue'
-                          size='medium'
-                        >
-                          {`${Literals.Columns.Name[Profile.Language]} :`}
-                          <Label.Detail>
-                            {`${patientDefine?.Firstname || 'Tanımsız'} ${patientDefine?.Lastname || 'Tanımsız'}`}
-                          </Label.Detail>
-                        </Label>
-                      </div>
-                      <div className='my-2'>
-                        <Label
-                          image
-                          color='blue'
-                          size='medium'
-                        >
-                          {`${Literals.Columns.CountryID[Profile.Language]} :`}
-                          <Label.Detail>
-                            {`${patientDefine?.CountryID || ''}`}
-                          </Label.Detail>
-                        </Label>
-                      </div>
-                      <div className='my-2'>
-                        <Label
-                          image
-                          color='blue'
-                          size='medium'
-                        >
-                          {`${Literals.Columns.Dateofbirth[Profile.Language]} :`}
-                          <Label.Detail>
-                            {`${this.dateCellhandler(patientDefine?.Dateofbirth) || ''}`}
-                          </Label.Detail>
-                        </Label>
-                      </div>
-
-                    </div>
-                    <div>
-                      <div className='my-2'>
-                        <Label
-                          image
-                          color='blue'
-                          size='medium'
-                        >
-                          {`${Literals.Columns.Gender[Profile.Language]} :`}
-                          <Label.Detail>
-                            {`${patientDefine?.Gender || ''}`}
-                          </Label.Detail>
-                        </Label>
-                      </div>
-                      <div className='my-2'>
-                        <Label
-                          image
-                          color='blue'
-                          size='medium'
-                        >
-                          {`${Literals.Columns.Fathername[Profile.Language]} :`}
-                          <Label.Detail>
-                            {`${patientDefine?.Fathername || ''}`}
-                          </Label.Detail>
-                        </Label>
-                      </div>
-                    </div>
-                    {patientPP
-                      ? <Profilephoto
-                        fileID={patientPP?.Uuid}
-                        fillnotification={fillCareplannotification}
-                        Profile={Profile}
-                        Imgheigth="40px"
-                      />
-                      : <Image
-                        floated='right'
-                        size='tiny'
-                        rounded
-                        src={`https://react.semantic-ui.com/images/avatar/large/${patientDefine?.Gender === '1' ? 'molly' : 'steve'}.jpg`}
-                      />
-                    }
-                  </div>
-                </Card>
-                <Pagedivider />
-              </React.Fragment>
-              }
-              {isPatientselected && <React.Fragment>
-                <Table celled className='overflow-x-auto' >
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.HeaderCell width={4}>{Literals.Columns.SupportplanID[Profile.Language]}</Table.HeaderCell>
-                      <Table.HeaderCell width={1}>{Literals.Columns.Helpstatus[Profile.Language]}</Table.HeaderCell>
-                      <Table.HeaderCell width={1}>{Literals.Columns.Requiredperiod[Profile.Language]}</Table.HeaderCell>
-                      <Table.HeaderCell width={1}>{Literals.Columns.Makingtype[Profile.Language]}</Table.HeaderCell>
-                      <Table.HeaderCell width={1}>{Literals.Columns.Rating[Profile.Language]}</Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {this.state.Supportplans.map((plan, index) => {
-                      return <Table.Row key={plan.key}>
-                        <Table.Cell>
-                          <Label>{plan.Supportplanname}</Label>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Dropdown
-                            value={plan.Helpstatus}
-                            placeholder={Literals.Columns.Helpstatus[Profile.Language]}
-                            name="Helpstatus"
-                            clearable
-                            search
-                            fluid
-                            selection
-                            options={Helpstatusoption}
-                            onChange={(e, data) => { this.changeHandler(plan.key, 'Helpstatus', data.value) }}
-                          />
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Dropdown
-                            value={plan.Requiredperiod}
-                            placeholder={Literals.Columns.Requiredperiod[Profile.Language]}
-                            name="Requiredperiod"
-                            clearable
-                            search
-                            fluid
-                            selection
-                            options={Requiredperiodoption}
-                            onChange={(e, data) => { this.changeHandler(plan.key, 'Requiredperiod', data.value) }}
-                          />
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Dropdown
-                            value={plan.Makingtype}
-                            placeholder={Literals.Columns.Makingtype[Profile.Language]}
-                            name="Makingtype"
-                            clearable
-                            search
-                            fluid
-                            selection
-                            options={Makingtypeoptions}
-                            onChange={(e, data) => { this.changeHandler(plan.key, 'Makingtype', data.value) }}
-                          />
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Dropdown
-                            value={plan.Rating}
-                            placeholder={Literals.Columns.Rating[Profile.Language]}
-                            name="Rating"
-                            clearable
-                            search
-                            fluid
-                            selection
-                            options={Ratingoptions}
-                            onChange={(e, data) => { this.changeHandler(plan.key, 'Rating', data.value) }}
-                          />
-                        </Table.Cell>
-                      </Table.Row>
-                    })}
-                  </Table.Body>
-                </Table>
-              </React.Fragment>}
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Careplans"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
-            />
-            <Submitbutton
-              isLoading={Careplans.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
-    )
-  }
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    const { EditCareplans, history, fillCareplannotification, Profile, closeModal, Careplans } = this.props
-    const data = this.context.getForm(this.PAGE_NAME)
-    data.Careplanservices = this.state.Supportplans
-    console.log('data.Careplanservices: ', data.Careplanservices);
+    const data = context.getForm(PAGE_NAME)
+    data.Careplanservices = supportplans
 
     let errors = []
     if (!validator.isISODate(data.Startdate)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Startdaterequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Careplans.Page.Header'), description: t('Pages.Careplans.Messages.Startdaterequired') })
     }
     if (!validator.isISODate(data.Enddate)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Enddaterequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Careplans.Page.Header'), description: t('Pages.Careplans.Messages.Enddaterequired') })
     }
     if (!validator.isISODate(data.Createdate)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Createdaterequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Careplans.Page.Header'), description: t('Pages.Careplans.Messages.Createdaterequired') })
     }
     if (!validator.isUUID(data.PatientID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Patientrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Careplans.Page.Header'), description: t('Pages.Careplans.Messages.Patientrequired') })
     }
-    data.Careplanservices.forEach((service => {
-      if (!validator.isUUID(service.Helpstatus)) {
-        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Helpstatusrequired[Profile.Language] })
-      }
-      if (!validator.isUUID(service.Requiredperiod)) {
-        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Requiredperiodrequired[Profile.Language] })
-      }
-      if (!validator.isUUID(service.Makingtype)) {
-        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Makingtyperequired[Profile.Language] })
-      }
-      if (!validator.isUUID(service.Rating)) {
-        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Ratingrequired[Profile.Language] })
-      }
-    }))
     if (errors.length > 0) {
       errors.forEach(error => {
         fillCareplannotification(error)
@@ -368,19 +86,219 @@ export default class CareplansEdit extends Component {
     }
   }
 
-  dateCellhandler = (value) => {
-    if (value) {
-      return value.split('T').length > 0 ? value.split('T')[0] : value
+  useEffect(() => {
+    if (validator.isUUID(Id)) {
+      GetCareplan(Id)
+      GetSupportplans()
+      GetSupportplanlists()
+      GetPatients()
+      GetPatientdefines()
+      GetFiles()
+      GetUsagetypes()
+      GetCareplanparameters()
+    } else {
+      history && history.push("/Careplans")
     }
-    return null
-  }
+  }, [])
 
-  changeHandler = (key, property, value) => {
-    let supportPlans = this.state.Supportplans
+  useEffect(() => {
+    setIsDatafetched(false)
+    setSupportplans([])
+  }, [typeID, patientID])
+
+  useEffect(() => {
+    if (!isFetched && !isloadingStatus && validator.isUUID(selected_record?.Uuid)) {
+      context.setForm(PAGE_NAME, {
+        ...selected_record,
+        Startdate: Formatdate(selected_record?.Startdate),
+        Enddate: Formatdate(selected_record?.Enddate),
+        Createdate: Formatdate(selected_record?.Createdate),
+      })
+      setIsFetched(true)
+    }
+
+    if (isValid && !isDatafetched && !isloadingStatus && validator.isUUID(selected_record?.Uuid)) {
+      const plans = (selected_record?.Careplanservices || []).map(plan => {
+        const supportplan = (Supportplans.list || []).find(u => u.Uuid === plan?.SupportplanID)
+        return {
+          ...plan,
+          Supportplanname: supportplan?.Name || t('Common.NoDataFound'),
+          key: Math.random()
+        }
+      }).filter(u => u)
+      setSupportplans(plans)
+      setIsDatafetched(true)
+    }
+  }, [typeID, patientID, isDatafetched, isloadingStatus])
+
+  return (<DimmerDimmable>
+    <Pagewrapper>
+      <Dimmer active={isloadingStatus} inverted>
+        <Loader>Yükleniyor</Loader>
+      </Dimmer>
+      <Headerwrapper>
+        <Headerbredcrump>
+          <Link to={"/Careplans"}>
+            <Breadcrumb.Section>{t('Pages.Careplans.Page.Header')}</Breadcrumb.Section>
+          </Link>
+          <Breadcrumb.Divider icon='right chevron' />
+          <Breadcrumb.Section>{t('Pages.Careplans.Page.EditHeader')}</Breadcrumb.Section>
+        </Headerbredcrump>
+        {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
+      </Headerwrapper>
+      <Pagedivider />
+      <Contentwrapper>
+        <Form>
+          <Form.Group widths='equal'>
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Type')} name="Type" formtype='dropdown' options={Supportplantypeoptions} />
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Patient')} name="PatientID" options={Patientoptions} formtype='dropdown' />
+          </Form.Group>
+          <Form.Group widths='equal'>
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Startdate')} name="Startdate" type="date" />
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Enddate')} name="Enddate" type="date" />
+          </Form.Group>
+          <Form.Group widths={'equal'}>
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Createdate')} name="Createdate" type="date" />
+          </Form.Group>
+          <Form.Group widths={'equal'}>
+            <FormInput page={PAGE_NAME} placeholder={t('Pages.Careplans.Columns.Info')} name="Info" />
+          </Form.Group>
+        </Form>
+      </Contentwrapper>
+      <CareplansCreatePatientcard
+        isValid={isValid}
+        Files={Files}
+        patient={patient}
+        patientdefine={patientdefine}
+        Usagetypes={Usagetypes}
+        fillnotification={fillCareplannotification}
+        Profile={Profile}
+      />
+      <CareplansCreateSupportplans
+        isValid={isValid}
+        type={type}
+        supportplans={supportplans}
+        setSupportplans={setSupportplans}
+        Careplanparameters={Careplanparameters}
+        fillnotification={fillCareplannotification}
+        Profile={Profile}
+      />
+      <Footerwrapper>
+        <Gobackbutton
+          history={history}
+          redirectUrl={"/Careplans"}
+          buttonText={t('Common.Button.Goback')}
+        />
+        <Submitbutton
+          isLoading={Careplans.isLoading}
+          buttonText={t('Common.Button.Update')}
+          submitFunction={handleSubmit}
+        />
+      </Footerwrapper>
+    </Pagewrapper>
+  </DimmerDimmable>
+  )
+}
+
+
+
+function CareplansCreatePatientcard(props) {
+
+  const { isValid, Files, patient, patientdefine, Usagetypes, fillnotification, Profile } = props
+
+  const usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
+  const file = (Files.list || []).find(u => u.ParentID === patient?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
+
+  return (isValid ?
+    <React.Fragment>
+      <Pagedivider />
+      <Contentwrapper>
+        <Header as='h2' icon textAlign='center'>
+          {file
+            ? <Profilephoto
+              fileID={file?.Uuid}
+              fillnotification={fillnotification}
+              Profile={Profile}
+            />
+            : <Icon name='users' circular />}
+          <Header.Content>{`${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`}</Header.Content>
+        </Header>
+      </Contentwrapper>
+    </React.Fragment>
+    : null)
+}
+
+
+
+function CareplansCreateSupportplans(props) {
+  const { isValid, type, supportplans, setSupportplans, Careplanparameters, Profile } = props
+
+  const t = Profile?.i18n?.t
+
+  const isTypeCareplan = (type?.value === SUPPORTPLAN_TYPE_CAREPLAN)
+  const isTypePsychosocial = (type?.value === SUPPORTPLAN_TYPE_PSYCHOSOCIAL)
+  const isTypeRating = (type?.value === SUPPORTPLAN_TYPE_RATING)
+
+  const Parameteroptions = (Careplanparameters.list || []).filter(u => u.Isactive).map(parameter => {
+    return { key: parameter.Uuid, text: parameter.Name, value: parameter.Uuid, type: parameter.Type }
+  })
+
+  const changeHandler = (key, property, value) => {
+    let supportPlans = supportplans
     const index = supportPlans.findIndex(plan => plan.key === key)
     supportPlans[index][property] = value
-    this.setState({ Supportplans: supportPlans })
+    setSupportplans([...supportPlans])
   }
 
+  const renderCell = (props) => {
+    const { value, name, placeholder, key, parametertype } = props
+    return <Table.Cell>
+      <Dropdown
+        value={value || ''}
+        placeholder={placeholder}
+        name={name}
+        clearable
+        search
+        fluid
+        selection
+        options={Parameteroptions.filter(u => u.type === parametertype)}
+        onChange={(e, data) => { changeHandler(key, name, data.value) }}
+      />
+    </Table.Cell>
+  }
+
+  return (isValid ?
+    <Contentwrapper>
+      <Table celled className='overflow-x-auto' >
+        <Table.Header>
+          <Table.Row>
+            {(isTypeCareplan || isTypePsychosocial || isTypeRating) ? <Table.HeaderCell width={6}>{t('Pages.Careplans.Columns.Suppportplan')}</Table.HeaderCell> : null}
+            {(isTypeCareplan || isTypePsychosocial) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Helpstatus')}</Table.HeaderCell> : null}
+            {(isTypeCareplan) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Presentationperiod')}</Table.HeaderCell> : null}
+            {(isTypeCareplan) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Presentationmakingtype')}</Table.HeaderCell> : null}
+            {(isTypePsychosocial) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Currentsituationrati̇ng')}</Table.HeaderCell> : null}
+            {(isTypePsychosocial) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Plannedsituationrati̇ng')}</Table.HeaderCell> : null}
+            {(isTypeCareplan || isTypePsychosocial) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Rating')}</Table.HeaderCell> : null}
+            {(isTypeRating) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Purposetarget')}</Table.HeaderCell> : null}
+            {(isTypeRating) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Purposetargetworks')}</Table.HeaderCell> : null}
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {(supportplans || []).map((plan, index) => {
+            return <Table.Row key={plan.key}>
+              {(isTypeCareplan || isTypePsychosocial || isTypeRating) ? <Table.Cell>{plan.Supportplanname}</Table.Cell> : null}
+              {(isTypeCareplan || isTypePsychosocial) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_HELPSTATU, key: plan?.key, name: "Helpstatus", value: plan?.Helpstatus, placeholder: t('Pages.Careplans.Columns.Helpstatus'), }) : null}
+              {(isTypeCareplan) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PRESENTATIONPERIOD, key: plan?.key, name: "Presentationperiod", value: plan?.Presentationperiod, placeholder: t('Pages.Careplans.Columns.Presentationperiod'), }) : null}
+              {(isTypeCareplan) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PRESENTATIONMAKINGTYPE, key: plan?.key, name: "Presentationmakingtype", value: plan?.Presentationmakingtype, placeholder: t('Pages.Careplans.Columns.Presentationmakingtype'), }) : null}
+              {(isTypePsychosocial) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_CURRENTSITUATIONRATİNG, key: plan?.key, name: "Currentsituationrati̇ng", value: plan?.Currentsituationrati̇ng, placeholder: t('Pages.Careplans.Columns.Currentsituationrati̇ng'), }) : null}
+              {(isTypePsychosocial) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PLANNEDSITUATIONRATİNG, key: plan?.key, name: "Plannedsituationrati̇ng", value: plan?.Plannedsituationrati̇ng, placeholder: t('Pages.Careplans.Columns.Plannedsituationrati̇ng'), }) : null}
+              {(isTypeCareplan || isTypePsychosocial) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_RATING, key: plan?.key, name: "Rating", value: plan?.Rating, placeholder: t('Pages.Careplans.Columns.Rating'), }) : null}
+              {(isTypeRating) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PURPOSETARGET, key: plan?.key, name: "Purposetarget", value: plan?.Purposetarget, placeholder: t('Pages.Careplans.Columns.Purposetarget'), }) : null}
+              {(isTypeRating) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PURPOSETARGETWORKS, key: plan?.key, name: "Purposetargetworks", value: plan?.Purposetargetworks, placeholder: t('Pages.Careplans.Columns.Purposetargetworks'), }) : null}
+            </Table.Row>
+          })}
+        </Table.Body>
+      </Table>
+    </Contentwrapper>
+    : null)
 }
-CareplansEdit.contextType = FormContext

@@ -31,6 +31,7 @@ const Routes = [
     { method: 'get', path: '/Careplans/:careplanId', controller: 'Careplan', action: 'GetCareplan' },
     { method: 'get', path: '/Careplans', controller: 'Careplan', action: 'GetCareplans' },
     { method: 'post', path: '/Careplans', controller: 'Careplan', action: 'AddCareplan' },
+    { method: 'put', path: '/Careplans/Savepreview/:careplanId', controller: 'Careplan', action: 'SavepreviewCareplan' },
     { method: 'put', path: '/Careplans/Approve/:careplanId', controller: 'Careplan', action: 'ApproveCareplan' },
     { method: 'put', path: '/Careplans', controller: 'Careplan', action: 'UpdateCareplan' },
     { method: 'delete', path: '/Careplans/:careplanId', controller: 'Careplan', action: 'DeleteCareplan' },

@@ -186,21 +186,9 @@ const Supportplanlists = lazy(() => import('./Containers/Supportplanlists/Suppor
 const SupportplanlistsCreate = lazy(() => import('./Containers/Supportplanlists/SupportplanlistsCreate'));
 const SupportplanlistsEdit = lazy(() => import('./Containers/Supportplanlists/SupportplanlistsEdit'));
 
-const Helpstatus = lazy(() => import('./Containers/Helpstatus/Helpstatus'));
-const HelpstatusCreate = lazy(() => import('./Containers/Helpstatus/HelpstatusCreate'));
-const HelpstatusEdit = lazy(() => import('./Containers/Helpstatus/HelpstatusEdit'));
-
-const Makingtypes = lazy(() => import('./Containers/Makingtypes/Makingtypes'));
-const MakingtypesCreate = lazy(() => import('./Containers/Makingtypes/MakingtypesCreate'));
-const MakingtypesEdit = lazy(() => import('./Containers/Makingtypes/MakingtypesEdit'));
-
-const Ratings = lazy(() => import('./Containers/Ratings/Ratings'));
-const RatingsCreate = lazy(() => import('./Containers/Ratings/RatingsCreate'));
-const RatingsEdit = lazy(() => import('./Containers/Ratings/RatingsEdit'));
-
-const Requiredperiods = lazy(() => import('./Containers/Requiredperiods/Requiredperiods'));
-const RequiredperiodsCreate = lazy(() => import('./Containers/Requiredperiods/RequiredperiodsCreate'));
-const RequiredperiodsEdit = lazy(() => import('./Containers/Requiredperiods/RequiredperiodsEdit'));
+const Careplanparameters = lazy(() => import('./Containers/Careplanparameters/Careplanparameters'));
+const CareplanparametersCreate = lazy(() => import('./Containers/Careplanparameters/CareplanparametersCreate'));
+const CareplanparametersEdit = lazy(() => import('./Containers/Careplanparameters/CareplanparametersEdit'));
 
 const Professions = lazy(() => import('./Containers/Professions/Professions'));
 const ProfessionsCreate = lazy(() => import('./Containers/Professions/ProfessionsCreate'));
@@ -419,17 +407,9 @@ class Routes extends Component {
       { exact: true, path: "/Usagetypes/Create", auth: true, component: UsagetypesCreate, permission: 'usagetypeadd' },
       { exact: true, path: "/Usagetypes/:UsagetypeID/Edit", auth: true, component: UsagetypesEdit, permission: 'usagetypeupdate' },
 
-      { exact: true, path: "/Helpstatus", auth: true, component: Helpstatus, permission: 'helpstatuview' },
-      { exact: true, path: "/Helpstatus/Create", auth: true, component: HelpstatusCreate, permission: 'helpstatuadd' },
-      { exact: true, path: "/Helpstatus/:HelpstatuID/Edit", auth: true, component: HelpstatusEdit, permission: 'helpstatuupdate' },
-
-      { exact: true, path: "/Makingtypes", auth: true, component: Makingtypes, permission: 'makingtypeview' },
-      { exact: true, path: "/Makingtypes/Create", auth: true, component: MakingtypesCreate, permission: 'makingtypeadd' },
-      { exact: true, path: "/Makingtypes/:MakingtypeID/Edit", auth: true, component: MakingtypesEdit, permission: 'makingtypeupdate' },
-
-      { exact: true, path: "/Ratings", auth: true, component: Ratings, permission: 'ratingview' },
-      { exact: true, path: "/Ratings/Create", auth: true, component: RatingsCreate, permission: 'ratingadd' },
-      { exact: true, path: "/Ratings/:RatingID/Edit", auth: true, component: RatingsEdit, permission: 'ratingupdate' },
+      { exact: true, path: "/Careplanparameters", auth: true, component: Careplanparameters, permission: 'careplanparameterview' },
+      { exact: true, path: "/Careplanparameters/Create", auth: true, component: CareplanparametersCreate, permission: 'careplanparameteradd' },
+      { exact: true, path: "/Careplanparameters/:CareplanparameterID/Edit", auth: true, component: CareplanparametersEdit, permission: 'careplanparameterupdate' },
 
       { exact: true, path: "/Professions", auth: true, component: Professions, permission: 'professionview' },
       { exact: true, path: "/Professions/Create", auth: true, component: ProfessionsCreate, permission: 'professionadd' },
@@ -442,10 +422,6 @@ class Routes extends Component {
       { exact: true, path: "/Professionpresettings", auth: true, component: Professionpresettings, permission: 'professionpresettingview' },
       { exact: true, path: "/Professionpresettings/Create", auth: true, component: ProfessionpresettingsCreate, permission: 'professionpresettingadd' },
       { exact: true, path: "/Professionpresettings/:ProfessionpresettingID/Edit", auth: true, component: ProfessionpresettingsEdit, permission: 'professionpresettingupdate' },
-
-      { exact: true, path: "/Requiredperiods", auth: true, component: Requiredperiods, permission: 'requiredperiodview' },
-      { exact: true, path: "/Requiredperiods/Create", auth: true, component: RequiredperiodsCreate, permission: 'requiredperiodadd' },
-      { exact: true, path: "/Requiredperiods/:RequiredperiodID/Edit", auth: true, component: RequiredperiodsEdit, permission: 'requiredperiodupdate' },
 
       { exact: true, path: "/Personelshifts", auth: true, component: Personelshifts, permission: 'personelshiftview' },
       { exact: true, path: "/Personelshifts/Create", auth: true, component: PersonelshiftsCreate, permission: 'personelshiftadd' },

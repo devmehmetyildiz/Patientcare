@@ -16,16 +16,25 @@ module.exports = sequelize.define('careplanserviceModel', {
     Helpstatus: {
         type: Sequelize.STRING
     },
-    Requiredperiod: {
+    Presentationperiod: {
         type: Sequelize.STRING
     },
-    Makingtype: {
+    Presentationmakingtype: {
         type: Sequelize.STRING
     },
     Rating: {
         type: Sequelize.STRING
     },
-    Createduser: {
+    Currentsituationrati̇ng: {
+        type: Sequelize.STRING
+    },
+    Plannedsituationrati̇ng: {
+        type: Sequelize.STRING
+    },
+    Purposetarget: {
+        type: Sequelize.STRING
+    },
+    Purposetargetworks: {
         type: Sequelize.STRING
     },
     Createtime: {

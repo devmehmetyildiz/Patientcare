@@ -29,9 +29,9 @@ export default class SupportplanlistsEdit extends Component {
   }
 
   componentDidUpdate() {
-    const { Supportplanlists, Supportplans, Departments } = this.props
+    const { Supportplanlists, Supportplans } = this.props
     const { selected_record, isLoading } = Supportplanlists
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !Departments.isLoading > 0 && !Supportplans.isLoading && !isLoading && !this.state.isDatafetched) {
+    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !Supportplans.isLoading && !isLoading && !this.state.isDatafetched) {
       this.setState({
         isDatafetched: true,
       })
@@ -45,7 +45,9 @@ export default class SupportplanlistsEdit extends Component {
 
     const t = Profile?.i18n?.t
 
-    const Supportplanoptions = (Supportplans.list || []).filter(u => u.Isactive).map(plan => {
+    const selectedtype = this.context.formstates[`${this.PAGE_NAME}/Type`]
+
+    const Supportplanoptions = (Supportplans.list || []).filter(u => u.Isactive && u.Type === selectedtype).map(plan => {
       return { key: plan.Uuid, text: plan.Name, value: plan.Uuid }
     })
 

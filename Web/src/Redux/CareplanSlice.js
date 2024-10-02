@@ -33,6 +33,10 @@ const Literals = {
         en: 'Care Plan approved successfully',
         tr: 'Bakım PLanı Başarı ile Onaylandı'
     },
+    completedescription: {
+        en: 'Care Plan completed successfully',
+        tr: 'Bakım PLanı Başarı ile Tamamlandı'
+    },
 }
 
 export const GetCareplans = createAsyncThunk(
@@ -112,6 +116,50 @@ export const EditCareplans = createAsyncThunk(
 );
 
 
+export const SavepreviewCareplans = createAsyncThunk(
+    'Careplans/SavepreviewCareplans',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Business, `${ROUTES.CAREPLAN}/Savepreview/${data.Uuid}`);
+            dispatch(fillCareplannotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.adddescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCareplannotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const CompleteCareplans = createAsyncThunk(
+    'Careplans/CompleteCareplans',
+    async (data, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const Language = state.Profile.Language || 'en'
+            const response = await instanse.put(config.services.Business, `${ROUTES.CAREPLAN}/Complete/${data.Uuid}`);
+            dispatch(fillCareplannotification({
+                type: 'Success',
+                code: Literals.updatecode[Language],
+                description: Literals.completedescription[Language],
+            }));
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillCareplannotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const ApproveCareplans = createAsyncThunk(
     'Careplans/ApproveCareplans',
     async (data, { dispatch, getState }) => {
@@ -167,7 +215,9 @@ export const CareplansSlice = createSlice({
         isLoading: false,
         isDeletemodalopen: false,
         isCompletemodalopen: false,
-        isApprovemodalopen: false
+        isApprovemodalopen: false,
+        isSavepreviewmodalopen: false,
+        isDetailmodalopen: false,
     },
     reducers: {
         handleSelectedCareplan: (state, action) => {
@@ -186,6 +236,12 @@ export const CareplansSlice = createSlice({
         },
         handleCompletemodal: (state, action) => {
             state.isCompletemodalopen = action.payload
+        },
+        handleSavepreviewmodal: (state, action) => {
+            state.isSavepreviewmodalopen = action.payload
+        },
+        handleDetailmodal: (state, action) => {
+            state.isDetailmodalopen = action.payload
         },
         handleApprovemodal: (state, action) => {
             state.isApprovemodalopen = action.payload
@@ -252,6 +308,28 @@ export const CareplansSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(SavepreviewCareplans.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(SavepreviewCareplans.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(SavepreviewCareplans.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(CompleteCareplans.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(CompleteCareplans.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(CompleteCareplans.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(DeleteCareplans.pending, (state) => {
                 state.isLoading = true;
             })
@@ -273,6 +351,8 @@ export const {
     handleDeletemodal,
     handleCompletemodal,
     handleApprovemodal,
+    handleSavepreviewmodal,
+    handleDetailmodal,
 } = CareplansSlice.actions;
 
 export default CareplansSlice.reducer;

@@ -68,7 +68,7 @@ export default class SupportplansEdit extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Supportplans.Column.Type')} name="Type" formtype='dropdown' options={Supportplantypeoptions} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Supportplans.Column.Type')} options={Supportplantypeoptions} name="Type" formtype='dropdown' />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Supportplans.Column.Name')} name="Name" />

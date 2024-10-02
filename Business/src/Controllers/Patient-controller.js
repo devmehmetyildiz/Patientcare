@@ -2356,11 +2356,15 @@ async function UpdatePatientsupportplans(req, res, next) {
     let validationErrors = []
     const {
         PatientID,
+        Type,
         Supportplans,
     } = req.body
 
     if (!validator.isUUID(PatientID)) {
         validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+    }
+    if (!validator.isNumber(Type)) {
+        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
     }
     if (!validator.isArray(Supportplans)) {
         validationErrors.push(messages.VALIDATION_ERROR.SUPPORTPLANS_REQUIRED)
@@ -2382,13 +2386,14 @@ async function UpdatePatientsupportplans(req, res, next) {
             return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
-        await db.patientsupportplanModel.destroy({ where: { PatientID: PatientID }, transaction: t });
+        await db.patientsupportplanModel.destroy({ where: { PatientID: PatientID, Type: Type }, transaction: t });
         for (const supportplan of Supportplans) {
             if (!supportplan.Uuid || !validator.isUUID(supportplan.Uuid)) {
                 return next(createValidationError(messages.VALIDATION_ERROR.SUPPORTPLANID_REQUIRED, req.language))
             }
             await db.patientsupportplanModel.create({
                 PatientID: PatientID,
+                Type: Type,
                 PlanID: supportplan.Uuid
             }, { transaction: t });
         }

@@ -21,6 +21,12 @@ const messages = {
 
     },
     VALIDATION_ERROR: {
+        TYPE_REQUIRED: {
+            code: 'TYPE_REQUIRED', description: {
+                en: 'type required',
+                tr: 'Tür gerekli',
+            }
+        },
         CAREPLANID_REQUIRED: {
             code: 'CAREPLANID_REQUIRED', description: {
                 en: 'care plan id required',

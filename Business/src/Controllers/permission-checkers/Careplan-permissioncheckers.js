@@ -20,6 +20,10 @@ async function ApproveCareplan(req, res, next) {
     PermissionHandler(req, next, 'careplanupdate')
 }
 
+async function SavepreviewCareplan(req, res, next) {
+    PermissionHandler(req, next, 'careplanupdate')
+}
+
 async function DeleteCareplan(req, res, next) {
     PermissionHandler(req, next, 'careplandelete')
 }
@@ -31,4 +35,5 @@ module.exports = {
     ApproveCareplan,
     UpdateCareplan,
     DeleteCareplan,
+    SavepreviewCareplan
 }

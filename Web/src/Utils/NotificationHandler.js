@@ -40,10 +40,6 @@ import { removeUsagetypenotification } from "../Redux/UsagetypeSlice"
 import { removeSupportplannotification } from "../Redux/SupportplanSlice"
 import { removeSupportplanlistnotification } from "../Redux/SupportplanlistSlice"
 import { removeCareplannotification } from "../Redux/CareplanSlice"
-import { removeHelpstatunotification } from "../Redux/HelpstatuSlice"
-import { removeMakingtypenotification } from "../Redux/MakingtypeSlice"
-import { removeRatingnotification } from "../Redux/RatingSlice"
-import { removeRequiredperiodnotification } from "../Redux/RequiredperiodSlice"
 import { removeProfessionnotification } from "../Redux/ProfessionSlice"
 import { removePersonelshiftnotification } from "../Redux/PersonelshiftSlice"
 import { removePersonelpresettingnotification } from "../Redux/PersonelpresettingSlice"
@@ -56,6 +52,7 @@ import { removeClaimpaymentparameternotification } from "../Redux/Claimpaymentpa
 import { removeClaimpaymentnotification } from "../Redux/ClaimpaymentSlice"
 import { removeTrainingnotification } from "../Redux/TrainingSlice"
 import { removePatienteventdefinenotification } from "../Redux/PatienteventdefineSlice"
+import { removeCareplanparameternotification } from "../Redux/CareplanparameterSlice"
 import Notificationwrapper from './Notification'
 
 export function NotificationHandler(props) {
@@ -76,11 +73,10 @@ export function NotificationHandler(props) {
             removeEquipmentgroupnotification, removePersonelnotification, removeBreakdownnotification, removeMainteancenotification,
             removePersonelshiftnotification, removeCompanycashmovementnotification, removePatientcashmovementnotification,
             removePatientcashregisternotification, removeUsernotificationnotification, removeReportnotification, removeUsagetypenotification,
-            removeSupportplannotification, removeSupportplanlistnotification, removeCareplannotification, removeHelpstatunotification,
-            removeMakingtypenotification, removeRatingnotification, removeRequiredperiodnotification, removeProfessionnotification, removePersonelpresettingnotification,
+            removeSupportplannotification, removeSupportplanlistnotification, removeCareplannotification, removeProfessionnotification, removePersonelpresettingnotification,
             removeProfessionpresettingnotification, removePersonelshiftdetailnotification, removeStocktypenotification,
             removeStocktypegroupnotification, removePurchaseordernotification, removeClaimpaymentparameternotification, removeClaimpaymentnotification,
-            removeTrainingnotification, removePatienteventdefinenotification
+            removeTrainingnotification, removePatienteventdefinenotification, removeCareplanparameternotification
         } = props
 
         const {
@@ -92,10 +88,10 @@ export function NotificationHandler(props) {
             Periods, Cases, Beds, Shiftdefines, Equipmentgroups, Equipments, Personels,
             Companycashmovements, Patientcashmovements,
             Patientcashregisters, Usernotifications, Reports, Usagetypes, Professions,
-            Supportplanlists, Supportplans, Careplans, Helpstatus, Makingtypes, Ratings, Requiredperiods,
+            Supportplanlists, Supportplans, Careplans,
             Personelshiftdetails, Personelpresettings, Professionpresettings, Personelshifts, Stocktypes,
             Stocktypegroups, Purchaseorders, Claimpaymentparameters, Claimpayments, Trainings,
-            Patienteventdefines
+            Patienteventdefines, Careplanparameters
         } = props.states
 
         Notification(Warehouses.notifications, removeWarehousenotification)
@@ -138,10 +134,6 @@ export function NotificationHandler(props) {
         Notification(Supportplanlists.notifications, removeSupportplanlistnotification)
         Notification(Supportplans.notifications, removeSupportplannotification)
         Notification(Careplans.notifications, removeCareplannotification)
-        Notification(Helpstatus.notifications, removeHelpstatunotification)
-        Notification(Makingtypes.notifications, removeMakingtypenotification)
-        Notification(Ratings.notifications, removeRatingnotification)
-        Notification(Requiredperiods.notifications, removeRequiredperiodnotification)
         Notification(Professions.notifications, removeProfessionnotification)
         Notification(Personelshifts.notifications, removePersonelshiftnotification)
         Notification(Personelpresettings.notifications, removePersonelpresettingnotification)
@@ -154,6 +146,7 @@ export function NotificationHandler(props) {
         Notification(Claimpayments.notifications, removeClaimpaymentnotification)
         Notification(Trainings.notifications, removeTrainingnotification)
         Notification(Patienteventdefines.notifications, removePatienteventdefinenotification)
+        Notification(Careplanparameters.notifications, removeCareplanparameternotification)
     })
 
     return null
@@ -175,11 +168,10 @@ const mapDispatchToProps = {
     removeEquipmentgroupnotification, removeEquipmentnotification, removePersonelnotification, removeBreakdownnotification,
     removeMainteancenotification, removeCompanycashmovementnotification, removePatientcashmovementnotification,
     removePatientcashregisternotification, removeUsernotificationnotification, removeReportnotification, removeUsagetypenotification,
-    removeSupportplanlistnotification, removeSupportplannotification, removeCareplannotification, removeHelpstatunotification, removeRequiredperiodnotification,
-    removeRatingnotification, removeMakingtypenotification, removeProfessionnotification, removePersonelshiftnotification,
+    removeSupportplanlistnotification, removeSupportplannotification, removeCareplannotification, removeProfessionnotification, removePersonelshiftnotification,
     removePersonelpresettingnotification, removeProfessionpresettingnotification, removePersonelshiftdetailnotification,
     removeStocktypenotification, removeStocktypegroupnotification, removePurchaseordernotification, removeClaimpaymentparameternotification,
-    removeClaimpaymentnotification, removeTrainingnotification, removePatienteventdefinenotification
+    removeClaimpaymentnotification, removeTrainingnotification, removePatienteventdefinenotification, removeCareplanparameternotification
 
 }
 

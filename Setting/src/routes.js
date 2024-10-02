@@ -89,29 +89,11 @@ const Routes = [
   { method: 'put', path: '/Supportplans', controller: 'Supportplan', action: 'UpdateSupportplan' },
   { method: 'delete', path: '/Supportplans/:supportplanId', controller: 'Supportplan', action: 'DeleteSupportplan' },
 
-  { method: 'get', path: '/Helpstatus/:helpstatuId', controller: 'Helpstatu', action: 'GetHelpstatu' },
-  { method: 'get', path: '/Helpstatus', controller: 'Helpstatu', action: 'GetHelpstatus' },
-  { method: 'post', path: '/Helpstatus', controller: 'Helpstatu', action: 'AddHelpstatu' },
-  { method: 'put', path: '/Helpstatus', controller: 'Helpstatu', action: 'UpdateHelpstatu' },
-  { method: 'delete', path: '/Helpstatus/:helpstatuId', controller: 'Helpstatu', action: 'DeleteHelpstatu' },
-
-  { method: 'get', path: '/Makingtypes/:makingtypeId', controller: 'Makingtype', action: 'GetMakingtype' },
-  { method: 'get', path: '/Makingtypes', controller: 'Makingtype', action: 'GetMakingtypes' },
-  { method: 'post', path: '/Makingtypes', controller: 'Makingtype', action: 'AddMakingtype' },
-  { method: 'put', path: '/Makingtypes', controller: 'Makingtype', action: 'UpdateMakingtype' },
-  { method: 'delete', path: '/Makingtypes/:makingtypeId', controller: 'Makingtype', action: 'DeleteMakingtype' },
-
-  { method: 'get', path: '/Ratings/:ratingId', controller: 'Rating', action: 'GetRating' },
-  { method: 'get', path: '/Ratings', controller: 'Rating', action: 'GetRatings' },
-  { method: 'post', path: '/Ratings', controller: 'Rating', action: 'AddRating' },
-  { method: 'put', path: '/Ratings', controller: 'Rating', action: 'UpdateRating' },
-  { method: 'delete', path: '/Ratings/:ratingId', controller: 'Rating', action: 'DeleteRating' },
-
-  { method: 'get', path: '/Requiredperiods/:requiredperiodId', controller: 'Requiredperiod', action: 'GetRequiredperiod' },
-  { method: 'get', path: '/Requiredperiods', controller: 'Requiredperiod', action: 'GetRequiredperiods' },
-  { method: 'post', path: '/Requiredperiods', controller: 'Requiredperiod', action: 'AddRequiredperiod' },
-  { method: 'put', path: '/Requiredperiods', controller: 'Requiredperiod', action: 'UpdateRequiredperiod' },
-  { method: 'delete', path: '/Requiredperiods/:requiredperiodId', controller: 'Requiredperiod', action: 'DeleteRequiredperiod' },
+  { method: 'get', path: '/Careplanparameters/:careplanparameterId', controller: 'Careplanparameter', action: 'GetCareplanparameter' },
+  { method: 'get', path: '/Careplanparameters', controller: 'Careplanparameter', action: 'GetCareplanparameters' },
+  { method: 'post', path: '/Careplanparameters', controller: 'Careplanparameter', action: 'AddCareplanparameter' },
+  { method: 'put', path: '/Careplanparameters', controller: 'Careplanparameter', action: 'UpdateCareplanparameter' },
+  { method: 'delete', path: '/Careplanparameters/:careplanparameterId', controller: 'Careplanparameter', action: 'DeleteCareplanparameter' },
 
 ]
 

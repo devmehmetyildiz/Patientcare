@@ -1,4 +1,4 @@
-module.exports = sequelize.define('careplanModel', {
+module.exports = sequelize.define('careplanparameterModel', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -7,39 +7,11 @@ module.exports = sequelize.define('careplanModel', {
     Uuid: {
         type: Sequelize.STRING
     },
-    Startdate: {
-        type: Sequelize.DATE
-    },
-    Enddate: {
-        type: Sequelize.DATE
-    },
-    PatientID: {
-        type: Sequelize.STRING
-    },
-
     Type: {
         type: Sequelize.INTEGER
     },
-
-    Isonpreview: {
-        type: Sequelize.BOOLEAN
-    },
-    Isapproved: {
-        type: Sequelize.BOOLEAN
-    },
-    Approveduser: {
+    Name: {
         type: Sequelize.STRING
-    },
-    Approvetime: {
-        type: Sequelize.DATE
-    },
-
-    Info: {
-        type: Sequelize.STRING
-    },
-
-    Createdate: {
-        type: Sequelize.DATE
     },
     Createduser: {
         type: Sequelize.STRING
@@ -63,6 +35,6 @@ module.exports = sequelize.define('careplanModel', {
         type: Sequelize.BOOLEAN
     }
 }, {
-    tableName: 'careplans', // replace with the name of your existing table
+    tableName: 'careplanparameters',
     timestamps: false
 });

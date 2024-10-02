@@ -1,35 +1,34 @@
 import React, { Component } from 'react'
 import { Button, Modal } from 'semantic-ui-react'
 
-export default class RatingsDelete extends Component {
+export default class CareplanparametersDelete extends Component {
 
   render() {
 
-    const { Profile, Ratings, DeleteRatings, handleDeletemodal, handleSelectedRating } = this.props
+    const { Profile, Careplanparameters, DeleteCareplanparameters, handleDeletemodal, handleSelectedCareplanparameter } = this.props
 
     const t = Profile?.i18n?.t
 
-    const { isDeletemodalopen, selected_record } = Ratings
-
+    const { isDeletemodalopen, selected_record } = Careplanparameters
     return (
       <Modal
         onClose={() => handleDeletemodal(false)}
         onOpen={() => handleDeletemodal(true)}
         open={isDeletemodalopen}
       >
-        <Modal.Header>{t('Pages.Ratings.Page.DeleteHeader')}</Modal.Header>
+        <Modal.Header>{t('Pages.Careplanparameters.Page.DeleteHeader')}</Modal.Header>
         <Modal.Content image>
           <Modal.Description>
             <p>
               <span className='font-bold'>{selected_record?.Name} </span>
-              {t('Pages.Ratings.Delete.Label.Check')}
+              {t('Pages.Careplanparameters.Delete.Label.Check')}
             </p>
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
           <Button color='black' onClick={() => {
             handleDeletemodal(false)
-            handleSelectedRating({})
+            handleSelectedCareplanparameter({})
           }}>
             {t('Common.Button.Giveup')}
           </Button>
@@ -38,9 +37,9 @@ export default class RatingsDelete extends Component {
             labelPosition='right'
             icon='checkmark'
             onClick={() => {
-              DeleteRatings(selected_record)
+              DeleteCareplanparameters(selected_record)
               handleDeletemodal(false)
-              handleSelectedRating({})
+              handleSelectedCareplanparameter({})
             }}
             positive
           />

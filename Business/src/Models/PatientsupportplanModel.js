@@ -4,6 +4,9 @@ module.exports = sequelize.define('patientsupportplanModel', {
         primaryKey: true,
         autoIncrement: true
     },
+    Type: {
+        type: Sequelize.INTEGER
+    },
     PatientID: {
         type: Sequelize.STRING
     },

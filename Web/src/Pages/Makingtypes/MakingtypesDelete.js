@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { Button, Modal } from 'semantic-ui-react'
-import Literals from './Literals'
 
 export default class MakingtypesDelete extends Component {
-  
+
   render() {
 
     const { Profile, Makingtypes, DeleteMakingtypes, handleDeletemodal, handleSelectedMakingtype } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isDeletemodalopen, selected_record } = Makingtypes
 
     return (
@@ -15,12 +17,12 @@ export default class MakingtypesDelete extends Component {
         onOpen={() => handleDeletemodal(true)}
         open={isDeletemodalopen}
       >
-        <Modal.Header>{Literals.Page.Pagedeleteheader[Profile.Language]}</Modal.Header>
+        <Modal.Header>{t('Pages.Makingtypes.Page.DeleteHeader')}</Modal.Header>
         <Modal.Content image>
           <Modal.Description>
             <p>
               <span className='font-bold'>{selected_record?.Name} </span>
-              {Literals.Messages.Deletecheck[Profile.Language]}
+              {t('Pages.Makingtypes.Delete.Label.Check')}
             </p>
           </Modal.Description>
         </Modal.Content>
@@ -29,10 +31,10 @@ export default class MakingtypesDelete extends Component {
             handleDeletemodal(false)
             handleSelectedMakingtype({})
           }}>
-            {Literals.Button.Giveup[Profile.Language]}
+            {t('Common.Button.Giveup')}
           </Button>
           <Button
-            content={Literals.Button.Delete[Profile.Language]}
+            content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'
             onClick={() => {

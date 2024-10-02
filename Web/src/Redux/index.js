@@ -39,10 +39,7 @@ import UsagetypeSlice from "./UsagetypeSlice";
 import SupportplanSlice from "./SupportplanSlice";
 import SupportplanlistSlice from "./SupportplanlistSlice";
 import CareplanSlice from "./CareplanSlice";
-import HelpstatuSlice from "./HelpstatuSlice";
-import MakingtypeSlice from "./MakingtypeSlice";
-import RequiredperiodSlice from "./RequiredperiodSlice";
-import RatingSlice from "./RatingSlice";
+import CareplanparameterSlice from "./CareplanparameterSlice";
 import ProfessionSlice from "./ProfessionSlice";
 import PersonelpresettingSlice from "./PersonelpresettingSlice";
 import PersonelshiftSlice from "./PersonelshiftSlice";
@@ -97,10 +94,7 @@ const Slices = combineReducers({
     Supportplans: SupportplanSlice,
     Supportplanlists: SupportplanlistSlice,
     Careplans: CareplanSlice,
-    Helpstatus: HelpstatuSlice,
-    Makingtypes: MakingtypeSlice,
-    Ratings: RatingSlice,
-    Requiredperiods: RequiredperiodSlice,
+    Careplanparameters: CareplanparameterSlice,
     Professions: ProfessionSlice,
     Personelshifts: PersonelshiftSlice,
     Personelshiftdetails: PersonelshiftdetailSlice,
