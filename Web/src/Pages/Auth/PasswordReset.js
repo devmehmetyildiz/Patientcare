@@ -28,10 +28,10 @@ export default class PasswordReset extends Component {
     render() {
 
         const { Profile } = this.props
-        const { isLoading, history } = Profile
+        const { isLoading, isLogging, history } = Profile
 
         return (
-            isLoading ? <LoadingPage /> :
+            isLogging ? <LoadingPage /> :
                 <div className='bg-white dark:bg-Contentbg ' >
                     <Navbar Profile={Profile} withoutControl={true} onlyTitle />
                     <div className='flex flex-row justify-start items-start '>

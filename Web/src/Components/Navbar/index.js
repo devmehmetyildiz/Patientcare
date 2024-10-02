@@ -54,8 +54,8 @@ export class Navbar extends Component {
 
   render() {
     const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, Usagetypes, history, onlyTitle, handleNotification, fillnotification, Files } = this.props
-    let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
-    let file = (Files.list || []).filter(u => u.ParentID === Profile?.meta?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
+    let usagetypePP = (Usagetypes?.list || []).find(u => u.Value === 'PP')?.Uuid || null
+    let file = (Files?.list || []).filter(u => u.ParentID === Profile?.meta?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
 
     const trigger = (
       <div className='flex flex-row justify-center items-center select-none'>
@@ -66,7 +66,7 @@ export class Navbar extends Component {
           Imgheigth="30px"
         /> : <FaUserAlt className='text-white' />}
         <div className={`h-[58.61px] text-white mx-4 my-auto transition-all ease-in-out duration-500  text-center flex flex-col justify-center items-center `}>
-          <p className='m-0 text-sm font-semibold tracking-wider font-Common '>{Profile.username}</p>
+          <p className='m-0 text-sm font-semibold tracking-wider font-Common '>{Profile?.username}</p>
           <p className='m-0 text-xs text-white dark:text-TextColor  '>
             <span className='mr-[2px]'>{Profile?.meta?.Roles?.length > 0 && Profile?.meta?.Roles[0]?.Name}</span>
           </p>
