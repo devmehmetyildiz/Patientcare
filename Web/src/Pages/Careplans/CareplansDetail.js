@@ -275,25 +275,25 @@ function CareplansCreateSupportplans(props) {
             {(isTypeCareplan || isTypePsychosocial) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Helpstatus')}</Table.HeaderCell> : null}
             {(isTypeCareplan) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Presentationperiod')}</Table.HeaderCell> : null}
             {(isTypeCareplan) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Presentationmakingtype')}</Table.HeaderCell> : null}
-            {(isTypePsychosocial) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Currentsituationrati̇ng')}</Table.HeaderCell> : null}
-            {(isTypePsychosocial) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Plannedsituationrati̇ng')}</Table.HeaderCell> : null}
+            {(isTypePsychosocial) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Purposetarget')}</Table.HeaderCell> : null}
+            {(isTypePsychosocial) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Purposetargetworks')}</Table.HeaderCell> : null}
+            {(isTypeRating) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Currentsituationrati̇ng')}</Table.HeaderCell> : null}
+            {(isTypeRating) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Plannedsituationrati̇ng')}</Table.HeaderCell> : null}
             {(isTypeCareplan || isTypePsychosocial) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Rating')}</Table.HeaderCell> : null}
-            {(isTypeRating) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Purposetarget')}</Table.HeaderCell> : null}
-            {(isTypeRating) ? <Table.HeaderCell width={2}>{t('Pages.Careplans.Columns.Purposetargetworks')}</Table.HeaderCell> : null}
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {(supportplans || []).map((plan, index) => {
             return <Table.Row key={plan.key}>
-              {(isTypeCareplan || isTypePsychosocial || isTypeRating) ? <Table.Cell className='!p-[4px]'>{plan.Supportplanname}</Table.Cell> : null}
+              {(isTypeCareplan || isTypePsychosocial || isTypeRating) ? <Table.Cell>{plan.Supportplanname}</Table.Cell> : null}
               {(isTypeCareplan || isTypePsychosocial) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_HELPSTATU, key: plan?.key, name: "Helpstatus", value: plan?.Helpstatus, placeholder: t('Pages.Careplans.Columns.Helpstatus'), }) : null}
               {(isTypeCareplan) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PRESENTATIONPERIOD, key: plan?.key, name: "Presentationperiod", value: plan?.Presentationperiod, placeholder: t('Pages.Careplans.Columns.Presentationperiod'), }) : null}
               {(isTypeCareplan) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PRESENTATIONMAKINGTYPE, key: plan?.key, name: "Presentationmakingtype", value: plan?.Presentationmakingtype, placeholder: t('Pages.Careplans.Columns.Presentationmakingtype'), }) : null}
-              {(isTypePsychosocial) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_CURRENTSITUATIONRATİNG, key: plan?.key, name: "Currentsituationrati̇ng", value: plan?.Currentsituationrati̇ng, placeholder: t('Pages.Careplans.Columns.Currentsituationrati̇ng'), }) : null}
-              {(isTypePsychosocial) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PLANNEDSITUATIONRATİNG, key: plan?.key, name: "Plannedsituationrati̇ng", value: plan?.Plannedsituationrati̇ng, placeholder: t('Pages.Careplans.Columns.Plannedsituationrati̇ng'), }) : null}
+              {(isTypePsychosocial) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PURPOSETARGET, key: plan?.key, name: "Purposetarget", value: plan?.Purposetarget, placeholder: t('Pages.Careplans.Columns.Purposetarget'), }) : null}
+              {(isTypePsychosocial) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PURPOSETARGETWORKS, key: plan?.key, name: "Purposetargetworks", value: plan?.Purposetargetworks, placeholder: t('Pages.Careplans.Columns.Purposetargetworks'), }) : null}
+              {(isTypeRating) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_CURRENTSITUATIONRATİNG, key: plan?.key, name: "Currentsituationrati̇ng", value: plan?.Currentsituationrati̇ng, placeholder: t('Pages.Careplans.Columns.Currentsituationrati̇ng'), }) : null}
+              {(isTypeRating) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PLANNEDSITUATIONRATİNG, key: plan?.key, name: "Plannedsituationrati̇ng", value: plan?.Plannedsituationrati̇ng, placeholder: t('Pages.Careplans.Columns.Plannedsituationrati̇ng'), }) : null}
               {(isTypeCareplan || isTypePsychosocial) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_RATING, key: plan?.key, name: "Rating", value: plan?.Rating, placeholder: t('Pages.Careplans.Columns.Rating'), }) : null}
-              {(isTypeRating) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PURPOSETARGET, key: plan?.key, name: "Purposetarget", value: plan?.Purposetarget, placeholder: t('Pages.Careplans.Columns.Purposetarget'), }) : null}
-              {(isTypeRating) ? renderCell({ parametertype: CAREPLANPARAMETER_TYPE_PURPOSETARGETWORKS, key: plan?.key, name: "Purposetargetworks", value: plan?.Purposetargetworks, placeholder: t('Pages.Careplans.Columns.Purposetargetworks'), }) : null}
             </Table.Row>
           })}
         </Table.Body>
