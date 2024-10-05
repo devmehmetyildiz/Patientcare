@@ -13,6 +13,7 @@ const { formatDate } = require("../Utilities/Convert")
 async function GetBreakdowns(req, res, next) {
     try {
         let data = null
+       // return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_BREAKDOWNID, req.language))
         const breakdowns = await db.breakdownModel.findAll({ where: { Isactive: true } })
         if (req?.Uuid) {
             data = await db.breakdownModel.findOne({ where: { Uuid: req?.Uuid } });

@@ -5,7 +5,6 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux'
 import rootSlice from './Redux'
-import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import 'semantic-ui-css/semantic.min.css'
 import AuthProvider from "./Provider/AuthProvider";
@@ -13,10 +12,25 @@ import FormProvider from "./Provider/FormProvider";
 import { handleauth } from "./Redux/ProfileSlice";
 import { tokenMiddleware, notificationMiddleware } from './Utils/Middlewares'
 import './i18n';
+import { configureStore } from "@reduxjs/toolkit";
+import { baseApi } from "./Api/api";
+import config from "./Config";
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(rootSlice, composeEnhancers(applyMiddleware(thunk, tokenMiddleware, notificationMiddleware)))
+const store = configureStore({
+  reducer: rootSlice,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false
+    }).concat(
+      thunk,
+      baseApi.middleware,
+      tokenMiddleware,
+      notificationMiddleware
+    ),
+  devTools: config.env !== 'production'
+});
 
+console.log('store: ', store.getState());
 store.dispatch({
   type: 'START_MIDDLEWARES'
 })

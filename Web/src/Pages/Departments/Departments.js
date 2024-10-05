@@ -4,6 +4,7 @@ import { Breadcrumb, Grid, GridColumn, Icon } from 'semantic-ui-react'
 import DepartmentDelete from "../../Containers/Departments/DepartmentsDelete"
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
+import { useGetBreakdownsQuery } from '../../Api/Features/Breakdown'
 
 export default function Departments(props) {
 
@@ -11,6 +12,8 @@ export default function Departments(props) {
   const t = Profile?.i18n?.t
 
   const [list, setList] = useState([])
+  const response = useGetBreakdownsQuery()
+  console.log('response : ', response);
 
   useEffect(() => {
     GetDepartments()
