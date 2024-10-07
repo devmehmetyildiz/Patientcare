@@ -1,6 +1,6 @@
 const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher,} = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -121,7 +121,7 @@ async function UpdateRoom(req, res, next) {
             return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
         }
         if (room.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.BED_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.BED_NOT_ACTIVE], req.language))
         }
 
         await db.roomModel.update({
@@ -168,7 +168,7 @@ async function DeleteRoom(req, res, next) {
             return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
         }
         if (room.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.BED_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.BED_NOT_ACTIVE], req.language))
         }
 
         await db.roomModel.update({

@@ -1,5 +1,5 @@
 const config = require("../Config")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -331,16 +331,16 @@ async function CheckPurchaseorder(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
         }
         if (purchaseorder.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
         }
         if (purchaseorder.Ischecked === true) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_IS_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_CHECKED], req.language))
         }
         if (purchaseorder.Isapproved === true) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_IS_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_APPROVED], req.language))
         }
         if (purchaseorder.Iscompleted === true) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
         }
 
         const {
@@ -454,16 +454,16 @@ async function ApprovePurchaseorder(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
         }
         if (purchaseorder.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
         }
         if (purchaseorder.Ischecked === false) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_NOT_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_CHECKED], req.language))
         }
         if (purchaseorder.Isapproved === true) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_IS_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_APPROVED], req.language))
         }
         if (purchaseorder.Iscompleted === true) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
         }
 
         const {
@@ -579,16 +579,16 @@ async function CompletePurchaseorder(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
         }
         if (purchaseorder.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
         }
         if (purchaseorder.Ischecked === false) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_NOT_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_CHECKED], req.language))
         }
         if (purchaseorder.Isapproved === false) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_NOT_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_APPROVED], req.language))
         }
         if (purchaseorder.Iscompleted === true) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
         }
 
         const {
@@ -757,16 +757,16 @@ async function CancelCheckPurchaseorder(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
         }
         if (purchaseorder.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
         }
         if (purchaseorder.Ischecked === false) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_IS_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_CHECKED], req.language))
         }
         if (purchaseorder.Isapproved === true) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_IS_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_APPROVED], req.language))
         }
         if (purchaseorder.Iscompleted === true) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
         }
 
         await db.purchaseorderModel.update({
@@ -845,16 +845,16 @@ async function CancelApprovePurchaseorder(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
         }
         if (purchaseorder.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
         }
         if (purchaseorder.Ischecked === false) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_NOT_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_CHECKED], req.language))
         }
         if (purchaseorder.Isapproved === false) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_IS_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_APPROVED], req.language))
         }
         if (purchaseorder.Iscompleted === true) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
         }
 
         await db.purchaseorderModel.update({
@@ -922,7 +922,7 @@ async function DeletePurchaseorder(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
         }
         if (purchaseorder.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
         }
 
         await db.purchaseorderModel.update({

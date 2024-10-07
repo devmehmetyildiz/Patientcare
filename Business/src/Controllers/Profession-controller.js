@@ -1,7 +1,7 @@
 const { types } = require("../Constants/Defines")
 const messages = require("../Constants/ProfessionMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher} = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -112,7 +112,7 @@ async function UpdateProfession(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PROFESSION_NOT_FOUND], req.language))
         }
         if (profession.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PROFESSION_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PROFESSION_NOT_ACTIVE], req.language))
         }
 
         await db.professionModel.update({
@@ -161,7 +161,7 @@ async function DeleteProfession(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PROFESSION_NOT_ACTIVE], req.language))
         }
         if (profession.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PROFESSION_NOT_FOUND], req.language))
+            return next(createNotfounderror([messages.ERROR.PROFESSION_NOT_FOUND], req.language))
         }
 
         await db.professionModel.update({

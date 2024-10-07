@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 const axios = require('axios')
 const uuid = require('uuid').v4
 const config = require('./Config')
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("./Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("./Utilities/Error")
 
 async function CroneJobs() {
     const rules = await db.ruleModel.findAll({ where: { Isactive: true, Status: true } })

@@ -2,7 +2,7 @@ const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
 const DoGet = require("../Utilities/DoGet")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -268,7 +268,7 @@ async function UpdateStock(req, res, next) {
             return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
         }
         if (stock.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
         }
 
         await db.stockModel.update({
@@ -321,7 +321,7 @@ async function ApproveStock(req, res, next) {
             return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
         }
         if (stock.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
         }
 
         await db.stockModel.update({
@@ -374,7 +374,7 @@ async function ApproveStocks(req, res, next) {
                 return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
             }
             if (stock.Isactive === false) {
-                return next(createAccessDenied([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+                return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
             }
 
             await db.stockModel.update({

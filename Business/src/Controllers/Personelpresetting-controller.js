@@ -2,7 +2,7 @@ const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const messages = require("../Constants/PersonelpresettingMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher,  requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -158,7 +158,7 @@ async function UpdatePersonelpresetting(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PERSONELPRESETTING_NOT_FOUND], req.language))
         }
         if (personelpresetting.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PERSONELPRESETTING_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PERSONELPRESETTING_NOT_ACTIVE], req.language))
         }
 
         await db.personelpresettingModel.update({
@@ -206,7 +206,7 @@ async function DeletePersonelpresetting(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PERSONELPRESETTING_NOT_FOUND], req.language))
         }
         if (personelpresetting.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PERSONELPRESETTING_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PERSONELPRESETTING_NOT_ACTIVE], req.language))
         }
 
         await db.personelpresettingModel.update({

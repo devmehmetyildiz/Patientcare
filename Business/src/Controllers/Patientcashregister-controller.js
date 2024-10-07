@@ -1,7 +1,7 @@
 const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -110,7 +110,7 @@ async function UpdatePatientcashregister(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_FOUND], req.language))
         }
         if (patientcashregister.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CASHREGISTER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_ACTIVE], req.language))
         }
 
         await db.patientcashregisterModel.update({
@@ -158,7 +158,7 @@ async function DeletePatientcashregister(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_FOUND], req.language))
         }
         if (patientcashregister.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CASHREGISTER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_ACTIVE], req.language))
         }
 
         await db.patientcashregisterModel.update({

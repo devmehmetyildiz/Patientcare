@@ -2,7 +2,7 @@ const config = require("../Config")
 const messages = require("../Constants/CareplanMessages")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher,  requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -184,7 +184,7 @@ async function UpdateCareplan(req, res, next) {
             return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
         }
         if (careplan.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
         }
 
         await db.careplanModel.update({
@@ -244,10 +244,10 @@ async function SavepreviewCareplan(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_FOUND], req.language))
         }
         if (careplan.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CAREPLAN_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_ACTIVE], req.language))
         }
         if (careplan.Needapprove === false) {
-            return next(createAccessDenied([messages.ERROR.CAREPLAN_DONTNEEDAPPROVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CAREPLAN_DONTNEEDAPPROVE], req.language))
         }
 
         await db.careplanModel.update({
@@ -299,10 +299,10 @@ async function ApproveCareplan(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_FOUND], req.language))
         }
         if (careplan.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CAREPLAN_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_ACTIVE], req.language))
         }
         if (careplan.Needapprove === false) {
-            return next(createAccessDenied([messages.ERROR.CAREPLAN_DONTNEEDAPPROVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CAREPLAN_DONTNEEDAPPROVE], req.language))
         }
 
         await db.careplanModel.update({
@@ -357,7 +357,7 @@ async function DeleteCareplan(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_FOUND], req.language))
         }
         if (careplan.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CARE], req.language))
+            return next(createNotfounderror([messages.ERROR.CARE], req.language))
         }
 
         await db.careplanModel.update({

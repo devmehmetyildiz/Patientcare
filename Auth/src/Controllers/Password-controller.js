@@ -2,7 +2,7 @@ const messages = require('../Constants/Messages')
 const createValidationError = require('../Utilities/Error').createValidation
 const bcrypt = require('bcrypt')
 const uuid = require('uuid').v4
-const { sequelizeErrorCatcher, createAccessDenied, createAutherror, requestErrorCatcher, createNotfounderror } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, createAutherror, requestErrorCatcher, createNotfounderror } = require("../Utilities/Error")
 const axios = require('axios')
 const config = require('../Config')
 const validator = require('../Utilities/Validator')
@@ -74,9 +74,9 @@ async function Createrequest(req, res, next) {
     await transporter.verify()
 
     await transporter.sendMail({
-      from: emailsetting.Mailaddress, 
-      to: user.Email, 
-      subject: "Elder Camp Parola Sıfırlama Talebiniz Alınmıştır", 
+      from: emailsetting.Mailaddress,
+      to: user.Email,
+      subject: "Elder Camp Parola Sıfırlama Talebiniz Alınmıştır",
       text: "Bu mesaj uygulama tarafından gönderilmiştir",
       html: Createresettemplate(user.Username, passwordresetrequest.Reseturl),
     })

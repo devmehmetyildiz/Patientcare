@@ -1,7 +1,7 @@
 const messages = require("../Constants/ClaimpaymentparameterMessages")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -164,10 +164,10 @@ async function UpdateClaimpaymentparameter(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
         }
         if (claimpaymentparameter.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
         }
         if (claimpaymentparameter.Isapproved === true) {
-            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_ALREADY_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_ALREADY_APPROVED], req.language))
         }
 
         await db.claimpaymentparameterModel.update({
@@ -216,10 +216,10 @@ async function ApproveClaimpaymentparameter(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
         }
         if (claimpaymentparameter.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
         }
         if (claimpaymentparameter.Isapproved === true) {
-            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_ALREADY_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_ALREADY_APPROVED], req.language))
         }
 
         await db.claimpaymentparameterModel.update({
@@ -278,10 +278,10 @@ async function SavepreviewClaimpaymentparameter(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
         }
         if (claimpaymentparameter.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
         }
         if (claimpaymentparameter.Isapproved === true) {
-            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_ALREADY_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_ALREADY_APPROVED], req.language))
         }
 
         await db.claimpaymentparameterModel.update({
@@ -332,10 +332,10 @@ async function ActivateClaimpaymentparameter(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
         }
         if (claimpaymentparameter.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
         }
         if (claimpaymentparameter.Isapproved === false) {
-            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_IS_NOT_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_IS_NOT_APPROVED], req.language))
         }
 
         await db.claimpaymentparameterModel.update({
@@ -397,10 +397,10 @@ async function DeactivateClaimpaymentparameter(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
         }
         if (claimpaymentparameter.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
         }
         if (claimpaymentparameter.Isapproved === false) {
-            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_IS_NOT_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_IS_NOT_APPROVED], req.language))
         }
 
         await db.claimpaymentparameterModel.update({
@@ -450,7 +450,7 @@ async function DeleteClaimpaymentparameter(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
         }
         if (claimpaymentparameter.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
         }
 
         await db.claimpaymentparameterModel.update({

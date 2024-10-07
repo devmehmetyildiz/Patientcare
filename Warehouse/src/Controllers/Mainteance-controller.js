@@ -2,7 +2,7 @@ const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const { formatDate } = require("../Utilities/Convert")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -142,7 +142,7 @@ async function UpdateMainteance(req, res, next) {
             return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
         }
         if (mainteance.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
         }
 
         await db.mainteanceModel.update({
@@ -199,7 +199,7 @@ async function CompleteMainteance(req, res, next) {
             return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
         }
         if (mainteance.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
         }
 
         await db.mainteanceModel.update({
@@ -255,7 +255,7 @@ async function DeleteMainteance(req, res, next) {
             return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
         }
         if (mainteance.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
         }
 
         await db.mainteanceModel.update({

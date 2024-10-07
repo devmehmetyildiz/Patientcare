@@ -1,7 +1,7 @@
 const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -149,7 +149,7 @@ async function UpdateStockdefine(req, res, next) {
             return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_FOUND], req.language))
         }
         if (stockdefine.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language))
         }
 
         await db.stockdefineModel.update({
@@ -198,7 +198,7 @@ async function DeleteStockdefine(req, res, next) {
             return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_FOUND], req.language))
         }
         if (stockdefine.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language))
         }
 
         await db.stockdefineModel.update({

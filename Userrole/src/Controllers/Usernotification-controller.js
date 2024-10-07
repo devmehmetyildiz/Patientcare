@@ -1,5 +1,5 @@
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -145,7 +145,7 @@ async function UpdateUsernotification(req, res, next) {
             return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_FOUND], req.language))
         }
         if (notification.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.NOTIFICATION_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_ACTIVE], req.language))
         }
 
         await db.usernotificationModel.update({
@@ -172,7 +172,7 @@ async function UpdateUsernotifications(req, res, next) {
                 return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_FOUND], req.language))
             }
             if (notification.Isactive === false) {
-                return next(createAccessDenied([messages.ERROR.NOTIFICATION_NOT_ACTIVE], req.language))
+                return next(createNotfounderror([messages.ERROR.NOTIFICATION_NOT_ACTIVE], req.language))
             }
 
             await db.usernotificationModel.update({

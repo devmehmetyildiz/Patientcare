@@ -1,6 +1,6 @@
 const config = require("../Config")
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -101,7 +101,7 @@ async function Downloadfile(req, res, next) {
             return next(createNotfounderror([messages.ERROR.FILE_NOT_FOUND], req.language))
         }
         if (file.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.FILE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.FILE_NOT_ACTIVE], req.language))
         }
         const encodedFileName = encodeURIComponent(file.Filename);
         res.setHeader("Content-Disposition", `attachment; filename="${encodedFileName}"`);
@@ -248,7 +248,7 @@ async function UpdateFile(req, res, next) {
                     return next(createNotfounderror([messages.ERROR.FILE_NOT_FOUND], req.language))
                 }
                 if (file.Isactive === false) {
-                    return next(createAccessDenied([messages.ERROR.FILE_NOT_ACTIVE], req.language))
+                    return next(createNotfounderror([messages.ERROR.FILE_NOT_ACTIVE], req.language))
                 }
                 if (filedata.WillDelete) {
                     await db.fileModel.update({
@@ -321,7 +321,7 @@ async function DeleteFile(req, res, next) {
             return next(createNotfounderror([messages.ERROR.FILE_NOT_FOUND], req.language))
         }
         if (file.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.FILE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.FILE_NOT_ACTIVE], req.language))
         }
 
         await db.fileModel.update({

@@ -1,5 +1,5 @@
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -229,7 +229,7 @@ async function UpdateRole(req, res, next) {
             return next(createNotfounderror([messages.ERROR.ROLE_NOT_FOUND], req.language))
         }
         if (role.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.ROLE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.ROLE_NOT_ACTIVE], req.language))
         }
 
         await db.roleModel.update({

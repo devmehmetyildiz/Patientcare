@@ -2,7 +2,7 @@ const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const messages = require("../Constants/PatientevenetdefineMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -119,7 +119,7 @@ async function UpdatePatienteventdefine(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENTEVENTDEFINE_NOT_FOUND], req.language))
         }
         if (patienteventdefine.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENTEVENTDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENTEVENTDEFINE_NOT_ACTIVE], req.language))
         }
 
         await db.patienteventdefineModel.update({
@@ -167,7 +167,7 @@ async function DeletePatienteventdefine(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENTEVENTDEFINE_NOT_FOUND], req.language))
         }
         if (patienteventdefine.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENTEVENTDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENTEVENTDEFINE_NOT_ACTIVE], req.language))
         }
 
         await db.patienteventdefineModel.update({

@@ -4,7 +4,7 @@ const messages = require("../Constants/PatientMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const DoGet = require("../Utilities/DoGet")
 const DoPost = require("../Utilities/DoPost")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -350,7 +350,7 @@ async function UpdatePatient(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
         await db.patientModel.update({
@@ -484,7 +484,7 @@ async function UpdatePatientDates(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
         await db.patientModel.update({
@@ -560,7 +560,7 @@ async function UpdatePatientmovements(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENTMOVEMENT_NOT_FOUND], req.language))
         }
         if (patientmovement.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENTMOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENTMOVEMENT_NOT_ACTIVE], req.language))
         }
 
         await db.patientmovementModel.update({
@@ -625,7 +625,7 @@ async function UpdatePatienteventmovements(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENTEVENTMOVEMENT_NOT_FOUND], req.language))
         }
         if (patienteventmovement.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENTEVENTMOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENTEVENTMOVEMENT_NOT_ACTIVE], req.language))
         }
 
         await db.patienteventmovementModel.update({
@@ -689,16 +689,16 @@ async function CheckPatient(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
         if (patient.Ischecked === true) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_CHECKED], req.language))
         }
         if (patient.Isapproved === true) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_APPROVED], req.language))
         }
         if (patient.Ispreregistration === true) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
         }
 
         const {
@@ -787,16 +787,16 @@ async function ApprovePatient(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
         if (patient.Ischecked === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_CHECKED], req.language))
         }
         if (patient.Isapproved === true) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_APPROVED], req.language))
         }
         if (patient.Ispreregistration === true) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
         }
 
         const {
@@ -884,16 +884,16 @@ async function CancelCheckPatient(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
         if (patient.Ischecked === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_CHECKED], req.language))
         }
         if (patient.Isapproved === true) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_APPROVED], req.language))
         }
         if (patient.Ispreregistration === true) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
         }
 
         const {
@@ -981,16 +981,16 @@ async function CancelApprovePatient(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
         if (patient.Ischecked === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_CHECKED], req.language))
         }
         if (patient.Isapproved === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_APPROVED], req.language))
         }
         if (patient.Ispreregistration === true) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
         }
 
         const {
@@ -1096,16 +1096,16 @@ async function CompletePatient(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
         if (patient.Ischecked === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_CHECKED], req.language))
         }
         if (patient.Isapproved === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_APPROVED], req.language))
         }
         if (patient.Ispreregistration === true) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
         }
 
         const {
@@ -1278,16 +1278,16 @@ async function PatientsRemove(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
         if (patient.Ischecked === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_CHECKED], req.language))
         }
         if (patient.Isapproved === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_APPROVED], req.language))
         }
         if (patient.Ispreregistration === true) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
         }
 
         const {
@@ -1407,16 +1407,16 @@ async function PatientsDead(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
         if (patient.Ischecked === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_CHECKED], req.language))
         }
         if (patient.Isapproved === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_APPROVED], req.language))
         }
         if (patient.Ispreregistration === true) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
         }
 
         const {
@@ -1534,16 +1534,16 @@ async function PatientsMakeactive(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
         if (patient.Ischecked === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_CHECKED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_CHECKED], req.language))
         }
         if (patient.Isapproved === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_APPROVED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_APPROVED], req.language))
         }
         if (patient.Ispreregistration === true) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_IS_COMPLETED], req.language))
         }
 
         const {
@@ -1643,7 +1643,7 @@ async function UpdatePatientcase(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
         if (!Ispastdate) {
@@ -1671,14 +1671,14 @@ async function UpdatePatientcase(req, res, next) {
 
                 const isHaveenddate = validator.isISODate(Occuredenddate)
                 if (!isHaveenddate) {
-                    return next(createAccessDenied([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_REQUIRED], req.language))
+                    return next(createNotfounderror([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_REQUIRED], req.language))
                 }
 
                 const nextmovement = patientmovements[0]
 
                 const isEnddatelowerthanfirstmovement = Checkdatelowerthanother(Occuredenddate, patientmovements[0]?.Occureddate)
                 if (!isEnddatelowerthanfirstmovement) {
-                    return next(createAccessDenied([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_TOO_BIG], req.language))
+                    return next(createNotfounderror([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_TOO_BIG], req.language))
                 }
 
                 if (isEnddatelowerthanfirstmovement) {
@@ -1753,7 +1753,7 @@ async function UpdatePatientscase(req, res, next) {
                 return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
             }
             if (patient.Isactive === false) {
-                return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+                return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
             }
 
             await db.patientModel.update({
@@ -1779,14 +1779,14 @@ async function UpdatePatientscase(req, res, next) {
 
                     const isHaveenddate = validator.isUUID(Occuredenddate)
                     if (!isHaveenddate) {
-                        return next(createAccessDenied([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_REQUIRED], req.language))
+                        return next(createNotfounderror([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_REQUIRED], req.language))
                     }
 
                     const nextmovement = patientmovements[0]
 
                     const isEnddatelowerthanfirstmovement = Checkdatelowerthanother(Occuredenddate, patientmovements[0]?.Occureddate)
                     if (!isEnddatelowerthanfirstmovement) {
-                        return next(createAccessDenied([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_TOO_BIG], req.language))
+                        return next(createNotfounderror([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_TOO_BIG], req.language))
                     }
 
 
@@ -1871,7 +1871,7 @@ async function UpdatePatientplace(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
         const selectedPatientOldBed = patient?.BedID
@@ -2162,7 +2162,7 @@ async function TransferPatientplace(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
         const otherpatient = await db.patientModel.findOne({ where: { Uuid: OtherPatientID || '' } })
@@ -2320,7 +2320,7 @@ async function UpdatePatienttododefines(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
         await db.patienttododefineModel.destroy({ where: { PatientID: PatientID }, transaction: t });
@@ -2383,7 +2383,7 @@ async function UpdatePatientsupportplans(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
         await db.patientsupportplanModel.destroy({ where: { PatientID: PatientID, Type: Type }, transaction: t });
@@ -2439,7 +2439,7 @@ async function DeletePatient(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
 
         await db.patientModel.destroy({ where: { Uuid: Uuid }, transaction: t });
@@ -2485,10 +2485,10 @@ async function DeletePreregisrations(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENT_NOT_FOUND], req.language))
         }
         if (patient.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ACTIVE], req.language))
         }
         if (patient.Ispreregistration === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENT_NOT_ON_PREREGISRATION], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENT_NOT_ON_PREREGISRATION], req.language))
         }
 
         try {
@@ -2562,7 +2562,7 @@ async function DeletePatientmovement(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENTMOVEMENT_NOT_FOUND], req.language))
         }
         if (patientmovement.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENTMOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENTMOVEMENT_NOT_ACTIVE], req.language))
         }
 
         await db.patientmovementModel.update({
@@ -2614,7 +2614,7 @@ async function DeletePatienteventmovement(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PATIENTEVENTMOVEMENT_NOT_FOUND], req.language))
         }
         if (patienteventmovement.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PATIENTEVENTMOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PATIENTEVENTMOVEMENT_NOT_ACTIVE], req.language))
         }
 
         await db.patienteventmovementModel.update({

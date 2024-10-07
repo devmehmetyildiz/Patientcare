@@ -2,7 +2,7 @@ const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -79,7 +79,7 @@ async function AddPatientcashmovement(req, res, next) {
             return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_FOUND], req.language))
         }
         if (registertype.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.CASHREGISTER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_ACTIVE], req.language))
         }
 
         if (registertype.Iseffectcompany) {
@@ -164,7 +164,7 @@ async function UpdatePatientcashmovement(req, res, next) {
             return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
         }
         if (patientcashmovement.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
         }
 
         await db.patientcashmovementModel.update({
@@ -216,7 +216,7 @@ async function DeletePatientcashmovement(req, res, next) {
             return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
         }
         if (patientcashmovement.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
         }
 
         await db.patientcashmovementModel.update({

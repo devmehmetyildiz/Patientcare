@@ -1,7 +1,7 @@
 const { types } = require("../Constants/Defines")
 const messages = require("../Constants/CareplanparameterMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher,} = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -124,7 +124,7 @@ async function UpdateCareplanparameter(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PARAMETER_NOT_FOUND], req.language))
         }
         if (careplanparameter.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PARAMETER_NOT_ACTIVE], req.language))
         }
 
         await db.careplanparameterModel.update({
@@ -171,7 +171,7 @@ async function DeleteCareplanparameter(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PARAMETER_NOT_FOUND], req.language))
         }
         if (careplanparameter.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PARAMETER_NOT_ACTIVE], req.language))
         }
 
         await db.careplanparameterModel.update({

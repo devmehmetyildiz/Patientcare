@@ -1,7 +1,7 @@
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
 const config = require("../Config")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -141,7 +141,7 @@ async function UpdateBreakdown(req, res, next) {
             return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
         }
         if (breakdown.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
         }
 
         await db.breakdownModel.update({
@@ -198,7 +198,7 @@ async function CompleteBreakdown(req, res, next) {
             return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
         }
         if (breakdown.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
         }
 
         await db.breakdownModel.update({
@@ -254,7 +254,7 @@ async function DeleteBreakdown(req, res, next) {
             return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
         }
         if (breakdown.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
         }
 
         await db.breakdownModel.update({

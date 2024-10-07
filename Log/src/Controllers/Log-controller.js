@@ -1,6 +1,6 @@
 const config = require("../Config")
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4

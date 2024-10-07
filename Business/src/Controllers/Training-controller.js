@@ -3,7 +3,7 @@ const { types } = require("../Constants/Defines")
 const messages = require("../Constants/TrainingMessages")
 const { trainingtypes } = require("../Constants/Trainingtypes")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -224,7 +224,7 @@ async function UpdateTraining(req, res, next) {
             return next(createNotfounderror([messages.ERROR.TRAINING_NOT_FOUND], req.language))
         }
         if (training.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
         }
 
         await db.trainingModel.update({
@@ -287,7 +287,7 @@ async function DeleteTraining(req, res, next) {
             return next(createNotfounderror([messages.ERROR.TRAINING_NOT_FOUND], req.language))
         }
         if (training.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
         }
 
         await db.trainingModel.update({
@@ -342,7 +342,7 @@ async function SavepreviewTraining(req, res, next) {
             return next(createNotfounderror([messages.ERROR.TRAINING_NOT_FOUND], req.language))
         }
         if (training.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
         }
 
         await db.trainingModel.update({
@@ -391,7 +391,7 @@ async function ApproveTraining(req, res, next) {
             return next(createNotfounderror([messages.ERROR.TRAINING_NOT_FOUND], req.language))
         }
         if (training.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
         }
 
         await db.trainingModel.update({
@@ -439,12 +439,11 @@ async function CompleteTraininguser(req, res, next) {
 
     try {
         const traininguser = await db.trainingusersModel.findOne({ where: { Uuid: Uuid } })
-        console.log('traininguser: ', traininguser);
         if (!traininguser) {
             return next(createNotfounderror([messages.ERROR.TRAININGUSER_NOT_FOUND], req.language))
         }
         if (traininguser.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.TRAININGUSER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.TRAININGUSER_NOT_ACTIVE], req.language))
         }
 
         await db.trainingusersModel.update({
@@ -494,7 +493,7 @@ async function CompleteTraining(req, res, next) {
             return next(createNotfounderror([messages.ERROR.TRAINING_NOT_FOUND], req.language))
         }
         if (training.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
         }
 
         await db.trainingModel.update({

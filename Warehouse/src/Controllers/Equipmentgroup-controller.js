@@ -1,6 +1,6 @@
 const CreateNotification = require("../Utilities/CreateNotification")
 const config = require("../Config")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -143,7 +143,7 @@ async function UpdateEquipmentgroup(req, res, next) {
             return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
         }
         if (equipmentgroup.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.EQUIPMENTGROUP_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_ACTIVE], req.language))
         }
 
         await db.equipmentgroupModel.update({
@@ -195,7 +195,7 @@ async function DeleteEquipmentgroup(req, res, next) {
             return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
         }
         if (equipmentgroup.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.EQUIPMENTGROUP_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_ACTIVE], req.language))
         }
 
         await db.equipmentgroupModel.update({

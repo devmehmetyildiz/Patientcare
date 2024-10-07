@@ -423,7 +423,7 @@ async function DeleteUsermovement(req, res, next) {
             return next(createNotfounderror([messages.ERROR.USERMOVEMENT_NOT_FOUND], req.language))
         }
         if (usermovement.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.USERMOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.USERMOVEMENT_NOT_ACTIVE], req.language))
         }
 
         await db.usermovementModel.update({
@@ -481,7 +481,7 @@ async function UpdateUsermovement(req, res, next) {
             return next(createNotfounderror([messages.ERROR.USERMOVEMENT_NOT_FOUND], req.language))
         }
         if (usermovement.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.USERMOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.USERMOVEMENT_NOT_ACTIVE], req.language))
         }
 
         await db.usermovementModel.update({
@@ -568,14 +568,14 @@ async function UpdateUsercase(req, res, next) {
 
                 const isHaveenddate = validator.isISODate(Occuredenddate)
                 if (!isHaveenddate) {
-                    return next(createAccessDenied([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_REQUIRED], req.language))
+                    return next(createNotfounderror([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_REQUIRED], req.language))
                 }
 
                 const nextmovement = usermovements[0]
 
                 const isEnddatelowerthanfirstmovement = Checkdatelowerthanother(Occuredenddate, usermovements[0]?.Occureddate)
                 if (!isEnddatelowerthanfirstmovement) {
-                    return next(createAccessDenied([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_TOO_BIG], req.language))
+                    return next(createNotfounderror([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_TOO_BIG], req.language))
                 }
 
                 if (isEnddatelowerthanfirstmovement) {

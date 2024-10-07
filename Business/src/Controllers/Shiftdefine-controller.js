@@ -2,7 +2,7 @@ const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const messages = require("../Constants/ShiftdefineMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -139,7 +139,7 @@ async function UpdateShiftdefine(req, res, next) {
             return next(createNotfounderror([messages.ERROR.SHIFTDEFINE_NOT_FOUND], req.language))
         }
         if (shiftdefine.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.SHIFTDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.SHIFTDEFINE_NOT_ACTIVE], req.language))
         }
 
         if (Isjoker) {
@@ -192,7 +192,7 @@ async function DeleteShiftdefine(req, res, next) {
             return next(createNotfounderror([messages.ERROR.SHIFTDEFINE_NOT_FOUND], req.language))
         }
         if (shiftdefine.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.SHIFTDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.SHIFTDEFINE_NOT_ACTIVE], req.language))
         }
 
         await db.shiftdefineModel.update({

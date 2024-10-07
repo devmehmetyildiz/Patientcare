@@ -1,6 +1,6 @@
 const config = require("../Config")
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -182,7 +182,7 @@ async function UpdateRule(req, res, next) {
             return next(createNotfounderror([messages.ERROR.RULE_NOT_FOUND], req.language))
         }
         if (!rule.Isactive) {
-            return next(createAccessDenied([messages.ERROR.RULE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.RULE_NOT_ACTIVE], req.language))
         }
         await jobs.stopChildProcess(Uuid)
 
@@ -234,7 +234,7 @@ async function DeleteRule(req, res, next) {
             return next(createNotfounderror([messages.ERROR.RULE_NOT_FOUND], req.language))
         }
         if (!rule.Isactive) {
-            return next(createAccessDenied([messages.ERROR.RULE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.RULE_NOT_ACTIVE], req.language))
         }
 
         await db.ruleModel.update({
@@ -284,7 +284,7 @@ async function StopRule(req, res, next) {
             return next(createNotfounderror([messages.ERROR.RULE_NOT_FOUND], req.language))
         }
         if (!rule.Isactive) {
-            return next(createAccessDenied([messages.ERROR.RULE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.RULE_NOT_ACTIVE], req.language))
         }
 
         await db.ruleModel.update({

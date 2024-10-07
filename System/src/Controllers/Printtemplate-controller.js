@@ -1,7 +1,7 @@
 const { types } = require("../Constants/Defines")
 const config = require("../Config")
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -128,7 +128,7 @@ async function UpdatePrinttemplate(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PRINTTEMPLATE_NOT_FOUND], req.language))
         }
         if (!printtemplate.Isactive) {
-            return next(createAccessDenied([messages.ERROR.PRINTTEMPLATE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PRINTTEMPLATE_NOT_ACTIVE], req.language))
         }
 
         await db.printtemplateModel.update({
@@ -176,7 +176,7 @@ async function DeletePrinttemplate(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PRINTTEMPLATE_NOT_FOUND], req.language))
         }
         if (!printtemplate.Isactive) {
-            return next(createAccessDenied([messages.ERROR.PRINTTEMPLATE_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PRINTTEMPLATE_NOT_ACTIVE], req.language))
         }
 
         await db.printtemplateModel.update({

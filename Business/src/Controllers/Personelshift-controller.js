@@ -6,7 +6,7 @@ const CreateNotification = require("../Utilities/CreateNotification")
 const DoPost = require("../Utilities/DoPost")
 const DoGet = require("../Utilities/DoGet")
 const { Getdateoptions } = require("../Utilities/Formatdate")
-const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -211,7 +211,7 @@ async function UpdatePersonelshift(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_FOUND], req.language))
         }
         if (personelshift.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
         }
 
         await db.personelshiftModel.update({
@@ -302,7 +302,7 @@ async function ApprovePersonelshift(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_FOUND], req.language))
         }
         if (personelshift.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
         }
 
         await db.personelshiftModel.update({
@@ -352,10 +352,10 @@ async function CompletePersonelshift(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_FOUND], req.language))
         }
         if (personelshift.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
         }
         if (personelshift.Isdeactive === true) {
-            return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_HASDEACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_HASDEACTIVE], req.language))
         }
 
         await db.personelshiftModel.update({
@@ -405,10 +405,10 @@ async function DeactivePersonelshift(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_FOUND], req.language))
         }
         if (personelshift.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
         }
         if (personelshift.Iscompleted === true) {
-            return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_HASCOMPLETED], req.language))
+            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_HASCOMPLETED], req.language))
         }
 
         await db.personelshiftModel.update({
@@ -459,7 +459,7 @@ async function DeletePersonelshift(req, res, next) {
             return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_FOUND], req.language))
         }
         if (personelshift.Isactive === false) {
-            return next(createAccessDenied([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFT_NOT_ACTIVE], req.language))
         }
 
         await db.personelshiftModel.update({

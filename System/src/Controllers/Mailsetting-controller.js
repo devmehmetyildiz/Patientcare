@@ -1,7 +1,7 @@
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
 const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
@@ -174,7 +174,7 @@ async function UpdateMailsetting(req, res, next) {
             return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_FOUND], req.language))
         }
         if (!mailsetting.Isactive) {
-            return next(createAccessDenied([messages.ERROR.MAILSETTING_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_ACTIVE], req.language))
         }
 
         await db.mailsettingModel.update({
@@ -222,7 +222,7 @@ async function DeleteMailsetting(req, res, next) {
             return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_FOUND], req.language))
         }
         if (!mailsetting.Isactive) {
-            return next(createAccessDenied([messages.ERROR.MAILSETTING_NOT_ACTIVE], req.language))
+            return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_ACTIVE], req.language))
         }
 
         await db.mailsettingModel.update({
