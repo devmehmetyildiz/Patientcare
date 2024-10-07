@@ -201,3 +201,40 @@ module.exports = {
     UpdateWarehouse,
     DeleteWarehouse,
 }
+
+const messages = {
+    ERROR: {
+        WAREHOUSE_NOT_FOUND: {
+            code: 'WAREHOUSE_NOT_FOUND', description: {
+                en: 'Warehouse not found',
+                tr: 'Ambar bulunamadı',
+            }
+        },
+        WAREHOUSE_NOT_ACTIVE: {
+            code: 'WAREHOUSE_NOT_ACTIVE', description: {
+                en: 'Warehouse not active',
+                tr: 'Ambar aktif değil',
+            }
+        },
+    },
+    VALIDATION_ERROR: {
+        NAME_REQUIRED: {
+            code: 'NAME_REQUIRED', description: {
+                en: 'The name required',
+                tr: 'Bu işlem için isim gerekli',
+            }
+        },
+        WAREHOUSEID_REQUIRED: {
+            code: 'WAREHOUSEID_REQUIRED', description: {
+                en: 'The warehouseid required',
+                tr: 'Bu işlem için warehouseid gerekli',
+            }
+        },
+        UNSUPPORTED_WAREHOUSEID: {
+            code: 'UNSUPPORTED_WAREHOUSEID', description: {
+                en: 'The warehouseid is unsupported',
+                tr: 'Geçersiz warehouseid',
+            }
+        },
+    }
+}

@@ -1,7 +1,6 @@
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
 const config = require("../Config")
-const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -86,11 +85,16 @@ async function AddBreakdown(req, res, next) {
             Isactive: true
         }, { transaction: t })
 
+        const equipment = await db.equipmentModel.findOne({ where: { Uuid: EquipmentID } })
+
         await CreateNotification({
             type: types.Create,
-            service: 'Arıza Talepleri',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'breakdownnotification',
-            message: `${formatDate(startDate)} tarihli arıza bildirimi ${username} tarafından başlatıldı.`,
+            message: {
+                tr: `${equipment?.Name} Eqipmanı İçin Arıza Talebi ${username} Tarafından Oluşturuldu.`,
+                en: `${equipment?.Name} Equipment Name, Breakdown Request Created By ${username} `
+            },
             pushurl: '/Breakdowns'
         })
         await t.commit()
@@ -146,11 +150,16 @@ async function UpdateBreakdown(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
 
+        const equipment = await db.equipmentModel.findOne({ where: { Uuid: breakdown.EquipmentID } })
+
         await CreateNotification({
             type: types.Update,
-            service: 'Arıza Talepleri',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'breakdownnotification',
-            message: `${formatDate(breakdown?.Starttime)} tarihli arıza bildirimi ${username} tarafından güncellendi.`,
+            message: {
+                tr: `${formatDate(breakdown.Starttime)} Başlangıç Tarihli, ${equipment?.Name} Eqipmanı İçin Açılan Arıza Talebi ${username} Tarafından Güncellendi.`,
+                en: `${formatDate(breakdown.Starttime)} Start Date, ${equipment.Name} Equipment Name, Breakdown Request Updated By ${username} `
+            },
             pushurl: '/Breakdowns'
         })
         await t.commit()
@@ -200,11 +209,16 @@ async function CompleteBreakdown(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
 
+        const equipment = await db.equipmentModel.findOne({ where: { Uuid: breakdown.EquipmentID } })
+
         await CreateNotification({
             type: types.Update,
-            service: 'Arıza Talepleri',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'breakdownnotification',
-            message: `${formatDate(breakdown?.Starttime)} tarihli arıza bildirimi ${username} tarafından tamamlandı.`,
+            message: {
+                tr: `${formatDate(breakdown.Starttime)} Başlangıç Tarihli, ${equipment?.Name} Eqipmanı İçin Açılan Arıza Talebi ${username} Tarafından Tamamlandı.`,
+                en: `${formatDate(breakdown.Starttime)} Start Date, ${equipment.Name} Equipment Name, Breakdown Request Completed By ${username} `
+            },
             pushurl: '/Breakdowns'
         })
 
@@ -249,11 +263,16 @@ async function DeleteBreakdown(req, res, next) {
             Isactive: false
         }, { where: { Uuid: Uuid }, transaction: t })
 
+        const equipment = await db.equipmentModel.findOne({ where: { Uuid: breakdown.EquipmentID } })
+
         await CreateNotification({
             type: types.Delete,
-            service: 'Arıza Talepleri',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'breakdownnotification',
-            message: `${formatDate(breakdown?.Starttime)} tarihli arıza bildirimi ${username} tarafından Silindi.`,
+            message: {
+                tr: `${formatDate(breakdown.Starttime)} Başlangıç Tarihli, ${equipment?.Name} Eqipmanı İçin Açılan Arıza Talebi ${username} Tarafından Silindi.`,
+                en: `${formatDate(breakdown.Starttime)} Start Date, ${equipment.Name} Equipment Name, Breakdown Request Deleted By ${username} `
+            },
             pushurl: '/Breakdowns'
         })
 
@@ -272,4 +291,60 @@ module.exports = {
     UpdateBreakdown,
     DeleteBreakdown,
     CompleteBreakdown
+}
+
+
+const messages = {
+    NOTIFICATION: {
+        PAGE_NAME: {
+            en: 'Breakdowns',
+            tr: 'Arıza Talepleri',
+        },
+    },
+    ERROR: {
+        BREAKDOWN_NOT_FOUND: {
+            code: 'BREAKDOWN_NOT_FOUND', description: {
+                en: 'breakdown not found',
+                tr: 'Arıza talebi bulunamadı',
+            }
+        },
+        BREAKDOWN_NOT_ACTIVE: {
+            code: 'BREAKDOWN_NOT_ACTIVE', description: {
+                en: 'breakdown not active',
+                tr: 'Arıza talebi aktif değil',
+            }
+        },
+    },
+    VALIDATION_ERROR: {
+        NAME_REQUIRED: {
+            code: 'NAME_REQUIRED', description: {
+                en: 'The name required',
+                tr: 'Bu işlem için isim gerekli',
+            }
+        },
+        BREAKDOWNID_REQUIRED: {
+            code: 'BREAKDOWNID_REQUIRED', description: {
+                en: 'The breakdownid required',
+                tr: 'Bu işlem için breakdownid gerekli',
+            }
+        },
+        UNSUPPORTED_BREAKDOWNID: {
+            code: 'UNSUPPORTED_BREAKDOWNID', description: {
+                en: 'The breakdownid is unsupported',
+                tr: 'geçersiz breakdownid',
+            }
+        },
+        EQUIPMENTID_REQUIRED: {
+            code: 'EQUIPMENTID_REQUIRED', description: {
+                en: 'The equipment id required',
+                tr: 'Bu işlem için equipment id gerekli',
+            }
+        },
+        USERID_REQUIRED: {
+            code: 'USERID_REQUIRED', description: {
+                en: 'The userid required',
+                tr: 'Bu işlem için userid gerekli',
+            }
+        },
+    }
 }

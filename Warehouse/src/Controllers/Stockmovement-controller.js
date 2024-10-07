@@ -1,6 +1,5 @@
 const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const DoGet = require("../Utilities/DoGet")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
@@ -438,4 +437,84 @@ module.exports = {
     ApproveStockmovement,
     ApproveStockmovements,
     AddStockmovements
+}
+
+const messages = {
+    ERROR: {
+        STOCKMOVEMENT_NOT_FOUND: {
+            code: 'STOCKMOVEMENT_NOT_FOUND', description: {
+                en: 'Stockmovement not found',
+                tr: 'Stok hareketi bulunamadı',
+            }
+        },
+        STOCKMOVEMENT_NOT_ACTIVE: {
+            code: 'STOCKMOVEMENT_NOT_ACTIVE', description: {
+                en: 'Stockmovement not active',
+                tr: 'Stok hareketi aktif değil',
+            }
+        },
+    },
+    VALIDATION_ERROR: {
+        STOCKMOVEMENTS_REQUIRED: {
+            code: 'STOCKMOVEMENTS_REQUIRED', description: {
+                en: 'The stock movements required',
+                tr: 'Bu işlem için stok hareketleri gerekli',
+            }
+        },
+        NAME_REQUIRED: {
+            code: 'NAME_REQUIRED', description: {
+                en: 'The name required',
+                tr: 'Bu işlem için isim gerekli',
+            }
+        },
+        DESCIRIPTION_REQUIRED: {
+            code: 'DESCIRIPTION_REQUIRED', description: {
+                en: 'The description required',
+                tr: 'Bu işlem için açıklama gerekli',
+            }
+        },
+        MOVEMENTTYPE_REQUIRED: {
+            code: 'MOVEMENTTYPE_REQUIRED', description: {
+                en: 'The movement type required',
+                tr: 'Bu işlem için hareket tipi gerekli',
+            }
+        },
+        AMOUNT_REQUIRED: {
+            code: 'AMOUNT_REQUIRED', description: {
+                en: 'The amount required',
+                tr: 'Bu işlem için miktar gerekli',
+            }
+        },
+        AMOUNT_LIMIT_ERROR: {
+            code: 'AMOUNT_LIMIT_ERROR', description: {
+                en: 'The amount is too low',
+                tr: 'Bu işlem yeterli ürün yok',
+            }
+        },
+        MOVEMENTDATE_REQUIRED: {
+            code: 'MOVEMENTDATE_REQUIRED', description: {
+                en: 'The movement date required',
+                tr: 'Bu işlem için hareket tarihi gerekli',
+            }
+        },
+        STOCKID_REQUIRED: {
+            code: 'STOCKID_REQUIRED', description: {
+                en: 'The stockid required',
+                tr: 'Bu işlem için stockid gerekli',
+            }
+        },
+        STOCKMOVEMENTID_REQUIRED: {
+            code: 'STOCKMOVEMENTID_REQUIRED', description: {
+                en: 'The stockmovementid required',
+                tr: 'Bu işlem için stockmovementid gerekli',
+            }
+        },
+        UNSUPPORTED_STOCKMOVEMENTID: {
+            code: 'UNSUPPORTED_STOCKMOVEMENTID', description: {
+                en: 'The stockmovementid is unsupported',
+                tr: 'Geçersiz stockmovementid',
+            }
+        },
+    }
+
 }

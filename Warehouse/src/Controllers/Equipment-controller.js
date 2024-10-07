@@ -1,7 +1,6 @@
 const CreateNotification = require("../Utilities/CreateNotification")
 const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -106,9 +105,12 @@ async function AddEquipment(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Ekipmanlar',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'equipmentnotification',
-            message: `${Name} ekipmanı ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${Name} ekipmanı ${username} tarafından Oluşturuldu.`,
+                en: `${Name} equipment Created By ${username}.`,
+            },
             pushurl: '/Equipments'
         })
 
@@ -177,9 +179,12 @@ async function UpdateEquipment(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Ekipmanlar',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'equipmentnotification',
-            message: `${Name} ekipmanı ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Name} ekipmanı ${username} tarafından Güncellendi.`,
+                en: `${Name} equipment Updated By ${username}.`,
+            },
             pushurl: '/Equipments'
         })
         await t.commit()
@@ -225,9 +230,12 @@ async function DeleteEquipment(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Ekipmanlar',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'equipmentnotification',
-            message: `${equipment?.Name} ekipmanı ${username} tarafından Silindi.`,
+            message: {
+                tr: `${equipment?.Name} ekipmanı ${username} tarafından Silindi.`,
+                en: `${equipment?.Name} equipment Deleted By ${username}.`,
+            },
             pushurl: '/Equipments'
         })
         await t.commit();
@@ -244,4 +252,77 @@ module.exports = {
     AddEquipment,
     UpdateEquipment,
     DeleteEquipment,
+}
+
+const messages = {
+    NOTIFICATION: {
+        PAGE_NAME: {
+            en: 'Equipments',
+            tr: 'Ekipmanlar',
+        },
+    },
+    ERROR: {
+        EQUIPMENTGROUP_NOT_FOUND: {
+            code: 'EQUIPMENTGROUP_NOT_FOUND', description: {
+                en: 'Equipment Group not found',
+                tr: 'Envarter Grubu bulunamadı',
+            }
+        },
+        EQUIPMENT_NOT_FOUND: {
+            code: 'EQUIPMENT_NOT_FOUND', description: {
+                en: 'Equipment not found',
+                tr: 'Envarter bulunamadı',
+            }
+        },
+        EQUIPMENTGROUP_NOT_ACTIVE: {
+            code: 'EQUIPMENTGROUP_NOT_ACTIVE', description: {
+                en: 'Equipment Group not active',
+                tr: 'Envarter Grubu bulunamadı',
+            }
+        },
+        EQUIPMENT_NOT_ACTIVE: {
+            code: 'EQUIPMENT_NOT_ACTIVE', description: {
+                en: 'Equipment not active',
+                tr: 'Envarter bulunamadı',
+            }
+        },
+    },
+    VALIDATION_ERROR: {
+        NAME_REQUIRED: {
+            code: 'NAME_REQUIRED', description: {
+                en: 'The name required',
+                tr: 'Bu işlem için isim gerekli',
+            }
+        },
+        EQUIPMENTGROUPID_REQUIRED: {
+            code: 'EQUIPMENTGROUPID_REQUIRED', description: {
+                en: 'The equipment group id required',
+                tr: 'Bu işlem için equipment group id gerekli',
+            }
+        },
+        EQUIPMENTID_REQUIRED: {
+            code: 'EQUIPMENTID_REQUIRED', description: {
+                en: 'The equipment id required',
+                tr: 'Bu işlem için equipment id gerekli',
+            }
+        },
+        USERID_REQUIRED: {
+            code: 'USERID_REQUIRED', description: {
+                en: 'The userid required',
+                tr: 'Bu işlem için userid gerekli',
+            }
+        },
+        PERSONELNAME_REQUIRED: {
+            code: 'PERSONELNAME_REQUIRED', description: {
+                en: 'The personel name required',
+                tr: 'Bu işlem için satın alma görevli adı gerekli',
+            }
+        },
+        UNSUPPORTED_EQUIPMENTID: {
+            code: 'UNSUPPORTED_EQUIPMENTID', description: {
+                en: 'The equipment id is unsupported',
+                tr: 'Geçersiz equipment id',
+            }
+        },
+    }
 }

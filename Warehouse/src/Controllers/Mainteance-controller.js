@@ -1,6 +1,5 @@
 const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const { formatDate } = require("../Utilities/Convert")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
@@ -87,11 +86,16 @@ async function AddMainteance(req, res, next) {
             Isactive: true
         }, { transaction: t })
 
+        const equipment = await db.equipmentModel.findOne({ where: { Uuid: EquipmentID } })
+
         await CreateNotification({
             type: types.Create,
-            service: 'Bakım Talepleri',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'mainteancenotification',
-            message: `${formatDate(startDate)} tarihli bakım talebi ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${equipment?.Name} Eqipmanı İçin Arıza Talebi ${username} Tarafından Oluşturuldu.`,
+                en: `${equipment?.Name} Equipment Name, Mainteancy Request Created By ${username} `
+            },
             pushurl: '/Mainteancies'
         })
 
@@ -147,11 +151,16 @@ async function UpdateMainteance(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
 
+        const equipment = await db.equipmentModel.findOne({ where: { Uuid: mainteance.EquipmentID } })
+
         await CreateNotification({
             type: types.Update,
-            service: 'Bakım Talepleri',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'mainteancenotification',
-            message: `${formatDate(mainteance?.Starttime)} tarihli bakım talebi ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${formatDate(mainteance.Starttime)} Başlangıç Tarihli, ${equipment?.Name} Eqipmanı İçin Açılan Bakım Talebi ${username} Tarafından Güncellendi.`,
+                en: `${formatDate(mainteance.Starttime)} Start Date, ${equipment.Name} Equipment Name, Mainteancy Request Updated By ${username} `
+            },
             pushurl: '/Mainteancies'
         })
 
@@ -201,11 +210,16 @@ async function CompleteMainteance(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
 
+        const equipment = await db.equipmentModel.findOne({ where: { Uuid: mainteance.EquipmentID } })
+
         await CreateNotification({
             type: types.Delete,
-            service: 'Bakım Talepleri',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'mainteancenotification',
-            message: `${formatDate(mainteance?.Starttime)} tarihli bakım talebi ${username} tarafından Tamamlandı.`,
+            message: {
+                tr: `${formatDate(mainteance.Starttime)} Başlangıç Tarihli, ${equipment?.Name} Eqipmanı İçin Açılan Bakım Talebi ${username} Tarafından Tamamlandı.`,
+                en: `${formatDate(mainteance.Starttime)} Start Date, ${equipment.Name} Equipment Name, Mainteancy Request Completed By ${username} `
+            },
             pushurl: '/Mainteancies'
         })
 
@@ -250,11 +264,16 @@ async function DeleteMainteance(req, res, next) {
             Isactive: false
         }, { where: { Uuid: Uuid }, transaction: t })
 
+        const equipment = await db.equipmentModel.findOne({ where: { Uuid: mainteance.EquipmentID } })
+
         await CreateNotification({
             type: types.Delete,
-            service: 'Bakım Talepleri',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'mainteancenotification',
-            message: `${formatDate(mainteance?.Starttime)} tarihli bakım talebi ${username} tarafından Silindi.`,
+            message: {
+                tr: `${formatDate(mainteance.Starttime)} Başlangıç Tarihli, ${equipment?.Name} Eqipmanı İçin Açılan Bakım Talebi ${username} Tarafından Silindi.`,
+                en: `${formatDate(mainteance.Starttime)} Start Date, ${equipment.Name} Equipment Name, Mainteancy Request Deleted By ${username} `
+            },
             pushurl: '/Mainteancies'
         })
 
@@ -273,4 +292,66 @@ module.exports = {
     UpdateMainteance,
     DeleteMainteance,
     CompleteMainteance
+}
+
+
+const messages = {
+    NOTIFICATION: {
+        PAGE_NAME: {
+            en: 'Mainteancies',
+            tr: 'Bakım Talepleri',
+        },
+    },
+    ERROR: {
+        MAINTEANCE_NOT_FOUND: {
+            code: 'MAINTEANCE_NOT_FOUND', description: {
+                en: 'maintance not found',
+                tr: 'Bakım talebi bulunamadı',
+            }
+        },
+        MAINTEANCE_NOT_ACTIVE: {
+            code: 'MAINTEANCE_NOT_ACTIVE', description: {
+                en: 'maintance not active',
+                tr: 'Bakım talebi aktif değil',
+            }
+        },
+    },
+    VALIDATION_ERROR: {
+        NAME_REQUIRED: {
+            code: 'NAME_REQUIRED', description: {
+                en: 'The name required',
+                tr: 'Bu işlem için isim gerekli',
+            }
+        },
+        MAINTEANCEID_REQUIRED: {
+            code: 'MAINTEANCEID_REQUIRED', description: {
+                en: 'The mainteanceid required',
+                tr: 'Bu işlem için mainteanceid gerekli',
+            }
+        },
+        UNSUPPORTED_MAINTEANCEID: {
+            code: 'UNSUPPORTED_MAINTEANCEID', description: {
+                en: 'The mainteanceid is unsupported',
+                tr: 'geçersiz mainteanceid',
+            }
+        },
+        EQUIPMENTID_REQUIRED: {
+            code: 'EQUIPMENTID_REQUIRED', description: {
+                en: 'The equipment id required',
+                tr: 'Bu işlem için equipment id gerekli',
+            }
+        },
+        USERID_REQUIRED: {
+            code: 'USERID_REQUIRED', description: {
+                en: 'The userid required',
+                tr: 'Bu işlem için userid gerekli',
+            }
+        },
+        PERSONELNAME_REQUIRED: {
+            code: 'PERSONELNAME_REQUIRED', description: {
+                en: 'The personel name required',
+                tr: 'Bu işlem için satın alma görevli adı gerekli',
+            }
+        },
+    }
 }

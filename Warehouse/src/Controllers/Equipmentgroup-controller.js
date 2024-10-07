@@ -1,6 +1,5 @@
 const CreateNotification = require("../Utilities/CreateNotification")
 const config = require("../Config")
-const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, createAccessDenied, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -93,9 +92,12 @@ async function AddEquipmentgroup(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Ekipman Grupları',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'equipmentgroupnotification',
-            message: `${Name} ekipmanı grubu ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${Name} ekipman grubu ${username} tarafından Oluşturuldu.`,
+                en: `${Name} equipment group Created By ${username}.`,
+            },
             pushurl: '/Equipmentgroups'
         })
 
@@ -152,9 +154,12 @@ async function UpdateEquipmentgroup(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Ekipman Grupları',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'equipmentgroupnotification',
-            message: `${Name} ekipmanı grubu ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Name} ekipman grubu ${username} tarafından Güncellendi.`,
+                en: `${Name} equipment group Created By ${username}.`,
+            },
             pushurl: '/Equipmentgroups'
         })
 
@@ -201,9 +206,12 @@ async function DeleteEquipmentgroup(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Ekipman Grupları',
+            service: messages.NOTIFICATION.PAGE_NAME,
             role: 'equipmentgroupnotification',
-            message: `${equipmentgroup?.Name} ekipmanı grubu ${username} tarafından Silindi.`,
+            message: {
+                tr: `${equipmentgroup?.Name} ekipman grubu ${username} tarafından Silindi.`,
+                en: `${equipmentgroup?.Name} equipment group Deleted By ${username}.`,
+            },
             pushurl: '/Equipmentgroups'
         })
 
@@ -221,4 +229,62 @@ module.exports = {
     AddEquipmentgroup,
     UpdateEquipmentgroup,
     DeleteEquipmentgroup,
+}
+
+
+const messages = {
+    NOTIFICATION: {
+        PAGE_NAME: {
+            en: 'Equipment Groups',
+            tr: 'Ekipman Grupları',
+        },
+    },
+    ERROR: {
+        EQUIPMENTGROUP_NOT_FOUND: {
+            code: 'EQUIPMENTGROUP_NOT_FOUND', description: {
+                en: 'Equipment Group not found',
+                tr: 'Envarter Grubu bulunamadı',
+            }
+        },
+
+        EQUIPMENTGROUP_NOT_ACTIVE: {
+            code: 'EQUIPMENTGROUP_NOT_ACTIVE', description: {
+                en: 'Equipment Group not active',
+                tr: 'Envarter Grubu bulunamadı',
+            }
+        },
+    },
+    VALIDATION_ERROR: {
+
+        NAME_REQUIRED: {
+            code: 'NAME_REQUIRED', description: {
+                en: 'The name required',
+                tr: 'Bu işlem için isim gerekli',
+            }
+        },
+        EQUIPMENTGROUPID_REQUIRED: {
+            code: 'EQUIPMENTGROUPID_REQUIRED', description: {
+                en: 'The equipment group id required',
+                tr: 'Bu işlem için equipment group id gerekli',
+            }
+        },
+        DEPARTMENTID_REQUIRED: {
+            code: 'DEPARTMENTID_REQUIRED', description: {
+                en: 'The departmentid required',
+                tr: 'Bu işlem için departmentid gerekli',
+            }
+        },
+        PERSONELNAME_REQUIRED: {
+            code: 'PERSONELNAME_REQUIRED', description: {
+                en: 'The personel name required',
+                tr: 'Bu işlem için satın alma görevli adı gerekli',
+            }
+        },
+        UNSUPPORTED_EQUIPMENTGROUPID: {
+            code: 'UNSUPPORTED_EQUIPMENTGROUPID', description: {
+                en: 'The equipment group id is unsupported',
+                tr: 'Geçersiz equipment group id',
+            }
+        },
+    }
 }
