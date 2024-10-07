@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Placeviews from "../../Pages/Placeviews/Placeviews"
-import { GetPatients } from "../../Redux/PatientSlice"
+import { GetPatients, fillPatientnotification } from "../../Redux/PatientSlice"
 import { GetPatientdefines } from "../../Redux/PatientdefineSlice"
 import { GetFloors } from "../../Redux/FloorSlice"
 import { GetRooms } from "../../Redux/RoomSlice"
@@ -21,6 +21,6 @@ const mapStateToProps = (state) => ({
     Profile: state.Profile
 })
 
-const mapDispatchToProps = { GetFiles, GetUsagetypes, GetCases, GetPatientdefines, GetPatients, GetFloors, GetRooms, GetBeds }
+const mapDispatchToProps = { GetFiles, GetUsagetypes, GetCases, GetPatientdefines, GetPatients, GetFloors, GetRooms, GetBeds, fillPatientnotification }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Placeviews)

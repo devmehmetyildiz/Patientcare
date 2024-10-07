@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Card, Grid, GridColumn, Icon, Label, Loader, Tab } from 'semantic-ui-react'
 import Literals from './Literals'
-import { Contentwrapper, Headerwrapper, LoadingPage, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
+import { Contentwrapper, Headerwrapper, LoadingPage, NoDataScreen, Pagedivider, Pagewrapper, Profilephoto, Settings } from '../../Components'
 import { ROUTES } from '../../Utils/Constants'
 import config from '../../Config'
 
 export default function Placeviews(props) {
     const { GetPatients, GetPatientdefines, GetFloors, GetRooms, GetBeds, GetCases, GetFiles, GetUsagetypes,
-        Files, Usagetypes, Patients, Floors, Rooms, Beds, Profile, Patientdefines, Cases } = props
+        Files, Usagetypes, Patients, Floors, Rooms, Beds, Profile, Patientdefines, Cases, fillPatientnotification } = props
 
     useEffect(() => {
         GetPatients()
@@ -32,16 +32,22 @@ export default function Placeviews(props) {
             u.BedID === bed?.Uuid)
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
         const cases = (Cases.list || []).find(u => u.Uuid === patient?.CaseID)
+
         let usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
-        const patientPP = (Files.list || []).find(u => u.ParentID === patient?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
+        let file = (Files.list || []).filter(u => u.ParentID === patient?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
 
         return {
             header: <div className='w-full flex flex-row justify-between items-start '>
                 <div className='flex flex-col justify-start items-start'>
                     <div className='font-bold'>{`${floor?.Name}-${room?.Name}-${bed?.Name}`}</div>
                 </div>
-                {patientPP
-                    ? <img alt='pp' src={`${config.services.File}${ROUTES.FILE}/Downloadfile/${patientPP?.Uuid}`} className="rounded-full" style={{ width: '30px', height: '30px' }} />
+                {file
+                    ? <Profilephoto
+                        fileID={file?.Uuid}
+                        fillnotification={fillPatientnotification}
+                        Profile={Profile}
+                        Imgheigth="30px"
+                    />
                     : <Icon name='users' circular />}
             </div>,
             meta: bed.Isoccupied ?
