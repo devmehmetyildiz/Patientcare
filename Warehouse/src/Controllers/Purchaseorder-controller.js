@@ -5,8 +5,7 @@ const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const DoGet = require("../Utilities/DoGet")
-const { types } = require('../Constants/Purchaseordermovementypes')
-const { types: notificationtypes } = require("../Constants/Defines")
+const { types, purchaseordermovementtypes } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
 const DELIVERY_TYPE_PATIENT = 0
 const DELIVERY_TYPE_WAREHOUSE = 1
@@ -106,7 +105,7 @@ async function AddPurchaseorder(req, res, next) {
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
             PurchaseorderID: purchaseorderuuid,
-            Type: types.Create,
+            Type: purchaseordermovementtypes.Create,
             UserID: req?.identity?.user?.Uuid || username,
             Info: req?.body?.Info || '',
             Occureddate: new Date(),
@@ -156,7 +155,7 @@ async function AddPurchaseorder(req, res, next) {
         }
 
         await CreateNotification({
-            type: notificationtypes.Create,
+            type: types.Create,
             service: messages.NOTIFICATION.PAGE_NAME,
             role: 'purchaseordernotification',
             message: {
@@ -223,7 +222,7 @@ async function UpdatePurchaseorder(req, res, next) {
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
             PurchaseorderID: Uuid,
-            Type: types.Update,
+            Type: purchaseordermovementtypes.Update,
             UserID: req?.identity?.user?.Uuid || username,
             Info: req?.body?.Info || '',
             Occureddate: new Date(),
@@ -279,7 +278,7 @@ async function UpdatePurchaseorder(req, res, next) {
         }
 
         await CreateNotification({
-            type: notificationtypes.Update,
+            type: types.Update,
             service: messages.NOTIFICATION.PAGE_NAME,
             role: 'purchaseordernotification',
             message: {
@@ -395,14 +394,14 @@ async function CheckPurchaseorder(req, res, next) {
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
             PurchaseorderID: Uuid,
-            Type: types.Check,
+            Type: purchaseordermovementtypes.Check,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Checkinfo || '',
             Occureddate: new Date()
         }, { transaction: t })
 
         await CreateNotification({
-            type: notificationtypes.Update,
+            type: types.Update,
             service: messages.NOTIFICATION.PAGE_NAME,
             role: 'purchaseordernotification',
             message: {
@@ -521,14 +520,14 @@ async function ApprovePurchaseorder(req, res, next) {
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
             PurchaseorderID: Uuid,
-            Type: types.Approve,
+            Type: purchaseordermovementtypes.Approve,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Approveinfo || '',
             Occureddate: new Date(),
         }, { transaction: t })
 
         await CreateNotification({
-            type: notificationtypes.Update,
+            type: types.Update,
             service: messages.NOTIFICATION.PAGE_NAME,
             role: 'purchaseordernotification',
             message: {
@@ -650,7 +649,7 @@ async function CompletePurchaseorder(req, res, next) {
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
             PurchaseorderID: Uuid,
-            Type: types.Complete,
+            Type: purchaseordermovementtypes.Complete,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Completeinfo || '',
             Occureddate: new Date(),
@@ -705,7 +704,7 @@ async function CompletePurchaseorder(req, res, next) {
         }
 
         await CreateNotification({
-            type: notificationtypes.Update,
+            type: types.Update,
             service: messages.NOTIFICATION.PAGE_NAME,
             role: 'purchaseordernotification',
             message: {
@@ -785,14 +784,14 @@ async function CancelCheckPurchaseorder(req, res, next) {
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
             PurchaseorderID: Uuid,
-            Type: types.Cancelcheck,
+            Type: purchaseordermovementtypes.Cancelcheck,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Cancelcheckinfo || '',
             Occureddate: new Date()
         }, { transaction: t })
 
         await CreateNotification({
-            type: notificationtypes.Update,
+            type: types.Update,
             service: messages.NOTIFICATION.PAGE_NAME,
             role: 'purchaseordernotification',
             message: {
@@ -873,14 +872,14 @@ async function CancelApprovePurchaseorder(req, res, next) {
         await db.purchaseordermovementModel.create({
             Uuid: uuid(),
             PurchaseorderID: Uuid,
-            Type: types.Cancelapprove,
+            Type: purchaseordermovementtypes.Cancelapprove,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Cancelapproveinfo || '',
             Occureddate: new Date(),
         }, { transaction: t })
 
         await CreateNotification({
-            type: notificationtypes.Update,
+            type: types.Update,
             service: messages.NOTIFICATION.PAGE_NAME,
             role: 'purchaseordernotification',
             message: {
@@ -944,7 +943,7 @@ async function DeletePurchaseorder(req, res, next) {
         }, { where: { WarehouseID: Uuid }, transaction: t })
 
         await CreateNotification({
-            type: notificationtypes.Delete,
+            type: types.Delete,
             service: messages.NOTIFICATION.PAGE_NAME,
             role: 'purchaseordernotification',
             message: {

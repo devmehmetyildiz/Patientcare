@@ -1,6 +1,5 @@
 const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/StocktypegroupMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation

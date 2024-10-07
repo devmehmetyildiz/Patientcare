@@ -19,8 +19,6 @@ import Todogroupdefines from "../Pages/Todogroupdefines/Literals"
 import Units from "../Pages/Units/Literals"
 import Warehouses from "../Pages/Warehouses/Literals"
 import Rules from "../Pages/Rules/Literals"
-import Beds from "../Pages/Beds/Literals"
-import Rooms from "../Pages/Rooms/Literals"
 import Floors from "../Pages/Floors/Literals"
 import Shiftdefines from "../Pages/Shiftdefines/Literals"
 import Equipmentgroups from "../Pages/Equipmentgroups/Literals"
@@ -63,8 +61,6 @@ const Literals = {
     Units,
     Warehouses,
     Rules,
-    Rooms,
-    Beds,
     Floors,
     Shiftdefines,
     Equipmentgroups,

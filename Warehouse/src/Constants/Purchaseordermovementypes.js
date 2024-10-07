@@ -1,11 +1,4 @@
 const types = {
-    Create: 'Oluşturma',
-    Update: 'Güncelleme',
-    Delete: 'Silme',
-    Transfer: 'Transfer',
-}
-
-const purchaseordermovementtypes = {
     Create: 'create',
     Update: 'update',
     Delete: 'delete',
@@ -16,4 +9,4 @@ const purchaseordermovementtypes = {
     Cancelapprove: 'cancelapprove',
 }
 
-module.exports = { types, purchaseordermovementtypes }
+module.exports = { types }

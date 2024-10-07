@@ -1,5 +1,3 @@
-
-
 1. ssh kurulumu yapılacak
 
     sudo apt update
@@ -123,7 +121,7 @@
 
     uygulamayı kontrol et 
 
-11. ngix ve pm2 
+11. pm2 
 
 
     npm install pm2 -g
@@ -134,4 +132,36 @@
     pm2 startup ile auto start olcak
     pm2 save ile kaydet
     
+
+
+12. Ftp ayarları
+
+    sudo apt update
+    sudo apt install vsftpd
+
+    sudo systemctl start vsftpd
+    sudo systemctl enable vsftpd
+
+    sudo nano /etc/vsftpd.conf
+
+    anonymous_enable=NO
+    local_enable=YES
+    write_enable=YES
+    chroot_local_user=YES
+    listen_port=21
+
+    sudo systemctl restart vsftpd
+
+    sudo ufw allow 21/tcp
+    sudo ufw reload
+
+    sudo adduser ftpuser
+    sudo passwd ftpuser
+
+    sudo mkdir -p /home/ftpuser/ftp
+
+    sudo chown ftpuser:ftpuser /home/ftpuser/ftp
+    sudo chmod 750 /home/ftpuser/ftp
+
+
 

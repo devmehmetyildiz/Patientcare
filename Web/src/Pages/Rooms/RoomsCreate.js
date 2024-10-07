@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import { FormInput,Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import FloorsCreate from '../../Containers/Floors/FloorsCreate'
 export default class RoomsCreate extends Component {
 
@@ -25,6 +24,8 @@ export default class RoomsCreate extends Component {
   render() {
     const { Rooms, Floors, Profile, history, closeModal } = this.props
 
+    const t = Profile?.i18n?.t
+
     const Floorsoptions = (Floors.list || []).filter(u => u.Isactive).map(Floor => {
       return { key: Floor.Uuid, text: Floor.Name, value: Floor.Uuid }
     })
@@ -35,29 +36,29 @@ export default class RoomsCreate extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Rooms"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Rooms.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Rooms.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.FloorID[Profile.Language]} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Label.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Label.Floor')} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
               history={history}
               redirectUrl={"/Rooms"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Rooms.isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -69,14 +70,17 @@ export default class RoomsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddRooms, history, fillRoomnotification, Profile, closeModal } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isUUID(data.FloorID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.FloorIDrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Rooms.Page.Header'), description: t('Pages.Rooms.Messages.FloorRequired') })
     }
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Rooms.Page.Header'), description: t('Pages.Rooms.Messages.NameRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

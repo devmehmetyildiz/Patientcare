@@ -1,5 +1,4 @@
 const config = require('../Config')
-const messages = require('../Constants/Messages')
 const { sequelizeErrorCatcher, createAutherror, requestErrorCatcher } = require('../Utilities/Error')
 const createValidationError = require('../Utilities/Error').createValidation
 const createErrorList = require('../Utilities/Error').createList
