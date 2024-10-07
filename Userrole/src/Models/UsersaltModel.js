@@ -11,6 +11,6 @@ module.exports = sequelize.define('usersaltModel', {
         type: Sequelize.STRING
     }
 }, {
-    tableName: 'userSalts', // replace with the name of your existing table
+    tableName: 'usersalts', // replace with the name of your existing table
     timestamps: false
 });

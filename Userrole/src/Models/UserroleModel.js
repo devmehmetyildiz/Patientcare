@@ -11,6 +11,6 @@ module.exports = sequelize.define('userroleModel', {
         type: Sequelize.STRING
     }
 }, {
-    tableName: 'userRoles', // replace with the name of your existing table
+    tableName: 'userroles', // replace with the name of your existing table
     timestamps: false
 });

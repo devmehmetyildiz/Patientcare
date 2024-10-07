@@ -62,7 +62,7 @@
 
     sudo apt install curl
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-    
+    source ~/.nvm/nvm.sh
     nvm --version
     
     nvm install 18.18.2
@@ -132,7 +132,11 @@
     pm2 startup ile auto start olcak
     pm2 save ile kaydet
     
+    react için ;
 
+    npm install -g http-server
+
+    pm2 start http-server --name "react-app" -- -p 3000 build
 
 12. Ftp ayarları
 
