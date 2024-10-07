@@ -9,6 +9,7 @@ const fs = require('fs');
 const stream = require("stream");
 const Reconnectftp = require("../Utilities/Reconnectftp")
 const ftp = require('basic-ftp')
+const SftpClient = require('ssh2-sftp-client');
 
 async function GetFiles(req, res, next) {
     try {
@@ -117,29 +118,27 @@ async function Downloadfile(req, res, next) {
                 res.end(callback);
             },
         });
-        const remoteFolderpath = `/${config.ftp.mainfolder}/${file.Filefolder}/`;
+        const remoteFolderpath = `${config.ftp.mainfolder}/${file.Filefolder}`;
         const remoteFilePath = `/${remoteFolderpath}/${file.Filename}`;
 
         await (async () => {
             try {
-                const client = new ftp.Client();
-                const server = {
+                const client = new SftpClient();
+                await client.connect({
                     host: config.ftp.host,
-                    user: config.ftp.user,
+                    port: 22,
+                    username: config.ftp.user,
                     password: config.ftp.password
-                };
-                await client.access(server);
+                });
 
-                await client.downloadTo(fileStream, remoteFilePath, 0);
-
-                fileStream.pipe(res);
+                await client.get(remoteFilePath, fileStream);
 
                 fileStream.on('finish', () => {
                     console.log('File downloaded and sent as response successfully');
                 });
 
             } catch (err) {
-                console.log('errondownload: ', err);
+                console.log('err: ', err);
                 return next(createValidationError(messages.ERROR.FILE_DOWNLOAD_ERROR))
             }
         })();
@@ -389,18 +388,17 @@ async function Uploadfiletoftp(fileObject) {
 
     await (async () => {
         try {
-            const client = new ftp.Client();
-            const server = {
+            const client = new SftpClient();
+            await client.connect({
                 host: config.ftp.host,
-                user: config.ftp.user,
+                port: 22,
+                username: config.ftp.user,
                 password: config.ftp.password
-            };
-            await client.access(server);
-            await client.uploadFrom(fileStream, remoteFilePath);
+            });
+            await client.put(fileStream, remoteFilePath);
             isuploaded = true
         } catch (err) {
             isuploaded = false
-            await Reconnectftp()
         }
     })();
     return isuploaded
@@ -413,14 +411,14 @@ async function Checkdirectoryfromftp(directoryname) {
 
     await (async () => {
 
+        const client = new SftpClient();
         try {
-            const client = new ftp.Client();
-            const server = {
+            await client.connect({
                 host: config.ftp.host,
-                user: config.ftp.user,
+                port: 22,
+                username: config.ftp.user,
                 password: config.ftp.password
-            };
-            await client.access(server);
+            });
             const dirList = await client.list(`/${config.ftp.mainfolder}/`);
             const directoryExists = dirList.some((item) => item.name === directoryname);
 
@@ -432,6 +430,8 @@ async function Checkdirectoryfromftp(directoryname) {
             }
         } catch (err) {
             isdirectoryactive = false
+        } finally {
+            await client.end();
         }
     })();
     return isdirectoryactive
