@@ -17,6 +17,6 @@ module.exports = sequelize.define('equipmentpropertyModel', {
         type: Sequelize.STRING
     },
 }, {
-    tableName: 'Equipmentproperties', // replace with the name of your existing table
+    tableName: 'equipmentproperties', 
     timestamps: false
 });

@@ -38,6 +38,6 @@ module.exports = sequelize.define('stocktypegroupModel', {
         type: Sequelize.BOOLEAN
     }
 }, {
-    tableName: 'Stocktypegroups', // replace with the name of your existing table
+    tableName: 'stocktypegroups', // replace with the name of your existing table
     timestamps: false
 });

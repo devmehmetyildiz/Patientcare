@@ -11,6 +11,6 @@ module.exports = sequelize.define('roleprivilegeModel', {
         type: Sequelize.STRING
     }
 }, {
-    tableName: 'rolePrivileges', // replace with the name of your existing table
+    tableName: 'roleprivileges', // replace with the name of your existing table
     timestamps: false
 });

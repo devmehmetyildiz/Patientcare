@@ -38,6 +38,6 @@ module.exports = sequelize.define('accesstokenModel', {
         type: Sequelize.BOOLEAN
     }
 }, {
-    tableName: 'accessTokens', // replace with the name of your existing table
+    tableName: 'accesstokens', // replace with the name of your existing table
     timestamps: false
 });

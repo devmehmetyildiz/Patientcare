@@ -167,5 +167,22 @@
     sudo chown ftpuser:ftpuser /home/ftpuser/ftp
     sudo chmod 750 /home/ftpuser/ftp
 
+13. ngix 
 
+    sudo apt install nginx
+    sudo nano /etc/nginx/sites-available/default
 
+server {
+    listen 80;
+    server_name 91.151.84.238;  # Sunucu IP adresi veya alan adı
+
+    location / {
+        root /var/apps/Patientcare/Patientcare/Web/build;  # Build dizininizin yolu
+        try_files $uri /index.html;  # Client-side yönlendirme için index.html
+    }
+
+    location /Login {
+        root /var/apps/Patientcare/Patientcare/Web/build;  # Build dizininizin yolu
+        try_files $uri /index.html;  # Client-side yönlendirme için index.html
+    }
+}

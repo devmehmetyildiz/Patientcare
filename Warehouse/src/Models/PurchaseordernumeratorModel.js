@@ -14,6 +14,6 @@ module.exports = sequelize.define('purchaseordernumeratorModel', {
         type: Sequelize.BOOLEAN
     }
 }, {
-    tableName: 'Purchaseordernumerators', // replace with the name of your existing table
+    tableName: 'purchaseordernumerators', // replace with the name of your existing table
     timestamps: false
 });
