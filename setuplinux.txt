@@ -1,0 +1,137 @@
+
+
+1. ssh kurulumu yapılacak
+
+    sudo apt update
+    sudo apt install openssh-server
+    sudo systemctl status ssh
+    sudo systemctl start ssh (çalışmıyorsa)
+
+    Virtual box kullanıyıorsa ayarlardan NAT seç ve aşağıdaki ayarları gir
+    Ad	 Protokol	Host IP	Host Port	Guest IP	Guest Port
+    SSH	 TCP	        127.0.0.1	 2222		        22
+    
+2. ip işlemleri için 
+
+    sudo apt install net-tools
+
+    ifconfig çalışır (eth veya enp li ağda bir ip oldugu görülür inet**)
+
+3.Dosya açmak için vim kur
+
+    sudo apt install vim
+
+4. ana bilgisayar cmd den ssh yapılır
+
+    ssh -p 2222 kullanıcı-adın@127.0.0.1
+
+5. Mysql kurulumu yapılacak
+
+    sudo apt install mysql-server
+    sudo systemctl status mysql
+    sudo systemctl start mysql (çalışmıyorsa)
+
+    kurulum için;
+
+    sudo mysql_secure_installation
+
+        Root şifresi ayarla: Evet (root kullanıcısına güçlü bir şifre ayarla).
+        Anonim kullanıcıları kaldır: Evet (anonim kullanıcıları kaldırmak güvenlik açısından önemlidir).
+        Uzaktan root girişi engelle: Evet (güvenlik için tavsiye edilir).
+        Test veritabanını kaldır: Evet (kullanılmayan veritabanlarını sil).
+        Yetki tablolarını yeniden yükle: Evet (değişikliklerin geçerli olması için).
+
+    sudo mysql -u root -p ile bağlan
+
+6. Patientcare adında db olustur  (; koy sonlarına)
+
+    CREATE DATABASE Patientcare;
+    SHOW DATABASES;
+    EXIT;
+
+7. Projeyi git den çekme 
+
+    sudo apt install git
+
+    git -v
+
+    var dizinine git 
+
+    sudo mkdir apps
+    sudo git clone https://github.com/devmehmetyildiz/Patientcare.git
+
+8. Node.js ve NVM kur 
+
+    sudo apt install curl
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+    
+    nvm --version
+    
+    nvm install 18.18.2
+    
+    nvm ls
+    nvm use 18.18.2
+    nvm alias default 18.18.2
+
+    node -v
+    npm -v
+
+9. Local auth projesi için .env oluştur ve npm start yapılacak
+
+    sudo touch .env
+
+    sudo vim .env diyerek aç
+    i ye tıkla edit moda gir 
+    env yi güncelle
+    esc de :wq yap kaydet çık
+    env dosyasını doldur
+
+    npm install yap- eğer yetki hatası alırsan ana dizine çık 
+    sudo chown -R mehmetyildiz:mehmetyildiz /var/apps
+
+    npm install yap
+    npm start yap
+
+    mysql hatası verirse 
+
+    GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'My.5079115294' WITH GRANT OPTION;
+    SELECT user, host, plugin FROM mysql.user WHERE user = 'root';
+    ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'My.5079115294';
+    FLUSH PRIVILEGES;
+
+    uygulamayı çalıştır
+
+    mysqle gir 
+    SHOW DATABASES;
+    Use Patientcare;
+
+    Show Tables; ile kontrol et 
+
+10. Uygulama portlarını dışarı açmak
+
+    sudo ufw status
+    sudo ufw enable
+    sudo ufw allow 3000:3010/tcp
+    sudo ufw allow ssh  (silinecek)
+    sudo ufw status numbered
+
+    uygulama çalışmıyorsa kontrol et portları 
+    sudo netstat -tuln | grep 3001
+
+    sudo fuser 3001/tcp   ile pid bul 
+    sudo kill -9 PIDno    ile kill et 
+
+    uygulamayı kontrol et 
+
+11. ngix ve pm2 
+
+
+    npm install pm2 -g
+
+    kurulu dizine git 
+    pm2 start app.js --name myapp
+
+    pm2 startup ile auto start olcak
+    pm2 save ile kaydet
+    
+
