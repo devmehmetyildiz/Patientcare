@@ -119,12 +119,15 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
         return next(createAutherror([messages.ERROR.PASSWORD_DIDNTMATCH], req.language))
     }
 
+    const expireTime = new Date()
+    expireTime.setHours(expireTime.getHours() + 1)
+
     let accessToken = {
         token_type: 'bearer',
         accessToken: uuid(),
         refreshToken: uuid(),
-        ExpiresAt: new Date(new Date().getTime() + 10 * 60000),
-        RefreshtokenexpiresAt: new Date(new Date().getTime() + 10 * 60000),
+        ExpiresAt: expireTime,
+        RefreshtokenexpiresAt: expireTime,
         redirect: user.Defaultpage
     }
 
@@ -200,12 +203,15 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
         return next(requestErrorCatcher(error, "USERROLE"))
     }
 
+    const expireTime = new Date()
+    expireTime.setHours(expireTime.getHours() + 1)
+
     let accessToken = {
         token_type: 'bearer',
         accessToken: uuid(),
         refreshToken: uuid(),
-        ExpiresAt: new Date(new Date().getTime() + 10 * 60000),
-        RefreshtokenexpiresAt: new Date(new Date().getTime() + 10 * 60000),
+        ExpiresAt: expireTime,
+        RefreshtokenexpiresAt: expireTime,
     }
 
     try {
