@@ -3,6 +3,10 @@ const Literals = {
 
     },
     Columns: {
+        Id: {
+            tr: 'Id',
+            en: 'Id'
+        },
         Name: {
             tr: 'Hasta Adı',
             en: 'Patient Name'

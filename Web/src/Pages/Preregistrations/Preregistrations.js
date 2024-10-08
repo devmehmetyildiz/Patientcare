@@ -37,7 +37,7 @@ export default class Preregistrations extends Component {
     const Columns = [
       { Header: t('Common.Column.Id'), accessor: 'Id' },
       { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
-      { Header: t('Pages.Preregistrations.Column.Name'), accessor: (row, disableImg) => this.nameCellhandler(row, disableImg), Title: true, Cell: (col, row) => this.imageCellhandler(col, row) },
+      { Header: t('Pages.Preregistrations.Column.Name'), accessor: (row, disableImg) => this.nameCellhandler(row, disableImg), Title: true },
       { Header: t('Pages.Preregistrations.Column.CountryID'), accessor: row => this.patientdefineCellhandler(row?.PatientdefineID), Subtitle: true },
       { Header: t('Pages.Preregistrations.Column.Happensdate'), accessor: row => this.dateCellhandler(row?.Happensdate), Lowtitle: true, Withtext: true },
       { Header: t('Pages.Preregistrations.Column.Approvaldate'), accessor: row => this.dateCellhandler(row?.Approvaldate), Lowtitle: true, Withtext: true },
@@ -217,6 +217,7 @@ export default class Preregistrations extends Component {
             fileID={file?.Uuid}
             fillnotification={fillPatientnotification}
             Profile={Profile}
+            Imgheigth="30px"
           />
           : null}
         {patientdefine?.Firstname ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}` : `${patientdefine?.CountryID}`}

@@ -205,6 +205,7 @@ function PatientcasesTab({ patients, cases, Patientdefines, Profile }) {
     }
 
     const Columns = [
+        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
         { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
         { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
@@ -268,6 +269,7 @@ function PatienttypeTab({ patients, patienttypes, Patientdefines, Profile }) {
     }
 
     const Columns = [
+        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
         { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
         { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
@@ -332,6 +334,7 @@ function PatientmedicalboardreportTab({ patients, medicalboardreportoptions, Pat
     }
 
     const Columns = [
+        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
         { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
         { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
@@ -396,6 +399,7 @@ function PatientdependencyTab({ patients, dependencyoptions, Patientdefines, Pro
     }
 
     const Columns = [
+        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
         { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
         { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
@@ -460,6 +464,7 @@ function PatientgenderTab({ patients, genderoptions, Patientdefines, Profile }) 
     }
 
     const Columns = [
+        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
         { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
         { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
@@ -522,6 +527,7 @@ function CostumertypeTab({ patients, costumertypes, Profile, Patientdefines }) {
     }
 
     const Columns = [
+        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
         { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
         { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
@@ -625,6 +631,7 @@ function DisbandedTab({ patients, Cases, Patientdefines, Profile, Patienttypes }
     }
 
     const leaveColumns = [
+        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
         { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
         { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
@@ -635,6 +642,7 @@ function DisbandedTab({ patients, Cases, Patientdefines, Profile, Patienttypes }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const deathColumns = [
+        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
         { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
         { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },

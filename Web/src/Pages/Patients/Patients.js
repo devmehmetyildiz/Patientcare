@@ -27,7 +27,7 @@ export default function Patients(props) {
   const Columns = [
     { Header: t('Common.Column.Id'), accessor: 'Id' },
     { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
-    { Header: t('Pages.Patients.Column.Name'), accessor: row => nameCellhandler(row), Cell: (col, row) => imageCellhandler(col, row), Title: true },
+    { Header: t('Pages.Patients.Column.Name'), accessor: row => nameCellhandler(row),Title: true },
     { Header: t('Pages.Patients.Column.Gender'), accessor: row => genderCellhandler(row) },
     { Header: t('Pages.Patients.Column.Approvaldate'), accessor: row => dateCellhandler(row?.Approvaldate) },
     { Header: t('Pages.Patients.Column.Leavedate'), accessor: row => dateCellhandler(row?.Leavedate), key: 'left' },

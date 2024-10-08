@@ -41,7 +41,7 @@ export default function Placeviews(props) {
                 <div className='flex flex-col justify-start items-start'>
                     <div className='font-bold'>{`${floor?.Name}-${room?.Name}-${bed?.Name}`}</div>
                 </div>
-                {file
+                {false
                     ? <Profilephoto
                         fileID={file?.Uuid}
                         fillnotification={fillPatientnotification}

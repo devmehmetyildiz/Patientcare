@@ -75,6 +75,7 @@ export default class PreregistrationsCreate extends Component {
     let data = this.context.getForm(this.PAGE_NAME)
     data.Patientdefine = patientdata
     data.Stocks = this.state.selectedStocks
+    console.log('data: ', data);
 
     if (!validator.isISODate(data.Approvaldate)) {
       data.Approvaldate = null
@@ -88,6 +89,8 @@ export default class PreregistrationsCreate extends Component {
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
+      console.log('data.DepartmentID: ', data.DepartmentID);
+
       errors.push({ type: 'Error', code: t('Pages.Preregistrations.Page.Header'), description: t('Pages.Preregistrations.Create.Messages.Departmentrequired') })
     }
     if (!validator.isUUID(data.CaseID)) {

@@ -46,6 +46,20 @@ export const GetFiles = createAsyncThunk(
     }
 );
 
+export const GetPPFiles = createAsyncThunk(
+    'Files/GetPPFiles',
+    async (_, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.File, ROUTES.FILE);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillFilenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const GetFile = createAsyncThunk(
     'Files/GetFile',
     async (guid, { dispatch }) => {
@@ -150,6 +164,7 @@ export const DeleteFiles = createAsyncThunk(
 export const FilesSlice = createSlice({
     name: 'Files',
     initialState: {
+        ppList: [],
         list: [],
         selected_record: {},
         errMsg: null,
@@ -185,6 +200,19 @@ export const FilesSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(GetFiles.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetPPFiles.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+                state.ppList = [];
+            })
+            .addCase(GetPPFiles.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.ppList = action.payload;
+            })
+            .addCase(GetPPFiles.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

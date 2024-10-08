@@ -15,7 +15,7 @@ export default class Layout extends Component {
   componentDidMount() {
     window.addEventListener("focus", this.onFocus)
     window.addEventListener("blur", this.onBlur);
-    const { GetActiveUser, GetUserRoles, GetTableMeta, GetUserMeta, Checktoken, GetUsagetypes } = this.props
+    const { GetActiveUser, GetUserRoles, GetTableMeta, GetUserMeta, Checktoken, GetUsagetypes, GetPPFiles } = this.props
     const routes = [
       "/Login",
       "/login",
@@ -36,6 +36,7 @@ export default class Layout extends Component {
       GetTableMeta()
       GetUsagetypes()
       GetUserMeta()
+      GetPPFiles()
       Checktoken({
         token: token || ''
       })

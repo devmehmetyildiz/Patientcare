@@ -162,7 +162,7 @@
         "Pages.Preregistrations.Column.Patientcompletetime": "Ön Kayıt Tamamlama tarihi",
         "Pages.Preregistrations.Column.Completeduser": "Tamamlayan Kullanıcı",
         "Pages.Preregistrations.Create.Messages.Departmentrequired": "Departman Gerekli",
-        "Pages.Preregistrations.Create.Messages.CaseRequired": "Departman Gerekli",
+        "Pages.Preregistrations.Create.Messages.CaseRequired": "Durum Gerekli",
         "Pages.Preregistrations.Create.Messages.ApprovaldateRequired": "Kuruma Giriş tarihi Gerekli",
         "Pages.Preregistrations.Create.Messages.PatientdefineRequired": "Geçerli Hasta TC veya Hasta Tanımı Gerekli",
         "Pages.Preregistrations.Create.Messages.StockRequired": "Stoklar Gerekli",
