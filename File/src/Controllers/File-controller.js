@@ -382,9 +382,9 @@ async function Uploadfiletoftp(fileObject) {
         return false
     }
     const fileStream = fs.createReadStream(fileObject.File.path);
-    const remoteFolderpath = `/${config.ftp.mainfolder}/${fileObject.Filefolder}/`;
-    const remoteFilePath = `/${remoteFolderpath}/${fileObject.File.name}`;
 
+    const remoteFolderpath = `${config.ftp.mainfolder}/${fileObject.Filefolder}`;
+    const remoteFilePath = `/${remoteFolderpath}/${fileObject.File.name}`;
 
     await (async () => {
         try {
@@ -398,6 +398,7 @@ async function Uploadfiletoftp(fileObject) {
             await client.put(fileStream, remoteFilePath);
             isuploaded = true
         } catch (err) {
+            console.log('err: ', err);
             isuploaded = false
         }
     })();
@@ -405,36 +406,35 @@ async function Uploadfiletoftp(fileObject) {
 }
 
 async function Checkdirectoryfromftp(directoryname) {
-    let isdirectoryactive = false
-
+    let isdirectoryactive = false;
     const remoteFolderpath = `/${config.ftp.mainfolder}/${directoryname}/`;
 
-    await (async () => {
+    const client = new SftpClient();
+    try {
+        await client.connect({
+            host: config.ftp.host,
+            port: 22,
+            username: config.ftp.user,
+            password: config.ftp.password
+        });
 
-        const client = new SftpClient();
-        try {
-            await client.connect({
-                host: config.ftp.host,
-                port: 22,
-                username: config.ftp.user,
-                password: config.ftp.password
-            });
-            const dirList = await client.list(`/${config.ftp.mainfolder}/`);
-            const directoryExists = dirList.some((item) => item.name === directoryname);
+        const dirList = await client.list(`/${config.ftp.mainfolder}/`);
 
-            if (!directoryExists) {
-                await client.ensureDir(remoteFolderpath);
-                isdirectoryactive = true
-            } else {
-                isdirectoryactive = true
-            }
-        } catch (err) {
-            isdirectoryactive = false
-        } finally {
-            await client.end();
+        const directoryExists = dirList.some((item) => item.name === directoryname);
+
+        if (!directoryExists) {
+            await client.mkdir(remoteFolderpath, true);  
         }
-    })();
-    return isdirectoryactive
+
+        isdirectoryactive = true;
+    } catch (err) {
+        console.log('Error checking/creating directory: ', err);
+        isdirectoryactive = false;
+    } finally {
+        await client.end();
+    }
+
+    return isdirectoryactive;
 }
 
 async function Removefileandfolderfromftp(fileObject) {
