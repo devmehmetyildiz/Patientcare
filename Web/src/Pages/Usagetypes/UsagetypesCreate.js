@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form, Icon, Popup } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import {
@@ -23,6 +22,8 @@ export default class UsagetypesCreate extends Component {
   render() {
     const { Usagetypes, Profile, history, closeModal } = this.props
 
+    const t = Profile?.i18n?.t
+
     const additionalicon = <Popup
       trigger={<div
         className='mx-2 cursor-pointer'
@@ -30,7 +31,7 @@ export default class UsagetypesCreate extends Component {
       >
         <Icon name='hand point right' />
       </div>}
-      content={Literals.Messages.Newvaluecheck[Profile.Language]}
+      content={t('Pages.Usagetypes.Messages.Newvaluecheck')}
     />
 
 
@@ -40,10 +41,10 @@ export default class UsagetypesCreate extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Usagetypes"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Usagetypes.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Usagetypes.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
@@ -51,21 +52,21 @@ export default class UsagetypesCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" additionalicon={additionalicon} />
-                {this.state.isHavevalue && <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Value[Profile.Language]} name="Value" />}
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Name')} name="Name" additionalicon={additionalicon} />
+                {this.state.isHavevalue && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Value')} name="Value" />}
               </Form.Group>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Isrequired[Profile.Language]} name="Isrequired" formtype={'checkbox'} />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Isrequired')} name="Isrequired" formtype={'checkbox'} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
               history={history}
               redirectUrl={"/Usagetypes"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Usagetypes.isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -77,14 +78,17 @@ export default class UsagetypesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddUsagetypes, history, fillUsagetypenotification, Profile, closeModal } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Usagetypes.Page.Header'), description: t('Pages.Usagetypes.Messages.NameRequired') })
     }
     if (this.state.isHavevalue) {
       if (!validator.isString(data.Value)) {
-        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Valuerequired[Profile.Language] })
+        errors.push({ type: 'Error', code: t('Pages.Usagetypes.Page.Header'), description: t('Pages.Usagetypes.Messages.ValueReqired') })
       }
     }
 

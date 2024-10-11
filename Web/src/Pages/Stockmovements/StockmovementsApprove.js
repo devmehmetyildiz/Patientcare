@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import Literals from './Literals'
 import { Button, Modal } from 'semantic-ui-react'
 
 export default class StockmovementsApprove extends Component {
   render() {
     const { Profile, Stockmovements, ApproveStockmovements, handleApprovemodal, handleSelectedStockmovement, Stockdefines, Stocks } = this.props
     const { isApprovemodalopen, selected_record } = Stockmovements
+    const t = Profile?.i18n?.t
 
     const stock = (Stocks.list || []).find(u => u.Uuid === selected_record.StockID)
     const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
@@ -16,12 +16,12 @@ export default class StockmovementsApprove extends Component {
         onOpen={() => handleApprovemodal(true)}
         open={isApprovemodalopen}
       >
-        <Modal.Header>{Literals.Page.Pageapproveheader[Profile.Language]}</Modal.Header>
+        <Modal.Header>{t('Pages.Stockmovements.Page.ApproveHeader')}</Modal.Header>
         <Modal.Content image>
           <Modal.Description>
             <p>
               <span className='font-bold'>{stockdefine?.Name} </span>
-              {Literals.Messages.Approvecheck[Profile.Language]}
+              {t('Pages.Stockmovements.Approve.Label.Check')}
             </p>
           </Modal.Description>
         </Modal.Content>
@@ -30,10 +30,10 @@ export default class StockmovementsApprove extends Component {
             handleApprovemodal(false)
             handleSelectedStockmovement({})
           }}>
-            {Literals.Button.Giveup[Profile.Language]}
+            {t('Common.Button.Giveup')}
           </Button>
           <Button
-            content={Literals.Button.Approve[Profile.Language]}
+            content={t('Common.Button.Approve')}
             labelPosition='right'
             icon='checkmark'
             onClick={() => {

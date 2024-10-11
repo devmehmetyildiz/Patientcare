@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Literals from './Literals'
 import { Button, Form, Modal } from 'semantic-ui-react'
 
 export default function PeriodsFastcreate({ Profile, Periods, FastcreatePeriod, handleFastcreatemodal }) {
@@ -7,6 +6,8 @@ export default function PeriodsFastcreate({ Profile, Periods, FastcreatePeriod, 
     const [data, setData] = useState({})
 
     const { isFastcreatemodalopen } = Periods
+
+    const t = Profile?.i18n?.t
 
     return (
         <Modal
@@ -17,47 +18,47 @@ export default function PeriodsFastcreate({ Profile, Periods, FastcreatePeriod, 
             }}
             open={isFastcreatemodalopen}
         >
-            <Modal.Header>{Literals.Page.Pagefastcreateheader[Profile.Language]}</Modal.Header>
+            <Modal.Header>{t('Pages.Periods.Page.FastcreateHeader')}</Modal.Header>
             <Modal.Content image>
                 <Modal.Description>
                     <Form>
                         <Form.Group widths={'equal'}>
                             <Form.Input
                                 onChange={(e) => { setData({ ...data, 'Formatstringstart': e.target.value }) }}
-                                label={Literals.Columns.Formatstringstart[Profile.Language]}
-                                placeholder={Literals.Columns.Formatstringstart[Profile.Language]}
+                                label={t('Pages.Periods.Column.Formatstringstart')}
+                                placeholder={t('Pages.Periods.Column.Formatstringstart')}
                             />
                             <Form.Input
                                 onChange={(e) => { setData({ ...data, 'Formatstringend': e.target.value }) }}
-                                label={Literals.Columns.Formatstringend[Profile.Language]}
-                                placeholder={Literals.Columns.Formatstringend[Profile.Language]}
+                                label={t('Pages.Periods.Column.Formatstringend')}
+                                placeholder={t('Pages.Periods.Column.Formatstringend')}
                             />
                         </Form.Group>
                         <Form.Group widths={'equal'}>
                             <Form.Input
                                 onChange={(e) => { setData({ ...data, 'Starttime': e.target.value }) }}
-                                label={Literals.Columns.Starttime[Profile.Language]}
-                                placeholder={Literals.Columns.Starttime[Profile.Language]}
+                                label={t('Pages.Periods.Column.Starttime')}
+                                placeholder={t('Pages.Periods.Column.Starttime')}
                                 type='time'
                             />
                             <Form.Input
                                 onChange={(e) => { setData({ ...data, 'Endtime': e.target.value }) }}
-                                label={Literals.Columns.Endtime[Profile.Language]}
-                                placeholder={Literals.Columns.Endtime[Profile.Language]}
+                                label={t('Pages.Periods.Column.Endtime')}
+                                placeholder={t('Pages.Periods.Column.Endtime')}
                                 type='time'
                             />
                         </Form.Group>
                         <Form.Group widths={'equal'}>
                             <Form.Input
                                 onChange={(e) => { setData({ ...data, 'Period': e.target.value }) }}
-                                label={Literals.Columns.Period[Profile.Language]}
-                                placeholder={Literals.Columns.Period[Profile.Language]}
+                                label={t('Pages.Periods.Column.Period')}
+                                placeholder={t('Pages.Periods.Column.Period')}
                                 type='number'
                             />
                             <Form.Input
                                 onChange={(e) => { setData({ ...data, 'Checktime': e.target.value }) }}
-                                label={Literals.Columns.Checktime[Profile.Language]}
-                                placeholder={Literals.Columns.Checktime[Profile.Language]}
+                                label={t('Pages.Periods.Column.Checktime')}
+                                placeholder={t('Pages.Periods.Column.Checktime')}
                                 type='time'
                             />
                         </Form.Group>
@@ -69,10 +70,10 @@ export default function PeriodsFastcreate({ Profile, Periods, FastcreatePeriod, 
                     handleFastcreatemodal(false)
                     setData({})
                 }}>
-                    {Literals.Button.Giveup[Profile.Language]}
+                    {t('Common.Button.Giveup')}
                 </Button>
                 <Button
-                    content={Literals.Button.Create[Profile.Language]}
+                    content={t('Common.Button.Create')}
                     labelPosition='right'
                     icon='checkmark'
                     onClick={() => {

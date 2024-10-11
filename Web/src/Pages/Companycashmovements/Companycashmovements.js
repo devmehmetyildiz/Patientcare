@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Loader, Breadcrumb, Grid, GridColumn, Label } from 'semantic-ui-react'
-import Literals from './Literals'
 import CompanycashmovementsDelete from '../../Containers/Companycashmovements/CompanycashmovementsDelete'
 import { CASHYPES } from '../../Utils/Constants'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
@@ -17,6 +16,9 @@ export default class Companycashmovements extends Component {
 
   render() {
     const { Companycashmovements, Profile, handleDeletemodal, handleSelectedCompanycashmovement } = this.props
+
+    const t = Profile?.i18n?.t
+    
     const { isLoading } = Companycashmovements
 
     const colProps = {
@@ -26,17 +28,17 @@ export default class Companycashmovements extends Component {
     }
 
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Movementtype[Profile.Language], accessor: row => this.typeCellhandler(row?.Movementtype), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Movementvalue[Profile.Language], accessor: row => this.cashCellhandler(row?.Movementvalue), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Report[Profile.Language], accessor: 'ReportID', Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+      { Header: t('Common.Column.Id'), accessor: 'Id' },
+      { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+      { Header: t('Pages.Companycashmovements.Column.Movementtype'), accessor: row => this.typeCellhandler(row?.Movementtype), Lowtitle: true, Withtext: true },
+      { Header: t('Pages.Companycashmovements.Column.Movementvalue'), accessor: row => this.cashCellhandler(row?.Movementvalue), Lowtitle: true, Withtext: true },
+      { Header: t('Pages.Companycashmovements.Column.Report'), accessor: 'ReportID', Lowtitle: true, Withtext: true },
+      { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+      { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+      { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+      { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "companycashmovement"
@@ -68,13 +70,13 @@ export default class Companycashmovements extends Component {
                 <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Companycashmovements"}>
-                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                      <Breadcrumb.Section>{t('Pages.Companycashmovements.Page.Header')}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
                 <Settings
                   Profile={Profile}
-                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreateheader={t('Pages.Companycashmovements.Page.CreateHeader')}
                   Pagecreatelink={"/Companycashmovements/Create"}
                   Columns={Columns}
                   list={list}
@@ -96,7 +98,7 @@ export default class Companycashmovements extends Component {
                 {Profile.Ismobile ?
                   <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
             }
           </Pagewrapper>
           <CompanycashmovementsDelete />

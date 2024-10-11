@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import {FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 export default class UnitsCreate extends Component {
 
@@ -25,6 +24,8 @@ export default class UnitsCreate extends Component {
 
   render() {
     const { Units, Departments, Profile, history, closeModal } = this.props
+
+    const t = Profile?.i18n?.t
 
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -49,10 +50,10 @@ export default class UnitsCreate extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Units"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Units.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Units.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
@@ -60,11 +61,11 @@ export default class UnitsCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unittype[Profile.Language]} name="Unittype" options={unitstatusOption} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Columns.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Columns.Unittype')} name="Unittype" options={unitstatusOption} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Columns.Departments')} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -72,11 +73,11 @@ export default class UnitsCreate extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Units"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Units.isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -87,6 +88,9 @@ export default class UnitsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddUnits, history, fillUnitnotification, Departments, Profile, closeModal } = this.props
+    
+    const t = Profile?.i18n?.t
+    
     const data = this.context.getForm(this.PAGE_NAME)
     data.Departments = data.Departments.map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)
@@ -94,13 +98,13 @@ export default class UnitsCreate extends Component {
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Units.Page.Header'), description: t('Pages.Units.Messages.NameRequired') })
     }
     if (!validator.isNumber(data.Unittype)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.UnittypeRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Units.Page.Header'), description: t('Pages.Units.Messages.UnittypeRequired') })
     }
     if (!validator.isArray(data.Departments)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Units.Page.Header'), description: t('Pages.Units.Messages.DepartmentRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

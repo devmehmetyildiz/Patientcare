@@ -4,7 +4,6 @@ import { Breadcrumb, Button, Dropdown, Form, Grid, Icon, Loader, Modal } from 's
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Settings, MobileTable, NoDataScreen, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, DataTable } from '../../Components'
-import { PATIENTS_MOVEMENTTYPES_APPROVE, PATIENTS_MOVEMENTTYPES_CANCELAPPROVE, PATIENTS_MOVEMENTTYPES_CANCELCHECK, PATIENTS_MOVEMENTTYPES_CASECHANGE, PATIENTS_MOVEMENTTYPES_CHECK, PATIENTS_MOVEMENTTYPES_COMPLETE, PATIENTS_MOVEMENTTYPES_CREATE, PATIENTS_MOVEMENTTYPES_DEAD, PATIENTS_MOVEMENTTYPES_LEFT, PATIENTS_MOVEMENTTYPES_PLACECHANGE, PATIENTS_MOVEMENTTYPES_UPDATE } from '../../Utils/Constants'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { Formatfulldate } from '../../Utils/Formatdate'
 

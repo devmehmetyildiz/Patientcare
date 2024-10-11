@@ -26,10 +26,11 @@ import PatientsDetailCard from './PatientsDetailCard'
 import PurchaseorderDetailCard from './PurchaseorderDetailCard'
 import Profilephoto from './Profilephoto'
 import Filepreview from './Filepreview'
+import FormArea from './FormArea'
 
 export {
     About, AddModal, Contentwrapper, DataTable, Footerwrapper, FormInput, Gobackbutton,
     Headerbredcrump, Headerwrapper, LoadingPage, MobileTable, Navbar, NoDataScreen, Notfoundpage,
     Pagedivider, ProtectedRoute, Settings, Sidebar, Spinner, Submitbutton, Pagewrapper, Textsearch, Search,
-    Box, PatientsDetailCard, PurchaseorderDetailCard, Profilephoto, Filepreview
+    Box, PatientsDetailCard, PurchaseorderDetailCard, Profilephoto, Filepreview, FormArea
 }

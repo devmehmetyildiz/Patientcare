@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
-import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import TodogroupdefinesDelete from '../../Containers/Todogroupdefines/TodogroupdefinesDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
@@ -23,7 +22,10 @@ export default class Todogroupdefines extends Component {
 
     render() {
         const { Todogroupdefines, Profile, handleDeletemodal, handleSelectedTodogroupdefine } = this.props
-        const { isLoading} = Todogroupdefines
+
+        const t = Profile?.i18n?.t
+
+        const { isLoading } = Todogroupdefines
 
         const colProps = {
             sortable: true,
@@ -32,17 +34,17 @@ export default class Todogroupdefines extends Component {
         }
 
         const Columns = [
-            { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
-            { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
-            { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
-            { Header: Literals.Columns.Tododefines[Profile.Language], accessor: (row, freeze) => this.tododefineCellhandler(row, freeze) },
-            { Header: Literals.Columns.Department[Profile.Language], accessor: row => this.departmentCellhandler(row?.DepartmentID), Subtitle: true, Withtext: true },
-            { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
-            { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
-            { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
-            { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', },
-            { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
-            { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+            { Header: t('Common.Column.Id'), accessor: 'Id' },
+            { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+            { Header: t('Pages.Todogroupdefines.Column.Name'), accessor: 'Name', Title: true },
+            { Header: t('Pages.Todogroupdefines.Column.Tododefines'), accessor: (row, freeze) => this.tododefineCellhandler(row, freeze) },
+            { Header: t('Pages.Todogroupdefines.Column.Department'), accessor: row => this.departmentCellhandler(row?.DepartmentID), Subtitle: true, Withtext: true },
+            { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+            { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+            { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+            { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+            { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+            { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
         const metaKey = "todogroupdefine"
@@ -60,7 +62,7 @@ export default class Todogroupdefines extends Component {
         })
 
         return (
-            isLoading  ? <LoadingPage /> :
+            isLoading ? <LoadingPage /> :
                 <React.Fragment>
                     <Pagewrapper>
                         <Headerwrapper>
@@ -68,13 +70,13 @@ export default class Todogroupdefines extends Component {
                                 <GridColumn width={8}>
                                     <Breadcrumb size='big'>
                                         <Link to={"/Todogroupdefines"}>
-                                            <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                                            <Breadcrumb.Section>{t('Pages.Todogroupdefines.Page.Header')}</Breadcrumb.Section>
                                         </Link>
                                     </Breadcrumb>
                                 </GridColumn>
                                 <Settings
                                     Profile={Profile}
-                                    Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                                    Pagecreateheader={t('Pages.Todogroupdefines.Page.CreateHeader')}
                                     Pagecreatelink={"/Todogroupdefines/Create"}
                                     Columns={Columns}
                                     list={list}
@@ -92,7 +94,7 @@ export default class Todogroupdefines extends Component {
                                 {Profile.Ismobile ?
                                     <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                                     <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-                            </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+                            </div> : <NoDataScreen message={t('Common.NoDataFound')} />
                         }
                     </Pagewrapper>
                     <TodogroupdefinesDelete />

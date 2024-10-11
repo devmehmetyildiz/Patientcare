@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -46,6 +45,7 @@ export default class StockmovementsDetail extends Component {
 
     render() {
         const { Stockmovements, Stocks, Profile, Stockdefines, history } = this.props
+        const Literals = null
 
         const stockmovement = (Stockmovements.list || []).filter(u => u.Isactive)
 

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -43,6 +42,9 @@ export default class PeriodsEdit extends Component {
   render() {
 
     const { Periods, Profile, history } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isLoading } = Periods
 
     return (
@@ -51,21 +53,21 @@ export default class PeriodsEdit extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Periods"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Periods.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Periods.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
               <Form.Field>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Periods.Column.Name')} name="Name" />
               </Form.Field>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required type='time' placeholder={Literals.Columns.Occuredtime[Profile.Language]} name="Occuredtime" />
-                <FormInput page={this.PAGE_NAME} required type='time' placeholder={Literals.Columns.Checktime[Profile.Language]} name="Checktime" />
+                <FormInput page={this.PAGE_NAME} required type='time' placeholder={t('Pages.Periods.Column.Occuredtime')} name="Occuredtime" />
+                <FormInput page={this.PAGE_NAME} required type='time' placeholder={t('Pages.Periods.Column.Checktime')} name="Checktime" />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -73,11 +75,11 @@ export default class PeriodsEdit extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Periods"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Periods.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -89,16 +91,19 @@ export default class PeriodsEdit extends Component {
     e.preventDefault()
 
     const { EditPeriods, history, fillPeriodnotification, Periods, Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Periods.Page.Header'), description: t('Pages.Periods.Messages.NameRequired') })
     }
     if (!validator.isString(data.Occuredtime)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Occuredtimerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Periods.Page.Header'), description: t('Pages.Periods.Messages.Occuredtimerequired') })
     }
     if (!validator.isString(data.Checktime)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Checktimerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Periods.Page.Header'), description: t('Pages.Periods.Messages.Checktimerequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

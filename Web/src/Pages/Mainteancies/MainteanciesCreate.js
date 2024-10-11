@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -32,6 +31,8 @@ export default class MainteanciesCreate extends Component {
   render() {
     const { Mainteancies, Equipments, Users, Usagetypes, Equipmentgroups, Profile, history, closeModal, fillMainteancenotification } = this.props
 
+    const t = Profile?.i18n?.t
+
     const Useroptions = (Users.list || []).filter(u => u.Isactive).map(personel => {
       return { key: personel.Uuid, text: `${personel?.Name} ${personel?.Surname}`, value: personel.Uuid }
     })
@@ -57,10 +58,10 @@ export default class MainteanciesCreate extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Mainteancies"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Mainteancies.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Mainteancies.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
@@ -68,12 +69,12 @@ export default class MainteanciesCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.EquipmentgroupID[Profile.Language]} name="EquipmentgroupID" options={Equipmentgroupoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.EquipmentID[Profile.Language]} name="EquipmentID" options={Equipmentoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Mainteancies.Column.Equipmentgroup')} name="EquipmentgroupID" options={Equipmentgroupoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mainteancies.Column.Equipment')} name="EquipmentID" options={Equipmentoptions} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.ResponsibleuserID[Profile.Language]} name="ResponsibleuserID" options={Useroptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Openinfo[Profile.Language]} name="Openinfo" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mainteancies.Column.Responsibleuser')} name="ResponsibleuserID" options={Useroptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Mainteancies.Column.Openinfo')} name="Openinfo" />
               </Form.Group>
             </Form>
             <Fileupload
@@ -81,7 +82,6 @@ export default class MainteanciesCreate extends Component {
               Usagetypes={Usagetypes}
               selectedFiles={this.state.selectedFiles}
               setselectedFiles={this.setselectedFiles}
-              Literals={Literals}
               Profile={Profile}
             />
           </Contentwrapper>
@@ -89,11 +89,11 @@ export default class MainteanciesCreate extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Mainteancies"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Mainteancies.isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -105,13 +105,16 @@ export default class MainteanciesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddMainteancies, history, fillMainteancenotification, Profile, closeModal } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
     if (!validator.isUUID(data.EquipmentID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Equipmentrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Mainteancies.Page.Header'), description: t('Pages.Mainteancies.Messages.EquipmentRequired') })
     }
     if (!validator.isUUID(data.ResponsibleuserID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Responsibleuserrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Mainteancies.Page.Header'), description: t('Pages.Mainteancies.Messages.ResponsibleuserRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

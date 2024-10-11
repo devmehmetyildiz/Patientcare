@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button, Tab, Grid } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -44,8 +43,10 @@ export default class PrinttemplatesEdit extends Component {
   render() {
 
     const { Printtemplates, Profile, history } = this.props
-    const { isLoading } = Printtemplates
 
+    const t = Profile?.i18n?.t
+
+    const { isLoading } = Printtemplates
 
     return (
       isLoading ? <LoadingPage /> :
@@ -53,10 +54,10 @@ export default class PrinttemplatesEdit extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Printtemplates"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Printtemplates.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Printtemplates.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
@@ -65,18 +66,18 @@ export default class PrinttemplatesEdit extends Component {
               <Tab className='station-tab'
                 panes={[
                   {
-                    menuItem: Literals.Columns.Savescreen[Profile.Language],
+                    menuItem: t('Pages.Printtemplates.Columns.Savescreen'),
                     pane: {
                       key: 'save',
                       content: <React.Fragment>
                         <Form.Group widths={"equal"}>
-                          <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                          <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Printtemplates.Columns.Name')} name="Name" />
                         </Form.Group>
                       </React.Fragment>
                     }
                   },
                   {
-                    menuItem: Literals.Columns.Editorscreen[Profile.Language],
+                    menuItem: t('Pages.Printtemplates.Columns.Editorscreen'),
                     pane: {
                       key: 'design',
                       content: <div className='max-h-[calc(66vh-10px)] overflow-y-auto overflow-x-hidden'>
@@ -113,15 +114,15 @@ export default class PrinttemplatesEdit extends Component {
               <Gobackbutton
                 history={history}
                 redirectUrl={"/Printtemplates"}
-                buttonText={Literals.Button.Goback[Profile.Language]}
+                buttonText={t('Common.Button.Goback')}
               />
               <Button floated="right" type="button" color='grey' onClick={(e) => {
                 this.setState({ template: '' })
-              }}>{Literals.Button.Clear[Profile.Language]}</Button>
+              }}>{t('Common.Button.Clear')}</Button>
             </Form.Group>
             <Submitbutton
               isLoading={isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -132,6 +133,8 @@ export default class PrinttemplatesEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
+    const t = Profile?.i18n?.t
+
     const { EditPrinttemplates, history, fillPrinttemplatenotification, Printtemplates, Profile } = this.props
 
     const data = this.context.getForm(this.PAGE_NAME)
@@ -139,10 +142,10 @@ export default class PrinttemplatesEdit extends Component {
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Printtemplates.Page.Header'), description: t('Pages.Printtemplates.Messages.NameRequired') })
     }
     if (!validator.isString(data.Printtemplate)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Printtemplaterequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Printtemplates.Page.Header'), description: t('Pages.Printtemplates.Messages.Printtemplaterequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

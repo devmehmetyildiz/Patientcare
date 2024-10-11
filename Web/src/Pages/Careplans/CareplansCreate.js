@@ -1,7 +1,6 @@
 import React, { Component, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Dimmer, DimmerDimmable, Dropdown, Form, Header, Icon, Image, Label, Loader, Table } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
 import {

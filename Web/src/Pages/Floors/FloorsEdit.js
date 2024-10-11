@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { GENDER_OPTION_MEN, GENDER_OPTION_WOMEN } from '../../Utils/Constants'
 
 export default class FloorsEdit extends Component {
 
@@ -41,9 +41,11 @@ export default class FloorsEdit extends Component {
   render() {
     const { Floors, Profile, history } = this.props
 
+    const t = Profile?.i18n?.t
+
     const Genderoptions = [
-      { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
-      { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
+      { key: 0, text: t('Option.Genderoption.Men'), value: GENDER_OPTION_MEN },
+      { key: 1, text: t('Option.Genderoption.Women'), value: GENDER_OPTION_WOMEN }
     ]
 
     return (
@@ -52,28 +54,28 @@ export default class FloorsEdit extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Floors"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Floors.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Floors.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Gender[Profile.Language]} name="Gender" options={Genderoptions} formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Floors.Column.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Floors.Column.Gender')} name="Gender" options={Genderoptions} formtype='dropdown' />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
               history={history}
               redirectUrl={"/Floors"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Floors.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -85,14 +87,17 @@ export default class FloorsEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditFloors, history, fillFloornotification, Profile, Floors } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Floors.Page.Header'), description: t('Pages.Floors.Messages.NameRequired') })
     }
     if (!validator.isString(data.Gender)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Genderrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Floors.Page.Header'), description: t('Pages.Floors.Messages.GenderRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

@@ -1,22 +1,16 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
-import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, 
-  Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import {
+  Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump,
+  Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
+} from '../../Components'
 export default class CostumertypesCreate extends Component {
 
   PAGE_NAME = "CostumertypesCreate"
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      modelOpened: false
-    }
-  }
 
   componentDidMount() {
     const { GetDepartments } = this.props
@@ -25,6 +19,8 @@ export default class CostumertypesCreate extends Component {
 
   render() {
     const { Costumertypes, Departments, Profile, history, closeModal } = this.props
+
+    const t = Profile?.i18n?.t
 
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
@@ -36,29 +32,29 @@ export default class CostumertypesCreate extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Costumertypes"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Costumertypes.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Costumertypes.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Costumertypes.Columns.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Costumertypes.Columns.Department')} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
               history={history}
               redirectUrl={"/Costumertypes"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Costumertypes.isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -70,6 +66,9 @@ export default class CostumertypesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddCostumertypes, history, fillCostumertypenotification, Departments, Profile, closeModal } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     data.Departments = data.Departments.map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)
@@ -77,10 +76,10 @@ export default class CostumertypesCreate extends Component {
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Costumertypes.Page.Header'), description: t('Pages.Costumertypes.Messages.NameRequired') })
     }
     if (!validator.isArray(data.Departments)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Departmentsrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Costumertypes.Page.Header'), description: t('Pages.Costumertypes.Messages.DepartmentRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

@@ -27,18 +27,8 @@ export default function Settings(props) {
         Additionalfunction,
     } = props
 
-    const options = {
-        en: 'Options',
-        tr: 'Seçenekler'
-    }
-
-    const closebutton = {
-        en: 'Close',
-        tr: 'Kapat'
-    }
-
-    const { roles } = Profile
-
+    const { roles, i18n } = Profile
+    const t = i18n?.t
     const createRole = `${metaKey}add`
     const reportRole = `${metaKey}getreport`
     const manageviewRole = `${metaKey}manageview`
@@ -54,7 +44,7 @@ export default function Settings(props) {
                 onOpen={() => { setmodalOpen(true) }}
                 basic
                 size='tiny'
-                trigger={<Button className='h-fit !m-auto !bg-[#2355a0] !text-white' floated='right'>{options[Profile.Language]}</Button>} >
+                trigger={<Button className='h-fit !m-auto !bg-[#2355a0] !text-white' floated='right'>{t('Components.Setting.Label.Option')}</Button>} >
                 <Modal.Content>
                     <div className='m-4 flex flex-col justify-center items-center w-full '>
                         <Grid stackable columns={1}>
@@ -85,7 +75,7 @@ export default function Settings(props) {
                                 }
                                 <Pagedivider />
                                 <Button basic color='red' inverted onClick={() => { setmodalOpen(false) }}>
-                                    <Icon name='remove' /> {closebutton[Profile.Language]}
+                                    <Icon name='remove' /> {t('Components.Setting.Label.Close')}
                                 </Button>
                             </GridColumn>
                         </Grid>

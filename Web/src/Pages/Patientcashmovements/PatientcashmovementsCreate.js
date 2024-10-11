@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -37,6 +36,9 @@ export default class PatientcashmovementsCreate extends Component {
   render() {
 
     const { Patientcashmovements, Profile, history, closeModal, Patients, Patientdefines, Patientcashregisters, location } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isLoading } = Patientcashmovements
 
     const Patientoptions = (Patients.list || []).filter(u => u.Isactive).map(patient => {
@@ -68,7 +70,7 @@ export default class PatientcashmovementsCreate extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Patientcashmovements"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Patientcashmovements.Page.Header')}</Breadcrumb.Section>
               </Link>
               {IshaveparamId && <React.Fragment>
                 <Breadcrumb.Divider icon='right chevron' />
@@ -77,7 +79,7 @@ export default class PatientcashmovementsCreate extends Component {
                 </Link>
               </React.Fragment>}
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Patientcashmovements.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
@@ -85,15 +87,15 @@ export default class PatientcashmovementsCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                {!IshaveparamId && <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Patient[Profile.Language]} name="PatientID" options={Patientoptions} formtype='dropdown' />}
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Register[Profile.Language]} name="RegisterID" options={Patientcashregisteroptions} formtype='dropdown' />
+                {!IshaveparamId && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientcashmovements.Column.Patient')} name="PatientID" options={Patientoptions} formtype='dropdown' />}
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientcashmovements.Column.Register')} name="RegisterID" options={Patientcashregisteroptions} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementvalue[Profile.Language]} name="Movementvalue" type='number' min={0} max={999999} step='0.01'/>
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientcashmovements.Column.Movementtype')} name="Movementtype" options={Movementoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientcashmovements.Column.Movementvalue')} name="Movementvalue" type='number' min={0} max={999999} step='0.01' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME}  placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientcashmovements.Column.Info')} name="Info" />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -101,11 +103,11 @@ export default class PatientcashmovementsCreate extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Patientcashmovements"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Patientcashmovements.isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -118,20 +120,22 @@ export default class PatientcashmovementsCreate extends Component {
 
     const { AddPatientcashmovements, history, fillPatientcashmovementnotification, Profile, closeModal, location } = this.props
 
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     !validator.isNumber(data.Movementvalue) && (data.Movementvalue = 0)
     let errors = []
     if (!validator.isUUID(data.PatientID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Patientrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Patientcashmovements.Page.Header'), description: t('Pages.Patientcashmovements.Messages.PatientRequired') })
     }
     if (!validator.isUUID(data.RegisterID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Registerrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Patientcashmovements.Page.Header'), description: t('Pages.Patientcashmovements.Messages.RegisterRequired') })
     }
     if (!validator.isNumber(data.Movementtype)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Typerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Patientcashmovements.Page.Header'), description: t('Pages.Patientcashmovements.Messages.TypeRequired') })
     }
     if (!validator.isNumber(data.Movementvalue)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Valuerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Patientcashmovements.Page.Header'), description: t('Pages.Patientcashmovements.Messages.ValueRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

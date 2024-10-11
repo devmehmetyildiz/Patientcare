@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
-import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import StocksDelete from '../../Containers/Stocks/StocksDelete'
 import StocksApprove from '../../Containers/Stocks/StocksApprove'
@@ -22,6 +21,9 @@ export default class Stocks extends Component {
   render() {
 
     const { Stocks, Profile, handleDeletemodal, handleSelectedStock, handleApprovemodal } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isLoading } = Stocks
 
     const colProps = {
@@ -31,27 +33,27 @@ export default class Stocks extends Component {
     }
 
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Warehouse[Profile.Language], accessor: row => this.warehouseCellhandler(row?.WarehouseID), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Stockdefine[Profile.Language], accessor: row => this.stockdefineCellhandler(row?.StockdefineID), Title: true },
-      { Header: Literals.Columns.Stocktype[Profile.Language], accessor: row => this.stocktypeCellhandler(row?.StockdefineID), Title: true },
-      { Header: Literals.Columns.Amount[Profile.Language], accessor: row => this.amountCellhandler(row), Subtitle: true, Withtext: true },
-      { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info' },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-      { Header: Literals.Columns.change[Profile.Language], accessor: 'change', disableProps: true },
-      { Header: Literals.Columns.approve[Profile.Language], accessor: 'approve', disableProps: true },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+      { Header: t('Common.Column.Id'), accessor: 'Id' },
+      { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+      { Header: t('Pages.Stocks.Column.Warehouse'), accessor: row => this.warehouseCellhandler(row?.WarehouseID), Lowtitle: true, Withtext: true },
+      { Header: t('Pages.Stocks.Column.Stockdefine'), accessor: row => this.stockdefineCellhandler(row?.StockdefineID), Title: true },
+      { Header: t('Pages.Stocks.Column.Stocktype'), accessor: row => this.stocktypeCellhandler(row?.StockdefineID), Title: true },
+      { Header: t('Pages.Stocks.Column.Amount'), accessor: row => this.amountCellhandler(row), Subtitle: true, Withtext: true },
+      { Header: t('Pages.Stocks.Column.Info'), accessor: 'Info' },
+      { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+      { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+      { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+      { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+      { Header: t('Common.Column.change'), accessor: 'edit', disableProps: true },
+      { Header: t('Common.Column.approve'), accessor: 'edit', disableProps: true },
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "stock"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Stocks.list || []).filter(u => u.Isactive  && u.Type === 0).map(item => {
+    const list = (Stocks.list || []).filter(u => u.Isactive && u.Type === 0).map(item => {
       return {
         ...item,
         change: <Link to={`/Stockmovements/Create?StockID=${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
@@ -76,13 +78,13 @@ export default class Stocks extends Component {
                 <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Stocks"}>
-                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                      <Breadcrumb.Section>{t('Pages.Stocks.Page.Header')}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
                 <Settings
                   Profile={Profile}
-                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreateheader={t('Pages.Stocks.Page.CreateHeader')}
                   Pagecreatelink={"/Stocks/Create"}
                   Columns={Columns}
                   list={list}
@@ -100,7 +102,7 @@ export default class Stocks extends Component {
                 {Profile.Ismobile ?
                   <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
             }
           </Pagewrapper>
           <StocksDelete />
@@ -118,12 +120,13 @@ export default class Stocks extends Component {
     }
   }
   stocktypeCellhandler = (value) => {
-    const { Stockdefines, Stocktypes } = this.props
+    const { Stockdefines, Stocktypes, Profile } = this.props
+    const t = Profile?.i18n?.t
     if (Stockdefines.isLoading || Stocktypes.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
       const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === value)
-      return (Stocktypes.list || []).find(u => u.Uuid === stockdefine?.StocktypeID)?.Name || 'tanımsız tür'
+      return (Stocktypes.list || []).find(u => u.Uuid === stockdefine?.StocktypeID)?.Name || t('Common.NoDataFound')
     }
   }
   warehouseCellhandler = (value) => {
@@ -136,7 +139,8 @@ export default class Stocks extends Component {
   }
 
   amountCellhandler = (row) => {
-    const { Stockmovements, Stocks, Units, Stockdefines } = this.props
+    const { Stockmovements, Stocks, Units, Stockdefines, Profile } = this.props
+    const t = Profile?.i18n?.t
     if (Stockmovements.isLoading || Stocks.isLoading || Units.isLoading || Stockdefines.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
@@ -152,12 +156,13 @@ export default class Stocks extends Component {
         }
         fullamount += (movement.Amount * movement.Movementtype);
       });
-      return `${amount} ${unit?.Name || 'tanımsız birim'} ${amount !== fullamount ? `( Toplam ${fullamount} ${unit?.Name || 'tanımsız birim'})` : ''}`
+      return `${amount} ${unit?.Name || t('Common.NoDataFound')} ${amount !== fullamount ? `( ${t('Pages.Stocks.Label.Total')} ${fullamount} ${unit?.Name || t('Common.NoDataFound')})` : ''}`
     }
   }
 
   boolCellhandler = (value) => {
     const { Profile } = this.props
-    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    const t = Profile?.i18n?.t
+    return value !== null && (value ? t('Common.Yes') : t('Common.No'))
   }
 }

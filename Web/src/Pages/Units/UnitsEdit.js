@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import { FormInput,Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 
 export default class UnitsEdit extends Component {
@@ -45,6 +44,8 @@ export default class UnitsEdit extends Component {
 
     const { Units, Departments, Profile, history } = this.props
 
+    const t = Profile?.i18n?.t
+
     const Departmentoptions = (Departments.list || []).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
@@ -68,21 +69,21 @@ export default class UnitsEdit extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Units"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Units.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Units.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Unittype[Profile.Language]} name="Unittype" options={unitstatusOption} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Columns.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Columns.Unittype')} name="Unittype" options={unitstatusOption} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Columns.Departments')} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -90,11 +91,11 @@ export default class UnitsEdit extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Units"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Units.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -107,6 +108,9 @@ export default class UnitsEdit extends Component {
     e.preventDefault()
 
     const { EditUnits, history, fillUnitnotification, Departments, Units, Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     data.Departments = data.Departments.map(id => {
       return (Departments.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
@@ -114,13 +118,13 @@ export default class UnitsEdit extends Component {
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Units.Page.Header'), description: t('Pages.Units.Messages.NameRequired') })
     }
     if (!validator.isNumber(data.Unittype)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.UnittypeRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Units.Page.Header'), description: t('Pages.Units.Messages.UnittypeRequired') })
     }
     if (!validator.isArray(data.Departments)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Units.Page.Header'), description: t('Pages.Units.Messages.DepartmentRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

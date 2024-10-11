@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -50,6 +49,8 @@ export default class StocksEdit extends Component {
   render() {
     const { Stocks, Warehouses, Stockdefines, Profile, history, Stocktypes, } = this.props
 
+    const t = Profile?.i18n?.t
+
     const selectedstockdefineId = this.context.formstates[`${this.PAGE_NAME}/StockdefineID`]
     const stockdefine = (Stockdefines.list || []).find(item => item.Uuid === selectedstockdefineId)
     const selectedstocktypeId = stockdefine?.StocktypeID
@@ -70,24 +71,24 @@ export default class StocksEdit extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Stocks"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Stocks.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section >{t('Pages.Stocks.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Warehouse[Profile.Language]} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' modal={WarehousesCreate} effect={this.onWarehousechange} />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' modal={StockdefinesCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocks.Column.Warehouse')} options={Warehouseoptions} name="WarehouseID" formtype='dropdown' modal={WarehousesCreate} effect={this.onWarehousechange} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocks.Column.Stockdefine')} options={Stockdefineoptions} name="StockdefineID" formtype='dropdown' modal={StockdefinesCreate} />
               </Form.Group>
               <Form.Group widths='equal'>
-                {Issktneeded ? <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Skt[Profile.Language]} name="Skt" type='date' /> : null}
+                {Issktneeded ? <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocks.Column.Skt')} name="Skt" type='date' /> : null}
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stocks.Column.Info')} name="Info" />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -95,11 +96,11 @@ export default class StocksEdit extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Stocks"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Stocks.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -111,6 +112,9 @@ export default class StocksEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditStocks, history, fillStocknotification, Stocks, Profile, Stockdefines, Stocktypes, Stocktypegroups } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
 
     const selectedstockdefineId = data?.StockdefineID
@@ -125,14 +129,14 @@ export default class StocksEdit extends Component {
 
     let errors = []
     if (!validator.isUUID(data.WarehouseID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.WarehouseRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Stocks.Page.Header'), description: t('Pages.Stocks.Messages.WarehouseRequired') })
     }
     if (!validator.isUUID(data.StockdefineID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StokdefineRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Stocks.Page.Header'), description: t('Pages.Stocks.Messages.StockdefineRequired') })
     }
     if (Issktneeded) {
       if (!validator.isISODate(data.Skt)) {
-        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.SktRequired[Profile.Language] })
+        errors.push({ type: 'Error', code: t('Pages.Stocks.Page.Header'), description: t('Pages.Stocks.Messages.SktRequired') })
       }
     } else {
       data.Skt = null

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -42,7 +41,10 @@ export default class CompanycashmovementsEdit extends Component {
   render() {
 
     const { Companycashmovements, Profile, history, closeModal } = this.props
-    const { isLoading} = Companycashmovements
+
+    const t = Profile?.i18n?.t
+
+    const { isLoading } = Companycashmovements
 
     const Movementoptions = [
       { key: CASHYPES[0]?.value, text: CASHYPES[0]?.Name, value: CASHYPES[0]?.value },
@@ -56,10 +58,10 @@ export default class CompanycashmovementsEdit extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Companycashmovements"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Companycashmovements.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Companycashmovements.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
@@ -67,12 +69,12 @@ export default class CompanycashmovementsEdit extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementvalue[Profile.Language]} name="Movementvalue" type='number' step='0.01'/>
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Companycashmovements.Column.Movementtype')} name="Movementtype" options={Movementoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Companycashmovements.Column.Movementvalue')} name="Movementvalue" type='number' step='0.01' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Report[Profile.Language]} name="ReportID" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Companycashmovements.Column.Report')} name="ReportID" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Companycashmovements.Column.Info')} name="Info" />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -80,11 +82,11 @@ export default class CompanycashmovementsEdit extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Companycashmovements"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Companycashmovements.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -96,16 +98,17 @@ export default class CompanycashmovementsEdit extends Component {
     e.preventDefault()
 
     const { EditCompanycashmovements, history, fillCompanycashmovementnotification, Companycashmovements, Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
-    console.log('data: ', data);
-    console.log('validator.isNumber(data.Movementvalue): ', validator.isNumber(data.Movementvalue));
     !validator.isNumber(data.Movementvalue) && (data.Movementvalue = 0)
     let errors = []
     if (!validator.isNumber(data.Movementtype)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Typerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Companycashmovements.Page.Header'), description: t('Pages.Companycashmovements.Messages.TypeRequired') })
     }
     if (!validator.isString(data.ReportID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Reportnorequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Companycashmovements.Page.Header'), description: t('Pages.Companycashmovements.Messages.ReportRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

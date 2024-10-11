@@ -3,7 +3,6 @@ import CaseSlice from "./CaseSlice";
 import DepartmentSlice from "./DepartmentSlice";
 import ProfileSlice from "./ProfileSlice";
 import RoleSlice from "./RoleSlice";
-import StationSlice from "./StationSlice";
 import UnitSlice from "./UnitSlice";
 import StockdefinesSlice from "./StockdefineSlice"
 import StockSlice from "./StockSlice"
@@ -61,7 +60,6 @@ const Slices = combineReducers({
     Profile: ProfileSlice,
     Roles: RoleSlice,
     Departments: DepartmentSlice,
-    Stations: StationSlice,
     Cases: CaseSlice,
     Stockdefines: StockdefinesSlice,
     Stocks: StockSlice,

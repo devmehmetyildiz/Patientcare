@@ -35,8 +35,6 @@ const UsersCreate = lazy(() => import('./Containers/Users/UsersCreate'));
 const UsersEdit = lazy(() => import('./Containers/Users/UsersEdit'));
 
 const Files = lazy(() => import('./Containers/Files/Files'));
-const FilesCreate = lazy(() => import('./Containers/Files/FilesCreate'));
-const FilesEdit = lazy(() => import('./Containers/Files/FilesEdit'));
 
 const Costumertypes = lazy(() => import('./Containers/Costumertypes/Costumertypes'));
 const CostumertypesCreate = lazy(() => import('./Containers/Costumertypes/CostumertypesCreate'));
@@ -76,7 +74,6 @@ const StocksCreate = lazy(() => import('./Containers/Stocks/StocksCreate'));
 const StocksEdit = lazy(() => import('./Containers/Stocks/StocksEdit'));
 
 const Stockmovements = lazy(() => import('./Containers/Stockmovements/Stockmovements'));
-const StockmovementsDetail = lazy(() => import('./Containers/Stockmovements/StockmovementsDetail'));
 const StockmovementsCreate = lazy(() => import('./Containers/Stockmovements/StockmovementsCreate'));
 const StockmovementsEdit = lazy(() => import('./Containers/Stockmovements/StockmovementsEdit'));
 
@@ -149,7 +146,6 @@ const MainteanciesCreate = lazy(() => import('./Containers/Mainteancies/Maintean
 const MainteanciesEdit = lazy(() => import('./Containers/Mainteancies/MainteanciesEdit'));
 
 const Placeviews = lazy(() => import('./Containers/Placeviews/Placeviews'));
-const PlaceviewsTransfer = lazy(() => import('./Containers/Placeviews/PlaceviewsTransfer'));
 
 const Patientcashregisters = lazy(() => import('./Containers/Patientcashregisters/Patientcashregisters'));
 const PatientcashregistersCreate = lazy(() => import('./Containers/Patientcashregisters/PatientcashregistersCreate'));
@@ -276,7 +272,6 @@ class Routes extends Component {
 
       { exact: true, path: "/Stockmovements", auth: true, component: Stockmovements, permission: 'stockmovementview' },
       { exact: true, path: "/Stockmovements/Create", auth: true, component: StockmovementsCreate, permission: 'stockmovementadd' },
-      { exact: true, path: "/Stockmovements/:StockmovementID", auth: true, component: StockmovementsDetail, permission: 'stockmovementview' },
       { exact: true, path: "/Stockmovements/:StockmovementID/Edit", auth: true, component: StockmovementsEdit, permission: 'stockmovementupdate' },
 
       { exact: true, path: "/Users", auth: true, component: Users, permission: 'userview' },
@@ -286,8 +281,6 @@ class Routes extends Component {
       { exact: true, path: "/Users/:UserID/Edit", auth: true, component: UsersEdit, permission: 'userupdate' },
 
       { exact: true, path: "/Files", auth: true, component: Files, permission: 'fileview' },
-      { exact: true, path: "/Files/Create", auth: true, component: FilesCreate, permission: 'fileadd' },
-      { exact: true, path: "/Files/:FileID/Edit", auth: true, component: FilesEdit, permission: 'fileupdate' },
 
       { exact: true, path: "/Costumertypes", auth: true, component: Costumertypes, permission: 'costumertypeview' },
       { exact: true, path: "/Costumertypes/Create", auth: true, component: CostumertypesCreate, permission: 'costumertypeadd' },
@@ -377,7 +370,6 @@ class Routes extends Component {
       { exact: true, path: "/Mainteancies/:MainteanceID/Edit", auth: true, component: MainteanciesEdit, permission: 'mainteanceupdate' },
 
       { exact: true, path: "/Placeviews", auth: true, component: Placeviews, permission: 'placeviewview' },
-      { exact: true, path: "/Placeviews/Transfer", auth: true, component: PlaceviewsTransfer, permission: 'placeviewtransfer' },
 
       { exact: true, path: "/Patientcashregisters", auth: true, component: Patientcashregisters, permission: 'patientcashregisterview' },
       { exact: true, path: "/Patientcashregisters/Create", auth: true, component: PatientcashregistersCreate, permission: 'patientcashregisteradd' },

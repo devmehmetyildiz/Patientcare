@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button, Accordion, Icon } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import CostumertypesCreate from '../../Containers/Costumertypes/CostumertypesCreate'
 import PatienttypesCreate from '../../Containers/Patienttypes/PatienttypesCreate'
-import { MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL, DEPENDENCY_OPTION_FULLY, DEPENDENCY_OPTION_PARTIAL, DEPENDENCY_OPTION_NON } from '../../Utils/Constants'
+import { MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL, DEPENDENCY_OPTION_FULLY, DEPENDENCY_OPTION_PARTIAL, DEPENDENCY_OPTION_NON, GENDER_OPTION_MEN, GENDER_OPTION_WOMEN, LIVE_OPTION_NOT_LIVING, LIVE_OPTION_LIVING, AFFINITY_OPTION_OWN, AFFINITY_OPTION_STEP } from '../../Utils/Constants'
 export default class PatientdefinesCreate extends Component {
 
   PAGE_NAME = "PatientdefinesCreate"
@@ -28,6 +27,8 @@ export default class PatientdefinesCreate extends Component {
 
   render() {
     const { Costumertypes, Departments, Patienttypes, Patientdefines, Profile, history, closeModal } = this.props
+
+    const t = Profile?.i18n?.t
 
     const Costumertypeoptions = (Costumertypes.list || []).filter(u => u.Isactive).map(costumertype => {
       let departments = (costumertype.Departmentuuids || [])
@@ -59,28 +60,30 @@ export default class PatientdefinesCreate extends Component {
     })
 
     const Liveoptions = [
-      { key: 0, text: Literals.Options.Liveoptions.value0[Profile.Language], value: false },
-      { key: 1, text: Literals.Options.Liveoptions.value1[Profile.Language], value: true }
+      { key: 0, text: t('Option.Liveoption.Notliving'), value: LIVE_OPTION_NOT_LIVING },
+      { key: 1, text: t('Option.Liveoption.Living'), value: LIVE_OPTION_LIVING }
     ]
+
     const Genderoptions = [
-      { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
-      { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
+      { key: 0, text: t('Option.Genderoption.Men'), value: GENDER_OPTION_MEN },
+      { key: 1, text: t('Option.Genderoption.Women'), value: GENDER_OPTION_WOMEN }
     ]
+
     const Affinityoptions = [
-      { key: 0, text: Literals.Options.Affinityoptions.value0[Profile.Language], value: "0" },
-      { key: 1, text: Literals.Options.Affinityoptions.value1[Profile.Language], value: "1" }
+      { key: 0, text: t('Option.Affinityoption.Own'), value: AFFINITY_OPTION_OWN },
+      { key: 1, text: t('Option.Affinityoption.Step'), value: AFFINITY_OPTION_STEP }
     ]
 
     const Medicalboardreportoptions = [
-      { key: 0, text: "RUHSAL", value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
-      { key: 1, text: "BEDENSEL", value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
-      { key: 2, text: "ZİHİNSEL", value: MEDICALBOARDREPORT_OPTION_MENTAL }
+      { key: 0, text: t('Option.Medicalboardreportoption.Spiritual'), value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
+      { key: 1, text: t('Option.Medicalboardreportoption.Physical'), value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
+      { key: 2, text: t('Option.Medicalboardreportoption.Mental'), value: MEDICALBOARDREPORT_OPTION_MENTAL }
     ]
 
     const Dependencyoptions = [
-      { key: 0, text: "TAM BAĞIMLI", value: DEPENDENCY_OPTION_FULLY },
-      { key: 1, text: "KISMİ BAĞIMLI", value: DEPENDENCY_OPTION_PARTIAL },
-      { key: 2, text: "BAĞIMSIZ", value: DEPENDENCY_OPTION_NON }
+      { key: 0, text: t('Option.Dependencyoption.Fully'), value: DEPENDENCY_OPTION_FULLY },
+      { key: 1, text: t('Option.Dependencyoption.Partial'), value: DEPENDENCY_OPTION_PARTIAL },
+      { key: 2, text: t('Option.Dependencyoption.Non'), value: DEPENDENCY_OPTION_NON }
     ]
 
     return (
@@ -89,10 +92,10 @@ export default class PatientdefinesCreate extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Patientdefines"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Patientdefines.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Patientdefines.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
@@ -100,19 +103,19 @@ export default class PatientdefinesCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Firstname[Profile.Language]} name="Firstname" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Lastname[Profile.Language]} name="Lastname" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Fathername[Profile.Language]} name="Fathername" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Mothername[Profile.Language]} name="Mothername" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Firstname')} name="Firstname" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Lastname')} name="Lastname" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Fathername')} name="Fathername" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Mothername')} name="Mothername" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.CountryID[Profile.Language]} name="CountryID" validationfunc={validator.isCountryID} validationmessage={"Geçerli Bir Tc Giriniz!"} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.CostumertypeName[Profile.Language]} name="CostumertypeID" options={Costumertypeoptions} formtype="dropdown" modal={CostumertypesCreate} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.PatienttypeName[Profile.Language]} name="PatienttypeID" options={Patienttypeoptions} formtype="dropdown" modal={PatienttypesCreate} />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Medicalboardreport[Profile.Language]} name="Medicalboardreport" options={Medicalboardreportoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientdefines.Column.CountryID')} name="CountryID" validationfunc={validator.isCountryID} validationmessage={"Geçerli Bir Tc Giriniz!"} />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Costumertype')} name="CostumertypeID" options={Costumertypeoptions} formtype="dropdown" modal={CostumertypesCreate} />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Patienttype')} name="PatienttypeID" options={Patienttypeoptions} formtype="dropdown" modal={PatienttypesCreate} />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Medicalboardreport')} name="Medicalboardreport" options={Medicalboardreportoptions} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Dependency[Profile.Language]} name="Dependency" options={Dependencyoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Dependency')} name="Dependency" options={Dependencyoptions} formtype="dropdown" />
               </Form.Group>
               <div className='my-4 h-[1px] w-full' />
               <Accordion>
@@ -121,44 +124,44 @@ export default class PatientdefinesCreate extends Component {
                   onClick={() => { this.setState({ isAccordionopen: !this.state.isAccordionopen }) }}
                 >
                   <Icon name='dropdown' />
-                  Ek Bilgiler
+                  {t('Pages.Patientdefines.Column.Additinal')}
                 </Accordion.Title>
                 <Accordion.Content active={this.state.isAccordionopen}>
                   <Form.Group widths='equal'>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Motherbiologicalaffinity[Profile.Language]} name="Motherbiologicalaffinity" options={Affinityoptions} formtype="dropdown" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Fatherbiologicalaffinity[Profile.Language]} name="Fatherbiologicalaffinity" options={Affinityoptions} formtype="dropdown" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Ismotheralive[Profile.Language]} name="Ismotheralive" options={Liveoptions} formtype="dropdown" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Isfatheralive[Profile.Language]} name="Isfatheralive" options={Liveoptions} formtype="dropdown" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Motherbiologicalaffinity')} name="Motherbiologicalaffinity" options={Affinityoptions} formtype="dropdown" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Fatherbiologicalaffinity')} name="Fatherbiologicalaffinity" options={Affinityoptions} formtype="dropdown" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Ismotheralive')} name="Ismotheralive" options={Liveoptions} formtype="dropdown" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Isfatheralive')} name="Isfatheralive" options={Liveoptions} formtype="dropdown" />
                   </Form.Group>
                   <Form.Group widths='equal'>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Dateofbirth[Profile.Language]} name="Dateofbirth" type='date' />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Placeofbirth[Profile.Language]} name="Placeofbirth" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Gender[Profile.Language]} name="Gender" options={Genderoptions} formtype="dropdown" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Marialstatus[Profile.Language]} name="Marialstatus" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Dateofbirth')} name="Dateofbirth" type='date' />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Placeofbirth')} name="Placeofbirth" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Gender')} name="Gender" options={Genderoptions} formtype="dropdown" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Marialstatus')} name="Marialstatus" />
                   </Form.Group>
                   <Form.Group widths='equal'>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Childnumber[Profile.Language]} name="Childnumber" type='number' min={0} max={99} />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Disabledchildnumber[Profile.Language]} name="Disabledchildnumber" type='number' min={0} max={99} />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Siblingstatus[Profile.Language]} name="Siblingstatus" type='number' min={0} max={99} />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Sgkstatus[Profile.Language]} name="Sgkstatus" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Childnumber')} name="Childnumber" type='number' min={0} max={99} />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Disabledchildnumber')} name="Disabledchildnumber" type='number' min={0} max={99} />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Siblingstatus')} name="Siblingstatus" type='number' min={0} max={99} />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Sgkstatus')} name="Sgkstatus" />
                   </Form.Group>
                   <Form.Group widths='equal'>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Budgetstatus[Profile.Language]} name="Budgetstatus" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.City[Profile.Language]} name="City" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Town[Profile.Language]} name="Town" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Country[Profile.Language]} name="Country" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Budgetstatus')} name="Budgetstatus" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.City')} name="City" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Town')} name="Town" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Country')} name="Country" />
                   </Form.Group>
                   <Form.Group widths='equal'>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Address1[Profile.Language]} name="Address1" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Address2[Profile.Language]} name="Address2" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Address1')} name="Address1" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Address2')} name="Address2" />
                   </Form.Group>
                   <Form.Group widths='equal'>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactname1[Profile.Language]} name="Contactname1" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactnumber1[Profile.Language]} name="Contactnumber1" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Contactname1')} name="Contactname1" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Contactnumber1')} name="Contactnumber1" />
                   </Form.Group>
                   <Form.Group widths='equal'>
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactname2[Profile.Language]} name="Contactname2" />
-                    <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Contactnumber2[Profile.Language]} name="Contactnumber2" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Contactname2')} name="Contactname2" />
+                    <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Patientdefines.Column.Contactnumber2')} name="Contactnumber2" />
                   </Form.Group>
                 </Accordion.Content>
               </Accordion>
@@ -168,11 +171,11 @@ export default class PatientdefinesCreate extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Patientdefines"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Patientdefines.isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -184,6 +187,9 @@ export default class PatientdefinesCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddPatientdefines, history, fillPatientdefinenotification, Profile, closeModal } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
 
     if (!data.Dateofbirth || data.Dateofbirth === '') {
@@ -202,8 +208,9 @@ export default class PatientdefinesCreate extends Component {
     let errors = []
 
     if (!validator.isString(data.CountryID) || !validator.isCountryID(data.CountryID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CountryIDrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Patientdefines.Page.Header'), description: t('Pages.Patientdefines.Messages.CountryIDRequired') })
     }
+
     if (errors.length > 0) {
       errors.forEach(error => {
         fillPatientdefinenotification(error)

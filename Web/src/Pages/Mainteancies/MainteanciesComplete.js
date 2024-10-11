@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import { Button, Form, Modal } from 'semantic-ui-react'
-import Literals from './Literals'
 
 
 export default function MainteanciesComplete(props) {
   const [closeInfo, setcloseInfo] = useState('')
 
   const { Profile, Mainteancies, CompleteMainteancies, handleCompletemodal, handleSelectedMainteance } = props
-  const { isCompletemodalopen, selected_record } = Mainteancies
 
+  const t = Profile?.i18n?.t
+
+  const { isCompletemodalopen, selected_record } = Mainteancies
 
   return (
     <Modal
@@ -22,17 +23,17 @@ export default function MainteanciesComplete(props) {
       }}
       open={isCompletemodalopen}
     >
-      <Modal.Header>{Literals.Page.Pagecompleteheader[Profile.Language]}</Modal.Header>
+      <Modal.Header>{t('Pages.Mainteancies.Page.CompleteHeader')}</Modal.Header>
       <Modal.Content image>
         <Modal.Description>
           <p>
-            {Literals.Messages.Completecheck[Profile.Language]}
+            {t('Pages.Mainteancies.Complete.Label.Check')}
           </p>
           <Form>
             <Form.Input
               fluid
-              label={Literals.Columns.Closeinfo[Profile.Language]}
-              placeholder={Literals.Columns.Closeinfo[Profile.Language]}
+              label={t('Pages.Mainteancies.Column.Closeinfo')}
+              placeholder={t('Pages.Mainteancies.Column.Closeinfo')}
               value={closeInfo}
               onChange={(e) => { setcloseInfo(e.target.value) }}
             />
@@ -45,10 +46,10 @@ export default function MainteanciesComplete(props) {
           handleSelectedMainteance({})
           setcloseInfo('')
         }}>
-          {Literals.Button.Giveup[Profile.Language]}
+          {t('Common.Button.Giveup')}
         </Button>
         <Button
-          content={Literals.Button.Complete[Profile.Language]}
+          content={t('Common.Button.Complete')}
           labelPosition='right'
           icon='checkmark'
           onClick={() => {

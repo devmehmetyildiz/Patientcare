@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Button, Modal } from 'semantic-ui-react'
-import Literals from './Literals'
 
 export default class StocksDelete extends Component {
   render() {
     const { Profile, Stocks, DeleteStocks, handleDeletemodal, handleSelectedStock, Stockdefines } = this.props
     const { isDeletemodalopen, selected_record } = Stocks
+    const t = Profile?.i18n?.t
 
     const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === selected_record.StockdefineID)
     return (
@@ -14,12 +14,12 @@ export default class StocksDelete extends Component {
         onOpen={() => handleDeletemodal(true)}
         open={isDeletemodalopen}
       >
-        <Modal.Header>{Literals.Page.Pagedeleteheader[Profile.Language]}</Modal.Header>
+        <Modal.Header>{t('Pages.Stocks.Page.DeleteHeader')}</Modal.Header>
         <Modal.Content image>
           <Modal.Description>
             <p>
               <span className='font-bold'>{stockdefine?.Name} </span>
-              {Literals.Messages.Deletecheck[Profile.Language]}
+              {t('Pages.Stocks.Delete.Label.Check')}
             </p>
           </Modal.Description>
         </Modal.Content>
@@ -28,10 +28,10 @@ export default class StocksDelete extends Component {
             handleDeletemodal(false)
             handleSelectedStock({})
           }}>
-            {Literals.Button.Giveup[Profile.Language]}
+            {t('Common.Button.Giveup')}
           </Button>
           <Button
-            content={Literals.Button.Delete[Profile.Language]}
+            content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'
             onClick={() => {

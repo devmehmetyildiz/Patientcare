@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Table, Button, Modal, Dropdown, Icon, Label } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -114,38 +113,38 @@ export default class PatientsEditroutine extends Component {
                     <Headerwrapper>
                         <Headerbredcrump>
                             <Link to={"/Patients"}>
-                                <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                                <Breadcrumb.Section>{t('Pages.Patients.Patients.Page.Header')}</Breadcrumb.Section>
                             </Link>
                             <Breadcrumb.Divider icon='right chevron' />
                             <Link to={"/Patients/" + Id}>
                                 <Breadcrumb.Section>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}`}</Breadcrumb.Section>
                             </Link>
                             <Breadcrumb.Divider icon='right chevron' />
-                            <Breadcrumb.Section>{Literals.Page.Pageeditroutineheader[Profile.Language]}</Breadcrumb.Section>
+                            <Breadcrumb.Section>{t('Pages.Patients.PatientsEditroutine.Page.Header')}</Breadcrumb.Section>
                         </Headerbredcrump>
                     </Headerwrapper>
                     <Pagedivider />
                     <Contentwrapper>
                         <div className='w-full flex flex-col justify-center items-center'>
                             <div className='w-full flex flex-row justify-end items-center'>
-                                <Button color='violet' floated='right' onClick={() => { this.setState({ createmodelOpened: true }) }} >{Literals.Button.Saveroutine[Profile.Language]}</Button>
-                                <Button color='violet' floated='right' onClick={() => { this.setState({ modelOpened: true }) }} >{Literals.Button.Selectroutine[Profile.Language]}</Button>
+                                <Button color='violet' floated='right' onClick={() => { this.setState({ createmodelOpened: true }) }} >{t('Pages.Patients.PatientsEditroutine.Buttons.Saveroutine')}</Button>
+                                <Button color='violet' floated='right' onClick={() => { this.setState({ modelOpened: true }) }} >{t('Pages.Patients.PatientsEditroutine.Buttons.Selectroutine')}</Button>
                             </div>
                             <Form className='w-full'>
                                 <Form.Group widths='equal'>
-                                    <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Tododefines[Profile.Language]} name="Tododefines" multiple options={Tododefinessoption} formtype='dropdown' modal={TododefinesCreate} />
+                                    <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patients.PatientsEditroutine.Column.Tododefines')} name="Tododefines" multiple options={Tododefinessoption} formtype='dropdown' modal={TododefinesCreate} />
                                 </Form.Group>
                                 <Pagedivider />
                                 <Table celled className='list-table ' key='product-create-type-conversion-table ' >
                                     {!Profile.Ismobile &&
                                         <Table.Header>
                                             <Table.Row>
-                                                <Table.HeaderCell width={1}>{Literals.Editroutinecolumns.Name[Profile.Language]}</Table.HeaderCell>
-                                                <Table.HeaderCell width={1}>{Literals.Editroutinecolumns.IsRequired[Profile.Language]}</Table.HeaderCell>
-                                                <Table.HeaderCell width={1}>{Literals.Editroutinecolumns.IsNeedactivation[Profile.Language]}</Table.HeaderCell>
-                                                <Table.HeaderCell width={1}>{Literals.Editroutinecolumns.Dayperiod[Profile.Language]}</Table.HeaderCell>
-                                                <Table.HeaderCell width={7}>{Literals.Editroutinecolumns.Periods[Profile.Language]}</Table.HeaderCell>
-                                                <Table.HeaderCell width={1}>{Literals.Editroutinecolumns.Remove[Profile.Language]}</Table.HeaderCell>
+                                                <Table.HeaderCell width={1}>{t('Pages.Patients.PatientsEditroutine.Column.Name')}</Table.HeaderCell>
+                                                <Table.HeaderCell width={1}>{t('Pages.Patients.PatientsEditroutine.Column.IsRequired')}</Table.HeaderCell>
+                                                <Table.HeaderCell width={1}>{t('Pages.Patients.PatientsEditroutine.Column.IsNeedactivation')}</Table.HeaderCell>
+                                                <Table.HeaderCell width={1}>{t('Pages.Patients.PatientsEditroutine.Column.Dayperiod')}</Table.HeaderCell>
+                                                <Table.HeaderCell width={7}>{t('Pages.Patients.PatientsEditroutine.Column.Periods')}</Table.HeaderCell>
+                                                <Table.HeaderCell width={1}>{t('Pages.Patients.PatientsEditroutine.Column.Remove')}</Table.HeaderCell>
                                             </Table.Row>
                                         </Table.Header>}
                                     <Table.Body>
@@ -153,22 +152,22 @@ export default class PatientsEditroutine extends Component {
                                             const tododefine = (Tododefines.list || []).filter(u => u.Isactive).find(u => u.Uuid === tododefineID)
                                             return <Table.Row key={Math.random()}>
                                                 <Table.Cell className='table-last-section'>
-                                                    {this.Cellwrapper(<Label>{`${tododefine?.Name}`}</Label>, Literals.Editroutinecolumns.Name[Profile.Language])}
+                                                    {this.Cellwrapper(<Label>{`${tododefine?.Name}`}</Label>, t('Pages.Patients.PatientsEditroutine.Column.Name'))}
                                                 </Table.Cell>
                                                 <Table.Cell className='table-last-section'>
                                                     {this.Cellwrapper(
                                                         tododefine?.IsRequired
                                                             ? <Icon className='cursor-pointer' color='green' name='checkmark' />
-                                                            : <Icon className='cursor-pointer' color='red' name='times circle' />, Literals.Editroutinecolumns.IsRequired[Profile.Language])}
+                                                            : <Icon className='cursor-pointer' color='red' name='times circle' />, t('Pages.Patients.PatientsEditroutine.Column.IsRequired'))}
                                                 </Table.Cell>
                                                 <Table.Cell className='table-last-section'>
                                                     {this.Cellwrapper(
                                                         tododefine?.IsNeedactivation
                                                             ? <Icon className='cursor-pointer' color='green' name='checkmark' />
-                                                            : <Icon className='cursor-pointer' color='red' name='times circle' />, Literals.Editroutinecolumns.IsNeedactivation[Profile.Language])}
+                                                            : <Icon className='cursor-pointer' color='red' name='times circle' />, t('Pages.Patients.PatientsEditroutine.Column.IsNeedactivation'))}
                                                 </Table.Cell>
                                                 <Table.Cell className='table-last-section'>
-                                                    {this.Cellwrapper(<Label>{`${tododefine?.Dayperiod}`}</Label>, Literals.Editroutinecolumns.Dayperiod[Profile.Language])}
+                                                    {this.Cellwrapper(<Label>{`${tododefine?.Dayperiod}`}</Label>, t('Pages.Patients.PatientsEditroutine.Column.Dayperiod'))}
                                                 </Table.Cell>
                                                 <Table.Cell className='table-last-section'>
                                                     {this.Cellwrapper(
@@ -177,7 +176,7 @@ export default class PatientsEditroutine extends Component {
                                                                 const period = (Periods.list || []).find(u => u.Uuid === periodID?.PeriodID)
                                                                 return <Label key={Math.random()}>{`${period?.Name}`}</Label>
                                                             })}
-                                                        </div>, Literals.Editroutinecolumns.Periods[Profile.Language])}
+                                                        </div>, t('Pages.Patients.PatientsEditroutine.Column.Periods'))}
                                                 </Table.Cell>
                                                 <Table.Cell >
                                                     {this.Cellwrapper(
@@ -188,7 +187,7 @@ export default class PatientsEditroutine extends Component {
                                                                     [`${this.PAGE_NAME}/Tododefines`]: (this.context.formstates[`${this.PAGE_NAME}/Tododefines`] || []).filter(u => u !== tododefine?.Uuid)
                                                                 })
                                                             }} />
-                                                        , Literals.Editroutinecolumns.Remove[Profile.Language])}
+                                                        , t('Pages.Patients.PatientsEditroutine.Column.Remove'))}
                                                 </Table.Cell>
                                             </Table.Row>
                                         })}
@@ -201,11 +200,11 @@ export default class PatientsEditroutine extends Component {
                         <Gobackbutton
                             history={history}
                             redirectUrl={Id ? `/Patients/${Id}` : `/Patients`}
-                            buttonText={Literals.Button.Goback[Profile.Language]}
+                            buttonText={t('Common.Button.Goback')}
                         />
                         <Submitbutton
                             isLoading={isLoadingstatus}
-                            buttonText={Literals.Button.Update[Profile.Language]}
+                            buttonText={t('Common.Button.Update')}
                             submitFunction={this.handleSubmit}
                         />
                     </Footerwrapper>
@@ -214,14 +213,14 @@ export default class PatientsEditroutine extends Component {
                         onOpen={() => { this.setState({ selectedTodogroupdefineID: '', modelOpened: true }) }}
                         open={this.state.modelOpened}
                     >
-                        <Modal.Header>{Literals.Editroutinecolumns.ReadyRoutineLists[Profile.Language]}</Modal.Header>
+                        <Modal.Header>{t('Pages.Patients.PatientsEditroutine.Page.ReadyList')}</Modal.Header>
                         <Modal.Content image className='!block'>
                             <Modal.Description>
                                 <Contentwrapper>
                                     <Form className='w-full'>
                                         <Form.Group widths='equal'>
                                             <Form.Field>
-                                                <label>{Literals.Editroutinecolumns.ReadyRoutineLists[Profile.Language]}</label>
+                                                <label>{t('Pages.Patients.PatientsEditroutine.Page.ReadyList')}</label>
                                                 <Dropdown
                                                     clearable
                                                     search
@@ -239,33 +238,33 @@ export default class PatientsEditroutine extends Component {
                                                 {!Profile.Ismobile &&
                                                     <Table.Header>
                                                         <Table.Row>
-                                                            <Table.HeaderCell width={1}>{Literals.Editroutinecolumns.Name[Profile.Language]}</Table.HeaderCell>
-                                                            <Table.HeaderCell width={1}>{Literals.Editroutinecolumns.IsRequired[Profile.Language]}</Table.HeaderCell>
-                                                            <Table.HeaderCell width={1}>{Literals.Editroutinecolumns.IsNeedactivation[Profile.Language]}</Table.HeaderCell>
-                                                            <Table.HeaderCell width={1}>{Literals.Editroutinecolumns.Dayperiod[Profile.Language]}</Table.HeaderCell>
-                                                            <Table.HeaderCell width={6}>{Literals.Editroutinecolumns.Periods[Profile.Language]}</Table.HeaderCell>
+                                                            <Table.HeaderCell width={1}>{t('Pages.Patients.PatientsEditroutine.Column.Name')}</Table.HeaderCell>
+                                                            <Table.HeaderCell width={1}>{t('Pages.Patients.PatientsEditroutine.Column.IsRequired')}</Table.HeaderCell>
+                                                            <Table.HeaderCell width={1}>{t('Pages.Patients.PatientsEditroutine.Column.IsNeedactivation')}</Table.HeaderCell>
+                                                            <Table.HeaderCell width={1}>{t('Pages.Patients.PatientsEditroutine.Column.Dayperiod')}</Table.HeaderCell>
+                                                            <Table.HeaderCell width={6}>{t('Pages.Patients.PatientsEditroutine.Column.Periods')}</Table.HeaderCell>
                                                         </Table.Row>
                                                     </Table.Header>}
                                                 <Table.Body>
                                                     {selectedTododefines.map(tododefine => {
                                                         return <Table.Row key={Math.random()}>
                                                             <Table.Cell >
-                                                                {this.Cellwrapper(<Label>{`${tododefine?.Name}`}</Label>, Literals.Editroutinecolumns.Name[Profile.Language])}
+                                                                {this.Cellwrapper(<Label>{`${tododefine?.Name}`}</Label>, t('Pages.Patients.PatientsEditroutine.Column.Name'))}
                                                             </Table.Cell>
                                                             <Table.Cell >
                                                                 {this.Cellwrapper(
                                                                     tododefine?.IsRequired
                                                                         ? <Icon className='cursor-pointer' color='green' name='checkmark' />
-                                                                        : <Icon className='cursor-pointer' color='red' name='times circle' />, Literals.Editroutinecolumns.IsRequired[Profile.Language])}
+                                                                        : <Icon className='cursor-pointer' color='red' name='times circle' />, t('Pages.Patients.PatientsEditroutine.Column.IsRequired'))}
                                                             </Table.Cell>
                                                             <Table.Cell >
                                                                 {this.Cellwrapper(
                                                                     tododefine?.IsNeedactivation
                                                                         ? <Icon className='cursor-pointer' color='green' name='checkmark' />
-                                                                        : <Icon className='cursor-pointer' color='red' name='times circle' />, Literals.Editroutinecolumns.IsNeedactivation[Profile.Language])}
+                                                                        : <Icon className='cursor-pointer' color='red' name='times circle' />, t('Pages.Patients.PatientsEditroutine.Column.IsNeedactivation'))}
                                                             </Table.Cell>
                                                             <Table.Cell >
-                                                                {this.Cellwrapper(<Label>{`${tododefine?.Dayperiod}`}</Label>, Literals.Editroutinecolumns.Dayperiod[Profile.Language])}
+                                                                {this.Cellwrapper(<Label>{`${tododefine?.Dayperiod}`}</Label>, t('Pages.Patients.PatientsEditroutine.Column.Dayperiod'))}
                                                             </Table.Cell>
                                                             <Table.Cell >
                                                                 {this.Cellwrapper(
@@ -274,7 +273,7 @@ export default class PatientsEditroutine extends Component {
                                                                             const period = (Periods.list || []).find(u => u.Uuid === periodID?.PeriodID)
                                                                             return <Label key={Math.random()}>{`${period?.Name}`}</Label>
                                                                         })}
-                                                                    </div>, Literals.Editroutinecolumns.IsNeedactivation[Profile.Language])}
+                                                                    </div>, t('Pages.Patients.PatientsEditroutine.Column.Periods'))}
                                                             </Table.Cell>
 
                                                         </Table.Row>
@@ -288,7 +287,7 @@ export default class PatientsEditroutine extends Component {
                         </Modal.Content>
                         <Modal.Actions>
                             <Button color='black' onClick={() => { this.setState({ modelOpened: false, selectedTodogroupdefineID: '' }) }}>
-                                {Literals.Button.Close[Profile.Language]}
+                                {t('Common.Button.Close')}
                             </Button>
                             <Button
                                 content={"Ekle"}
@@ -310,7 +309,7 @@ export default class PatientsEditroutine extends Component {
                         onOpen={() => { this.setState({ newGroupname: '', newDepartmentID: '', createmodelOpened: true }) }}
                         open={this.state.createmodelOpened}
                     >
-                        <Modal.Header> {Literals.Editroutinecolumns.SaveRoutineList[Profile.Language]}</Modal.Header>
+                        <Modal.Header> {t('Pages.Patients.PatientsEditroutine.Page.Save')}</Modal.Header>
                         <Modal.Content image className='!block'>
                             <Modal.Description>
                                 <Contentwrapper>
@@ -318,14 +317,14 @@ export default class PatientsEditroutine extends Component {
                                         <Form.Group widths='equal'>
                                             <Form.Field>
                                                 <Form.Input
-                                                    placeholder={Literals.Editroutinecolumns.Routinelistname[Profile.Language]}
-                                                    label={Literals.Editroutinecolumns.Routinelistname[Profile.Language]}
+                                                    placeholder={t('Pages.Patients.PatientsEditroutine.Column.ListName')}
+                                                    label={t('Pages.Patients.PatientsEditroutine.Column.ListName')}
                                                     fluid
                                                     onChange={(e) => { this.setState({ newGroupname: e.target.value }) }}
                                                 />
                                             </Form.Field>
                                             <Form.Field>
-                                                <label>{Literals.Editroutinecolumns.Department[Profile.Language]}</label>
+                                                <label>{t('Pages.Patients.PatientsEditroutine.Column.Department')}</label>
                                                 <Dropdown
                                                     clearable
                                                     search
@@ -342,10 +341,10 @@ export default class PatientsEditroutine extends Component {
                         </Modal.Content>
                         <Modal.Actions>
                             <Button color='black' onClick={() => { this.setState({ newGroupname: '', newDepartmentID: '', createmodelOpened: false }) }}>
-                                {Literals.Button.Close[Profile.Language]}
+                                {t('Common.Button.Close')}
                             </Button>
                             <Button
-                                content={Literals.Button.Add[Profile.Language]}
+                                content={t('Common.Button.Add')}
                                 labelPosition='right'
                                 icon='checkmark'
                                 onClick={() => {
@@ -357,13 +356,13 @@ export default class PatientsEditroutine extends Component {
 
                                     let errors = []
                                     if (!validator.isString(Name)) {
-                                        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
+                                        errors.push({ type: 'Error', code: t('Pages.Patients.PatientsEditroutine.Page.Header'), description: t('Pages.Patients.PatientsEditroutine.Messages.NameRequired') })
                                     }
                                     if (!validator.isArray(defines)) {
-                                        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.TododefininesRequired[Profile.Language] })
+                                        errors.push({ type: 'Error', code: t('Pages.Patients.PatientsEditroutine.Page.Header'), description: t('Pages.Patients.PatientsEditroutine.Messages.RoutinesRequired') })
                                     }
                                     if (!validator.isUUID(DepartmentID)) {
-                                        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
+                                        errors.push({ type: 'Error', code: t('Pages.Patients.PatientsEditroutine.Page.Header'), description: t('Pages.Patients.PatientsEditroutine.Messages.DepartmentRequired') })
                                     }
                                     if (errors.length > 0) {
                                         errors.forEach(error => {
@@ -398,7 +397,7 @@ export default class PatientsEditroutine extends Component {
         }).filter(u => u)
         let errors = []
         if (!validator.isArray(data.Tododefines)) {
-            errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.TododefininesRequired[Profile.Language] })
+            errors.push({ type: 'Error', code: t('Pages.Patients.PatientsEditroutine.Page.Header'), description: t('Pages.Patients.PatientsEditroutine.Messages.RoutinesRequired') })
         }
 
         if (errors.length > 0) {

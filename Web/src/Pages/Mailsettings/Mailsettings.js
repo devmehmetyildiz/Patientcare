@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import Literals from './Literals'
 import MailsettingsDelete from "../../Containers/Mailsettings/MailsettingsDelete"
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
@@ -15,6 +14,9 @@ export default class Mailsettings extends Component {
   render() {
 
     const { Mailsettings, Profile, handleSelectedMailsetting, handleDeletemodal } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isLoading } = Mailsettings
 
     const colProps = {
@@ -24,21 +26,21 @@ export default class Mailsettings extends Component {
     }
 
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
-      { Header: Literals.Columns.User[Profile.Language], accessor: 'User' },
-      { Header: Literals.Columns.Smtphost[Profile.Language], accessor: 'Smtphost' },
-      { Header: Literals.Columns.Smtpport[Profile.Language], accessor: 'Smtpport' },
-      { Header: Literals.Columns.Mailaddress[Profile.Language], accessor: 'Mailaddress', Subtitle: true },
-      { Header: Literals.Columns.Isbodyhtml[Profile.Language], accessor: row => this.boolCellhandler(row?.Isbodyhtml) },
-      { Header: Literals.Columns.Issettingactive[Profile.Language], accessor: row => this.boolCellhandler(row.Issettingactive) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+      { Header: t('Common.Column.Id'), accessor: 'Id' },
+      { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+      { Header: t('Pages.Mailsettings.Column.Name'), accessor: 'Name', Title: true },
+      { Header: t('Pages.Mailsettings.Column.User'), accessor: 'User' },
+      { Header: t('Pages.Mailsettings.Column.Smtphost'), accessor: 'Smtphost' },
+      { Header: t('Pages.Mailsettings.Column.Smtpport'), accessor: 'Smtpport' },
+      { Header: t('Pages.Mailsettings.Column.Mailaddress'), accessor: 'Mailaddress', Subtitle: true },
+      { Header: t('Pages.Mailsettings.Column.Isbodyhtml'), accessor: row => this.boolCellhandler(row?.Isbodyhtml) },
+      { Header: t('Pages.Mailsettings.Column.Issettingactive'), accessor: row => this.boolCellhandler(row.Issettingactive) },
+      { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+      { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+      { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+      { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "mailsetting"
@@ -56,7 +58,7 @@ export default class Mailsettings extends Component {
     })
 
     return (
-      isLoading  ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>
@@ -64,13 +66,13 @@ export default class Mailsettings extends Component {
                 <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Mailsettings"}>
-                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                      <Breadcrumb.Section>{t('Pages.Mailsettings.Page.Header')}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
                 <Settings
                   Profile={Profile}
-                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreateheader={t('Pages.Mailsettings.Page.CreateHeader')}
                   Pagecreatelink={"/Mailsettings/Create"}
                   Columns={Columns}
                   list={list}
@@ -88,7 +90,7 @@ export default class Mailsettings extends Component {
                 {Profile.Ismobile ?
                   <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
             }
           </Pagewrapper>
           <MailsettingsDelete />
@@ -98,6 +100,7 @@ export default class Mailsettings extends Component {
 
   boolCellhandler = (value) => {
     const { Profile } = this.props
-    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    const t = Profile?.i18n?.t
+    return value !== null && (value ? t('Common.Yes') : t('Common.No'))
   }
 }

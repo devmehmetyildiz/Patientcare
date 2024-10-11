@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form, Icon, Table } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
 import {
@@ -55,6 +54,8 @@ export default class EquipmentsEdit extends Component {
 
     const { Equipments, Equipmentgroups, Floors, Rooms, Beds, Users, Profile, history } = this.props
 
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
 
     const Equipmentgroupoptions = (Equipmentgroups.list || []).filter(u => u.Isactive).map(group => {
@@ -78,37 +79,37 @@ export default class EquipmentsEdit extends Component {
     })
 
     return (
-      Equipments.isLoading  ? <LoadingPage /> :
+      Equipments.isLoading ? <LoadingPage /> :
         <Pagewrapper>
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Equipments"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Equipments.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Equipments.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Equipmentgroup[Profile.Language]} name="EquipmentgroupID" options={Equipmentgroupoptions} formtype="dropdown" />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.User[Profile.Language]} name="UserID" options={Usersoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Columns.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Columns.Equipmentgroup')} name="EquipmentgroupID" options={Equipmentgroupoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Columns.User')} name="UserID" options={Usersoptions} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Floor[Profile.Language]} name="FloorID" options={Flooroptions} formtype="dropdown" />
-                {validator.isUUID(data?.FloorID) && <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Room[Profile.Language]} name="RoomID" options={Roomsoptions} formtype="dropdown" />}
-                {validator.isUUID(data?.FloorID) && validator.isUUID(data?.RoomID) && <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Bed[Profile.Language]} name="BedID" options={Bedsoptions} formtype="dropdown" />}
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Columns.Floor')} name="FloorID" options={Flooroptions} formtype="dropdown" />
+                {validator.isUUID(data?.FloorID) && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Columns.Room')} name="RoomID" options={Roomsoptions} formtype="dropdown" />}
+                {validator.isUUID(data?.FloorID) && validator.isUUID(data?.RoomID) && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Columns.Bed')} name="BedID" options={Bedsoptions} formtype="dropdown" />}
               </Form.Group>
               <Table celled className='overflow-x-auto' key='table' >
                 <Table.Header>
                   <Table.Row>
-                    <Table.HeaderCell width={1}>{Literals.Columns.Order[Profile.Language]}</Table.HeaderCell>
-                    <Table.HeaderCell width={3}>{Literals.Columns.Propertyname[Profile.Language]}</Table.HeaderCell>
-                    <Table.HeaderCell width={6}>{Literals.Columns.Propertyvalue[Profile.Language]}</Table.HeaderCell>
-                    <Table.HeaderCell width={1}>{Literals.Columns.Remove[Profile.Language]}</Table.HeaderCell>
+                    <Table.HeaderCell width={1}>{t('Pages.Equipments.Columns.Order')}</Table.HeaderCell>
+                    <Table.HeaderCell width={3}>{t('Pages.Equipments.Columns.Propertyname')}</Table.HeaderCell>
+                    <Table.HeaderCell width={6}>{t('Pages.Equipments.Columns.Propertyvalue')}</Table.HeaderCell>
+                    <Table.HeaderCell width={1}>{t('Pages.Equipments.Columns.Remove')}</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -122,14 +123,14 @@ export default class EquipmentsEdit extends Component {
                       </Table.Cell>
                       <Table.Cell>
                         <Form.Field>
-                          <Form.Input value={property.Propertyname} placeholder={Literals.Columns.Propertyname[Profile.Language]} name="Propertyname" onChange={(e) => { this.changeHandler(property.key, 'Propertyname', e.target.value) }} />
+                          <Form.Input value={property.Propertyname} placeholder={t('Pages.Equipments.Columns.Propertyname')} name="Propertyname" onChange={(e) => { this.changeHandler(property.key, 'Propertyname', e.target.value) }} />
                         </Form.Field>
                       </Table.Cell>
                       <Table.Cell>
-                        <Form.Input value={property.Propertyvalue} placeholder={Literals.Columns.Propertyvalue[Profile.Language]} name="Propertyvalue" onChange={(e) => { this.changeHandler(property.key, 'Propertyvalue', e.target.value) }} />
+                        <Form.Input value={property.Propertyvalue} placeholder={t('Pages.Equipments.Columns.Propertyvalue')} name="Propertyvalue" onChange={(e) => { this.changeHandler(property.key, 'Propertyvalue', e.target.value) }} />
                       </Table.Cell>
                       <Table.Cell className='table-last-section'>
-                        {!property.Id && <Icon className='type-conversion-remove-icon' link color='red' name='minus circle'
+                        {!property.Uuid && <Icon className='type-conversion-remove-icon' link color='red' name='minus circle'
                           onClick={() => { this.remove(property.key, property.Order) }} />}
                       </Table.Cell>
                     </Table.Row>
@@ -138,7 +139,7 @@ export default class EquipmentsEdit extends Component {
                 <Table.Footer>
                   <Table.Row>
                     <Table.Cell colSpan='11'>
-                      <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNew() }}>{Literals.Button.Addproperty[Profile.Language]}</Button>
+                      <Button type="button" color='green' className='addMoreButton' size='mini' onClick={() => { this.AddNew() }}>{t('Pages.Equipments.Column.Addproperty')}</Button>
                     </Table.Cell>
                   </Table.Row>
                 </Table.Footer>
@@ -149,11 +150,11 @@ export default class EquipmentsEdit extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Equipments"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Equipments.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -166,17 +167,20 @@ export default class EquipmentsEdit extends Component {
     e.preventDefault()
 
     const { EditEquipments, history, Equipments, fillEquipmentnotification, Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     data.Equipmentproperties = this.state.selectedProperties
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Equipments.Page.Header'), description: t('Pages.Equipments.Messages.NameRequired') })
     }
     if (!validator.isString(data.EquipmentgroupID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Equipmentgrouprequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Equipments.Page.Header'), description: t('Pages.Equipments.Messages.EquipmentgroupRequired') })
     }
     if (!validator.isString(data.UserID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Userrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Equipments.Page.Header'), description: t('Pages.Equipments.Messages.UserRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

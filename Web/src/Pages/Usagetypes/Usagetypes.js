@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon } from 'semantic-ui-react'
 import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import Literals from './Literals'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import UsagetypesDelete from '../../Containers/Usagetypes/UsagetypesDelete'
@@ -16,6 +15,9 @@ export default class Usagetypes extends Component {
 
   render() {
     const { Usagetypes, Profile, handleDeletemodal, handleSelectedUsagetype } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isLoading } = Usagetypes
 
     const colProps = {
@@ -25,17 +27,17 @@ export default class Usagetypes extends Component {
     }
 
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
-      { Header: Literals.Columns.Value[Profile.Language], accessor: 'Value' },
-      { Header: Literals.Columns.Isrequired[Profile.Language], accessor: row => this.boolCellhandler(row?.Isrequired), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true, }
+      { Header: t('Common.Column.Id'), accessor: 'Id' },
+      { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+      { Header: t('Pages.Usagetypes.Column.Name'), accessor: 'Name', Title: true },
+      { Header: t('Pages.Usagetypes.Column.Value'), accessor: 'Value' },
+      { Header: t('Pages.Usagetypes.Column.Isrequired'), accessor: row => this.boolCellhandler(row?.Isrequired), Lowtitle: true, Withtext: true },
+      { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+      { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+      { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+      { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "usagetype"
@@ -61,13 +63,13 @@ export default class Usagetypes extends Component {
                 <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Usagetypes"}>
-                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                      <Breadcrumb.Section>{t('Pages.Usagetypes.Page.Header')}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
                 <Settings
                   Profile={Profile}
-                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreateheader={t('Pages.Usagetypes.Page.CreateHeader')}
                   Pagecreatelink={"/Usagetypes/Create"}
                   Columns={Columns}
                   list={list}
@@ -85,7 +87,7 @@ export default class Usagetypes extends Component {
                 {Profile.Ismobile ?
                   <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
             }
           </Pagewrapper>
           <UsagetypesDelete />
@@ -95,6 +97,7 @@ export default class Usagetypes extends Component {
 
   boolCellhandler = (value) => {
     const { Profile } = this.props
-    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    const t = Profile?.i18n?.t
+    return value !== null && (value ? t('Common.Yes') : t('Common.No'))
   }
 }

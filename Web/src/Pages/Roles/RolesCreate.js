@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Checkbox, Divider, Form, Search, Breadcrumb, Button } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -25,6 +24,9 @@ export default class RolesCreate extends Component {
 
     render() {
         const { Roles, Profile, history, closeModal } = this.props
+
+        const t = Profile?.i18n?.t
+
         const { privileges, privilegegroups, isLoading } = Roles
 
         const decoratedgroups = (privilegegroups || []).map(group => {
@@ -38,10 +40,10 @@ export default class RolesCreate extends Component {
                     <Headerwrapper>
                         <Headerbredcrump>
                             <Link to={"/Roles"}>
-                                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                                <Breadcrumb.Section >{t('Pages.Roles.Page.Header')}</Breadcrumb.Section>
                             </Link>
                             <Breadcrumb.Divider icon='right chevron' />
-                            <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+                            <Breadcrumb.Section>{t('Pages.Roles.Page.CreateHeader')}</Breadcrumb.Section>
                         </Headerbredcrump>
                         {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
                     </Headerwrapper>
@@ -49,9 +51,9 @@ export default class RolesCreate extends Component {
                     <Contentwrapper>
                         <Form>
                             <div className='w-full'>
-                                <Button className='!bg-[#2355a0] !text-white !cursor-pointer' floated='right' onClick={this.handleAddall} >{Literals.Button.Addall[Profile.Language]}</Button>
+                                <Button className='!bg-[#2355a0] !text-white !cursor-pointer' floated='right' onClick={this.handleAddall} >{t('Pages.Roles.Column.AddAll')}</Button>
                             </div>
-                            <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Roles.Column.Name')} name="Name" />
                             <div className='w-full py-2'>
                                 <Search
                                     placeholder='Search...'
@@ -91,15 +93,15 @@ export default class RolesCreate extends Component {
                             <Gobackbutton
                                 history={history}
                                 redirectUrl={"/Roles"}
-                                buttonText={Literals.Button.Goback[Profile.Language]}
+                                buttonText={t('Common.Button.Goback')}
                             />
                             <Button floated="right" type="button" color='grey' onClick={(e) => {
                                 this.setState({ selectedPrivileges: [] })
-                            }}>{Literals.Button.Clear[Profile.Language]}</Button>
+                            }}>{t('Common.Button.Clear')}</Button>
                         </Form.Group>
                         <Submitbutton
                             isLoading={isLoading}
-                            buttonText={Literals.Button.Create[Profile.Language]}
+                            buttonText={t('Common.Button.Create')}
                             submitFunction={this.handleSubmit}
                         />
                     </Footerwrapper>
@@ -113,15 +115,17 @@ export default class RolesCreate extends Component {
 
         const { AddRoles, history, fillRolenotification, Profile, closeModal } = this.props
 
+        const t = Profile?.i18n?.t
+
         const data = this.context.getForm(this.PAGE_NAME)
         data.Privileges = this.state.selectedPrivileges.map(u => { return u.code })
 
         let errors = []
         if (!validator.isString(data.Name)) {
-            errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
+            errors.push({ type: 'Error', code: t('Pages.Roles.Page.Header'), description: t('Pages.Roles.Messages.NameRequired') })
         }
         if (!validator.isArray(data.Privileges)) {
-            errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PrivilegesRequired[Profile.Language] })
+            errors.push({ type: 'Error', code: t('Pages.Roles.Page.Header'), description: t('Pages.Roles.Messages.PrivilegesRequired') })
         }
         if (errors.length > 0) {
             errors.forEach(error => {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon, Loader } from 'semantic-ui-react'
-import Literals from './Literals'
 import EquipmentsDelete from "../../Containers/Equipments/EquipmentsDelete"
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import {
@@ -25,6 +24,9 @@ export default class Equipments extends Component {
   render() {
 
     const { Equipments, Profile, handleSelectedEquipment, handleDeletemodal } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isLoading } = Equipments
 
     const colProps = {
@@ -34,20 +36,20 @@ export default class Equipments extends Component {
     }
 
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
-      { Header: Literals.Columns.Equipmentgroup[Profile.Language], accessor: row => this.equipmentgroupCellhandler(row?.EquipmentgroupID), Subtitle: true, Withtext: true },
-      { Header: Literals.Columns.Floor[Profile.Language], accessor: row => this.floorCellhandler(row?.FloorID) },
-      { Header: Literals.Columns.Room[Profile.Language], accessor: row => this.roomCellhandler(row?.RoomID) },
-      { Header: Literals.Columns.Bed[Profile.Language], accessor: row => this.bedCellhandler(row?.BedID) },
-      { Header: Literals.Columns.User[Profile.Language], accessor: row => this.userCellhandler(row?.UserID) },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+      { Header: t('Common.Column.Id'), accessor: 'Id' },
+      { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+      { Header: t('Pages.Equipments.Column.Name'), accessor: 'Name', Title: true },
+      { Header: t('Pages.Equipments.Column.Equipmentgroup'), accessor: row => this.equipmentgroupCellhandler(row?.EquipmentgroupID), Subtitle: true, Withtext: true },
+      { Header: t('Pages.Equipments.Column.Floor'), accessor: row => this.floorCellhandler(row?.FloorID) },
+      { Header: t('Pages.Equipments.Column.Room'), accessor: row => this.roomCellhandler(row?.RoomID) },
+      { Header: t('Pages.Equipments.Column.Bed'), accessor: row => this.bedCellhandler(row?.BedID) },
+      { Header: t('Pages.Equipments.Column.User'), accessor: row => this.userCellhandler(row?.UserID) },
+      { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+      { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+      { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+      { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "equipment"
@@ -74,13 +76,13 @@ export default class Equipments extends Component {
                 <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Equipments"}>
-                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                      <Breadcrumb.Section>{t('Pages.Equipments.Page.Header')}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
                 <Settings
                   Profile={Profile}
-                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreateheader={t('Pages.Equipments.Page.CreateHeader')}
                   Pagecreatelink={"/Equipments/Create"}
                   Columns={Columns}
                   list={list}
@@ -98,7 +100,7 @@ export default class Equipments extends Component {
                 {Profile.Ismobile ?
                   <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
             }
           </Pagewrapper>
           <EquipmentsDelete />

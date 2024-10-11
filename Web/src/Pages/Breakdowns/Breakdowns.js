@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon, Loader } from 'semantic-ui-react'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
-import Literals from './Literals'
 import BreakdownsDelete from '../../Containers/Breakdowns/BreakdownsDelete'
 import BreakdownsComplete from '../../Containers/Breakdowns/BreakdownsComplete'
 import validator from '../../Utils/Validator'
@@ -19,6 +18,9 @@ export default class Breakdowns extends Component {
 
   render() {
     const { Breakdowns, Profile, handleDeletemodal, handleSelectedBreakdown, handleCompletemodal } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isLoading } = Breakdowns
 
     const colProps = {
@@ -28,22 +30,22 @@ export default class Breakdowns extends Component {
     }
 
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Starttime[Profile.Language], accessor: row => this.dateCellhandler(row?.Starttime), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Endtime[Profile.Language], accessor: row => this.dateCellhandler(row?.Endtime), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.EquipmentID[Profile.Language], accessor: row => this.equipmentCellhandler(row?.EquipmentID), Title: true },
-      { Header: Literals.Columns.ResponsibleuserID[Profile.Language], accessor: row => this.userCellhandler(row?.ResponsibleuserID), Subtitle: true, Withtext: true, },
-      { Header: Literals.Columns.Openinfo[Profile.Language], accessor: 'Openinfo' },
-      { Header: Literals.Columns.Closeinfo[Profile.Language], accessor: 'Closeinfo' },
-      { Header: Literals.Columns.Iscompleted[Profile.Language], accessor: row => this.boolCellhandler(row?.Iscompleted), disableProps: true },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-      { Header: Literals.Columns.complete[Profile.Language], accessor: 'complete', disableProps: true },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+      { Header: t('Common.Column.Id'), accessor: 'Id' },
+      { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+      { Header: t('Pages.Breakdowns.Column.Starttime'), accessor: row => this.dateCellhandler(row?.Starttime), Lowtitle: true, Withtext: true },
+      { Header: t('Pages.Breakdowns.Column.Endtime'), accessor: row => this.dateCellhandler(row?.Endtime), Lowtitle: true, Withtext: true },
+      { Header: t('Pages.Breakdowns.Column.Equipment'), accessor: row => this.equipmentCellhandler(row?.EquipmentID), Title: true },
+      { Header: t('Pages.Breakdowns.Column.Responsibleuser'), accessor: row => this.userCellhandler(row?.ResponsibleuserID), Subtitle: true, Withtext: true, },
+      { Header: t('Pages.Breakdowns.Column.Openinfo'), accessor: 'Openinfo' },
+      { Header: t('Pages.Breakdowns.Column.Closeinfo'), accessor: 'Closeinfo' },
+      { Header: t('Pages.Breakdowns.Column.Iscompleted'), accessor: row => this.boolCellhandler(row?.Iscompleted), disableProps: true },
+      { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+      { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+      { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+      { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+      { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true },
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "breakdown"
@@ -65,7 +67,7 @@ export default class Breakdowns extends Component {
     })
 
     return (
-      isLoading? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>
@@ -73,13 +75,13 @@ export default class Breakdowns extends Component {
                 <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Breakdowns"}>
-                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                      <Breadcrumb.Section>{t('Pages.Breakdowns.Page.Header')}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
                 <Settings
                   Profile={Profile}
-                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreateheader={t('Pages.Breakdowns.Page.CreateHeader')}
                   Pagecreatelink={"/Breakdowns/Create"}
                   Columns={Columns}
                   list={list}
@@ -97,7 +99,7 @@ export default class Breakdowns extends Component {
                 {Profile.Ismobile ?
                   <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
             }
           </Pagewrapper>
           <BreakdownsDelete />
@@ -107,21 +109,27 @@ export default class Breakdowns extends Component {
   }
 
   userCellhandler = (value) => {
-    const { Users } = this.props
+    const { Users, Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     if (Users.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
       const personel = (Users.list || []).find(u => u.Uuid === value)
-      return personel ? `${personel?.Name} ${personel?.Surname}` : 'Tanımsız'
+      return personel ? `${personel?.Name} ${personel?.Surname}` : t('Common.NoDataFound')
     }
   }
 
   equipmentCellhandler = (value) => {
-    const { Equipments } = this.props
+    const { Equipments, Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     if (Equipments.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return (Equipments.list || []).find(u => u.Uuid === value)?.Name || 'Tanımsız'
+      return (Equipments.list || []).find(u => u.Uuid === value)?.Name || t('Common.NoDataFound')
     }
   }
 

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, Icon, Label, Loader } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Settings, MobileTable, NoDataScreen, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, DataTable } from '../../Components'
@@ -37,6 +36,7 @@ export default class PatientsEditcash extends Component {
 
     componentDidUpdate() {
         const { Patients, Patientdefines, Patientcashmovements, Patientcashregisters } = this.props
+
         const { selected_record } = Patients
 
         const isLoadingstatus =
@@ -55,6 +55,8 @@ export default class PatientsEditcash extends Component {
 
         const { Patients, Patientdefines, Patientcashmovements, Patientcashregisters, handleSelectedPatientcashmovement, handleDeletemodal,
             Profile, match, PatientID } = this.props
+
+        const t = Profile?.i18n?.t
 
         const Id = match?.params?.PatientID || PatientID
 
@@ -82,18 +84,18 @@ export default class PatientsEditcash extends Component {
         }
 
         const Columns = [
-            { Header: Literals.Editcash.Id[Profile.Language], accessor: 'Id', },
-            { Header: Literals.Editcash.Uuid[Profile.Language], accessor: 'Uuid' },
-            { Header: Literals.Editcash.Patient[Profile.Language], accessor: 'PatientID', Cell: col => this.patientCellhandler(col) },
-            { Header: Literals.Editcash.Register[Profile.Language], accessor: 'RegisterID', Cell: col => this.registerCellhandler(col) },
-            { Header: Literals.Editcash.Movementtype[Profile.Language], accessor: 'Movementtype', Cell: col => this.typeCellhandler(col) },
-            { Header: Literals.Editcash.Movementvalue[Profile.Language], accessor: 'Movementvalue', Cell: col => this.cashCellhandler(col) },
-            { Header: Literals.Editcash.Createduser[Profile.Language], accessor: 'Createduser' },
-            { Header: Literals.Editcash.Updateduser[Profile.Language], accessor: 'Updateduser' },
-            { Header: Literals.Editcash.Createtime[Profile.Language], accessor: 'Createtime' },
-            { Header: Literals.Editcash.Updatetime[Profile.Language], accessor: 'Updatetime' },
-            { Header: Literals.Editcash.edit[Profile.Language], accessor: 'edit', disableProps: true },
-            { Header: Literals.Editcash.delete[Profile.Language], accessor: 'delete', disableProps: true }
+            { Header: t('Common.Column.Id'), accessor: 'Id' },
+            { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+            { Header: t('Pages.Patients.PatientsEditcash.Columns.Patient'), accessor: 'PatientID', Cell: col => this.patientCellhandler(col) },
+            { Header: t('Pages.Patients.PatientsEditcash.Columns.Register'), accessor: 'RegisterID', Cell: col => this.registerCellhandler(col) },
+            { Header: t('Pages.Patients.PatientsEditcash.Columns.Movementtype'), accessor: 'Movementtype', Cell: col => this.typeCellhandler(col) },
+            { Header: t('Pages.Patients.PatientsEditcash.Columns.Movementvalue'), accessor: 'Movementvalue', Cell: col => this.cashCellhandler(col) },
+            { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+            { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+            { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+            { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+            { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+            { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
         const metaKey = 'PatientsEditcash'
@@ -116,19 +118,19 @@ export default class PatientsEditcash extends Component {
                             <Grid.Column width={8}>
                                 <Headerbredcrump>
                                     <Link to={"/Patients"}>
-                                        <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                                        <Breadcrumb.Section>{t('Pages.Patients.Page.Header')}</Breadcrumb.Section>
                                     </Link>
                                     <Breadcrumb.Divider icon='right chevron' />
                                     <Link to={"/Patients/" + Id}>
                                         <Breadcrumb.Section>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}`}</Breadcrumb.Section>
                                     </Link>
                                     <Breadcrumb.Divider icon='right chevron' />
-                                    <Breadcrumb.Section>{Literals.Page.Pageeditcashheader[Profile.Language]}</Breadcrumb.Section>
+                                    <Breadcrumb.Section>{t('Pages.Patients.PatientsEditcash.Page.Header')}</Breadcrumb.Section>
                                 </Headerbredcrump>
                             </Grid.Column>
                             <Settings
                                 Profile={Profile}
-                                Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                                Pagecreateheader={t('Pages.Patients.PatientsEditcash.Page.CreateHeader')}
                                 Pagecreatelink={`/Patientcashmovements/Create?PatientID=${Id}`}
                                 Columns={Columns}
                                 list={list}
@@ -150,7 +152,7 @@ export default class PatientsEditcash extends Component {
                             {Profile.Ismobile ?
                                 <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                                 <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-                        </div> : <NoDataScreen message={Literals.Messages.Nomovementfind[Profile.Language]} />
+                        </div> : <NoDataScreen message={t('Common.NoDataFound')} />
                     }
                     <PatientcashmovementsDelete />
                 </Pagewrapper >
@@ -160,11 +162,12 @@ export default class PatientsEditcash extends Component {
     handleSubmit = (e) => {
         e.preventDefault()
         const { history, Profile, fillPatientnotification, Editpatientcase, match, PatientID } = this.props
+        const t = Profile?.i18n?.t
         let Id = PatientID || match?.params?.PatientID
         const data = this.context.getForm(this.PAGE_NAME)
         let errors = []
         if (!validator.isUUID(data.CaseID)) {
-            errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.WarehouseReuired[Profile.Language] })
+            errors.push({ type: 'Error', code: t('Pages.Patients.PatientsEditcash.Page.Header'), description: t('Pages.Patients.PatientsEditcash.Messages.CaseRequired') })
         }
 
         if (errors.length > 0) {
@@ -201,12 +204,13 @@ export default class PatientsEditcash extends Component {
     }
 
     registerCellhandler = (col) => {
-        const { Patientcashregisters } = this.props
+        const { Patientcashregisters, Profile } = this.props
+        const t = Profile?.i18n?.t
         if (Patientcashregisters.isLoading) {
             return <Loader size='small' active inline='centered' ></Loader>
         } else {
             const register = (Patientcashregisters.list || []).find(u => u.Uuid === col.value)
-            return register?.Name || "tanımsız"
+            return register?.Name || t('Common.NoDataFound')
         }
     }
 }

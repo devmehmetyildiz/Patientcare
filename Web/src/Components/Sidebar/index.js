@@ -156,59 +156,24 @@ export const getSidebarroutes = (Profile) => {
         return isAvailable
     }
 
-    const Sidebarliterals = {
-        Setting: {
-            en: "Settings",
-            tr: "Ayarlar"
-        },
-        Warehouse: {
-            en: "Warehouse Management",
-            tr: "Ambar Yönetimi"
-        },
-        Claimpayments: {
-            en: "Claim Payments",
-            tr: "Hakedişler"
-        },
-        Orders: {
-            en: "Orders",
-            tr: "Siparişler"
-        },
-        Patients: {
-            en: "Patients",
-            tr: "Hastalar"
-        },
-        Organisation: {
-            en: "Organisation Management",
-            tr: "Kurum Yönetimi"
-        },
-        System: {
-            en: "System Management",
-            tr: "Sistem Yönetimi"
-        },
-        Shifts: {
-            en: "Shift Management",
-            tr: "Vardiya Yönetimi"
-        },
-    }
-
     const defaultpages = [
         {
             id: 1,
-            title: Sidebarliterals.Organisation[Profile.Language],
+            title: t('Sidebar.Menu.Organisation'),
             isOpened: false,
             icon: <TbGauge className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: t('Pages.Overview.Page.Header'), url: "/Overview", permission: checkAuth('overviewview') },
-                { id: 5, subtitle: Literals.Patientfollowup.Page.Pageheader[Profile.Language], url: "/Patientfollowup", permission: checkAuth('patientview') },
-                { id: 3, subtitle: Literals.Placeviews.Page.Pageheader[Profile.Language], url: "/Placeviews", permission: checkAuth('placeviewview') },
-                { id: 4, subtitle: Literals.Companycashmovements.Page.Pageheader[Profile.Language], url: "/Companycashmovements", permission: checkAuth('companycashmovementview') },
+                { id: 5, subtitle: t('Pages.Patientfollowup.Page.Header'), url: "/Patientfollowup", permission: checkAuth('patientview') },
+                { id: 3, subtitle: t('Pages.Placeviews.Page.Header'), url: "/Placeviews", permission: checkAuth('placeviewview') },
+                { id: 4, subtitle: t('Pages.Companycashmovements.Page.Header'), url: "/Companycashmovements", permission: checkAuth('companycashmovementview') },
                 { id: 1, subtitle: t('Pages.Approve.Page.Header'), url: "/Approve", permission: checkAuth('roleview') },
                 { id: 2, subtitle: t('Pages.Trainings.Page.Header'), url: "/Trainings", permission: checkAuth('roleview') },
             ]
         },
         {
             id: 2,
-            title: Sidebarliterals.Claimpayments[Profile.Language],
+            title: t('Sidebar.Menu.Claimpayments'),
             isOpened: false,
             icon: <TbReportMoney className=' text-[#2355a0]' />,
             items: [
@@ -218,7 +183,7 @@ export const getSidebarroutes = (Profile) => {
         },
         {
             id: 3,
-            title: Sidebarliterals.Shifts[Profile.Language],
+            title: t('Sidebar.Menu.Shifts'),
             isOpened: false,
             icon: <TbCalendar className=' text-[#2355a0]' />,
             items: [
@@ -230,73 +195,73 @@ export const getSidebarroutes = (Profile) => {
         },
         {
             id: 4,
-            title: Sidebarliterals.Patients[Profile.Language],
+            title: t('Sidebar.Menu.Patients'),
             isOpened: false,
             icon: <Tb3DRotate className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: Literals.Preregistrations.Page.Pageheader[Profile.Language], url: "/Preregistrations", permission: checkAuth('preregistrationview') },
-                { id: 2, subtitle: Literals.Patients.Page.Pageheader[Profile.Language], url: "/Patients", permission: checkAuth('patientview') },
-                { id: 3, subtitle: Literals.Patientdefines.Page.Pageheader[Profile.Language], url: "/Patientdefines", permission: checkAuth('patientdefineview') },
-                { id: 4, subtitle: Literals.Patientcashmovements.Page.Pageheader[Profile.Language], url: "/Patientcashmovements", permission: checkAuth('patientcashmovementview') },
-                { id: 5, subtitle: Literals.Careplans.Page.Pageheader[Profile.Language], url: "/Careplans", permission: checkAuth('careplanview') },
+                { id: 1, subtitle: t('Pages.Preregistrations.Page.Header'), url: "/Preregistrations", permission: checkAuth('preregistrationview') },
+                { id: 2, subtitle: t('Pages.Patients.Page.Header'), url: "/Patients", permission: checkAuth('patientview') },
+                { id: 3, subtitle: t('Pages.Patientdefines.Page.Header'), url: "/Patientdefines", permission: checkAuth('patientdefineview') },
+                { id: 4, subtitle: t('Pages.Patientcashmovements.Page.Header'), url: "/Patientcashmovements", permission: checkAuth('patientcashmovementview') },
+                { id: 5, subtitle: t('Pages.Careplans.Page.Header'), url: "/Careplans", permission: checkAuth('careplanview') },
             ]
         },
         {
             id: 5,
-            title: Sidebarliterals.Warehouse[Profile.Language],
+            title: t('Sidebar.Menu.Warehouse'),
             isOpened: false,
             icon: <TbActivity className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: t('Pages.Purchaseorder.Page.Header'), url: "/Purchaseorders", permission: checkAuth('purchaseorderview') },
-                { id: 2, subtitle: Literals.Warehouses.Page.Pageheader[Profile.Language], url: "/Warehouses", permission: checkAuth('warehouseview') },
-                { id: 3, subtitle: Literals.Stocks.Page.Pageheader[Profile.Language], url: "/Stocks", permission: checkAuth('stockview') },
-                { id: 4, subtitle: Literals.Stockmovements.Page.Pageheader[Profile.Language], url: "/Stockmovements", permission: checkAuth('stockmovementview') },
-                { id: 5, subtitle: Literals.Equipmentgroups.Page.Pageheader[Profile.Language], url: "/Equipmentgroups", permission: checkAuth('equipmentgroupview') },
-                { id: 6, subtitle: Literals.Equipments.Page.Pageheader[Profile.Language], url: "/Equipments", permission: checkAuth('equipmentview') },
-                { id: 7, subtitle: Literals.Breakdowns.Page.Pageheader[Profile.Language], url: "/Breakdowns", permission: checkAuth('breakdownview') },
-                { id: 8, subtitle: Literals.Mainteancies.Page.Pageheader[Profile.Language], url: "/Mainteancies", permission: checkAuth('mainteanceview') },
+                { id: 2, subtitle: t('Pages.Warehouses.Page.Header'), url: "/Warehouses", permission: checkAuth('warehouseview') },
+                { id: 3, subtitle: t('Pages.Stocks.Page.Header'), url: "/Stocks", permission: checkAuth('stockview') },
+                { id: 4, subtitle: t('Pages.Stockmovements.Page.Header'), url: "/Stockmovements", permission: checkAuth('stockmovementview') },
+                { id: 5, subtitle: t('Pages.Equipmentgroups.Page.Header'), url: "/Equipmentgroups", permission: checkAuth('equipmentgroupview') },
+                { id: 6, subtitle: t('Pages.Equipments.Page.Header'), url: "/Equipments", permission: checkAuth('equipmentview') },
+                { id: 7, subtitle: t('Pages.Breakdowns.Page.Header'), url: "/Breakdowns", permission: checkAuth('breakdownview') },
+                { id: 8, subtitle: t('Pages.Mainteancies.Page.Header'), url: "/Mainteancies", permission: checkAuth('mainteanceview') },
             ]
         },
         {
             id: 6,
-            title: Sidebarliterals.System[Profile.Language],
+            title: t('Sidebar.Menu.System'),
             isOpened: false,
             icon: <TbGauge className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: Literals.Files.Page.Pageheader[Profile.Language], url: "/Files", permission: checkAuth('fileview') },
-                { id: 2, subtitle: Literals.Rules.Page.Pageheader[Profile.Language], url: "/Rules", permission: checkAuth('ruleview') },
-                { id: 3, subtitle: Literals.Mailsettings.Page.Pageheader[Profile.Language], url: "/Mailsettings", permission: checkAuth('mailsettingview') },
-                { id: 4, subtitle: Literals.Printtemplates.Page.Pageheader[Profile.Language], url: "/Printtemplates", permission: checkAuth('printtemplateview') },
-                { id: 5, subtitle: Literals.Appreports.Page.Pageheader[Profile.Language], url: "/Appreports", permission: checkAuth('admin') },
+                { id: 1, subtitle: t('Pages.Files.Page.Header'), url: "/Files", permission: checkAuth('fileview') },
+                { id: 2, subtitle: t('Pages.Rules.Page.Header'), url: "/Rules", permission: checkAuth('ruleview') },
+                { id: 3, subtitle: t('Pages.Mailsettings.Page.Header'), url: "/Mailsettings", permission: checkAuth('mailsettingview') },
+                { id: 4, subtitle: t('Pages.Printtemplates.Page.Header'), url: "/Printtemplates", permission: checkAuth('printtemplateview') },
+                { id: 5, subtitle: t('Pages.Appreports.Page.Header'), url: "/Appreports", permission: checkAuth('admin') },
                 { id: 6, subtitle: t('Pages.Log.Page.Header'), url: "/Logs", permission: checkAuth('admin') },
             ]
         },
         {
             id: 7,
-            title: Sidebarliterals.Setting[Profile.Language],
+            title: t('Sidebar.Menu.Setting'),
             isOpened: false,
             icon: <MdSettings className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: Literals.Roles.Page.Pageheader[Profile.Language], url: "/Roles", permission: checkAuth('roleview') },
+                { id: 1, subtitle: t('Pages.Roles.Page.Header'), url: "/Roles", permission: checkAuth('roleview') },
                 { id: 2, subtitle: t('Pages.Departments.Page.Header'), url: "/Departments", permission: checkAuth('departmentview') },
                 { id: 3, subtitle: t('Pages.Users.Page.Header'), url: "/Users", permission: checkAuth('userview') },
                 { id: 4, subtitle: t('Pages.Cases.Page.Header'), url: "/Cases", permission: checkAuth('caseview') },
                 { id: 4, subtitle: t('Pages.Patienteventdefines.Page.Header'), url: "/Patienteventdefines", permission: checkAuth('patienteventdefineview') },
-                { id: 5, subtitle: Literals.Units.Page.Pageheader[Profile.Language], url: "/Units", permission: checkAuth('unitview') },
-                { id: 6, subtitle: Literals.Stocktypes.Page.Pageheader[Profile.Language], url: "/Stocktypes", permission: checkAuth('stocktypeview') },
-                { id: 7, subtitle: Literals.Stocktypegroups.Page.Pageheader[Profile.Language], url: "/Stocktypegroups", permission: checkAuth('stocktypegroupview') },
-                { id: 8, subtitle: Literals.Stockdefines.Page.Pageheader[Profile.Language], url: "/Stockdefines", permission: checkAuth('stockdefineview') },
-                { id: 9, subtitle: Literals.Floors.Page.Pageheader[Profile.Language], url: "/Floors", permission: checkAuth('floorview') },
+                { id: 5, subtitle: t('Pages.Units.Page.Header'), url: "/Units", permission: checkAuth('unitview') },
+                { id: 6, subtitle: t('Pages.Stocktypes.Page.Header'), url: "/Stocktypes", permission: checkAuth('stocktypeview') },
+                { id: 7, subtitle: t('Pages.Stocktypegroups.Page.Header'), url: "/Stocktypegroups", permission: checkAuth('stocktypegroupview') },
+                { id: 8, subtitle: t('Pages.Stockdefines.Page.Header'), url: "/Stockdefines", permission: checkAuth('stockdefineview') },
+                { id: 9, subtitle: t('Pages.Floors.Page.Header'), url: "/Floors", permission: checkAuth('floorview') },
                 { id: 10, subtitle: t('Pages.Rooms.Page.Header'), url: "/Rooms", permission: checkAuth('roomview') },
                 { id: 11, subtitle: t('Pages.Beds.Page.Header'), url: "/Beds", permission: checkAuth('bedview') },
-                { id: 12, subtitle: Literals.Patientcashregisters.Page.Pageheader[Profile.Language], url: "/Patientcashregisters", permission: checkAuth('patientcashregisterview') },
-                { id: 13, subtitle: Literals.Patienttypes.Page.Pageheader[Profile.Language], url: "/Patienttypes", permission: checkAuth('patienttypeview') },
-                { id: 14, subtitle: Literals.Costumertypes.Page.Pageheader[Profile.Language], url: "/Costumertypes", permission: checkAuth('costumertypeview') },
-                { id: 15, subtitle: Literals.Periods.Page.Pageheader[Profile.Language], url: "/Periods", permission: checkAuth('periodview') },
-                { id: 16, subtitle: Literals.Tododefines.Page.Pageheader[Profile.Language], url: "/Tododefines", permission: checkAuth('tododefineview') },
-                { id: 17, subtitle: Literals.Todogroupdefines.Page.Pageheader[Profile.Language], url: "/Todogroupdefines", permission: checkAuth('todogroupdefineview') },
-                { id: 18, subtitle: Literals.Usagetypes.Page.Pageheader[Profile.Language], url: "/Usagetypes", permission: checkAuth('usagetypeview') },
-                { id: 19, subtitle: Literals.Professions.Page.Pageheader[Profile.Language], url: "/Professions", permission: checkAuth('professionview') },
+                { id: 12, subtitle: t('Pages.Patientcashregisters.Page.Header'), url: "/Patientcashregisters", permission: checkAuth('patientcashregisterview') },
+                { id: 13, subtitle: t('Pages.Patienttypes.Page.Header'), url: "/Patienttypes", permission: checkAuth('patienttypeview') },
+                { id: 14, subtitle: t('Pages.Costumertypes.Page.Header'), url: "/Costumertypes", permission: checkAuth('costumertypeview') },
+                { id: 15, subtitle: t('Pages.Periods.Page.Header'), url: "/Periods", permission: checkAuth('periodview') },
+                { id: 16, subtitle: t('Pages.Tododefines.Page.Header'), url: "/Tododefines", permission: checkAuth('tododefineview') },
+                { id: 17, subtitle: t('Pages.Todogroupdefines.Page.Header'), url: "/Todogroupdefines", permission: checkAuth('todogroupdefineview') },
+                { id: 18, subtitle: t('Pages.Usagetypes.Page.Header'), url: "/Usagetypes", permission: checkAuth('usagetypeview') },
+                { id: 19, subtitle: t('Pages.Professions.Page.Header'), url: "/Professions", permission: checkAuth('professionview') },
                 { id: 20, subtitle: t('Pages.Supportplans.Page.Header'), url: "/Supportplans", permission: checkAuth('supportplanview') },
                 { id: 21, subtitle: t('Pages.Supportplanlists.Page.Header'), url: "/Supportplanlists", permission: checkAuth('supportplanlistview') },
                 { id: 22, subtitle: t('Pages.Careplanparameters.Page.Header'), url: "/Careplanparameters", permission: checkAuth('helpstatuview') },

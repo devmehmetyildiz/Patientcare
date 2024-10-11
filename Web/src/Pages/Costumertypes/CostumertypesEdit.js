@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Form } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
@@ -46,6 +45,8 @@ export default class CostumertypesEdit extends Component {
 
     const { Costumertypes, Departments, Profile, history } = this.props
 
+    const t = Profile?.i18n?.t
+
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
@@ -57,28 +58,28 @@ export default class CostumertypesEdit extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Costumertypes"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Costumertypes.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Costumertypes.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Departmentstxt[Profile.Language]} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Costumertypes.Columns.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Costumertypes.Columns.Department')} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
               history={history}
               redirectUrl={"/Costumertypes"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Costumertypes.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -91,6 +92,9 @@ export default class CostumertypesEdit extends Component {
     e.preventDefault()
 
     const { EditCostumertypes, history, fillCostumertypenotification, Departments, Costumertypes, Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     data.Departments = data.Departments.map(id => {
       return (Departments.list || []).filter(u => u.Isactive).find(u => u.Uuid === id)
@@ -98,10 +102,10 @@ export default class CostumertypesEdit extends Component {
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Costumertypes.Page.Header'), description: t('Pages.Costumertypes.Messages.NameRequired') })
     }
     if (!validator.isArray(data.Departments)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Departmentsrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Costumertypes.Page.Header'), description: t('Pages.Costumertypes.Messages.DepartmentRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

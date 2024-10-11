@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Header, Icon } from 'semantic-ui-react'
-import Literals from './Literals'
 import { Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Profilephoto, Submitbutton } from '../../Components'
 import Fileupload, { FileuploadPrepare } from '../../Components/Fileupload'
 
@@ -9,6 +8,7 @@ export default function PatientsFiles(props) {
     const { GetPatient, match, Patientdefines, history, Usagetypes, GetFiles, GetPatientdefines, PatientID, GetUsagetypes, fillFilenotification,
         Files, Patients, EditFiles, Profile, } = props
 
+    const t = Profile?.i18n?.t
     const [patient, setPatient] = useState({})
     const [isDatafetched, setisDatafetched] = useState(false)
     const [selectedFiles, setselectedFiles] = useState([])
@@ -49,7 +49,7 @@ export default function PatientsFiles(props) {
         e.preventDefault()
 
         const Id = match?.params?.PatientID || PatientID
-        const reqFiles = FileuploadPrepare(selectedFiles.map(u => ({ ...u, ParentID: Id })), fillFilenotification, Literals, Profile)
+        const reqFiles = FileuploadPrepare(selectedFiles.map(u => ({ ...u, ParentID: Id })), fillFilenotification, null, Profile)
 
         EditFiles({ data: reqFiles, history, url: Id ? `/Patients/${Id}` : "/Patients" })
     }
@@ -67,14 +67,14 @@ export default function PatientsFiles(props) {
                 <Headerwrapper>
                     <Headerbredcrump>
                         <Link to={"/Patients"}>
-                            <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                            <Breadcrumb.Section>{t('Pages.Patients.Page.Header')}</Breadcrumb.Section>
                         </Link>
                         <Breadcrumb.Divider icon='right chevron' />
                         <Link to={"/Patients/" + Id}>
                             <Breadcrumb.Section>{`${patientdefine?.Firstname} ${patientdefine?.Lastname}`}</Breadcrumb.Section>
                         </Link>
                         <Breadcrumb.Divider icon='right chevron' />
-                        <Breadcrumb.Section>{Literals.Page.Pageeditfileheader[Profile.Language]}</Breadcrumb.Section>
+                        <Breadcrumb.Section>{t('Pages.Patients.PatientFiles.Page.Header')}</Breadcrumb.Section>
                     </Headerbredcrump>
                 </Headerwrapper>
                 <Pagedivider />
@@ -95,18 +95,17 @@ export default function PatientsFiles(props) {
                     Usagetypes={Usagetypes}
                     selectedFiles={selectedFiles}
                     setselectedFiles={setselectedFiles}
-                    Literals={null}
                     Profile={Profile}
                 />
                 <Footerwrapper>
                     <Gobackbutton
                         history={history}
                         redirectUrl={"/Patients"}
-                        buttonText={Literals.Button.Goback[Profile.Language]}
+                        buttonText={t('Common.Button.Goback')}
                     />
                     <Submitbutton
                         isLoading={isLoading}
-                        buttonText={Literals.Button.Update[Profile.Language]}
+                        buttonText={t('Common.Button.Update')}
                         submitFunction={handleSubmit}
                     />
                 </Footerwrapper>

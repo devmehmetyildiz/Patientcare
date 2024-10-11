@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -50,6 +49,8 @@ export default class StocktypegroupsEdit extends Component {
 
     const { Stocktypes, Stocktypegroups, Profile, history } = this.props
 
+    const t = Profile?.i18n?.t
+
     const Stocktypesoption = (Stocktypes.list || []).filter(u => u.Isactive).map(type => {
       return { key: type.Uuid, text: type.Name, value: type.Uuid }
     })
@@ -60,21 +61,21 @@ export default class StocktypegroupsEdit extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Stocktypegroups"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Stocktypegroups.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Stocktypegroups.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypegroups.Columns.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stocktypegroups.Columns.Info')} name="Info" />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stocktypes[Profile.Language]} options={Stocktypesoption} name="Stocktypes" formtype='dropdown' multiple modal={StocktypesCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypegroups.Columns.Stocktypes')} options={Stocktypesoption} name="Stocktypes" formtype='dropdown' multiple modal={StocktypesCreate} />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -82,11 +83,11 @@ export default class StocktypegroupsEdit extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Stocktypegroups"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Stocktypegroups.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -99,16 +100,18 @@ export default class StocktypegroupsEdit extends Component {
     e.preventDefault()
 
     const { EditStocktypegroups, history, fillStocktypegroupnotification, Stocktypegroups, Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Stocktypegroups.Page.Header'), description: t('Pages.Stocktypegroups.Messages.NameRequired') })
     }
     if (!validator.isArray(data.Stocktypes)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.StocktypesRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Stocktypegroups.Page.Header'), description: t('Pages.Stocktypegroups.Messages.StocktypesRequired') })
     }
-
     data.Stocktypes = (data.Stocktypes || []).join(',')
 
     if (errors.length > 0) {

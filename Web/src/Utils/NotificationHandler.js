@@ -16,7 +16,6 @@ import { removeRolenotification } from "../Redux/RoleSlice"
 import { removeRoomnotification } from "../Redux/RoomSlice"
 import { removeRulenotification } from "../Redux/RuleSlice"
 import { removePrinttemplatenotification } from "../Redux/PrinttemplateSlice"
-import { removeStationnotification } from "../Redux/StationSlice"
 import { removeStockdefinenotification } from "../Redux/StockdefineSlice"
 import { removeStockmovementnotification } from "../Redux/StockmovementSlice"
 import { removeStocknotification } from "../Redux/StockSlice"
@@ -65,7 +64,7 @@ export function NotificationHandler(props) {
         const {
             removeWarehousenotification, removeUsernotification, removeUnitnotification,
             removeTodogroupdefinenotification, removeTododefinenotification, removeStocknotification,
-            removeStockmovementnotification, removeStockdefinenotification, removeStationnotification,
+            removeStockmovementnotification, removeStockdefinenotification,
             removeRulenotification, removePrinttemplatenotification, removeRoomnotification, removeRolenotification,
             removenotification, removePatienttypenotification, removePatientnotification, removePatientdefinenotification, removeMailsettingnotification,
             removeFloornotification, removeFilenotification, removeDepartmentnotification, removeCostumertypenotification,
@@ -82,7 +81,7 @@ export function NotificationHandler(props) {
         const {
             Warehouses, Users, Units,
             Todogroupdefines, Tododefines, Stocks, Stockmovements,
-            Stockdefines, Stations, Rules, Printtemplates, Rooms,
+            Stockdefines, Rules, Printtemplates, Rooms,
             Roles, Profile, Patienttypes, Patients, Patientdefines, Mailsettings,
             Floors, Files, Departments, Costumertypes, Breakdowns, Mainteancies,
             Periods, Cases, Beds, Shiftdefines, Equipmentgroups, Equipments, Personels,
@@ -103,7 +102,6 @@ export function NotificationHandler(props) {
         Notification(Stocks.notifications, removeStocknotification)
         Notification(Stockmovements.notifications, removeStockmovementnotification)
         Notification(Stockdefines.notifications, removeStockdefinenotification)
-        Notification(Stations.notifications, removeStationnotification)
         Notification(Rules.notifications, removeRulenotification)
         Notification(Printtemplates.notifications, removePrinttemplatenotification)
         Notification(Rooms.notifications, removeRoomnotification)
@@ -159,7 +157,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     removeWarehousenotification, removeUsernotification, removeUnitnotification,
     removeTodogroupdefinenotification, removeTododefinenotification, removeStocknotification,
-    removeStockmovementnotification, removeStockdefinenotification, removeStationnotification,
+    removeStockmovementnotification, removeStockdefinenotification,
     removeRulenotification, removePrinttemplatenotification, removeRoomnotification, removeRolenotification,
     removenotification, removePatienttypenotification, removePatientnotification,
     removePatientdefinenotification, removeMailsettingnotification,

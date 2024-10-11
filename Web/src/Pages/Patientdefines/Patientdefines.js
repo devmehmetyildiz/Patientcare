@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Loader, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import Literals from './Literals'
 import PatientdefinesDelete from "../../Containers/Patientdefines/PatientdefinesDelete"
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
@@ -18,6 +17,9 @@ export default class Patientdefines extends Component {
   render() {
 
     const { Patientdefines, Profile, handleSelectedPatientdefine, handleDeletemodal } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isLoading } = Patientdefines
 
     const colProps = {
@@ -27,46 +29,46 @@ export default class Patientdefines extends Component {
     }
 
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Firstname[Profile.Language], accessor: 'Firstname', Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Lastname[Profile.Language], accessor: 'Lastname', Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.Fathername[Profile.Language], accessor: 'Fathername' },
-      { Header: Literals.Columns.Mothername[Profile.Language], accessor: 'Mothername' },
-      { Header: Literals.Columns.Motherbiologicalaffinity[Profile.Language], accessor: 'Motherbiologicalaffinity' },
-      { Header: Literals.Columns.Ismotheralive[Profile.Language], accessor: row => this.boolCellhandler(row?.Ismotheralive) },
-      { Header: Literals.Columns.Fatherbiologicalaffinity[Profile.Language], accessor: 'Fatherbiologicalaffinity' },
-      { Header: Literals.Columns.Isfatheralive[Profile.Language], accessor: row => this.boolCellhandler(row?.Isfatheralive) },
-      { Header: Literals.Columns.CountryID[Profile.Language], accessor: 'CountryID', Title: true },
-      { Header: Literals.Columns.Dateofbirth[Profile.Language], accessor: row => this.dateCellhandler(row?.Dateofbirth) },
-      { Header: Literals.Columns.Placeofbirth[Profile.Language], accessor: 'Placeofbirth' },
-      { Header: Literals.Columns.Gender[Profile.Language], accessor: 'Gender' },
-      { Header: Literals.Columns.Marialstatus[Profile.Language], accessor: 'Marialstatus' },
-      { Header: Literals.Columns.Criminalrecord[Profile.Language], accessor: 'Criminalrecord' },
-      { Header: Literals.Columns.Childnumber[Profile.Language], accessor: 'Childnumber' },
-      { Header: Literals.Columns.Disabledchildnumber[Profile.Language], accessor: 'Disabledchildnumber' },
-      { Header: Literals.Columns.Siblingstatus[Profile.Language], accessor: 'Siblingstatus' },
-      { Header: Literals.Columns.Sgkstatus[Profile.Language], accessor: 'Sgkstatus' },
-      { Header: Literals.Columns.Budgetstatus[Profile.Language], accessor: 'Budgetstatus' },
-      { Header: Literals.Columns.City[Profile.Language], accessor: 'City' },
-      { Header: Literals.Columns.Town[Profile.Language], accessor: 'Town' },
-      { Header: Literals.Columns.Address1[Profile.Language], accessor: 'Address1' },
-      { Header: Literals.Columns.Address2[Profile.Language], accessor: 'Address2' },
-      { Header: Literals.Columns.Country[Profile.Language], accessor: 'Country' },
-      { Header: Literals.Columns.Contactnumber1[Profile.Language], accessor: 'Contactnumber1' },
-      { Header: Literals.Columns.Contactnumber2[Profile.Language], accessor: 'Contactnumber2' },
-      { Header: Literals.Columns.Contactname1[Profile.Language], accessor: 'Contactname1' },
-      { Header: Literals.Columns.Contactname2[Profile.Language], accessor: 'Contactname2' },
-      { Header: Literals.Columns.CostumertypeName[Profile.Language], accessor: row => this.costumertypeCellhandler(row?.CostumertypeID), Lowtitle: true, Withtext: true },
-      { Header: Literals.Columns.PatienttypeName[Profile.Language], accessor: row => this.patienttypeCellhandler(row?.PatienttypeID), Subtitle: true, Withtext: true },
-      { Header: Literals.Columns.Medicalboardreport[Profile.Language], accessor: 'Medicalboardreport' },
-      { Header: Literals.Columns.Dependency[Profile.Language], accessor: 'Dependency' },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+      { Header: t('Common.Column.Id'), accessor: 'Id' },
+      { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+      { Header: t('Pages.Patientdefines.Column.Firstname'), accessor: 'Firstname', Lowtitle: true, Withtext: true },
+      { Header: t('Pages.Patientdefines.Column.Lastname'), accessor: 'Lastname', Lowtitle: true, Withtext: true },
+      { Header: t('Pages.Patientdefines.Column.Fathername'), accessor: 'Fathername' },
+      { Header: t('Pages.Patientdefines.Column.Mothername'), accessor: 'Mothername' },
+      { Header: t('Pages.Patientdefines.Column.Motherbiologicalaffinity'), accessor: 'Motherbiologicalaffinity' },
+      { Header: t('Pages.Patientdefines.Column.Ismotheralive'), accessor: row => this.boolCellhandler(row?.Ismotheralive) },
+      { Header: t('Pages.Patientdefines.Column.Fatherbiologicalaffinity'), accessor: 'Fatherbiologicalaffinity' },
+      { Header: t('Pages.Patientdefines.Column.Isfatheralive'), accessor: row => this.boolCellhandler(row?.Isfatheralive) },
+      { Header: t('Pages.Patientdefines.Column.CountryID'), accessor: 'CountryID', Title: true },
+      { Header: t('Pages.Patientdefines.Column.Dateofbirth'), accessor: row => this.dateCellhandler(row?.Dateofbirth) },
+      { Header: t('Pages.Patientdefines.Column.Placeofbirth'), accessor: 'Placeofbirth' },
+      { Header: t('Pages.Patientdefines.Column.Gender'), accessor: 'Gender' },
+      { Header: t('Pages.Patientdefines.Column.Marialstatus'), accessor: 'Marialstatus' },
+      { Header: t('Pages.Patientdefines.Column.Criminalrecord'), accessor: 'Criminalrecord' },
+      { Header: t('Pages.Patientdefines.Column.Childnumber'), accessor: 'Childnumber' },
+      { Header: t('Pages.Patientdefines.Column.Disabledchildnumber'), accessor: 'Disabledchildnumber' },
+      { Header: t('Pages.Patientdefines.Column.Siblingstatus'), accessor: 'Siblingstatus' },
+      { Header: t('Pages.Patientdefines.Column.Sgkstatus'), accessor: 'Sgkstatus' },
+      { Header: t('Pages.Patientdefines.Column.Budgetstatus'), accessor: 'Budgetstatus' },
+      { Header: t('Pages.Patientdefines.Column.City'), accessor: 'City' },
+      { Header: t('Pages.Patientdefines.Column.Town'), accessor: 'Town' },
+      { Header: t('Pages.Patientdefines.Column.Address1'), accessor: 'Address1' },
+      { Header: t('Pages.Patientdefines.Column.Address2'), accessor: 'Address2' },
+      { Header: t('Pages.Patientdefines.Column.Country'), accessor: 'Country' },
+      { Header: t('Pages.Patientdefines.Column.Contactnumber1'), accessor: 'Contactnumber1' },
+      { Header: t('Pages.Patientdefines.Column.Contactnumber2'), accessor: 'Contactnumber2' },
+      { Header: t('Pages.Patientdefines.Column.Contactname1'), accessor: 'Contactname1' },
+      { Header: t('Pages.Patientdefines.Column.Contactname2'), accessor: 'Contactname2' },
+      { Header: t('Pages.Patientdefines.Column.CostumertypeID'), accessor: row => this.costumertypeCellhandler(row?.CostumertypeID), Lowtitle: true, Withtext: true },
+      { Header: t('Pages.Patientdefines.Column.PatienttypeID'), accessor: row => this.patienttypeCellhandler(row?.PatienttypeID), Subtitle: true, Withtext: true },
+      { Header: t('Pages.Patientdefines.Column.Medicalboardreport'), accessor: 'Medicalboardreport' },
+      { Header: t('Pages.Patientdefines.Column.Dependency'), accessor: 'Dependency' },
+      { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+      { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+      { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+      { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "patientdefine"
@@ -92,13 +94,13 @@ export default class Patientdefines extends Component {
                 <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Patientdefines"}>
-                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                      <Breadcrumb.Section>{t('Pages.Patientdefines.Page.Header')}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
                 <Settings
                   Profile={Profile}
-                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreateheader={t('Pages.Patientdefines.Page.CreateHeader')}
                   Pagecreatelink={"/Patientdefines/Create"}
                   Columns={Columns}
                   list={list}
@@ -116,7 +118,7 @@ export default class Patientdefines extends Component {
                 {Profile.Ismobile ?
                   <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
             }
           </Pagewrapper>
           <PatientdefinesDelete />
@@ -126,7 +128,8 @@ export default class Patientdefines extends Component {
 
   boolCellhandler = (value) => {
     const { Profile } = this.props
-    return value !== null && (value ? Literals.Messages.Yes[Profile.Language] : Literals.Messages.No[Profile.Language])
+    const t = Profile?.i18n?.t
+    return value !== null && (value ? t('Common.Yes') : t('Common.No'))
   }
 
   costumertypeCellhandler = (value) => {

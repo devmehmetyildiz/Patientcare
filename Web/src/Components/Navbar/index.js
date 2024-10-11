@@ -4,38 +4,7 @@ import { Link } from 'react-router-dom'
 import { Button, Dropdown, Header, Icon, Modal } from 'semantic-ui-react'
 import Search from '../Search'
 import { Profilephoto } from '..'
-const navbarLiterals = {
 
-  editProfile: {
-    en: "Profile",
-    tr: "Profilim"
-  },
-  changePassword: {
-    en: "Change Password",
-    tr: "Parola Değiştir"
-  },
-  exit: {
-    en: "Exit",
-    tr: "Çıkış Yap"
-  },
-  Yes: {
-    en: "Yes",
-    tr: "Evet"
-  },
-  No: {
-    en: "No",
-    tr: "Hayır"
-  },
-  exitText: {
-    en: "Are you sure to exit?",
-    tr: "Çıkış yapmak istediğine emin misiniz?"
-  },
-  exitTitle: {
-    en: "You gonna exit from program!",
-    tr: "Uygulamadan çıkış yapmak üzeresiniz"
-  }
-  
-}
 export class Navbar extends Component {
   state = { open: false, searchWord: '' }
 
@@ -54,6 +23,9 @@ export class Navbar extends Component {
 
   render() {
     const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, Usagetypes, history, onlyTitle, handleNotification, fillnotification, Files } = this.props
+
+    const t = Profile?.i18n?.t
+
     let usagetypePP = (Usagetypes?.list || []).find(u => u.Value === 'PP')?.Uuid || null
     let file = (Files?.list || []).filter(u => u.ParentID === Profile?.meta?.Uuid).find(u => (((u.Usagetype || '').split(',')) || []).includes(usagetypePP))
 
@@ -111,30 +83,30 @@ export class Navbar extends Component {
               <Dropdown icon={null} trigger={trigger} basic className="h-full block">
                 <Dropdown.Menu className='!right-[1%] !left-auto '>
                   <Dropdown.Item>
-                    <Link to={`/Users/${Profile?.meta?.Uuid}`} className='text-[#3d3d3d] hover:text-[#3d3d3d]'><Icon className='id card ' />{navbarLiterals.editProfile[Profile.Language]}</Link>
+                    <Link to={`/Users/${Profile?.meta?.Uuid}`} className='text-[#3d3d3d] hover:text-[#3d3d3d]'><Icon className='id card ' />{t('Navbar.Label.Profile')}</Link>
                   </Dropdown.Item>
                   <Dropdown.Item>
-                    <Link to='/profile/change-password' className='text-[#3d3d3d] hover:text-[#3d3d3d]'> <Icon className='lock' />{navbarLiterals.changePassword[Profile.Language]}</Link>
+                    <Link to='/profile/change-password' className='text-[#3d3d3d] hover:text-[#3d3d3d]'> <Icon className='lock' />{t('Navbar.Label.Changepassword')}</Link>
                   </Dropdown.Item>
                   <Dropdown.Item className='layout-menu-item logout' >
                     <Modal
                       open={this.state.open}
-                      trigger={<Button>{navbarLiterals.exit[Profile.Language]}</Button>}
+                      trigger={<Button>{t('Navbar.Label.Exit')}</Button>}
                       onClose={() => this.handleClose()}
                       onOpen={() => this.handleOpen()}
                     >
                       <Header icon='archive' content='Uygulamadan Çıkmak Üzeresiniz!' />
                       <Modal.Content>
                         <p>
-                          {navbarLiterals.exitText[Profile.Language]}
+                          {t('Navbar.Label.ExitWarning')}
                         </p>
                       </Modal.Content>
                       <Modal.Actions>
                         <Button color='red' onClick={() => this.handleClose()} >
-                          <Icon name='remove' /> {navbarLiterals.No[Profile.Language]}
+                          <Icon name='remove' /> {t('Common.No')}
                         </Button>
                         <Button color='green' onClick={() => { this.LogoutHandler() }}>
-                          <Icon name='checkmark' /> {navbarLiterals.Yes[Profile.Language]}
+                          <Icon name='checkmark' /> {t('Common.Yes')}
                         </Button>
                       </Modal.Actions>
                     </Modal>

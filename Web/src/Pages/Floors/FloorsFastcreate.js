@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
-import Literals from './Literals'
 import { Button, Dropdown, Form, Modal } from 'semantic-ui-react'
 import { Pagedivider } from '../../Components'
+import { GENDER_OPTION_MEN, GENDER_OPTION_WOMEN } from '../../Utils/Constants'
 
 export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, handleFastcreatemodal }) {
+
+    const t = Profile?.i18n?.t
 
     const [record, setRecord] = useState({})
 
     const { isFastcreatemodalopen } = Floors
 
     const Genderoptions = [
-        { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
-        { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
+        { key: 0, text: t('Option.Genderoption.Men'), value: GENDER_OPTION_MEN },
+        { key: 1, text: t('Option.Genderoption.Women'), value: GENDER_OPTION_WOMEN }
     ]
 
     return (
@@ -23,12 +25,12 @@ export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, ha
             }}
             open={isFastcreatemodalopen}
         >
-            <Modal.Header>{Literals.Page.Pagefastcreateheader[Profile.Language]}</Modal.Header>
+            <Modal.Header>{t('Pages.Floors.Page.FastCreateHeader')}</Modal.Header>
             <Modal.Content image>
                 <Modal.Description>
                     <Form>
                         <Form.Field>
-                            <label className='text-[#000000de] mb-2'>{Literals.Columns.Gender[Profile.Language]}</label>
+                            <label className='text-[#000000de] mb-2'>{t('Pages.Floors.Column.Gender')}</label>
                             <Dropdown
                                 fluid
                                 clearable
@@ -40,24 +42,24 @@ export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, ha
                         <Form.Group widths={'equal'}>
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Formatfloorstringstart': e.target.value }) }}
-                                label={Literals.Columns.Formatfloorstringstart[Profile.Language]}
-                                placeholder={Literals.Columns.Formatfloorstringstart[Profile.Language]}
+                                label={t('Pages.Floors.Column.Formatfloorstringstart')}
+                                placeholder={t('Pages.Floors.Column.Formatfloorstringstart')}
                             />
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Formatfloorstringend': e.target.value }) }}
-                                label={Literals.Columns.Formatfloorstringend[Profile.Language]}
-                                placeholder={Literals.Columns.Formatfloorstringend[Profile.Language]}
+                                label={t('Pages.Floors.Column.Formatfloorstringend')}
+                                placeholder={t('Pages.Floors.Column.Formatfloorstringend')}
                             />
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Floorstartnumber': e.target.value }) }}
-                                label={Literals.Columns.Floorstartnumber[Profile.Language]}
-                                placeholder={Literals.Columns.Floorstartnumber[Profile.Language]}
+                                label={t('Pages.Floors.Column.Floorstartnumber')}
+                                placeholder={t('Pages.Floors.Column.Floorstartnumber')}
                                 type='number'
                             />
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Floorendnumber': e.target.value }) }}
-                                label={Literals.Columns.Floorendnumber[Profile.Language]}
-                                placeholder={Literals.Columns.Floorendnumber[Profile.Language]}
+                                label={t('Pages.Floors.Column.Floorendnumber')}
+                                placeholder={t('Pages.Floors.Column.Floorendnumber')}
                                 type='number'
                             />
                         </Form.Group>
@@ -65,24 +67,24 @@ export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, ha
                         <Form.Group widths={'equal'}>
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Formatroomstringstart': e.target.value }) }}
-                                label={Literals.Columns.Formatroomstringstart[Profile.Language]}
-                                placeholder={Literals.Columns.Formatroomstringstart[Profile.Language]}
+                                label={t('"Pages.Floors.Column.Formatroomstringstart')}
+                                placeholder={t('"Pages.Floors.Column.Formatroomstringstart')}
                             />
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Formatroomstringend': e.target.value }) }}
-                                label={Literals.Columns.Formatroomstringend[Profile.Language]}
-                                placeholder={Literals.Columns.Formatroomstringend[Profile.Language]}
+                                label={t('Pages.Floors.Column.Formatroomstringend')}
+                                placeholder={t('Pages.Floors.Column.Formatroomstringend')}
                             />
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Roomstartnumber': e.target.value }) }}
-                                label={Literals.Columns.Roomstartnumber[Profile.Language]}
-                                placeholder={Literals.Columns.Roomstartnumber[Profile.Language]}
+                                label={t('Pages.Floors.Column.Roomstartnumber')}
+                                placeholder={t('Pages.Floors.Column.Roomstartnumber')}
                                 type='number'
                             />
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Roomendnumber': e.target.value }) }}
-                                label={Literals.Columns.Roomendnumber[Profile.Language]}
-                                placeholder={Literals.Columns.Roomendnumber[Profile.Language]}
+                                label={t('Pages.Floors.Column.Roomendnumber')}
+                                placeholder={t('Pages.Floors.Column.Roomendnumber')}
                                 type='number'
                             />
                         </Form.Group>
@@ -90,24 +92,24 @@ export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, ha
                         <Form.Group widths={'equal'}>
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Formatbedstringstart': e.target.value }) }}
-                                label={Literals.Columns.Formatbedstringstart[Profile.Language]}
-                                placeholder={Literals.Columns.Formatbedstringstart[Profile.Language]}
+                                label={t('Pages.Floors.Column.Formatbedstringstart')}
+                                placeholder={t('Pages.Floors.Column.Formatbedstringstart')}
                             />
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Formatbedstringend': e.target.value }) }}
-                                label={Literals.Columns.Formatbedstringend[Profile.Language]}
-                                placeholder={Literals.Columns.Formatbedstringend[Profile.Language]}
+                                label={t('Pages.Floors.Column.Formatbedstringend')}
+                                placeholder={t('Pages.Floors.Column.Formatbedstringend')}
                             />
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Bedstartnumber': e.target.value }) }}
-                                label={Literals.Columns.Bedstartnumber[Profile.Language]}
-                                placeholder={Literals.Columns.Bedstartnumber[Profile.Language]}
+                                label={t('Pages.Floors.Column.Bedstartnumber')}
+                                placeholder={t('Pages.Floors.Column.Bedstartnumber')}
                                 type='number'
                             />
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Bedendnumber': e.target.value }) }}
-                                label={Literals.Columns.Bedendnumber[Profile.Language]}
-                                placeholder={Literals.Columns.Bedendnumber[Profile.Language]}
+                                label={t('Pages.Floors.Column.Bedendnumber')}
+                                placeholder={t('Pages.Floors.Column.Bedendnumber')}
                                 type='number'
                             />
                         </Form.Group>
@@ -119,10 +121,10 @@ export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, ha
                     handleFastcreatemodal(false)
                     setRecord({})
                 }}>
-                    {Literals.Button.Giveup[Profile.Language]}
+                    {t('Common.Button.Giveup')}
                 </Button>
                 <Button
-                    content={Literals.Button.Create[Profile.Language]}
+                    content={t('Common.Button.Delete')}
                     labelPosition='right'
                     icon='checkmark'
                     onClick={() => {

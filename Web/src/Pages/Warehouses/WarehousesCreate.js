@@ -1,28 +1,19 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
-import StocktypegroupsCreate from '../../Containers/Stocktypegroups/StocktypegroupsCreate'
 
 export default class WarehousesCreate extends Component {
 
   PAGE_NAME = "WarehousesCreate"
 
-  componentDidMount() {
-    const { GetStocktypegroups } = this.props
-    GetStocktypegroups()
-  }
-
   render() {
 
-    const { Warehouses, Profile, history, closeModal, Stocktypegroups } = this.props
+    const { Warehouses, Profile, history, closeModal } = this.props
 
-    const Stocktypegroupsoption = (Stocktypegroups.list || []).filter(u => u.Isactive).map(type => {
-      return { key: type.Uuid, text: type.Name, value: type.Uuid }
-    })
+    const t = Profile?.i18n?.t
 
     const { isLoading } = Warehouses
 
@@ -32,10 +23,10 @@ export default class WarehousesCreate extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Warehouses"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Warehouses.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Warehouses.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
@@ -43,20 +34,20 @@ export default class WarehousesCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Warehouses.Columns.Name')} name="Name" />
               </Form.Group>
-              <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+              <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Warehouses.Columns.Info')} name="Info" />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
               history={history}
               redirectUrl={"/Warehouses"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -69,10 +60,12 @@ export default class WarehousesCreate extends Component {
 
     const { AddWarehouses, history, fillWarehousenotification, Profile, closeModal } = this.props
 
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Warehouses.Page.Header'), description: t('Pages.Warehouses.Messages.NameRequired') })
     }
 
     if (errors.length > 0) {

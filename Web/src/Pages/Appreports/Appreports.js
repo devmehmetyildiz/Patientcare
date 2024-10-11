@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import Literals from './Literals'
 import { FormContext } from '../../Provider/FormProvider'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -19,6 +18,8 @@ export default class Appreports extends Component {
     render() {
 
         const { Profile, Reports, Users } = this.props
+
+        const t = Profile?.i18n?.t
 
         const { logs } = Reports
 
@@ -41,14 +42,18 @@ export default class Appreports extends Component {
                 type: 'pie',
             },
             title: {
-                text: 'Aylık Servis Kullanımı',
+                text: t('Pages.Appreports.Column.Montlyusage'),
             },
             series: {
-                name: 'Servisler',
+                name: t('Pages.Appreports.Column.Services'),
                 data: servicesUsage
             }
         };
 
+        const monthslabels = {
+            en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            tr: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık']
+        }
         const userLog = [...new Set(logs.map(u => { return u.RequestuserID }) || [])]
         const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         const lineoptions = {
@@ -57,14 +62,14 @@ export default class Appreports extends Component {
                 zoomType: 'x'
             },
             title: {
-                text: 'Uygulama Girişleri',
+                text: t('Pages.Appreports.Column.Applogins'),
             },
             xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                categories: monthslabels[Profile.Language],
             },
             yAxis: {
                 title: {
-                    text: 'Giriş Sayısı',
+                    text: t('Pages.Appreports.Column.Logincount'),
                 },
             },
             series: (userLog || []).map(user => {
@@ -90,7 +95,7 @@ export default class Appreports extends Component {
                                 <GridColumn width={8}>
                                     <Breadcrumb size='big'>
                                         <Link to={"/Appreports"} >
-                                            <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                                            <Breadcrumb.Section>{t('Pages.Appreports.Page.Header')}</Breadcrumb.Section>
                                         </Link>
                                     </Breadcrumb>
                                 </GridColumn>

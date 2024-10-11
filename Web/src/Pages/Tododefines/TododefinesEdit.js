@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -43,6 +42,9 @@ export default class TododefinesEdit extends Component {
   render() {
 
     const { Tododefines, Periods, Profile, history } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isLoading } = Tododefines
 
     const Periodsoptions = (Periods.list || []).filter(u => u.Isactive).map(period => {
@@ -55,26 +57,26 @@ export default class TododefinesEdit extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Tododefines"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Tododefines.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Tododefines.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Dayperiod[Profile.Language]} name="Dayperiod" type="number" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Info[Profile.Language]} name="Info" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Tododefines.Column.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Tododefines.Column.Dayperiod')} name="Dayperiod" type="number" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Tododefines.Column.Info')} name="Info" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Periods[Profile.Language]} name="Periods" multiple options={Periodsoptions} formtype='dropdown' modal={PeriodsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Tododefines.Column.Periods')} name="Periods" multiple options={Periodsoptions} formtype='dropdown' modal={PeriodsCreate} />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsRequired[Profile.Language]} name="IsRequired" formtype="checkbox" />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.IsNeedactivation[Profile.Language]} name="IsNeedactivation" formtype="checkbox" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Tododefines.Column.IsRequired')} name="IsRequired" formtype="checkbox" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Tododefines.Column.IsNeedactivation')} name="IsNeedactivation" formtype="checkbox" />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -82,11 +84,11 @@ export default class TododefinesEdit extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Tododefines"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Tododefines.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -98,6 +100,9 @@ export default class TododefinesEdit extends Component {
     e.preventDefault()
 
     const { EditTododefines, history, fillTododefinenotification, Tododefines, Periods, Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     data.Periods = data.Periods.map(id => {
       return (Periods.list || []).find(u => u.Uuid === id)
@@ -105,13 +110,13 @@ export default class TododefinesEdit extends Component {
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
-    }
-    if (!validator.isNumber(data.Dayperiod)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DayperiodRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Tododefines.Page.Header'), description: t('Pages.Tododefines.Messages.NameRequired') })
     }
     if (!validator.isArray(data.Periods)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.PeriodsRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Tododefines.Page.Header'), description: t('Pages.Tododefines.Messages.PeriodsRequired') })
+    }
+    if (!validator.isNumber(data.Dayperiod)) {
+      errors.push({ type: 'Error', code: t('Pages.Tododefines.Page.Header'), description: t('Pages.Tododefines.Messages.DayperiodRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Form } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -66,6 +65,8 @@ export default class BreakdownsEdit extends Component {
   render() {
     const { Breakdowns, Equipments, Files, Usagetypes, Users, Equipmentgroups, Profile, history, fillBreakdownnotification } = this.props
 
+    const t = Profile?.i18n?.t
+
     const Useroptions = (Users.list || []).filter(u => u.Isactive).map(personel => {
       return { key: personel.Uuid, text: `${personel?.Name} ${personel?.Surname}`, value: personel.Uuid }
     })
@@ -93,22 +94,22 @@ export default class BreakdownsEdit extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Breakdowns"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Breakdowns.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Breakdowns.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.EquipmentgroupID[Profile.Language]} name="EquipmentgroupID" options={Equipmentgroupoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.EquipmentID[Profile.Language]} name="EquipmentID" options={Equipmentoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Breakdowns.Column.Equipmentgroup')} name="EquipmentgroupID" options={Equipmentgroupoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Breakdowns.Column.Equipment')} name="EquipmentID" options={Equipmentoptions} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.ResponsibleuserID[Profile.Language]} name="ResponsibleuserID" options={Useroptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} placeholder={Literals.Columns.Openinfo[Profile.Language]} name="Openinfo" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Breakdowns.Column.Responsibleuser')} name="ResponsibleuserID" options={Useroptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Breakdowns.Column.Openinfo')} name="Openinfo" />
               </Form.Group>
             </Form>
             <Fileupload
@@ -116,7 +117,6 @@ export default class BreakdownsEdit extends Component {
               Usagetypes={Usagetypes}
               selectedFiles={this.state.selectedFiles}
               setselectedFiles={this.setselectedFiles}
-              Literals={Literals}
               Profile={Profile}
             />
           </Contentwrapper>
@@ -124,11 +124,11 @@ export default class BreakdownsEdit extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Breakdowns"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Breakdowns.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -141,12 +141,15 @@ export default class BreakdownsEdit extends Component {
     e.preventDefault()
     const { EditBreakdowns, history, fillBreakdownnotification, Profile, Breakdowns } = this.props
     const data = this.context.getForm(this.PAGE_NAME)
+
+    const t = Profile?.i18n?.t
+
     let errors = []
     if (!validator.isUUID(data.EquipmentID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Equipmentrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Breakdowns.Page.Header'), description: t('Pages.Breakdowns.Messages.EquipmentRequired') })
     }
     if (!validator.isUUID(data.ResponsibleuserID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Responsibleuserrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Breakdowns.Page.Header'), description: t('Pages.Breakdowns.Messages.ResponsibleuserRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

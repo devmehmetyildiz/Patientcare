@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import { FormInput,Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import TododefinesCreate from '../../Containers/Tododefines/TododefinesCreate'
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 export default class TodogroupdefinesCreate extends Component {
@@ -28,6 +27,8 @@ export default class TodogroupdefinesCreate extends Component {
   render() {
     const { Todogroupdefines, Departments, Tododefines, Profile, history, closeModal } = this.props
 
+    const t = Profile?.i18n?.t
+
     const Tododefineoptions = (Tododefines.list || []).filter(u => u.Isactive).map(tododefine => {
       return { key: tododefine.Uuid, text: tododefine.Name, value: tododefine.Uuid }
     })
@@ -41,20 +42,20 @@ export default class TodogroupdefinesCreate extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Todogroupdefines"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Todogroupdefines.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Todogroupdefines.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Todogroupdefines.Column.Name')} name="Name" />
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Tododefines[Profile.Language]} name="Tododefines" multiple options={Tododefineoptions} formtype='dropdown' modal={TododefinesCreate} />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Todogroupdefines.Column.Tododefines')} name="Tododefines" multiple options={Tododefineoptions} formtype='dropdown' modal={TododefinesCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Todogroupdefines.Column.Department')} name="DepartmentID" options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -62,11 +63,11 @@ export default class TodogroupdefinesCreate extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Todogroupdefines"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Todogroupdefines.isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -79,6 +80,9 @@ export default class TodogroupdefinesCreate extends Component {
     e.preventDefault()
 
     const { AddTodogroupdefines, history, fillTodogroupdefinenotification, Tododefines, Profile, closeModal } = this.props
+   
+    const t = Profile?.i18n?.t
+   
     const data = this.context.getForm(this.PAGE_NAME)
     data.Tododefines = data.Tododefines.map(id => {
       return (Tododefines.list || []).find(u => u.Uuid === id)
@@ -86,13 +90,13 @@ export default class TodogroupdefinesCreate extends Component {
 
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.NameRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Todogroupdefines.Page.Header'), description: t('Pages.Todogroupdefines.Messages.NameRNameRequiredequired') })
     }
     if (!validator.isArray(data.Tododefines)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.TododefininesRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Todogroupdefines.Page.Header'), description: t('Pages.Todogroupdefines.Messages.TododefinesRequired') })
     }
     if (!validator.isUUID(data.DepartmentID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.DepartmentRequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Todogroupdefines.Page.Header'), description: t('Pages.Todogroupdefines.Messages.DepartmentRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

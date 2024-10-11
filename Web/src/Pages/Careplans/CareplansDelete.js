@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Button, Modal } from 'semantic-ui-react'
-import Literals from './Literals'
 
 export default class CareplansDelete extends Component {
 

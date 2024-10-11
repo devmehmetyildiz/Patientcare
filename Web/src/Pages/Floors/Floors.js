@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon } from 'semantic-ui-react'
-import Literals from './Literals'
 import FloorsDelete from '../../Containers/Floors/FloorsDelete'
 import FloorsFastcreate from '../../Containers/Floors/FloorsFastcreate'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
+import { GENDER_OPTION_MEN, GENDER_OPTION_WOMEN } from '../../Utils/Constants'
 
 export default class Floors extends Component {
 
@@ -16,6 +16,9 @@ export default class Floors extends Component {
 
   render() {
     const { Floors, Profile, handleDeletemodal, handleSelectedFloor, handleFastcreatemodal } = this.props
+ 
+    const t = Profile?.i18n?.t
+ 
     const { isLoading } = Floors
 
     const colProps = {
@@ -25,16 +28,16 @@ export default class Floors extends Component {
     }
 
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id' },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid' },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
-      { Header: Literals.Columns.Gender[Profile.Language], accessor: row => this.genderCellhandler(row?.Gender), Lowtitle: true, Withtext: true, },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser' },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser' },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime' },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime' },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+      { Header: t('Common.Column.Id'), accessor: 'Id' },
+      { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+      { Header: t('Pages.Floors.Column.Name'), accessor: 'Name', Title: true },
+      { Header: t('Pages.Floors.Column.Gender'), accessor: row => this.genderCellhandler(row?.Gender), Lowtitle: true, Withtext: true, },
+      { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+      { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+      { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+      { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "floor"
@@ -60,13 +63,13 @@ export default class Floors extends Component {
                 <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Floors"}>
-                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                      <Breadcrumb.Section>{t('Pages.Floors.Page.Header')}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
                 <Settings
                   Profile={Profile}
-                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreateheader={t('Pages.Floors.Page.CreateHeader')}
                   Pagecreatelink={"/Floors/Create"}
                   Columns={Columns}
                   list={list}
@@ -76,7 +79,7 @@ export default class Floors extends Component {
                   Showcolumnchooser
                   Showexcelexport
                   Additionalfunction={() => { handleFastcreatemodal(true) }}
-                  Additionalfunctiontxt={Literals.Button.Fastcreate[Profile.Language]}
+                  Additionalfunctiontxt={t('Pages.Floors.Column.Fastcreate')}
                 />
               </Grid>
             </Headerwrapper>
@@ -86,7 +89,7 @@ export default class Floors extends Component {
                 {Profile.Ismobile ?
                   <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
             }
           </Pagewrapper>
           <FloorsDelete />
@@ -97,10 +100,13 @@ export default class Floors extends Component {
 
   genderCellhandler = (value) => {
     const { Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     const Genderoptions = [
-      { key: 0, text: Literals.Options.Genderoptions.value0[Profile.Language], value: "0" },
-      { key: 1, text: Literals.Options.Genderoptions.value1[Profile.Language], value: "1" }
+      { key: 0, text: t('Option.Genderoption.Men'), value: GENDER_OPTION_MEN },
+      { key: 1, text: t('Option.Genderoption.Women'), value: GENDER_OPTION_WOMEN }
     ]
-    return Genderoptions.find(u => u.value === value)?.text || 'Tanımsız'
+    return Genderoptions.find(u => u.value === value)?.text || t('Common.NoDataFound')
   }
 }

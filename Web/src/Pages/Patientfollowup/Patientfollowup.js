@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Form, Breadcrumb, Button, Label, Dropdown, Tab, Grid, Table, Icon } from 'semantic-ui-react'
-import Literals from './Literals'
-import validator from '../../Utils/Validator'
+import { Form, Breadcrumb, Button, Label, Tab, Icon } from 'semantic-ui-react'
 import { FormContext } from '../../Provider/FormProvider'
-import { Contentwrapper, DataTable, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
+import { Contentwrapper, DataTable, Headerbredcrump, Headerwrapper, LoadingPage, MobileTable, Pagedivider, Pagewrapper } from '../../Components'
 import Formatdate from '../../Utils/Formatdate'
-import { DEPENDENCY_OPTION_FULLY, DEPENDENCY_OPTION_NON, DEPENDENCY_OPTION_PARTIAL, MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL } from '../../Utils/Constants'
+import { DEPENDENCY_OPTION_FULLY, DEPENDENCY_OPTION_NON, DEPENDENCY_OPTION_PARTIAL, GENDER_OPTION_MEN, GENDER_OPTION_WOMEN, MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL } from '../../Utils/Constants'
 
 export default class Patientfollowup extends Component {
 
@@ -21,8 +19,10 @@ export default class Patientfollowup extends Component {
     }
 
     render() {
-        const { Patients, Patientdefines, Profile, history, closeModal, Cases, Patienttypes, Costumertypes } = this.props
-
+        const { Patients, Patientdefines, Profile, closeModal, Cases, Patienttypes, Costumertypes } = this.props
+        
+        const t = Profile?.i18n?.t
+        
         const isLoading =
             Patients.isLoading ||
             Patientdefines.isLoading ||
@@ -38,21 +38,22 @@ export default class Patientfollowup extends Component {
             .filter(u => !((disbandedCases || []).includes(u?.CaseID)))
 
         const medicalboardreportoptions = [
-            { key: 0, text: "RUHSAL", value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
-            { key: 1, text: "BEDENSEL", value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
-            { key: 2, text: "ZİHİNSEL", value: MEDICALBOARDREPORT_OPTION_MENTAL }
+            { key: 0, text: t('Option.Medicalboardreportoption.Spiritual'), value: MEDICALBOARDREPORT_OPTION_SPIRITUAL },
+            { key: 1, text: t('Option.Medicalboardreportoption.Physical'), value: MEDICALBOARDREPORT_OPTION_PHYSICAL },
+            { key: 2, text: t('Option.Medicalboardreportoption.Mental'), value: MEDICALBOARDREPORT_OPTION_MENTAL }
         ]
 
         const dependencyoptions = [
-            { key: 0, text: "TAM BAĞIMLI", value: DEPENDENCY_OPTION_FULLY },
-            { key: 1, text: "KISMİ BAĞIMLI", value: DEPENDENCY_OPTION_PARTIAL },
-            { key: 2, text: "BAĞIMSIZ", value: DEPENDENCY_OPTION_NON }
+            { key: 0, text: t('Option.Dependencyoption.Fully'), value: DEPENDENCY_OPTION_FULLY },
+            { key: 1, text: t('Option.Dependencyoption.Partial'), value: DEPENDENCY_OPTION_PARTIAL },
+            { key: 2, text: t('Option.Dependencyoption.Non'), value: DEPENDENCY_OPTION_NON }
         ]
 
         const genderoptions = [
-            { key: 0, text: "ERKEK", value: "0" },
-            { key: 1, text: "KADIN", value: "1" }
+            { key: 0, text: t('Option.Genderoption.Men'), value: GENDER_OPTION_MEN },
+            { key: 1, text: t('Option.Genderoption.Women'), value: GENDER_OPTION_WOMEN }
         ]
+
         const patienttypes = (Patienttypes.list || []).filter(u => u.Isactive)
         const costumertypes = (Costumertypes.list || []).filter(u => u.Isactive)
 
@@ -66,7 +67,7 @@ export default class Patientfollowup extends Component {
                     <Headerwrapper>
                         <Headerbredcrump>
                             <Link to={"/Patientfollowup"}>
-                                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                                <Breadcrumb.Section >{t('Pages.Patientfollowup.Page.Header')}</Breadcrumb.Section>
                             </Link>
                         </Headerbredcrump>
                         {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
@@ -78,7 +79,7 @@ export default class Patientfollowup extends Component {
                                 className="w-full bg-white"
                                 panes={[
                                     {
-                                        menuItem: 'Hasta Türlerine Göre',
+                                        menuItem: t('Pages.Patientfollowup.Tab.Patienttype'),
                                         pane: {
                                             key: 'patienttypes',
                                             content: <PatienttypeTab
@@ -90,7 +91,7 @@ export default class Patientfollowup extends Component {
                                         }
                                     },
                                     {
-                                        menuItem: 'Durumlarına Göre',
+                                        menuItem: t('Pages.Patientfollowup.Tab.Patientcase'),
                                         pane: {
                                             key: 'patientcases',
                                             content: <PatientcasesTab
@@ -102,7 +103,7 @@ export default class Patientfollowup extends Component {
                                         }
                                     },
                                     {
-                                        menuItem: 'Sağlık Kurul Raporuna Göre',
+                                        menuItem: t('Pages.Patientfollowup.Tab.Patientmedicalreport'),
                                         pane: {
                                             key: 'patientreporttype',
                                             content: <PatientmedicalboardreportTab
@@ -114,7 +115,7 @@ export default class Patientfollowup extends Component {
                                         }
                                     },
                                     {
-                                        menuItem: 'Bağımlılık Derecesine Göre',
+                                        menuItem: t('Pages.Patientfollowup.Tab.Patientdependency'),
                                         pane: {
                                             key: 'patientreporttype',
                                             content: <PatientdependencyTab
@@ -126,7 +127,7 @@ export default class Patientfollowup extends Component {
                                         }
                                     },
                                     {
-                                        menuItem: 'Cinsiyetlerine Göre',
+                                        menuItem: t('Pages.Patientfollowup.Tab.Patientgender'),
                                         pane: {
                                             key: 'patientgenders',
                                             content: <PatientgenderTab
@@ -138,7 +139,7 @@ export default class Patientfollowup extends Component {
                                         }
                                     },
                                     {
-                                        menuItem: 'Müşteri Türlerine Göre',
+                                        menuItem: t('Pages.Patientfollowup.Tab.Patientcostumertype'),
                                         pane: {
                                             key: 'costumertypes',
                                             content: <CostumertypeTab
@@ -150,7 +151,7 @@ export default class Patientfollowup extends Component {
                                         }
                                     },
                                     {
-                                        menuItem: 'Ayrılanlar / Vefat Edenler',
+                                        menuItem: t('Pages.Patientfollowup.Tab.Patientdisand'),
                                         pane: {
                                             key: 'disbanded',
                                             content: <DisbandedTab
@@ -178,6 +179,7 @@ Patientfollowup.contextType = FormContext
 
 function PatientcasesTab({ patients, cases, Patientdefines, Profile }) {
 
+    const t = Profile?.i18n?.t
 
     const colProps = {
         sortable: true,
@@ -205,11 +207,11 @@ function PatientcasesTab({ patients, cases, Patientdefines, Profile }) {
     }
 
     const Columns = [
-        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
-        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
-        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
-        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
-        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+        { Header: t('Common.Column.Id'), accessor: "Id", Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.Name'), accessor: row => nameCellhandler(row), Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.CountryID'), accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: t('Pages.Patientfollowup.Columns.Happensdate'), accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: t('Pages.Patientfollowup.Columns.actions'), accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
@@ -242,6 +244,7 @@ function PatientcasesTab({ patients, cases, Patientdefines, Profile }) {
 
 function PatienttypeTab({ patients, patienttypes, Patientdefines, Profile }) {
 
+    const t = Profile?.i18n?.t
 
     const colProps = {
         sortable: true,
@@ -269,11 +272,11 @@ function PatienttypeTab({ patients, patienttypes, Patientdefines, Profile }) {
     }
 
     const Columns = [
-        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
-        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
-        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
-        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
-        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+        { Header: t('Common.Column.Id'), accessor: "Id", Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.Name'), accessor: row => nameCellhandler(row), Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.CountryID'), accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: t('Pages.Patientfollowup.Columns.Happensdate'), accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: t('Pages.Patientfollowup.Columns.actions'), accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
@@ -307,6 +310,7 @@ function PatienttypeTab({ patients, patienttypes, Patientdefines, Profile }) {
 
 function PatientmedicalboardreportTab({ patients, medicalboardreportoptions, Patientdefines, Profile }) {
 
+    const t = Profile?.i18n?.t
 
     const colProps = {
         sortable: true,
@@ -334,11 +338,11 @@ function PatientmedicalboardreportTab({ patients, medicalboardreportoptions, Pat
     }
 
     const Columns = [
-        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
-        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
-        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
-        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
-        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+        { Header: t('Common.Column.Id'), accessor: "Id", Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.Name'), accessor: row => nameCellhandler(row), Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.CountryID'), accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: t('Pages.Patientfollowup.Columns.Happensdate'), accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: t('Pages.Patientfollowup.Columns.actions'), accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
@@ -372,6 +376,7 @@ function PatientmedicalboardreportTab({ patients, medicalboardreportoptions, Pat
 
 function PatientdependencyTab({ patients, dependencyoptions, Patientdefines, Profile }) {
 
+    const t = Profile?.i18n?.t
 
     const colProps = {
         sortable: true,
@@ -399,11 +404,11 @@ function PatientdependencyTab({ patients, dependencyoptions, Patientdefines, Pro
     }
 
     const Columns = [
-        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
-        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
-        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
-        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
-        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+        { Header: t('Common.Column.Id'), accessor: "Id", Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.Name'), accessor: row => nameCellhandler(row), Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.CountryID'), accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: t('Pages.Patientfollowup.Columns.Happensdate'), accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: t('Pages.Patientfollowup.Columns.actions'), accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
@@ -437,6 +442,7 @@ function PatientdependencyTab({ patients, dependencyoptions, Patientdefines, Pro
 
 function PatientgenderTab({ patients, genderoptions, Patientdefines, Profile }) {
 
+    const t = Profile?.i18n?.t
 
     const colProps = {
         sortable: true,
@@ -464,11 +470,11 @@ function PatientgenderTab({ patients, genderoptions, Patientdefines, Profile }) 
     }
 
     const Columns = [
-        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
-        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
-        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
-        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
-        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+        { Header: t('Common.Column.Id'), accessor: "Id", Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.Name'), accessor: row => nameCellhandler(row), Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.CountryID'), accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: t('Pages.Patientfollowup.Columns.Happensdate'), accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: t('Pages.Patientfollowup.Columns.actions'), accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     return <div className='grid grid-cols-1 md:grid-cols-2 w-full'>
@@ -500,6 +506,7 @@ function PatientgenderTab({ patients, genderoptions, Patientdefines, Profile }) 
 }
 
 function CostumertypeTab({ patients, costumertypes, Profile, Patientdefines }) {
+    const t = Profile?.i18n?.t
 
     const colProps = {
         sortable: true,
@@ -527,11 +534,11 @@ function CostumertypeTab({ patients, costumertypes, Profile, Patientdefines }) {
     }
 
     const Columns = [
-        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
-        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
-        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
-        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
-        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+        { Header: t('Common.Column.Id'), accessor: "Id", Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.Name'), accessor: row => nameCellhandler(row), Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.CountryID'), accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: t('Pages.Patientfollowup.Columns.Happensdate'), accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: t('Pages.Patientfollowup.Columns.actions'), accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
 
@@ -563,6 +570,7 @@ function CostumertypeTab({ patients, costumertypes, Profile, Patientdefines }) {
 }
 
 function DisbandedTab({ patients, Cases, Patientdefines, Profile, Patienttypes }) {
+    const t = Profile?.i18n?.t
 
     let cases = []
 
@@ -631,25 +639,25 @@ function DisbandedTab({ patients, Cases, Patientdefines, Profile, Patienttypes }
     }
 
     const leaveColumns = [
-        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
-        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
-        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
-        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
-        { Header: Literals.Columns.Leavedate[Profile.Language], accessor: row => dateCellhandler(row?.Leavedate), },
-        { Header: Literals.Columns.Age[Profile.Language], accessor: row => ageCellhandler(row), },
-        { Header: Literals.Columns.Patienttype[Profile.Language], accessor: row => patienttypeCellhandler(row), },
-        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+        { Header: t('Common.Column.Id'), accessor: "Id", Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.Name'), accessor: row => nameCellhandler(row), Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.CountryID'), accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: t('Pages.Patientfollowup.Columns.Happensdate'), accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: t('Pages.Patientfollowup.Columns.Leavedate'), accessor: row => dateCellhandler(row?.Leavedate), },
+        { Header: t('Pages.Patientfollowup.Columns.Age'), accessor: row => ageCellhandler(row), },
+        { Header: t('Pages.Patientfollowup.Columns.Patienttype'), accessor: row => patienttypeCellhandler(row), },
+        { Header: t('Pages.Patientfollowup.Columns.actions'), accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const deathColumns = [
-        { Header: Literals.Columns.Id[Profile.Language], accessor: "Id", Title: true },
-        { Header: Literals.Columns.Name[Profile.Language], accessor: row => nameCellhandler(row), Title: true },
-        { Header: Literals.Columns.CountryID[Profile.Language], accessor: row => countryIDCellhandler(row), Subtitle: true },
-        { Header: Literals.Columns.Happensdate[Profile.Language], accessor: row => dateCellhandler(row?.Happensdate), },
-        { Header: Literals.Columns.Dateofdeath[Profile.Language], accessor: row => deathCellhandler(row), },
-        { Header: Literals.Columns.Age[Profile.Language], accessor: row => agewithdeathCellhandler(row), },
-        { Header: Literals.Columns.Patienttype[Profile.Language], accessor: row => patienttypeCellhandler(row), },
-        { Header: Literals.Columns.actions[Profile.Language], accessor: 'actions', disableProps: true }
+        { Header: t('Common.Column.Id'), accessor: "Id", Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.Name'), accessor: row => nameCellhandler(row), Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.CountryID'), accessor: row => countryIDCellhandler(row), Subtitle: true },
+        { Header: t('Pages.Patientfollowup.Columns.Happensdate'), accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: t('Pages.Patientfollowup.Columns.Dateofdeath'), accessor: row => deathCellhandler(row), },
+        { Header: t('Pages.Patientfollowup.Columns.Age'), accessor: row => ageCellhandler(row), },
+        { Header: t('Pages.Patientfollowup.Columns.Patienttype'), accessor: row => patienttypeCellhandler(row), },
+        { Header: t('Pages.Patientfollowup.Columns.actions'), accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     return (cases.map(casedata => {

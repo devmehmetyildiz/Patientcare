@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Form } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from "../../Utils/Validator"
 import { FormContext } from '../../Provider/FormProvider'
 import {
@@ -46,6 +45,8 @@ export default class EquipmentgroupsEdit extends Component {
 
     const { Equipmentgroups, Departments, Profile, history } = this.props
 
+    const t = Profile?.i18n?.t
+
     const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
@@ -56,28 +57,28 @@ export default class EquipmentgroupsEdit extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Equipmentgroups"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Equipmentgroups.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pageeditheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Equipmentgroups.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Name[Profile.Language]} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Department[Profile.Language]} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipmentgroups.Column.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipmentgroups.Column.Department')} name="DepartmentID" options={Departmentoptions} formtype="dropdown" />
             </Form>
           </Contentwrapper>
           <Footerwrapper>
             <Gobackbutton
               history={history}
               redirectUrl={"/Equipmentgroups"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Equipmentgroups.isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -90,13 +91,16 @@ export default class EquipmentgroupsEdit extends Component {
     e.preventDefault()
 
     const { EditEquipmentgroups, history, fillEquipmentgroupnotification, Equipmentgroups, Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     let errors = []
     if (!validator.isString(data.Name)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Namerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Equipmentgroups.Page.Header'), description: t('Pages.Equipmentgroups.Messages.NameRequired') })
     }
     if (!validator.isUUID(data.DepartmentID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Departmentrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Equipmentgroups.Page.Header'), description: t('Pages.Equipmentgroups.Messages.DepartmentRequired') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

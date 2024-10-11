@@ -6,7 +6,6 @@ const departmentModel = require('./DepartmentModel')
 const departmentstationModel = require('./DepartmentstationModel')
 const patienttypeModel = require('./PatienttypeModel')
 const periodModel = require('./PeriodModel')
-const stationModel = require('./StationModel')
 const tododefineModel = require('./TododefineModel')
 const todogroupdefineModel = require('./TodogroupdefineModel')
 const todogroupdefinetododefineModel = require('./TodogroupdefinetododefineModel')
@@ -23,7 +22,6 @@ const supportplanlistModel = require('./SupportplanlistModel')
 const supportplanlistsupportplanModel = require('./SupportplanlistsupportplanModel')
 const careplanparameterModel = require('./CareplanparameterModel')
 
-
 module.exports = {
     floorModel,
     caseModel,
@@ -36,7 +34,6 @@ module.exports = {
     departmentstationModel,
     patienttypeModel,
     periodModel,
-    stationModel,
     tododefineModel,
     todogroupdefineModel,
     todogroupdefinetododefineModel,

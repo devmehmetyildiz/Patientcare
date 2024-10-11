@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Card, Grid, GridColumn, Icon, Label, Loader, Tab } from 'semantic-ui-react'
-import Literals from './Literals'
 import { Contentwrapper, Headerwrapper, LoadingPage, NoDataScreen, Pagedivider, Pagewrapper, Profilephoto, Settings } from '../../Components'
-import { ROUTES } from '../../Utils/Constants'
-import config from '../../Config'
 
 export default function Placeviews(props) {
     const { GetPatients, GetPatientdefines, GetFloors, GetRooms, GetBeds, GetCases, GetFiles, GetUsagetypes,
         Files, Usagetypes, Patients, Floors, Rooms, Beds, Profile, Patientdefines, Cases, fillPatientnotification } = props
+
+    const t = Profile?.i18n?.t
 
     useEffect(() => {
         GetPatients()
@@ -75,7 +74,7 @@ export default function Placeviews(props) {
         let panes = [];
 
         panes.push({
-            menuItem: Literals.Columns.Onlyfilled[Profile.Language], render: () => <Tab.Pane>
+            menuItem: t('Pages.Placeviews.Tab.Onlyfilled'), render: () => <Tab.Pane>
                 <Viewrender
                     list={(list || []).filter(u => u.filled)}
                     Profile={Profile}
@@ -99,7 +98,7 @@ export default function Placeviews(props) {
         });
 
         panes.push({
-            menuItem: Literals.Columns.All[Profile.Language], render: () => <Tab.Pane>
+            menuItem: t('Pages.Placeviews.Tab.All'), render: () => <Tab.Pane>
                 <Viewrender
                     list={(list || [])}
                     Profile={Profile}
@@ -120,7 +119,7 @@ export default function Placeviews(props) {
                             <GridColumn width={8}>
                                 <Breadcrumb size='big'>
                                     <Link to={"/Placeviews"}>
-                                        <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                                        <Breadcrumb.Section>{t('Pages.Placeviews.Page.Header')}</Breadcrumb.Section>
                                     </Link>
                                 </Breadcrumb>
                             </GridColumn>
@@ -138,6 +137,8 @@ export default function Placeviews(props) {
 
 function Viewrender(props) {
     const { list, Profile } = props
+   
+    const t = Profile?.i18n?.t
 
     const roomList = [...new Set([...(list || []).map(u => u.roomID)])]
 
@@ -158,8 +159,7 @@ function Viewrender(props) {
                     <Pagedivider />
                 </React.Fragment>
             })}
-        </div>
-        : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+        </div> : <NoDataScreen message={t('Common.NoDataFound')} />
 }
 
 function Patientcard(props) {

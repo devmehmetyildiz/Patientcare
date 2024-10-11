@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
@@ -35,6 +34,8 @@ export default class StockmovementsCreate extends Component {
   render() {
     const { Stockmovements, Stocks, Stockdefines, Profile, history, closeModal, Stocktypes } = this.props
 
+    const t = Profile?.i18n?.t
+
     const Stockoptions = (Stocks.list || []).filter(u => u.Isactive).map(stock => {
       const stockdefine = (Stockdefines.list || []).find(u => u?.Uuid === stock?.StockdefineID)
       const stocktype = (Stocktypes.list || []).find(u => u?.Uuid === stockdefine?.StocktypeID)
@@ -43,8 +44,8 @@ export default class StockmovementsCreate extends Component {
     })
 
     const Movementoptions = [
-      { key: -1, text: Literals.Options.Movementoptions.value0[Profile.Language], value: -1 },
-      { key: 1, text: Literals.Options.Movementoptions.value1[Profile.Language], value: 1 },
+      { key: -1, text: t('Option.Movementoption.Outcome'), value: -1 },
+      { key: 1, text: t('Option.Movementoption.Income'), value: 1 },
     ]
 
     return (
@@ -53,20 +54,20 @@ export default class StockmovementsCreate extends Component {
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Stockmovements"}>
-                <Breadcrumb.Section >{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                <Breadcrumb.Section >{t('Pages.Stockmovements.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{Literals.Page.Pagecreateheader[Profile.Language]}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Stockmovements.Page.CreateHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
             {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
           </Headerwrapper>
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Stockdefine[Profile.Language]} options={Stockoptions} name="StockID" formtype='dropdown' />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockmovements.Column.Stockdefine')} options={Stockoptions} name="StockID" formtype='dropdown' />
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Amount[Profile.Language]} name="Amount" type='number' min={0} max={9999} />
-                <FormInput page={this.PAGE_NAME} required placeholder={Literals.Columns.Movementtype[Profile.Language]} name="Movementtype" options={Movementoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockmovements.Column.Amount')} name="Amount" type='number' min={0} max={9999} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockmovements.Column.Movementtype')} name="Movementtype" options={Movementoptions} formtype='dropdown' />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -74,11 +75,11 @@ export default class StockmovementsCreate extends Component {
             <Gobackbutton
               history={history}
               redirectUrl={"/Stockmovements"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
+              buttonText={t('Common.Button.Goback')}
             />
             <Submitbutton
               isLoading={Stockmovements.isLoading}
-              buttonText={Literals.Button.Create[Profile.Language]}
+              buttonText={t('Common.Button.Create')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>
@@ -90,21 +91,21 @@ export default class StockmovementsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddStockmovements, history, fillStockmovementnotification, Profile, closeModal } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
     data.Movementdate = new Date()
-    data.Newvalue = 0
-    data.Prevvalue = 0
-    data.Status = 0
 
     let errors = []
     if (!validator.isNumber(data.Movementtype)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Movementrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Stockmovements.Page.Header'), description: t('Pages.Stockmovements.Messages.MovementtypeRequired"') })
     }
     if (!validator.isUUID(data.StockID)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Stockrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Stockmovements.Page.Header'), description: t('Pages.Stockmovements.Messages.StockRequired"') })
     }
     if (!validator.isNumber(data.Amount)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Amountrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Stockmovements.Page.Header'), description: t('Pages.Stockmovements.Messages.AmountRequired"') })
     }
     if (errors.length > 0) {
       errors.forEach(error => {

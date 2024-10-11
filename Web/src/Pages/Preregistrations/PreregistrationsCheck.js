@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { Button, Checkbox, Dropdown, Form, Modal } from 'semantic-ui-react'
 import { Contentwrapper, PatientsDetailCard } from '../../Components'
@@ -44,6 +43,8 @@ export default function PreregistrationsCheck(props) {
   } = props
 
   const { isCheckmodalopen, selected_record, isCheckdeactive } = Patients
+
+  const t = Profile?.i18n?.t
 
   const {
     CaseID,
@@ -123,7 +124,7 @@ export default function PreregistrationsCheck(props) {
       }}
       open={isCheckmodalopen}
     >
-      <Modal.Header>{Isdeactive ? Literals.Page.Pagecheckedcancelheadermodal[Profile.Language] : Literals.Page.Pagecheckedheadermodal[Profile.Language]}</Modal.Header>
+      <Modal.Header>{Isdeactive ? t('Pages.Preregistrations.Page.Modal.CancelCheckHeader') : t('Pages.Preregistrations.Page.Modal.CheckHeader')}</Modal.Header>
       <PatientsDetailCard
         Profile={Profile}
         Patients={Patients}
@@ -151,7 +152,7 @@ export default function PreregistrationsCheck(props) {
               <Form.Field>
                 <label
                   className='text-[#000000de]'>
-                  {Literals.Columns.Case[Profile.Language]}
+                  {t('Pages.Preregistrations.Column.Case')}
                 </label>
                 <Dropdown
                   value={selectedcase}
@@ -164,7 +165,7 @@ export default function PreregistrationsCheck(props) {
                 />
               </Form.Field>
               <Form.Input
-                label={Literals.Columns.Info[Profile.Language]}
+                label={t('Pages.Preregistrations.Column.Info')}
                 value={selectedinfo || ''}
                 onChange={(e) => { setSelectedinfo(e.target.value) }}
                 fluid
@@ -174,7 +175,7 @@ export default function PreregistrationsCheck(props) {
               <Form.Field>
                 <label
                   className='text-[#000000de]'>
-                  {Literals.Columns.Isoninstitution[Profile.Language]}
+                  {t('Pages.Preregistrations.Complete.Label.Isoninstitution')}
                 </label>
                 <Checkbox toggle className='m-2'
                   checked={selectedIsoninstitution}
@@ -193,18 +194,18 @@ export default function PreregistrationsCheck(props) {
           setSelectedIsoninstitution(false)
           handleSelectedPatient({})
         }}>
-          {Literals.Button.Goback[Profile.Language]}
+          {t('Common.Button.Goback')}
         </Button>
         {Isdeactive
           ? <Button
-            content={Literals.Button.Cancelcheck[Profile.Language]}
+            content={t('Common.Button.CancelCheck')}
             labelPosition='right'
             icon='checkmark'
             className=' !bg-[#2355a0] !text-white'
             onClick={() => {
               let errors = []
               if (!validator.isUUID(selectedcase)) {
-                errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CaseRequired[Profile.Language] })
+                errors.push({ type: 'Error', code: t('Pages.Preregistrations.Page.Header'), description: t('Pages.Preregistrations.Create.Messages.CaseRequired') })
               }
               if (errors.length > 0) {
                 errors.forEach(error => {
@@ -227,14 +228,14 @@ export default function PreregistrationsCheck(props) {
             positive
           />
           : <Button
-            content={Literals.Button.Check[Profile.Language]}
+            content={t('Common.Button.Check')}
             labelPosition='right'
             icon='checkmark'
             className=' !bg-[#2355a0] !text-white'
             onClick={() => {
               let errors = []
               if (!validator.isUUID(selectedcase)) {
-                errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CaseRequired[Profile.Language] })
+                errors.push({ type: 'Error', code: t('Pages.Preregistrations.Page.Header'), description: t('Pages.Preregistrations.Create.Messages.CaseRequired') })
               }
               if (errors.length > 0) {
                 errors.forEach(error => {

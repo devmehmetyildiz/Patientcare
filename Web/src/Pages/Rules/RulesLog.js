@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Literals from './Literals'
 import { Button, Modal } from 'semantic-ui-react'
 import { NoDataScreen, Footerwrapper } from '../../Components'
 
@@ -7,6 +6,9 @@ export default class RulesLog extends Component {
 
     render() {
         const { Profile, Rules, handleLogmodal, ClearRulelogs, GetRulelogswithoutloading } = this.props
+
+        const t = Profile?.i18n?.t
+
         const { isLogmodalopen, loglist, selected_record } = Rules
         return (
             <Modal
@@ -16,11 +18,11 @@ export default class RulesLog extends Component {
             >
                 <Modal.Header>
                     <Footerwrapper>
-                        {`${Literals.Page.Pagelogheader[Profile.Language]} - ${selected_record.Name}`}
+                        {`${t('Pages.Rules.Page.LogHeader')} - ${selected_record.Name}`}
                         <Button color='red' onClick={() => {
                             GetRulelogswithoutloading(selected_record?.Uuid)
                         }}>
-                            {Literals.Button.Refresh[Profile.Language]}
+                            {t('Pages.Rules.Column.Refresh')}
                         </Button>
                     </Footerwrapper>
                 </Modal.Header>
@@ -34,7 +36,7 @@ export default class RulesLog extends Component {
                                 </div>
                             })
 
-                            : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />}
+                            : <NoDataScreen message={t('Common.NoDataFound')} />}
                     </div>
                 </Modal.Content>
                 <Modal.Actions>
@@ -42,10 +44,10 @@ export default class RulesLog extends Component {
                         <Button color='black' onClick={() => {
                             ClearRulelogs(selected_record)
                         }}>
-                            {Literals.Button.Clear[Profile.Language]}
+                            {t('Common.Button.Goback')}
                         </Button>
                         <Button
-                            content={Literals.Button.Close[Profile.Language]}
+                            content={t('Common.Button.Close')}
                             labelPosition='right'
                             icon='checkmark'
                             onClick={() => {

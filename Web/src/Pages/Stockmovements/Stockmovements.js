@@ -49,7 +49,6 @@ export default class Stockmovements extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser', },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime', },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime', },
-      { Header: t('Common.Column.watch'), accessor: 'watch', disableProps: true },
       { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true },
       { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
       { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true }
@@ -61,7 +60,6 @@ export default class Stockmovements extends Component {
     const list = (Stockmovements.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
-        watch: <Link to={`/Stockmovements/${item.Uuid}`} ><Icon link size='large' className='text-[#7ec5bf] hover:text-[#5bbdb5]' name='sitemap' /></Link>,
         edit: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Link to={`/Stockmovements/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
         approve: item.Isapproved ? <Icon size='large' color='black' name='minus' /> : <Icon link size='large' color='red' name='hand pointer' onClick={() => {
           handleSelectedStockmovement(item)

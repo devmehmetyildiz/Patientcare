@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { Button, Checkbox, Dropdown, Form, Modal } from 'semantic-ui-react'
 import { Contentwrapper, PatientsDetailCard } from '../../Components'
@@ -44,6 +43,8 @@ export default function PreregistrationsApprove(props) {
   } = props
 
   const { isApprovemodalopen, selected_record, isApprovedeactive } = Patients
+
+  const t = Profile?.i18n?.t
 
   const {
     CaseID,
@@ -93,19 +94,19 @@ export default function PreregistrationsApprove(props) {
   });
 
   const CaseOption = (Cases.list || [])
-  .filter(u => u.Isactive)
-  .filter(u => u.Patientstatus !== CASE_PATIENT_STATUS_DEATH && u.Patientstatus !== CASE_PATIENT_STATUS_LEFT)
-  .map(casedata => {
-    const departmentuuids = (casedata?.Departmentuuids || []).map(u => u.DepartmentID);
-    let isHavepatients = false
-    departmentuuids.forEach(departmentuuid => {
-      const department = (Departments.list || []).find(u => u.Uuid === departmentuuid)
-      if (department?.Ishavepatients === true || department?.Ishavepatients === 1) {
-        isHavepatients = true
-      }
-    });
-    return isHavepatients === true && casedata?.CaseStatus === 0 ? { key: casedata.Uuid, text: casedata.Name, value: casedata.Uuid } : false
-  }).filter(u => u)
+    .filter(u => u.Isactive)
+    .filter(u => u.Patientstatus !== CASE_PATIENT_STATUS_DEATH && u.Patientstatus !== CASE_PATIENT_STATUS_LEFT)
+    .map(casedata => {
+      const departmentuuids = (casedata?.Departmentuuids || []).map(u => u.DepartmentID);
+      let isHavepatients = false
+      departmentuuids.forEach(departmentuuid => {
+        const department = (Departments.list || []).find(u => u.Uuid === departmentuuid)
+        if (department?.Ishavepatients === true || department?.Ishavepatients === 1) {
+          isHavepatients = true
+        }
+      });
+      return isHavepatients === true && casedata?.CaseStatus === 0 ? { key: casedata.Uuid, text: casedata.Name, value: casedata.Uuid } : false
+    }).filter(u => u)
 
 
   return (
@@ -124,7 +125,7 @@ export default function PreregistrationsApprove(props) {
       }}
       open={isApprovemodalopen}
     >
-      <Modal.Header>{Isdeactive ? Literals.Page.Pageapprovedcancelheadermodal[Profile.Language] : Literals.Page.Pageapprovedheadermodal[Profile.Language]}</Modal.Header>
+      <Modal.Header>{Isdeactive ? t('Pages.Preregistrations.Page.Modal.CancelApproveHeader') : t('Pages.Preregistrations.Page.Modal.ApproveHeader')}</Modal.Header>
       <PatientsDetailCard
         Profile={Profile}
         Patients={Patients}
@@ -152,7 +153,7 @@ export default function PreregistrationsApprove(props) {
               <Form.Field>
                 <label
                   className='text-[#000000de]'>
-                  {Literals.Columns.Case[Profile.Language]}
+                  {t('Pages.Preregistrations.Column.Case')}
                 </label>
                 <Dropdown
                   value={selectedcase}
@@ -165,7 +166,7 @@ export default function PreregistrationsApprove(props) {
                 />
               </Form.Field>
               <Form.Input
-                label={Literals.Columns.Info[Profile.Language]}
+                label={t('Pages.Preregistrations.Column.Info')}
                 value={selectedinfo || ''}
                 onChange={(e) => { setSelectedinfo(e.target.value) }}
                 fluid
@@ -175,7 +176,7 @@ export default function PreregistrationsApprove(props) {
               <Form.Field>
                 <label
                   className='text-[#000000de]'>
-                  {Literals.Columns.Isoninstitution[Profile.Language]}
+                  {t('Pages.Preregistrations.Complete.Label.Isoninstitution')}
                 </label>
                 <Checkbox toggle className='m-2'
                   checked={selectedIsoninstitution}
@@ -194,18 +195,18 @@ export default function PreregistrationsApprove(props) {
           setSelectedIsoninstitution(false)
           handleSelectedPatient({})
         }}>
-          {Literals.Button.Goback[Profile.Language]}
+          {t('Common.Button.Goback')}
         </Button>
         {Isdeactive
           ? <Button
-            content={Literals.Button.Cancelapprove[Profile.Language]}
+            content={t('Common.Button.CancelApprove')}
             labelPosition='right'
             icon='checkmark'
             className=' !bg-[#2355a0] !text-white'
             onClick={() => {
               let errors = []
               if (!validator.isUUID(selectedcase)) {
-                errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CaseRequired[Profile.Language] })
+                errors.push({ type: 'Error', code: t('Pages.Preregistrations.Page.Header'), description: t('Pages.Preregistrations.Create.Messages.CaseRequired') })
               }
               if (errors.length > 0) {
                 errors.forEach(error => {
@@ -228,14 +229,14 @@ export default function PreregistrationsApprove(props) {
             positive
           />
           : <Button
-            content={Literals.Button.Approve[Profile.Language]}
+            content={t('Common.Button.Approve')}
             labelPosition='right'
             icon='checkmark'
             className=' !bg-[#2355a0] !text-white'
             onClick={() => {
               let errors = []
               if (!validator.isUUID(selectedcase)) {
-                errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.CaseRequired[Profile.Language] })
+                errors.push({ type: 'Error', code: t('Pages.Preregistrations.Page.Header'), description: t('Pages.Preregistrations.Create.Messages.CaseRequired') })
               }
               if (errors.length > 0) {
                 errors.forEach(error => {

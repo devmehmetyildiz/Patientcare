@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import Literals from './Literals'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import RulesDelete from '../../Containers/Rules/RulesDelete'
 import RulesLog from '../../Containers/Rules/RulesLog'
@@ -15,6 +14,9 @@ export class Rules extends Component {
 
   render() {
     const { Rules, Profile, handleDeletemodal, handleSelectedRule, handleLogmodal, GetRulelogs, StopRules } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isLoading } = Rules
 
     const colProps = {
@@ -24,19 +26,19 @@ export class Rules extends Component {
     }
 
     const Columns = [
-      { Header: Literals.Columns.Id[Profile.Language], accessor: 'Id', },
-      { Header: Literals.Columns.Uuid[Profile.Language], accessor: 'Uuid', },
-      { Header: Literals.Columns.Name[Profile.Language], accessor: 'Name', Title: true },
-      { Header: Literals.Columns.Info[Profile.Language], accessor: 'Info' },
-      { Header: Literals.Columns.Status[Profile.Language], accessor: row => this.statusCellhandler(row?.Status), disableProps: true },
-      { Header: Literals.Columns.Createduser[Profile.Language], accessor: 'Createduser', },
-      { Header: Literals.Columns.Updateduser[Profile.Language], accessor: 'Updateduser', },
-      { Header: Literals.Columns.Createtime[Profile.Language], accessor: 'Createtime', },
-      { Header: Literals.Columns.Updatetime[Profile.Language], accessor: 'Updatetime', },
-      { Header: Literals.Columns.Stop[Profile.Language], accessor: 'Stop', disableProps: true },
-      { Header: Literals.Columns.log[Profile.Language], accessor: 'log', disableProps: true },
-      { Header: Literals.Columns.edit[Profile.Language], accessor: 'edit', disableProps: true },
-      { Header: Literals.Columns.delete[Profile.Language], accessor: 'delete', disableProps: true }
+      { Header: t('Common.Column.Id'), accessor: 'Id' },
+      { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+      { Header: t('Pages.Rules.Column.Name'), accessor: 'Name', Title: true },
+      { Header: t('Pages.Rules.Column.Info'), accessor: 'Info' },
+      { Header: t('Pages.Rules.Column.Status'), accessor: row => this.statusCellhandler(row?.Status), disableProps: true },
+      { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+      { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+      { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+      { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+      { Header: t('Pages.Rules.Column.Stop'), accessor: 'Stop', disableProps: true },
+      { Header: t('Pages.Rules.Column.Log'), accessor: 'log', disableProps: true },
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "rule"
@@ -70,13 +72,13 @@ export class Rules extends Component {
                 <GridColumn width={8}>
                   <Breadcrumb size='big'>
                     <Link to={"/Rules"}>
-                      <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
+                      <Breadcrumb.Section>{t('Pages.Rules.Page.Header')}</Breadcrumb.Section>
                     </Link>
                   </Breadcrumb>
                 </GridColumn>
                 <Settings
                   Profile={Profile}
-                  Pagecreateheader={Literals.Page.Pagecreateheader[Profile.Language]}
+                  Pagecreateheader={t('Pages.Rules.Page.CreateHeader')}
                   Pagecreatelink={"/Rules/Create"}
                   Columns={Columns}
                   list={list}
@@ -94,7 +96,7 @@ export class Rules extends Component {
                 {Profile.Ismobile ?
                   <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
                   <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={Literals.Messages.Nodatafind[Profile.Language]} />
+              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
             }
           </Pagewrapper>
           <RulesDelete />
