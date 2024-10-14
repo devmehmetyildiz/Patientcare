@@ -5,7 +5,8 @@
   "main": "src/App.js",
   "scripts": {
     "start": "nodemon src/App.js",
-    "build": "cpy .env web.config src dist && cpy 'src/**/*' dist && esbuild src/App.js --bundle --minify --platform=node --outfile=dist/bundle.js"
+    "build": "cpy .env web.config src dist && cpy 'src/**/*' dist && esbuild src/App.js --bundle --minify --platform=node --outfile=dist/bundle.js",
+    "lint": "eslint ."
   },
   "author": "mehmetyildiz",
   "license": "ISC",

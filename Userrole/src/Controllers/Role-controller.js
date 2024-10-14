@@ -1,6 +1,6 @@
 const { sequelizeErrorCatcher, } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const Priveleges = require("../Constants/Privileges")
@@ -40,22 +40,22 @@ async function GetRole(req, res, next) {
 
     let validationErrors = []
     if (req.params.roleId === undefined) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROLEID_REQUIRED)
+        validationErrors.push(req.t('Roles.Error.RoleIDRequired'))
     }
     if (!validator.isUUID(req.params.roleId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_ROLEID)
+        validationErrors.push(req.t('Roles.Error.UnsupportedRoleID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Roles'), req.language))
     }
 
     try {
         const role = await db.roleModel.findOne({ where: { Uuid: req.params.roleId } });
         if (!role) {
-            return next(createNotfounderror([messages.ERROR.ROLE_NOT_FOUND]))
+            return next(createNotFoundError(req.t('Roles.Error.NotFound'), req.t('Roles'), req.language))
         }
         if (!role.Isactive) {
-            return next(createNotfounderror([messages.ERROR.ROLE_NOT_ACTIVE]))
+            return next(createNotFoundError(req.t('Roles.Error.NotActive'), req.t('Roles'), req.language))
         }
         role.Privileges = []
         let privileges = await db.roleprivilegeModel.findAll({
@@ -92,17 +92,17 @@ async function Getprivilegesbyuserid(req, res, next) {
     try {
         let validationErrors = []
         if (req.params.userId === undefined) {
-            validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+            validationErrors.push(req.t('Roles.Error.UserIDRequired'))
         }
         if (!validator.isUUID(req.params.userId)) {
-            validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+            validationErrors.push(req.t('Roles.Error.UnsupportedUserID'))
         }
         if (validationErrors.length > 0) {
-            return next(createValidationError(validationErrors, req.language))
+            return next(createValidationError(validationErrors, req.t('Roles'), req.language))
         }
         const userroles = await db.userroleModel.findAll({ where: { UserID: req.params.userId } })
         if (!userroles) {
-            return next(createNotfounderror([messages.ERROR.USERROLE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Roles.Error.UserroleNotFound'), req.t('Roles'), req.language))
         }
         for (const userrole of userroles) {
             let privileges = await db.roleprivilegeModel.findAll({ where: { RoleID: userrole.RoleID } })
@@ -119,14 +119,14 @@ async function GetActiveuserprivileges(req, res, next) {
     try {
         let validationErrors = []
         if (!req.identity.user) {
-            validationErrors.push(messages.ERROR.USER_NOT_FOUND)
+            validationErrors.push(req.t('Roles.Error.UserNotFound'))
         }
         if (validationErrors.length > 0) {
-            return next(createValidationError(validationErrors, req.language))
+            return next(createValidationError(validationErrors, req.t('Roles'), req.language))
         }
         const userroles = await db.userroleModel.findAll({ where: { UserID: req.identity.user.Uuid } })
         if (!userroles) {
-            return next(createNotfounderror([messages.ERROR.USERROLE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Roles.Error.UserroleNotFound'), req.t('Roles'), req.language))
         }
         for (const userrole of userroles) {
             let privileges = await db.roleprivilegeModel.findAll({ where: { RoleID: userrole.RoleID } })
@@ -147,14 +147,14 @@ async function AddRole(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Roles.Error.NameRequired'))
     }
     if (!validator.isArray(Privileges)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRIVILEGES_REQUIRED)
+        validationErrors.push(req.t('Roles.Error.PrevilegesRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Roles'), req.language))
     }
 
     let roleuuid = uuid()
@@ -180,9 +180,12 @@ async function AddRole(req, res, next) {
 
         await CreateNotification({
             type: notificationTypes.Create,
-            service: 'Roller',
+            service: req.t('Roles'),
             role: 'rolenotification',
-            message: `${Name} rolü ${username} tarafından oluşturuldu.`,
+            message: {
+                tr: `${Name} Rolü ${username} Tarafından Oluşturuldu.`,
+                en: `${Name} Role Created By ${username}`
+            }[req.language],
             pushurl: '/Roles'
         })
 
@@ -204,19 +207,19 @@ async function UpdateRole(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROLEID_REQUIRED)
+        validationErrors.push(req.t('Roles.Error.RoleIDRequired'))
     }
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Roles.Error.NameRequired'))
     }
     if (!validator.isArray(Privileges)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRIVILEGES_REQUIRED)
+        validationErrors.push(req.t('Roles.Error.PrevilegesRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_ROLEID)
+        validationErrors.push(req.t('Roles.Error.UnsupportedRoleID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Roles'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -225,10 +228,10 @@ async function UpdateRole(req, res, next) {
     try {
         const role = await db.roleModel.findOne({ where: { Uuid: Uuid } })
         if (!role) {
-            return next(createNotfounderror([messages.ERROR.ROLE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Roles.Error.NotFound'), req.t('Roles'), req.language))
         }
         if (role.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.ROLE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Roles.Error.NotActive'), req.t('Roles'), req.language))
         }
 
         await db.roleModel.update({
@@ -247,9 +250,12 @@ async function UpdateRole(req, res, next) {
 
         await CreateNotification({
             type: notificationTypes.Update,
-            service: 'Roller',
+            service: req.t('Roles'),
             role: 'rolenotification',
-            message: `${Name} rolü ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Name} Rolü ${username} Tarafından Güncellendi.`,
+                en: `${Name} Role Updated By ${username}`
+            }[req.language],
             pushurl: '/Roles'
         })
         await t.commit()
@@ -265,13 +271,13 @@ async function DeleteRole(req, res, next) {
     const Uuid = req.params.roleId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Roles.Error.UserIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+        validationErrors.push(req.t('Roles.Error.UnsupportedUserID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Roles'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -280,10 +286,10 @@ async function DeleteRole(req, res, next) {
     try {
         const role = await db.roleModel.findOne({ where: { Uuid: Uuid } })
         if (!role) {
-            return next(createNotfounderror([messages.ERROR.ROLE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Roles.Error.NotFound'), req.t('Roles'), req.language))
         }
         if (!role.Isactive) {
-            return next(createNotfounderror([messages.ERROR.ROLE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Roles.Error.NotActive'), req.t('Roles'), req.language))
         }
 
         await db.ruleModel.update({
@@ -293,10 +299,13 @@ async function DeleteRole(req, res, next) {
         }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
-            type: notificationTypes.Delete,
-            service: 'Roller',
+            type: notificationTypes.Update,
+            service: req.t('Roles'),
             role: 'rolenotification',
-            message: `${role?.Name} rolü ${username} tarafından Silindi.`,
+            message: {
+                tr: `${role?.Name} Rolü ${username} Tarafından Silindi.`,
+                en: `${role?.Name} Role Deleted By ${username}`
+            }[req.language],
             pushurl: '/Roles'
         })
 
@@ -320,72 +329,4 @@ module.exports = {
     Getprivileges,
     Getprivilegegroups,
     GetRolescount
-}
-
-const messages = {
-    ERROR: {
-        ROLE_NOT_FOUND: {
-            code: 'ROLE_NOT_FOUND', description: {
-                en: 'Role not found',
-                tr: 'Rol bulunamadı',
-            }
-        },
-        USER_NOT_FOUND: {
-            code: 'USER_NOT_FOUND', description: {
-                en: 'User not found',
-                tr: 'Kullanıcı bulunamadı',
-            }
-        },
-        ROLE_NOT_ACTIVE: {
-            code: 'ROLE_NOT_ACTIVE', description: {
-                en: 'Role not active',
-                tr: 'Rol aktif değil',
-            }
-        },
-        USERROLE_NOT_FOUND: {
-            code: 'USERROLE_NOT_FOUND', description: {
-                en: 'User role not found',
-                tr: 'Kullanıcı rolü bulunamadı',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        ROLEID_REQUIRED: {
-            code: 'ROLEID_REQUIRED', description: {
-                en: 'The role uuid required',
-                tr: 'Bu işlem için rol uuid gerekli',
-            }
-        },
-        UNSUPPORTED_ROLEID: {
-            code: 'UNSUPPORTED_ROLEID', description: {
-                en: 'Unstupported uuid has given',
-                tr: 'Geçersiz role id',
-            }
-        },
-        PRIVILEGES_REQUIRED: {
-            code: 'PRIVILEGES_REQUIRED', description: {
-                en: 'At least 1 privileges required',
-                tr: 'En az 1 adet yetki seçilmelidir.',
-            }
-        },
-        USERID_REQUIRED: {
-            code: 'USERID_REQUIRED', description: {
-                en: 'The user uuid required',
-                tr: 'Bu işlem için kullanıcı uuid gerekli',
-            }
-        },
-        UNSUPPORTED_USERID: {
-            code: 'UNSUPPORTED_USERID', description: {
-                en: 'Unstupported uuid has given',
-                tr: 'Geçersiz kullanıcı id girişi',
-            }
-        },
-    }
-
 }

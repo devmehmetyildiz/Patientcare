@@ -11,7 +11,7 @@ const makeSureMysqlThatConnect = () => new Promise((resolve, reject) => {
         dialect: 'mysql',
         host: config.database.host,
         logging: false,
-        query:{raw:true}
+        query: { raw: true }
     });
     global.sequelize = sequelize
     global.db = db
@@ -23,7 +23,7 @@ const makeSureMysqlThatConnect = () => new Promise((resolve, reject) => {
             Object.keys(models).forEach(model => {
                 db[model] = models[model]
             })
-            sequelize.sync({ /* force: true */ alter: true }).then(() => {
+            sequelize.sync({ alter: true }).then(() => {
                 console.log('Database synced successfully.');
                 resolve()
             });

@@ -136,6 +136,7 @@
 
    pm2 serve build/ 3000 --name "react-build" --spa
 
+pm2 serve build/ 4000 --name "web_test" --spa
 
 12. Ftp ayarları
 
@@ -170,3 +171,20 @@
 
 
     chmod +x build-all.sh
+
+UPDATE patientdefines
+SET 
+    Firstname = CASE
+        WHEN Gender = '0' THEN (SELECT UPPER(Firstname) FROM (SELECT 'John' AS Firstname UNION SELECT 'Robert' UNION SELECT 'Michael' UNION SELECT 'William' UNION SELECT 'James' UNION SELECT 'David' UNION SELECT 'Joseph') AS male_firstnames ORDER BY RAND() LIMIT 1)
+        WHEN Gender = '1' THEN (SELECT UPPER(Firstname) FROM (SELECT 'Mary' AS Firstname UNION SELECT 'Patricia' UNION SELECT 'Jennifer' UNION SELECT 'Linda' UNION SELECT 'Elizabeth' UNION SELECT 'Susan' UNION SELECT 'Karen') AS female_firstnames ORDER BY RAND() LIMIT 1)
+    END,
+    Lastname = (SELECT UPPER(Lastname) FROM (SELECT 'Smith' AS Lastname UNION SELECT 'Johnson' UNION SELECT 'Williams' UNION SELECT 'Brown' UNION SELECT 'Jones' UNION SELECT 'Garcia' UNION SELECT 'Miller') AS lastnames ORDER BY RAND() LIMIT 1),
+    Fathername = (SELECT UPPER(Firstname) FROM (SELECT 'John' AS Firstname UNION SELECT 'Robert' UNION SELECT 'Michael' UNION SELECT 'William' UNION SELECT 'James' UNION SELECT 'David' UNION SELECT 'Joseph') AS male_firstnames ORDER BY RAND() LIMIT 1),
+    Mothername = (SELECT UPPER(Firstname) FROM (SELECT 'Mary' AS Firstname UNION SELECT 'Patricia' UNION SELECT 'Jennifer' UNION SELECT 'Linda' UNION SELECT 'Elizabeth' UNION SELECT 'Susan' UNION SELECT 'Karen') AS female_firstnames ORDER BY RAND() LIMIT 1),
+    CountryID = LPAD(FLOOR(RAND() * 99999999999), 11, '0'), -- Random 11-character number as string
+    Contactnumber1="",
+    Contactnumber2="",
+    Contactname1="",
+    Contactname2="",
+    Dateofbirth = STR_TO_DATE(CONCAT(FLOOR(1937 + (RAND() * (1950-1937 + 1))), '-', LPAD(FLOOR(1 + RAND() * 12), 2, '0'), '-', LPAD(FLOOR(1 + RAND() * 28), 2, '0')), '%Y-%m-%d') -- Random date between 1937 and 1950
+WHERE id = 1;

@@ -1,6 +1,6 @@
 const { sequelizeErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const bcrypt = require('bcrypt')
 
@@ -8,18 +8,18 @@ async function Getusersalt(req, res, next) {
 
     let validationErrors = []
     if (req.params.userId === undefined) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Profile.Error.UserIDRequired'))
     }
     if (!validator.isUUID(req.params.userId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+        validationErrors.push(req.t('Profile.Error.UnsupportedUserID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Profile'), req.language))
     }
     try {
         const usersalt = await db.usersaltModel.findOne({ where: { UserID: req.params.userId } })
         if (!usersalt) {
-            return next(createNotfounderror([messages.ERROR.USERSALT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Profile.Error.UserSaltNotFound'), req.t('Profile'), req.language))
         }
         res.status(200).json(usersalt)
     } catch (error) {
@@ -31,10 +31,10 @@ async function Getuserbyemail(req, res, next) {
 
     let validationErrors = []
     if (req.params.email === undefined) {
-        validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED)
+        validationErrors.push(req.t('Profile.Error.EmailRequired'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Profile'), req.language))
     }
     try {
         const user = await db.userModel.findOne({ where: { Email: req.params.email } })
@@ -45,10 +45,10 @@ async function Getuserbyemail(req, res, next) {
             attributes: ['RoleID']
         })
         if (!user) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Profile.Error.NotFound'), req.t('Profile'), req.language))
         }
         if (!user.Isactive) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Profile.Error.NotActive'), req.t('Profile'), req.language))
         }
         res.status(200).json(user)
     } catch (error) {
@@ -60,10 +60,10 @@ async function Getuserbyusername(req, res, next) {
 
     let validationErrors = []
     if (req.params.username === undefined) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
+        validationErrors.push(req.t('Profile.Error.UsernameRequired'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Profile'), req.language))
     }
     try {
         const user = await db.userModel.findOne({ where: { Username: req.params.username } })
@@ -74,10 +74,10 @@ async function Getuserbyusername(req, res, next) {
             attributes: ['RoleID']
         })
         if (!user) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Profile.Error.NotFound'), req.t('Profile'), req.language))
         }
         if (!user.Isactive) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Profile.Error.NotActive'), req.t('Profile'), req.language))
         }
         res.status(200).json(user)
     } catch (error) {
@@ -93,13 +93,13 @@ async function Changepasswordbyrequest(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Profile.Error.UserIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+        validationErrors.push(req.t('Profile.Error.UnsupportedUserID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Profile'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -108,10 +108,10 @@ async function Changepasswordbyrequest(req, res, next) {
     try {
         const user = await db.userModel.findOne({ where: { Uuid: Uuid } })
         if (!user) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Profile.Error.NotFound'), req.t('Profile'), req.language))
         }
         if (!user.Isactive) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Profile.Error.NotActive'), req.t('Profile'), req.language))
         }
 
         await db.userModel.update({
@@ -137,19 +137,19 @@ async function Changepassword(req, res, next) {
     } = req.body
 
     if (!validator.isString(Newpassword)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NEWPASSWORD_REQUIRED)
+        validationErrors.push(req.t('Profile.Error.NewPasswordRequired'))
     }
     if (!validator.isString(Newpasswordre)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NEWPASSWORD_REQUIRED)
+        validationErrors.push(req.t('Profile.Error.NewPasswordReRequired'))
     }
     if (!validator.isString(Oldpassword)) {
-        validationErrors.push(messages.VALIDATION_ERROR.OLDPASSWORD_REQUIRED)
+        validationErrors.push(req.t('Profile.Error.OldPasswordRequired'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Profile'), req.language))
     }
     if (Newpassword !== Newpasswordre) {
-        return next(createNotfounderror([messages.VALIDATION_ERROR.PASSWORD_DIDNT_MATCH], req.language))
+        return next(createNotFoundError(req.t('Profile.Error.PasswordDidntMatch'), req.t('Profile'), req.language))
     }
 
     let newSalt = ""
@@ -157,10 +157,10 @@ async function Changepassword(req, res, next) {
     try {
         usersalt = await db.usersaltModel.findOne({ where: { UserID: req.identity?.user?.Uuid } })
         if (!usersalt) {
-            return next(createNotfounderror([messages.ERROR.USERSALT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Profile.Error.UserSaltNotFound'), req.t('Profile'), req.language))
         }
         if (!ValidatePassword(Oldpassword, req.identity?.user?.PasswordHash, usersalt.Salt)) {
-            return next(createValidationError([messages.VALIDATION_ERROR.OLDPASSWORD_DIDNT_MATCH], req.language))
+            return next(createNotFoundError(req.t('Profile.Error.OldPasswordDidntMatch'), req.t('Profile'), req.language))
         }
         newSalt = await bcrypt.genSalt(16)
     } catch (error) {
@@ -194,7 +194,7 @@ async function Changepassword(req, res, next) {
 
 async function Getusername(req, res, next) {
     if (!req.identity?.user) {
-        return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+        return next(createNotFoundError(req.t('Profile.Error.NotFound'), req.t('Profile'), req.language))
     }
     res.status(200)
     return res.send(req?.identity?.user?.Username || '')
@@ -202,7 +202,7 @@ async function Getusername(req, res, next) {
 
 async function Getmeta(req, res, next) {
     if (!req.identity?.user) {
-        return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+        return next(createNotFoundError(req.t('Profile.Error.NotFound'), req.t('Profile'), req.language))
     }
     res.status(200)
     return res.send(req.identity.user)
@@ -211,12 +211,12 @@ async function Getmeta(req, res, next) {
 async function Gettablemeta(req, res, next) {
 
     if (!req.identity.user) {
-        return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+        return next(createNotFoundError(req.t('Profile.Error.NotFound'), req.t('Profile'), req.language))
     }
     try {
         const tablemetaconfigs = await db.tablemetaconfigModel.findAll({ where: { UserID: req?.identity?.user?.Uuid || '' } })
         if (!tablemetaconfigs) {
-            return next(createNotfounderror([messages.ERROR.TABLEMETA_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Profile.TableMetaNotFound.NotFound'), req.t('Profile'), req.language))
         }
         res.status(200).json(tablemetaconfigs)
     } catch (error) {
@@ -227,7 +227,7 @@ async function Gettablemeta(req, res, next) {
 async function Resettablemeta(req, res, next) {
     const key = req?.params?.metaKey
     if (!req.identity?.user) {
-        return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+        return next(createNotFoundError(req.t('Profile.Error.NotFound'), req.t('Profile'), req.language))
     }
     try {
         await db.tablemetaconfigModel.destroy({ where: { Meta: key, UserID: req?.identity?.user?.Uuid || '' } })
@@ -246,10 +246,10 @@ async function Savetablemeta(req, res, next) {
     } = req.body
 
     if (validator.isString(Meta)) {
-        validationErrors.push(messages.VALIDATION_ERROR.META_REQUIRED)
+        validationErrors.push(req.t('Profile.Error.MetaRequired'))
     }
     if (validator.isString(Config)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CONFIG_REQUIRED)
+        validationErrors.push(req.t('Profile.Error.ConfigRequired'))
     }
     try {
         const tablemetaconfig = await db.tablemetaconfigModel.findOne({ where: { UserID: req?.identity?.user?.Uuid || '', Meta: Meta || '' } })
@@ -265,7 +265,7 @@ async function Savetablemeta(req, res, next) {
         }
         const tablemetaconfigs = await db.tablemetaconfigModel.findAll({ where: { UserID: req?.identity?.user?.Uuid } })
         if (!tablemetaconfigs) {
-            return next(createNotfounderror([messages.ERROR.TABLEMETA_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Profile.Error.TableMetaNotFound'), req.t('Profile'), req.language))
         }
         res.status(200).json(tablemetaconfigs)
     } catch (error) {
@@ -298,90 +298,3 @@ module.exports = {
     Getusersalt,
     Changepasswordbyrequest
 }
-
-
-const messages = {
-    ERROR: {
-      ROLE_NOT_FOUND: {
-        code: 'ROLE_NOT_FOUND', description: {
-          en: 'Role not found',
-          tr: 'Rol bulunamadı',
-        }
-      },
-      USER_NOT_FOUND: {
-        code: 'USER_NOT_FOUND', description: {
-          en: 'User not found',
-          tr: 'Kullanıcı bulunamadı',
-        }
-      },
-      TABLEMETA_NOT_FOUND: {
-        code: 'TABLEMETA_NOT_FOUND', description: {
-          en: 'Table meta not found',
-          tr: 'Tablo meta datası bulunamadı',
-        }
-      },
-      USER_NOT_ACTIVE: {
-        code: 'USER_NOT_ACTIVE', description: {
-          en: 'User not active',
-          tr: 'Kullanıcı aktif değil',
-        }
-      },
-      USERSALT_NOT_FOUND: {
-        code: 'USERSALT_NOT_FOUND', description: {
-          en: 'User salt not found',
-          tr: 'Kullanıcı tuzu bulunamadı',
-        }
-      },
-    },
-    VALIDATION_ERROR: {
-      NAME_REQUIRED: {
-        code: 'NAME_REQUIRED', description: {
-          en: 'The name required',
-          tr: 'Bu işlem için isim gerekli',
-        }
-      },
-      META_REQUIRED: {
-        code: 'META_REQUIRED', description: {
-          en: 'The meta required',
-          tr: 'Bu işlem için meta data gerekli',
-        }
-      },
-      CONFIG_REQUIRED: {
-        code: 'CONFIG_REQUIRED', description: {
-          en: 'The config required',
-          tr: 'Bu işlem için config gerekli',
-        }
-      },
-      USERNAME_REQUIRED: {
-        code: 'USERNAME_REQUIRED', description: {
-          en: 'The username required',
-          tr: 'Bu işlem için kullanıcı adı gerekli',
-        }
-      },
-      PASSWORD_REQUIRED: {
-        code: 'PASSWORD_REQUIRED', description: {
-          en: 'The user password required',
-          tr: 'Bu işlem için kullanıcı şifresi gerekli',
-        }
-      },
-      EMAIL_REQUIRED: {
-        code: 'EMAIL_REQUIRED', description: {
-          en: 'The email required',
-          tr: 'Bu işlem için e-posta gerekli',
-        }
-      },
-      USERID_REQUIRED: {
-        code: 'USERID_REQUIRED', description: {
-          en: 'The user uuid required',
-          tr: 'Bu işlem için kullanıcı uuid gerekli',
-        }
-      },
-      UNSUPPORTED_USERID: {
-        code: 'UNSUPPORTED_USERID', description: {
-          en: 'Unstupported uuid has given',
-          tr: 'Geçersiz kullanıcı id girişi',
-        }
-      },
-    }
-  }
-  

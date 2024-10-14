@@ -1,6 +1,6 @@
 const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const bcrypt = require('bcrypt')
@@ -16,7 +16,7 @@ async function Register(req, res, next) {
             }
         });
         if (usercount > 0) {
-            return next(createValidationError([messages.ERROR.ADMIN_USER_ALREADY_ACTIVE], req.language))
+            return next(createValidationError(req.t('Users.Error.AdminUserAlreadyActive'), req.t('Users'), req.language))
         }
         const {
             Username,
@@ -25,17 +25,17 @@ async function Register(req, res, next) {
         } = req.body
         let validationErrors = []
         if (!validator.isString(Username)) {
-            validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
+            validationErrors.push(req.t('Roles.Error.UsernameRequired'))
         }
         if (!validator.isString(Password)) {
-            validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
+            validationErrors.push(req.t('Roles.Error.PasswordRequired'))
         }
         if (!validator.isString(Email)) {
-            validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED)
+            validationErrors.push(req.t('Roles.Error.EmailRequired'))
         }
 
         if (validationErrors.length > 0) {
-            return next(createValidationError(validationErrors, req.language))
+            return next(createValidationError(validationErrors, req.t('Users'), req.language))
         }
 
 
@@ -136,21 +136,21 @@ async function GetUser(req, res, next) {
 
     let validationErrors = []
     if (req.params.userId === undefined) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Users.Error.UserIDRequired'))
     }
     if (!validator.isUUID(req.params.userId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+        validationErrors.push(req.t('Users.Error.UnsupportedUserID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Users'), req.language))
     }
     try {
         const user = await db.userModel.findOne({ where: { Uuid: req.params.userId } })
         if (!user) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Users.Error.NotFound'), req.t('Users'), req.language))
         }
         if (!user.Isactive) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Users.Error.NotActive'), req.t('Users'), req.language))
         }
         user.Roleuuids = await db.userroleModel.findAll({
             where: {
@@ -186,41 +186,41 @@ async function AddUser(req, res, next) {
     } = req.body
 
     if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
+        validationErrors.push(req.t('Users.Error.UsernameRequired'))
     }
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Users.Error.NameRequired'))
     }
     if (!validator.isString(Surname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SURNAME_REQUIRED)
+        validationErrors.push(req.t('Users.Error.SurnameRequired'))
     }
     if (!validator.isString(Language)) {
-        validationErrors.push(messages.VALIDATION_ERROR.LANGUAGE_REQUIRED)
+        validationErrors.push(req.t('Users.Error.LanguageRequired'))
     }
     if (!validator.isString(Password)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
+        validationErrors.push(req.t('Users.Error.PasswordRequired'))
     }
     if (!validator.isString(Email)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED)
+        validationErrors.push(req.t('Users.Error.EmailRequired'))
     }
     if (!validator.isArray(Roles)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROLES_REQUIRED)
+        validationErrors.push(req.t('Users.Error.RolesRequired'))
     }
     const usernamecheck = GetUserByUsername(next, Username)
         .then(user => {
             if (user && Object.keys(user).length > 0) {
-                validationErrors.push(messages.VALIDATION_ERROR.USERNAME_DUPLICATE)
+                validationErrors.push(req.t('Users.Error.UsernameDuplicated'))
             }
         })
     const emailcheck = GetUserByEmail(next, Email)
         .then(user => {
             if (user && Object.keys(user).length > 0) {
-                validationErrors.push(messages.VALIDATION_ERROR.EMAIL_DUPLICATE)
+                validationErrors.push(req.t('Users.Error.EmailDuplicated'))
             }
         })
     await Promise.all([usernamecheck, emailcheck])
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Users'), req.language))
     }
 
     const salt = await bcrypt.genSalt(16)
@@ -246,7 +246,7 @@ async function AddUser(req, res, next) {
         }, { transaction: t })
         for (const role of Roles) {
             if (!role.Uuid || !validator.isUUID(role.Uuid)) {
-                return next(createValidationError([messages.VALIDATION_ERROR.UNSUPPORTED_ROLEID], req.language))
+                return next(createValidationError(req.t('Users.Error.UnsupportedRoleID'), req.t('Users'), req.language))
             }
             await db.userroleModel.create({
                 UserID: useruuid,
@@ -256,11 +256,16 @@ async function AddUser(req, res, next) {
 
         await CreateNotification({
             type: notificationTypes.Create,
-            service: 'Kullanıcılar',
+            service: req.t('Users'),
             role: 'usernotification',
-            message: `${Username} kullanıcısı ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${Username} Kullanıcısı ${username} Tarafından Oluşturuldu.`,
+                en: `${Username} User Created By ${username}`
+            }[req.language],
             pushurl: '/Users'
         })
+
+
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -282,22 +287,22 @@ async function UpdateUser(req, res, next) {
     } = req.body
 
     if (!validator.isString(Username)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
+        validationErrors.push(req.t('Users.Error.UsernameDuplicated'))
     }
     if (!validator.isString(Language)) {
-        validationErrors.push(messages.VALIDATION_ERROR.LANGUAGE_REQUIRED)
+        validationErrors.push(req.t('Users.Error.LanguageRequired'))
     }
     if (!validator.isString(Email)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED)
+        validationErrors.push(req.t('Users.Error.EmailRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Users.Error.UserIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+        validationErrors.push(req.t('Users.Error.UnsupportedUserID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Users'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -306,10 +311,10 @@ async function UpdateUser(req, res, next) {
     try {
         const user = await db.userModel.findOne({ where: { Uuid: Uuid } })
         if (!user) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Users.Error.NotFound'), req.t('Users'), req.language))
         }
         if (!user.Isactive) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Users.Error.NotActive'), req.t('Users'), req.language))
         }
 
         await db.userModel.update({
@@ -324,7 +329,7 @@ async function UpdateUser(req, res, next) {
 
         for (const role of Roles) {
             if (!role.Uuid || !validator.isUUID(role.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_ROLEID, req.language))
+                return next(createValidationError(req.t('Users.Error.UnsupportedRoleID'), req.t('Users'), req.language))
             }
             await db.userroleModel.create({
                 UserID: Uuid,
@@ -334,11 +339,15 @@ async function UpdateUser(req, res, next) {
 
         await CreateNotification({
             type: notificationTypes.Update,
-            service: 'Kullanıcılar',
+            service: req.t('Users'),
             role: 'usernotification',
-            message: `${Username} kullanıcısı ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Username} Kullanıcısı ${username} Tarafından Güncellendi.`,
+                en: `${Username} User Updated By ${username}`
+            }[req.language],
             pushurl: '/Users'
         })
+
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -354,13 +363,13 @@ async function DeleteUser(req, res, next) {
     const Uuid = req.params.userId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Users.Error.UserIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+        validationErrors.push(req.t('Users.Error.UnsupportedUserID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Users'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -369,10 +378,10 @@ async function DeleteUser(req, res, next) {
     try {
         const user = await db.userModel.findOne({ where: { Uuid: Uuid } })
         if (!user) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Users.Error.NotFound'), req.t('Users'), req.language))
         }
         if (!user.Isactive) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Users.Error.NotActive'), req.t('Users'), req.language))
         }
 
         await db.userModel.update({
@@ -383,9 +392,12 @@ async function DeleteUser(req, res, next) {
 
         await CreateNotification({
             type: notificationTypes.Delete,
-            service: 'Kullanıcılar',
+            service: req.t('Users'),
             role: 'usernotification',
-            message: `${user?.Username} kullanıcısı ${username} tarafından Silindi.`,
+            message: {
+                tr: `${user?.Username} Kullanıcısı ${username} Tarafından Silindi.`,
+                en: `${user?.Username} User Deleted By ${username}`
+            }[req.language],
             pushurl: '/Users'
         })
         await t.commit();
@@ -403,13 +415,13 @@ async function DeleteUsermovement(req, res, next) {
     const Uuid = req.params.usermovementId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERMOVEMENTID_REQUIRED)
+        validationErrors.push(req.t('Users.Error.UsermovementIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+        validationErrors.push(req.t('Users.Error.UnsupportedUsermovementID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Users'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -418,10 +430,10 @@ async function DeleteUsermovement(req, res, next) {
     try {
         const usermovement = await db.usermovementModel.findOne({ where: { Uuid: Uuid } })
         if (!usermovement) {
-            return next(createNotfounderror([messages.ERROR.USERMOVEMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Users.Error.UsermovementNotFound'), req.t('Users'), req.language))
         }
         if (usermovement.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.USERMOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Users.Error.UsermovementNotActive'), req.t('Users'), req.language))
         }
 
         await db.usermovementModel.update({
@@ -434,9 +446,12 @@ async function DeleteUsermovement(req, res, next) {
 
         await CreateNotification({
             type: notificationTypes.Delete,
-            service: 'Kullanıcılar',
+            service: req.t('Users'),
             role: 'usernotification',
-            message: `${user?.Name} ${user?.Surname} kullanıcısına ait hareket ${username} tarafından silindi.`,
+            message: {
+                tr: `${user?.Username} Kullanıcı Hareketi ${username} Tarafından Silindi.`,
+                en: `${user?.Username} User Movement Deleted By ${username}`
+            }[req.language],
             pushurl: '/Users'
         })
         await t.commit();
@@ -457,17 +472,17 @@ async function UpdateUsermovement(req, res, next) {
 
 
     if (!validator.isISODate(Occureddate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDDATE_REQUIRED)
+        validationErrors.push(req.t('Users.Error.OccureddateRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERMOVEMENTID_REQUIRED)
+        validationErrors.push(req.t('Users.Error.UsermovementIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERMOVEMENTID)
+        validationErrors.push(req.t('Users.Error.UnsupportedUsermovementID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Users'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -476,10 +491,10 @@ async function UpdateUsermovement(req, res, next) {
     try {
         const usermovement = await db.usermovementModel.findOne({ where: { Uuid: Uuid } })
         if (!usermovement) {
-            return next(createNotfounderror([messages.ERROR.USERMOVEMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Users.Error.UsermovementNotFound'), req.t('Users'), req.language))
         }
         if (usermovement.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.USERMOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Users.Error.UsermovementNotActive'), req.t('Users'), req.language))
         }
 
         await db.usermovementModel.update({
@@ -492,9 +507,12 @@ async function UpdateUsermovement(req, res, next) {
 
         await CreateNotification({
             type: notificationTypes.Update,
-            service: 'Kullanıcılar',
+            service: req.t('Users'),
             role: 'usernotification',
-            message: `${user?.Name} ${user?.Surname} kullanıcısına ait hareket ${username} tarafından güncellendi.`,
+            message: {
+                tr: `${user?.Username} Kullanıcı Hareketi ${username} Tarafından Güncellendi.`,
+                en: `${user?.Username} Movement Updated By ${username}`
+            }[req.language],
             pushurl: '/Users'
         })
 
@@ -518,14 +536,14 @@ async function UpdateUsercase(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(UserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Users.Error.UserIDRequired'))
     }
     if (!validator.isUUID(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+        validationErrors.push(req.t('Users.Error.CaseIDRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Users'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -535,10 +553,10 @@ async function UpdateUsercase(req, res, next) {
 
         const user = await db.userModel.findOne({ where: { Uuid: UserID } })
         if (!user) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Users.Error.NotFound'), req.t('Users'), req.language))
         }
         if (!user.Isactive) {
-            return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Users.Error.NotActive'), req.t('Users'), req.language))
         }
 
         if (!Ispastdate) {
@@ -566,14 +584,14 @@ async function UpdateUsercase(req, res, next) {
 
                 const isHaveenddate = validator.isISODate(Occuredenddate)
                 if (!isHaveenddate) {
-                    return next(createNotfounderror([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_REQUIRED], req.language))
+                    return next(createNotFoundError(req.t('Users.Error.MovementEndDateRequired'), req.t('Users'), req.language))
                 }
 
                 const nextmovement = usermovements[0]
 
                 const isEnddatelowerthanfirstmovement = Checkdatelowerthanother(Occuredenddate, usermovements[0]?.Occureddate)
                 if (!isEnddatelowerthanfirstmovement) {
-                    return next(createNotfounderror([messages.VALIDATION_ERROR.MOVEMENT_END_DATE_TOO_BIG], req.language))
+                    return next(createNotFoundError(req.t('Users.Error.MovementEndDateTooBig'), req.t('Users'), req.language))
                 }
 
                 if (isEnddatelowerthanfirstmovement) {
@@ -601,9 +619,12 @@ async function UpdateUsercase(req, res, next) {
 
         await CreateNotification({
             type: notificationTypes.Update,
-            service: 'Kullanıcılar',
+            service: req.t('Users'),
             role: 'usernotification',
-            message: `${user?.Name} ${user?.Surname} personel durumu ${username} tarafından güncellendi.`,
+            message: {
+                tr: `${user?.Username} Kullanıcısı Durumu ${username} Tarafından Güncellendi.`,
+                en: `${user?.Username} User Case Updated By ${username}`
+            }[req.language],
             pushurl: '/Users'
         })
 
@@ -680,144 +701,4 @@ module.exports = {
     UpdateUsercase,
     UpdateUsermovement,
     DeleteUsermovement
-}
-
-const messages = {
-    ERROR: {
-        ADMIN_USER_ALREADY_ACTIVE: {
-            code: 'ADMIN_USER_ALREADY_ACTIVE', description: {
-                en: 'Admin user already active',
-                tr: 'Admin kullanıcı zaten aktif',
-            }
-        },
-        USER_NOT_FOUND: {
-            code: 'USER_NOT_FOUND', description: {
-                en: 'User not found',
-                tr: 'Kullanıcı bulunamadı',
-            }
-        },
-        USER_NOT_ACTIVE: {
-            code: 'USER_NOT_ACTIVE', description: {
-                en: 'User not active',
-                tr: 'Kullanıcı aktif değil',
-            }
-        },
-        USERMOVEMENT_NOT_FOUND: {
-            code: 'USERMOVEMENT_NOT_FOUND', description: {
-                en: 'user movement not found',
-                tr: 'kullanıcı hareketi bulunamadı',
-            }
-        },
-        USERMOVEMENT_NOT_ACTIVE: {
-            code: 'USERMOVEMENT_NOT_ACTIVE', description: {
-                en: 'user movement not active',
-                tr: 'kullanıcı hareketi bulunamadı',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        UNSUPPORTED_ROLEID: {
-            code: 'UNSUPPORTED_ROLEID', description: {
-                en: 'Unstupported uuid has given',
-                tr: 'Geçersiz role id',
-            }
-        },
-        USERNAME_REQUIRED: {
-            code: 'USERNAME_REQUIRED', description: {
-                en: 'The username required',
-                tr: 'Bu işlem için kullanıcı adı gerekli',
-            }
-        },
-        PASSWORD_REQUIRED: {
-            code: 'PASSWORD_REQUIRED', description: {
-                en: 'The user password required',
-                tr: 'Bu işlem için kullanıcı şifresi gerekli',
-            }
-        },
-        EMAIL_REQUIRED: {
-            code: 'EMAIL_REQUIRED', description: {
-                en: 'The email required',
-                tr: 'Bu işlem için e-posta gerekli',
-            }
-        },
-        SURNAME_REQUIRED: {
-            code: 'SURNAME_REQUIRED', description: {
-                en: 'The surname required',
-                tr: 'Bu işlem için soyisim gerekli',
-            }
-        },
-        LANGUAGE_REQUIRED: {
-            code: 'LANGUAGE_REQUIRED', description: {
-                en: 'The language required',
-                tr: 'Bu işlem için dil gerekli',
-            }
-        },
-        ROLES_REQUIRED: {
-            code: 'ROLES_REQUIRED', description: {
-                en: 'The roles required',
-                tr: 'Bu işlem için roller gerekli',
-            }
-        },
-        USERNAME_DUPLICATE: {
-            code: 'USERNAME_DUPLICATE', description: {
-                en: 'Username already active',
-                tr: 'Kullanıcı adı zaten mevcut',
-            }
-        },
-        EMAIL_DUPLICATE: {
-            code: 'EMAIL_DUPLICATE', description: {
-                en: 'E-mail already active',
-                tr: 'E-posta zaten mevcut',
-            }
-        },
-        CASEID_REQUIRED: {
-            code: 'CASEID_REQUIRED', description: {
-                en: 'The case uuid required',
-                tr: 'Bu işlem için durum uuid gerekli',
-            }
-        },
-        USERID_REQUIRED: {
-            code: 'USERID_REQUIRED', description: {
-                en: 'The user uuid required',
-                tr: 'Bu işlem için kullanıcı uuid gerekli',
-            }
-        },
-        UNSUPPORTED_USERID: {
-            code: 'UNSUPPORTED_USERID', description: {
-                en: 'Unstupported uuid has given',
-                tr: 'Geçersiz kullanıcı id girişi',
-            }
-        },
-        MOVEMENT_END_DATE_REQUIRED: {
-            code: 'MOVEMENT_END_DATE_REQUIRED', description: {
-                en: 'The movement end date required, system should know end date when you enter past dated movement',
-                tr: 'Bu işlem için hareket sona erme tarihi gerekli, geçmiş tarihli hareket girişlerinde sistem bitiş tarihi bilmeli',
-            }
-        },
-        MOVEMENT_END_DATE_TOO_BIG: {
-            code: 'MOVEMENT_END_DATE_TOO_BIG', description: {
-                en: 'The movement end date is too big, you should enter lower date before next movement start',
-                tr: 'Hareket sona erme tarihi çok güncel, geçmiş tarihli hareketlerde bir sonraki hareket tarihinden daha geçmiş hareket tarihi girmen gerekli',
-            }
-        },
-        USERMOVEMENTID_REQUIRED: {
-            code: 'USERMOVEMENTID_REQUIRED', description: {
-                en: 'The UsermovementID required',
-                tr: 'Bu işlem için Kullanıcı Hareket Uuid gerekli',
-            }
-        },
-        UNSUPPORTED_USERMOVEMENTID: {
-            code: 'UNSUPPORTED_USERMOVEMENTID', description: {
-                en: 'The user movement id is unsupported',
-                tr: 'Tanımsız kullanıcı hareket uuid değeri',
-            }
-        },
-    }
-
 }
