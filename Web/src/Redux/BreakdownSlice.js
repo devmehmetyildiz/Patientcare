@@ -5,33 +5,6 @@ import instanse from "./axios";
 import config from "../Config";
 import { FileuploadPrepare } from '../Components/Fileupload';
 
-const Literals = {
-    addcode: {
-        en: 'Data Save',
-        tr: 'Veri Kaydetme'
-    },
-    adddescription: {
-        en: 'Breakdown added successfully',
-        tr: 'Arıza Talebi Başarı ile eklendi'
-    },
-    updatecode: {
-        en: 'Data Update',
-        tr: 'Veri Güncelleme'
-    },
-    updatedescription: {
-        en: 'Breakdown updated successfully',
-        tr: 'Arıza Talebi Başarı ile güncellendi'
-    },
-    deletecode: {
-        en: 'Data Delete',
-        tr: 'Veri Silme'
-    },
-    deletedescription: {
-        en: 'Breakdown Deleted successfully',
-        tr: 'Arıza Talebi Başarı ile Silindi'
-    },
-}
-
 export const GetBreakdowns = createAsyncThunk(
     'Breakdowns/GetBreakdowns',
     async (_, { dispatch }) => {
@@ -65,18 +38,18 @@ export const AddBreakdowns = createAsyncThunk(
     async ({ data, files, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.post(config.services.Warehouse, ROUTES.BREAKDOWN, data);
             dispatch(fillBreakdownnotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                code: t('Common.Code.Add'),
+                description: t('Redux.Breakdowns.Messages.Add'),
             }));
             clearForm && clearForm('BreakdownsCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Breakdowns');
             if (files && files?.length > 0) {
-                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillBreakdownnotification, Literals, state.Profile)
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillBreakdownnotification, null, state.Profile)
                 await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
             }
             return response?.data?.list || [];
@@ -93,18 +66,18 @@ export const EditBreakdowns = createAsyncThunk(
     async ({ data, files, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Warehouse, ROUTES.BREAKDOWN, data);
             dispatch(fillBreakdownnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Breakdowns.Messages.Update'),
             }));
             clearForm && clearForm('BreakdownsUpdate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Breakdowns');
             if (files && files?.length > 0) {
-                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillBreakdownnotification, Literals, state.Profile)
+                const reqFiles = FileuploadPrepare(files.map(u => ({ ...u, ParentID: response?.data?.data?.Uuid })), fillBreakdownnotification, null, state.Profile)
                 await instanse.put(config.services.File, ROUTES.FILE, reqFiles, 'mime/form-data');
             }
             return response?.data?.list || [];
@@ -121,12 +94,12 @@ export const CompleteBreakdowns = createAsyncThunk(
     async (data, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Warehouse, ROUTES.BREAKDOWN + '/Complete', data);
             dispatch(fillBreakdownnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Breakdowns.Messages.Complete'),
             }));
             return response?.data?.list || [];
         } catch (error) {
@@ -141,14 +114,13 @@ export const DeleteBreakdowns = createAsyncThunk(
     'Breakdowns/DeleteBreakdowns',
     async (data, { dispatch, getState }) => {
         try {
-
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.Warehouse, `${ROUTES.BREAKDOWN}/${data.Uuid}`);
             dispatch(fillBreakdownnotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Breakdowns.Messages.Delete'),
             }));
             return response?.data?.list || [];
         } catch (error) {

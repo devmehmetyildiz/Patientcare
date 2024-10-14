@@ -71,11 +71,11 @@ export default class StocktypegroupsEdit extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypegroups.Columns.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stocktypegroups.Columns.Info')} name="Info" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypegroups.Column.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stocktypegroups.Column.Info')} name="Info" />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypegroups.Columns.Stocktypes')} options={Stocktypesoption} name="Stocktypes" formtype='dropdown' multiple modal={StocktypesCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypegroups.Column.Stocktypes')} options={Stocktypesoption} name="Stocktypes" formtype='dropdown' multiple modal={StocktypesCreate} />
               </Form.Group>
             </Form>
           </Contentwrapper>

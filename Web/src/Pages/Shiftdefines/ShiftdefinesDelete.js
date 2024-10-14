@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { Button, Modal } from 'semantic-ui-react'
-import Literals from './Literals'
 
 export default class ShiftdefinesDelete extends Component {
   render() {
     const { Profile, Shiftdefines, DeleteShiftdefines, handleDeletemodal, handleSelectedShiftdefine } = this.props
+
+    const t = Profile?.i18n?.t
+
     const { isDeletemodalopen, selected_record } = Shiftdefines
     return (
       <Modal
@@ -12,12 +14,12 @@ export default class ShiftdefinesDelete extends Component {
         onOpen={() => handleDeletemodal(true)}
         open={isDeletemodalopen}
       >
-        <Modal.Header>{Literals.Page.Pagedeleteheader[Profile.Language]}</Modal.Header>
+        <Modal.Header>{t('Pages.Shiftdefines.Page.DeleteHeader')}</Modal.Header>
         <Modal.Content image>
           <Modal.Description>
             <p>
               <span className='font-bold'>{selected_record?.Name} </span>
-              {Literals.Messages.Deletecheck[Profile.Language]}
+              {t('Pages.Shiftdefines.Delete.Label.Check')}
             </p>
           </Modal.Description>
         </Modal.Content>
@@ -26,10 +28,10 @@ export default class ShiftdefinesDelete extends Component {
             handleDeletemodal(false)
             handleSelectedShiftdefine({})
           }}>
-            {Literals.Button.Giveup[Profile.Language]}
+            {t('Common.Button.Giveup')}
           </Button>
           <Button
-            content={Literals.Button.Delete[Profile.Language]}
+            content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'
             onClick={() => {

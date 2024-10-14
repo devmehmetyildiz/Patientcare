@@ -59,15 +59,15 @@ export default class StocktypesEdit extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Columns.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stocktypes.Columns.Info')} name="Info" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Column.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stocktypes.Column.Info')} name="Info" />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Columns.Issktneed')} name="Issktneed" formtype='checkbox' />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Columns.Isbarcodeneed')} name="Isbarcodeneed" formtype='checkbox' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Column.Issktneed')} name="Issktneed" formtype='checkbox' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Column.Isbarcodeneed')} name="Isbarcodeneed" formtype='checkbox' />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Columns.Isredpill')} name="Isredpill" formtype='checkbox' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Column.Isredpill')} name="Isredpill" formtype='checkbox' />
               </Form.Group>
             </Form>
           </Contentwrapper>

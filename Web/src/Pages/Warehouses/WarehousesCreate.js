@@ -34,9 +34,9 @@ export default class WarehousesCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Warehouses.Columns.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Warehouses.Column.Name')} name="Name" />
               </Form.Group>
-              <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Warehouses.Columns.Info')} name="Info" />
+              <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Warehouses.Column.Info')} name="Info" />
             </Form>
           </Contentwrapper>
           <Footerwrapper>

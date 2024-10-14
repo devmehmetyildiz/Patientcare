@@ -74,21 +74,21 @@ export default class StockdefinesEdit extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Columns.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stockdefines.Columns.Brand')} name="Brand" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Column.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stockdefines.Column.Brand')} name="Brand" />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Columns.Stocktype')} options={Stocktypesoption} name="StocktypeID" formtype='dropdown' modal={StocktypesCreate} />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Columns.Unit')} options={Unitoption} name="UnitID" formtype='dropdown' modal={UnitsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Column.Stocktype')} options={Stocktypesoption} name="StocktypeID" formtype='dropdown' modal={StocktypesCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Column.Unit')} options={Unitoption} name="UnitID" formtype='dropdown' modal={UnitsCreate} />
               </Form.Group>
               {Isbarcodeneed ?
                 <Form.Group widths={"equal"}>
-                  <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Columns.Barcode')} name="Barcode" />
+                  <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Column.Barcode')} name="Barcode" />
                 </Form.Group>
                 : null
               }
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stockdefines.Columns.Info')} name="Info" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stockdefines.Column.Info')} name="Info" />
               </Form.Group>
             </Form>
           </Contentwrapper>

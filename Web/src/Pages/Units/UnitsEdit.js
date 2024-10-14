@@ -79,11 +79,11 @@ export default class UnitsEdit extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Columns.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Columns.Unittype')} name="Unittype" options={unitstatusOption} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Unittype')} name="Unittype" options={unitstatusOption} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Columns.Departments')} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Department')} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
             </Form>
           </Contentwrapper>

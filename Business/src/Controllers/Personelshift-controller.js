@@ -619,8 +619,6 @@ async function Getpeparedpersonelshift(req, res, next) {
     }
 }
 
-
-
 async function Getpreviouspersonelshifts(ProfessionID, startDate) {
     const Dateoptions = Getdateoptions(1000)
     const startDateorder = Dateoptions.find(u => new Date(u.value).getTime() === startDate.getTime())?.order
@@ -706,6 +704,7 @@ function GetFloorforfill(floors, Filledusers) {
     }
     return selectedShift
 }
+
 function GetShiftforfill(shiftdefines, Filledusers) {
     let selectedShift = null
     for (const shiftdefine of shiftdefines) {

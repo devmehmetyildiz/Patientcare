@@ -44,8 +44,8 @@ export default class Stocks extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.change'), accessor: 'edit', disableProps: true },
-      { Header: t('Common.Column.approve'), accessor: 'edit', disableProps: true },
+      { Header: t('Common.Column.change'), accessor: 'change', disableProps: true },
+      { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true },
       { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
       { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })

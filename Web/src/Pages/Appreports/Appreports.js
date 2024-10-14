@@ -54,6 +54,7 @@ export default class Appreports extends Component {
             en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             tr: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık']
         }
+        
         const userLog = [...new Set(logs.map(u => { return u.RequestuserID }) || [])]
         const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         const lineoptions = {

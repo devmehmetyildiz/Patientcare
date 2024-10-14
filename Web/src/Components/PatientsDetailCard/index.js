@@ -139,7 +139,8 @@ export default function PatientsDetailCard(props) {
                                         fileID={patientPP?.Uuid}
                                         fillnotification={fillnotification}
                                         Profile={Profile}
-                                        Imgheigth="40px"
+                                        right
+                                        Imgheigth="90px"
                                     />
                                     : <Image
                                         floated='right'

@@ -61,11 +61,11 @@ export default class UnitsCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Columns.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Columns.Unittype')} name="Unittype" options={unitstatusOption} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Unittype')} name="Unittype" options={unitstatusOption} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Columns.Departments')} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Department')} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
               </Form.Group>
             </Form>
           </Contentwrapper>
@@ -88,9 +88,9 @@ export default class UnitsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddUnits, history, fillUnitnotification, Departments, Profile, closeModal } = this.props
-    
+
     const t = Profile?.i18n?.t
-    
+
     const data = this.context.getForm(this.PAGE_NAME)
     data.Departments = data.Departments.map(id => {
       return (Departments.list || []).find(u => u.Uuid === id)

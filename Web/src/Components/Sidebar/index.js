@@ -190,7 +190,7 @@ export const getSidebarroutes = (Profile) => {
                 { id: 1, subtitle: Literals.Personelshifts.Page.Pageheader[Profile.Language], url: "/Personelshifts", permission: checkAuth('personelshiftview') },
                 { id: 2, subtitle: Literals.Personelpresettings.Page.Pageheader[Profile.Language], url: "/Personelpresettings", permission: checkAuth('personelpresettingview') },
                 { id: 3, subtitle: Literals.Professionpresettings.Page.Pageheader[Profile.Language], url: "/Professionpresettings", permission: checkAuth('professionpresettingview') },
-                { id: 4, subtitle: Literals.Shiftdefines.Page.Pageheader[Profile.Language], url: "/Shiftdefines", permission: checkAuth('shiftdefineview') },
+                { id: 4, subtitle: t('Pages.Shiftdefines.Page.Header'), url: "/Shiftdefines", permission: checkAuth('shiftdefineview') },
             ]
         },
         {

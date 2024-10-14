@@ -28,3 +28,7 @@ personel tesvisi hariç hakediş yap
 
 
 yaş hesaplama hatalı model değiş
+
+
+npm install eslint --save-dev
+npm install i18next i18next-fs-backend i18next-http-middleware

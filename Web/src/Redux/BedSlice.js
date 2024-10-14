@@ -4,33 +4,6 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
-const Literals = {
-    addcode: {
-        en: 'Data Save',
-        tr: 'Veri Kaydetme'
-    },
-    adddescription: {
-        en: 'Bed added successfully',
-        tr: 'Yatak Başarı ile eklendi'
-    },
-    updatecode: {
-        en: 'Data Update',
-        tr: 'Veri Güncelleme'
-    },
-    updatedescription: {
-        en: 'Bed updated successfully',
-        tr: 'Yatak Başarı ile güncellendi'
-    },
-    deletecode: {
-        en: 'Data Delete',
-        tr: 'Veri Silme'
-    },
-    deletedescription: {
-        en: 'Bed Deleted successfully',
-        tr: 'Yatak Başarı ile Silindi'
-    },
-}
-
 export const GetBeds = createAsyncThunk(
     'Beds/GetBeds',
     async (_, { dispatch }) => {
@@ -64,12 +37,12 @@ export const AddBeds = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.post(config.services.Setting, ROUTES.BED, data);
             dispatch(fillBednotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
+                code: t('Common.Code.Add'),
+                description: t('Redux.Beds.Messages.Add'),
             }));
             clearForm && clearForm('BedsCreate')
             closeModal && closeModal()
@@ -88,12 +61,12 @@ export const AddRecordBeds = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.post(config.services.Setting, ROUTES.BED + '/AddRecord', data);
             dispatch(fillBednotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
+                code: t('Common.Code.Add'),
+                description: t('Redux.Beds.Messages.Add'),
             }));
             clearForm && clearForm('BedsCreate')
             closeModal && closeModal()
@@ -112,12 +85,12 @@ export const EditBeds = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Setting, ROUTES.BED, data);
             dispatch(fillBednotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
+                code: t('Common.Code.Update'),
+                description: t('Redux.Beds.Messages.Update'),
             }));
             closeModal && closeModal()
             clearForm && clearForm('BedsUpdate')
@@ -136,12 +109,12 @@ export const ChangeBedOccupied = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Setting, ROUTES.BED + '/ChangeBedOccupied', data);
             dispatch(fillBednotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Beds.Messages.Update'),
             }));
             closeModal && closeModal()
             clearForm && clearForm('BedsUpdate')
@@ -161,12 +134,12 @@ export const DeleteBeds = createAsyncThunk(
         try {
 
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.Setting, `${ROUTES.BED}/${data.Uuid}`);
             dispatch(fillBednotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Beds.Messages.Delete'),
             }));
             return response.data;
         } catch (error) {

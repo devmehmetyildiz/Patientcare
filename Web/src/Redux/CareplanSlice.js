@@ -4,41 +4,6 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
-const Literals = {
-    addcode: {
-        en: 'Data Save',
-        tr: 'Veri Kaydetme'
-    },
-    adddescription: {
-        en: 'Care plan added successfully',
-        tr: 'Bakım planı Başarı ile eklendi'
-    },
-    updatecode: {
-        en: 'Data Update',
-        tr: 'Veri Güncelleme'
-    },
-    updatedescription: {
-        en: 'Care plan updated successfully',
-        tr: 'Bakım planı Başarı ile güncellendi'
-    },
-    deletecode: {
-        en: 'Data Delete',
-        tr: 'Veri Silme'
-    },
-    deletedescription: {
-        en: 'Care plan Deleted successfully',
-        tr: 'Bakım planı Başarı ile Silindi'
-    },
-    approvedescription: {
-        en: 'Care Plan approved successfully',
-        tr: 'Bakım PLanı Başarı ile Onaylandı'
-    },
-    completedescription: {
-        en: 'Care Plan completed successfully',
-        tr: 'Bakım PLanı Başarı ile Tamamlandı'
-    },
-}
-
 export const GetCareplans = createAsyncThunk(
     'Careplans/GetCareplans',
     async (_, { dispatch }) => {
@@ -72,12 +37,12 @@ export const AddCareplans = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.post(config.services.Business, ROUTES.CAREPLAN, data);
             dispatch(fillCareplannotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                code: t('Common.Code.Add'),
+                description: t('Redux.Careplans.Messages.Add'),
             }));
             clearForm && clearForm('CareplansCreate')
             closeModal && closeModal()
@@ -96,12 +61,12 @@ export const EditCareplans = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.CAREPLAN, data);
             dispatch(fillCareplannotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Careplans.Messages.Update'),
             }));
             clearForm && clearForm('CareplansUpdate')
             closeModal && closeModal()
@@ -122,12 +87,12 @@ export const SavepreviewCareplans = createAsyncThunk(
         try {
 
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, `${ROUTES.CAREPLAN}/Savepreview/${data.Uuid}`);
             dispatch(fillCareplannotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.adddescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Careplans.Messages.Savepreview'),
             }));
             return response.data;
         } catch (error) {
@@ -144,12 +109,12 @@ export const CompleteCareplans = createAsyncThunk(
         try {
 
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, `${ROUTES.CAREPLAN}/Complete/${data.Uuid}`);
             dispatch(fillCareplannotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.completedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Careplans.Messages.Complete'),
             }));
             return response.data;
         } catch (error) {
@@ -166,12 +131,12 @@ export const ApproveCareplans = createAsyncThunk(
         try {
 
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, `${ROUTES.CAREPLAN}/Approve/${data.Uuid}`);
             dispatch(fillCareplannotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.approvedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Careplans.Messages.Approve'),
             }));
             return response.data;
         } catch (error) {
@@ -189,12 +154,12 @@ export const DeleteCareplans = createAsyncThunk(
         try {
 
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.Business, `${ROUTES.CAREPLAN}/${data.Uuid}`);
             dispatch(fillCareplannotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Careplans.Messages.Delete'),
             }));
             return response.data;
         } catch (error) {

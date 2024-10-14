@@ -5,7 +5,7 @@ import { Loader } from 'semantic-ui-react'
 
 export default function Profilephoto(props) {
 
-    const { fileID, fillnotification, Profile, Imgheigth } = props
+    const { fileID, fillnotification, Profile, Imgheigth, right } = props
 
     const [img, setImg] = useState(null)
     const [sended, setSended] = useState(false)
@@ -20,12 +20,14 @@ export default function Profilephoto(props) {
     const objectHeigth = Imgheigth ? Imgheigth : '100px'
 
     return (
-        img ? <img
-            alt='pp'
-            src={img}
-            className="rounded-full"
-            style={{ width: objectHeigth, height: objectHeigth }}
-        /> : <div style={{ width: objectHeigth, height: objectHeigth }}>
+        img ? <div className={` ${right ? 'absolute top-2 right-2' : ''} `}>
+            <img
+                alt='pp'
+                src={img}
+                className="rounded-full"
+                style={{ width: objectHeigth, height: objectHeigth }}
+            />
+        </div> : <div className={` ${right ? 'absolute top-2 right-2' : ''} `} style={{ width: objectHeigth, height: objectHeigth }}>
             <Loader />
         </div>
     )
