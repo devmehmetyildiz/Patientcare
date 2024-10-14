@@ -1,6 +1,5 @@
 const { types } = require("../Constants/Defines")
 const config = require("../Config")
-const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -206,4 +205,48 @@ module.exports = {
     AddPrinttemplate,
     UpdatePrinttemplate,
     DeletePrinttemplate,
+}
+
+const messages = {
+    ERROR: {
+        PRINTTEMPLATE_NOT_FOUND: {
+            code: 'PRINTTEMPLATE_NOT_FOUND', description: {
+                en: 'The print template not found',
+                tr: 'Yazdırma taslağı bulunamadı',
+            }
+        },
+        PRINTTEMPLATE_NOT_ACTIVE: {
+            code: 'PRINTTEMPLATE_NOT_ACTIVE', description: {
+                en: 'The print template not active',
+                tr: 'Yazdırma taslağı aktif değil',
+            }
+        },
+    },
+    VALIDATION_ERROR: {
+        NAME_REQUIRED: {
+            code: 'NAME_REQUIRED', description: {
+                en: 'The name required',
+                tr: 'Bu işlem için isim gerekli',
+            }
+        },
+        PRINTTEMPLATEID_REQUIRED: {
+            code: 'PRINTTEMPLATEID_REQUIRED', description: {
+                en: 'The printtemplateid required',
+                tr: 'Bu işlem için printtemplateid gerekli',
+            }
+        },
+        UNSUPPORTED_PRINTTEMPLATEID: {
+            code: 'UNSUPPORTED_PRINTTEMPLATEID', description: {
+                en: 'unsupported printtemplateid',
+                tr: 'Tanımsız printtemplateid',
+            }
+        },
+        PRINTTEMPLATE_REQUIRED: {
+            code: 'PRINTTEMPLATE_REQUIRED', description: {
+                en: 'The printtemplate required',
+                tr: 'Bu işlem için yazdırma taslağı gerekli',
+            }
+        },
+    }
+
 }

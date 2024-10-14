@@ -1,16 +1,14 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
-
 async function GetDepartments(req, res, next) {
     try {
-        const departments = await db.departmentModel.findAll({ where: { Isactive: true } })
+        const departments = await db.departmentModel.findAll()
         res.status(200).json(departments)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -21,22 +19,22 @@ async function GetDepartment(req, res, next) {
 
     let validationErrors = []
     if (!req.params.departmentId) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
+        validationErrors.push(req.t('Departments.Error.DepartmentIDRequired'))
     }
     if (!validator.isUUID(req.params.departmentId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID)
+        validationErrors.push(req.t('Departments.Error.UnsupportedDepartmentID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Departments'), req.language))
     }
 
     try {
         const department = await db.departmentModel.findOne({ where: { Uuid: req.params.departmentId } });
         if (!department) {
-            return createNotfounderror([messages.ERROR.DEPARTMENT_NOT_FOUND])
+            return next(createNotFoundError(req.t('Departments.Error.NotFound'), req.t('Departments'), req.language))
         }
         if (!department.Isactive) {
-            return createNotfounderror([messages.ERROR.DEPARTMENT_NOT_ACTIVE])
+            return next(createNotFoundError(req.t('Departments.Error.NotActive'), req.t('Departments'), req.language))
         }
         res.status(200).json(department)
     } catch (error) {
@@ -53,11 +51,11 @@ async function AddDepartment(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Departments.Error.NameRequired'))
     }
 
     if (!validator.isBoolean(Ishavepatients)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISHAVEPATIENTS_REQUIRED)
+        validationErrors.push(req.t('Departments.Error.IshavepatientsRequired'))
     }
 
 
@@ -80,9 +78,12 @@ async function AddDepartment(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Departmanlar',
+            service: req.t('Departments'),
             role: 'departmentnotification',
-            message: `${Name} departmanı ${username} tarafından oluşturuldu.`,
+            message: {
+                en: `${Name} Department Created By ${username}.`,
+                tr: `${Name} Departmanı ${username} Tarafından Oluşturuldu.`
+            }[req.language],
             pushurl: '/Departments'
         })
 
@@ -104,16 +105,16 @@ async function UpdateDepartment(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Departments.Error.NameRequired'))
     }
     if (!validator.isBoolean(Ishavepatients)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISHAVEPATIENTS_REQUIRED)
+        validationErrors.push(req.t('Departments.Error.IshavepatientsRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
+        validationErrors.push(req.t('Departments.Error.DepartmentIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID)
+        validationErrors.push(req.t('Departments.Error.UnsupportedDepartmentID'))
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -124,10 +125,10 @@ async function UpdateDepartment(req, res, next) {
     try {
         const department = await db.departmentModel.findOne({ where: { Uuid: Uuid } })
         if (!department) {
-            return next(createNotfounderror([messages.ERROR.DEPARTMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Departments.Error.NotFound'), req.t('Departments'), req.language))
         }
         if (department.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.DEPARTMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Departments.Error.NotActive'), req.t('Departments'), req.language))
         }
 
         await db.departmentModel.update({
@@ -138,9 +139,12 @@ async function UpdateDepartment(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Departmanlar',
+            service: req.t('Departments'),
             role: 'departmentnotification',
-            message: `${Name} departmanı ${username} tarafından güncellendi.`,
+            message: {
+                en: `${Name} Department Updated By ${username}.`,
+                tr: `${Name} Departmanı ${username} Tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Departments'
         })
 
@@ -157,10 +161,10 @@ async function DeleteDepartment(req, res, next) {
     const Uuid = req.params.departmentId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
+        validationErrors.push(req.t('Departments.Error.DepartmentIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID)
+        validationErrors.push(req.t('Departments.Error.UnsupportedDepartmentID'))
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -170,10 +174,10 @@ async function DeleteDepartment(req, res, next) {
     try {
         const department = await db.departmentModel.findOne({ where: { Uuid: Uuid } })
         if (!department) {
-            return next(createNotfounderror([messages.ERROR.DEPARTMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Departments.Error.NotFound'), req.t('Departments'), req.language))
         }
         if (department.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.DEPARTMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Departments.Error.NotActive'), req.t('Departments'), req.language))
         }
 
         await db.departmentModel.update({
@@ -184,9 +188,12 @@ async function DeleteDepartment(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Departmanlar',
+            service: req.t('Departments'),
             role: 'departmentnotification',
-            message: `${department?.Name} departmanı ${username} tarafından Silindi.`,
+            message: {
+                en: `${department?.Name} Department Deleted By ${username}.`,
+                tr: `${department?.Name} Departmanı ${username} Tarafından Silindi.`
+            }[req.language],
             pushurl: '/Departments'
         })
 

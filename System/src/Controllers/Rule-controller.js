@@ -1,5 +1,4 @@
 const config = require("../Config")
-const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -319,4 +318,54 @@ module.exports = {
     GetRulelogs,
     ClearRulelogs,
     StopRule
+}
+
+const messages = {
+    ERROR: {
+        RULE_NOT_FOUND: {
+            code: 'RULE_NOT_FOUND', description: {
+                en: 'The rule not found',
+                tr: 'Kural bulunamadı',
+            }
+        },
+        RULE_NOT_ACTIVE: {
+            code: 'RULE_NOT_ACTIVE', description: {
+                en: 'The rule not active',
+                tr: 'Kural aktif değil',
+            }
+        },
+        RULELOG_NOT_FOUND: {
+            code: 'RULELOG_NOT_FOUND', description: {
+                en: 'The rule log not found',
+                tr: 'Kural bulunamadı',
+            }
+        },
+    },
+    VALIDATION_ERROR: {
+        NAME_REQUIRED: {
+            code: 'NAME_REQUIRED', description: {
+                en: 'The name required',
+                tr: 'Bu işlem için isim gerekli',
+            }
+        },
+        RULE_REQUIRED: {
+            code: 'RULE_REQUIRED', description: {
+                en: 'The rule required',
+                tr: 'Bu işlem için kural gerekli',
+            }
+        },
+        RULEID_REQUIRED: {
+            code: 'RULEID_REQUIRED', description: {
+                en: 'The ruleId required',
+                tr: 'Bu işlem için ruleId gerekli',
+            }
+        },
+        UNSUPPORTED_RULEID: {
+            code: 'UNSUPPORTED_RULEID', description: {
+                en: 'unsupported ruleId',
+                tr: 'Tanımsız ruleId',
+            }
+        },
+    }
+
 }

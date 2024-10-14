@@ -1,16 +1,15 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
 
 async function GetCostumertypes(req, res, next) {
     try {
-        const costumertypes = await db.costumertypeModel.findAll({ where: { Isactive: true } })
+        const costumertypes = await db.costumertypeModel.findAll()
         for (const costumertype of costumertypes) {
             costumertype.Departmentuuids = await db.costumertypedepartmentModel.findAll({
                 where: {
@@ -29,22 +28,22 @@ async function GetCostumertype(req, res, next) {
 
     let validationErrors = []
     if (!req.params.costumertypeId) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED)
+        validationErrors.push(req.t('Costmertypes.Error.CostumertypeIDRequired'))
     }
     if (!validator.isUUID(req.params.costumertypeId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_COSTUMERTYPEID)
+        validationErrors.push(req.t('Costmertypes.Error.UnsupportedCostumertypeID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Costmertypes'), req.language))
     }
 
     try {
         const costumertype = await db.costumertypeModel.findOne({ where: { Uuid: req.params.costumertypeId } });
         if (!costumertype) {
-            return createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND])
+            return next(createNotFoundError(req.t('Costmertypes.Error.NotFound'), req.t('Costmertypes'), req.language))
         }
         if (!costumertype.Isactive) {
-            return createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_ACTIVE])
+            return next(createNotFoundError(req.t('Costmertypes.Error.NotActive'), req.t('Costmertypes'), req.language))
         }
         costumertype.Departmentuuids = await db.costumertypedepartmentModel.findAll({
             where: {
@@ -67,14 +66,14 @@ async function AddCostumertype(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Costmertypes.Error.NameRequired'))
     }
     if (!validator.isArray(Departments)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
+        validationErrors.push(req.t('Costmertypes.Error.DepartmentsRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Costmertypes'), req.language))
     }
 
     let costumertypeuuid = uuid()
@@ -92,7 +91,7 @@ async function AddCostumertype(req, res, next) {
 
         for (const department of Departments) {
             if (!department.Uuid || !validator.isUUID(department.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
+                return next(createValidationError(req.t('Costmertypes.Error.DepartmentsRequired'), req.t('Costmertypes'), req.language))
             }
             await db.costumertypedepartmentModel.create({
                 CostumertypeID: costumertypeuuid,
@@ -102,9 +101,12 @@ async function AddCostumertype(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Müşteri Türleri',
+            service: req.t('Costmertypes'),
             role: 'costumertypenotification',
-            message: `${Name} müşteri türü ${username} tarafından Oluşturuldu.`,
+            message: {
+                en: `${Name} Costumertype Created By ${username}.`,
+                tr: `${Name} Müşteri Türü ${username} Tarafından Oluşturuldu.`
+            }[req.language],
             pushurl: '/Costumertypes'
         })
 
@@ -126,16 +128,16 @@ async function UpdateCostumertype(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Costmertypes.Error.NameRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED)
+        validationErrors.push(req.t('Costmertypes.Error.CostumertypeIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_COSTUMERTYPEID)
+        validationErrors.push(req.t('Costmertypes.Error.UnsupportedCostumertypeID'))
     }
     if (!validator.isArray(Departments)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
+        validationErrors.push(req.t('Costmertypes.Error.DepartmentsRequired'))
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -146,10 +148,10 @@ async function UpdateCostumertype(req, res, next) {
     try {
         const costumertype = await db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
         if (!costumertype) {
-            return next(createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Costmertypes.Error.NotFound'), req.t('Costmertypes'), req.language))
         }
         if (costumertype.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Costmertypes.Error.NotActive'), req.t('Costmertypes'), req.language))
         }
 
         await db.costumertypeModel.update({
@@ -161,7 +163,7 @@ async function UpdateCostumertype(req, res, next) {
         await db.costumertypedepartmentModel.destroy({ where: { CostumertypeID: Uuid }, transaction: t });
         for (const department of Departments) {
             if (!department.Uuid || !validator.isUUID(department.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
+                return next(createValidationError(req.t('Costmertypes.Error.DepartmentsRequired'), req.t('Costmertypes'), req.language))
             }
             await db.costumertypedepartmentModel.create({
                 CostumertypeID: Uuid,
@@ -171,9 +173,12 @@ async function UpdateCostumertype(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Müşteri Türleri',
+            service: req.t('Costmertypes'),
             role: 'costumertypenotification',
-            message: `${Name} müşteri türü ${username} tarafından Güncellendi.`,
+            message: {
+                en: `${Name} Costumertype Updated By ${username}.`,
+                tr: `${Name} Müşteri Türü ${username} Tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Costumertypes'
         })
         await t.commit()
@@ -189,10 +194,10 @@ async function DeleteCostumertype(req, res, next) {
     const Uuid = req.params.costumertypeId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED)
+        validationErrors.push(req.t('Costmertypes.Error.CostumertypeIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_COSTUMERTYPEID)
+        validationErrors.push(req.t('Costmertypes.Error.UnsupportedCostumertypeID'))
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -203,10 +208,10 @@ async function DeleteCostumertype(req, res, next) {
     try {
         const costumertype = await db.costumertypeModel.findOne({ where: { Uuid: Uuid } })
         if (!costumertype) {
-            return next(createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Costmertypes.Error.NotFound'), req.t('Costmertypes'), req.language))
         }
         if (costumertype.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.COSTUMERTYPE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Costmertypes.Error.NotActive'), req.t('Costmertypes'), req.language))
         }
 
         await db.costumertypeModel.update({
@@ -217,9 +222,12 @@ async function DeleteCostumertype(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Müşteri Türleri',
+            service: req.t('Costmertypes'),
             role: 'costumertypenotification',
-            message: `${costumertype?.Name} müşteri türü ${username} tarafından Silindi.`,
+            message: {
+                en: `${costumertype?.Name} Costumertype Deleted By ${username}.`,
+                tr: `${costumertype?.Name} Müşteri Türü ${username} Tarafından Silindi.`
+            }[req.language],
             pushurl: '/Costumertypes'
         })
         await t.commit();

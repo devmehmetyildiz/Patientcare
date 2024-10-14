@@ -1,16 +1,14 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher,  } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher, } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
-
 async function GetTododefines(req, res, next) {
     try {
-        const tododefines = await db.tododefineModel.findAll({ where: { Isactive: true } })
+        const tododefines = await db.tododefineModel.findAll()
         for (const tododefine of tododefines) {
             tododefine.Perioduuids = await db.tododefineperiodModel.findAll({
                 where: {
@@ -29,13 +27,13 @@ async function GetTododefine(req, res, next) {
 
     let validationErrors = []
     if (!req.params.tododefineId) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINEID_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.TododefineIDRequired'))
     }
     if (!validator.isUUID(req.params.tododefineId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID)
+        validationErrors.push(req.t('Tododefines.Error.UnsupportedTododefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Tododefines'), req.language))
     }
 
     try {
@@ -64,23 +62,23 @@ async function AddTododefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.NameRequired'))
     }
     if (!validator.isBoolean(IsRequired)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISREQUIRED_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.IsRequiredRequired'))
     }
     if (!validator.isNumber(Dayperiod)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DAYPERIOD_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.DayPeriodRequired'))
     }
     if (!validator.isBoolean(IsNeedactivation)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISNEEDACTIVATION_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.IsNeedActivationRequired'))
     }
     if (!validator.isArray(Periods)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.PeriodsRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Tododefines'), req.language))
     }
 
     let tododefineuuid = uuid()
@@ -99,7 +97,7 @@ async function AddTododefine(req, res, next) {
 
         for (const period of Periods) {
             if (!period.Uuid || !validator.isUUID(period.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID, req.language))
+                return next(createValidationError(req.t('Tododefines.Error.UnsupportedPeriodID'), req.t('Tododefines'), req.language))
             }
             await db.tododefineperiodModel.create({
                 TododefineID: tododefineuuid,
@@ -109,9 +107,12 @@ async function AddTododefine(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Rutinler',
+            service: req.t('Tododefines'),
             role: 'tododefinenotification',
-            message: `${Name} rutini ${username} tarafından Oluşturuldu.`,
+            message: {
+                en: `${Name} Routine Created By${username}.`,
+                tr: `${Name} rutini ${username} tarafından Oluşturuldu.`
+            }[req.language],
             pushurl: '/Tododefines'
         })
         await t.commit()
@@ -135,28 +136,28 @@ async function UpdateTododefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.NameRequired'))
     }
     if (!validator.isNumber(Dayperiod)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DAYPERIOD_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.DayPeriodRequired'))
     }
     if (!validator.isBoolean(IsRequired)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISREQUIRED_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.IsRequiredRequired'))
     }
     if (!validator.isBoolean(IsNeedactivation)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISNEEDACTIVATION_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.IsNeedActivationRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINEID_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.TododefineIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID)
+        validationErrors.push(req.t('Tododefines.Error.UnsupportedTododefineID'))
     }
     if (!validator.isArray(Periods)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERIODS_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.PeriodsRequired'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Tododefines'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -165,10 +166,10 @@ async function UpdateTododefine(req, res, next) {
     try {
         const tododefine = db.tododefineModel.findOne({ where: { Uuid: Uuid } })
         if (!tododefine) {
-            return next(createNotfounderror([messages.ERROR.TODODEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Tododefines.Error.NotFound'), req.t('Tododefines'), req.language))
         }
         if (tododefine.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.TODODEFINE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Tododefines.Error.NotActive'), req.t('Tododefines'), req.language))
         }
 
         await db.tododefineModel.update({
@@ -180,7 +181,7 @@ async function UpdateTododefine(req, res, next) {
         await db.tododefineperiodModel.destroy({ where: { TododefineID: Uuid }, transaction: t });
         for (const period of Periods) {
             if (!period.Uuid || !validator.isUUID(period.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID, req.language))
+                return next(createValidationError(req.t('Tododefines.Error.UnsupportedPeriodID'), req.t('Tododefines'), req.language))
             }
             await db.tododefineperiodModel.create({
                 TododefineID: Uuid,
@@ -190,9 +191,12 @@ async function UpdateTododefine(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Rutinler',
+            service: req.t('Tododefines'),
             role: 'tododefinenotification',
-            message: `${Name} rutini ${username} tarafından Güncellendi.`,
+            message: {
+                en: `${Name} Routine Updated By ${username}.`,
+                tr: `${Name} rutini ${username} tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Tododefines'
         })
         await t.commit()
@@ -208,13 +212,13 @@ async function DeleteTododefine(req, res, next) {
     const Uuid = req.params.tododefineId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINEID_REQUIRED)
+        validationErrors.push(req.t('Tododefines.Error.TododefineIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID)
+        validationErrors.push(req.t('Tododefines.Error.UnsupportedTododefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Tododefines'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -223,10 +227,10 @@ async function DeleteTododefine(req, res, next) {
     try {
         const tododefine = await db.tododefineModel.findOne({ where: { Uuid: Uuid } })
         if (!tododefine) {
-            return next(createNotfounderror([messages.ERROR.TODODEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Tododefines.Error.NotFound'), req.t('Tododefines'), req.language))
         }
         if (tododefine.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.TODODEFINE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Tododefines.Error.NotActive'), req.t('Tododefines'), req.language))
         }
 
         await db.tododefineModel.update({
@@ -237,9 +241,12 @@ async function DeleteTododefine(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Rutinler',
+            service: req.t('Tododefines'),
             role: 'tododefinenotification',
-            message: `${tododefine?.Name} rutini ${username} tarafından Silindi.`,
+            message: {
+                en: `${tododefine?.Name} Routine Deleted By ${username}.`,
+                tr: `${tododefine?.Name} rutini ${username} tarafından Silindi.`
+            }[req.language],
             pushurl: '/Tododefines'
         })
         await t.commit();

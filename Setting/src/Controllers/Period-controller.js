@@ -1,16 +1,15 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
 
 async function GetPeriods(req, res, next) {
     try {
-        const periods = await db.periodModel.findAll({ where: { Isactive: true } })
+        const periods = await db.periodModel.findAll()
         res.status(200).json(periods)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -21,13 +20,13 @@ async function GetPeriod(req, res, next) {
 
     let validationErrors = []
     if (!req.params.periodId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERIODID_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.PeriodIDRequired'))
     }
     if (!validator.isUUID(req.params.periodId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID)
+        validationErrors.push(req.t('Periods.Error.UnsupportedPeriodID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Periods'), req.language))
     }
 
     try {
@@ -48,17 +47,17 @@ async function AddPeriod(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.NameRequired'))
     }
     if (!validator.isString(Occuredtime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDTIME_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.OccuredtimeRequired'))
     }
     if (!validator.isString(Checktime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CHECKTIME_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.ChecktimeRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Periods'), req.language))
     }
 
     let perioduuid = uuid()
@@ -77,9 +76,12 @@ async function AddPeriod(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Periyotlar',
+            service: req.t('Periods'),
             role: 'periodnotification',
-            message: `${Name} periyodu ${username} tarafından Oluşturuldu.`,
+            message: {
+                en: `${Name} Period Created By ${username}.`,
+                tr: `${Name} Periyodu ${username} Tarafından Oluşturuldu.`
+            }[req.language],
             pushurl: '/Periods'
         })
         await t.commit()
@@ -103,22 +105,21 @@ async function FastcreatePeriod(req, res, next) {
 
     const timePattern = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
 
-
     if (!timePattern.test(Starttime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTTIME_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.StarttimeRequired'))
     }
     if (!timePattern.test(Endtime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ENDTIME_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.EndtimeRequired'))
     }
     if (!timePattern.test(Checktime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CHECKTIME_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.ChecktimeRequired'))
     }
     if (!validator.isNumber(parseInt(Period)) || parseInt(Period) >= 61 || parseInt(Period) < 1) {
-        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDTIME_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.OccuredtimeRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Periods'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -159,9 +160,12 @@ async function FastcreatePeriod(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Periyotlar',
+            service: req.t('Periods'),
             role: 'periodnotification',
-            message: `Periyotlar ${username} tarafından hızlı şekilde Oluşturuldu.`,
+            message: {
+                tr: `Periyotlar ${username} Tarafından Hızlı Şekilde Oluşturuldu.`,
+                en: `Periods Fast Created By ${username}.`
+            }[req.language],
             pushurl: '/Periods'
         })
         await t.commit()
@@ -184,22 +188,22 @@ async function UpdatePeriod(req, res, next) {
     } = req.body
 
     if (!Name || !validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.NameRequired'))
     }
     if (!Occuredtime || !validator.isString(Occuredtime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.OCCUREDTIME_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.OccuredtimeRequired'))
     }
     if (!Checktime || !validator.isString(Checktime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CHECKTIME_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.ChecktimeRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERIODID_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.PeriodIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID)
+        validationErrors.push(req.t('Periods.Error.UnsupportedPeriodID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Periods'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -208,10 +212,10 @@ async function UpdatePeriod(req, res, next) {
     try {
         const period = await db.periodModel.findOne({ where: { Uuid: Uuid } })
         if (!period) {
-            return next(createNotfounderror([messages.ERROR.PERIOD_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Periods.Error.NotFound'), req.t('Periods'), req.language))
         }
         if (period.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PERIOD_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Periods.Error.NotActive'), req.t('Periods'), req.language))
         }
 
         await db.periodModel.update({
@@ -222,9 +226,12 @@ async function UpdatePeriod(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Periyotlar',
+            service: req.t('Periods'),
             role: 'periodnotification',
-            message: `${Name} periyodu ${username} tarafından Güncellendi.`,
+            message: {
+                en: `${Name} Period Updated By ${username}.`,
+                tr: `${Name} Periyodu ${username} Tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Periods'
         })
 
@@ -241,13 +248,13 @@ async function DeletePeriod(req, res, next) {
     const Uuid = req.params.periodId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERIODID_REQUIRED)
+        validationErrors.push(req.t('Periods.Error.PeriodIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERIODID)
+        validationErrors.push(req.t('Periods.Error.UnsupportedPeriodID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Periods'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -256,10 +263,10 @@ async function DeletePeriod(req, res, next) {
     try {
         const period = await db.periodModel.findOne({ where: { Uuid: Uuid } })
         if (!period) {
-            return next(createNotfounderror([messages.ERROR.PERIOD_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Periods.Error.NotFound'), req.t('Periods'), req.language))
         }
         if (period.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PERIOD_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Periods.Error.NotActive'), req.t('Periods'), req.language))
         }
 
         await db.periodModel.update({
@@ -270,9 +277,12 @@ async function DeletePeriod(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Periyotlar',
+            service: req.t('Periods'),
             role: 'periodnotification',
-            message: `${period?.Name} periyodu ${username} tarafından Silindi.`,
+            message: {
+                en: `${period?.Name} Period Deleted By ${username}.`,
+                tr: `${period?.Name} Periyodu ${username} Tarafından Silindi.`
+            }[req.language],
             pushurl: '/Periods'
         })
         await t.commit();

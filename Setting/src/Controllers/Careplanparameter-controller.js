@@ -1,15 +1,14 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/CareplanparameterMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher,} = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher, } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
 async function GetCareplanparameters(req, res, next) {
     try {
-        const careplanparameters = await db.careplanparameterModel.findAll({ where: { Isactive: true } })
+        const careplanparameters = await db.careplanparameterModel.findAll()
         res.status(200).json(careplanparameters)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -20,22 +19,22 @@ async function GetCareplanparameter(req, res, next) {
 
     let validationErrors = []
     if (!req.params.careplanparameterId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PARAMETERID_REQUIRED)
+        validationErrors.push(req.t('Careplanparameters.Error.CareplanparameterIDRequired'))
     }
     if (!validator.isUUID(req.params.careplanparameterId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PARAMETERID)
+        validationErrors.push(req.t('Careplanparameters.Error.UnsupportedCareplanparameterID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Careplanparameters'), req.language))
     }
 
     try {
         const careplanparameter = await db.careplanparameterModel.findOne({ where: { Uuid: req.params.careplanparameterId } });
         if (!careplanparameter) {
-            return createNotfounderror([messages.ERROR.PARAMETER_NOT_FOUND])
+            return next(createNotFoundError(req.t('Careplanparameters.Error.NotFound'), req.t('Careplanparameters'), req.language))
         }
         if (!careplanparameter.Isactive) {
-            return createNotfounderror([messages.ERROR.PARAMETER_NOT_ACTIVE])
+            return next(createNotFoundError(req.t('Careplanparameters.Error.NotActive'), req.t('Careplanparameters'), req.language))
         }
         res.status(200).json(careplanparameter)
     } catch (error) {
@@ -52,14 +51,14 @@ async function AddCareplanparameter(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Careplanparameters.Error.NameRequired'))
     }
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+        validationErrors.push(req.t('Careplanparameters.Error.TypeRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Careplanparameters'), req.language))
     }
 
     let careplanparameteruuid = uuid()
@@ -77,9 +76,12 @@ async function AddCareplanparameter(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Bireysel Bakım Planı Parametreleri',
+            service: req.t('Careplanparameters'),
             role: 'careplanparameternotification',
-            message: `${Name} parametresi ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${Name} parametresi ${username} tarafından Oluşturuldu.`,
+                en: `${Name} parameter created by ${username}`
+            }[req.language],
             pushurl: '/Careplanparameters'
         })
 
@@ -101,19 +103,19 @@ async function UpdateCareplanparameter(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Careplanparameters.Error.NameRequired'))
     }
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+        validationErrors.push(req.t('Careplanparameters.Error.TypeRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PARAMETERID_REQUIRED)
+        validationErrors.push(req.t('Careplanparameters.Error.CareplanparameterIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PARAMETERID)
+        validationErrors.push(req.t('Careplanparameters.Error.UnsupportedCareplanparameterID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Careplanparameters'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -121,10 +123,10 @@ async function UpdateCareplanparameter(req, res, next) {
     try {
         const careplanparameter = await db.careplanparameterModel.findOne({ where: { Uuid: Uuid } })
         if (!careplanparameter) {
-            return next(createNotfounderror([messages.ERROR.PARAMETER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Careplanparameters.Error.NotFound'), req.t('Careplanparameters'), req.language))
         }
         if (careplanparameter.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Careplanparameters.Error.NotActive'), req.t('Careplanparameters'), req.language))
         }
 
         await db.careplanparameterModel.update({
@@ -135,9 +137,12 @@ async function UpdateCareplanparameter(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Bireysel Bakım Planı Parametreleri',
+            service: req.t('Careplanparameters'),
             role: 'careplanparameternotification',
-            message: `${Name} parametresi ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Name} parametresi ${username} tarafından Oluşturuldu.`,
+                en: `${Name} parameter created by ${username}`
+            }[req.language],
             pushurl: '/Careplanparameters'
         })
 
@@ -154,13 +159,13 @@ async function DeleteCareplanparameter(req, res, next) {
     const Uuid = req.params.careplanparameterId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PARAMETERID_REQUIRED)
+        validationErrors.push(req.t('Careplanparameters.Error.CareplanparameterIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PARAMETERID)
+        validationErrors.push(req.t('Careplanparameters.Error.UnsupportedCareplanparameterID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Careplanparameters'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -168,10 +173,10 @@ async function DeleteCareplanparameter(req, res, next) {
     try {
         const careplanparameter = await db.careplanparameterModel.findOne({ where: { Uuid: Uuid } })
         if (!careplanparameter) {
-            return next(createNotfounderror([messages.ERROR.PARAMETER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Careplanparameters.Error.NotFound'), req.t('Careplanparameters'), req.language))
         }
         if (careplanparameter.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Careplanparameters.Error.NotActive'), req.t('Careplanparameters'), req.language))
         }
 
         await db.careplanparameterModel.update({
@@ -182,9 +187,12 @@ async function DeleteCareplanparameter(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Bireysel Bakım Planı Parametreleri',
+            service: req.t('Careplanparameters'),
             role: 'careplanparameternotification',
-            message: `${careplanparameter?.Name} parametresi ${username} tarafından Silindi.`,
+            message: {
+                tr: `${careplanparameter?.Name} parametresi ${username} tarafından Silindi.`,
+                en: `${careplanparameter?.Name} parameter deleted by ${username}`
+            }[req.language],
             pushurl: '/Careplanparameters'
         })
 

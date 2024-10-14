@@ -1,12 +1,10 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-
 
 async function GetSupportplans(req, res, next) {
     try {
@@ -21,13 +19,13 @@ async function GetSupportplan(req, res, next) {
 
     let validationErrors = []
     if (!req.params.supportplanId) {
-        validationErrors.push(messages.VALIDATION_ERROR.SUPPORTPLANID_REQUIRED)
+        validationErrors.push(req.t('Supportplans.Error.SupportplanIDRequired'))
     }
     if (!validator.isUUID(req.params.supportplanId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SUPPORTPLANID)
+        validationErrors.push(req.t('Supportplans.Error.UnsupportedSupportplanID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Supportplans'), req.language))
     }
 
     try {
@@ -47,14 +45,14 @@ async function AddSupportplan(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Supportplans.Error.NameRequired'))
     }
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+        validationErrors.push(req.t('Supportplans.Error.TypeRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Supportplans'), req.language))
     }
 
     let supportplanuuid = uuid()
@@ -73,9 +71,12 @@ async function AddSupportplan(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Destek Planları',
+            service: req.t('Supportplans'),
             role: 'supportplannotification',
-            message: `${Name} destek planı ${username} tarafından Oluşturuldu.`,
+            message: {
+                en: `${Name} Supportplan Created By ${username}.`,
+                tr: `${Name} Destek planı ${username} tarafından Oluşturuldu.`
+            }[req.language],
             pushurl: '/Supportplans'
         })
 
@@ -97,19 +98,19 @@ async function UpdateSupportplan(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Supportplans.Error.NameRequired'))
     }
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+        validationErrors.push(req.t('Supportplans.Error.TypeRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.SUPPORTPLANID_REQUIRED)
+        validationErrors.push(req.t('Supportplans.Error.SupportplanIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SUPPORTPLANID)
+        validationErrors.push(req.t('Supportplans.Error.UnsupportedSupportplanID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Supportplans'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -118,10 +119,10 @@ async function UpdateSupportplan(req, res, next) {
     try {
         const supportplan = await db.supportplanModel.findOne({ where: { Uuid: Uuid } })
         if (!supportplan) {
-            return next(createNotfounderror([messages.ERROR.SUPPORTPLAN_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Supportplans.Error.NotFound'), req.t('Supportplans'), req.language))
         }
         if (supportplan.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.SUPPORTPLAN_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Supportplans.Error.NotActive'), req.t('Supportplans'), req.language))
         }
 
         await db.supportplanModel.update({
@@ -132,9 +133,12 @@ async function UpdateSupportplan(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Destek Planları',
+            service: req.t('Supportplans'),
             role: 'supportplannotification',
-            message: `${Name} destek planı ${username} tarafından Güncellendi.`,
+            message: {
+                en: `${Name} Supportplan Updated By ${username}.`,
+                tr: `${Name} Destek Planı ${username} Tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Supportplans'
         })
 
@@ -151,13 +155,13 @@ async function DeleteSupportplan(req, res, next) {
     const Uuid = req.params.supportplanId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.SUPPORTPLANID_REQUIRED)
+        validationErrors.push(req.t('Supportplans.Error.SupportplanIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SUPPORTPLANID)
+        validationErrors.push(req.t('Supportplans.Error.UnsupportedSupportplanID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Supportplans'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -166,10 +170,10 @@ async function DeleteSupportplan(req, res, next) {
     try {
         const supportplan = await db.supportplanModel.findOne({ where: { Uuid: Uuid } })
         if (!supportplan) {
-            return next(createNotfounderror([messages.ERROR.SUPPORTPLAN_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Supportplans.Error.NotFound'), req.t('Supportplans'), req.language))
         }
         if (supportplan.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.SUPPORTPLAN_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Supportplans.Error.NotActive'), req.t('Supportplans'), req.language))
         }
 
         await db.supportplanModel.update({
@@ -180,9 +184,12 @@ async function DeleteSupportplan(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Destek Planları',
+            service: req.t('Supportplans'),
             role: 'supportplannotification',
-            message: `${supportplan?.Name} destek planı ${username} tarafından Güncellendi.`,
+            message: {
+                en: `${supportplan?.Name} Supportplan Deleted By ${username}.`,
+                tr: `${supportplan?.Name} Destek planı ${username} Tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Supportplans'
         })
 

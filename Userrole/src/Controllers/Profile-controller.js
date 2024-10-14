@@ -1,4 +1,3 @@
-const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -299,3 +298,90 @@ module.exports = {
     Getusersalt,
     Changepasswordbyrequest
 }
+
+
+const messages = {
+    ERROR: {
+      ROLE_NOT_FOUND: {
+        code: 'ROLE_NOT_FOUND', description: {
+          en: 'Role not found',
+          tr: 'Rol bulunamadı',
+        }
+      },
+      USER_NOT_FOUND: {
+        code: 'USER_NOT_FOUND', description: {
+          en: 'User not found',
+          tr: 'Kullanıcı bulunamadı',
+        }
+      },
+      TABLEMETA_NOT_FOUND: {
+        code: 'TABLEMETA_NOT_FOUND', description: {
+          en: 'Table meta not found',
+          tr: 'Tablo meta datası bulunamadı',
+        }
+      },
+      USER_NOT_ACTIVE: {
+        code: 'USER_NOT_ACTIVE', description: {
+          en: 'User not active',
+          tr: 'Kullanıcı aktif değil',
+        }
+      },
+      USERSALT_NOT_FOUND: {
+        code: 'USERSALT_NOT_FOUND', description: {
+          en: 'User salt not found',
+          tr: 'Kullanıcı tuzu bulunamadı',
+        }
+      },
+    },
+    VALIDATION_ERROR: {
+      NAME_REQUIRED: {
+        code: 'NAME_REQUIRED', description: {
+          en: 'The name required',
+          tr: 'Bu işlem için isim gerekli',
+        }
+      },
+      META_REQUIRED: {
+        code: 'META_REQUIRED', description: {
+          en: 'The meta required',
+          tr: 'Bu işlem için meta data gerekli',
+        }
+      },
+      CONFIG_REQUIRED: {
+        code: 'CONFIG_REQUIRED', description: {
+          en: 'The config required',
+          tr: 'Bu işlem için config gerekli',
+        }
+      },
+      USERNAME_REQUIRED: {
+        code: 'USERNAME_REQUIRED', description: {
+          en: 'The username required',
+          tr: 'Bu işlem için kullanıcı adı gerekli',
+        }
+      },
+      PASSWORD_REQUIRED: {
+        code: 'PASSWORD_REQUIRED', description: {
+          en: 'The user password required',
+          tr: 'Bu işlem için kullanıcı şifresi gerekli',
+        }
+      },
+      EMAIL_REQUIRED: {
+        code: 'EMAIL_REQUIRED', description: {
+          en: 'The email required',
+          tr: 'Bu işlem için e-posta gerekli',
+        }
+      },
+      USERID_REQUIRED: {
+        code: 'USERID_REQUIRED', description: {
+          en: 'The user uuid required',
+          tr: 'Bu işlem için kullanıcı uuid gerekli',
+        }
+      },
+      UNSUPPORTED_USERID: {
+        code: 'UNSUPPORTED_USERID', description: {
+          en: 'Unstupported uuid has given',
+          tr: 'Geçersiz kullanıcı id girişi',
+        }
+      },
+    }
+  }
+  

@@ -1,9 +1,8 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
@@ -29,23 +28,17 @@ async function GetTodogroupdefine(req, res, next) {
 
     let validationErrors = []
     if (!req.params.todogroupdefineId) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Todogroupdefines.Error.TodogroupdefineIDRequired'))
     }
     if (!validator.isUUID(req.params.todogroupdefineId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID)
+        validationErrors.push(req.t('Todogroupdefines.Error.UnsupportedTodogroupdefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Todogroupdefines'), req.language))
     }
 
     try {
         const todogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: req.params.todogroupdefineId } });
-        if (!todogroupdefine) {
-            return createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND])
-        }
-        if (!todogroupdefine.Isactive) {
-            return createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE])
-        }
         todogroupdefine.Tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
             where: {
                 GroupID: todogroupdefine.Uuid,
@@ -68,17 +61,17 @@ async function AddTodogroupdefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Todogroupdefines.Error.NameRequired'))
     }
     if (!validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
+        validationErrors.push(req.t('Todogroupdefines.Error.DepartmentIDRequired'))
     }
     if (!validator.isArray(Tododefines)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINES_REQUIRED)
+        validationErrors.push(req.t('Todogroupdefines.Error.TododefinesRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Todogroupdefines'), req.language))
     }
 
     let todogroupdefineuuid = uuid()
@@ -97,7 +90,7 @@ async function AddTodogroupdefine(req, res, next) {
 
         for (const tododefine of Tododefines) {
             if (!tododefine.Uuid || !validator.isUUID(tododefine.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID, req.language))
+                return next(createValidationError(req.t('Todogroupdefines.Error.UnsupportedTododefineID'), req.t('Todogroupdefines'), req.language))
             }
             await db.todogroupdefinetododefineModel.create({
                 GroupID: todogroupdefineuuid,
@@ -107,9 +100,12 @@ async function AddTodogroupdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Rutin Listeleri',
+            service: req.t('Todogroupdefines'),
             role: 'todogroupdefinenotification',
-            message: `${Name} rutin listesi ${username} tarafından Oluşturuldu.`,
+            message: {
+                en: `${Name} Routine List Created By ${username}.`,
+                tr: `${Name} Rutin Listesi ${username} Tarafından Oluşturuldu.`
+            }[req.language],
             pushurl: '/Todogroupdefines'
         })
         await t.commit()
@@ -130,22 +126,22 @@ async function UpdateTodogroupdefine(req, res, next) {
         Uuid
     } = req.body
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Todogroupdefines.Error.NameRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Todogroupdefines.Error.TodogroupdefineIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID)
+        validationErrors.push(req.t('Todogroupdefines.Error.UnsupportedTodogroupdefineID'))
     }
     if (!validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
+        validationErrors.push(req.t('Todogroupdefines.Error.DepartmentIDRequired'))
     }
     if (!validator.isArray(Tododefines)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODODEFINES_REQUIRED)
+        validationErrors.push(req.t('Todogroupdefines.Error.TododefinesRequired'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Todogroupdefines'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -154,10 +150,10 @@ async function UpdateTodogroupdefine(req, res, next) {
     try {
         const todogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!todogroupdefine) {
-            return next(createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Todogroupdefines.Error.NotFound'), req.t('Todogroupdefines'), req.language))
         }
         if (todogroupdefine.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Todogroupdefines.Error.NotActive'), req.t('Todogroupdefines'), req.language))
         }
 
 
@@ -170,7 +166,7 @@ async function UpdateTodogroupdefine(req, res, next) {
         await db.todogroupdefinetododefineModel.destroy({ where: { GroupID: Uuid }, transaction: t });
         for (const tododefine of Tododefines) {
             if (!tododefine.Uuid || !validator.isUUID(tododefine.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_TODODEFINEID, req.language))
+                return next(createValidationError(req.t('Todogroupdefines.Error.UnsupportedTododefineID'), req.t('Todogroupdefines'), req.language))
             }
             await db.todogroupdefinetododefineModel.create({
                 GroupID: Uuid,
@@ -180,9 +176,12 @@ async function UpdateTodogroupdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Rutin Listeleri',
+            service: req.t('Todogroupdefines'),
             role: 'todogroupdefinenotification',
-            message: `${Name} rutin listesi ${username} tarafından Güncellendi.`,
+            message: {
+                en: `${Name} Routine List Updated By ${username}.`,
+                tr: `${Name} Rutin Listesi ${username} Tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Todogroupdefines'
         })
         await t.commit()
@@ -199,13 +198,13 @@ async function DeleteTodogroupdefine(req, res, next) {
     const Uuid = req.params.todogroupdefineId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TODOGROUPDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Todogroupdefines.Error.TodogroupdefineIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TODOGROUPDEFINEID)
+        validationErrors.push(req.t('Todogroupdefines.Error.UnsupportedTodogroupdefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Todogroupdefines'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -214,10 +213,10 @@ async function DeleteTodogroupdefine(req, res, next) {
     try {
         const todogroupdefine = await db.todogroupdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!todogroupdefine) {
-            return next(createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Todogroupdefines.Error.NotFound'), req.t('Todogroupdefines'), req.language))
         }
         if (todogroupdefine.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.TODOGROUPDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Todogroupdefines.Error.NotActive'), req.t('Todogroupdefines'), req.language))
         }
 
         await db.todogroupdefineModel.update({
@@ -228,9 +227,12 @@ async function DeleteTodogroupdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Rutin Listeleri',
+            service: req.t('Todogroupdefines'),
             role: 'todogroupdefinenotification',
-            message: `${todogroupdefine?.Name} rutin listesi ${username} tarafından Silindi.`,
+            message: {
+                en: `${todogroupdefine?.Name} Routine List Updated By ${username}.`,
+                tr: `${todogroupdefine?.Name} Rutin Listesi ${username} Tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Todogroupdefines'
         })
         await t.commit();

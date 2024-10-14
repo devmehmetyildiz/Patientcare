@@ -1,4 +1,3 @@
-const messages = require("../Constants/UserMessages")
 const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -6,8 +5,7 @@ const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const bcrypt = require('bcrypt')
 const CreateNotification = require("../Utilities/CreateNotification")
-const { types } = require("../Constants/Defines")
-const { usermovementypes } = require("../Constants/Usermovementypes")
+const { notificationTypes, usermovementypes } = require("../Constants/Defines")
 
 async function Register(req, res, next) {
 
@@ -257,7 +255,7 @@ async function AddUser(req, res, next) {
         }
 
         await CreateNotification({
-            type: types.Create,
+            type: notificationTypes.Create,
             service: 'Kullanıcılar',
             role: 'usernotification',
             message: `${Username} kullanıcısı ${username} tarafından Oluşturuldu.`,
@@ -335,7 +333,7 @@ async function UpdateUser(req, res, next) {
         }
 
         await CreateNotification({
-            type: types.Update,
+            type: notificationTypes.Update,
             service: 'Kullanıcılar',
             role: 'usernotification',
             message: `${Username} kullanıcısı ${username} tarafından Güncellendi.`,
@@ -384,7 +382,7 @@ async function DeleteUser(req, res, next) {
         }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
-            type: types.Delete,
+            type: notificationTypes.Delete,
             service: 'Kullanıcılar',
             role: 'usernotification',
             message: `${user?.Username} kullanıcısı ${username} tarafından Silindi.`,
@@ -435,7 +433,7 @@ async function DeleteUsermovement(req, res, next) {
         const user = await db.userModel.findOne({ where: { Uuid: usermovement?.MovementuserID } })
 
         await CreateNotification({
-            type: types.Delete,
+            type: notificationTypes.Delete,
             service: 'Kullanıcılar',
             role: 'usernotification',
             message: `${user?.Name} ${user?.Surname} kullanıcısına ait hareket ${username} tarafından silindi.`,
@@ -493,7 +491,7 @@ async function UpdateUsermovement(req, res, next) {
         const user = await db.userModel.findOne({ where: { Uuid: usermovement?.MovementuserID } })
 
         await CreateNotification({
-            type: types.Update,
+            type: notificationTypes.Update,
             service: 'Kullanıcılar',
             role: 'usernotification',
             message: `${user?.Name} ${user?.Surname} kullanıcısına ait hareket ${username} tarafından güncellendi.`,
@@ -602,7 +600,7 @@ async function UpdateUsercase(req, res, next) {
         }, { transaction: t })
 
         await CreateNotification({
-            type: types.Update,
+            type: notificationTypes.Update,
             service: 'Kullanıcılar',
             role: 'usernotification',
             message: `${user?.Name} ${user?.Surname} personel durumu ${username} tarafından güncellendi.`,
@@ -682,4 +680,144 @@ module.exports = {
     UpdateUsercase,
     UpdateUsermovement,
     DeleteUsermovement
+}
+
+const messages = {
+    ERROR: {
+        ADMIN_USER_ALREADY_ACTIVE: {
+            code: 'ADMIN_USER_ALREADY_ACTIVE', description: {
+                en: 'Admin user already active',
+                tr: 'Admin kullanıcı zaten aktif',
+            }
+        },
+        USER_NOT_FOUND: {
+            code: 'USER_NOT_FOUND', description: {
+                en: 'User not found',
+                tr: 'Kullanıcı bulunamadı',
+            }
+        },
+        USER_NOT_ACTIVE: {
+            code: 'USER_NOT_ACTIVE', description: {
+                en: 'User not active',
+                tr: 'Kullanıcı aktif değil',
+            }
+        },
+        USERMOVEMENT_NOT_FOUND: {
+            code: 'USERMOVEMENT_NOT_FOUND', description: {
+                en: 'user movement not found',
+                tr: 'kullanıcı hareketi bulunamadı',
+            }
+        },
+        USERMOVEMENT_NOT_ACTIVE: {
+            code: 'USERMOVEMENT_NOT_ACTIVE', description: {
+                en: 'user movement not active',
+                tr: 'kullanıcı hareketi bulunamadı',
+            }
+        },
+    },
+    VALIDATION_ERROR: {
+        NAME_REQUIRED: {
+            code: 'NAME_REQUIRED', description: {
+                en: 'The name required',
+                tr: 'Bu işlem için isim gerekli',
+            }
+        },
+        UNSUPPORTED_ROLEID: {
+            code: 'UNSUPPORTED_ROLEID', description: {
+                en: 'Unstupported uuid has given',
+                tr: 'Geçersiz role id',
+            }
+        },
+        USERNAME_REQUIRED: {
+            code: 'USERNAME_REQUIRED', description: {
+                en: 'The username required',
+                tr: 'Bu işlem için kullanıcı adı gerekli',
+            }
+        },
+        PASSWORD_REQUIRED: {
+            code: 'PASSWORD_REQUIRED', description: {
+                en: 'The user password required',
+                tr: 'Bu işlem için kullanıcı şifresi gerekli',
+            }
+        },
+        EMAIL_REQUIRED: {
+            code: 'EMAIL_REQUIRED', description: {
+                en: 'The email required',
+                tr: 'Bu işlem için e-posta gerekli',
+            }
+        },
+        SURNAME_REQUIRED: {
+            code: 'SURNAME_REQUIRED', description: {
+                en: 'The surname required',
+                tr: 'Bu işlem için soyisim gerekli',
+            }
+        },
+        LANGUAGE_REQUIRED: {
+            code: 'LANGUAGE_REQUIRED', description: {
+                en: 'The language required',
+                tr: 'Bu işlem için dil gerekli',
+            }
+        },
+        ROLES_REQUIRED: {
+            code: 'ROLES_REQUIRED', description: {
+                en: 'The roles required',
+                tr: 'Bu işlem için roller gerekli',
+            }
+        },
+        USERNAME_DUPLICATE: {
+            code: 'USERNAME_DUPLICATE', description: {
+                en: 'Username already active',
+                tr: 'Kullanıcı adı zaten mevcut',
+            }
+        },
+        EMAIL_DUPLICATE: {
+            code: 'EMAIL_DUPLICATE', description: {
+                en: 'E-mail already active',
+                tr: 'E-posta zaten mevcut',
+            }
+        },
+        CASEID_REQUIRED: {
+            code: 'CASEID_REQUIRED', description: {
+                en: 'The case uuid required',
+                tr: 'Bu işlem için durum uuid gerekli',
+            }
+        },
+        USERID_REQUIRED: {
+            code: 'USERID_REQUIRED', description: {
+                en: 'The user uuid required',
+                tr: 'Bu işlem için kullanıcı uuid gerekli',
+            }
+        },
+        UNSUPPORTED_USERID: {
+            code: 'UNSUPPORTED_USERID', description: {
+                en: 'Unstupported uuid has given',
+                tr: 'Geçersiz kullanıcı id girişi',
+            }
+        },
+        MOVEMENT_END_DATE_REQUIRED: {
+            code: 'MOVEMENT_END_DATE_REQUIRED', description: {
+                en: 'The movement end date required, system should know end date when you enter past dated movement',
+                tr: 'Bu işlem için hareket sona erme tarihi gerekli, geçmiş tarihli hareket girişlerinde sistem bitiş tarihi bilmeli',
+            }
+        },
+        MOVEMENT_END_DATE_TOO_BIG: {
+            code: 'MOVEMENT_END_DATE_TOO_BIG', description: {
+                en: 'The movement end date is too big, you should enter lower date before next movement start',
+                tr: 'Hareket sona erme tarihi çok güncel, geçmiş tarihli hareketlerde bir sonraki hareket tarihinden daha geçmiş hareket tarihi girmen gerekli',
+            }
+        },
+        USERMOVEMENTID_REQUIRED: {
+            code: 'USERMOVEMENTID_REQUIRED', description: {
+                en: 'The UsermovementID required',
+                tr: 'Bu işlem için Kullanıcı Hareket Uuid gerekli',
+            }
+        },
+        UNSUPPORTED_USERMOVEMENTID: {
+            code: 'UNSUPPORTED_USERMOVEMENTID', description: {
+                en: 'The user movement id is unsupported',
+                tr: 'Tanımsız kullanıcı hareket uuid değeri',
+            }
+        },
+    }
+
 }

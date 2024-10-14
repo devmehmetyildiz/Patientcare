@@ -1,12 +1,10 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-
 
 async function GetUsagetypes(req, res, next) {
     try {
@@ -21,22 +19,22 @@ async function GetUsagetype(req, res, next) {
 
     let validationErrors = []
     if (!req.params.usagetypeId) {
-        validationErrors.push(messages.VALIDATION_ERROR.USAGETYPEID_REQUIRED)
+        validationErrors.push(req.t('Usagetypes.Error.UnitIDRequired'))
     }
     if (!validator.isUUID(req.params.usagetypeId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USAGETYPEID)
+        validationErrors.push(req.t('Usagetypes.Error.UnsupportedUnitID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Usagetypes'), req.language))
     }
 
     try {
         const usagetype = await db.usagetypeModel.findOne({ where: { Uuid: req.params.usagetypeId } });
         if (!usagetype) {
-            return createNotfounderror([messages.ERROR.USAGETYPE_NOT_FOUND])
+            return next(createNotFoundError(req.t('Usagetypes.Error.NotFound'), req.t('Usagetypes'), req.language))
         }
         if (!usagetype.Isactive) {
-            return createNotfounderror([messages.ERROR.USAGETYPE_NOT_ACTIVE])
+            return next(createNotFoundError(req.t('Usagetypes.Error.NotActive'), req.t('Usagetypes'), req.language))
         }
         res.status(200).json(usagetype)
     } catch (error) {
@@ -52,11 +50,11 @@ async function AddUsagetype(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Usagetypes.Error.NameRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Usagetypes'), req.language))
     }
 
     let usagetypeuuid = uuid()
@@ -68,16 +66,19 @@ async function AddUsagetype(req, res, next) {
         await db.usagetypeModel.create({
             ...req.body,
             Uuid: usagetypeuuid,
-            Createduser: "System",
+            Createduser: username,
             Createtime: new Date(),
             Isactive: true
         }, { transaction: t })
 
         await CreateNotification({
             type: types.Create,
-            service: 'Kullanım Türleri',
+            service: req.t('Usagetypes'),
             role: 'usagetypenotification',
-            message: `${Name} kullanım türü ${username} tarafından Oluşturuldu.`,
+            message: {
+                en: `${Name} Usagetype Created By ${username}.`,
+                tr: `${Name} kullanım türü ${username} tarafından Oluşturuldu.`
+            }[req.language],
             pushurl: '/Usagetypes'
         })
         await t.commit()
@@ -96,14 +97,17 @@ async function UpdateUsagetype(req, res, next) {
         Uuid
     } = req.body
 
-    if (!Name || !validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+    if (!validator.isString(Name)) {
+        validationErrors.push(req.t('Usagetypes.Error.NameRequired'))
+    }
+    if (!Uuid) {
+        validationErrors.push(req.t('Usagetypes.Error.UsagetypeIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USAGETYPEID_REQUIRED)
+        validationErrors.push(req.t('Usagetypes.Error.UnsupportedUsagetypeID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Usagetypes'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -112,10 +116,10 @@ async function UpdateUsagetype(req, res, next) {
     try {
         const usagetype = await db.usagetypeModel.findOne({ where: { Uuid: Uuid } })
         if (!usagetype) {
-            return next(createNotfounderror([messages.ERROR.USAGETYPE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Usagetypes.Error.NotFound'), req.t('Usagetypes'), req.language))
         }
         if (usagetype.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.USAGETYPE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Usagetypes.Error.NotActive'), req.t('Usagetypes'), req.language))
         }
 
         await db.usagetypeModel.update({
@@ -126,9 +130,12 @@ async function UpdateUsagetype(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Kullanım Türleri',
+            service: req.t('Usagetypes'),
             role: 'usagetypenotification',
-            message: `${Name} kullanım türü ${username} tarafından Güncellendi.`,
+            message: {
+                en: `${Name} Usagetype Updated By ${username}.`,
+                tr: `${Name} Kullanım Türü ${username} Tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Usagetypes'
         })
         await t.commit()
@@ -146,13 +153,13 @@ async function DeleteUsagetype(req, res, next) {
     const Uuid = req.params.usagetypeId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.USAGETYPEID_REQUIRED)
+        validationErrors.push(req.t('Usagetypes.Error.UsagetypeIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USAGETYPEID)
+        validationErrors.push(req.t('Usagetypes.Error.UnsupportedUsagetypeID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Usagetypes'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -161,10 +168,10 @@ async function DeleteUsagetype(req, res, next) {
     try {
         const usagetype = await db.usagetypeModel.findOne({ where: { Uuid: Uuid } })
         if (!usagetype) {
-            return next(createNotfounderror([messages.ERROR.USAGETYPE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Usagetypes.Error.NotFound'), req.t('Usagetypes'), req.language))
         }
         if (usagetype.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.USAGETYPE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Usagetypes.Error.NotActive'), req.t('Usagetypes'), req.language))
         }
 
         await db.usagetypeModel.update({
@@ -175,9 +182,12 @@ async function DeleteUsagetype(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Kullanım Türleri',
+            service: req.t('Usagetypes'),
             role: 'usagetypenotification',
-            message: `${usagetype?.Name} kullanım türü ${username} tarafından Silindi.`,
+            message: {
+                en: `${usagetype?.Name} Usagetype Deleted By ${username}.`,
+                tr: `${usagetype?.Name} Kullanım Türü ${username} Tarafından Silindi.`
+            }[req.language],
             pushurl: '/Usagetypes'
         })
         await t.commit();

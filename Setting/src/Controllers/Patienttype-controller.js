@@ -1,16 +1,15 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
 
 async function GetPatienttypes(req, res, next) {
     try {
-        const patienttypes = await db.patienttypeModel.findAll({ where: { Isactive: true } })
+        const patienttypes = await db.patienttypeModel.findAll()
         res.status(200).json(patienttypes)
     } catch (error) {
         next(sequelizeErrorCatcher(error))
@@ -21,13 +20,13 @@ async function GetPatienttype(req, res, next) {
 
     let validationErrors = []
     if (!req.params.patienttypeId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTTYPEID_REQUIRED)
+        validationErrors.push(req.t('Patienttypes.Error.PatienttypeIDRequired'))
     }
     if (!validator.isUUID(req.params.patienttypeId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTTYPEID)
+        validationErrors.push(req.t('Patienttypes.Error.UnsupportedPatienttypeID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patienttypes'), req.language))
     }
 
     try {
@@ -47,11 +46,11 @@ async function AddPatienttype(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Patienttypes.Error.NameRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patienttypes'), req.language))
     }
 
     let patienttypeuuid = uuid()
@@ -70,9 +69,12 @@ async function AddPatienttype(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Hasta Türleri',
+            service: req.t('Patienttypes'),
             role: 'patienttypenotification',
-            message: `${Name} hasta türü ${username} tarafından Oluşturuldu.`,
+            message: {
+                en: `${Name} Patient Type Created By ${username}.`,
+                tr: `${Name} Hasta Türü ${username} Tarafından Oluşturuldu.`
+            }[req.language],
             pushurl: '/Patienttypes'
         })
 
@@ -93,16 +95,16 @@ async function UpdatePatienttype(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Patienttypes.Error.NameRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTTYPEID_REQUIRED)
+        validationErrors.push(req.t('Patienttypes.Error.PatienttypeIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTTYPEID)
+        validationErrors.push(req.t('Patienttypes.Error.UnsupportedPatienttypeID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patienttypes'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -111,10 +113,10 @@ async function UpdatePatienttype(req, res, next) {
     try {
         const patienttype = await db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
         if (!patienttype) {
-            return next(createNotfounderror([messages.ERROR.PATIENTTYPE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Patienttypes.Error.NotFound'), req.t('Patienttypes'), req.language))
         }
         if (patienttype.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PATIENTTYPE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Patienttypes.Error.NotActive'), req.t('Patienttypes'), req.language))
         }
 
         await db.patienttypeModel.update({
@@ -125,9 +127,12 @@ async function UpdatePatienttype(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hasta Türleri',
+            service: req.t('Patienttypes'),
             role: 'patienttypenotification',
-            message: `${Name} hasta türü ${username} tarafından Güncellendi.`,
+            message: {
+                en: `${Name} Patient Type Updated By ${username}.`,
+                tr: `${Name} Hasta Türü ${username} Tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Patienttypes'
         })
 
@@ -144,13 +149,13 @@ async function DeletePatienttype(req, res, next) {
     const Uuid = req.params.patienttypeId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTTYPEID_REQUIRED)
+        validationErrors.push(req.t('Patienttypes.Error.PatienttypeIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTTYPEID)
+        validationErrors.push(req.t('Patienttypes.Error.UnsupportedPatienttypeID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patienttypes'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -159,10 +164,10 @@ async function DeletePatienttype(req, res, next) {
     try {
         const patienttype = await db.patienttypeModel.findOne({ where: { Uuid: Uuid } })
         if (!patienttype) {
-            return next(createNotfounderror([messages.ERROR.PATIENTTYPE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Patienttypes.Error.NotActive'), req.t('Patienttypes'), req.language))
         }
         if (patienttype.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PATIENTTYPE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Patienttypes.Error.NotActive'), req.t('Patienttypes'), req.language))
         }
 
         await db.patienttypeModel.update({
@@ -173,9 +178,12 @@ async function DeletePatienttype(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Hasta Türleri',
+            service: req.t('Patienttypes'),
             role: 'patienttypenotification',
-            message: `${patienttype?.Name} hasta türü ${username} tarafından Silindi.`,
+            message: {
+                en: `${patienttype?.Name} Patient Type Deleted By ${username}.`,
+                tr: `${patienttype?.Name} Hasta Türü ${username} Tarafından Silindi.`
+            }[req.language],
             pushurl: '/Patienttypes'
         })
 

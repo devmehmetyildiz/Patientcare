@@ -1,15 +1,14 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
-const { sequelizeErrorCatcher,} = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher, } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const CreateNotification = require("../Utilities/CreateNotification")
 
 async function GetRooms(req, res, next) {
     try {
-        const rooms = await db.roomModel.findAll({ where: { Isactive: true } })
+        const rooms = await db.roomModel.findAll()
         res.status(200).json(rooms)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -20,13 +19,13 @@ async function GetRoom(req, res, next) {
 
     let validationErrors = []
     if (!req.params.roomId) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROOMID_REQUIRED)
+        validationErrors.push(req.t('Rooms.Error.RoomIDRequired'))
     }
     if (!validator.isUUID(req.params.roomId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_ROOMID)
+        validationErrors.push(req.t('Rooms.Error.UnsupportedRoomID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Rooms'), req.language))
     }
 
     try {
@@ -47,14 +46,14 @@ async function AddRoom(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Rooms.Error.RoomIDRequired'))
     }
     if (!validator.isUUID(FloorID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROOMID_REQUIRED)
+        validationErrors.push(req.t('Rooms.Error.FloorIDRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Rooms'), req.language))
     }
 
     let roomuuid = uuid()
@@ -73,9 +72,12 @@ async function AddRoom(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Odalar',
+            service: req.t('Rooms'),
             role: 'roomnotification',
-            message: `${Name} odası ${username} tarafından Oluşturuldu.`,
+            message: {
+                en: `${Name} Room Created By ${username}.`,
+                tr: `${Name} Odası ${username} Tarafından Oluşturuldu.`
+            }[req.language],
             pushurl: '/Rooms'
         })
 
@@ -97,19 +99,19 @@ async function UpdateRoom(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Rooms.Error.NameRequired'))
     }
     if (!validator.isUUID(FloorID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FLOORID_REQUIRED)
+        validationErrors.push(req.t('Rooms.Error.FloorIDRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
+        validationErrors.push(req.t('Rooms.Error.RoomIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
+        validationErrors.push(req.t('Rooms.Error.UnsupportedRoomID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Rooms'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -118,10 +120,10 @@ async function UpdateRoom(req, res, next) {
     try {
         const room = await db.roomModel.findOne({ where: { Uuid: Uuid } })
         if (!room) {
-            return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Rooms.Error.NotFound'), req.t('Rooms'), req.language))
         }
         if (room.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.BED_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Rooms.Error.NotActive'), req.t('Rooms'), req.language))
         }
 
         await db.roomModel.update({
@@ -132,9 +134,12 @@ async function UpdateRoom(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Odalar',
+            service: req.t('Rooms'),
             role: 'roomnotification',
-            message: `${Name} odası ${username} tarafından Güncellendi.`,
+            message: {
+                en: `${Name} Updated By ${username}.`,
+                tr: `${Name} Odası ${username} Tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Rooms'
         })
 
@@ -151,13 +156,13 @@ async function DeleteRoom(req, res, next) {
     const Uuid = req.params.roomId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
+        validationErrors.push(req.t('Rooms.Error.RoomIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
+        validationErrors.push(req.t('Rooms.Error.UnsupportedRoomID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Rooms'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -165,10 +170,10 @@ async function DeleteRoom(req, res, next) {
     try {
         const room = await db.roomModel.findOne({ where: { Uuid: Uuid } })
         if (!room) {
-            return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Rooms.Error.NotFound'), req.t('Rooms'), req.language))
         }
         if (room.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.BED_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Rooms.Error.NotActive'), req.t('Rooms'), req.language))
         }
 
         await db.roomModel.update({
@@ -179,9 +184,12 @@ async function DeleteRoom(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Odalar',
+            service: req.t('Rooms'),
             role: 'roomnotification',
-            message: `${room?.Name} odası ${username} tarafından Silindi.`,
+            message: {
+                en: `${room?.Name} Room Deleted By ${username}.`,
+                tr: `${room?.Name} Odası ${username} Tarafından Silindi.`
+            }[req.language],
             pushurl: '/Rooms'
         })
 

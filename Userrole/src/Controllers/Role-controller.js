@@ -1,11 +1,10 @@
-const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const Priveleges = require("../Constants/Privileges")
-const { types } = require("../Constants/Defines")
+const { notificationTypes } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
 
 async function GetRoles(req, res, next) {
@@ -180,7 +179,7 @@ async function AddRole(req, res, next) {
         }
 
         await CreateNotification({
-            type: types.Create,
+            type: notificationTypes.Create,
             service: 'Roller',
             role: 'rolenotification',
             message: `${Name} rolü ${username} tarafından oluşturuldu.`,
@@ -247,7 +246,7 @@ async function UpdateRole(req, res, next) {
         }
 
         await CreateNotification({
-            type: types.Update,
+            type: notificationTypes.Update,
             service: 'Roller',
             role: 'rolenotification',
             message: `${Name} rolü ${username} tarafından Güncellendi.`,
@@ -294,7 +293,7 @@ async function DeleteRole(req, res, next) {
         }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
-            type: types.Delete,
+            type: notificationTypes.Delete,
             service: 'Roller',
             role: 'rolenotification',
             message: `${role?.Name} rolü ${username} tarafından Silindi.`,
@@ -321,4 +320,72 @@ module.exports = {
     Getprivileges,
     Getprivilegegroups,
     GetRolescount
+}
+
+const messages = {
+    ERROR: {
+        ROLE_NOT_FOUND: {
+            code: 'ROLE_NOT_FOUND', description: {
+                en: 'Role not found',
+                tr: 'Rol bulunamadı',
+            }
+        },
+        USER_NOT_FOUND: {
+            code: 'USER_NOT_FOUND', description: {
+                en: 'User not found',
+                tr: 'Kullanıcı bulunamadı',
+            }
+        },
+        ROLE_NOT_ACTIVE: {
+            code: 'ROLE_NOT_ACTIVE', description: {
+                en: 'Role not active',
+                tr: 'Rol aktif değil',
+            }
+        },
+        USERROLE_NOT_FOUND: {
+            code: 'USERROLE_NOT_FOUND', description: {
+                en: 'User role not found',
+                tr: 'Kullanıcı rolü bulunamadı',
+            }
+        },
+    },
+    VALIDATION_ERROR: {
+        NAME_REQUIRED: {
+            code: 'NAME_REQUIRED', description: {
+                en: 'The name required',
+                tr: 'Bu işlem için isim gerekli',
+            }
+        },
+        ROLEID_REQUIRED: {
+            code: 'ROLEID_REQUIRED', description: {
+                en: 'The role uuid required',
+                tr: 'Bu işlem için rol uuid gerekli',
+            }
+        },
+        UNSUPPORTED_ROLEID: {
+            code: 'UNSUPPORTED_ROLEID', description: {
+                en: 'Unstupported uuid has given',
+                tr: 'Geçersiz role id',
+            }
+        },
+        PRIVILEGES_REQUIRED: {
+            code: 'PRIVILEGES_REQUIRED', description: {
+                en: 'At least 1 privileges required',
+                tr: 'En az 1 adet yetki seçilmelidir.',
+            }
+        },
+        USERID_REQUIRED: {
+            code: 'USERID_REQUIRED', description: {
+                en: 'The user uuid required',
+                tr: 'Bu işlem için kullanıcı uuid gerekli',
+            }
+        },
+        UNSUPPORTED_USERID: {
+            code: 'UNSUPPORTED_USERID', description: {
+                en: 'Unstupported uuid has given',
+                tr: 'Geçersiz kullanıcı id girişi',
+            }
+        },
+    }
+
 }

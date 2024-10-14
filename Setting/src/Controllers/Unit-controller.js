@@ -1,16 +1,14 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
-
 async function GetUnits(req, res, next) {
     try {
-        const units = await db.unitModel.findAll({ where: { Isactive: true } })
+        const units = await db.unitModel.findAll()
         for (const unit of units) {
             unit.Departmentuuids = await db.unitdepartmentModel.findAll({
                 where: {
@@ -29,22 +27,22 @@ async function GetUnit(req, res, next) {
 
     let validationErrors = []
     if (!req.params.unitId) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)
+        validationErrors.push(req.t('Units.Error.UnitIDRequired'))
     }
     if (!validator.isUUID(req.params.unitId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_UNITID)
+        validationErrors.push(req.t('Units.Error.UnsupportedUnitID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Units'), req.language))
     }
 
     try {
         const unit = await db.unitModel.findOne({ where: { Uuid: req.params.unitId } });
         if (!unit) {
-            return createNotfounderror([messages.ERROR.UNIT_NOT_FOUND])
+            return next(createNotFoundError(req.t('Units.Error.NotFound'), req.t('Units'), req.language))
         }
         if (!unit.Isactive) {
-            return createNotfounderror([messages.ERROR.UNIT_NOT_ACTIVE])
+            return next(createNotFoundError(req.t('Units.Error.NotActive'), req.t('Units'), req.language))
         }
         unit.Departmentuuids = await db.unitdepartmentModel.findAll({
             where: {
@@ -68,17 +66,17 @@ async function AddUnit(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Units.Error.NameRequired'))
     }
     if (!validator.isNumber(Unittype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITTYPE_REQUIRED)
+        validationErrors.push(req.t('Units.Error.UnittypeRequired'))
     }
     if (!validator.isArray(Departments)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
+        validationErrors.push(req.t('Units.Error.DepartmentsRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Units'), req.language))
     }
 
     let unituuid = uuid()
@@ -97,7 +95,7 @@ async function AddUnit(req, res, next) {
 
         for (const department of Departments) {
             if (!department.Uuid || !validator.isUUID(department.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
+                return next(createValidationError(req.t('Units.Error.UnsupportedDepartmentID"'), req.t('Units'), req.language))
             }
             await db.unitdepartmentModel.create({
                 UnitID: unituuid,
@@ -107,9 +105,12 @@ async function AddUnit(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Birimler',
+            service: req.t('Units'),
             role: 'unitnotification',
-            message: `${Name} birimi ${username} tarafından Oluşturuldu.`,
+            message: {
+                en: `${Name} Unit Created By ${username}.`,
+                tr: `${Name} birimi ${username} tarafından Oluşturuldu.`
+            }[req.language],
             pushurl: '/Units'
         })
         await t.commit()
@@ -131,22 +132,22 @@ async function UpdateUnit(req, res, next) {
     } = req.body
 
     if (!Name || !validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Units.Error.NameRequired'))
     }
     if (!Unittype && !validator.isNumber(Unittype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITTYPE_REQUIRED)
+        validationErrors.push(req.t('Units.Error.UnittypeRequired'))
     }
     if (!Departments || !Array.isArray(Departments) || Departments.length <= 0) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
+        validationErrors.push(req.t('Units.Error.DepartmentsRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)
+        validationErrors.push(req.t('Units.Error.UnitIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_UNITID)
+        validationErrors.push(req.t('Units.Error.UnsupportedUnitID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Units'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -155,10 +156,10 @@ async function UpdateUnit(req, res, next) {
     try {
         const unit = await db.unitModel.findOne({ where: { Uuid: Uuid } })
         if (!unit) {
-            return next(createNotfounderror([messages.ERROR.UNIT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Units.Error.NotFound'), req.t('Units'), req.language))
         }
         if (unit.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.UNIT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Units.Error.NotActive'), req.t('Units'), req.language))
         }
 
         await db.unitModel.update({
@@ -170,7 +171,7 @@ async function UpdateUnit(req, res, next) {
         await db.unitdepartmentModel.destroy({ where: { UnitID: Uuid }, transaction: t });
         for (const department of Departments) {
             if (!department.Uuid || !validator.isUUID(department.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
+                return next(createValidationError(req.t('Units.Error.UnsupportedDepartmentID"'), req.t('Units'), req.language))
             }
             await db.unitdepartmentModel.create({
                 UnitID: Uuid,
@@ -180,9 +181,12 @@ async function UpdateUnit(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Birimler',
+            service: req.t('Units'),
             role: 'unitnotification',
-            message: `${Name} birimi ${username} tarafından Güncellendi.`,
+            message: {
+                en: `${Name} Unit Updated By ${username}.`,
+                tr: `${Name} birimi ${username} tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Units'
         })
         await t.commit()
@@ -200,13 +204,13 @@ async function DeleteUnit(req, res, next) {
     const Uuid = req.params.unitId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)
+        validationErrors.push(req.t('Units.Error.UnitIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_UNITID)
+        validationErrors.push(req.t('Units.Error.UnsupportedUnitID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Units'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -215,10 +219,10 @@ async function DeleteUnit(req, res, next) {
     try {
         const unit = await db.unitModel.findOne({ where: { Uuid: Uuid } })
         if (!unit) {
-            return next(createNotfounderror([messages.ERROR.UNIT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Units.Error.NotFound'), req.t('Units'), req.language))
         }
         if (unit.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.UNIT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Units.Error.NotActive'), req.t('Units'), req.language))
         }
 
         await db.unitModel.update({
@@ -229,9 +233,12 @@ async function DeleteUnit(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Birimler',
+            service: req.t('Units'),
             role: 'unitnotification',
-            message: `${unit?.Name} birimi ${username} tarafından Silindi.`,
+            message: {
+                en: `${unit?.Name} Unit Deleted By ${username}.`,
+                tr: `${unit?.Name} birimi ${username} tarafından Silindi.`
+            }[req.language],
             pushurl: '/Units'
         })
         await t.commit();

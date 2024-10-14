@@ -1,16 +1,15 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
 
 async function GetFloors(req, res, next) {
     try {
-        const floors = await db.floorModel.findAll({ where: { Isactive: true } })
+        const floors = await db.floorModel.findAll()
         res.status(200).json(floors)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -21,13 +20,13 @@ async function GetFloor(req, res, next) {
 
     let validationErrors = []
     if (!req.params.floorId) {
-        validationErrors.push(messages.VALIDATION_ERROR.FILEID_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.FloorIDRequired'))
     }
     if (!validator.isUUID(req.params.floorId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_FLOORID)
+        validationErrors.push(req.t('Floors.Error.UnsupportedFloorID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Floors'), req.language))
     }
 
     try {
@@ -48,14 +47,14 @@ async function AddFloor(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.NameRequired'))
     }
     if (!validator.isString(Gender)) {
-        validationErrors.push(messages.VALIDATION_ERROR.GENDER_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.GenderRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Floors'), req.language))
     }
 
     let flooruuid = uuid()
@@ -73,9 +72,12 @@ async function AddFloor(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Katlar',
+            service: req.t('Floors'),
             role: 'floornotification',
-            message: `${Name} yatağı ${username} tarafından Oluşturuldu.`,
+            message: {
+                en: `${Name} Floor Created By ${username}.`,
+                tr: `${Name} Kat ${username} tarafından Oluşturuldu.`
+            }[req.language],
             pushurl: '/Floors'
         })
         await t.commit()
@@ -106,25 +108,25 @@ async function FastcreateFloor(req, res, next) {
 
 
     if (!validator.isString(Gender)) {
-        validationErrors.push(messages.VALIDATION_ERROR.GENDER_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.GenderRequired'))
     }
     if (!validator.isNumber(parseInt(Floorstartnumber))) {
-        validationErrors.push(messages.VALIDATION_ERROR.FLOORSTARTNUMBER_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.FloorStartNumberRequired'))
     }
     if (!validator.isNumber(parseInt(Floorendnumber))) {
-        validationErrors.push(messages.VALIDATION_ERROR.FLOORENDNUMBER_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.FloorEndNumberRequired'))
     }
     if (!validator.isNumber(parseInt(Roomstartnumber))) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROOMSTARTNUMBER_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.RoomStartNumberRequired'))
     }
     if (!validator.isNumber(parseInt(Roomendnumber))) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROOMENDNUMBER_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.RoomEndNumberRequired'))
     }
     if (!validator.isNumber(parseInt(Bedstartnumber))) {
-        validationErrors.push(messages.VALIDATION_ERROR.BEDSTARTNUMBER_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.BedStartNumberRequired'))
     }
     if (!validator.isNumber(parseInt(Bedendnumber))) {
-        validationErrors.push(messages.VALIDATION_ERROR.BEDENDNUMBER_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.BedEndNumberRequired'))
     }
     const floorstartnumber = parseInt(Floorstartnumber)
     const floorendnumber = parseInt(Floorendnumber)
@@ -134,13 +136,13 @@ async function FastcreateFloor(req, res, next) {
     const bedendnumber = parseInt(Bedendnumber)
 
     if (floorstartnumber > floorendnumber) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTNUMBER_CANTSMALL)
+        validationErrors.push(req.t('Floors.Error.FloorNumberCantSmall'))
     }
     if (roomstartnumber > roomendnumber) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTNUMBER_CANTSMALL)
+        validationErrors.push(req.t('Floors.Error.RoomNumberCantSmall'))
     }
     if (bedstartnumber > bedendnumber) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTNUMBER_CANTSMALL)
+        validationErrors.push(req.t('Floors.Error.BedNumberCantSmall'))
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -195,9 +197,12 @@ async function FastcreateFloor(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Katlar',
+            service: req.t('Floors'),
             role: 'floornotification',
-            message: `Hızlı kat özelliği ile katlar oluşturuldu`,
+            message: {
+                en: `Floors Created By Fast Create`,
+                tr: `Hızlı Kat Özelliği İle Katlar Oluşturuldu`
+            }[req.language],
             pushurl: '/Floors'
         })
         await t.commit()
@@ -219,19 +224,19 @@ async function UpdateFloor(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.NameRequired'))
     }
     if (!validator.isString(Gender)) {
-        validationErrors.push(messages.VALIDATION_ERROR.GENDER_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.GenderRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.FloorIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
+        validationErrors.push(req.t('Floors.Error.UnsupportedFloorID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Floors'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -239,10 +244,10 @@ async function UpdateFloor(req, res, next) {
     try {
         const floor = await db.floorModel.findOne({ where: { Uuid: Uuid } })
         if (!floor) {
-            return next(createNotfounderror([messages.ERROR.FLOOR_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Floors.Error.NotFound'), req.t('Floors'), req.language))
         }
         if (floor.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.FLOOR_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Floors.Error.NotActive'), req.t('Floors'), req.language))
         }
 
         await db.floorModel.update({
@@ -253,9 +258,12 @@ async function UpdateFloor(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Katlar',
+            service: req.t('Floors'),
             role: 'floornotification',
-            message: `${floor?.Name} katı ${username} tarafından Güncellendi.`,
+            message: {
+                en: `${Name} Floor Updated By ${username}.`,
+                tr: `${Name} Katı ${username} Tarafından Güncellendi.`
+            }[req.language],
             pushurl: '/Floors'
         })
 
@@ -272,13 +280,13 @@ async function DeleteFloor(req, res, next) {
     const Uuid = req.params.floorId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
+        validationErrors.push(req.t('Floors.Error.FloorIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
+        validationErrors.push(req.t('Floors.Error.UnsupportedFloorID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Floors'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -286,10 +294,10 @@ async function DeleteFloor(req, res, next) {
     try {
         const floor = await db.floorModel.findOne({ where: { Uuid: Uuid } })
         if (!floor) {
-            return next(createNotfounderror([messages.ERROR.FLOOR_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Floors.Error.NotFound'), req.t('Floors'), req.language))
         }
         if (floor.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.FLOOR_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Floors.Error.NotActive'), req.t('Floors'), req.language))
         }
 
         await db.floorModel.update({
@@ -300,9 +308,12 @@ async function DeleteFloor(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Katlar',
+            service: req.t('Floors'),
             role: 'floornotification',
-            message: `${floor?.Name} katı ${username} tarafından Silindi.`,
+            message: {
+                en: `${floor?.Name} Floor Deleted By ${username}.`,
+                tr: `${floor?.Name} Katı ${username} Tarafından Silindi.`
+            }[req.language],
             pushurl: '/Floors'
         })
 

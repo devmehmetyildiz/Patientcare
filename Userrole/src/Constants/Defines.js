@@ -1,7 +1,13 @@
-const types = {
+const notificationTypes = {
     Create: 'Oluşturma',
     Update: 'Güncelleme',
     Delete: 'Silme'
 }
 
-module.exports = { types }
+const usermovementypes = {
+    Userworkstart: 'userworkstart',
+    Userworkend: 'userworkend',
+    Usercasechange: 'usercasechange'
+}
+
+module.exports = { notificationTypes, usermovementypes }

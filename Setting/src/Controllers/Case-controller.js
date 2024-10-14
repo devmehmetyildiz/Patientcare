@@ -1,16 +1,15 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
 
 async function GetCases(req, res, next) {
     try {
-        const cases = await db.caseModel.findAll({ where: { Isactive: true } })
+        const cases = await db.caseModel.findAll()
         for (const casedata of cases) {
             casedata.Departmentuuids = await db.casedepartmentModel.findAll({
                 where: {
@@ -30,10 +29,10 @@ async function GetCompleteCase(req, res, next) {
     try {
         const casedata = await db.caseModel.findOne({ where: { CaseStatus: 1 } });
         if (!casedata) {
-            return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Cases.Error.NotFound'), req.t('Careplanparameters'), req.language))
         }
         if (!casedata.Isactive) {
-            return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE])
+            return next(createNotFoundError(req.t('Cases.Error.NotActive'), req.t('Careplanparameters'), req.language))
         }
         casedata.Departmentuuids = await db.casedepartmentModel.findAll({
             where: {
@@ -52,10 +51,10 @@ async function GetDeactivateCase(req, res, next) {
     try {
         const casedata = await db.caseModel.findOne({ where: { CaseStatus: -1 } });
         if (!casedata) {
-            return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Cases.Error.NotFound'), req.t('Careplanparameters'), req.language))
         }
         if (!casedata.Isactive) {
-            return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE])
+            return next(createNotFoundError(req.t('Cases.Error.NotActive'), req.t('Careplanparameters'), req.language))
         }
         casedata.Departmentuuids = await db.casedepartmentModel.findAll({
             where: {
@@ -73,22 +72,22 @@ async function GetCase(req, res, next) {
 
     let validationErrors = []
     if (!req.params.caseId) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.CaseIDRequired'))
     }
     if (!validator.isUUID(req.params.caseId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID)
+        validationErrors.push(req.t('Cases.Error.UnsupportedCaseID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Cases'), req.language))
     }
 
     try {
         const casedata = await db.caseModel.findOne({ where: { Uuid: req.params.caseId } });
         if (!casedata) {
-            return createNotfounderror([messages.ERROR.CASE_NOT_FOUND])
+            return next(createNotFoundError(req.t('Cases.Error.NotFound'), req.t('Careplanparameters'), req.language))
         }
         if (!casedata.Isactive) {
-            return createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE])
+            return next(createNotFoundError(req.t('Cases.Error.NotActive'), req.t('Careplanparameters'), req.language))
         }
         casedata.Departmentuuids = await db.casedepartmentModel.findAll({
             where: {
@@ -116,23 +115,23 @@ async function AddCase(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.NameRequired'))
     }
     if (!validator.isString(Shortname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHORTNAME_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.ShortnameRequired'))
     }
     if (!validator.isString(Casecolor)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.CasecolorRequired'))
     }
     if (!validator.isNumber(CaseStatus)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASECOLOR_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.CasestatusRequired'))
     }
     if (!validator.isArray(Departments)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.DepartmentsRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Cases'), req.language))
     }
 
     let caseuuid = uuid()
@@ -151,7 +150,7 @@ async function AddCase(req, res, next) {
 
         for (const department of Departments) {
             if (!department.Uuid || !validator.isUUID(department.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
+                return next(createValidationError(req.t('Cases.Error.UnsupportedDepartmentID'), req.t('Cases'), req.language))
             }
             await db.casedepartmentModel.create({
                 CaseID: caseuuid,
@@ -161,9 +160,12 @@ async function AddCase(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Durumlar',
+            service: req.t('Cases'),
             role: 'casenotification',
-            message: `${Name} durumu ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${Name} durumu ${username} tarafından Oluşturuldu.`,
+                en: `${Name} case created by ${username}.`
+            }[req.language],
             pushurl: '/Cases'
         })
         await t.commit()
@@ -187,25 +189,25 @@ async function UpdateCase(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.NameRequired'))
     }
     if (!validator.isString(Shortname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHORTNAME_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.ShortnameRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.CaseIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID)
+        validationErrors.push(req.t('Cases.Error.UnsupportedCaseID'))
     }
     if (!validator.isString(Casecolor)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.CasecolorRequired'))
     }
     if (!validator.isNumber(CaseStatus)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASECOLOR_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.CasestatusRequired'))
     }
     if (!validator.isArray(Departments)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTS_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.DepartmentsRequired'))
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -217,10 +219,10 @@ async function UpdateCase(req, res, next) {
     try {
         const casedata = await db.caseModel.findOne({ where: { Uuid: Uuid } })
         if (!casedata) {
-            return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Cases.Error.NotFound'), req.t('Cases'), req.language))
         }
         if (casedata.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Cases.Error.NotActive'), req.t('Cases'), req.language))
         }
 
         await db.caseModel.update({
@@ -232,7 +234,7 @@ async function UpdateCase(req, res, next) {
         await db.casedepartmentModel.destroy({ where: { CaseID: Uuid }, transaction: t });
         for (const department of Departments) {
             if (!department.Uuid || !validator.isUUID(department.Uuid)) {
-                return next(createValidationError(messages.VALIDATION_ERROR.UNSUPPORTED_DEPARTMENTID, req.language))
+                return next(createValidationError(req.t('Cases.Error.UnsupportedDepartmentID'), req.t('Cases'), req.language))
             }
             await db.casedepartmentModel.create({
                 CaseID: Uuid,
@@ -242,9 +244,12 @@ async function UpdateCase(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Durumlar',
+            service: req.t('Cases'),
             role: 'casenotification',
-            message: `${Name} durumu ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Name} durumu ${username} tarafından Güncellendi.`,
+                en: `${Name} case updated by ${username}.`
+            }[req.language],
             pushurl: '/Cases'
         })
         await t.commit()
@@ -260,10 +265,10 @@ async function DeleteCase(req, res, next) {
     const Uuid = req.params.caseId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+        validationErrors.push(req.t('Cases.Error.CaseIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID)
+        validationErrors.push(req.t('Cases.Error.UnsupportedCaseID'))
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -275,10 +280,10 @@ async function DeleteCase(req, res, next) {
     try {
         const casedata = await db.caseModel.findOne({ where: { Uuid: Uuid } })
         if (!casedata) {
-            return next(createNotfounderror([messages.ERROR.CASE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Cases.Error.NotFound'), req.t('Cases'), req.language))
         }
         if (casedata.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CASE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Cases.Error.NotActive'), req.t('Cases'), req.language))
         }
 
         await db.caseModel.update({
@@ -289,9 +294,12 @@ async function DeleteCase(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Durumlar',
+            service: req.t('Cases'),
             role: 'casenotification',
-            message: `${casedata?.Name} durumu ${username} tarafından Silindi.`,
+            message: {
+                tr: `${casedata?.Name} Durumu ${username} tarafından Silindi.`,
+                en: `${casedata?.Name} Case Deleted by ${username}.`
+            }[req.language],
             pushurl: '/Cases'
         })
         await t.commit();

@@ -1,4 +1,3 @@
-const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -300,4 +299,35 @@ module.exports = {
     DeleteUsernotificationbyid,
     DeleteUsernotificationbyidreaded,
     AddUsernotificationbyrole
+}
+
+const messages = {
+    ERROR: {
+        NOTIFICATION_NOT_ACTIVE: {
+            code: 'NOTIFICATION_NOT_ACTIVE', description: {
+                en: 'notification not active',
+                tr: 'Bildirim aktif değil',
+            }
+        },
+        NOTIFICATION_NOT_FOUND: {
+            code: 'NOTIFICATION_NOT_FOUND', description: {
+                en: 'notification not found',
+                tr: 'bildirim bulunamadı',
+            }
+        },
+    },
+    VALIDATION_ERROR: {
+        NOTIFICATIONID_REQUIRED: {
+            code: 'NOTIFICATIONID_REQUIRED', description: {
+                en: 'The notificationid required',
+                tr: 'Bu işlem için notificationid gerekli',
+            }
+        },
+        UNSUPPORTED_NOTIFICATIONID: {
+            code: 'UNSUPPORTED_NOTIFICATIONID', description: {
+                en: 'Unstupported notificationid has given',
+                tr: 'Geçersiz notificationid girişi',
+            }
+        },
+    }
 }

@@ -1,6 +1,5 @@
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher, } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidation
 const createNotfounderror = require("../Utilities/Error").createNotfounderror
@@ -253,4 +252,72 @@ module.exports = {
     UpdateMailsetting,
     DeleteMailsetting,
     GetActiveMailsetting
+}
+
+const messages = {
+    ERROR: {
+        MAILSETTING_NOT_FOUND: {
+            code: 'MAILSETTING_NOT_FOUND', description: {
+                en: 'The mail setting not found',
+                tr: 'Mail ayarı bulunamadı',
+            }
+        },
+        MAILSETTING_NOT_ACTIVE: {
+            code: 'MAILSETTING_NOT_ACTIVE', description: {
+                en: 'The mail setting not active',
+                tr: 'Mail ayarı aktif değil',
+            }
+        },
+    },
+    VALIDATION_ERROR: {
+        NAME_REQUIRED: {
+            code: 'NAME_REQUIRED', description: {
+                en: 'The name required',
+                tr: 'Bu işlem için isim gerekli',
+            }
+        },
+        USER_REQUIRED: {
+            code: 'USER_REQUIRED', description: {
+                en: 'The user required',
+                tr: 'Bu işlem için kullanıcı gerekli',
+            }
+        },
+        PASSWORD_REQUIRED: {
+            code: 'PASSWORD_REQUIRED', description: {
+                en: 'The password required',
+                tr: 'Bu işlem için parola gerekli',
+            }
+        },
+        SMTPHOST_REQUIRED: {
+            code: 'SMTPHOST_REQUIRED', description: {
+                en: 'The smtp host required',
+                tr: 'Bu işlem için smtp host gerekli',
+            }
+        },
+        SMTPPORT_REQUIRED: {
+            code: 'SMTPPORT_REQUIRED', description: {
+                en: 'The smtp port required',
+                tr: 'Bu işlem için smtp port gerekli',
+            }
+        },
+        MAILADDRESS_REQUIRED: {
+            code: 'MAILADDRESS_REQUIRED', description: {
+                en: 'The mail address required',
+                tr: 'Bu işlem için mail adresi gerekli',
+            }
+        },
+        MAILSETTINGID_REQUIRED: {
+            code: 'MAILSETTINGID_REQUIRED', description: {
+                en: 'The mailsettingid required',
+                tr: 'Bu işlem için mailsettingid gerekli',
+            }
+        },
+        UNSUPPORTED_MAILSETTINGID: {
+            code: 'UNSUPPORTED_MAILSETTINGID', description: {
+                en: 'unsupported mailsettingid',
+                tr: 'Tanımsız mailsettingid',
+            }
+        },
+    }
+
 }

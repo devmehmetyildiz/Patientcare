@@ -1,16 +1,14 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher,} = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher, } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
-
 async function GetBeds(req, res, next) {
     try {
-        const beds = await db.bedModel.findAll({ where: { Isactive: true } })
+        const beds = await db.bedModel.findAll()
         res.status(200).json(beds)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -21,13 +19,13 @@ async function GetBed(req, res, next) {
 
     let validationErrors = []
     if (!req.params.bedId) {
-        validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
+        validationErrors.push(req.t('Beds.Error.IdRequired'))
     }
     if (!validator.isUUID(req.params.bedId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
+        validationErrors.push(req.t('Beds.Error.UnsupportedBedID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Beds'), req.language))
     }
 
     try {
@@ -49,14 +47,14 @@ async function AddBed(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Beds.Error.NameRequired'))
     }
     if (!validator.isUUID(RoomID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROOMID_REQUIRED)
+        validationErrors.push(req.t('Beds.Error.RoomIDRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Beds'), req.language))
     }
 
     let beduuid = uuid()
@@ -74,9 +72,12 @@ async function AddBed(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Yataklar',
+            service: req.t('Beds'),
             role: 'bednotification',
-            message: `${Name} yatağı ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${Name} yatağı ${username} tarafından Oluşturuldu.`,
+                en: `${Name} bed created by ${username}`
+            }[req.language],
             pushurl: '/Beds'
         })
 
@@ -98,16 +99,16 @@ async function UpdateBed(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Beds.Error.NameRequired'))
     }
     if (!validator.isUUID(RoomID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ROOMID_REQUIRED)
+        validationErrors.push(req.t('Beds.Error.RoomIDRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
+        validationErrors.push(req.t('Beds.Error.IdRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
+        validationErrors.push(req.t('Beds.Error.UnsupportedBedID'))
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -118,10 +119,10 @@ async function UpdateBed(req, res, next) {
     try {
         const bed = await db.bedModel.findOne({ where: { Uuid: Uuid } })
         if (!bed) {
-            return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Beds.Error.NotFound'), req.t('Beds'), req.language))
         }
         if (bed.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.BED_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Beds.Error.NotActive'), req.t('Beds'), req.language))
         }
 
         await db.bedModel.update({
@@ -132,9 +133,12 @@ async function UpdateBed(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Yataklar',
+            service: req.t('Beds'),
             role: 'bednotification',
-            message: `${Name} yatağı ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Name} yatağı ${username} tarafından Güncellendi.`,
+                en: `${Name} bed updated by ${username}`
+            }[req.language],
             pushurl: '/Beds'
         })
 
@@ -155,10 +159,10 @@ async function ChangeBedstatus(req, res, next) {
     } = req.body
 
     if (!NewUuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
+        validationErrors.push(req.t('Beds.Error.IdRequired'))
     }
     if (!validator.isUUID(NewUuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
+        validationErrors.push(req.t('Beds.Error.UnsupportedBedID'))
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -170,10 +174,10 @@ async function ChangeBedstatus(req, res, next) {
         if (OldUuid && validator.isUUID(OldUuid)) {
             const oldbed = await db.bedModel.findOne({ where: { Uuid: OldUuid } })
             if (!oldbed) {
-                return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
+                return next(createNotFoundError(req.t('Beds.Error.NotFound'), req.t('Beds'), req.language))
             }
             if (oldbed.Isactive === false) {
-                return next(createNotfounderror([messages.ERROR.BED_NOT_ACTIVE], req.language))
+                return next(createNotFoundError(req.t('Beds.Error.NotFound'), req.t('Beds'), req.language))
             }
 
             await db.bedModel.update({
@@ -185,10 +189,10 @@ async function ChangeBedstatus(req, res, next) {
         }
         const newBed = await db.bedModel.findOne({ where: { Uuid: NewUuid } })
         if (!newBed) {
-            return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Beds.Error.NotFound'), req.t('Beds'), req.language))
         }
         if (newBed.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.BED_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Beds.Error.NotFound'), req.t('Beds'), req.language))
         }
 
         await db.bedModel.update({
@@ -200,9 +204,12 @@ async function ChangeBedstatus(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Yataklar',
+            service: req.t('Beds'),
             role: 'bednotification',
-            message: `${newBed?.Name} yatağı ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${newBed?.Name} yatağı ${username} tarafından Güncellendi.`,
+                en: `${newBed?.Name} bed updated by ${username}`
+            }[req.language],
             pushurl: '/Beds'
         })
 
@@ -223,13 +230,13 @@ async function ChangeBedOccupied(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(BedID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
+        validationErrors.push(req.t('Beds.Error.IdRequired'))
     }
     if (!validator.isBoolean(Isoccupied)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISOCCUPIED_REQUIRED)
+        validationErrors.push(req.t('Beds.Error.Isoccupied'))
     } else {
         if (Isoccupied && !validator.isUUID(PatientID)) {
-            validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+            validationErrors.push(req.t('Beds.Error.PatientIDRequired'))
         }
     }
     if (validationErrors.length > 0) {
@@ -241,10 +248,10 @@ async function ChangeBedOccupied(req, res, next) {
     try {
         const bed = await db.bedModel.findOne({ where: { Uuid: BedID } })
         if (!bed) {
-            return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Beds.Error.NotFound'), req.t('Beds'), req.language))
         }
         if (bed.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.BED_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Beds.Error.NotActive'), req.t('Beds'), req.language))
         }
 
         await db.bedModel.update({
@@ -257,9 +264,12 @@ async function ChangeBedOccupied(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Yataklar',
+            service: req.t('Beds'),
             role: 'bednotification',
-            message: `${bed?.Name} yatağı ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${bed?.Name} yatağı ${username} tarafından Güncellendi.`,
+                en: `${bed?.Name} bed updated by ${username}`
+            }[req.language],
             pushurl: '/Beds'
         })
 
@@ -277,10 +287,10 @@ async function DeleteBed(req, res, next) {
     const Uuid = req.params.bedId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.BEDID_REQUIRED)
+        validationErrors.push(req.t('Beds.Error.IdRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BEDID)
+        validationErrors.push(req.t('Beds.Error.UnsupportedBedID'))
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -291,13 +301,13 @@ async function DeleteBed(req, res, next) {
     try {
         const bed = await db.bedModel.findOne({ where: { Uuid: Uuid } })
         if (!bed) {
-            return next(createNotfounderror([messages.ERROR.BED_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Beds.Error.NotFound'), req.t('Beds'), req.language))
         }
         if (bed.Isactive === false) {
-            return next(createValidationError([messages.ERROR.BED_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Beds.Error.NotActive'), req.t('Beds'), req.language))
         }
         if (bed.Isoccupied === true || bed.Isoccupied === 1) {
-            return next(createValidationError([messages.ERROR.BED_IS_OCCUPIED], req.language))
+            return next(createNotFoundError(req.t('Beds.Error.Isoccupied'), req.t('Beds'), req.language))
         }
 
         await db.bedModel.update({
@@ -308,9 +318,12 @@ async function DeleteBed(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Yataklar',
+            service: req.t('Beds'),
             role: 'bednotification',
-            message: `${bed?.Name} yatağı ${username} tarafından Silindi.`,
+            message: {
+                tr: `${bed?.Name} yatağı ${username} tarafından Silindi.`,
+                en: `${bed?.Name} bed deleted by ${username}`
+            }[req.language],
             pushurl: '/Beds'
         })
 

@@ -1,5 +1,4 @@
 const config = require('../Config')
-const messages = require('../Constants/Messages')
 const { sequelizeErrorCatcher, createAutherror, requestErrorCatcher } = require('../Utilities/Error')
 const createValidationError = require('../Utilities/Error').createValidation
 const createErrorList = require('../Utilities/Error').createList
@@ -8,10 +7,6 @@ const axios = require('axios');
 const INVALID_AUTHORIZATION_HEADER = createErrorList('FORBIDDEN', 'INVALID_AUTHORIZATION_HEADER', {
     en: 'Access denied. Invalid authorization header',
     tr: 'Erişim reddedildi. Geçersiz yekilendirme başlığı',
-})
-const INVALID_ACCESS_TOKEN = createErrorList('FORBIDDEN', 'INVALID_ACCESS_TOKEN', {
-    en: 'Access denied. Invalid access token',
-    tr: 'Erişim reddedildi. Geçersiz erişim anahtarı',
 })
 
 
