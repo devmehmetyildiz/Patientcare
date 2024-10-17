@@ -75,6 +75,8 @@ export default class PatientsEditroutine extends Component {
             Patients, Patientdefines, Todogroupdefines, Profile, history, match, PatientID, Periods, Tododefines, AddTodogroupdefines, Departments, fillPatientnotification
         } = this.props
 
+        const t = Profile?.i18n?.t
+
         const Id = match?.params?.PatientID || PatientID
 
         const { selected_record } = Patients
@@ -390,6 +392,8 @@ export default class PatientsEditroutine extends Component {
     handleSubmit = (e) => {
         e.preventDefault()
         const { history, Profile, fillPatientnotification, UpdatePatienttododefines, match, PatientID, Tododefines } = this.props
+        const t = Profile?.i18n?.t
+
         let Id = PatientID || match?.params?.PatientID
         const data = this.context.getForm(this.PAGE_NAME)
         data.Tododefines = data.Tododefines.map(u => {

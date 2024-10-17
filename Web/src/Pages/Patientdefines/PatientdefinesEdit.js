@@ -213,6 +213,9 @@ export default class PatientdefinesEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { EditPatientdefines, history, fillPatientdefinenotification, Patientdefines, Profile } = this.props
+
+    const t = Profile?.i18n?.t
+
     const data = this.context.getForm(this.PAGE_NAME)
 
     if (!data.Dateofbirth || data.Dateofbirth === '') {

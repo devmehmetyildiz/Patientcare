@@ -5,8 +5,8 @@
   "main": "src/App.js",
   "scripts": {
     "start": "nodemon src/App.js",
-    "build": "cpy .env web.config src dist && cpy 'src/**/*' dist && esbuild src/App.js --bundle --minify --platform=node --outfile=dist/bundle.js",
-   "lint": "eslint ./src --config eslint.config.js"
+    "build": "cpy .env eslint.config.js web.config dist && cpy 'src/**/*' dist && cp -r src/Locales dist/ && esbuild src/App.js --bundle --minify --platform=node --outfile=dist/bundle.js --external:i18next --external:i18next-http-middleware --external:i18next-fs-backend",
+    "lint": "eslint ./src --config eslint.config.js"
   },
   "author": "mehmetyildiz",
   "license": "ISC",
