@@ -8,7 +8,7 @@ const uuid = require('uuid').v4
 
 async function GetProfessions(req, res, next) {
     try {
-        const professions = await db.professionModel.findAll({ where: { Isactive: true } })
+        const professions = await db.professionModel.findAll()
         res.status(200).json(professions)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

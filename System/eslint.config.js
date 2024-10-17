@@ -17,12 +17,11 @@ module.exports = [
         sequelize: "readonly",
         process: "readonly",
         __dirname: "readonly",
-        childProcesses: "readonly",
       },
     },
     rules: {
-      "no-unused-vars": "error",
       "no-undef": "error",
+      "no-unused-vars": ["error", { "argsIgnorePattern": "^next$" }],
     },
   },
   pluginJs.configs.recommended,

@@ -20,5 +20,5 @@
     "Password.Error.RequestNotFound": "Parola Sıfırlama İsteği Bulunamadı",
     "Password.Error.RequestNotActive": "Parola Sıfırlama İsteği Aktif Değil",
     "Password.Error.RequestRejected": "Parola Sıfırlama İsteği Zaten Kullanılmış",
-    "Password.Error.RequestEnded": "Parola Sıfırlama İsteği Süresi Dolmuş",
+    "Password.Error.RequestEnded": "Parola Sıfırlama İsteği Süresi Dolmuş"
 }

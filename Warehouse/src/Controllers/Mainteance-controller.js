@@ -9,7 +9,7 @@ const uuid = require('uuid').v4
 async function GetMainteancies(req, res, next) {
     try {
         let data = null
-        const mainteancies = await db.mainteanceModel.findAll({ where: { Isactive: true } })
+        const mainteancies = await db.mainteanceModel.findAll()
         if (req?.Uuid) {
             data = await db.mainteanceModel.findOne({ where: { Uuid: req?.Uuid } });
         }

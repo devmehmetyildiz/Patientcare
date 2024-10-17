@@ -9,7 +9,6 @@ const INVALID_AUTHORIZATION_HEADER = createErrorList('FORBIDDEN', 'INVALID_AUTHO
     tr: 'Erişim reddedildi. Geçersiz yekilendirme başlığı',
 })
 
-
 const PUBLIC_URLS = [
 
 ]

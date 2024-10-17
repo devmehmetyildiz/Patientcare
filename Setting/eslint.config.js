@@ -20,8 +20,8 @@ module.exports = [
       },
     },
     rules: {
-      "no-unused-vars": "error",
       "no-undef": "error",
+      "no-unused-vars": ["error", { "argsIgnorePattern": "^next$" }],
     },
   },
   pluginJs.configs.recommended,

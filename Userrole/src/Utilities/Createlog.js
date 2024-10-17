@@ -2,7 +2,7 @@ const axios = require('axios')
 const config = require('../Config')
 const validator = require('./Validator')
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
     try {
         const originalSend = res.send;
         const username = req?.identity?.user?.Username || 'System'
@@ -32,9 +32,20 @@ module.exports = async (req, res, next) => {
                 }
             }).catch(() => {
             })
-            originalSend.call(this, body);
+            let decoratedResponsebody = null
+            try {
+                let parsedBody = JSON.parse(body)
+                if (parsedBody && parsedBody?.fulldescription) {
+                    delete parsedBody.fulldescription
+                    decoratedResponsebody = parsedBody
+                } else {
+                    decoratedResponsebody = body
+                }
+            } catch {
+                decoratedResponsebody = body
+            }
+            originalSend.call(this, decoratedResponsebody);
         };
-        next()
     } catch (error) {
         console.log("error on create log", error)
     }

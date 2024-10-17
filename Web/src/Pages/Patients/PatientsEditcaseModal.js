@@ -140,7 +140,7 @@ export default function PatientsEditcaseModal(props) {
                             if (isNeedEndDate && !validator.isISODate(data?.Occuredenddate)) {
                                 errors.push({ type: 'Error', code: t('Pages.Patients.PatientsEditcaseModal.Page.Header'), description: t('Pages.Patients.PatientsEditcaseModal.Messages.OccureddateendRequired') })
                             } else {
-                                if (nextmovements.length > 0) {
+                                if ((nextmovements || []).length > 0) {
                                     const nextmovement = nextmovements[0]
 
                                     if (new Date(data?.Occuredenddate).getTime() >= new Date(nextmovement?.Occureddate).getTime()) {

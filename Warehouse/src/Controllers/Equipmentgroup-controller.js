@@ -8,7 +8,7 @@ const { types } = require("../Constants/Defines")
 
 async function GetEquipmentgroups(req, res, next) {
     try {
-        const equipmentgroups = await db.equipmentgroupModel.findAll({ where: { Isactive: true } })
+        const equipmentgroups = await db.equipmentgroupModel.findAll()
         for (const equipmentgroup of equipmentgroups) {
             equipmentgroup.Equipments = await db.equipmentModel.findAll({
                 where: {

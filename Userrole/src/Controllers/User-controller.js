@@ -104,7 +104,7 @@ async function Register(req, res, next) {
 async function GetUsers(req, res, next) {
     try {
         let data = null
-        const users = await db.userModel.findAll({ where: { Isactive: true } })
+        const users = await db.userModel.findAll()
         for (const user of users) {
             user.Roleuuids = await db.userroleModel.findAll({
                 where: {

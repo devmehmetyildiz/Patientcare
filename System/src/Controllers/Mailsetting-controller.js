@@ -9,7 +9,7 @@ const uuid = require('uuid').v4
 
 async function GetMailsettings(req, res, next) {
     try {
-        const mailsettings = await db.mailsettingModel.findAll({ where: { Isactive: true } })
+        const mailsettings = await db.mailsettingModel.findAll()
         res.status(200).json(mailsettings)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

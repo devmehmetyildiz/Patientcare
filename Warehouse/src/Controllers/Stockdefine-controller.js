@@ -8,7 +8,7 @@ const uuid = require('uuid').v4
 
 async function GetStockdefines(req, res, next) {
     try {
-        const stockdefines = await db.stockdefineModel.findAll({ where: { Isactive: true } })
+        const stockdefines = await db.stockdefineModel.findAll()
         res.status(200).json(stockdefines)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

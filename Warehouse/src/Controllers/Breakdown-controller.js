@@ -9,7 +9,7 @@ const uuid = require('uuid').v4
 async function GetBreakdowns(req, res, next) {
     try {
         let data = null
-        const breakdowns = await db.breakdownModel.findAll({ where: { Isactive: true } })
+        const breakdowns = await db.breakdownModel.findAll()
         if (req?.Uuid) {
             data = await db.breakdownModel.findOne({ where: { Uuid: req?.Uuid } });
         }

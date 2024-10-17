@@ -10,7 +10,7 @@ const SftpClient = require('ssh2-sftp-client');
 
 async function GetFiles(req, res, next) {
     try {
-        const files = await db.fileModel.findAll({ where: { Isactive: true } })
+        const files = await db.fileModel.findAll()
         res.status(200).json(files)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

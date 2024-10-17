@@ -9,7 +9,7 @@ i18next
     .init({
         fallbackLng: 'tr',
         backend: {
-            loadPath: path.join(__dirname, 'locales', '{{lng}}', 'translation.json'),
+            loadPath: path.join(__dirname, 'Locales', '{{lng}}.json'),
         },
         detection: {
             order: ['querystring', 'cookie', 'header'],

@@ -8,7 +8,7 @@ const uuid = require('uuid').v4
 
 async function GetEquipments(req, res, next) {
     try {
-        const equipments = await db.equipmentModel.findAll({ where: { Isactive: true } })
+        const equipments = await db.equipmentModel.findAll()
         for (const equipment of equipments) {
             equipment.Equipmentproperties = await db.equipmentpropertyModel.findAll({
                 where: {

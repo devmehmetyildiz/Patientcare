@@ -1,7 +1,7 @@
 const config = require("../Config")
 const validator = require('../Utilities/Validator')
 module.exports.init = function (app) {
-  app.use(function (req, res) {
+  app.use(function (req, res, next) {
     res.status(404)
     res.json({
       type: 'NOT_FOUND',
@@ -10,7 +10,7 @@ module.exports.init = function (app) {
     })
   })
 
-  app.use(function (err, req, res) {
+  app.use(function (err, req, res, next) {
     if (err !== undefined && err.type !== undefined) {
 
       const result = {

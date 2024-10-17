@@ -167,14 +167,17 @@ const version1_1_0_6 = {
 
 const version1_1_0_7 = {
     version: "1.1.0.7",
-    changes: [
-       
-    ],
     bugs: [
         {
             title: "Hastalar", commits: [
                 "Hasta Yerleşimleri tasarım düzenlemesi",
                 "Ön Kayıtlar, tamamlanan hastalar tasarım düzenlemesi",
+                "Hasta ve Kullanıcı Durum Değiştirmede Hata Düzenlemesi",
+            ],
+        },
+        {
+            title: "Sistem", commits: [
+                "Arka Plan Servis Düzenlemeleri",
             ],
         },
     ],
@@ -186,4 +189,5 @@ export {
     version1_1_0_3,
     version1_1_0_5,
     version1_1_0_6,
+    version1_1_0_7,
 }

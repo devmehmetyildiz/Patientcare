@@ -8,7 +8,7 @@ const uuid = require('uuid').v4
 
 async function GetPatientcashmovements(req, res, next) {
     try {
-        const patientcashmovements = await db.patientcashmovementModel.findAll({ where: { Isactive: true } })
+        const patientcashmovements = await db.patientcashmovementModel.findAll()
         res.status(200).json(patientcashmovements)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

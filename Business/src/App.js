@@ -18,6 +18,7 @@ require("./Middlewares/Databaseconnector")()
     const crossDomainEnabler = require('./Middlewares/Crossdomainenabler');
     const languageHelper = require('./Middlewares/LanguageHelper')
     const requestloghelper = require('./Middlewares/Requestloghelper')
+    const databaseconnectionchecker = require('./Middlewares/Databaseconnectionchecker')
     const whitelist = config.session.corsdomains
     const corsOptions = {
       origin: function (origin, callback) {
@@ -48,11 +49,12 @@ require("./Middlewares/Databaseconnector")()
     app.use(middleware.handle(i18next));
     app.use(languageHelper)
     app.use(crossDomainEnabler)
+    app.use(databaseconnectionchecker)
     app.use(authorizationChecker)
     app.use(requestloghelper)
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/permission-checkers/`, controllerFileSuffix: '-permissioncheckers.js', logRoutesList: false })
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/`, controllerFileSuffix: '-controller.js', logRoutesList: false })
-    
+
     errorHandlers.init(app)
 
     if (config.env === 'development' || config.env === 'production') {

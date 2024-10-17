@@ -134,7 +134,7 @@ export default function UsersEditcaseModal(props) {
                             if (isNeedEndDate && !validator.isISODate(data?.Occuredenddate)) {
                                 errors.push({ type: 'Error', code: t('Pages.Users.UsersEditcaseModal.Page.Header'), description: t('Pages.Users.UsersEditcaseModal.Messages.OccureddateendRequired') })
                             } else {
-                                if (nextmovements.length > 0) {
+                                if ((nextmovements || []).length > 0) {
                                     const nextmovement = nextmovements[0]
 
                                     if (new Date(data?.Occuredenddate).getTime() >= new Date(nextmovement?.Occureddate).getTime()) {

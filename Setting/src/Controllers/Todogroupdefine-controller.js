@@ -9,7 +9,7 @@ const uuid = require('uuid').v4
 
 async function GetTodogroupdefines(req, res, next) {
     try {
-        const todogroupdefines = await db.todogroupdefineModel.findAll({ where: { Isactive: true } })
+        const todogroupdefines = await db.todogroupdefineModel.findAll()
         for (const todogroupdefine of todogroupdefines) {
             todogroupdefine.Tododefineuuids = await db.todogroupdefinetododefineModel.findAll({
                 where: {

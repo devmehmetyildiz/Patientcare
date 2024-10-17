@@ -24,7 +24,7 @@ module.exports = async ({ type, service, role, message, pushurl }) => {
 
         const { Privilege, Message } = data
 
-        const users = await db.userModel.findAll({ where: { Isactive: true } })
+        const users = await db.userModel.findAll()
 
         for (const user of users) {
             let notificationSended = false

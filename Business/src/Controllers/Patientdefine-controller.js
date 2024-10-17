@@ -8,7 +8,7 @@ const uuid = require('uuid').v4
 
 async function GetPatientdefines(req, res, next) {
     try {
-        const patientdefines = await db.patientdefineModel.findAll({ where: { Isactive: true } })
+        const patientdefines = await db.patientdefineModel.findAll()
         res.status(200).json(patientdefines)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

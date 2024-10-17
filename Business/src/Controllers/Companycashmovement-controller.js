@@ -8,7 +8,7 @@ const uuid = require('uuid').v4
 
 async function GetCompanycashmovements(req, res, next) {
     try {
-        const companycashmovements = await db.companycashmovementModel.findAll({ where: { Isactive: true } })
+        const companycashmovements = await db.companycashmovementModel.findAll()
         res.status(200).json(companycashmovements)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

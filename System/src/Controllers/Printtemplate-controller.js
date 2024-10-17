@@ -8,7 +8,7 @@ const CreateNotification = require("../Utilities/CreateNotification")
 
 async function GetPrinttemplates(req, res, next) {
     try {
-        const printtemplates = await db.printtemplateModel.findAll({ where: { Isactive: true } })
+        const printtemplates = await db.printtemplateModel.findAll()
         res.status(200).json(printtemplates)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))

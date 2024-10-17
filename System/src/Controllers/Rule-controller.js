@@ -9,7 +9,7 @@ const { types } = require("../Constants/Defines")
 
 async function GetRules(req, res, next) {
     try {
-        const rules = await db.ruleModel.findAll({ where: { Isactive: true } })
+        const rules = await db.ruleModel.findAll()
         res.status(200).json(rules)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
