@@ -111,7 +111,7 @@ async function UpdateBed(req, res, next) {
         validationErrors.push(req.t('Beds.Error.UnsupportedBedID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Beds'), req.language))
     }
 
     const t = await db.sequelize.transaction();

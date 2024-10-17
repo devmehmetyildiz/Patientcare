@@ -1,12 +1,10 @@
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require("axios")
 
 async function GetWarehouses(req, res, next) {
     try {
@@ -22,22 +20,22 @@ async function GetWarehouse(req, res, next) {
 
     let validationErrors = []
     if (!req.params.warehouseId) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
+        validationErrors.push(req.t('Warehouses.Error.WarehouseIDRequired'))
     }
     if (!validator.isUUID(req.params.warehouseId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_WAREHOUSEID)
+        validationErrors.push(req.t('Warehouses.Error.UnsupportedWarehouseID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Warehouses'), req.language))
     }
 
     try {
         const warehouse = await db.warehouseModel.findOne({ where: { Uuid: req.params.warehouseId } });
         if (!warehouse) {
-            return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Warehouses.Error.NotFound'), req.t('Warehouses'), req.language))
         }
         if (!warehouse.Isactive) {
-            return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Warehouses.Error.NotActive'), req.t('Warehouses'), req.language))
         }
         res.status(200).json(warehouse)
     } catch (error) {
@@ -53,11 +51,11 @@ async function AddWarehouse(req, res, next) {
     } = req.body
 
     if (!Name || !validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Warehouses.Error.NameRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Warehouses'), req.language))
     }
     let warehouseuuid = uuid()
 
@@ -75,10 +73,13 @@ async function AddWarehouse(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Ambarlar',
+            service: req.t('Warehouses'),
             role: 'warehousenotification',
-            message: `${Name} ambarı  ${username} tarafından oluşturuldu.`,
-            pushurl: `/Warehouses`
+            message: {
+                tr: `${Name} Deposu ${username} Tarafından Eklendi.`,
+                en: `${Name} Warehouse Created By ${username}.`,
+            }[req.language],
+            pushurl: '/Warehouses'
         })
 
         await t.commit()
@@ -97,16 +98,16 @@ async function UpdateWarehouse(req, res, next) {
         Uuid
     } = req.body
     if (!Name || !validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Warehouses.Error.NameRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
+        validationErrors.push(req.t('Warehouses.Error.WarehouseIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
+        validationErrors.push(req.t('Warehouses.Error.UnsupportedWarehouseID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Warehouses'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -115,10 +116,10 @@ async function UpdateWarehouse(req, res, next) {
     try {
         const warehouse = await db.warehouseModel.findOne({ where: { Uuid: Uuid } })
         if (!warehouse) {
-            return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Warehouses.Error.NotFound'), req.t('Warehouses'), req.language))
         }
-        if (warehouse.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_ACTIVE], req.language))
+        if (!warehouse.Isactive) {
+            return next(createNotFoundError(req.t('Warehouses.Error.NotActive'), req.t('Warehouses'), req.language))
         }
 
         await db.warehouseModel.update({
@@ -129,10 +130,13 @@ async function UpdateWarehouse(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Ambarlar',
+            service: req.t('Warehouses'),
             role: 'warehousenotification',
-            message: `${Name} ambarı  ${username} tarafından Güncellendi.`,
-            pushurl: `/Warehouses`
+            message: {
+                tr: `${Name} Deposu ${username} Tarafından Güncellendi.`,
+                en: `${Name} Warehouse Updated By ${username}.`,
+            }[req.language],
+            pushurl: '/Warehouses'
         })
 
         await t.commit()
@@ -149,13 +153,13 @@ async function DeleteWarehouse(req, res, next) {
     const Uuid = req.params.warehouseId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
+        validationErrors.push(req.t('Warehouses.Error.WarehouseIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_WAREHOUSEID)
+        validationErrors.push(req.t('Warehouses.Error.UnsupportedWarehouseID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Warehouses'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -164,11 +168,12 @@ async function DeleteWarehouse(req, res, next) {
     try {
         const warehouse = await db.warehouseModel.findOne({ where: { Uuid: Uuid } })
         if (!warehouse) {
-            return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Warehouses.Error.NotFound'), req.t('Warehouses'), req.language))
         }
-        if (warehouse.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.WAREHOUSE_NOT_ACTIVE], req.language))
+        if (!warehouse.Isactive) {
+            return next(createNotFoundError(req.t('Warehouses.Error.NotActive'), req.t('Warehouses'), req.language))
         }
+
 
         await db.warehouseModel.update({
             Deleteduser: username,
@@ -179,10 +184,13 @@ async function DeleteWarehouse(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Ambarlar',
+            service: req.t('Warehouses'),
             role: 'warehousenotification',
-            message: `${warehouse?.Name} ambarı  ${username} tarafından silindi.`,
-            pushurl: `/Warehouses`
+            message: {
+                tr: `${warehouse?.Name} Deposu ${username} Tarafından Silindi.`,
+                en: `${warehouse?.Name} Warehouse Deleted By ${username}.`,
+            }[req.language],
+            pushurl: '/Warehouses'
         })
 
         await t.commit();
@@ -199,41 +207,4 @@ module.exports = {
     AddWarehouse,
     UpdateWarehouse,
     DeleteWarehouse,
-}
-
-const messages = {
-    ERROR: {
-        WAREHOUSE_NOT_FOUND: {
-            code: 'WAREHOUSE_NOT_FOUND', description: {
-                en: 'Warehouse not found',
-                tr: 'Ambar bulunamadı',
-            }
-        },
-        WAREHOUSE_NOT_ACTIVE: {
-            code: 'WAREHOUSE_NOT_ACTIVE', description: {
-                en: 'Warehouse not active',
-                tr: 'Ambar aktif değil',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        WAREHOUSEID_REQUIRED: {
-            code: 'WAREHOUSEID_REQUIRED', description: {
-                en: 'The warehouseid required',
-                tr: 'Bu işlem için warehouseid gerekli',
-            }
-        },
-        UNSUPPORTED_WAREHOUSEID: {
-            code: 'UNSUPPORTED_WAREHOUSEID', description: {
-                en: 'The warehouseid is unsupported',
-                tr: 'Geçersiz warehouseid',
-            }
-        },
-    }
 }

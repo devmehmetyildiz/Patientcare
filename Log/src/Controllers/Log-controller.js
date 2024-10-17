@@ -1,8 +1,4 @@
-const config = require("../Config")
-const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
 async function GetLogsByQuerry(req, res, next) {
@@ -73,12 +69,6 @@ async function GetLogs(req, res, next) {
 }
 
 async function AddLog(req, res, next) {
-
-    let validationErrors = []
-
-    if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
-    }
 
     let loguuid = uuid()
 

@@ -1,10 +1,8 @@
-const config = require("../Config")
 const { sequelizeErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const DoGet = require("../Utilities/DoGet")
 const { types, purchaseordermovementtypes } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
 const DELIVERY_TYPE_PATIENT = 0
@@ -31,22 +29,22 @@ async function GetPurchaseorder(req, res, next) {
 
     let validationErrors = []
     if (!req.params.purchaseorderId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.PurchaseorderIDRequired'))
     }
     if (!validator.isUUID(req.params.purchaseorderId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
+        validationErrors.push(req.t('Purchaseorders.Error.UnsupportedPurchaseorderID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
     }
 
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: req.params.purchaseorderId } });
         if (!purchaseorder) {
-            return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND])
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotFound'), req.t('Purchaseorders'), req.language))
         }
         if (!purchaseorder.Isactive) {
-            return createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE])
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotActive'), req.t('Purchaseorders'), req.language))
         }
         res.status(200).json(purchaseorder)
     } catch (error) {
@@ -64,14 +62,14 @@ async function AddPurchaseorder(req, res, next) {
     } = req.body
 
     if (!validator.isString(Company)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.CompanyRequired'))
     }
     if (!validator.isString(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.CaseRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
     }
 
     let purchaseorderuuid = uuid()
@@ -122,17 +120,17 @@ async function AddPurchaseorder(req, res, next) {
             } = stock
 
             if (!validator.isUUID(StockdefineID)) {
-                validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
+                validationErrors.push(req.t('Purchaseorders.Error.StockdefineRequired'))
             }
             if (!validator.isNumber(Type)) {
-                validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+                validationErrors.push(req.t('Purchaseorders.Error.TypeRequired'))
             }
             if (!validator.isNumber(Number(Amount))) {
-                validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED)
+                validationErrors.push(req.t('Purchaseorders.Error.AmountRequired'))
             }
 
             if (validationErrors.length > 0) {
-                return next(createValidationError(validationErrors, req.language))
+                return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
             }
 
             const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: StockdefineID } });
@@ -140,7 +138,7 @@ async function AddPurchaseorder(req, res, next) {
 
             if (stocktype?.Issktneed) {
                 if (!validator.isString(Skt)) {
-                    next(createValidationError([messages.VALIDATION_ERROR.SKT_REQUIRED], req.language))
+                    return next(createValidationError(req.t('Purchaseorders.Error.SktRequired'), req.t('Purchaseorders'), req.language))
                 }
             }
 
@@ -156,12 +154,12 @@ async function AddPurchaseorder(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Purchaseorders'),
             role: 'purchaseordernotification',
             message: {
-                tr: `${purchaseno} Numaralı, Satın Alma Talebi ${username} Tarafından Oluşturuldu.`,
-                en: `${purchaseno} Purhcaseorder, Created By ${username} `
-            },
+                tr: `${purchaseno} Satın Alma Talebi ${username} tarafından Oluşturuldu.`,
+                en: `${purchaseno} Pruchase Order Created by ${username}`
+            }[req.language],
             pushurl: '/Purchaseorders'
         })
 
@@ -185,20 +183,20 @@ async function UpdatePurchaseorder(req, res, next) {
     } = req.body
 
     if (!validator.isString(Company)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.CompanyRequired'))
     }
     if (!validator.isString(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.CaseRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
+        validationErrors.push(req.t('Purchaseorders.Error.PurchaseorderIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.UnsupportedPurchaseorderID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -207,10 +205,10 @@ async function UpdatePurchaseorder(req, res, next) {
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } });
         if (!purchaseorder) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotFound'), req.t('Purchaseorders'), req.language))
         }
         if (!purchaseorder.Isactive) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotActive'), req.t('Purchaseorders'), req.language))
         }
 
         await db.purchaseorderModel.update({
@@ -245,17 +243,17 @@ async function UpdatePurchaseorder(req, res, next) {
             } = stock
 
             if (!validator.isUUID(StockdefineID)) {
-                validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
+                validationErrors.push(req.t('Purchaseorders.Error.StockdefineRequired'))
             }
             if (!validator.isNumber(Type)) {
-                validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+                validationErrors.push(req.t('Purchaseorders.Error.TypeRequired'))
             }
             if (!validator.isNumber(Number(Amount))) {
-                validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED)
+                validationErrors.push(req.t('Purchaseorders.Error.AmountRequired'))
             }
 
             if (validationErrors.length > 0) {
-                return next(createValidationError(validationErrors, req.language))
+                return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
             }
 
             const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: StockdefineID } });
@@ -263,7 +261,7 @@ async function UpdatePurchaseorder(req, res, next) {
 
             if (stocktype?.Issktneed) {
                 if (!validator.isString(Skt)) {
-                    next(createValidationError([messages.VALIDATION_ERROR.SKT_REQUIRED], req.language))
+                    return next(createValidationError(req.t('Purchaseorders.Error.SktRequired'), req.t('Purchaseorders'), req.language))
                 }
             }
 
@@ -279,12 +277,12 @@ async function UpdatePurchaseorder(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Purchaseorders'),
             role: 'purchaseordernotification',
             message: {
-                tr: `${purchaseorder?.Purchaseno} Numaralı, Satın Alma Talebi ${username} Tarafından Güncellendi.`,
-                en: `${purchaseorder?.Purchaseno} Purhcaseorder, Updated By ${username} `
-            },
+                tr: `${purchaseorder?.Purchaseno} Satın Alma Talebi ${username} tarafından Güncelle.`,
+                en: `${purchaseorder?.Purchaseno} Pruchase Order Updated by ${username}`
+            }[req.language],
             pushurl: '/Purchaseorders'
         })
 
@@ -308,17 +306,17 @@ async function CheckPurchaseorder(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.PurchaseorderIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
+        validationErrors.push(req.t('Purchaseorders.Error.UnsupportedPurchaseorderID'))
     }
     if (!validator.isUUID(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.CaseRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -327,20 +325,21 @@ async function CheckPurchaseorder(req, res, next) {
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } })
         if (!purchaseorder) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotFound'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotActive'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Ischecked === true) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_CHECKED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.Checked'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Isapproved === true) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_APPROVED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.Approved'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Iscompleted === true) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.Completed'), req.t('Purchaseorders'), req.language))
         }
+
 
         const {
             Company,
@@ -353,29 +352,33 @@ async function CheckPurchaseorder(req, res, next) {
         } = purchaseorder
 
         if (!validator.isString(Company)) {
-            validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.CompanyRequired'))
         }
         if (!validator.isString(Delivereruser)) {
-            validationErrors.push(messages.VALIDATION_ERROR.DELIVERERUSER_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.DelivereruserRequired'))
         }
         if (!validator.isUUID(ReceiveruserID)) {
-            validationErrors.push(messages.VALIDATION_ERROR.RECEIVERUSERID_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.RevieveuserIDRequired'))
         }
         if (!validator.isNumber(Deliverytype)) {
-            validationErrors.push(messages.VALIDATION_ERROR.DELIVERYTYPE_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.DelivertypeRequired'))
         }
         if (!validator.isNumber(Price)) {
-            validationErrors.push(messages.VALIDATION_ERROR.PRICE_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.PriceRequired'))
         }
         if (Deliverytype === DELIVERY_TYPE_PATIENT) {
             if (!validator.isUUID(DeliverypatientID)) {
-                validationErrors.push(messages.VALIDATION_ERROR.DELIVERYPATIENTID_REQUIRED)
+                validationErrors.push(req.t('Purchaseorders.Error.DeliveryPatientIDRequired'))
             }
         }
         if (Deliverytype === DELIVERY_TYPE_WAREHOUSE) {
             if (!validator.isUUID(DeliverywarehouseID)) {
-                validationErrors.push(messages.VALIDATION_ERROR.DELIVERYWAREHOUSEID_REQUIRED)
+                validationErrors.push(req.t('Purchaseorders.Error.DeliveryWarehouseIDRequired'))
             }
+        }
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
         }
 
         await db.purchaseorderModel.update({
@@ -402,12 +405,12 @@ async function CheckPurchaseorder(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Purchaseorders'),
             role: 'purchaseordernotification',
             message: {
-                tr: `${purchaseorder?.Purchaseno} Numaralı, Satın Alma Talebi ${username} Tarafından Kontrol Edildi.`,
-                en: `${purchaseorder?.Purchaseno} Purhcaseorder, Checked By ${username} `
-            },
+                tr: `${purchaseorder?.Purchaseno} Satın Alma Talebi ${username} tarafından Kontrol Edildi.`,
+                en: `${purchaseorder?.Purchaseno} Pruchase Order Checked by ${username}`
+            }[req.language],
             pushurl: '/Purchaseorders'
         })
 
@@ -431,17 +434,17 @@ async function ApprovePurchaseorder(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.PurchaseorderIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
+        validationErrors.push(req.t('Purchaseorders.Error.UnsupportedPurchaseorderID'))
     }
     if (!validator.isUUID(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.CaseRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -450,19 +453,19 @@ async function ApprovePurchaseorder(req, res, next) {
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } })
         if (!purchaseorder) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotFound'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotActive'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Ischecked === false) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_CHECKED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotChecked'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Isapproved === true) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_APPROVED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.Approved'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Iscompleted === true) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.Completed'), req.t('Purchaseorders'), req.language))
         }
 
         const {
@@ -476,32 +479,33 @@ async function ApprovePurchaseorder(req, res, next) {
         } = purchaseorder
 
         if (!validator.isString(Company)) {
-            validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.CompanyRequired'))
         }
         if (!validator.isString(Delivereruser)) {
-            validationErrors.push(messages.VALIDATION_ERROR.DELIVERERUSER_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.DelivereruserRequired'))
         }
         if (!validator.isUUID(ReceiveruserID)) {
-            validationErrors.push(messages.VALIDATION_ERROR.RECEIVERUSERID_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.RevieveuserIDRequired'))
         }
         if (!validator.isNumber(Deliverytype)) {
-            validationErrors.push(messages.VALIDATION_ERROR.DELIVERYTYPE_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.DelivertypeRequired'))
         }
         if (!validator.isNumber(Price)) {
-            validationErrors.push(messages.VALIDATION_ERROR.PRICE_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.PriceRequired'))
         }
         if (Deliverytype === DELIVERY_TYPE_PATIENT) {
             if (!validator.isUUID(DeliverypatientID)) {
-                validationErrors.push(messages.VALIDATION_ERROR.DELIVERYPATIENTID_REQUIRED)
+                validationErrors.push(req.t('Purchaseorders.Error.DeliveryPatientIDRequired'))
             }
         }
         if (Deliverytype === DELIVERY_TYPE_WAREHOUSE) {
             if (!validator.isUUID(DeliverywarehouseID)) {
-                validationErrors.push(messages.VALIDATION_ERROR.DELIVERYWAREHOUSEID_REQUIRED)
+                validationErrors.push(req.t('Purchaseorders.Error.DeliveryWarehouseIDRequired'))
             }
         }
+
         if (validationErrors.length > 0) {
-            return next(createValidationError(validationErrors, req.language))
+            return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
         }
 
         await db.purchaseorderModel.update({
@@ -528,12 +532,12 @@ async function ApprovePurchaseorder(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Purchaseorders'),
             role: 'purchaseordernotification',
             message: {
-                tr: `${purchaseorder?.Purchaseno} Numaralı, Satın Alma Talebi ${username} Tarafından Onaylandı.`,
-                en: `${purchaseorder?.Purchaseno} Purhcaseorder, Approved By ${username} `
-            },
+                tr: `${purchaseorder?.Purchaseno} Satın Alma Talebi ${username} tarafından Onaylandı.`,
+                en: `${purchaseorder?.Purchaseno} Pruchase Order Approved by ${username}`
+            }[req.language],
             pushurl: '/Purchaseorders'
         })
 
@@ -557,17 +561,17 @@ async function CompletePurchaseorder(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.PurchaseorderIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
+        validationErrors.push(req.t('Purchaseorders.Error.UnsupportedPurchaseorderID'))
     }
     if (!validator.isUUID(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.CaseRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -575,19 +579,19 @@ async function CompletePurchaseorder(req, res, next) {
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } })
         if (!purchaseorder) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotFound'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotActive'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Ischecked === false) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_CHECKED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotChecked'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Isapproved === false) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_APPROVED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotApproved'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Iscompleted === true) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.Completed'), req.t('Purchaseorders'), req.language))
         }
 
         const {
@@ -601,37 +605,34 @@ async function CompletePurchaseorder(req, res, next) {
         } = purchaseorder
 
         if (!validator.isString(Company)) {
-            validationErrors.push(messages.VALIDATION_ERROR.COMPANY_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.CompanyRequired'))
         }
         if (!validator.isString(Delivereruser)) {
-            validationErrors.push(messages.VALIDATION_ERROR.DELIVERERUSER_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.DelivereruserRequired'))
         }
         if (!validator.isUUID(ReceiveruserID)) {
-            validationErrors.push(messages.VALIDATION_ERROR.RECEIVERUSERID_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.RevieveuserIDRequired'))
         }
-
         if (!validator.isNumber(Deliverytype)) {
-            validationErrors.push(messages.VALIDATION_ERROR.DELIVERYTYPE_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.DelivertypeRequired'))
         }
         if (!validator.isNumber(Price)) {
-            validationErrors.push(messages.VALIDATION_ERROR.PRICE_REQUIRED)
+            validationErrors.push(req.t('Purchaseorders.Error.PriceRequired'))
         }
         if (Deliverytype === DELIVERY_TYPE_PATIENT) {
             if (!validator.isUUID(DeliverypatientID)) {
-                validationErrors.push(messages.VALIDATION_ERROR.DELIVERYPATIENTID_REQUIRED)
+                validationErrors.push(req.t('Purchaseorders.Error.DeliveryPatientIDRequired'))
             }
         }
         if (Deliverytype === DELIVERY_TYPE_WAREHOUSE) {
             if (!validator.isUUID(DeliverywarehouseID)) {
-                validationErrors.push(messages.VALIDATION_ERROR.DELIVERYWAREHOUSEID_REQUIRED)
+                validationErrors.push(req.t('Purchaseorders.Error.DeliveryWarehouseIDRequired'))
             }
         }
+
         if (validationErrors.length > 0) {
-            return next(createValidationError(validationErrors, req.language))
+            return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
         }
-
-        const cases = await DoGet(config.services.Setting, `Cases`)
-
 
         await db.purchaseorderModel.update({
             ...purchaseorder,
@@ -705,12 +706,12 @@ async function CompletePurchaseorder(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Purchaseorders'),
             role: 'purchaseordernotification',
             message: {
-                tr: `${purchaseorder?.Purchaseno} Numaralı, Satın Alma Talebi ${username} Tarafından Completed.`,
-                en: `${purchaseorder?.Purchaseno} Purhcaseorder, Completed By ${username} `
-            },
+                tr: `${purchaseorder?.Purchaseno} Satın Alma Talebi ${username} tarafından Tamamlandı.`,
+                en: `${purchaseorder?.Purchaseno} Pruchase Order Completed by ${username}`
+            }[req.language],
             pushurl: '/Purchaseorders'
         })
 
@@ -734,17 +735,17 @@ async function CancelCheckPurchaseorder(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.PurchaseorderIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
+        validationErrors.push(req.t('Purchaseorders.Error.UnsupportedPurchaseorderID'))
     }
     if (!validator.isUUID(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.CaseRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -753,19 +754,19 @@ async function CancelCheckPurchaseorder(req, res, next) {
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } })
         if (!purchaseorder) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotFound'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotActive'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Ischecked === false) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_CHECKED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotChecked'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Isapproved === true) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_APPROVED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.Approved'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Iscompleted === true) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.Completed'), req.t('Purchaseorders'), req.language))
         }
 
         await db.purchaseorderModel.update({
@@ -792,12 +793,12 @@ async function CancelCheckPurchaseorder(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Purchaseorders'),
             role: 'purchaseordernotification',
             message: {
-                tr: `${purchaseorder?.Purchaseno} Numaralı, Satın Alma Talebi Kontrolü ${username} Tarafından İptal Edildi.`,
-                en: `${purchaseorder?.Purchaseno} Purhcaseorder Check, Cancelled By ${username} `
-            },
+                tr: `${purchaseorder?.Purchaseno} Satın Alma Talebi ${username} tarafından Kontrol İptali Yapıldı.`,
+                en: `${purchaseorder?.Purchaseno} Pruchase Order Cancel Checked by ${username}`
+            }[req.language],
             pushurl: '/Purchaseorders'
         })
 
@@ -822,17 +823,17 @@ async function CancelApprovePurchaseorder(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.PurchaseorderIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
+        validationErrors.push(req.t('Purchaseorders.Error.UnsupportedPurchaseorderID'))
     }
     if (!validator.isUUID(CaseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.CaseRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -841,19 +842,19 @@ async function CancelApprovePurchaseorder(req, res, next) {
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } })
         if (!purchaseorder) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotFound'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotActive'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Ischecked === false) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_CHECKED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotChecked'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Isapproved === false) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_APPROVED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotApproved'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Iscompleted === true) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_IS_COMPLETED], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.Completed'), req.t('Purchaseorders'), req.language))
         }
 
         await db.purchaseorderModel.update({
@@ -880,12 +881,12 @@ async function CancelApprovePurchaseorder(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Purchaseorders'),
             role: 'purchaseordernotification',
             message: {
-                tr: `${purchaseorder?.Purchaseno} Numaralı, Satın Alma Talebi Onayı ${username} Tarafından İptal Edildi.`,
-                en: `${purchaseorder?.Purchaseno} Purhcaseorder Approve, Cancelled By ${username} `
-            },
+                tr: `${purchaseorder?.Purchaseno} Satın Alma Talebi ${username} tarafından Onay İptali Yapıldı.`,
+                en: `${purchaseorder?.Purchaseno} Pruchase Order Cancel Approved by ${username}`
+            }[req.language],
             pushurl: '/Purchaseorders'
         })
 
@@ -904,13 +905,14 @@ async function DeletePurchaseorder(req, res, next) {
     const Uuid = req.params.purchaseorderId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PURCHASEORDERID_REQUIRED)
+        validationErrors.push(req.t('Purchaseorders.Error.PurchaseorderIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PURCHASEORDERID)
+        validationErrors.push(req.t('Purchaseorders.Error.UnsupportedPurchaseorderID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Purchaseorders'), req.language))
     }
 
     const username = req?.identity?.user?.Username || 'System'
@@ -918,10 +920,10 @@ async function DeletePurchaseorder(req, res, next) {
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } })
         if (!purchaseorder) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotFound'), req.t('Purchaseorders'), req.language))
         }
         if (purchaseorder.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PURCHASEORDER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Purchaseorders.Error.NotActive'), req.t('Purchaseorders'), req.language))
         }
 
         await db.purchaseorderModel.update({
@@ -944,12 +946,12 @@ async function DeletePurchaseorder(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Purchaseorders'),
             role: 'purchaseordernotification',
             message: {
-                tr: `${purchaseorder?.Purchaseno} Numaralı, Satın Alma Talebi ${username} Tarafından Silindi.`,
-                en: `${purchaseorder?.Purchaseno} Purhcaseorder, Deleted By ${username} `
-            },
+                tr: `${purchaseorder?.Purchaseno} Satın Alma Talebi ${username} tarafından Silindi.`,
+                en: `${purchaseorder?.Purchaseno} Pruchase Order Deleted by ${username}`
+            }[req.language],
             pushurl: '/Purchaseorders'
         })
 
@@ -1026,144 +1028,4 @@ module.exports = {
     CompletePurchaseorder,
     CancelCheckPurchaseorder,
     CancelApprovePurchaseorder
-}
-
-const messages = {
-    NOTIFICATION: {
-        PAGE_NAME: {
-            en: 'Purchase Orders',
-            tr: 'Satın Almalar',
-        },
-    },
-    ERROR: {
-        PURCHASEORDER_NOT_FOUND: {
-            code: 'PURCHASEORDER_NOT_FOUND', description: {
-                en: 'Purchase order not found',
-                tr: 'Satın alma bulunamadı',
-            }
-        },
-        PURCHASEORDER_NOT_ACTIVE: {
-            code: 'PURCHASEORDER_NOT_ACTIVE', description: {
-                en: 'Purchase order not active',
-                tr: 'Satın alma aktif değil',
-            }
-        },
-        PURCHASEORDER_NOT_CHECKED: {
-            code: 'PURCHASEORDER_NOT_CHECKED', description: {
-                en: 'Purchase order not checked',
-                tr: 'Satın alma aktif kontrol edilmemiş',
-            }
-        },
-        PURCHASEORDER_NOT_APPROVED: {
-            code: 'PURCHASEORDER_NOT_APPROVED', description: {
-                en: 'Purchase order not approved',
-                tr: 'Satın alma aktif onaylanmamış',
-            }
-        },
-        PURCHASEORDER_IS_COMPLETED: {
-            code: 'PURCHASEORDER_IS_COMPLETED', description: {
-                en: 'Purchase order is completed',
-                tr: 'Satın alma tamamlanmış',
-            }
-        },
-        PURCHASEORDER_IS_APPROVED: {
-            code: 'PURCHASEORDER_IS_APPROVED', description: {
-                en: 'Purchase order is approved',
-                tr: 'Satın alma onaylanmış',
-            }
-        },
-        PURCHASEORDER_IS_CHECKED: {
-            code: 'PURCHASEORDER_IS_CHECKED', description: {
-                en: 'Purchase order is checked',
-                tr: 'Satın alma kontrol edilmiş',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        DELIVERYWAREHOUSEID_REQUIRED: {
-            code: 'DELIVERYWAREHOUSEID_REQUIRED', description: {
-                en: 'The Delivery warehouse ID required',
-                tr: 'Bu işlem için Teslim Edilecek Ambar gerekli',
-            }
-        },
-        DELIVERYPATIENTID_REQUIRED: {
-            code: 'DELIVERYPATIENTID_REQUIRED', description: {
-                en: 'The Delivery patient ID required',
-                tr: 'Bu işlem için Teslim Edilecek Hasta gerekli',
-            }
-        },
-        DELIVERERUSER_REQUIRED: {
-            code: 'DELIVERERUSER_REQUIRED', description: {
-                en: 'The Deliverer user required',
-                tr: 'Bu işlem için Teslim Eden Personel gerekli',
-            }
-        },
-        DELIVERYTYPE_REQUIRED: {
-            code: 'DELIVERYTYPE_REQUIRED', description: {
-                en: 'The Delivery type required',
-                tr: 'Bu işlem için Teslim Türü gerekli',
-            }
-        },
-        RECEIVERUSERID_REQUIRED: {
-            code: 'RECEIVERUSERID_REQUIRED', description: {
-                en: 'The Receiver user ID required',
-                tr: 'Bu işlem için Teslim Alan Personel gerekli',
-            }
-        },
-        COMPANY_REQUIRED: {
-            code: 'COMPANY_REQUIRED', description: {
-                en: 'The company required',
-                tr: 'Bu işlem için firma gerekli',
-            }
-        },
-        AMOUNT_REQUIRED: {
-            code: 'AMOUNT_REQUIRED', description: {
-                en: 'The amount required',
-                tr: 'Bu işlem için miktar gerekli',
-            }
-        },
-        PRICE_REQUIRED: {
-            code: 'PRICE_REQUIRED', description: {
-                en: 'The price required',
-                tr: 'Bu işlem için ücret gerekli',
-            }
-        },
-        CASEID_REQUIRED: {
-            code: 'CASEID_REQUIRED', description: {
-                en: 'The case id required',
-                tr: 'Bu işlem için durum gerekli',
-            }
-        },
-        STOCKDEFINEID_REQUIRED: {
-            code: 'STOCKDEFINEID_REQUIRED', description: {
-                en: 'The stock define id required',
-                tr: 'Bu işlem için stok tanımı gerekli',
-            }
-        },
-        SKT_REQUIRED: {
-            code: 'SKT_REQUIRED', description: {
-                en: 'The skt required',
-                tr: 'Bu işlem için skt gerekli',
-            }
-        },
-        TYPE_REQUIRED: {
-            code: 'TYPE_REQUIRED', description: {
-                en: 'The type required',
-                tr: 'Bu işlem için stok türü gerekli',
-            }
-        },
-        PURCHASEORDERID_REQUIRED: {
-            code: 'PURCHASEORDERID_REQUIRED', description: {
-                en: 'The purchaseorderid required',
-                tr: 'Bu işlem için satın alma id gerekli',
-            }
-        },
-        UNSUPPORTED_PURCHASEORDERID: {
-            code: 'UNSUPPORTED_PURCHASEORDERID', description: {
-                en: 'The purchaseorderid is unsupported',
-                tr: 'geçersiz satın alma id si',
-            }
-        },
-    }
-
 }

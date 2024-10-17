@@ -1,12 +1,10 @@
 const CreateNotification = require("../Utilities/CreateNotification")
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher, } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetEquipments(req, res, next) {
     try {
@@ -29,22 +27,22 @@ async function GetEquipment(req, res, next) {
 
     let validationErrors = []
     if (!req.params.equipmentId) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+        validationErrors.push(req.t('Equipments.Error.EquipmentIDRequired'))
     }
     if (!validator.isUUID(req.params.equipmentId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_EQUIPMENTID)
+        validationErrors.push(req.t('Equipments.Error.UnsupportedEquipmentID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Equipments'), req.language))
     }
 
     try {
         const equipment = await db.equipmentModel.findOne({ where: { Uuid: req.params.equipmentId } });
         if (!equipment) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Equipments.Error.NotFound'), req.t('Equipments'), req.language))
         }
         if (!equipment.Isactive) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Equipments.Error.NotActive'), req.t('Equipments'), req.language))
         }
         equipment.Equipmentproperties = await db.equipmentpropertyModel.findAll({
             where: {
@@ -69,17 +67,17 @@ async function AddEquipment(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Equipments.Error.NameRequired'))
     }
     if (!validator.isUUID(EquipmentgroupID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTGROUPID_REQUIRED)
+        validationErrors.push(req.t('Equipments.Error.EquipmentgroupRequired'))
     }
     if (!validator.isUUID(UserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Equipments.Error.UserIDRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Equipments'), req.language))
     }
 
     let equipmentuuid = uuid()
@@ -105,12 +103,12 @@ async function AddEquipment(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Equipments'),
             role: 'equipmentnotification',
             message: {
-                tr: `${Name} ekipmanı ${username} tarafından Oluşturuldu.`,
-                en: `${Name} equipment Created By ${username}.`,
-            },
+                tr: `${Name} Eqipmanı  ${username} tarafından Oluşturuldu.`,
+                en: `${Name} Equipment  Created by ${username}`
+            }[req.language],
             pushurl: '/Equipments'
         })
 
@@ -134,23 +132,23 @@ async function UpdateEquipment(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Equipments.Error.NameRequired'))
     }
     if (!validator.isUUID(EquipmentgroupID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTGROUPID_REQUIRED)
+        validationErrors.push(req.t('Equipments.Error.EquipmentgroupRequired'))
     }
     if (!validator.isUUID(UserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Equipments.Error.UserIDRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+        validationErrors.push(req.t('Equipments.Error.EquipmentIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_EQUIPMENTID)
+        validationErrors.push(req.t('Equipments.Error.UnsupportedEquipmentID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Equipments'), req.language))
     }
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
@@ -158,10 +156,10 @@ async function UpdateEquipment(req, res, next) {
     try {
         const equipment = await db.equipmentModel.findOne({ where: { Uuid: Uuid } })
         if (!equipment) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Equipments.Error.NotFound'), req.t('Equipments'), req.language))
         }
-        if (equipment.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_ACTIVE], req.language))
+        if (!equipment.Isactive) {
+            return next(createNotFoundError(req.t('Equipments.Error.NotActive'), req.t('Equipments'), req.language))
         }
 
         await db.equipmentModel.update({
@@ -179,14 +177,15 @@ async function UpdateEquipment(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Equipments'),
             role: 'equipmentnotification',
             message: {
-                tr: `${Name} ekipmanı ${username} tarafından Güncellendi.`,
-                en: `${Name} equipment Updated By ${username}.`,
-            },
+                tr: `${Name} Eqipmanı ${username} tarafından Güncellendi.`,
+                en: `${Name} Equipment Updated by ${username}`
+            }[req.language],
             pushurl: '/Equipments'
         })
+
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -201,13 +200,14 @@ async function DeleteEquipment(req, res, next) {
     const Uuid = req.params.equipmentId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+        validationErrors.push(req.t('Equipments.Error.EquipmentIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_EQUIPMENTID)
+        validationErrors.push(req.t('Equipments.Error.UnsupportedEquipmentID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Equipments'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -216,10 +216,10 @@ async function DeleteEquipment(req, res, next) {
     try {
         const equipment = await db.equipmentModel.findOne({ where: { Uuid: Uuid } })
         if (!equipment) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Equipments.Error.NotFound'), req.t('Equipments'), req.language))
         }
-        if (equipment.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENT_NOT_ACTIVE], req.language))
+        if (!equipment.Isactive) {
+            return next(createNotFoundError(req.t('Equipments.Error.NotActive'), req.t('Equipments'), req.language))
         }
 
         await db.equipmentModel.update({
@@ -230,14 +230,15 @@ async function DeleteEquipment(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Equipments'),
             role: 'equipmentnotification',
             message: {
-                tr: `${equipment?.Name} ekipmanı ${username} tarafından Silindi.`,
-                en: `${equipment?.Name} equipment Deleted By ${username}.`,
-            },
+                tr: `${equipment?.Name} Ekipmanı ${username} tarafından Silindi.`,
+                en: `${equipment?.Name} Equipment Deleted by ${username}`
+            }[req.language],
             pushurl: '/Equipments'
         })
+
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -252,77 +253,4 @@ module.exports = {
     AddEquipment,
     UpdateEquipment,
     DeleteEquipment,
-}
-
-const messages = {
-    NOTIFICATION: {
-        PAGE_NAME: {
-            en: 'Equipments',
-            tr: 'Ekipmanlar',
-        },
-    },
-    ERROR: {
-        EQUIPMENTGROUP_NOT_FOUND: {
-            code: 'EQUIPMENTGROUP_NOT_FOUND', description: {
-                en: 'Equipment Group not found',
-                tr: 'Envarter Grubu bulunamadı',
-            }
-        },
-        EQUIPMENT_NOT_FOUND: {
-            code: 'EQUIPMENT_NOT_FOUND', description: {
-                en: 'Equipment not found',
-                tr: 'Envarter bulunamadı',
-            }
-        },
-        EQUIPMENTGROUP_NOT_ACTIVE: {
-            code: 'EQUIPMENTGROUP_NOT_ACTIVE', description: {
-                en: 'Equipment Group not active',
-                tr: 'Envarter Grubu bulunamadı',
-            }
-        },
-        EQUIPMENT_NOT_ACTIVE: {
-            code: 'EQUIPMENT_NOT_ACTIVE', description: {
-                en: 'Equipment not active',
-                tr: 'Envarter bulunamadı',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        EQUIPMENTGROUPID_REQUIRED: {
-            code: 'EQUIPMENTGROUPID_REQUIRED', description: {
-                en: 'The equipment group id required',
-                tr: 'Bu işlem için equipment group id gerekli',
-            }
-        },
-        EQUIPMENTID_REQUIRED: {
-            code: 'EQUIPMENTID_REQUIRED', description: {
-                en: 'The equipment id required',
-                tr: 'Bu işlem için equipment id gerekli',
-            }
-        },
-        USERID_REQUIRED: {
-            code: 'USERID_REQUIRED', description: {
-                en: 'The userid required',
-                tr: 'Bu işlem için userid gerekli',
-            }
-        },
-        PERSONELNAME_REQUIRED: {
-            code: 'PERSONELNAME_REQUIRED', description: {
-                en: 'The personel name required',
-                tr: 'Bu işlem için satın alma görevli adı gerekli',
-            }
-        },
-        UNSUPPORTED_EQUIPMENTID: {
-            code: 'UNSUPPORTED_EQUIPMENTID', description: {
-                en: 'The equipment id is unsupported',
-                tr: 'Geçersiz equipment id',
-            }
-        },
-    }
 }

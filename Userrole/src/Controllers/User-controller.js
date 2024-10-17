@@ -1,4 +1,4 @@
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidationError
 const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
@@ -666,8 +666,8 @@ async function GetUsersforshift(req, res, next) {
     }
 }
 
-function GetUserByEmail(next, Email, language) {
-    return new Promise((resolve, reject) => {
+function GetUserByEmail(next, Email) {
+    return new Promise((resolve) => {
         db.userModel.findOne({ where: { Email: Email, Isactive: true } })
             .then(user => {
                 resolve(user)
@@ -677,8 +677,8 @@ function GetUserByEmail(next, Email, language) {
     })
 }
 
-function GetUserByUsername(next, Username, language) {
-    return new Promise((resolve, reject) => {
+function GetUserByUsername(next, Username) {
+    return new Promise((resolve) => {
         db.userModel.findOne({ where: { Username: Username, Isactive: true } })
             .then(user => {
                 resolve(user)
@@ -688,6 +688,18 @@ function GetUserByUsername(next, Username, language) {
     })
 }
 
+function Checkdatelowerthanother(startDate, endDate) {
+
+    const StartDate = new Date(startDate)
+    const EndDate = new Date(endDate)
+
+    if (StartDate.getTime() >= EndDate.getTime()) {
+        return false
+    } else {
+        return true
+    }
+
+}
 
 
 module.exports = {

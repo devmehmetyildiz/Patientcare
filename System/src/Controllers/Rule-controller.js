@@ -1,7 +1,6 @@
-const config = require("../Config")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const jobs = require('../Jobs')
@@ -21,13 +20,13 @@ async function GetRulelogs(req, res, next) {
 
     let validationErrors = []
     if (!req.params.ruleId) {
-        validationErrors.push(messages.VALIDATION_ERROR.RULEID_REQUIRED)
+        validationErrors.push(req.t('Rules.Error.RuleIDRequired'))
     }
     if (!validator.isUUID(req.params.ruleId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_RULEID)
+        validationErrors.push(req.t('Rules.Error.UnsupportedRuleID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Rules'), req.language))
     }
 
     try {
@@ -36,7 +35,7 @@ async function GetRulelogs(req, res, next) {
                 ['Id', 'DESC']],
         });
         if (!rulelogs) {
-            return next(createNotfounderror([messages.ERROR.RULELOG_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Rules.Error.RulelogNotFound'), req.t('Rules'), req.language))
         }
         res.status(200).json(rulelogs)
     } catch (error) {
@@ -48,13 +47,13 @@ async function ClearRulelogs(req, res, next) {
 
     let validationErrors = []
     if (!req.params.ruleId) {
-        validationErrors.push(messages.VALIDATION_ERROR.RULEID_REQUIRED)
+        validationErrors.push(req.t('Rules.Error.RuleIDRequired'))
     }
     if (!validator.isUUID(req.params.ruleId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_RULEID)
+        validationErrors.push(req.t('Rules.Error.UnsupportedRuleID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Rules'), req.language))
     }
     const t = await db.sequelize.transaction();
     try {
@@ -71,22 +70,22 @@ async function GetRule(req, res, next) {
 
     let validationErrors = []
     if (!req.params.ruleId) {
-        validationErrors.push(messages.VALIDATION_ERROR.RULEID_REQUIRED)
+        validationErrors.push(req.t('Rules.Error.RuleIDRequired'))
     }
     if (!validator.isUUID(req.params.ruleId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_RULEID)
+        validationErrors.push(req.t('Rules.Error.UnsupportedRuleID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Rules'), req.language))
     }
 
     try {
         const rule = await db.ruleModel.findOne({ where: { Uuid: req.params.ruleId } });
         if (!rule) {
-            return next(createNotfounderror([messages.ERROR.RULE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Rules.Error.NotFound'), req.t('Rules'), req.language))
         }
         if (!rule.Isactive) {
-            return next(createNotfounderror([messages.ERROR.RULE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Rules.Error.NotActive'), req.t('Rules'), req.language))
         }
         res.status(200).json(rule)
     } catch (error) {
@@ -103,14 +102,14 @@ async function AddRule(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Rules.Error.NameRequired'))
     }
     if (!validator.isString(Rule)) {
-        validationErrors.push(messages.VALIDATION_ERROR.RULE_REQUIRED)
+        validationErrors.push(req.t('Rules.Error.RuleRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Rules'), req.language))
     }
 
     let ruleuuid = uuid()
@@ -129,9 +128,12 @@ async function AddRule(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Kurallar',
+            service: req.t('Rules'),
             role: 'rulenotification',
-            message: `${Name} kuralı ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${Name} Kural ${username} tarafından Oluşturuldu.`,
+                en: `${Name} Rule Created by ${username}`
+            }[req.language],
             pushurl: '/Rules'
         })
 
@@ -156,20 +158,20 @@ async function UpdateRule(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Rules.Error.NameRequired'))
     }
     if (!validator.isString(Rule)) {
-        validationErrors.push(messages.VALIDATION_ERROR.RULE_REQUIRED)
-    }
-    if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.RULEID_REQUIRED)
+        validationErrors.push(req.t('Rules.Error.RuleRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_RULEID)
+        validationErrors.push(req.t('Rules.Error.RuleIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Rules.Error.UnsupportedRuleID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Rules'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -178,10 +180,10 @@ async function UpdateRule(req, res, next) {
     try {
         const rule = await db.ruleModel.findOne({ where: { Uuid: Uuid } })
         if (!rule) {
-            return next(createNotfounderror([messages.ERROR.RULE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Rules.Error.NotFound'), req.t('Rules'), req.language))
         }
         if (!rule.Isactive) {
-            return next(createNotfounderror([messages.ERROR.RULE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Rules.Error.NotActive'), req.t('Rules'), req.language))
         }
         await jobs.stopChildProcess(Uuid)
 
@@ -193,9 +195,12 @@ async function UpdateRule(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Kurallar',
+            service: req.t('Rules'),
             role: 'rulenotification',
-            message: `${Name} kuralı ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Name} Kural ${username} tarafından Güncellendi.`,
+                en: `${Name} Rule Updated by ${username}`
+            }[req.language],
             pushurl: '/Rules'
         })
 
@@ -215,13 +220,14 @@ async function DeleteRule(req, res, next) {
     const Uuid = req.params.ruleId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.RULEID_REQUIRED)
+        validationErrors.push(req.t('Rules.Error.RuleIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_RULEID)
+        validationErrors.push(req.t('Rules.Error.UnsupportedRuleID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Rules'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -230,10 +236,10 @@ async function DeleteRule(req, res, next) {
     try {
         const rule = await db.ruleModel.findOne({ where: { Uuid: Uuid } })
         if (!rule) {
-            return next(createNotfounderror([messages.ERROR.RULE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Rules.Error.NotFound'), req.t('Rules'), req.language))
         }
         if (!rule.Isactive) {
-            return next(createNotfounderror([messages.ERROR.RULE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Rules.Error.NotActive'), req.t('Rules'), req.language))
         }
 
         await db.ruleModel.update({
@@ -244,9 +250,12 @@ async function DeleteRule(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Kurallar',
+            service: req.t('Rules'),
             role: 'rulenotification',
-            message: `${rule?.Name} kuralı ${username} tarafından Silindi.`,
+            message: {
+                tr: `${rule?.Name} Kural ${username} tarafından Silindi.`,
+                en: `${rule?.Name} Rule Deleted by ${username}`
+            }[req.language],
             pushurl: '/Rules'
         })
 
@@ -265,13 +274,14 @@ async function StopRule(req, res, next) {
     const Uuid = req.params.ruleId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.RULEID_REQUIRED)
+        validationErrors.push(req.t('Rules.Error.RuleIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_RULEID)
+        validationErrors.push(req.t('Rules.Error.UnsupportedRuleID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Rules'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -280,10 +290,10 @@ async function StopRule(req, res, next) {
     try {
         const rule = await db.ruleModel.findOne({ where: { Uuid: Uuid } })
         if (!rule) {
-            return next(createNotfounderror([messages.ERROR.RULE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Rules.Error.NotFound'), req.t('Rules'), req.language))
         }
         if (!rule.Isactive) {
-            return next(createNotfounderror([messages.ERROR.RULE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Rules.Error.NotActive'), req.t('Rules'), req.language))
         }
 
         await db.ruleModel.update({
@@ -295,11 +305,15 @@ async function StopRule(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Kurallar',
+            service: req.t('Rules'),
             role: 'rulenotification',
-            message: `${rule?.Name} kuralı ${username} tarafından Durduruldu.`,
+            message: {
+                tr: `${rule?.Name} Kural ${username} tarafından Durduruldu.`,
+                en: `${rule?.Name} Rule Stopped by ${username}`
+            }[req.language],
             pushurl: '/Rules'
         })
+
         await t.commit();
         await jobs.stopChildProcess(Uuid)
     } catch (error) {
@@ -320,52 +334,3 @@ module.exports = {
     StopRule
 }
 
-const messages = {
-    ERROR: {
-        RULE_NOT_FOUND: {
-            code: 'RULE_NOT_FOUND', description: {
-                en: 'The rule not found',
-                tr: 'Kural bulunamadı',
-            }
-        },
-        RULE_NOT_ACTIVE: {
-            code: 'RULE_NOT_ACTIVE', description: {
-                en: 'The rule not active',
-                tr: 'Kural aktif değil',
-            }
-        },
-        RULELOG_NOT_FOUND: {
-            code: 'RULELOG_NOT_FOUND', description: {
-                en: 'The rule log not found',
-                tr: 'Kural bulunamadı',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        RULE_REQUIRED: {
-            code: 'RULE_REQUIRED', description: {
-                en: 'The rule required',
-                tr: 'Bu işlem için kural gerekli',
-            }
-        },
-        RULEID_REQUIRED: {
-            code: 'RULEID_REQUIRED', description: {
-                en: 'The ruleId required',
-                tr: 'Bu işlem için ruleId gerekli',
-            }
-        },
-        UNSUPPORTED_RULEID: {
-            code: 'UNSUPPORTED_RULEID', description: {
-                en: 'unsupported ruleId',
-                tr: 'Tanımsız ruleId',
-            }
-        },
-    }
-
-}

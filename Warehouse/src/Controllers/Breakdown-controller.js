@@ -1,13 +1,10 @@
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const config = require("../Config")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
-const { formatDate } = require("../Utilities/Convert")
 
 async function GetBreakdowns(req, res, next) {
     try {
@@ -26,22 +23,22 @@ async function GetBreakdown(req, res, next) {
 
     let validationErrors = []
     if (!req.params.breakdownId) {
-        validationErrors.push(messages.VALIDATION_ERROR.BREAKDOWNID_REQUIRED)
+        validationErrors.push(req.t('Breakdowns.Error.BreakdownIDRequired'))
     }
     if (!validator.isUUID(req.params.breakdownId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BREAKDOWNID)
+        validationErrors.push(req.t('Breakdowns.Error.UnsupportedBreakdownID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Breakdowns'), req.language))
     }
 
     try {
         const breakdown = await db.breakdownModel.findOne({ where: { Uuid: req.params.breakdownId } });
         if (!breakdown) {
-            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Breakdowns.Error.NotFound'), req.t('Breakdowns'), req.language))
         }
         if (!breakdown.Isactive) {
-            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Breakdowns.Error.NotActive'), req.t('Breakdowns'), req.language))
         }
         res.status(200).json(breakdown)
     } catch (error) {
@@ -58,14 +55,14 @@ async function AddBreakdown(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(EquipmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+        validationErrors.push(req.t('Breakdowns.Error.EquipmentIDRequired'))
     }
     if (!validator.isUUID(ResponsibleuserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Breakdowns.Error.ResponsibleuserIDRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Breakdowns'), req.language))
     }
 
     let breakdownuuid = uuid()
@@ -89,14 +86,15 @@ async function AddBreakdown(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Breakdowns'),
             role: 'breakdownnotification',
             message: {
-                tr: `${equipment?.Name} Eqipmanı İçin Arıza Talebi ${username} Tarafından Oluşturuldu.`,
-                en: `${equipment?.Name} Equipment Name, Breakdown Request Created By ${username} `
-            },
+                tr: `${equipment?.Name} Eqipmanı için Arıza Talebi ${username} tarafından Oluşturuldu.`,
+                en: `${equipment?.Name} Equipment Breakdown Request Created by ${username}`
+            }[req.language],
             pushurl: '/Breakdowns'
         })
+
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -117,20 +115,20 @@ async function UpdateBreakdown(req, res, next) {
 
 
     if (!validator.isUUID(EquipmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+        validationErrors.push(req.t('Breakdowns.Error.EquipmentIDRequired'))
     }
     if (!validator.isUUID(ResponsibleuserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Breakdowns.Error.ResponsibleuserIDRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.BREAKDOWNID_REQUIRED)
+        validationErrors.push(req.t('Breakdowns.Error.BreakdownIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BREAKDOWNID)
+        validationErrors.push(req.t('Breakdowns.Error.UnsupportedBreakdownID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Breakdowns'), req.language))
     }
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
@@ -138,10 +136,10 @@ async function UpdateBreakdown(req, res, next) {
     try {
         const breakdown = await db.breakdownModel.findOne({ where: { Uuid: Uuid } })
         if (!breakdown) {
-            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Breakdowns.Error.NotFound'), req.t('Breakdowns'), req.language))
         }
-        if (breakdown.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
+        if (!breakdown.Isactive) {
+            return next(createNotFoundError(req.t('Breakdowns.Error.NotActive'), req.t('Breakdowns'), req.language))
         }
 
         await db.breakdownModel.update({
@@ -154,14 +152,15 @@ async function UpdateBreakdown(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Breakdowns'),
             role: 'breakdownnotification',
             message: {
-                tr: `${formatDate(breakdown.Starttime)} Başlangıç Tarihli, ${equipment?.Name} Eqipmanı İçin Açılan Arıza Talebi ${username} Tarafından Güncellendi.`,
-                en: `${formatDate(breakdown.Starttime)} Start Date, ${equipment.Name} Equipment Name, Breakdown Request Updated By ${username} `
-            },
+                tr: `${equipment?.Name} Eqipmanı için Arıza Talebi ${username} tarafından Güncellendi.`,
+                en: `${equipment?.Name} Equipment Breakdown Request Updated by ${username}`
+            }[req.language],
             pushurl: '/Breakdowns'
         })
+
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -180,25 +179,26 @@ async function CompleteBreakdown(req, res, next) {
 
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.BREAKDOWNID_REQUIRED)
+        validationErrors.push(req.t('Breakdowns.Error.BreakdownIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BREAKDOWNID)
+        validationErrors.push(req.t('Breakdowns.Error.UnsupportedBreakdownID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Breakdowns'), req.language))
     }
+
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
 
     try {
         const breakdown = await db.breakdownModel.findOne({ where: { Uuid: Uuid } })
         if (!breakdown) {
-            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Breakdowns.Error.NotFound'), req.t('Breakdowns'), req.language))
         }
-        if (breakdown.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
+        if (!breakdown.Isactive) {
+            return next(createNotFoundError(req.t('Breakdowns.Error.NotActive'), req.t('Breakdowns'), req.language))
         }
 
         await db.breakdownModel.update({
@@ -213,12 +213,12 @@ async function CompleteBreakdown(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Breakdowns'),
             role: 'breakdownnotification',
             message: {
-                tr: `${formatDate(breakdown.Starttime)} Başlangıç Tarihli, ${equipment?.Name} Eqipmanı İçin Açılan Arıza Talebi ${username} Tarafından Tamamlandı.`,
-                en: `${formatDate(breakdown.Starttime)} Start Date, ${equipment.Name} Equipment Name, Breakdown Request Completed By ${username} `
-            },
+                tr: `${equipment?.Name} Eqipmanı için Arıza Talebi ${username} tarafından Tamamlandı.`,
+                en: `${equipment?.Name} Equipment Breakdown Request Completed by ${username}`
+            }[req.language],
             pushurl: '/Breakdowns'
         })
 
@@ -236,13 +236,14 @@ async function DeleteBreakdown(req, res, next) {
     const Uuid = req.params.breakdownId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.BREAKDOWNID_REQUIRED)
+        validationErrors.push(req.t('Breakdowns.Error.BreakdownIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_BREAKDOWNID)
+        validationErrors.push(req.t('Breakdowns.Error.UnsupportedBreakdownID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Breakdowns'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -251,10 +252,10 @@ async function DeleteBreakdown(req, res, next) {
     try {
         const breakdown = await db.breakdownModel.findOne({ where: { Uuid: Uuid } })
         if (!breakdown) {
-            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Breakdowns.Error.NotFound'), req.t('Breakdowns'), req.language))
         }
-        if (breakdown.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.BREAKDOWN_NOT_ACTIVE], req.language))
+        if (!breakdown.Isactive) {
+            return next(createNotFoundError(req.t('Breakdowns.Error.NotActive'), req.t('Breakdowns'), req.language))
         }
 
         await db.breakdownModel.update({
@@ -267,12 +268,12 @@ async function DeleteBreakdown(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Breakdowns'),
             role: 'breakdownnotification',
             message: {
-                tr: `${formatDate(breakdown.Starttime)} Başlangıç Tarihli, ${equipment?.Name} Eqipmanı İçin Açılan Arıza Talebi ${username} Tarafından Silindi.`,
-                en: `${formatDate(breakdown.Starttime)} Start Date, ${equipment.Name} Equipment Name, Breakdown Request Deleted By ${username} `
-            },
+                tr: `${equipment?.Name} Eqipmanı için Arıza Talebi ${username} tarafından Silindi.`,
+                en: `${equipment?.Name} Equipment Breakdown Request Deleted by ${username}`
+            }[req.language],
             pushurl: '/Breakdowns'
         })
 
@@ -291,60 +292,4 @@ module.exports = {
     UpdateBreakdown,
     DeleteBreakdown,
     CompleteBreakdown
-}
-
-
-const messages = {
-    NOTIFICATION: {
-        PAGE_NAME: {
-            en: 'Breakdowns',
-            tr: 'Arıza Talepleri',
-        },
-    },
-    ERROR: {
-        BREAKDOWN_NOT_FOUND: {
-            code: 'BREAKDOWN_NOT_FOUND', description: {
-                en: 'breakdown not found',
-                tr: 'Arıza talebi bulunamadı',
-            }
-        },
-        BREAKDOWN_NOT_ACTIVE: {
-            code: 'BREAKDOWN_NOT_ACTIVE', description: {
-                en: 'breakdown not active',
-                tr: 'Arıza talebi aktif değil',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        BREAKDOWNID_REQUIRED: {
-            code: 'BREAKDOWNID_REQUIRED', description: {
-                en: 'The breakdownid required',
-                tr: 'Bu işlem için breakdownid gerekli',
-            }
-        },
-        UNSUPPORTED_BREAKDOWNID: {
-            code: 'UNSUPPORTED_BREAKDOWNID', description: {
-                en: 'The breakdownid is unsupported',
-                tr: 'geçersiz breakdownid',
-            }
-        },
-        EQUIPMENTID_REQUIRED: {
-            code: 'EQUIPMENTID_REQUIRED', description: {
-                en: 'The equipment id required',
-                tr: 'Bu işlem için equipment id gerekli',
-            }
-        },
-        USERID_REQUIRED: {
-            code: 'USERID_REQUIRED', description: {
-                en: 'The userid required',
-                tr: 'Bu işlem için userid gerekli',
-            }
-        },
-    }
 }

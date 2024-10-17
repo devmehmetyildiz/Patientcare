@@ -1,0 +1,11 @@
+{
+    "Files": "Dosyalar",
+    "Files.Error.NotFound": "Dosya Bulunamadı",
+    "Files.Error.NotActive": "Dosya Aktif Değil",
+    "Files.Error.ParentIDRequired": "Üst ID Gerekli",
+    "Files.Error.UnsupportedParentID": "Tanımsız Üst ID",
+    "Files.Error.FileIDRequired": "Dosya ID Gerekli",
+    "Files.Error.UnsupportedFileID": "Tanımsız Dosy ID",
+    "Files.Error.Downloaderror": "Dosya İndirme Başarısız",
+    "Files.Error.Uploaderror": "Dosya Yükleme Başarısız"
+}

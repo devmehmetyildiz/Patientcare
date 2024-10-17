@@ -72,11 +72,11 @@ async function GetRole(req, res, next) {
     }
 }
 
-async function Getprivileges(req, res, next) {
+async function Getprivileges(req, res) {
     res.status(200).json(Priveleges)
 }
 
-async function Getprivilegegroups(req, res, next) {
+async function Getprivilegegroups(req, res) {
     let groups = []
     Priveleges.forEach(element => {
         let foundedValue = groups.find(u => u.en === element.group.en && u.tr === element.group.tr)

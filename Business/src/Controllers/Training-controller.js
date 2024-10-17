@@ -1,14 +1,13 @@
 const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/TrainingMessages")
 const { trainingtypes } = require("../Constants/Trainingtypes")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const DoGet = require("../Utilities/DoGet")
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetTrainings(req, res, next) {
     try {
@@ -34,13 +33,13 @@ async function GetTraining(req, res, next) {
 
     let validationErrors = []
     if (!req.params.trainingId) {
-        validationErrors.push(messages.VALIDATION_ERROR.TRAININGID_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TrainingIDRequired'))
     }
     if (!validator.isUUID(req.params.trainingId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TRAININGID)
+        validationErrors.push(req.t('Tranings.Error.UnsupportedTrainingID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Tranings'), req.language))
     }
 
     try {
@@ -72,41 +71,38 @@ async function AddTraining(req, res, next) {
     } = req.body
 
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TypeRequired'))
     }
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.NameRequired'))
     }
     if (!validator.isISODate(Trainingdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TRAININGDATE_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TrainingdateRequired'))
     }
     if (!validator.isString(Duration)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DURATION_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.DurationRequired'))
     }
     if (Type === trainingtypes.Company && !validator.isString(Educator)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EDUCATOR_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.EducatorRequired'))
     }
     if (Type === trainingtypes.Company && !validator.isString(Companyname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANYNAME_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.CompanynameRequired'))
     }
     if (Type === trainingtypes.Organization && !validator.isUUID(EducatoruserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EDUCATORUSERID_REQUIRED)
-    }
-    if (Type === trainingtypes.Organization && !validator.isUUID(EducatoruserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EDUCATORUSERID_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.EducatoruserIDRequired'))
     }
     if (!validator.isArray(Trainingusers) || (Trainingusers || []).length <= 0) {
-        validationErrors.push(messages.VALIDATION_ERROR.TRAININGUSERS_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TrainingusersRequired'))
     } else {
         for (const user of Trainingusers) {
             if (!validator.isUUID(user)) {
-                validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+                validationErrors.push(req.t('Tranings.Error.TraininguserIDRequired'))
             }
         }
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Tranings'), req.language))
     }
 
     let traininguuid = uuid()
@@ -140,10 +136,13 @@ async function AddTraining(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Eğitimler',
-            role: 'trainingnotification',
-            message: `${Name} isimli eğitim  ${username} tarafından Taslak Olarak Oluşturuldu.`,
-            pushurl: '/Trainings'
+            service: req.t('Tranings'),
+            role: 'traningnotification',
+            message: {
+                tr: `${Name} Eğitimi ${username} tarafından Oluşturuldu.`,
+                en: `${Name} Training Created By ${username}`
+            }[req.language],
+            pushurl: '/Tranings'
         })
 
         await t.commit()
@@ -163,7 +162,6 @@ async function UpdateTraining(req, res, next) {
         Type,
         Name,
         Trainingdate,
-        Place,
         Companyname,
         Duration,
         Educator,
@@ -172,47 +170,44 @@ async function UpdateTraining(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TRAININGID_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TrainingIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TRAININGID)
+        validationErrors.push(req.t('Tranings.Error.UnsupportedTrainingID'))
     }
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TypeRequired'))
     }
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.NameRequired'))
     }
     if (!validator.isISODate(Trainingdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TRAININGDATE_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TrainingdateRequired'))
     }
     if (!validator.isString(Duration)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DURATION_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.DurationRequired'))
     }
     if (Type === trainingtypes.Company && !validator.isString(Educator)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EDUCATOR_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.EducatorRequired'))
     }
     if (Type === trainingtypes.Company && !validator.isString(Companyname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COMPANYNAME_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.CompanynameRequired'))
     }
     if (Type === trainingtypes.Organization && !validator.isUUID(EducatoruserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EDUCATORUSERID_REQUIRED)
-    }
-    if (Type === trainingtypes.Organization && !validator.isUUID(EducatoruserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EDUCATORUSERID_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.EducatoruserIDRequired'))
     }
     if (!validator.isArray(Trainingusers) || (Trainingusers || []).length <= 0) {
-        validationErrors.push(messages.VALIDATION_ERROR.TRAININGUSERS_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TrainingusersRequired'))
     } else {
         for (const user of Trainingusers) {
             if (!validator.isUUID(user)) {
-                validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+                validationErrors.push(req.t('Tranings.Error.TraininguserIDRequired'))
             }
         }
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Tranings'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -221,10 +216,10 @@ async function UpdateTraining(req, res, next) {
     try {
         const training = await db.trainingModel.findOne({ where: { Uuid: Uuid } })
         if (!training) {
-            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Tranings.Error.NotFound'), req.t('Tranings'), req.language))
         }
         if (training.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Tranings.Error.NotActive'), req.t('Tranings'), req.language))
         }
 
         await db.trainingModel.update({
@@ -249,11 +244,15 @@ async function UpdateTraining(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Eğitimler',
-            role: 'trainingnotification',
-            message: `${Name} isimli Eğitim ${username} tarafından Güncellendi.`,
-            pushurl: '/Trainings'
+            service: req.t('Tranings'),
+            role: 'traningnotification',
+            message: {
+                tr: `${Name} Eğitimi ${username} tarafından Güncellendi.`,
+                en: `${Name} Training Updated By ${username}`
+            }[req.language],
+            pushurl: '/Tranings'
         })
+
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -269,13 +268,13 @@ async function DeleteTraining(req, res, next) {
     const Uuid = req.params.trainingId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TRAININGID_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TrainingIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TRAININGID)
+        validationErrors.push(req.t('Tranings.Error.UnsupportedTrainingID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Tranings'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -284,10 +283,10 @@ async function DeleteTraining(req, res, next) {
     try {
         const training = await db.trainingModel.findOne({ where: { Uuid: Uuid } })
         if (!training) {
-            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Tranings.Error.NotFound'), req.t('Tranings'), req.language))
         }
         if (training.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Tranings.Error.NotActive'), req.t('Tranings'), req.language))
         }
 
         await db.trainingModel.update({
@@ -304,11 +303,15 @@ async function DeleteTraining(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Eğitimler',
-            role: 'trainingnotification',
-            message: `${training?.Name} isimli Eğitim  ${username} tarafından Silindi.`,
-            pushurl: '/Trainings'
+            service: req.t('Tranings'),
+            role: 'traningnotification',
+            message: {
+                tr: `${training?.Name} Eğitimi ${username} tarafından Silindi.`,
+                en: `${training?.Name} Training Deleted By ${username}`
+            }[req.language],
+            pushurl: '/Tranings'
         })
+
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -324,14 +327,15 @@ async function SavepreviewTraining(req, res, next) {
     const Uuid = req.params.trainingId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TRAININGID_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TrainingIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TRAININGID)
+        validationErrors.push(req.t('Tranings.Error.UnsupportedTrainingID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Tranings'), req.language))
     }
+
 
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
@@ -339,10 +343,10 @@ async function SavepreviewTraining(req, res, next) {
     try {
         const training = await db.trainingModel.findOne({ where: { Uuid: Uuid } })
         if (!training) {
-            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Tranings.Error.NotFound'), req.t('Tranings'), req.language))
         }
         if (training.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Tranings.Error.NotActive'), req.t('Tranings'), req.language))
         }
 
         await db.trainingModel.update({
@@ -353,11 +357,15 @@ async function SavepreviewTraining(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Eğitimler',
-            role: 'trainingnotification',
-            message: `${training?.Name} isimli Eğitim  ${username} tarafından Kayıt Edildi.`,
-            pushurl: '/Trainings'
+            service: req.t('Tranings'),
+            role: 'traningnotification',
+            message: {
+                tr: `${training?.Name} Eğitimi ${username} tarafından Kayıt Edildi.`,
+                en: `${training?.Name} Training Saved By ${username}`
+            }[req.language],
+            pushurl: '/Tranings'
         })
+
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -373,13 +381,13 @@ async function ApproveTraining(req, res, next) {
     const Uuid = req.params.trainingId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TRAININGID_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TrainingIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TRAININGID)
+        validationErrors.push(req.t('Tranings.Error.UnsupportedTrainingID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Tranings'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -388,10 +396,10 @@ async function ApproveTraining(req, res, next) {
     try {
         const training = await db.trainingModel.findOne({ where: { Uuid: Uuid } })
         if (!training) {
-            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Tranings.Error.NotFound'), req.t('Tranings'), req.language))
         }
         if (training.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Tranings.Error.NotActive'), req.t('Tranings'), req.language))
         }
 
         await db.trainingModel.update({
@@ -404,11 +412,15 @@ async function ApproveTraining(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Eğitimler',
-            role: 'trainingnotification',
-            message: `${training?.Name} isimli Eğitim  ${username} tarafından Onaylandı.`,
-            pushurl: '/Trainings'
+            service: req.t('Tranings'),
+            role: 'traningnotification',
+            message: {
+                tr: `${training?.Name} Eğitimi ${username} tarafından Onaylandı.`,
+                en: `${training?.Name} Training Approved By ${username}`
+            }[req.language],
+            pushurl: '/Tranings'
         })
+
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -422,16 +434,15 @@ async function CompleteTraininguser(req, res, next) {
 
     let validationErrors = []
     const Uuid = req.params.traininguserId
-    console.log('Uuid: ', Uuid);
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TRAININGUSERID_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TraininguserIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TRAININGUSERID)
+        validationErrors.push(req.t('Tranings.Error.UnsupportedTraininguserID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Tranings'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -440,10 +451,10 @@ async function CompleteTraininguser(req, res, next) {
     try {
         const traininguser = await db.trainingusersModel.findOne({ where: { Uuid: Uuid } })
         if (!traininguser) {
-            return next(createNotfounderror([messages.ERROR.TRAININGUSER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Tranings.Error.TraininguserNotFound'), req.t('Tranings'), req.language))
         }
         if (traininguser.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.TRAININGUSER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Tranings.Error.TraininguserNotActive'), req.t('Tranings'), req.language))
         }
 
         await db.trainingusersModel.update({
@@ -453,14 +464,19 @@ async function CompleteTraininguser(req, res, next) {
         }, { where: { Uuid: Uuid }, transaction: t })
 
         const training = await db.trainingModel.findOne({ where: { Uuid: traininguser?.TrainingID || '' } });
+        const user = DoGet(config.services.Userrole, 'Users' + traininguser?.Uuid)
 
         await CreateNotification({
             type: types.Update,
-            service: 'Eğitimler',
-            role: 'trainingnotification',
-            message: `${training?.Name} isimli Eğitim  ${username} tarafından Katıldı Olarak Tamamlandı.`,
-            pushurl: '/Trainings'
+            service: req.t('Tranings'),
+            role: 'traningnotification',
+            message: {
+                tr: `${user?.Username} Kullanıcısı ${training?.Name} Eğitimini Tamamladı.`,
+                en: `${user?.Username} User Completed ${training?.Name} Training`
+            }[req.language],
+            pushurl: '/Tranings'
         })
+
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -475,13 +491,13 @@ async function CompleteTraining(req, res, next) {
     const Uuid = req.params.trainingId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.TRAININGID_REQUIRED)
+        validationErrors.push(req.t('Tranings.Error.TrainingIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_TRAININGID)
+        validationErrors.push(req.t('Tranings.Error.UnsupportedTrainingID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Tranings'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -490,10 +506,10 @@ async function CompleteTraining(req, res, next) {
     try {
         const training = await db.trainingModel.findOne({ where: { Uuid: Uuid } })
         if (!training) {
-            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Tranings.Error.NotFound'), req.t('Tranings'), req.language))
         }
         if (training.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.TRAINING_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Tranings.Error.NotActive'), req.t('Tranings'), req.language))
         }
 
         await db.trainingModel.update({
@@ -506,11 +522,15 @@ async function CompleteTraining(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Eğitimler',
-            role: 'trainingnotification',
-            message: `${training?.Name} isimli Eğitim  ${username} tarafından Tamamlandı.`,
-            pushurl: '/Trainings'
+            service: req.t('Tranings'),
+            role: 'traningnotification',
+            message: {
+                tr: `${training?.Name} Eğitimi ${username} tarafından Tamamlandı.`,
+                en: `${training?.Name} Training Completed By ${username}`
+            }[req.language],
+            pushurl: '/Tranings'
         })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

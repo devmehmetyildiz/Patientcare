@@ -1,4 +1,5 @@
 const { sequelizeErrorCatcher } = require('./Error')
+const uuid = require('uuid').v4
 
 module.exports = async ({ type, service, role, message, pushurl }) => {
     

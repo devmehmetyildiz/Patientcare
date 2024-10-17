@@ -1,8 +1,9 @@
-const messages = require('../Constants/Messages')
-const createValidationError = require('../Utilities/Error').createValidation
+const createValidationError = require('../Utilities/Error').createValidationError
+const createAuthError = require('../Utilities/Error').createAuthError
+const createNotFoundError = require('../Utilities/Error').createNotFoundError
 const bcrypt = require('bcrypt')
 const uuid = require('uuid').v4
-const { sequelizeErrorCatcher, createAutherror, requestErrorCatcher, createNotfounderror } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const axios = require('axios')
 const config = require('../Config')
 const validator = require('../Utilities/Validator')
@@ -12,10 +13,10 @@ const { Createresettemplate } = require('../Utilities/Htmltemplates')
 async function Createrequest(req, res, next) {
   let validationErrors = []
   if (!req.params.email) {
-    validationErrors.push(messages.VALIDATION_ERROR.EMAIL_REQUIRED)
+    validationErrors.push(req.t('Password.Error.EmailRequired'))
   }
   if (validationErrors.length > 0) {
-    return next(createValidationError(validationErrors, req.language))
+    return next(createValidationError(validationErrors, req.t('Password'), req.language))
   }
 
   try {
@@ -93,32 +94,32 @@ async function Getrequestbyuser(req, res, next) {
 
   let validationErrors = []
   if (req.params.requestId === undefined) {
-    validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+    validationErrors.push(req.t('Password.Error.RequestIDRequired'))
   }
   if (!validator.isUUID(req.params.requestId)) {
-    validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_USERID)
+    validationErrors.push(req.t('Password.Error.UnsupportedRequestID'))
   }
   if (validationErrors.length > 0) {
-    return next(createValidationError(validationErrors, req.language))
+    return next(createValidationError(validationErrors, req.t('Password'), req.language))
   }
   try {
     const request = await db.passwordrefreshrequestModel.findOne({ where: { Uuid: req.params.requestId } })
     if (!request) {
-      return next(createNotfounderror([messages.ERROR.REQUEST_NOT_FOUND], req.language))
+      return next(createNotFoundError(req.t('Password.Error.RequestNotFound'), req.t('Password'), req.language))
     }
     if (!request.Isactive) {
-      return next(createNotfounderror([messages.ERROR.REQUEST_NOT_ACTIVE], req.language))
+      return next(createNotFoundError(req.t('Password.Error.RequestNotActive'), req.t('Password'), req.language))
     }
 
     if (request.Userfetchedcount > 1) {
-      return next(createAutherror([messages.ERROR.RESET_REQUEST_REJECTED], req.language))
+      return next(createAuthError(req.t('Password.Error.RequestRejected'), req.t('Password'), req.language))
     }
 
     const Datenow = new Date(request.Createtime);
     Datenow.setDate(Datenow.getDate() + 1);
 
     if (request.Createtime > Datenow) {
-      return next(createAutherror([messages.ERROR.RESET_REQUEST_ENDED], req.language))
+      return next(createAuthError(req.t('Password.Error.RequestEnded'), req.t('Password'), req.language))
     }
 
     await db.passwordrefreshrequestModel.update({
@@ -151,30 +152,30 @@ async function Getrequestbyuser(req, res, next) {
 async function Validateresetrequest(req, res, next) {
   let validationErrors = []
   if (!req.params.requestId) {
-    validationErrors.push(messages.VALIDATION_ERROR.REQUESTID_REQUIRED)
+    validationErrors.push(req.t('Password.Error.RequestIDRequired'))
   }
   if (validationErrors.length > 0) {
-    return next(createValidationError(validationErrors, req.language))
+    return next(createValidationError(validationErrors, req.t('Password'), req.language))
   }
 
   try {
     const request = await db.passwordrefreshrequestModel.findOne({ where: { Uuid: req.params.requestId } })
     if (!request) {
-      return next(createNotfounderror([messages.ERROR.REQUEST_NOT_FOUND], req.language))
+      return next(createNotFoundError(req.t('Password.Error.RequestNotFound'), req.t('Password'), req.language))
     }
     if (!request.Isactive) {
-      return next(createNotfounderror([messages.ERROR.REQUEST_NOT_ACTIVE], req.language))
+      return next(createNotFoundError(req.t('Password.Error.RequestNotActive'), req.t('Password'), req.language))
     }
 
     if (request.Userfetchedcount > 0 || request.Emailconfirmed > 0) {
-      return next(createAutherror([messages.ERROR.RESET_REQUEST_REJECTED], req.language))
+      return next(createAuthError(req.t('Password.Error.RequestRejected'), req.t('Password'), req.language))
     }
 
     const Datenow = new Date(request.Createtime);
     Datenow.setDate(Datenow.getDate() + 1);
 
     if (request.Createtime > Datenow) {
-      return next(createAutherror([messages.ERROR.RESET_REQUEST_ENDED], req.language))
+      return next(createAuthError(req.t('Password.Error.RequestEnded'), req.t('Password'), req.language))
     }
 
     await db.passwordrefreshrequestModel.update({
@@ -200,23 +201,23 @@ async function Resetpassword(req, res, next) {
 
   let validationErrors = []
   if (!validator.isString(Password)) {
-    validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
+    validationErrors.push(req.t('Password.Error.PasswordRequired'))
   }
   if (!validator.isUUID(RequestId)) {
-    validationErrors.push(messages.VALIDATION_ERROR.REQUESTID_REQUIRED)
+    validationErrors.push(req.t('Password.Error.RequestIDRequired'))
   }
   if (validationErrors.length > 0) {
-    return next(createValidationError(validationErrors, req.language))
+    return next(createValidationError(validationErrors, req.t('Password'), req.language))
   }
   let user = null
   let usersalt = null
   try {
     const request = await db.passwordrefreshrequestModel.findOne({ where: { Uuid: RequestId } })
     if (!request) {
-      return next(createNotfounderror([messages.ERROR.REQUEST_NOT_FOUND], req.language))
+      return next(createNotFoundError(req.t('Password.Error.RequestNotFound'), req.t('Password'), req.language))
     }
     if (!request.Isactive) {
-      return next(createNotfounderror([messages.ERROR.REQUEST_NOT_ACTIVE], req.language))
+      return next(createNotFoundError(req.t('Password.Error.RequestNotActive'), req.t('Password'), req.language))
     }
     try {
       const userresponse = await axios({

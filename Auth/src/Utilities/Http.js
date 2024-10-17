@@ -11,7 +11,7 @@ module.exports = async (method, url) => {
             }
         })
         return response.data
-    } catch (error) {
+    } catch {
         return null
     }
 }

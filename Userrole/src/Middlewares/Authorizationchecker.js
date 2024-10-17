@@ -1,6 +1,7 @@
 const config = require('../Config')
-const { sequelizeErrorCatcher, createAutherror, requestErrorCatcher } = require('../Utilities/Error')
-const createValidationError = require('../Utilities/Error').createValidation
+const { sequelizeErrorCatcher, requestErrorCatcher } = require('../Utilities/Error')
+const createValidationError = require('../Utilities/Error').createValidationError
+const createNotFoundError = require('../Utilities/Error').createNotFoundError
 const createErrorList = require('../Utilities/Error').createList
 const axios = require('axios');
 
@@ -8,7 +9,6 @@ const INVALID_AUTHORIZATION_HEADER = createErrorList('FORBIDDEN', 'INVALID_AUTHO
     en: 'Access denied. Invalid authorization header',
     tr: 'Erişim reddedildi. Geçersiz yekilendirme başlığı',
 })
-
 
 const PUBLIC_URLS = [
 ]
@@ -62,10 +62,10 @@ async function authorizationChecker(req, res, next) {
                         try {
                             const user = await db.userModel.findOne({ where: { Uuid: accessToken.Userid } })
                             if (!user) {
-                                return next(createNotfounderror([messages.ERROR.USER_NOT_FOUND], req.language))
+                                return next(createNotFoundError(req.t('Users.Error.NotFound'), req.t('Users'), req.language))
                             }
                             if (!user.Isactive) {
-                                return next(createNotfounderror([messages.ERROR.USER_NOT_ACTIVE], req.language))
+                                return next(createNotFoundError(req.t('Users.Error.NotActive'), req.t('Users'), req.language))
                             }
                             let rolesuuids = await db.userroleModel.findAll({
                                 where: {
@@ -81,7 +81,7 @@ async function authorizationChecker(req, res, next) {
                             req.identity.user = user
                             const userroles = await db.userroleModel.findAll({ where: { UserID: user.Uuid } })
                             if (!userroles) {
-                                return next(createNotfounderror([messages.ERROR.USERROLE_NOT_FOUND], req.language))
+                                return next(createNotFoundError(req.t('Users.Error.UserroleNotFound'), req.t('Users'), req.language))
                             }
                             for (const userrole of userroles) {
                                 let privileges = await db.roleprivilegeModel.findAll({ where: { RoleID: userrole.RoleID } })
@@ -91,11 +91,8 @@ async function authorizationChecker(req, res, next) {
                             sequelizeErrorCatcher(error)
                             next()
                         }
-
-
                     }
                 }
-
             } else {
                 return next(INVALID_AUTHORIZATION_HEADER[req.language])
             }

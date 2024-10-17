@@ -8,8 +8,8 @@ module.exports = async ({ type, service, role, message, pushurl }) => {
         const notificationMessage = {
             Notificationtype: 'Information',
             Notificationtime: new Date(),
-            Subject: `${service?.tr ? service?.tr : service} - ${type}`,
-            Message: message?.tr ? message?.tr : message,
+            Subject: `${service} - ${type}`,
+            Message: message,
             Pushurl: pushurl,
             Isshowed: false,
             Isreaded: false,

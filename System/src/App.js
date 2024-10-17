@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const config = require('./Config');
+const i18next = require('./i18n');
+const middleware = require('i18next-http-middleware');
+
 const childProcesses = {};
 global.childProcesses = childProcesses
 require("./Middlewares/Databaseconnector")()
@@ -45,6 +48,7 @@ require("./Middlewares/Databaseconnector")()
 
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(middleware.handle(i18next));
     app.use(languageHelper)
     app.use(crossDomainEnabler)
     app.use(authorizationChecker)

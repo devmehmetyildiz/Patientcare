@@ -2,12 +2,11 @@ const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
 const DoGet = require("../Utilities/DoGet")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher, } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetStockmovements(req, res, next) {
     try {
@@ -22,22 +21,22 @@ async function GetStockmovement(req, res, next) {
 
     let validationErrors = []
     if (!req.params.stockmovementId) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.StockmovementIDRequired'))
     }
     if (!validator.isUUID(req.params.stockmovementId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
+        validationErrors.push(req.t('Stockmovements.Error.UnsupportedStockmovementID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stockmovements'), req.language))
     }
 
     try {
         const stockmovement = await db.stockmovementModel.findOne({ where: { Uuid: req.params.stockmovementId } });
         if (!stockmovement) {
-            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Stockmovements.Error.NotFound'), req.t('Stockdefines'), req.language))
         }
         if (!stockmovement.Isactive) {
-            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Stockmovements.Error.NotActive'), req.t('Stockdefines'), req.language))
         }
         res.status(200).json(stockmovement)
     } catch (error) {
@@ -57,20 +56,20 @@ async function AddStockmovement(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(StockID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.StockIDRequired'))
     }
     if (!validator.isNumber(Movementtype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.MovementtypeRequired'))
     }
     if (!validator.isNumber(Amount)) {
-        validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.AmountRequired'))
     }
     if (!validator.isISODate(Movementdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.MovementdateRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stockmovements'), req.language))
     }
 
     let stockmovementuuid = uuid()
@@ -86,7 +85,7 @@ async function AddStockmovement(req, res, next) {
         });
 
         if (Movementtype === -1 && Amount > amount) {
-            return next(createValidationError([messages.VALIDATION_ERROR.AMOUNT_LIMIT_ERROR], req.language))
+            return next(createValidationError(req.t('Stockmovements.Error.AmountlimitRequired'), req.t('Stockmovements'), req.language))
         }
 
         await db.stockmovementModel.create({
@@ -105,10 +104,13 @@ async function AddStockmovement(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Stok Hareketleri',
+            service: req.t('Stockmovements'),
             role: 'stockmovementnotification',
-            message: `${Amount} ${unit?.Name} ${stockdefine?.Name} ürünü  ${username} tarafından eklendi.`,
-            pushurl: `/Stockmovements`
+            message: {
+                tr: `${Amount} ${unit?.Name} ${stockdefine?.Name} Ürünü  ${username} Tarafından Eklendi.`,
+                en: `${Amount} ${unit?.Name} ${stockdefine?.Name} Stock  Created By ${username}.`,
+            }[req.language],
+            pushurl: '/Stockmovements'
         })
 
         await t.commit()
@@ -128,11 +130,11 @@ async function AddStockmovements(req, res, next) {
     } = req.body
 
     if (!validator.isArray(Stockmovements)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTS_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.StockmovementsRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stockmovements'), req.language))
     }
 
     for (const movement of Stockmovements) {
@@ -144,21 +146,21 @@ async function AddStockmovements(req, res, next) {
         } = movement
 
         if (!validator.isUUID(StockID)) {
-            validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+            validationErrors.push(req.t('Stockmovements.Error.StockIDRequired'))
         }
         if (!validator.isNumber(Movementtype)) {
-            validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED)
+            validationErrors.push(req.t('Stockmovements.Error.MovementtypeRequired'))
         }
         if (!validator.isNumber(Amount)) {
-            validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED)
+            validationErrors.push(req.t('Stockmovements.Error.AmountRequired'))
         }
         if (!validator.isISODate(Movementdate)) {
-            validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED)
+            validationErrors.push(req.t('Stockmovements.Error.MovementdateRequired'))
         }
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stockmovements'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -189,10 +191,13 @@ async function AddStockmovements(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Stok Hareketleri',
+            service: req.t('Stockmovements'),
             role: 'stockmovementnotification',
-            message: `Stok hareketleri ${username} tarafından eklendi.`,
-            pushurl: `/Stockmovements`
+            message: {
+                tr: `Toplu Stok Hareket Eklemesi  ${username} Tarafından Yapıldı.`,
+                en: `Total Stock Movement Created By ${username}.`,
+            }[req.language],
+            pushurl: '/Stockmovements'
         })
 
         await t.commit()
@@ -215,26 +220,26 @@ async function UpdateStockmovement(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(StockID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.StockIDRequired'))
     }
     if (!validator.isNumber(Movementtype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.MovementtypeRequired'))
     }
     if (!validator.isNumber(Amount)) {
-        validationErrors.push(messages.VALIDATION_ERROR.AMOUNT_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.AmountRequired'))
     }
     if (!validator.isISODate(Movementdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTDATE_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.MovementdateRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.StockmovementIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
+        validationErrors.push(req.t('Stockmovements.Error.UnsupportedStockmovementID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stockmovements'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -243,10 +248,10 @@ async function UpdateStockmovement(req, res, next) {
     try {
         const stockmovement = await db.stockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!stockmovement) {
-            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stockmovements.Error.NotFound'), req.t('Stockdefines'), req.language))
         }
-        if (stockmovement.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+        if (!stockmovement.Isactive) {
+            return next(createNotFoundError(req.t('Stockmovements.Error.NotActive'), req.t('Stockdefines'), req.language))
         }
 
         await db.stockmovementModel.update({
@@ -260,10 +265,13 @@ async function UpdateStockmovement(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Stok Hareketleri',
+            service: req.t('Stockmovements'),
             role: 'stockmovementnotification',
-            message: `${stockdefine?.Name} ürüne ait hareket  ${username} tarafından Güncellendi.`,
-            pushurl: `/Stockmovements`
+            message: {
+                tr: `${stockdefine?.Name} Ürünü Ait Stok Hareketi ${username} Tarafından Güncellendi.`,
+                en: `${stockdefine?.Name}'s Stock Movement Updated By ${username}.`,
+            }[req.language],
+            pushurl: '/Stockmovements'
         })
 
         await t.commit()
@@ -279,13 +287,14 @@ async function ApproveStockmovement(req, res, next) {
     const Uuid = req.params.stockmovementId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.StockmovementIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
+        validationErrors.push(req.t('Stockmovements.Error.UnsupportedStockmovementID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stockmovements'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -294,10 +303,10 @@ async function ApproveStockmovement(req, res, next) {
     try {
         const stockmovement = await db.stockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!stockmovement) {
-            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stockmovements.Error.NotFound'), req.t('Stockdefines'), req.language))
         }
-        if (stockmovement.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+        if (!stockmovement.Isactive) {
+            return next(createNotFoundError(req.t('Stockmovements.Error.NotActive'), req.t('Stockdefines'), req.language))
         }
 
         await db.stockmovementModel.update({
@@ -312,10 +321,13 @@ async function ApproveStockmovement(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Stok Hareketleri',
+            service: req.t('Stockmovements'),
             role: 'stockmovementnotification',
-            message: `${stockdefine?.Name} ürününe ait hareket ${username} tarafından onaylandı.`,
-            pushurl: `/Stockmovements`
+            message: {
+                tr: `${stockdefine?.Name} Ürünü Ait Stok Hareketi ${username} Tarafından Onaylandı.`,
+                en: `${stockdefine?.Name}'s Stock Movement Approved By ${username}.`,
+            }[req.language],
+            pushurl: '/Stockmovements'
         })
 
         await t.commit()
@@ -336,20 +348,21 @@ async function ApproveStockmovements(req, res, next) {
     try {
         for (const data of (body || [])) {
             if (!data) {
-                validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
+                validationErrors.push(req.t('Stockmovements.Error.StockmovementIDRequired'))
             }
             if (!validator.isUUID(data)) {
-                validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
+                validationErrors.push(req.t('Stockmovements.Error.UnsupportedStockmovementID'))
             }
             if (validationErrors.length > 0) {
-                return next(createValidationError(validationErrors, req.language))
+                return next(createValidationError(validationErrors, req.t('Stockmovements'), req.language))
             }
+
             const stockmovement = await db.stockmovementModel.findOne({ where: { Uuid: data } })
             if (!stockmovement) {
-                return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
+                return next(createNotFoundError(req.t('Stockmovements.Error.NotFound'), req.t('Stockdefines'), req.language))
             }
-            if (stockmovement.Isactive === false) {
-                return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+            if (!stockmovement.Isactive) {
+                return next(createNotFoundError(req.t('Stockmovements.Error.NotActive'), req.t('Stockdefines'), req.language))
             }
 
             await db.stockmovementModel.update({
@@ -362,11 +375,15 @@ async function ApproveStockmovements(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Stok Hareketleri',
+            service: req.t('Stockmovements'),
             role: 'stockmovementnotification',
-            message: `Toplu Stok hareketi  ${username} tarafından onaylandı.`,
-            pushurl: `/Stockmovements`
+            message: {
+                tr: `Toplu Stok Hareketleri ${username} Tarafından Onaylandı.`,
+                en: `Total Stock Movements Approved By ${username}.`,
+            }[req.language],
+            pushurl: '/Stockmovements'
         })
+
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -381,13 +398,14 @@ async function DeleteStockmovement(req, res, next) {
     const Uuid = req.params.stockmovementId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKMOVEMENTID_REQUIRED)
+        validationErrors.push(req.t('Stockmovements.Error.StockmovementIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKMOVEMENTID)
+        validationErrors.push(req.t('Stockmovements.Error.UnsupportedStockmovementID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stockmovements'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -396,10 +414,10 @@ async function DeleteStockmovement(req, res, next) {
     try {
         const stockmovement = await db.stockmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!stockmovement) {
-            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stockmovements.Error.NotFound'), req.t('Stockdefines'), req.language))
         }
-        if (stockmovement.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.STOCKMOVEMENT_NOT_ACTIVE], req.language))
+        if (!stockmovement.Isactive) {
+            return next(createNotFoundError(req.t('Stockmovements.Error.NotActive'), req.t('Stockdefines'), req.language))
         }
 
         await db.stockmovementModel.update({
@@ -413,10 +431,13 @@ async function DeleteStockmovement(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Stok Hareketleri',
+            service: req.t('Stockmovements'),
             role: 'stockmovementnotification',
-            message: `${stockdefine?.Name} ürününe ait hareket  ${username} tarafından silindif.`,
-            pushurl: `/Stockmovements`
+            message: {
+                tr: `${stockdefine?.Name} Ürünü Ait Stok Hareketi ${username} Tarafından Silindi.`,
+                en: `${stockdefine?.Name}'s Stock Movement Deleted By ${username}.`,
+            }[req.language],
+            pushurl: '/Stockmovements'
         })
 
         await t.commit();
@@ -437,84 +458,4 @@ module.exports = {
     ApproveStockmovement,
     ApproveStockmovements,
     AddStockmovements
-}
-
-const messages = {
-    ERROR: {
-        STOCKMOVEMENT_NOT_FOUND: {
-            code: 'STOCKMOVEMENT_NOT_FOUND', description: {
-                en: 'Stockmovement not found',
-                tr: 'Stok hareketi bulunamadı',
-            }
-        },
-        STOCKMOVEMENT_NOT_ACTIVE: {
-            code: 'STOCKMOVEMENT_NOT_ACTIVE', description: {
-                en: 'Stockmovement not active',
-                tr: 'Stok hareketi aktif değil',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        STOCKMOVEMENTS_REQUIRED: {
-            code: 'STOCKMOVEMENTS_REQUIRED', description: {
-                en: 'The stock movements required',
-                tr: 'Bu işlem için stok hareketleri gerekli',
-            }
-        },
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        DESCIRIPTION_REQUIRED: {
-            code: 'DESCIRIPTION_REQUIRED', description: {
-                en: 'The description required',
-                tr: 'Bu işlem için açıklama gerekli',
-            }
-        },
-        MOVEMENTTYPE_REQUIRED: {
-            code: 'MOVEMENTTYPE_REQUIRED', description: {
-                en: 'The movement type required',
-                tr: 'Bu işlem için hareket tipi gerekli',
-            }
-        },
-        AMOUNT_REQUIRED: {
-            code: 'AMOUNT_REQUIRED', description: {
-                en: 'The amount required',
-                tr: 'Bu işlem için miktar gerekli',
-            }
-        },
-        AMOUNT_LIMIT_ERROR: {
-            code: 'AMOUNT_LIMIT_ERROR', description: {
-                en: 'The amount is too low',
-                tr: 'Bu işlem yeterli ürün yok',
-            }
-        },
-        MOVEMENTDATE_REQUIRED: {
-            code: 'MOVEMENTDATE_REQUIRED', description: {
-                en: 'The movement date required',
-                tr: 'Bu işlem için hareket tarihi gerekli',
-            }
-        },
-        STOCKID_REQUIRED: {
-            code: 'STOCKID_REQUIRED', description: {
-                en: 'The stockid required',
-                tr: 'Bu işlem için stockid gerekli',
-            }
-        },
-        STOCKMOVEMENTID_REQUIRED: {
-            code: 'STOCKMOVEMENTID_REQUIRED', description: {
-                en: 'The stockmovementid required',
-                tr: 'Bu işlem için stockmovementid gerekli',
-            }
-        },
-        UNSUPPORTED_STOCKMOVEMENTID: {
-            code: 'UNSUPPORTED_STOCKMOVEMENTID', description: {
-                en: 'The stockmovementid is unsupported',
-                tr: 'Geçersiz stockmovementid',
-            }
-        },
-    }
-
 }

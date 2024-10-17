@@ -1,11 +1,9 @@
 const CreateNotification = require("../Utilities/CreateNotification")
-const config = require("../Config")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 const { types } = require("../Constants/Defines")
 
 async function GetEquipmentgroups(req, res, next) {
@@ -28,22 +26,22 @@ async function GetEquipmentgroup(req, res, next) {
 
     let validationErrors = []
     if (!req.params.equipmentgroupId) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTGROUPID_REQUIRED)
+        validationErrors.push(req.t('Equipmentgroups.Error.EquipmentgroupIDRequired'))
     }
     if (!validator.isUUID(req.params.equipmentgroupId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_EQUIPMENTGROUPID)
+        validationErrors.push(req.t('Equipmentgroups.Error.UnsupportedEquipmentgroupID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Equipmentgroups'), req.language))
     }
 
     try {
         const equipmentgroup = await db.equipmentgroupModel.findOne({ where: { Uuid: req.params.equipmentgroupId } });
         if (!equipmentgroup) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Equipmentgroups.Error.NotFound'), req.t('Equipmentgroups'), req.language))
         }
         if (!equipmentgroup.Isactive) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Equipmentgroups.Error.NotActive'), req.t('Equipmentgroups'), req.language))
         }
         equipmentgroup.Equipments = await db.equipmentModel.findAll({
             where: {
@@ -66,14 +64,14 @@ async function AddEquipmentgroup(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Equipmentgroups.Error.NameRequired'))
     }
     if (!DepartmentID || !validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
+        validationErrors.push(req.t('Equipmentgroups.Error.DepartmentRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Equipmentgroups'), req.language))
     }
 
     let equipmentgroupuuid = uuid()
@@ -92,12 +90,12 @@ async function AddEquipmentgroup(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Equipmentgroups'),
             role: 'equipmentgroupnotification',
             message: {
-                tr: `${Name} ekipman grubu ${username} tarafından Oluşturuldu.`,
-                en: `${Name} equipment group Created By ${username}.`,
-            },
+                tr: `${Name} Ekipman Grubu ${username} tarafından Oluşturuldu.`,
+                en: `${Name} Equipment Group Created by ${username}`
+            }[req.language],
             pushurl: '/Equipmentgroups'
         })
 
@@ -119,20 +117,20 @@ async function UpdateEquipmentgroup(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Equipmentgroups.Error.NameRequired'))
     }
     if (!DepartmentID || !validator.isUUID(DepartmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DEPARTMENTID_REQUIRED)
+        validationErrors.push(req.t('Equipmentgroups.Error.DepartmentRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTGROUPID_REQUIRED)
+        validationErrors.push(req.t('Equipmentgroups.Error.EquipmentgroupIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_EQUIPMENTGROUPID)
+        validationErrors.push(req.t('Equipmentgroups.Error.UnsupportedEquipmentgroupID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Equipmentgroups'), req.language))
     }
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
@@ -140,10 +138,10 @@ async function UpdateEquipmentgroup(req, res, next) {
     try {
         const equipmentgroup = await db.equipmentgroupModel.findOne({ where: { Uuid: Uuid } })
         if (!equipmentgroup) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Equipmentgroups.Error.NotFound'), req.t('Equipmentgroups'), req.language))
         }
-        if (equipmentgroup.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_ACTIVE], req.language))
+        if (!equipmentgroup.Isactive) {
+            return next(createNotFoundError(req.t('Equipmentgroups.Error.NotActive'), req.t('Equipmentgroups'), req.language))
         }
 
         await db.equipmentgroupModel.update({
@@ -154,12 +152,12 @@ async function UpdateEquipmentgroup(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Equipmentgroups'),
             role: 'equipmentgroupnotification',
             message: {
-                tr: `${Name} ekipman grubu ${username} tarafından Güncellendi.`,
-                en: `${Name} equipment group Created By ${username}.`,
-            },
+                tr: `${Name} Ekipman Grubu ${username} tarafından Güncellendi.`,
+                en: `${Name} Equipment Group Updated by ${username}`
+            }[req.language],
             pushurl: '/Equipmentgroups'
         })
 
@@ -177,13 +175,14 @@ async function DeleteEquipmentgroup(req, res, next) {
     const Uuid = req.params.equipmentgroupId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTGROUPID_REQUIRED)
+        validationErrors.push(req.t('Equipmentgroups.Error.EquipmentgroupIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_EQUIPMENTGROUPID)
+        validationErrors.push(req.t('Equipmentgroups.Error.UnsupportedEquipmentgroupID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Equipmentgroups'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -192,10 +191,10 @@ async function DeleteEquipmentgroup(req, res, next) {
     try {
         const equipmentgroup = await db.equipmentgroupModel.findOne({ where: { Uuid: Uuid } })
         if (!equipmentgroup) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Equipmentgroups.Error.NotFound'), req.t('Equipmentgroups'), req.language))
         }
-        if (equipmentgroup.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.EQUIPMENTGROUP_NOT_ACTIVE], req.language))
+        if (!equipmentgroup.Isactive) {
+            return next(createNotFoundError(req.t('Equipmentgroups.Error.NotActive'), req.t('Equipmentgroups'), req.language))
         }
 
         await db.equipmentgroupModel.update({
@@ -206,12 +205,12 @@ async function DeleteEquipmentgroup(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Equipmentgroups'),
             role: 'equipmentgroupnotification',
             message: {
-                tr: `${equipmentgroup?.Name} ekipman grubu ${username} tarafından Silindi.`,
-                en: `${equipmentgroup?.Name} equipment group Deleted By ${username}.`,
-            },
+                tr: `${equipmentgroup?.Name} Ekipman Grubu ${username} tarafından Silindi.`,
+                en: `${equipmentgroup?.Name} Equipment Group Deleted by ${username}`
+            }[req.language],
             pushurl: '/Equipmentgroups'
         })
 
@@ -229,62 +228,4 @@ module.exports = {
     AddEquipmentgroup,
     UpdateEquipmentgroup,
     DeleteEquipmentgroup,
-}
-
-
-const messages = {
-    NOTIFICATION: {
-        PAGE_NAME: {
-            en: 'Equipment Groups',
-            tr: 'Ekipman Grupları',
-        },
-    },
-    ERROR: {
-        EQUIPMENTGROUP_NOT_FOUND: {
-            code: 'EQUIPMENTGROUP_NOT_FOUND', description: {
-                en: 'Equipment Group not found',
-                tr: 'Envarter Grubu bulunamadı',
-            }
-        },
-
-        EQUIPMENTGROUP_NOT_ACTIVE: {
-            code: 'EQUIPMENTGROUP_NOT_ACTIVE', description: {
-                en: 'Equipment Group not active',
-                tr: 'Envarter Grubu bulunamadı',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        EQUIPMENTGROUPID_REQUIRED: {
-            code: 'EQUIPMENTGROUPID_REQUIRED', description: {
-                en: 'The equipment group id required',
-                tr: 'Bu işlem için equipment group id gerekli',
-            }
-        },
-        DEPARTMENTID_REQUIRED: {
-            code: 'DEPARTMENTID_REQUIRED', description: {
-                en: 'The departmentid required',
-                tr: 'Bu işlem için departmentid gerekli',
-            }
-        },
-        PERSONELNAME_REQUIRED: {
-            code: 'PERSONELNAME_REQUIRED', description: {
-                en: 'The personel name required',
-                tr: 'Bu işlem için satın alma görevli adı gerekli',
-            }
-        },
-        UNSUPPORTED_EQUIPMENTGROUPID: {
-            code: 'UNSUPPORTED_EQUIPMENTGROUPID', description: {
-                en: 'The equipment group id is unsupported',
-                tr: 'Geçersiz equipment group id',
-            }
-        },
-    }
 }

@@ -1,12 +1,10 @@
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetStocktypegroups(req, res, next) {
     try {
@@ -21,22 +19,22 @@ async function GetStocktypegroup(req, res, next) {
 
     let validationErrors = []
     if (!req.params.stocktypegroupId) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKTYPEGROUPID_REQUIRED)
+        validationErrors.push(req.t('Stocktypegroups.Error.StocktypegroupIDRequired'))
     }
     if (!validator.isUUID(req.params.stocktypegroupId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKTYPEGROUPID)
+        validationErrors.push(req.t('Stocktypegroups.Error.UnsupportedStocktypegroupID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocktypegroups'), req.language))
     }
 
     try {
         const stocktypegroup = await db.stocktypegroupModel.findOne({ where: { Uuid: req.params.stocktypegroupId } });
         if (!stocktypegroup) {
-            return next(createNotfounderror([messages.ERROR.STOCKTYPEGROUP_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stocktypegroups.Error.NotFound'), req.t('Stocktypegroups'), req.language))
         }
         if (!stocktypegroup.Isactive) {
-            return next(createNotfounderror([messages.ERROR.STOCKTYPEGROUP_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Stocktypegroups.Error.NotActive'), req.t('Stocktypegroups'), req.language))
         }
         res.status(200).json(stocktypegroup)
     } catch (error) {
@@ -52,11 +50,11 @@ async function AddStocktypegroup(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Stocktypegroups.Error.NameRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocktypegroups'), req.language))
     }
 
     let stocktypegroupuuid = uuid()
@@ -75,10 +73,13 @@ async function AddStocktypegroup(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Stok Tür Grupları',
-            role: 'stocktypegroupnotification',
-            message: `${Name} stok tür grubu  ${username} tarafından eklendi.`,
-            pushurl: `/Stocktypegroups`
+            service: req.t('Stocktypegroups'),
+            role: 'stocktypenotification',
+            message: {
+                tr: `${Name} Stok Tür Grubu ${username} Tarafından Eklendi.`,
+                en: `${Name} Stock Type Group Created By ${username}.`,
+            }[req.language],
+            pushurl: '/Stocktypegroups'
         })
 
         await t.commit()
@@ -98,17 +99,17 @@ async function UpdateStocktypegroup(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Stocktypegroups.Error.NameRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKTYPEGROUPID_REQUIRED)
+        validationErrors.push(req.t('Stocktypegroups.Error.StocktypegroupIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKTYPEGROUPID)
+        validationErrors.push(req.t('Stocktypegroups.Error.UnsupportedStocktypegroupID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocktypegroups'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -117,10 +118,10 @@ async function UpdateStocktypegroup(req, res, next) {
     try {
         const stocktypegroup = await db.stocktypegroupModel.findOne({ where: { Uuid: Uuid } })
         if (!stocktypegroup) {
-            return next(createNotfounderror([messages.ERROR.STOCKTYPEGROUP_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stocktypegroups.Error.NotFound'), req.t('Stocktypegroups'), req.language))
         }
-        if (stocktypegroup.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.STOCKTYPEGROUP_NOT_ACTIVE], req.language))
+        if (!stocktypegroup.Isactive) {
+            return next(createNotFoundError(req.t('Stocktypegroups.Error.NotActive'), req.t('Stocktypegroups'), req.language))
         }
 
         await db.stocktypegroupModel.update({
@@ -129,13 +130,15 @@ async function UpdateStocktypegroup(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
 
-
         await CreateNotification({
-            type: types.Update,
-            service: 'Stok Tür Grupları',
-            role: 'stocktypegroupnotification',
-            message: `${stocktypegroup?.Name} stok tür grubu  ${username} tarafından Güncellendi.`,
-            pushurl: `/Stocktypegroups`
+            type: types.Create,
+            service: req.t('Stocktypegroups'),
+            role: 'stocktypenotification',
+            message: {
+                tr: `${Name} Stok Tür Grubu ${username} Tarafından Güncellendi.`,
+                en: `${Name} Stock Type Group Updated By ${username}.`,
+            }[req.language],
+            pushurl: '/Stocktypegroups'
         })
 
         await t.commit()
@@ -152,13 +155,14 @@ async function DeleteStocktypegroup(req, res, next) {
     const Uuid = req.params.stocktypegroupId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKTYPEGROUPID_REQUIRED)
+        validationErrors.push(req.t('Stocktypegroups.Error.StocktypegroupIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKTYPEGROUPID)
+        validationErrors.push(req.t('Stocktypegroups.Error.UnsupportedStocktypegroupID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocktypegroups'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -167,10 +171,10 @@ async function DeleteStocktypegroup(req, res, next) {
     try {
         const stocktypegroup = await db.stocktypegroupModel.findOne({ where: { Uuid: Uuid } })
         if (!stocktypegroup) {
-            return next(createNotfounderror([messages.ERROR.STOCKTYPEGROUP_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stocktypegroups.Error.NotFound'), req.t('Stocktypegroups'), req.language))
         }
-        if (stocktypegroup.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.STOCKTYPEGROUP_NOT_ACTIVE], req.language))
+        if (!stocktypegroup.Isactive) {
+            return next(createNotFoundError(req.t('Stocktypegroups.Error.NotActive'), req.t('Stocktypegroups'), req.language))
         }
 
         await db.stocktypegroupModel.update({
@@ -181,10 +185,13 @@ async function DeleteStocktypegroup(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Stok Tür Grupları',
-            role: 'stocktypegroupnotification',
-            message: `${stocktypegroup?.Name} stok tür grubu  ${username} tarafından silindi.`,
-            pushurl: `/Stocktypegroups`
+            service: req.t('Stocktypegroups'),
+            role: 'stocktypenotification',
+            message: {
+                tr: `${stocktypegroup?.Name} Stok Tür Grubu ${username} Tarafından Silindi.`,
+                en: `${stocktypegroup?.Name} Stock Type Group Silindi By ${username}.`,
+            }[req.language],
+            pushurl: '/Stocktypegroups'
         })
 
         await t.commit();
@@ -202,41 +209,4 @@ module.exports = {
     AddStocktypegroup,
     UpdateStocktypegroup,
     DeleteStocktypegroup,
-}
-
-const messages = {
-    ERROR: {
-        STOCKTYPEGROUP_NOT_FOUND: {
-            code: 'STOCKTYPEGROUP_NOT_FOUND', description: {
-                en: 'Stock type group not found',
-                tr: 'Stok Tür Grubu bulunamadı',
-            }
-        },
-        STOCKTYPEGROUP_NOT_ACTIVE: {
-            code: 'STOCKTYPEGROUP_NOT_ACTIVE', description: {
-                en: 'Stock type group not active',
-                tr: 'Stok Tür Grubu aktif değil',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        STOCKTYPEGROUPID_REQUIRED: {
-            code: 'STOCKTYPEGROUPID_REQUIRED', description: {
-                en: 'The stocktypegroupid required',
-                tr: 'Bu işlem için stok tür grup id gerekli',
-            }
-        },
-        UNSUPPORTED_STOCKTYPEGROUPID: {
-            code: 'UNSUPPORTED_STOCKTYPEGROUPID', description: {
-                en: 'The stock type group id is unsupported',
-                tr: 'geçersiz stok tür grup id si',
-            }
-        },
-    }
 }

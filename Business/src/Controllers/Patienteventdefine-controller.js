@@ -1,13 +1,10 @@
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/PatientevenetdefineMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetPatienteventdefines(req, res, next) {
     try {
@@ -22,13 +19,13 @@ async function GetPatienteventdefine(req, res, next) {
 
     let validationErrors = []
     if (!req.params.patienteventdefineId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTEVENTDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Patienteventdefines.Error.PatienteventdefineIDRequired'))
     }
     if (!validator.isUUID(req.params.patienteventdefineId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTEVENTDEFINEID)
+        validationErrors.push(req.t('Patienteventdefines.Error.UnsupportedPatienteventdefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patienteventdefines'), req.language))
     }
 
     try {
@@ -49,12 +46,11 @@ async function AddPatienteventdefine(req, res, next) {
 
 
     if (!validator.isString(Eventname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EVENTNAME_REQUIRED)
+        validationErrors.push(req.t('Patienteventdefines.Error.EventnameRequired'))
     }
 
-
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patienteventdefines'), req.language))
     }
 
     let patienteventdefineuuid = uuid()
@@ -73,9 +69,12 @@ async function AddPatienteventdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Hasta Vaka Tanımları',
+            service: req.t('Patienteventdefines'),
             role: 'patienteventdefinenotification',
-            message: `${Eventname} isimli Hasta Vaka Tanımı  ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${Eventname} İsimli Vaka Tanımı  ${username} tarafından Oluşturuldu.`,
+                en: `${Eventname} Event Define Created By ${username}`
+            }[req.language],
             pushurl: '/Patienteventdefines'
         })
 
@@ -97,17 +96,17 @@ async function UpdatePatienteventdefine(req, res, next) {
 
 
     if (!validator.isString(Eventname)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EVENTNAME_REQUIRED)
+        validationErrors.push(req.t('Patienteventdefines.Error.EventnameRequired'))
     }
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTEVENTDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Patienteventdefines.Error.PatienteventdefineIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTEVENTDEFINEID)
+        validationErrors.push(req.t('Patienteventdefines.Error.UnsupportedPatienteventdefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patienteventdefines'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -116,10 +115,10 @@ async function UpdatePatienteventdefine(req, res, next) {
     try {
         const patienteventdefine = await db.patienteventdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!patienteventdefine) {
-            return next(createNotfounderror([messages.ERROR.PATIENTEVENTDEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Patienteventdefines.Error.NotFound'), req.t('Patienteventdefines'), req.language))
         }
         if (patienteventdefine.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PATIENTEVENTDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Patienteventdefines.Error.NotActive'), req.t('Patienteventdefines'), req.language))
         }
 
         await db.patienteventdefineModel.update({
@@ -130,11 +129,15 @@ async function UpdatePatienteventdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hasta Vaka Tanımları',
+            service: req.t('Patienteventdefines'),
             role: 'patienteventdefinenotification',
-            message: `${Eventname} isimli Hasta Vaka Tanımı  ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Eventname} İsimli Vaka Tanımı  ${username} tarafından Güncellendi.`,
+                en: `${Eventname} Event Define Updated By ${username}`
+            }[req.language],
             pushurl: '/Patienteventdefines'
         })
+
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -149,13 +152,13 @@ async function DeletePatienteventdefine(req, res, next) {
     const Uuid = req.params.patienteventdefineId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTEVENTDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Patienteventdefines.Error.PatienteventdefineIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTEVENTDEFINEID)
+        validationErrors.push(req.t('Patienteventdefines.Error.UnsupportedPatienteventdefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patienteventdefines'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -164,10 +167,10 @@ async function DeletePatienteventdefine(req, res, next) {
     try {
         const patienteventdefine = await db.patienteventdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!patienteventdefine) {
-            return next(createNotfounderror([messages.ERROR.PATIENTEVENTDEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Patienteventdefines.Error.NotFound'), req.t('Patienteventdefines'), req.language))
         }
         if (patienteventdefine.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PATIENTEVENTDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Patienteventdefines.Error.NotActive'), req.t('Patienteventdefines'), req.language))
         }
 
         await db.patienteventdefineModel.update({
@@ -177,12 +180,16 @@ async function DeletePatienteventdefine(req, res, next) {
         }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
-            type: types.Delete,
-            service: 'Hasta Vaka Tanımları',
+            type: types.Update,
+            service: req.t('Patienteventdefines'),
             role: 'patienteventdefinenotification',
-            message: `${patienteventdefine?.Eventname} isimli Hasta Vaka Tanımı  ${username} tarafından Silindi.`,
+            message: {
+                tr: `${patienteventdefine?.Eventname} İsimli Vaka Tanımı  ${username} tarafından Silindi.`,
+                en: `${patienteventdefine?.Eventname} Event Define Deleted By ${username}`
+            }[req.language],
             pushurl: '/Patienteventdefines'
         })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

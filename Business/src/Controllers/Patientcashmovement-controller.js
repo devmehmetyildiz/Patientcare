@@ -1,10 +1,8 @@
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotfounderror = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
@@ -21,13 +19,13 @@ async function GetPatientcashmovement(req, res, next) {
 
     let validationErrors = []
     if (!req.params.movementId) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTID_REQUIRED)
+        validationErrors.push(req.t('Patientcashmovements.Error.PatientmovementIDRequired'))
     }
     if (!validator.isUUID(req.params.movementId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MOVEMENTID)
+        validationErrors.push(req.t('Patientcashmovements.Error.UnsupportedPatientmovementID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patientcashmovements'), req.language))
     }
 
     try {
@@ -51,20 +49,20 @@ async function AddPatientcashmovement(req, res, next) {
 
 
     if (!validator.isUUID(PatientID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+        validationErrors.push(req.t('Patientcashmovements.Error.PatientIDRequired'))
     }
     if (!validator.isUUID(RegisterID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.REGISTERID_REQUIRED)
+        validationErrors.push(req.t('Patientcashmovements.Error.RegisterIDRequired'))
     }
     if (!validator.isNumber(Movementtype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED)
+        validationErrors.push(req.t('Patientcashmovements.Error.MovementtypeRequired'))
     }
     if (!validator.isNumber(Movementvalue)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTVALUE_REQUIRED)
+        validationErrors.push(req.t('Patientcashmovements.Error.MovementvalueRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patientcashmovements'), req.language))
     }
 
     let movementuuid = uuid()
@@ -76,10 +74,10 @@ async function AddPatientcashmovement(req, res, next) {
 
         const registertype = await db.patientcashregisterModel.findAll({ where: { Isactive: true, Uuid: RegisterID } })
         if (!registertype) {
-            return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_FOUND], req.language))
+            return next(createNotfounderror(req.t('Patientcashmovements.Error.PatientcashregisterNotFound'), req.t('Patientcashmovements'), req.language))
         }
         if (registertype.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_ACTIVE], req.language))
+            return next(createNotfounderror(req.t('Patientcashmovements.Error.PatientcashregisterNotActive'), req.t('Patientcashmovements'), req.language))
         }
 
         if (registertype.Iseffectcompany) {
@@ -108,9 +106,12 @@ async function AddPatientcashmovement(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Hasta Cüzdanları',
+            service: req.t('Patientcashmovements'),
             role: 'patientcashmovementnotification',
-            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ${Movementvalue || 0} TL ${username} tarafından Eklendi.`,
+            message: {
+                tr: `${patientdefine?.Firstname} ${patientdefine?.Lastname} Hastasına ait para hareketi ${username} tarafından Oluşturuldu.`,
+                en: `${patientdefine?.Firstname} ${patientdefine?.Lastname} Patient Cash Movement Created By ${username}`
+            }[req.language],
             pushurl: '/Patientcashmovements'
         })
 
@@ -134,25 +135,25 @@ async function UpdatePatientcashmovement(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(PatientID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+        validationErrors.push(req.t('Patientcashmovements.Error.PatientIDRequired'))
     }
     if (!validator.isUUID(RegisterID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.REGISTERID_REQUIRED)
+        validationErrors.push(req.t('Patientcashmovements.Error.RegisterIDRequired'))
     }
     if (!validator.isNumber(Movementtype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED)
+        validationErrors.push(req.t('Patientcashmovements.Error.MovementtypeRequired'))
     }
     if (!validator.isNumber(Movementvalue)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTVALUE_REQUIRED)
+        validationErrors.push(req.t('Patientcashmovements.Error.MovementvalueRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTID_REQUIRED)
+        validationErrors.push(req.t('Patientcashmovements.Error.PatientmovementIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MOVEMENTID)
+        validationErrors.push(req.t('Patientcashmovements.Error.UnsupportedPatientmovementID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patientcashmovements'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -161,10 +162,10 @@ async function UpdatePatientcashmovement(req, res, next) {
     try {
         const patientcashmovement = await db.patientcashmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!patientcashmovement) {
-            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
+            return next(createNotfounderror(req.t('Patientcashmovements.Error.NotFound'), req.t('Patientcashmovements'), req.language))
         }
         if (patientcashmovement.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror(req.t('Patientcashmovements.Error.NotActive'), req.t('Patientcashmovements'), req.language))
         }
 
         await db.patientcashmovementModel.update({
@@ -178,9 +179,12 @@ async function UpdatePatientcashmovement(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hasta Cüzdanları',
+            service: req.t('Patientcashmovements'),
             role: 'patientcashmovementnotification',
-            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasının ${patientcashmovement?.Movementvalue} TL ücreti ,  ${Movementvalue || 0} TL olarak ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${patientdefine?.Firstname} ${patientdefine?.Lastname} Hastasına ait para hareketi ${username} tarafından Güncellendi.`,
+                en: `${patientdefine?.Firstname} ${patientdefine?.Lastname} Patient Cash Movement Updated By ${username}`
+            }[req.language],
             pushurl: '/Patientcashmovements'
         })
 
@@ -198,13 +202,13 @@ async function DeletePatientcashmovement(req, res, next) {
     const Uuid = req.params.movementId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTID_REQUIRED)
+        validationErrors.push(req.t('Patientcashmovements.Error.PatientmovementIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MOVEMENTID)
+        validationErrors.push(req.t('Patientcashmovements.Error.UnsupportedPatientmovementID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patientcashmovements'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -213,10 +217,10 @@ async function DeletePatientcashmovement(req, res, next) {
     try {
         const patientcashmovement = await db.patientcashmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!patientcashmovement) {
-            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
+            return next(createNotfounderror(req.t('Patientcashmovements.Error.NotFound'), req.t('Patientcashmovements'), req.language))
         }
         if (patientcashmovement.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotfounderror(req.t('Patientcashmovements.Error.NotActive'), req.t('Patientcashmovements'), req.language))
         }
 
         await db.patientcashmovementModel.update({
@@ -231,9 +235,12 @@ async function DeletePatientcashmovement(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Hasta Cüzdanları',
+            service: req.t('Patientcashmovements'),
             role: 'patientcashmovementnotification',
-            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasının ${patientcashmovement?.Movementvalue} TL ücreti ${username} tarafından Silindi.`,
+            message: {
+                tr: `${patientdefine?.Firstname} ${patientdefine?.Lastname} Hastasına ait para hareketi ${username} tarafından Silindi.`,
+                en: `${patientdefine?.Firstname} ${patientdefine?.Lastname} Patient Cash Movement Deleted By ${username}`
+            }[req.language],
             pushurl: '/Patientcashmovements'
         })
 

@@ -1,13 +1,10 @@
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/ProfessionpresettingMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher,  requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetProfessionpresettings(req, res, next) {
     try {
@@ -22,13 +19,13 @@ async function GetProfessionpresetting(req, res, next) {
 
     let validationErrors = []
     if (!req.params.professionpresettingId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PROFESSIONPRESETTINGID_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.PersonelpresettingIDRequired'))
     }
     if (!validator.isUUID(req.params.professionpresettingId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PROFESSIONPRESETTINGID)
+        validationErrors.push(req.t('Professionpresettings.Error.UnsupportedPersonelpresettingID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Professionpresettings'), req.language))
     }
 
     try {
@@ -54,29 +51,29 @@ async function AddProfessionpresetting(req, res, next) {
 
 
     if (!validator.isUUID(ProfessionID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PROFESSIONID_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.ProfessionIDRequired'))
     }
     if (!validator.isBoolean(Isinfinite)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISINFITINE_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.IsinfiniteRequired'))
     }
     if (!validator.isBoolean(Isapproved)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISAPPROVED_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.IsapprovedRequired'))
     }
     if (!validator.isBoolean(Iscompleted)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISCOMPLETED_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.IsCompletedRequired'))
     }
     if (!validator.isBoolean(Isdeactive)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISDEACTIVE_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.IsdeactivatedRequired'))
     }
     if (!validator.isBoolean(Ispersonelstay)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISPERSONELSTAY_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.IspersonelstayRequired'))
     }
     if (Isinfinite === false && !validator.isISODate(Startdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.StartdateRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Professionpresettings'), req.language))
     }
 
     let professionpresettinguuid = uuid()
@@ -95,11 +92,15 @@ async function AddProfessionpresetting(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Meslek Ön Ayarları',
+            service: req.t('Professionpresettings'),
             role: 'professionpresettingnotification',
-            message: `${professionpresettinguuid} numaralı meslek ön ayarı ${username} tarafından Eklendi.`,
+            message: {
+                tr: `${professionpresettinguuid} Id'li Meslek Ön Ayarı ${username} tarafından Oluşturuldu.`,
+                en: `${professionpresettinguuid} Id Profession Pre Setting Created By ${username}`
+            }[req.language],
             pushurl: '/Professionpresettings'
         })
+
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -124,34 +125,34 @@ async function UpdateProfessionpresetting(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(ProfessionID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PROFESSIONID_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.ProfessionIDRequired'))
     }
     if (!validator.isBoolean(Isinfinite)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISINFITINE_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.IsinfiniteRequired'))
     }
     if (!validator.isBoolean(Isapproved)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISAPPROVED_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.IsapprovedRequired'))
     }
     if (!validator.isBoolean(Iscompleted)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISCOMPLETED_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.IsCompletedRequired'))
     }
     if (!validator.isBoolean(Isdeactive)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISDEACTIVE_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.IsdeactivatedRequired'))
     }
     if (!validator.isBoolean(Ispersonelstay)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISPERSONELSTAY_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.IspersonelstayRequired'))
     }
     if (Isinfinite === false && !validator.isISODate(Startdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.StartdateRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHIFTID_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.ProfessionpresettingIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTID)
+        validationErrors.push(req.t('Professionpresettings.Error.UnsupportedProfessionpresettingID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Professionpresettings'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -160,10 +161,10 @@ async function UpdateProfessionpresetting(req, res, next) {
     try {
         const professionpresetting = db.professionpresettingModel.findOne({ where: { Uuid: Uuid } })
         if (!professionpresetting) {
-            return next(createNotfounderror([messages.ERROR.PROFESSIONPRESETTING_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Professionpresettings.Error.NotFound'), req.t('Professionpresettings'), req.language))
         }
         if (professionpresetting.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PROFESSIONPRESETTING_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Professionpresettings.Error.NotActive'), req.t('Professionpresettings'), req.language))
         }
 
         await db.professionpresettingModel.update({
@@ -175,11 +176,15 @@ async function UpdateProfessionpresetting(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Meslek Ön Ayarları',
+            service: req.t('Professionpresettings'),
             role: 'professionpresettingnotification',
-            message: `${Uuid} numaralı meslek ön ayarı ${username} tarafından güncellendi.`,
+            message: {
+                tr: `${Uuid} Id'li Meslek Ön Ayarı ${username} tarafından Güncellendi.`,
+                en: `${Uuid} Id Profession Pre Setting Updated By ${username}`
+            }[req.language],
             pushurl: '/Professionpresettings'
         })
+
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -193,13 +198,13 @@ async function DeleteProfessionpresetting(req, res, next) {
     const Uuid = req.params.professionpresettingId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHIFTID_REQUIRED)
+        validationErrors.push(req.t('Professionpresettings.Error.ProfessionpresettingIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTID)
+        validationErrors.push(req.t('Professionpresettings.Error.UnsupportedProfessionpresettingID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Professionpresettings'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -208,10 +213,10 @@ async function DeleteProfessionpresetting(req, res, next) {
     try {
         const professionpresetting = db.professionpresettingModel.findOne({ where: { Uuid: Uuid } })
         if (!professionpresetting) {
-            return next(createNotfounderror([messages.ERROR.PROFESSIONPRESETTING_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Professionpresettings.Error.NotFound'), req.t('Professionpresettings'), req.language))
         }
         if (professionpresetting.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PROFESSIONPRESETTING_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Professionpresettings.Error.NotActive'), req.t('Professionpresettings'), req.language))
         }
 
         await db.professionpresettingModel.update({
@@ -222,9 +227,12 @@ async function DeleteProfessionpresetting(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Meslek Ön Ayarları',
+            service: req.t('Professionpresettings'),
             role: 'professionpresettingnotification',
-            message: `${Uuid} numaralı meslek ön ayarı ${username} tarafından Silindi.`,
+            message: {
+                tr: `${Uuid} Id'li Meslek Ön Ayarı ${username} tarafından Silindi.`,
+                en: `${Uuid} Id Profession Pre Setting Deleted By ${username}`
+            }[req.language],
             pushurl: '/Professionpresettings'
         })
 

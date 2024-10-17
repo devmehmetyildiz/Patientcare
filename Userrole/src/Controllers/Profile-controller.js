@@ -281,7 +281,7 @@ async function ValidatePassword(UserPassword, DbPassword, salt) {
         } else {
             return false
         }
-    } catch (error) {
+    } catch {
         return false
     }
 }

@@ -13,7 +13,7 @@ async function Getnumerator(next, transaction) {
             }, { where: { Id: previous.Id }, transaction })
             return newnumerator
         } else {
-            const newnumerator = await Createnewnumerator(_, next)
+            const newnumerator = await Createnewnumerator(null, next)
             await db.filenumeratorModel.create({
                 Current: newnumerator
             }, { transaction })

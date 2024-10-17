@@ -1,13 +1,10 @@
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetPatientdefines(req, res, next) {
     try {
@@ -22,13 +19,13 @@ async function GetPatientdefine(req, res, next) {
 
     let validationErrors = []
     if (!req.params.patientdefineId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Patientdefines.Error.PatientdefineIDRequired'))
     }
     if (!validator.isUUID(req.params.patientdefineId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTDEFINEID)
+        validationErrors.push(req.t('Patientdefines.Error.UnsupportedPatientdefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patientdefines'), req.language))
     }
 
     try {
@@ -49,12 +46,11 @@ async function AddPatientdefine(req, res, next) {
 
 
     if (!validator.isString(CountryID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
+        validationErrors.push(req.t('Patientdefines.Error.CountryIDRequired'))
     }
 
-
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patientdefines'), req.language))
     }
 
     let patientdefineuuid = uuid()
@@ -73,9 +69,12 @@ async function AddPatientdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Hasta Tanımları',
+            service: req.t('Patientdefines'),
             role: 'patientdefinenotification',
-            message: `${CountryID} TC kimlik numaralı hasta  ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${CountryID} TC kimlik Numaralı Hasta  ${username} tarafından Oluşturuldu.`,
+                en: `${CountryID} Country ID Patient Created By ${username}`
+            }[req.language],
             pushurl: '/Patientdefines'
         })
 
@@ -97,17 +96,18 @@ async function UpdatePatientdefine(req, res, next) {
 
 
     if (!validator.isString(CountryID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.COUNTRYID_REQUIRED)
+        validationErrors.push(req.t('Patientdefines.Error.CountryIDRequired'))
     }
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Patientdefines.Error.PatientdefineIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTDEFINEID)
+        validationErrors.push(req.t('Patientdefines.Error.UnsupportedPatientdefineID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patientdefines'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -116,10 +116,10 @@ async function UpdatePatientdefine(req, res, next) {
     try {
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!patientdefine) {
-            return next(createNotfounderror([messages.ERROR.PATIENTDEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Patientdefines.Error.NotFound'), req.t('Patientdefines'), req.language))
         }
         if (patientdefine.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PATIENTDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Patientdefines.Error.NotActive'), req.t('Patientdefines'), req.language))
         }
 
         await db.patientdefineModel.update({
@@ -130,9 +130,12 @@ async function UpdatePatientdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hasta Tanımları',
+            service: req.t('Patientdefines'),
             role: 'patientdefinenotification',
-            message: `${CountryID} TC kimlik numaralı hasta  ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${CountryID} TC kimlik Numaralı Hasta  ${username} tarafından Güncellendi.`,
+                en: `${CountryID} Country ID Patient Updated By ${username}`
+            }[req.language],
             pushurl: '/Patientdefines'
         })
         await t.commit()
@@ -149,13 +152,13 @@ async function DeletePatientdefine(req, res, next) {
     const Uuid = req.params.patientdefineId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Patientdefines.Error.PatientdefineIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PATIENTDEFINEID)
+        validationErrors.push(req.t('Patientdefines.Error.UnsupportedPatientdefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patientdefines'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -164,10 +167,10 @@ async function DeletePatientdefine(req, res, next) {
     try {
         const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!patientdefine) {
-            return next(createNotfounderror([messages.ERROR.PATIENTDEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Patientdefines.Error.NotFound'), req.t('Patientdefines'), req.language))
         }
         if (patientdefine.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PATIENTDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Patientdefines.Error.NotActive'), req.t('Patientdefines'), req.language))
         }
 
         await db.patientdefineModel.update({
@@ -178,9 +181,12 @@ async function DeletePatientdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Hasta Tanımları',
+            service: req.t('Patientdefines'),
             role: 'patientdefinenotification',
-            message: `${patientdefine?.CountryID} TC kimlik numaralı hasta  ${username} tarafından Silindi.`,
+            message: {
+                tr: `${patientdefine?.CountryID} TC kimlik Numaralı Hasta  ${username} tarafından Silindi.`,
+                en: `${patientdefine?.CountryID} Country ID Patient Deleted By ${username}`
+            }[req.language],
             pushurl: '/Patientdefines'
         })
         await t.commit();

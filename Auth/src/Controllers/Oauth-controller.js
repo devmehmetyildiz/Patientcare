@@ -1,13 +1,14 @@
-const messages = require('../Constants/Messages')
-const createValidationError = require('../Utilities/Error').createValidation
+const createValidationError = require('../Utilities/Error').createValidationError
+const createAuthError = require('../Utilities/Error').createAuthError
+const createNotFoundError = require('../Utilities/Error').createNotFoundError
 const bcrypt = require('bcrypt')
 const uuid = require('uuid').v4
-const { sequelizeErrorCatcher, createAutherror, requestErrorCatcher, createNotfounderror } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const axios = require('axios')
 const config = require('../Config')
 const Createlog = require('../Utilities/Createlog')
 
-function Testserver(req, res, next) {
+function Testserver(req, res) {
     res.status(200).json({ message: "success" })
 }
 
@@ -16,17 +17,17 @@ function Login(req, res, next) {
     let grantType = req.body.grant_type || req.body.grantType || req.query.grant_type || req.query.grantType
 
     if (!grantType) {
-        validationErrors.push(messages.VALIDATION_ERROR.GRANTTYPE_REQUIRED)
+        validationErrors.push(req.t('Oauth.Error.GranttypeRequired'))
     }
 
     switch (grantType) {
         case 'password': return responseToGetTokenByGrantPassword(req, res, next)
         case 'refresh_token': return responseToGetTokenByRefreshToken(req, res, next)
-        default: validationErrors.push(messages.VALIDATION_ERROR.INVALID_GRANTTYPE)
+        default: validationErrors.push(req.t('Oauth.Error.InvalidGranttype'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Oauth'), req.language))
     }
 }
 
@@ -54,21 +55,21 @@ async function ValidateToken(req, res, next) {
     let bearerToken = req.body.accessToken || req.body.accessToken || req.query.accessToken || req.query.accessToken
 
     if (!bearerToken) {
-        validationErrors.push(messages.ERROR.ACCESS_TOKEN_NOT_FOUND)
+        validationErrors.push(req.t('Oauth.Error.AccessTokenNotFound'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Oauth'), req.language))
     }
 
     accessToken = await db.accesstokenModel.findOne({ where: { Accesstoken: bearerToken, Isactive: true } })
     if (!accessToken) {
-        return next(createAutherror(messages.ERROR.ACCESS_TOKEN_NOT_FOUND, req.language))
+        return next(createAuthError(req.t('Oauth.Error.AccessTokenNotFound'), req.t('Oauth'), req.language))
     }
     const g1 = new Date(accessToken.ExpiresAt)
     const g2 = new Date()
     if (g1.getTime() <= g2.getTime()) {
-        return next(createAutherror(messages.ERROR.ACCESS_TOKEN_INVALID, req.language))
+        return next(createAuthError(req.t('Oauth.Error.AccessTokenInvalid'), req.t('Oauth'), req.language))
     }
     return res.status(200).json(accessToken)
 }
@@ -77,15 +78,15 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
     let validationErrors = []
 
     if (!req.body.Username) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERNAME_REQUIRED)
+        validationErrors.push(req.t('Oauth.Error.UsernameRequired'))
     }
 
     if (!req.body.Password) {
-        validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
+        validationErrors.push(req.t('Oauth.Error.PasswordRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Oauth'), req.language))
     }
     let user = null
     let usersalt = null
@@ -116,7 +117,7 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
     }
 
     if (!await ValidatePassword(req.body.Password, user.PasswordHash, usersalt.Salt)) {
-        return next(createAutherror([messages.ERROR.PASSWORD_DIDNTMATCH], req.language))
+        return next(createAuthError(req.t('Oauth.Error.PasswordDindtMatch'), req.t('Oauth'), req.language))
     }
 
     const expireTime = new Date()
@@ -172,22 +173,22 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
     let validationErrors = []
 
     if (!req.body.refreshToken) {
-        validationErrors.push(messages.VALIDATION_ERROR.REFRESHTOKEN_REQUIRED)
+        validationErrors.push(req.t('Oauth.Error.RefreshTokenRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Oauth'), req.language))
     }
 
     const token = await db.accesstokenModel.findOne({ where: { Refreshtoken: req.body.refreshToken } });
     if (!token) {
-        return next(createNotfounderror([messages.ERROR.REFRESH_TOKEN_NOT_FOUND], req.language))
+        return next(createNotFoundError(req.t('Oauth.Error.RefreshTokenNotFound'), req.t('Oauth'), req.language))
     }
 
     const g1 = new Date(token.RefreshtokenexpiresAt)
     const g2 = new Date()
     if (g1.getTime() <= g2.getTime()) {
-        return next(createValidationError([messages.ERROR.REFRESH_TOKEN_EXPIRED], req.language))
+        return next(createAuthError(req.t('Oauth.Error.RefreshTokenExpired'), req.t('Oauth'), req.language))
     }
     let user = null
     try {
@@ -250,7 +251,7 @@ async function ValidatePassword(UserPassword, DbPassword, salt) {
         } else {
             return false
         }
-    } catch (error) {
+    } catch {
         return false
     }
 }

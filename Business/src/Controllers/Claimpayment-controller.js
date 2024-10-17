@@ -1,9 +1,8 @@
-const messages = require("../Constants/ClaimpaymentMessages")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const { claimpaymenttypes } = require('../Constants/Claimpaymenttypes')
@@ -26,10 +25,10 @@ async function GetClaimpayment(req, res, next) {
 
     let validationErrors = []
     if (!req.params.claimpaymentId) {
-        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTID_REQUIRED)
+        validationErrors.push(req.t('Claimpayments.Error.ClaimpaymentIDRequired'))
     }
     if (!validator.isUUID(req.params.claimpaymentId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTID)
+        validationErrors.push(req.t('Claimpayments.Error.UnsupportedClaimpaymentID'))
     }
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.language))
@@ -56,21 +55,20 @@ async function AddClaimpayment(req, res, next) {
     } = req.body
 
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
-        return next(createValidationError(validationErrors, req.language))
+        validationErrors.push(req.t('Claimpayments.Error.TypeRequired'))
     }
     if (!validator.isString(Name)) {
-        return next(createValidationError([messages.VALIDATION_ERROR.NAME_REQUIRED], req.language))
+        validationErrors.push(req.t('Claimpayments.Error.NameRequired'))
     }
     if (!validator.isISODate(Starttime)) {
-        return next(createValidationError([messages.VALIDATION_ERROR.STARTTIME_REQUIRED], req.language))
+        validationErrors.push(req.t('Claimpayments.Error.StarttimeRequired'))
     }
     if (!validator.isISODate(Endtime)) {
-        return next(createValidationError([messages.VALIDATION_ERROR.ENDTIME_REQUIRED], req.language))
+        validationErrors.push(req.t('Claimpayments.Error.EndtimeRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Claimpayments'), req.language))
     }
 
     let ClaimpaymentID = uuid()
@@ -102,11 +100,11 @@ async function AddClaimpayment(req, res, next) {
                 CalculationResponse = await CreateClaimpaymentByPersonel(config)
                 break;
             default:
-                return next(createValidationError([messages.VALIDATION_ERROR.UNSUPPORTED_TYPE], req.language))
+                return next(createValidationError(req.t('Claimpayments.Error.Unsupportedtype'), req.t('Claimpayments'), req.language))
         }
 
         if (!CalculationResponse) {
-            return next(createValidationError([messages.ERROR.CLAIMPAYMENT_DID_NOT_CALCULATE], req.language))
+            return next(createValidationError(req.t('Claimpayments.Error.DidNotCalculate'), req.t('Claimpayments'), req.language))
         }
 
         const {
@@ -168,9 +166,12 @@ async function AddClaimpayment(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Hakedişler',
+            service: req.t('Claimpayments'),
             role: 'claimpaymentnotification',
-            message: `${ClaimpaymentID} numaralı hakediş ${username} tarafından Eklendi.`,
+            message: {
+                tr: `${Name} İsimli Hakediş ${username} tarafından Oluşturuldu.`,
+                en: `${Name} Named Claimpayment Created By ${username}`
+            }[req.language],
             pushurl: '/Claimpayments'
         })
 
@@ -188,13 +189,13 @@ async function ApproveClaimpayment(req, res, next) {
     const Uuid = req.params.claimpaymentId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTID_REQUIRED)
+        validationErrors.push(req.t('Claimpayments.Error.ClaimpaymentIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTID)
+        validationErrors.push(req.t('Claimpayments.Error.UnsupportedClaimpaymentID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Claimpayments'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -203,13 +204,13 @@ async function ApproveClaimpayment(req, res, next) {
     try {
         const claimpayment = await db.claimpaymentModel.findOne({ where: { Uuid: Uuid } })
         if (!claimpayment) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Claimpayments.Error.NotFound'), req.t('Claimpayments'), req.language))
         }
         if (claimpayment.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Claimpayments.Error.NotActive'), req.t('Claimpayments'), req.language))
         }
         if (claimpayment.Isapproved === true) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENT_ALREADY_APPROVED], req.language))
+            return next(createNotFoundError(req.t('Claimpayments.Error.Approved'), req.t('Claimpayments'), req.language))
         }
 
         await db.claimpaymentModel.update({
@@ -223,9 +224,12 @@ async function ApproveClaimpayment(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hakedişlet',
+            service: req.t('Claimpayments'),
             role: 'claimpaymentnotification',
-            message: `${Uuid} numaralı hakediş ${username} tarafından Onaylandı.`,
+            message: {
+                tr: `${claimpayment?.Name} İsimli Hakediş ${username} tarafından Onaylandı.`,
+                en: `${claimpayment?.Name} Named Claimpayment Approved By ${username}`
+            }[req.language],
             pushurl: '/Claimpayments'
         })
 
@@ -242,13 +246,13 @@ async function SavepreviewClaimpayment(req, res, next) {
     const Uuid = req.params.claimpaymentId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTID_REQUIRED)
+        validationErrors.push(req.t('Claimpayments.Error.ClaimpaymentIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTID)
+        validationErrors.push(req.t('Claimpayments.Error.UnsupportedClaimpaymentID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Claimpayments'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -257,13 +261,13 @@ async function SavepreviewClaimpayment(req, res, next) {
     try {
         const claimpayment = await db.claimpaymentModel.findOne({ where: { Uuid: Uuid } })
         if (!claimpayment) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Claimpayments.Error.NotFound'), req.t('Claimpayments'), req.language))
         }
         if (claimpayment.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Claimpayments.Error.NotActive'), req.t('Claimpayments'), req.language))
         }
         if (claimpayment.Isapproved === true) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENT_ALREADY_APPROVED], req.language))
+            return next(createNotFoundError(req.t('Claimpayments.Error.Approved'), req.t('Claimpayments'), req.language))
         }
 
         await db.claimpaymentModel.update({
@@ -275,9 +279,12 @@ async function SavepreviewClaimpayment(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hakedişler',
+            service: req.t('Claimpayments'),
             role: 'claimpaymentnotification',
-            message: `${Uuid} numaralı hakediş ${username} tarafından Kaydedildi.`,
+            message: {
+                tr: `${claimpayment?.Name} İsimli Hakediş ${username} tarafından Kayıt Edildi.`,
+                en: `${claimpayment?.Name} Named Claimpayment Saved By ${username}`
+            }[req.language],
             pushurl: '/Claimpayments'
         })
 
@@ -294,13 +301,13 @@ async function DeleteClaimpayment(req, res, next) {
     const Uuid = req.params.claimpaymentId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTID_REQUIRED)
+        validationErrors.push(req.t('Claimpayments.Error.ClaimpaymentIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTID)
+        validationErrors.push(req.t('Claimpayments.Error.UnsupportedClaimpaymentID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Claimpayments'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -309,10 +316,10 @@ async function DeleteClaimpayment(req, res, next) {
     try {
         const claimpayment = await db.claimpaymentModel.findOne({ where: { Uuid: Uuid } })
         if (!claimpayment) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Claimpayments.Error.NotFound'), req.t('Claimpayments'), req.language))
         }
         if (claimpayment.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Claimpayments.Error.NotActive'), req.t('Claimpayments'), req.language))
         }
 
         await db.claimpaymentModel.update({
@@ -329,10 +336,13 @@ async function DeleteClaimpayment(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Hakediş Parametreleri',
-            role: 'claimpaymentparameternotification',
-            message: `${Uuid} numaralı hakediş parametresi ${username} tarafından Silindi.`,
-            pushurl: '/Claimpaymentparameters'
+            service: req.t('Claimpayments'),
+            role: 'claimpaymentnotification',
+            message: {
+                tr: `${claimpayment?.Name} İsimli Hakediş ${username} tarafından Silindi.`,
+                en: `${claimpayment?.Name} Named Claimpayment Deleted By ${username}`
+            }[req.language],
+            pushurl: '/Claimpayments'
         })
 
         await t.commit();
@@ -365,11 +375,11 @@ async function CreateClaimpaymentByPatient({ Starttime, Endtime, req, next, }) {
             }
         })
     if (!claimpaymentparameter) {
-        return next(createValidationError([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
+        return next(createValidationError(req.t('Claimpayments.Error.ClaimpaymentparameterNotFound'), req.t('Claimpayments'), req.language))
     }
     const selectedcostumertype = (costumertypes || []).find(u => u.Uuid === claimpaymentparameter?.CostumertypeID)
     if (!selectedcostumertype) {
-        return next(createValidationError([messages.ERROR.PARAMETERCOSTUMERTYPE_NOT_FOUND], req.language))
+        return next(createValidationError(req.t('Claimpayments.Error.ClaimpaymentparameterCostumertypeNotFound'), req.t('Claimpayments'), req.language))
     }
     const patients = await db.sequelize.query(
         `SELECT patients.* FROM patients
@@ -388,7 +398,7 @@ async function CreateClaimpaymentByPatient({ Starttime, Endtime, req, next, }) {
         }
     );
     if ((patients || []).length <= 0) {
-        return next(createValidationError([messages.ERROR.NO_PATIENT_FOUND], req.language))
+        return next(createValidationError(req.t('Claimpayments.Error.NoPatientFound'), req.t('Claimpayments'), req.language))
     }
     const dates = getDateArray(Starttime, Endtime)
     for (const patient of patients) {
@@ -474,11 +484,11 @@ async function CreateClaimpaymentByBhks({ Starttime, Endtime, req, next, }) {
             }
         })
     if (!claimpaymentparameter) {
-        return next(createValidationError([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
+        return next(createValidationError(req.t('Claimpayments.Error.ClaimpaymentparameterNotFound'), req.t('Claimpayments'), req.language))
     }
     const selectedcostumertype = (costumertypes || []).find(u => u.Uuid === claimpaymentparameter?.CostumertypeID)
     if (!selectedcostumertype) {
-        return next(createValidationError([messages.ERROR.PARAMETERCOSTUMERTYPE_NOT_FOUND], req.language))
+        return next(createValidationError(req.t('Claimpayments.Error.ClaimpaymentparameterCostumertypeNotFound'), req.t('Claimpayments'), req.language))
     }
     const patients = await db.sequelize.query(
         `SELECT patients.* FROM patients
@@ -497,7 +507,7 @@ async function CreateClaimpaymentByBhks({ Starttime, Endtime, req, next, }) {
         }
     );
     if ((patients || []).length <= 0) {
-        return next(createValidationError([messages.ERROR.NO_PATIENT_FOUND], req.language))
+        return next(createValidationError(req.t('Claimpayments.Error.NoPatientFound'), req.t('Claimpayments'), req.language))
     }
     const dates = getDateArray(Starttime, Endtime)
     for (const patient of patients) {
@@ -589,11 +599,11 @@ async function CreateClaimpaymentByKys({ Starttime, Endtime, req, next, }) {
             }
         })
     if (!claimpaymentparameter) {
-        return next(createValidationError([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
+        return next(createValidationError(req.t('Claimpayments.Error.ClaimpaymentparameterNotFound'), req.t('Claimpayments'), req.language))
     }
     const selectedcostumertype = (costumertypes || []).find(u => u.Uuid === claimpaymentparameter?.CostumertypeID)
     if (!selectedcostumertype) {
-        return next(createValidationError([messages.ERROR.PARAMETERCOSTUMERTYPE_NOT_FOUND], req.language))
+        return next(createValidationError(req.t('Claimpayments.Error.ClaimpaymentparameterCostumertypeNotFound'), req.t('Claimpayments'), req.language))
     }
     const patients = await db.sequelize.query(
         `SELECT patients.* FROM patients
@@ -612,7 +622,7 @@ async function CreateClaimpaymentByKys({ Starttime, Endtime, req, next, }) {
         }
     );
     if ((patients || []).length <= 0) {
-        return next(createValidationError([messages.ERROR.NO_PATIENT_FOUND], req.language))
+        return next(createValidationError(req.t('Claimpayments.Error.NoPatientFound'), req.t('Claimpayments'), req.language))
     }
     const dates = getDateArray(Starttime, Endtime)
     for (const patient of patients) {
@@ -684,7 +694,7 @@ async function CreateClaimpaymentByKys({ Starttime, Endtime, req, next, }) {
     }
 }
 
-async function CreateClaimpaymentByPersonel({ Starttime, Endtime, req, next, }) {
+async function CreateClaimpaymentByPersonel() {
 
 }
 

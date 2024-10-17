@@ -1,12 +1,10 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/ProfessionMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher} = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-
 
 async function GetProfessions(req, res, next) {
     try {
@@ -21,13 +19,13 @@ async function GetProfession(req, res, next) {
 
     let validationErrors = []
     if (!req.params.professionId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PROFESSIONID_REQUIRED)
+        validationErrors.push(req.t('Professions.Error.ProfessionIDRequired'))
     }
     if (!validator.isUUID(req.params.professionId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PROFESSIONID)
+        validationErrors.push(req.t('Professions.Error.UnsupportedProfessionID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Professions'), req.language))
     }
 
     try {
@@ -47,11 +45,11 @@ async function AddProfession(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Professions.Error.NameRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Professions'), req.language))
     }
 
     let professionuuid = uuid()
@@ -70,9 +68,12 @@ async function AddProfession(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Meslekler',
+            service: req.t('Professions'),
             role: 'professionnotification',
-            message: `${Name} mesleği ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${Name} İsimli Meslek ${username} tarafından Oluşturuldu.`,
+                en: `${Name} Profession Created By ${username}`
+            }[req.language],
             pushurl: '/Professions'
         })
 
@@ -94,13 +95,17 @@ async function UpdateProfession(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Professions.Error.NameRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PROFESSIONID_REQUIRED)
+        validationErrors.push(req.t('Professions.Error.ProfessionIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PROFESSIONID)
+        validationErrors.push(req.t('Professions.Error.UnsupportedProfessionID'))
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Professions'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -109,10 +114,10 @@ async function UpdateProfession(req, res, next) {
     try {
         const profession = await db.professionModel.findOne({ where: { Uuid: Uuid } })
         if (!profession) {
-            return next(createNotfounderror([messages.ERROR.PROFESSION_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Professions.Error.NotFound'), req.t('Professions'), req.language))
         }
         if (profession.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PROFESSION_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Professions.Error.NotActive'), req.t('Professions'), req.language))
         }
 
         await db.professionModel.update({
@@ -123,9 +128,12 @@ async function UpdateProfession(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Meslekler',
+            service: req.t('Professions'),
             role: 'professionnotification',
-            message: `${Name} mesleği ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Name} İsimli Meslek ${username} tarafından Güncellendi.`,
+                en: `${Name} Profession Updated By ${username}`
+            }[req.language],
             pushurl: '/Professions'
         })
 
@@ -143,13 +151,14 @@ async function DeleteProfession(req, res, next) {
     const Uuid = req.params.professionId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PROFESSIONID_REQUIRED)
+        validationErrors.push(req.t('Professions.Error.ProfessionIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PROFESSIONID)
+        validationErrors.push(req.t('Professions.Error.UnsupportedProfessionID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Professions'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -158,10 +167,10 @@ async function DeleteProfession(req, res, next) {
     try {
         const profession = await db.professionModel.findOne({ where: { Uuid: Uuid } })
         if (!profession) {
-            return next(createNotfounderror([messages.ERROR.PROFESSION_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Professions.Error.NotFound'), req.t('Professions'), req.language))
         }
         if (profession.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PROFESSION_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Professions.Error.NotActive'), req.t('Professions'), req.language))
         }
 
         await db.professionModel.update({
@@ -172,9 +181,12 @@ async function DeleteProfession(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Meslekler',
+            service: req.t('Professions'),
             role: 'professionnotification',
-            message: `${profession?.Name} mesleği ${username} tarafından Silindi.`,
+            message: {
+                tr: `${profession?.Name} İsimli Meslek ${username} tarafından Silindi.`,
+                en: `${profession?.Name} Profession Deleted By ${username}`
+            }[req.language],
             pushurl: '/Professions'
         })
 

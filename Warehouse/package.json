@@ -5,7 +5,8 @@
   "main": "src/App.js",
   "scripts": {
     "start": "nodemon src/App.js",
-    "build": "cpy .env web.config src dist && cpy 'src/**/*' dist && esbuild src/App.js --bundle --minify --platform=node --outfile=dist/bundle.js"
+    "build": "cpy .env web.config src dist && cpy 'src/**/*' dist && esbuild src/App.js --bundle --minify --platform=node --outfile=dist/bundle.js",
+    "lint": "eslint ./src --config eslint.config.js"
   },
   "author": "mehmetyildiz",
   "license": "ISC",
@@ -27,6 +28,9 @@
     "env": "^0.0.2",
     "expect": "^29.5.0",
     "express-session": "^1.17.3",
+    "i18next": "^23.16.0",
+    "i18next-fs-backend": "^2.3.2",
+    "i18next-http-middleware": "^3.6.0",
     "mysql2": "^3.2.0",
     "pg": "^8.10.0",
     "pg-hstore": "^2.3.4",

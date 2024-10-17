@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const config = require('./Config');
+const i18next = require('./i18n');
+const middleware = require('i18next-http-middleware');
 
 require("./Middlewares/Databaseconnector")()
   .then(() => {
@@ -43,6 +45,7 @@ require("./Middlewares/Databaseconnector")()
 
     app.use(bodyParser.json({ limit: '50mb' }))
     app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+    app.use(middleware.handle(i18next));
     app.use(languageHelper)
     app.use(crossDomainEnabler)
     app.use(authorizationChecker)

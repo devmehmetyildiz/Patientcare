@@ -1,13 +1,10 @@
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const { formatDate } = require("../Utilities/Convert")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher, } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetMainteancies(req, res, next) {
     try {
@@ -26,22 +23,22 @@ async function GetMainteance(req, res, next) {
 
     let validationErrors = []
     if (!req.params.mainteanceId) {
-        validationErrors.push(messages.VALIDATION_ERROR.MAINTEANCEID_REQUIRED)
+        validationErrors.push(req.t('Mainteancies.Error.MainteancyIDRequired'))
     }
     if (!validator.isUUID(req.params.mainteanceId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MAINTEANCEID)
+        validationErrors.push(req.t('Mainteancies.Error.UnsupportedMainteancyID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Mainteancies'), req.language))
     }
 
     try {
         const mainteance = await db.mainteanceModel.findOne({ where: { Uuid: req.params.mainteanceId } });
         if (!mainteance) {
-            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Mainteancies.Error.NotFound'), req.t('Mainteancies'), req.language))
         }
         if (!mainteance.Isactive) {
-            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Mainteancies.Error.NotActive'), req.t('Mainteancies'), req.language))
         }
         res.status(200).json(mainteance)
     } catch (error) {
@@ -59,14 +56,14 @@ async function AddMainteance(req, res, next) {
 
 
     if (!validator.isUUID(EquipmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+        validationErrors.push(req.t('Mainteancies.Error.EquipmentIDRequired'))
     }
     if (!validator.isUUID(ResponsibleuserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Mainteancies.Error.ResponsibleuserIDRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Mainteancies'), req.language))
     }
 
     let mainteanceuuid = uuid()
@@ -90,12 +87,12 @@ async function AddMainteance(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Mainteancies'),
             role: 'mainteancenotification',
             message: {
-                tr: `${equipment?.Name} Eqipmanı İçin Arıza Talebi ${username} Tarafından Oluşturuldu.`,
-                en: `${equipment?.Name} Equipment Name, Mainteancy Request Created By ${username} `
-            },
+                tr: `${equipment?.Name} Eqipmanı için Bakım Talebi ${username} tarafından Oluşturuldu.`,
+                en: `${equipment?.Name} Equipment Mainteancy Request Created by ${username}`
+            }[req.language],
             pushurl: '/Mainteancies'
         })
 
@@ -118,20 +115,20 @@ async function UpdateMainteance(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(EquipmentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.EQUIPMENTID_REQUIRED)
+        validationErrors.push(req.t('Mainteancies.Error.EquipmentIDRequired'))
     }
     if (!validator.isUUID(ResponsibleuserID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USERID_REQUIRED)
+        validationErrors.push(req.t('Mainteancies.Error.ResponsibleuserIDRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.MAINTEANCEID_REQUIRED)
+        validationErrors.push(req.t('Mainteancies.Error.MainteancyIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MAINTEANCEID)
+        validationErrors.push(req.t('Mainteancies.Error.UnsupportedMainteancyID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Mainteancies'), req.language))
     }
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
@@ -139,10 +136,10 @@ async function UpdateMainteance(req, res, next) {
     try {
         const mainteance = await db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
         if (!mainteance) {
-            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Mainteancies.Error.NotFound'), req.t('Mainteancies'), req.language))
         }
-        if (mainteance.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
+        if (!mainteance.Isactive) {
+            return next(createNotFoundError(req.t('Mainteancies.Error.NotActive'), req.t('Mainteancies'), req.language))
         }
 
         await db.mainteanceModel.update({
@@ -155,12 +152,12 @@ async function UpdateMainteance(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Mainteancies'),
             role: 'mainteancenotification',
             message: {
-                tr: `${formatDate(mainteance.Starttime)} Başlangıç Tarihli, ${equipment?.Name} Eqipmanı İçin Açılan Bakım Talebi ${username} Tarafından Güncellendi.`,
-                en: `${formatDate(mainteance.Starttime)} Start Date, ${equipment.Name} Equipment Name, Mainteancy Request Updated By ${username} `
-            },
+                tr: `${equipment?.Name} Eqipmanı için Bakım Talebi ${username} tarafından Güncellendi.`,
+                en: `${equipment?.Name} Equipment Mainteancy Request Updated by ${username}`
+            }[req.language],
             pushurl: '/Mainteancies'
         })
 
@@ -181,25 +178,26 @@ async function CompleteMainteance(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.MAINTEANCEID_REQUIRED)
+        validationErrors.push(req.t('Mainteancies.Error.MainteancyIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MAINTEANCEID)
+        validationErrors.push(req.t('Mainteancies.Error.UnsupportedMainteancyID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Mainteancies'), req.language))
     }
+
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
 
     try {
         const mainteance = await db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
         if (!mainteance) {
-            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Mainteancies.Error.NotFound'), req.t('Mainteancies'), req.language))
         }
-        if (mainteance.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
+        if (!mainteance.Isactive) {
+            return next(createNotFoundError(req.t('Mainteancies.Error.NotActive'), req.t('Mainteancies'), req.language))
         }
 
         await db.mainteanceModel.update({
@@ -213,13 +211,13 @@ async function CompleteMainteance(req, res, next) {
         const equipment = await db.equipmentModel.findOne({ where: { Uuid: mainteance.EquipmentID } })
 
         await CreateNotification({
-            type: types.Delete,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            type: types.Update,
+            service: req.t('Mainteancies'),
             role: 'mainteancenotification',
             message: {
-                tr: `${formatDate(mainteance.Starttime)} Başlangıç Tarihli, ${equipment?.Name} Eqipmanı İçin Açılan Bakım Talebi ${username} Tarafından Tamamlandı.`,
-                en: `${formatDate(mainteance.Starttime)} Start Date, ${equipment.Name} Equipment Name, Mainteancy Request Completed By ${username} `
-            },
+                tr: `${equipment?.Name} Eqipmanı için Bakım Talebi ${username} tarafından Güncellendi.`,
+                en: `${equipment?.Name} Equipment Mainteancy Request Updated by ${username}`
+            }[req.language],
             pushurl: '/Mainteancies'
         })
 
@@ -237,13 +235,14 @@ async function DeleteMainteance(req, res, next) {
     const Uuid = req.params.mainteanceId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.MAINTEANCEID_REQUIRED)
+        validationErrors.push(req.t('Mainteancies.Error.MainteancyIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MAINTEANCEID)
+        validationErrors.push(req.t('Mainteancies.Error.UnsupportedMainteancyID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Mainteancies'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -252,10 +251,10 @@ async function DeleteMainteance(req, res, next) {
     try {
         const mainteance = await db.mainteanceModel.findOne({ where: { Uuid: Uuid } })
         if (!mainteance) {
-            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Mainteancies.Error.NotFound'), req.t('Mainteancies'), req.language))
         }
-        if (mainteance.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.MAINTEANCE_NOT_ACTIVE], req.language))
+        if (!mainteance.Isactive) {
+            return next(createNotFoundError(req.t('Mainteancies.Error.NotActive'), req.t('Mainteancies'), req.language))
         }
 
         await db.mainteanceModel.update({
@@ -268,12 +267,12 @@ async function DeleteMainteance(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Mainteancies'),
             role: 'mainteancenotification',
             message: {
-                tr: `${formatDate(mainteance.Starttime)} Başlangıç Tarihli, ${equipment?.Name} Eqipmanı İçin Açılan Bakım Talebi ${username} Tarafından Silindi.`,
-                en: `${formatDate(mainteance.Starttime)} Start Date, ${equipment.Name} Equipment Name, Mainteancy Request Deleted By ${username} `
-            },
+                tr: `${equipment?.Name} Eqipmanı için Bakım Talebi ${username} tarafından Silindi.`,
+                en: `${equipment?.Name} Equipment Mainteancy Request Deleted by ${username}`
+            }[req.language],
             pushurl: '/Mainteancies'
         })
 
@@ -292,66 +291,4 @@ module.exports = {
     UpdateMainteance,
     DeleteMainteance,
     CompleteMainteance
-}
-
-
-const messages = {
-    NOTIFICATION: {
-        PAGE_NAME: {
-            en: 'Mainteancies',
-            tr: 'Bakım Talepleri',
-        },
-    },
-    ERROR: {
-        MAINTEANCE_NOT_FOUND: {
-            code: 'MAINTEANCE_NOT_FOUND', description: {
-                en: 'maintance not found',
-                tr: 'Bakım talebi bulunamadı',
-            }
-        },
-        MAINTEANCE_NOT_ACTIVE: {
-            code: 'MAINTEANCE_NOT_ACTIVE', description: {
-                en: 'maintance not active',
-                tr: 'Bakım talebi aktif değil',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        MAINTEANCEID_REQUIRED: {
-            code: 'MAINTEANCEID_REQUIRED', description: {
-                en: 'The mainteanceid required',
-                tr: 'Bu işlem için mainteanceid gerekli',
-            }
-        },
-        UNSUPPORTED_MAINTEANCEID: {
-            code: 'UNSUPPORTED_MAINTEANCEID', description: {
-                en: 'The mainteanceid is unsupported',
-                tr: 'geçersiz mainteanceid',
-            }
-        },
-        EQUIPMENTID_REQUIRED: {
-            code: 'EQUIPMENTID_REQUIRED', description: {
-                en: 'The equipment id required',
-                tr: 'Bu işlem için equipment id gerekli',
-            }
-        },
-        USERID_REQUIRED: {
-            code: 'USERID_REQUIRED', description: {
-                en: 'The userid required',
-                tr: 'Bu işlem için userid gerekli',
-            }
-        },
-        PERSONELNAME_REQUIRED: {
-            code: 'PERSONELNAME_REQUIRED', description: {
-                en: 'The personel name required',
-                tr: 'Bu işlem için satın alma görevli adı gerekli',
-            }
-        },
-    }
 }

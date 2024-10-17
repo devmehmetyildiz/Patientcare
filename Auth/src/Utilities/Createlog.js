@@ -2,7 +2,7 @@ const axios = require('axios')
 const config = require('../Config')
 const validator = require('./Validator')
 
-module.exports = async (req, res, error) => {
+module.exports = async (req, res, next) => {
     try {
         const originalSend = res.send;
         const username = req?.identity?.user?.Username || 'System'
@@ -35,7 +35,8 @@ module.exports = async (req, res, error) => {
             originalSend.call(this, body);
         };
         next()
-    } catch {
+    } catch (error) {
+        console.log("error on create log", error)
     }
 }
 
@@ -52,7 +53,7 @@ function Getdomain(req) {
 function isJsonString(str) {
     try {
         JSON.parse(str);
-    } catch (e) {
+    } catch {
         if (validator.isObject(str) || validator.isArray(str)) {
             return true
         }

@@ -1,7 +1,7 @@
 const config = require("../Config")
 const validator = require('../Utilities/Validator')
 module.exports.init = function (app) {
-  app.use(function (req, res, next) {
+  app.use(function (req, res) {
     res.status(404)
     res.json({
       type: 'NOT_FOUND',
@@ -10,18 +10,18 @@ module.exports.init = function (app) {
     })
   })
 
-  app.use(function (err, req, res, next) {
+  app.use(function (err, req, res) {
     if (err !== undefined && err.type !== undefined) {
-      
+
       const result = {
         type: err.type,
         code: err.code || '',
         description: err.description,
         fulldescription: err?.fulldescription?.stack
-        ? isJsonString(err?.fulldescription?.stack) ? JSON.stringify(err?.fulldescription?.stack) : String(err?.fulldescription?.stack)
-        : isJsonString(err?.stack) ? JSON.stringify(err?.stack) : String(err?.stack)
+          ? isJsonString(err?.fulldescription?.stack) ? JSON.stringify(err?.fulldescription?.stack) : String(err?.fulldescription?.stack)
+          : isJsonString(err?.stack) ? JSON.stringify(err?.stack) : String(err?.stack)
       }
-      
+
       if (err.list !== undefined) {
         result.list = err.list
       }
@@ -116,7 +116,7 @@ function isBodyParseError(err) {
 function isJsonString(str) {
   try {
     JSON.parse(str);
-  } catch (e) {
+  } catch {
     if (validator.isObject(str) || validator.isArray(str)) {
       return true
     }

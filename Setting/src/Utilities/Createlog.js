@@ -35,8 +35,8 @@ module.exports = async (req, res, next) => {
             originalSend.call(this, body);
         };
         next()
-    } catch (e) {
-        console.log("e", e)
+    } catch (error) {
+        console.log("error on create log", error)
     }
 }
 

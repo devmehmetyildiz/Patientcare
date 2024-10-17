@@ -1,13 +1,10 @@
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/ShiftdefineMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetShiftdefines(req, res, next) {
     try {
@@ -22,13 +19,13 @@ async function GetShiftdefine(req, res, next) {
 
     let validationErrors = []
     if (!req.params.shiftdefineId) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHIFTDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Shiftdefines.Error.ShiftdefineIDRequired'))
     }
     if (!validator.isUUID(req.params.shiftdefineId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTDEFINEID)
+        validationErrors.push(req.t('Shiftdefines.Error.UnsupportedShiftdefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Shiftdefines'), req.language))
     }
 
     try {
@@ -50,17 +47,17 @@ async function AddShiftdefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Shiftdefines.Error.ShiftdefineIDRequired'))
     }
     if (!validator.isString(Starttime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTTIME_REQUIRED)
+        validationErrors.push(req.t('Shiftdefines.Error.StarttimeRequired'))
     }
     if (!validator.isString(Endtime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ENDTIME_REQUIRED)
+        validationErrors.push(req.t('Shiftdefines.Error.EndtimeRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Shiftdefines'), req.language))
     }
 
     let shiftdefineuuid = uuid()
@@ -87,11 +84,15 @@ async function AddShiftdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Vardiya Tanımları',
+            service: req.t('Shiftdefines'),
             role: 'shiftdefinenotification',
-            message: `${Name} vardiya tanımı ${username} tarafından Eklendi.`,
+            message: {
+                tr: `${Name} Vardiya Tanımı ${username} tarafından Oluşturuldu.`,
+                en: `${Name} Shift Define Created By ${username}`
+            }[req.language],
             pushurl: '/Shiftdefines'
         })
+
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -112,22 +113,22 @@ async function UpdateShiftdefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Shiftdefines.Error.ShiftdefineIDRequired'))
     }
     if (!validator.isString(Starttime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTTIME_REQUIRED)
+        validationErrors.push(req.t('Shiftdefines.Error.StarttimeRequired'))
     }
     if (!validator.isString(Endtime)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ENDTIME_REQUIRED)
+        validationErrors.push(req.t('Shiftdefines.Error.EndtimeRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHIFTDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Shiftdefines.Error.ShiftdefineIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTDEFINEID)
+        validationErrors.push(req.t('Shiftdefines.Error.UnsupportedShiftdefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Shiftdefines'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -136,10 +137,10 @@ async function UpdateShiftdefine(req, res, next) {
     try {
         const shiftdefine = db.shiftdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!shiftdefine) {
-            return next(createNotfounderror([messages.ERROR.SHIFTDEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Shiftdefines.Error.NotFound'), req.t('Shiftdefines'), req.language))
         }
         if (shiftdefine.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.SHIFTDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Shiftdefines.Error.NotActive'), req.t('Shiftdefines'), req.language))
         }
 
         if (Isjoker) {
@@ -156,11 +157,15 @@ async function UpdateShiftdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Vardiya Tanımları',
+            service: req.t('Shiftdefines'),
             role: 'shiftdefinenotification',
-            message: `${Name} vardiya tanımı ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Name} Vardiya Tanımı ${username} tarafından Güncellendi.`,
+                en: `${Name} Shift Define Updated By ${username}`
+            }[req.language],
             pushurl: '/Shiftdefines'
         })
+
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -174,13 +179,13 @@ async function DeleteShiftdefine(req, res, next) {
     const Uuid = req.params.shiftdefineId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHIFTDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Shiftdefines.Error.ShiftdefineIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_SHIFTDEFINEID)
+        validationErrors.push(req.t('Shiftdefines.Error.UnsupportedShiftdefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Shiftdefines'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -189,10 +194,10 @@ async function DeleteShiftdefine(req, res, next) {
     try {
         const shiftdefine = db.shiftdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!shiftdefine) {
-            return next(createNotfounderror([messages.ERROR.SHIFTDEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Shiftdefines.Error.NotFound'), req.t('Shiftdefines'), req.language))
         }
         if (shiftdefine.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.SHIFTDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Shiftdefines.Error.NotActive'), req.t('Shiftdefines'), req.language))
         }
 
         await db.shiftdefineModel.update({
@@ -203,11 +208,15 @@ async function DeleteShiftdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Vardiya Tanımları',
+            service: req.t('Shiftdefines'),
             role: 'shiftdefinenotification',
-            message: `${shiftdefine?.Name} vardiyası ${username} tarafından Silindi.`,
+            message: {
+                tr: `${shiftdefine?.Name} Vardiya Tanımı ${username} tarafından Silindi.`,
+                en: `${shiftdefine?.Name} Shift Define Deleted By ${username}`
+            }[req.language],
             pushurl: '/Shiftdefines'
         })
+
         await t.commit();
     } catch (error) {
         await t.rollback();

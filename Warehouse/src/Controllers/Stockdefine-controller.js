@@ -1,12 +1,10 @@
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetStockdefines(req, res, next) {
     try {
@@ -21,22 +19,22 @@ async function GetStockdefine(req, res, next) {
 
     let validationErrors = []
     if (!req.params.stockdefineId) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Stockdefines.Error.StockdefineIDRequired'))
     }
     if (!validator.isUUID(req.params.stockdefineId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKDEFINEID)
+        validationErrors.push(req.t('Stockdefines.Error.UnsupportedStockdefineID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stockdefines'), req.language))
     }
 
     try {
         const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: req.params.stockdefineId } });
         if (!stockdefine) {
-            return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stockdefines.Error.NotFound'), req.t('Stockdefines'), req.language))
         }
         if (!stockdefine.Isactive) {
-            return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Stockdefines.Error.NotFound'), req.t('Stockdefines'), req.language))
         }
 
         res.status(200).json(stockdefine)
@@ -56,14 +54,14 @@ async function AddStockdefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Stockdefines.Error.NameRequired'))
     }
     if (!validator.isUUID(UnitID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)
+        validationErrors.push(req.t('Stockdefines.Error.UnitIDRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stockdefines'), req.language))
     }
 
     let stockdefineuuid = uuid()
@@ -77,7 +75,7 @@ async function AddStockdefine(req, res, next) {
 
         if (stocktype?.Isbarcodeneed) {
             if (!validator.isString(Barcode)) {
-                next(createValidationError([messages.VALIDATION_ERROR.BARCODE_REQUIRED], req.language))
+                return next(createValidationError(req.t('Stockdefines.Error.BarcodeRequired'), req.t('Stockdefines'), req.language))
             }
         }
 
@@ -91,10 +89,13 @@ async function AddStockdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Stok Tanımları',
+            service: req.t('Stockdefines'),
             role: 'stockdefinenotification',
-            message: `${Name} ürün tanımı  ${username} tarafından Oluşturuldu.`,
-            pushurl: `/Stockdefines`
+            message: {
+                tr: `${Name} Ürünü Tanımı ${username} Tarafından Eklendi.`,
+                en: `${Name} Stockdefine Created By ${username}.`,
+            }[req.language],
+            pushurl: '/Stockdefines'
         })
 
         await t.commit()
@@ -117,20 +118,20 @@ async function UpdateStockdefine(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Stockdefines.Error.NameRequired'))
     }
     if (!validator.isUUID(UnitID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNITID_REQUIRED)
+        validationErrors.push(req.t('Stockdefines.Error.UnitIDRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Stockdefines.Error.StockdefineIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKDEFINEID)
+        validationErrors.push(req.t('Stockdefines.Error.UnsupportedStockdefineID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stockdefines'), req.language))
     }
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
@@ -140,16 +141,16 @@ async function UpdateStockdefine(req, res, next) {
 
         if (stocktype?.Isbarcodeneed) {
             if (!validator.isString(Barcode)) {
-                next(createValidationError([messages.VALIDATION_ERROR.BARCODE_REQUIRED], req.language))
+                return next(createValidationError(req.t('Stockdefines.Error.BarcodeRequired'), req.t('Stockdefines'), req.language))
             }
         }
 
         const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!stockdefine) {
-            return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stockdefines.Error.NotFound'), req.t('Stockdefines'), req.language))
         }
-        if (stockdefine.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language))
+        if (!stockdefine.Isactive) {
+            return next(createNotFoundError(req.t('Stockdefines.Error.NotFound'), req.t('Stockdefines'), req.language))
         }
 
         await db.stockdefineModel.update({
@@ -160,10 +161,13 @@ async function UpdateStockdefine(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Stok Tanımları',
+            service: req.t('Stockdefines'),
             role: 'stockdefinenotification',
-            message: `${Name} ürün tanımı  ${username} tarafından Güncellendi.`,
-            pushurl: `/Stockdefines`
+            message: {
+                tr: `${Name} Ürünü Tanımı ${username} Tarafından Güncellendi.`,
+                en: `${Name} Stockdefine Updated By ${username}.`,
+            }[req.language],
+            pushurl: '/Stockdefines'
         })
 
         await t.commit()
@@ -180,13 +184,14 @@ async function DeleteStockdefine(req, res, next) {
     const Uuid = req.params.stockdefineId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Stockdefines.Error.StockdefineIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKDEFINEID)
+        validationErrors.push(req.t('Stockdefines.Error.UnsupportedStockdefineID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stockdefines'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -195,10 +200,10 @@ async function DeleteStockdefine(req, res, next) {
     try {
         const stockdefine = await db.stockdefineModel.findOne({ where: { Uuid: Uuid } })
         if (!stockdefine) {
-            return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stockdefines.Error.NotFound'), req.t('Stockdefines'), req.language))
         }
-        if (stockdefine.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.STOCKDEFINE_NOT_ACTIVE], req.language))
+        if (!stockdefine.Isactive) {
+            return next(createNotFoundError(req.t('Stockdefines.Error.NotFound'), req.t('Stockdefines'), req.language))
         }
 
         await db.stockdefineModel.update({
@@ -208,11 +213,14 @@ async function DeleteStockdefine(req, res, next) {
         }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
-            type: types.Create,
-            service: 'Stok Tanımları',
+            type: types.Delete,
+            service: req.t('Stockdefines'),
             role: 'stockdefinenotification',
-            message: `${stockdefine?.Name} ürün tanımı  ${username} tarafından Silindi.`,
-            pushurl: `/Stockdefines`
+            message: {
+                tr: `${stockdefine?.Name} Ürünü Tanımı ${username} Tarafından Silindi.`,
+                en: `${stockdefine?.Name} Stockdefine Deleted By ${username}.`,
+            }[req.language],
+            pushurl: '/Stockdefines'
         })
 
         await t.commit();
@@ -229,54 +237,4 @@ module.exports = {
     AddStockdefine,
     UpdateStockdefine,
     DeleteStockdefine,
-}
-
-const messages = {
-    ERROR: {
-        STOCKDEFINE_NOT_FOUND: {
-            code: 'STOCKDEFINE_NOT_FOUND', description: {
-                en: 'Stock define not found',
-                tr: 'Stok tanımı bulunamadı',
-            }
-        },
-        STOCKDEFINE_NOT_ACTIVE: {
-            code: 'STOCKDEFINE_NOT_ACTIVE', description: {
-                en: 'Stock define not active',
-                tr: 'Stok tanımı aktif değil',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        BARCODE_REQUIRED: {
-            code: 'BARCODE_REQUIRED', description: {
-                en: 'The barcode required',
-                tr: 'Bu işlem için barkod gerekli',
-            }
-        },
-        UNITID_REQUIRED: {
-            code: 'UNITID_REQUIRED', description: {
-                en: 'The unit required',
-                tr: 'Bu işlem için birim gerekli',
-            }
-        },
-        STOCKDEFINEID_REQUIRED: {
-            code: 'STOCKDEFINEID_REQUIRED', description: {
-                en: 'The stockdefineid required',
-                tr: 'Bu işlem için stok tanımı id gerekli',
-            }
-        },
-        UNSUPPORTED_STOCKDEFINEID: {
-            code: 'UNSUPPORTED_STOCKDEFINEID', description: {
-                en: 'The stock define id is unsupported',
-                tr: 'geçersiz stok tanım id si',
-            }
-        },
-    }
-
 }

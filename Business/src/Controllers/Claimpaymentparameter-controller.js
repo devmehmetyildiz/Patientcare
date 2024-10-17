@@ -1,9 +1,8 @@
-const messages = require("../Constants/ClaimpaymentparameterMessages")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const { claimpaymenttypes } = require('../Constants/Claimpaymenttypes')
@@ -21,13 +20,13 @@ async function GetClaimpaymentparameter(req, res, next) {
 
     let validationErrors = []
     if (!req.params.claimpaymentparameterId) {
-        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTPARAMETERID_REQUIRED)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.ClaimpaymentparameterIDRequired'))
     }
     if (!validator.isUUID(req.params.claimpaymentparameterId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTPARAMETERID)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.UnsupportedClaimpaymentparameterID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Claimpaymentparameters'), req.language))
     }
 
     try {
@@ -50,29 +49,28 @@ async function AddClaimpaymentparameter(req, res, next) {
     } = req.body
 
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
-        return next(createValidationError(validationErrors, req.language))
+        validationErrors.push(req.t('Claimpaymentparameters.Error.TypeRequired'))
     }
     if (Type !== claimpaymenttypes.Personel) {
         if (!validator.isUUID(CostumertypeID)) {
-            return next(createValidationError([messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED], req.language))
+            validationErrors.push(req.t('Claimpaymentparameters.Error.CostumertypeIDRequired'))
         }
     }
     if (!validator.isUUID(CostumertypeID)) {
-        return next(createValidationError([messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED], req.language))
+        validationErrors.push(req.t('Claimpaymentparameters.Error.CostumertypeIDRequired'))
     }
     if (!validator.isNumber(Patientclaimpaymentperpayment)) {
-        return next(createValidationError([messages.VALIDATION_ERROR.PERPAYMENT_REQUIRED], req.language))
+        validationErrors.push(req.t('Claimpaymentparameters.Error.PatientclaimpaymentperpaymentRequired'))
     }
     if (!validator.isNumber(Perpaymentkdvpercent)) {
-        return next(createValidationError([messages.VALIDATION_ERROR.KDVPERCENT_REQUIRED], req.language))
+        validationErrors.push(req.t('Claimpaymentparameters.Error.PerpaymentkdvpercentRequired'))
     }
     if (!validator.isNumber(Perpaymentkdvwithholdingpercent)) {
-        return next(createValidationError([messages.VALIDATION_ERROR.KDVWITHHOLDINGPERCENT_REQUIRED], req.language))
+        validationErrors.push(req.t('Claimpaymentparameters.Error.PerpaymentkdvwithholdingpercentRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Claimpaymentparameters'), req.language))
     }
 
     let parameteruuid = uuid()
@@ -97,9 +95,12 @@ async function AddClaimpaymentparameter(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Hakediş Parametreleri',
+            service: req.t('Claimpaymentparameters'),
             role: 'claimpaymentparameternotification',
-            message: `${parameteruuid} numaralı parametre ${username} tarafından Taslak olarak Eklendi.`,
+            message: {
+                tr: `${new Date()} Tarihli'li Hakediş parametresi ${username} tarafından Oluşturuldu.`,
+                en: `${new Date()} With Start Date Claimpaymentparameter Created By ${username}`
+            }[req.language],
             pushurl: '/Claimpaymentparameters'
         })
 
@@ -124,35 +125,34 @@ async function UpdateClaimpaymentparameter(req, res, next) {
     } = req.body
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTPARAMETERID_REQUIRED)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.ClaimpaymentparameterIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTPARAMETERID)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.UnsupportedClaimpaymentparameterID'))
     }
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
-        return next(createValidationError(validationErrors, req.language))
+        validationErrors.push(req.t('Claimpaymentparameters.Error.TypeRequired'))
     }
     if (Type !== claimpaymenttypes.Personel) {
         if (!validator.isUUID(CostumertypeID)) {
-            return next(createValidationError([messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED], req.language))
+            validationErrors.push(req.t('Claimpaymentparameters.Error.CostumertypeIDRequired'))
         }
     }
     if (!validator.isUUID(CostumertypeID)) {
-        return next(createValidationError([messages.VALIDATION_ERROR.COSTUMERTYPEID_REQUIRED], req.language))
+        validationErrors.push(req.t('Claimpaymentparameters.Error.CostumertypeIDRequired'))
     }
     if (!validator.isNumber(Patientclaimpaymentperpayment)) {
-        return next(createValidationError([messages.VALIDATION_ERROR.PERPAYMENT_REQUIRED], req.language))
+        validationErrors.push(req.t('Claimpaymentparameters.Error.PatientclaimpaymentperpaymentRequired'))
     }
     if (!validator.isNumber(Perpaymentkdvpercent)) {
-        return next(createValidationError([messages.VALIDATION_ERROR.KDVPERCENT_REQUIRED], req.language))
+        validationErrors.push(req.t('Claimpaymentparameters.Error.PerpaymentkdvpercentRequired'))
     }
     if (!validator.isNumber(Perpaymentkdvwithholdingpercent)) {
-        return next(createValidationError([messages.VALIDATION_ERROR.KDVWITHHOLDINGPERCENT_REQUIRED], req.language))
+        validationErrors.push(req.t('Claimpaymentparameters.Error.PerpaymentkdvwithholdingpercentRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Claimpaymentparameters'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -161,13 +161,13 @@ async function UpdateClaimpaymentparameter(req, res, next) {
     try {
         const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Uuid: Uuid } })
         if (!claimpaymentparameter) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotFound'), req.t('Claimpaymentparameters'), req.language))
         }
         if (claimpaymentparameter.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotActive'), req.t('Claimpaymentparameters'), req.language))
         }
         if (claimpaymentparameter.Isapproved === true) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_ALREADY_APPROVED], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.Approved'), req.t('Claimpaymentparameters'), req.language))
         }
 
         await db.claimpaymentparameterModel.update({
@@ -179,9 +179,12 @@ async function UpdateClaimpaymentparameter(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hakediş Parametreleri',
+            service: req.t('Claimpaymentparameters'),
             role: 'claimpaymentparameternotification',
-            message: `${Uuid} numaralı hakediş parametresi ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${claimpaymentparameter?.Createtime} Tarihli'li Hakediş parametresi ${username} tarafından Güncellendi.`,
+                en: `${claimpaymentparameter?.Createtime} With Start Date Claimpaymentparameter Updated By ${username}`
+            }[req.language],
             pushurl: '/Claimpaymentparameters'
         })
 
@@ -198,13 +201,13 @@ async function ApproveClaimpaymentparameter(req, res, next) {
     const Uuid = req.params.claimpaymentparameterId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTPARAMETERID_REQUIRED)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.ClaimpaymentparameterIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTPARAMETERID)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.UnsupportedClaimpaymentparameterID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Claimpaymentparameters'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -213,13 +216,13 @@ async function ApproveClaimpaymentparameter(req, res, next) {
     try {
         const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Uuid: Uuid } })
         if (!claimpaymentparameter) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotFound'), req.t('Claimpaymentparameters'), req.language))
         }
         if (claimpaymentparameter.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotActive'), req.t('Claimpaymentparameters'), req.language))
         }
         if (claimpaymentparameter.Isapproved === true) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_ALREADY_APPROVED], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.Approved'), req.t('Claimpaymentparameters'), req.language))
         }
 
         await db.claimpaymentparameterModel.update({
@@ -240,9 +243,12 @@ async function ApproveClaimpaymentparameter(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hakediş Parametreleri',
+            service: req.t('Claimpaymentparameters'),
             role: 'claimpaymentparameternotification',
-            message: `${Uuid} numaralı hakediş parametresi ${username} tarafından Onaylandı.`,
+            message: {
+                tr: `${claimpaymentparameter?.Createtime} Tarihli'li Hakediş parametresi ${username} tarafından Onaylandı.`,
+                en: `${claimpaymentparameter?.Createtime} With Start Date Claimpaymentparameter Approved By ${username}`
+            }[req.language],
             pushurl: '/Claimpaymentparameters'
         })
 
@@ -260,13 +266,13 @@ async function SavepreviewClaimpaymentparameter(req, res, next) {
     const Uuid = req.params.claimpaymentparameterId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTPARAMETERID_REQUIRED)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.ClaimpaymentparameterIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTPARAMETERID)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.UnsupportedClaimpaymentparameterID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Claimpaymentparameters'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -275,13 +281,13 @@ async function SavepreviewClaimpaymentparameter(req, res, next) {
     try {
         const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Uuid: Uuid } })
         if (!claimpaymentparameter) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotFound'), req.t('Claimpaymentparameters'), req.language))
         }
         if (claimpaymentparameter.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotActive'), req.t('Claimpaymentparameters'), req.language))
         }
         if (claimpaymentparameter.Isapproved === true) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_ALREADY_APPROVED], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.Approved'), req.t('Claimpaymentparameters'), req.language))
         }
 
         await db.claimpaymentparameterModel.update({
@@ -294,9 +300,12 @@ async function SavepreviewClaimpaymentparameter(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hakediş Parametreleri',
+            service: req.t('Claimpaymentparameters'),
             role: 'claimpaymentparameternotification',
-            message: `${Uuid} numaralı hakediş parametresi ${username} tarafından Kaydedildi.`,
+            message: {
+                tr: `${claimpaymentparameter?.Createtime} Tarihli'li Hakediş parametresi ${username} tarafından Kayıt Edildi.`,
+                en: `${claimpaymentparameter?.Createtime} With Start Date Claimpaymentparameter Saved By ${username}`
+            }[req.language],
             pushurl: '/Claimpaymentparameters'
         })
 
@@ -314,13 +323,13 @@ async function ActivateClaimpaymentparameter(req, res, next) {
     const Uuid = req.params.claimpaymentparameterId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTPARAMETERID_REQUIRED)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.ClaimpaymentparameterIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTPARAMETERID)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.UnsupportedClaimpaymentparameterID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Claimpaymentparameters'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -329,13 +338,13 @@ async function ActivateClaimpaymentparameter(req, res, next) {
     try {
         const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Uuid: Uuid } })
         if (!claimpaymentparameter) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotFound'), req.t('Claimpaymentparameters'), req.language))
         }
         if (claimpaymentparameter.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotActive'), req.t('Claimpaymentparameters'), req.language))
         }
         if (claimpaymentparameter.Isapproved === false) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_IS_NOT_APPROVED], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotApproved'), req.t('Claimpaymentparameters'), req.language))
         }
 
         await db.claimpaymentparameterModel.update({
@@ -356,12 +365,14 @@ async function ActivateClaimpaymentparameter(req, res, next) {
             transaction: t
         });
 
-
         await CreateNotification({
             type: types.Update,
-            service: 'Hakediş Parametreleri',
+            service: req.t('Claimpaymentparameters'),
             role: 'claimpaymentparameternotification',
-            message: `${Uuid} numaralı hakediş parametresi ${username} tarafından Aktif Edildi.`,
+            message: {
+                tr: `${claimpaymentparameter?.Createtime} Tarihli'li Hakediş parametresi ${username} tarafından Aktif Edildi.`,
+                en: `${claimpaymentparameter?.Createtime} With Start Date Claimpaymentparameter Activated By ${username}`
+            }[req.language],
             pushurl: '/Claimpaymentparameters'
         })
 
@@ -379,13 +390,13 @@ async function DeactivateClaimpaymentparameter(req, res, next) {
     const Uuid = req.params.claimpaymentparameterId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTPARAMETERID_REQUIRED)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.ClaimpaymentparameterIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTPARAMETERID)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.UnsupportedClaimpaymentparameterID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Claimpaymentparameters'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -394,13 +405,13 @@ async function DeactivateClaimpaymentparameter(req, res, next) {
     try {
         const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Uuid: Uuid } })
         if (!claimpaymentparameter) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotFound'), req.t('Claimpaymentparameters'), req.language))
         }
         if (claimpaymentparameter.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotActive'), req.t('Claimpaymentparameters'), req.language))
         }
         if (claimpaymentparameter.Isapproved === false) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_IS_NOT_APPROVED], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotApproved'), req.t('Claimpaymentparameters'), req.language))
         }
 
         await db.claimpaymentparameterModel.update({
@@ -413,9 +424,12 @@ async function DeactivateClaimpaymentparameter(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hakediş Parametreleri',
+            service: req.t('Claimpaymentparameters'),
             role: 'claimpaymentparameternotification',
-            message: `${Uuid} numaralı hakediş parametresi ${username} tarafından İnaktif edildi.`,
+            message: {
+                tr: `${claimpaymentparameter?.Createtime} Tarihli'li Hakediş parametresi ${username} tarafından İnaktif Edildi.`,
+                en: `${claimpaymentparameter?.Createtime} With Start Date Claimpaymentparameter Deactivated By ${username}`
+            }[req.language],
             pushurl: '/Claimpaymentparameters'
         })
 
@@ -432,13 +446,13 @@ async function DeleteClaimpaymentparameter(req, res, next) {
     const Uuid = req.params.claimpaymentparameterId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CLAIMPAYMENTPARAMETERID_REQUIRED)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.ClaimpaymentparameterIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CLAIMPAYMENTPARAMETERID)
+        validationErrors.push(req.t('Claimpaymentparameters.Error.UnsupportedClaimpaymentparameterID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Claimpaymentparameters'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -447,10 +461,10 @@ async function DeleteClaimpaymentparameter(req, res, next) {
     try {
         const claimpaymentparameter = await db.claimpaymentparameterModel.findOne({ where: { Uuid: Uuid } })
         if (!claimpaymentparameter) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotFound'), req.t('Claimpaymentparameters'), req.language))
         }
         if (claimpaymentparameter.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CLAIMPAYMENTPARAMETER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Claimpaymentparameters.Error.NotActive'), req.t('Claimpaymentparameters'), req.language))
         }
 
         await db.claimpaymentparameterModel.update({
@@ -464,9 +478,12 @@ async function DeleteClaimpaymentparameter(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Hakediş Parametreleri',
+            service: req.t('Claimpaymentparameters'),
             role: 'claimpaymentparameternotification',
-            message: `${Uuid} numaralı hakediş parametresi ${username} tarafından Silindi.`,
+            message: {
+                tr: `${claimpaymentparameter?.Createtime} Tarihli'li Hakediş parametresi ${username} tarafından Silindi.`,
+                en: `${claimpaymentparameter?.Createtime} With Start Date Claimpaymentparameter Deleted By ${username}`
+            }[req.language],
             pushurl: '/Claimpaymentparameters'
         })
 

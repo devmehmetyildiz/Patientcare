@@ -132,16 +132,6 @@ const Routes = [
     { method: 'post', path: '/Personelpresettings', controller: 'Personelpresetting', action: 'AddPersonelpresetting' },
     { method: 'put', path: '/Personelpresettings', controller: 'Personelpresetting', action: 'UpdatePersonelpresetting' },
     { method: 'delete', path: '/Personelpresettings/:personelpresettingId', controller: 'Personelpresetting', action: 'DeletePersonelpresetting' },
-
-    { method: 'get', path: '/Todos/GetTodosbyPatientID/:patientId', controller: 'Todo', action: 'GetTodosbyPatientID' },
-    { method: 'get', path: '/Todos/:todoId', controller: 'Todo', action: 'GetTodo' },
-    { method: 'get', path: '/Todos', controller: 'Todo', action: 'GetTodos' },
-    { method: 'post', path: '/Todos/Approve/:todoId', controller: 'Todo', action: 'ApproveTodo' },
-    { method: 'post', path: '/Todos/Approve', controller: 'Todo', action: 'ApproveTodos' },
-    { method: 'post', path: '/Todos/AddPatienttodolist', controller: 'Todo', action: 'AddPatienttodolist' },
-    { method: 'post', path: '/Todos', controller: 'Todo', action: 'AddTodo' },
-    { method: 'put', path: '/Todos', controller: 'Todo', action: 'UpdateTodo' },
-    { method: 'delete', path: '/Todos/:todoId', controller: 'Todo', action: 'DeleteTodo' },
 ]
 
 module.exports = Routes

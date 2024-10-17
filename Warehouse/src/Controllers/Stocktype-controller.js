@@ -1,12 +1,10 @@
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetStocktypes(req, res, next) {
     try {
@@ -21,22 +19,22 @@ async function GetStocktype(req, res, next) {
 
     let validationErrors = []
     if (!req.params.stocktypeId) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKTYPEID_REQUIRED)
+        validationErrors.push(req.t('Stocktypes.Error.StocktypeIDRequired'))
     }
     if (!validator.isUUID(req.params.stocktypeId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKTYPEID)
+        validationErrors.push(req.t('Stocktypes.Error.UnsupportedStocktypeID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocktypes'), req.language))
     }
 
     try {
         const stocktype = await db.stocktypeModel.findOne({ where: { Uuid: req.params.stocktypeId } });
         if (!stocktype) {
-            return next(createNotfounderror([messages.ERROR.STOCKTYPE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stocktypes.Error.NotFound'), req.t('Stocktypes'), req.language))
         }
         if (!stocktype.Isactive) {
-            return next(createNotfounderror([messages.ERROR.STOCKTYPE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Stocktypes.Error.NotFound'), req.t('Stocktypes'), req.language))
         }
         res.status(200).json(stocktype)
     } catch (error) {
@@ -52,11 +50,11 @@ async function AddStocktype(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Stocktypes.Error.NameRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocktypes'), req.language))
     }
 
     let stocktypeuuid = uuid()
@@ -75,10 +73,13 @@ async function AddStocktype(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Stok Türleri',
+            service: req.t('Stocktypes'),
             role: 'stocktypenotification',
-            message: `${Name} stok türü  ${username} tarafından eklendi.`,
-            pushurl: `/Stocktypes`
+            message: {
+                tr: `${Name} Stok Türü ${username} Tarafından Eklendi.`,
+                en: `${Name} Stock Type Created By ${username}.`,
+            }[req.language],
+            pushurl: '/Stocktypes'
         })
 
         await t.commit()
@@ -98,17 +99,17 @@ async function UpdateStocktype(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Stocktypes.Error.NameRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKTYPEID_REQUIRED)
+        validationErrors.push(req.t('Stocktypes.Error.StocktypeIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKTYPEID)
+        validationErrors.push(req.t('Stocktypes.Error.UnsupportedStocktypeID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocktypes'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -117,10 +118,10 @@ async function UpdateStocktype(req, res, next) {
     try {
         const stocktype = await db.stocktypeModel.findOne({ where: { Uuid: Uuid } })
         if (!stocktype) {
-            return next(createNotfounderror([messages.ERROR.STOCKTYPE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stocktypes.Error.NotFound'), req.t('Stocktypes'), req.language))
         }
-        if (stocktype.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.STOCKTYPE_NOT_ACTIVE], req.language))
+        if (!stocktype.Isactive) {
+            return next(createNotFoundError(req.t('Stocktypes.Error.NotFound'), req.t('Stocktypes'), req.language))
         }
 
         await db.stocktypeModel.update({
@@ -132,10 +133,13 @@ async function UpdateStocktype(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Stok Türleri',
+            service: req.t('Stocktypes'),
             role: 'stocktypenotification',
-            message: `${stocktype?.Name} stok türü  ${username} tarafından Güncellendi.`,
-            pushurl: `/Stocktypes`
+            message: {
+                tr: `${Name} Stok Türü ${username} Tarafından Güncellendi.`,
+                en: `${Name} Stock Type Updated By ${username}.`,
+            }[req.language],
+            pushurl: '/Stocktypes'
         })
 
         await t.commit()
@@ -152,13 +156,14 @@ async function DeleteStocktype(req, res, next) {
     const Uuid = req.params.stocktypeId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKTYPEID_REQUIRED)
+        validationErrors.push(req.t('Stocktypes.Error.StocktypeIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKTYPEID)
+        validationErrors.push(req.t('Stocktypes.Error.UnsupportedStocktypeID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocktypes'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -167,10 +172,10 @@ async function DeleteStocktype(req, res, next) {
     try {
         const stocktype = await db.stocktypeModel.findOne({ where: { Uuid: Uuid } })
         if (!stocktype) {
-            return next(createNotfounderror([messages.ERROR.STOCKTYPE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stocktypes.Error.NotFound'), req.t('Stocktypes'), req.language))
         }
-        if (stocktype.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.STOCKTYPE_NOT_ACTIVE], req.language))
+        if (!stocktype.Isactive) {
+            return next(createNotFoundError(req.t('Stocktypes.Error.NotFound'), req.t('Stocktypes'), req.language))
         }
 
         await db.stocktypeModel.update({
@@ -181,10 +186,13 @@ async function DeleteStocktype(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Stok Türleri',
+            service: req.t('Stocktypes'),
             role: 'stocktypenotification',
-            message: `${stocktype?.Name} stok türü  ${username} tarafından silindi.`,
-            pushurl: `/Stocktypes`
+            message: {
+                tr: `${stocktype?.Name} Stok Türü ${username} Tarafından Silindi.`,
+                en: `${stocktype?.Name} Stock Type Deleted By ${username}.`,
+            }[req.language],
+            pushurl: '/Stocktypes'
         })
 
         await t.commit();
@@ -202,42 +210,4 @@ module.exports = {
     AddStocktype,
     UpdateStocktype,
     DeleteStocktype,
-}
-
-const messages = {
-    ERROR: {
-        STOCKTYPE_NOT_FOUND: {
-            code: 'STOCKTYPE_NOT_FOUND', description: {
-                en: 'Stock type not found',
-                tr: 'Stok Türü bulunamadı',
-            }
-        },
-        STOCKTYPE_NOT_ACTIVE: {
-            code: 'STOCKTYPE_NOT_ACTIVE', description: {
-                en: 'Stock type not active',
-                tr: 'Stok türü aktif değil',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        STOCKTYPEID_REQUIRED: {
-            code: 'STOCKTYPEID_REQUIRED', description: {
-                en: 'The stocktypeid required',
-                tr: 'Bu işlem için stok tür id gerekli',
-            }
-        },
-        UNSUPPORTED_STOCKTYPEID: {
-            code: 'UNSUPPORTED_STOCKTYPEID', description: {
-                en: 'The stock type id is unsupported',
-                tr: 'geçersiz stok tür id si',
-            }
-        },
-    }
-
 }

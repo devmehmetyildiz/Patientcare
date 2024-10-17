@@ -1,11 +1,9 @@
 const { types } = require("../Constants/Defines")
-const config = require("../Config")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 const CreateNotification = require("../Utilities/CreateNotification")
 
 async function GetPrinttemplates(req, res, next) {
@@ -21,22 +19,22 @@ async function GetPrinttemplate(req, res, next) {
 
     let validationErrors = []
     if (!req.params.printtemplateId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATEID_REQUIRED)
+        validationErrors.push(req.t('Printtemplates.Error.PrinttemplateIDRequired'))
     }
     if (!validator.isUUID(req.params.printtemplateId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PRINTTEMPLATEID)
+        validationErrors.push(req.t('Printtemplates.Error.UnsupportedPrinttemplateID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Printtemplates'), req.language))
     }
 
     try {
         const printtemplate = await db.printtemplateModel.findOne({ where: { Uuid: req.params.printtemplateId } });
         if (!printtemplate) {
-            return next(createNotfounderror([messages.ERROR.PRINTTEMPLATE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Printtemplates.Error.NotFound'), req.t('Printtemplates'), req.language))
         }
         if (!printtemplate.Isactive) {
-            return next(createNotfounderror([messages.ERROR.PRINTTEMPLATE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Printtemplates.Error.NotActive'), req.t('Printtemplates'), req.language))
         }
         res.status(200).json(printtemplate)
     } catch (error) {
@@ -53,14 +51,14 @@ async function AddPrinttemplate(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Printtemplates.Error.NameRequired'))
     }
     if (!validator.isString(Printtemplate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATE_REQUIRED)
+        validationErrors.push(req.t('Printtemplates.Error.PrinttemplateRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Printtemplates'), req.language))
     }
 
     let printtemplateuuid = uuid()
@@ -79,11 +77,15 @@ async function AddPrinttemplate(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Yazdırma Taslakları',
+            service: req.t('Printtemplates'),
             role: 'printtemplatenotification',
-            message: `${Name} yazdırma taslağı ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${Name} Yazdırma Taslağı ${username} tarafından Oluşturuldu.`,
+                en: `${Name} Printtemplate Created by ${username}`
+            }[req.language],
             pushurl: '/Printtemplates'
         })
+
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -102,20 +104,20 @@ async function UpdatePrinttemplate(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Printtemplates.Error.NameRequired'))
     }
     if (!validator.isString(Printtemplate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATE_REQUIRED)
+        validationErrors.push(req.t('Printtemplates.Error.PrinttemplateRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATEID_REQUIRED)
+        validationErrors.push(req.t('Printtemplates.Error.PrinttemplateIDRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PRINTTEMPLATEID)
+        validationErrors.push(req.t('Printtemplates.Error.UnsupportedPrinttemplateID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Printtemplates'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -124,10 +126,10 @@ async function UpdatePrinttemplate(req, res, next) {
     try {
         const printtemplate = await db.printtemplateModel.findOne({ where: { Uuid: Uuid } })
         if (!printtemplate) {
-            return next(createNotfounderror([messages.ERROR.PRINTTEMPLATE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Printtemplates.Error.NotFound'), req.t('Printtemplates'), req.language))
         }
         if (!printtemplate.Isactive) {
-            return next(createNotfounderror([messages.ERROR.PRINTTEMPLATE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Printtemplates.Error.NotActive'), req.t('Printtemplates'), req.language))
         }
 
         await db.printtemplateModel.update({
@@ -138,11 +140,15 @@ async function UpdatePrinttemplate(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Yazdırma Taslakları',
+            service: req.t('Printtemplates'),
             role: 'printtemplatenotification',
-            message: `${Name} yazdırma taslağı ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Name} Yazdırma Taslağı ${username} tarafından Güncelle.`,
+                en: `${Name} Printtemplate Updated by ${username}`
+            }[req.language],
             pushurl: '/Printtemplates'
         })
+
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -156,14 +162,15 @@ async function DeletePrinttemplate(req, res, next) {
     let validationErrors = []
     const Uuid = req.params.printtemplateId
 
-    if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PRINTTEMPLATEID_REQUIRED)
-    }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PRINTTEMPLATEID)
+        validationErrors.push(req.t('Printtemplates.Error.PrinttemplateIDRequired'))
     }
+    if (!Uuid) {
+        validationErrors.push(req.t('Printtemplates.Error.UnsupportedPrinttemplateID'))
+    }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Printtemplates'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -172,10 +179,10 @@ async function DeletePrinttemplate(req, res, next) {
     try {
         const printtemplate = await db.printtemplateModel.findOne({ where: { Uuid: Uuid } })
         if (!printtemplate) {
-            return next(createNotfounderror([messages.ERROR.PRINTTEMPLATE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Printtemplates.Error.NotFound'), req.t('Printtemplates'), req.language))
         }
         if (!printtemplate.Isactive) {
-            return next(createNotfounderror([messages.ERROR.PRINTTEMPLATE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Printtemplates.Error.NotActive'), req.t('Printtemplates'), req.language))
         }
 
         await db.printtemplateModel.update({
@@ -186,11 +193,15 @@ async function DeletePrinttemplate(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Yazdırma Taslakları',
+            service: req.t('Printtemplates'),
             role: 'printtemplatenotification',
-            message: `${printtemplate?.Name} yazdırma taslağı ${username} tarafından Silindi.`,
+            message: {
+                tr: `${printtemplate?.Name} Yazdırma Taslağı ${username} tarafından Silindi.`,
+                en: `${printtemplate?.Name} Printtemplate Deleted by ${username}`
+            }[req.language],
             pushurl: '/Printtemplates'
         })
+
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -207,46 +218,3 @@ module.exports = {
     DeletePrinttemplate,
 }
 
-const messages = {
-    ERROR: {
-        PRINTTEMPLATE_NOT_FOUND: {
-            code: 'PRINTTEMPLATE_NOT_FOUND', description: {
-                en: 'The print template not found',
-                tr: 'Yazdırma taslağı bulunamadı',
-            }
-        },
-        PRINTTEMPLATE_NOT_ACTIVE: {
-            code: 'PRINTTEMPLATE_NOT_ACTIVE', description: {
-                en: 'The print template not active',
-                tr: 'Yazdırma taslağı aktif değil',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        PRINTTEMPLATEID_REQUIRED: {
-            code: 'PRINTTEMPLATEID_REQUIRED', description: {
-                en: 'The printtemplateid required',
-                tr: 'Bu işlem için printtemplateid gerekli',
-            }
-        },
-        UNSUPPORTED_PRINTTEMPLATEID: {
-            code: 'UNSUPPORTED_PRINTTEMPLATEID', description: {
-                en: 'unsupported printtemplateid',
-                tr: 'Tanımsız printtemplateid',
-            }
-        },
-        PRINTTEMPLATE_REQUIRED: {
-            code: 'PRINTTEMPLATE_REQUIRED', description: {
-                en: 'The printtemplate required',
-                tr: 'Bu işlem için yazdırma taslağı gerekli',
-            }
-        },
-    }
-
-}

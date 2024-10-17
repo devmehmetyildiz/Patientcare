@@ -1,13 +1,10 @@
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetCompanycashmovements(req, res, next) {
     try {
@@ -22,13 +19,13 @@ async function GetCompanycashmovement(req, res, next) {
 
     let validationErrors = []
     if (!req.params.movementId) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTID_REQUIRED)
+        validationErrors.push(req.t('Companycashmovements.Error.CompanycashmovementIDRequired'))
     }
     if (!validator.isUUID(req.params.movementId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MOVEMENTID)
+        validationErrors.push(req.t('Companycashmovements.Error.UnsupportedCompanycashmovementID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Companycashmovements'), req.language))
     }
 
     try {
@@ -51,15 +48,14 @@ async function AddCompanycashmovement(req, res, next) {
 
 
     if (!validator.isNumber(Movementtype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED)
+        validationErrors.push(req.t('Companycashmovements.Error.MovementtypeRequired'))
     }
     if (!validator.isString(ReportID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.REPORTID_REQUIRED)
+        validationErrors.push(req.t('Companycashmovements.Error.ReportIDRequired'))
     }
 
-
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Companycashmovements'), req.language))
     }
 
     let movementuuid = uuid()
@@ -78,9 +74,12 @@ async function AddCompanycashmovement(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Kurum Kasası',
+            service: req.t('Companycashmovements'),
             role: 'companycashmovementnotification',
-            message: `${Movementvalue || 0} TL hasta kasasına ${username} tarafından Eklendi.`,
+            message: {
+                tr: `${Movementvalue} Değerinde Kurum Para Hareketi ${username} tarafından Oluşturuldu.`,
+                en: `${Movementvalue} Value CompanyCashMovement Created By ${username}`
+            }[req.language],
             pushurl: '/Companycashmovements'
         })
         await t.commit()
@@ -103,19 +102,19 @@ async function UpdateCompanycashmovement(req, res, next) {
 
 
     if (!validator.isNumber(Movementtype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTTYPE_REQUIRED)
+        validationErrors.push(req.t('Companycashmovements.Error.MovementtypeRequired'))
     }
     if (!validator.isString(ReportID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.REPORTID_REQUIRED)
+        validationErrors.push(req.t('Companycashmovements.Error.ReportIDRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTID_REQUIRED)
+        validationErrors.push(req.t('Companycashmovements.Error.CompanycashmovementIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MOVEMENTID)
+        validationErrors.push(req.t('Companycashmovements.Error.UnsupportedCompanycashmovementID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Companycashmovements'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -124,10 +123,10 @@ async function UpdateCompanycashmovement(req, res, next) {
     try {
         const companycashmovement = await db.companycashmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!companycashmovement) {
-            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Companycashmovements.Error.NotFound'), req.t('Companycashmovements'), req.language))
         }
         if (companycashmovement.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Companycashmovements.Error.NotActive'), req.t('Companycashmovements'), req.language))
         }
 
         await db.companycashmovementModel.update({
@@ -138,9 +137,12 @@ async function UpdateCompanycashmovement(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Kurum Kasası',
+            service: req.t('Companycashmovements'),
             role: 'companycashmovementnotification',
-            message: `Kurum kasasındaki ${companycashmovement?.Movementvalue} TL ,  ${Movementvalue || 0} TL olarak ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Movementvalue} Değerinde Kurum Para Hareketi ${username} tarafından Güncellendi.`,
+                en: `${Movementvalue} Value CompanyCashMovement Updated By ${username}`
+            }[req.language],
             pushurl: '/Companycashmovements'
         })
         await t.commit()
@@ -157,13 +159,13 @@ async function DeleteCompanycashmovement(req, res, next) {
     const Uuid = req.params.movementId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.MOVEMENTID_REQUIRED)
+        validationErrors.push(req.t('Companycashmovements.Error.CompanycashmovementIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MOVEMENTID)
+        validationErrors.push(req.t('Companycashmovements.Error.UnsupportedCompanycashmovementID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Companycashmovements'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -172,10 +174,10 @@ async function DeleteCompanycashmovement(req, res, next) {
     try {
         const companycashmovement = await db.companycashmovementModel.findOne({ where: { Uuid: Uuid } })
         if (!companycashmovement) {
-            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Companycashmovements.Error.NotFound'), req.t('Companycashmovements'), req.language))
         }
         if (companycashmovement.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Companycashmovements.Error.NotActive'), req.t('Companycashmovements'), req.language))
         }
 
         await db.companycashmovementModel.update({
@@ -186,9 +188,12 @@ async function DeleteCompanycashmovement(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Kurum Kasası',
+            service: req.t('Companycashmovements'),
             role: 'companycashmovementnotification',
-            message: `Kurum kasasındaki ${companycashmovement?.Movementvalue} TL ${username} tarafından Silindi.`,
+            message: {
+                tr: `${companycashmovement?.Movementvalue} Değerinde Kurum Para Hareketi ${username} tarafından Silindi.`,
+                en: `${companycashmovement?.Movementvalue} Value CompanyCashMovement Deleted By ${username}`
+            }[req.language],
             pushurl: '/Companycashmovements'
         })
 

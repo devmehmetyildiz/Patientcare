@@ -32,6 +32,7 @@
     "Users.Error.NotActive": "Kullanıcı Aktif Değil",
     "Users.Error.UserIDRequired": "Kullanıcı ID'si Gerekli",
     "Users.Error.UnsupportedUserID": "Tanımsız Kullanıcı ID Değeri",
+    "Users.Error.UserroleNotFound": "Kullanıcı Rolleri Bulunamadı",
     "Users.Error.NameRequired": "İlk İsim Gerekli",
     "Users.Error.SurnameRequired": "Soy İsim Gerekli",
     "Users.Error.UsernameRequired": "Kullanıcı Adı Gerekli",

@@ -1,10 +1,8 @@
-const config = require("../Config")
-const messages = require("../Constants/CareplanMessages")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher,  requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
@@ -24,13 +22,13 @@ async function GetCareplan(req, res, next) {
 
     let validationErrors = []
     if (!req.params.careplanId) {
-        validationErrors.push(messages.VALIDATION_ERROR.CAREPLANID_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.CareplanIDRequired'))
     }
     if (!validator.isUUID(req.params.careplanId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CAREPLANID)
+        validationErrors.push(req.t('Careplans.Error.UnsupportedCareplanID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Careplans'), req.language))
     }
 
     try {
@@ -56,32 +54,32 @@ async function AddCareplan(req, res, next) {
     } = req.body
 
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.TypeRequired'))
     }
     if (!validator.isISODate(Startdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.StartdateRequired'))
     }
     if (!validator.isISODate(Enddate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ENDDATE_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.EnddateRequired'))
     }
     if (!validator.isString(PatientID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.PatientIDRequired'))
     }
     if (!validator.isISODate(Createdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CREATEDATE_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.CreatedateRequired'))
     }
     if (!validator.isArray(Careplanservices)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CAREPLANSERVICES_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.CareplanservicesRequired'))
     } else {
         for (const careplanservice of Careplanservices) {
             if (!validator.isUUID(careplanservice?.SupportplanID)) {
-                validationErrors.push(messages.VALIDATION_ERROR.SUPPORTPLANID_REQUIRED)
+                validationErrors.push(req.t('Careplans.Error.SupportplanIDRequired'))
             }
         }
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Careplans'), req.language))
     }
 
     let careplanuuid = uuid()
@@ -114,16 +112,17 @@ async function AddCareplan(req, res, next) {
             }, { transaction: t })
         }
 
-        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } });
-        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
-
         await CreateNotification({
             type: types.Create,
-            service: 'Bireysel Bakım Planları',
+            service: req.t('Careplans'),
             role: 'careplannotification',
-            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Eklendi.`,
+            message: {
+                tr: `${Createdate} Tarihli Bakım Planı ${username} tarafından Oluşturuldu.`,
+                en: `${Createdate} Dated Care Plan Created By ${username}`
+            }[req.language],
             pushurl: '/Careplans'
         })
+
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -136,6 +135,7 @@ async function UpdateCareplan(req, res, next) {
 
     let validationErrors = []
     const {
+        Type,
         Startdate,
         Enddate,
         PatientID,
@@ -144,35 +144,38 @@ async function UpdateCareplan(req, res, next) {
         Uuid
     } = req.body
 
+    if (!validator.isNumber(Type)) {
+        validationErrors.push(req.t('Careplans.Error.TypeRequired'))
+    }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CAREPLANID_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.CareplanIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CAREPLANID)
+        validationErrors.push(req.t('Careplans.Error.UnsupportedCareplanID'))
     }
     if (!validator.isISODate(Startdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STARTDATE_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.StartdateRequired'))
     }
     if (!validator.isISODate(Enddate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ENDDATE_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.EnddateRequired'))
     }
     if (!validator.isString(PatientID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PATIENTID_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.PatientIDRequired'))
     }
     if (!validator.isISODate(Createdate)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CREATEDATE_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.CreatedateRequired'))
     }
     if (!validator.isArray(Careplanservices)) {
-        validationErrors.push(messages.VALIDATION_ERROR.CAREPLANSERVICES_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.CareplanservicesRequired'))
     } else {
         for (const careplanservice of Careplanservices) {
             if (!careplanservice?.Uuid) {
-                validationErrors.push(messages.VALIDATION_ERROR.CAREPLANSERVICEID_REQUIRED)
+                validationErrors.push(req.t('Careplans.Error.SupportplanIDRequired'))
             }
         }
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Careplans'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -181,10 +184,10 @@ async function UpdateCareplan(req, res, next) {
     try {
         const careplan = await db.careplanModel.findOne({ where: { Uuid: Uuid } })
         if (!careplan) {
-            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Careplans.Error.NotFound'), req.t('Careplans'), req.language))
         }
         if (careplan.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.MOVEMENT_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Careplans.Error.NotActive'), req.t('Careplans'), req.language))
         }
 
         await db.careplanModel.update({
@@ -201,14 +204,14 @@ async function UpdateCareplan(req, res, next) {
             }, { where: { Uuid: careplanservice?.Uuid }, transaction: t })
         }
 
-        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } });
-        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
-
         await CreateNotification({
             type: types.Update,
-            service: 'Bireysel Bakım Planları',
+            service: req.t('Careplans'),
             role: 'careplannotification',
-            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Createdate} Tarihli Bakım Planı ${username} tarafından Güncellendi.`,
+                en: `${Createdate} Dated Care Plan Updated By ${username}`
+            }[req.language],
             pushurl: '/Careplans'
         })
 
@@ -226,13 +229,13 @@ async function SavepreviewCareplan(req, res, next) {
     const Uuid = req.params.careplanId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CAREPLANID_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.CareplanIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CAREPLANID)
+        validationErrors.push(req.t('Careplans.Error.UnsupportedCareplanID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Careplans'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -241,13 +244,13 @@ async function SavepreviewCareplan(req, res, next) {
     try {
         const careplan = await db.careplanModel.findOne({ where: { Uuid: Uuid } })
         if (!careplan) {
-            return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Careplans.Error.NotFound'), req.t('Careplans'), req.language))
         }
         if (careplan.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Careplans.Error.NotActive'), req.t('Careplans'), req.language))
         }
         if (careplan.Needapprove === false) {
-            return next(createNotfounderror([messages.ERROR.CAREPLAN_DONTNEEDAPPROVE], req.language))
+            return next(createNotFoundError(req.t('Careplans.Error.Approved'), req.t('Careplans'), req.language))
         }
 
         await db.careplanModel.update({
@@ -257,14 +260,14 @@ async function SavepreviewCareplan(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
 
-        const patient = await db.patientModel.findOne({ where: { Uuid: careplan?.PatientID } });
-        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
-
         await CreateNotification({
             type: types.Update,
-            service: 'Bireysel Bakım Planları',
+            service: req.t('Careplans'),
             role: 'careplannotification',
-            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Onaylandı.`,
+            message: {
+                tr: `${careplan?.Createdate} Tarihli Bakım Planı ${username} tarafından Kayıt Edildi.`,
+                en: `${careplan?.Createdate} Dated Care Plan Saved By ${username}`
+            }[req.language],
             pushurl: '/Careplans'
         })
 
@@ -281,13 +284,13 @@ async function ApproveCareplan(req, res, next) {
     const Uuid = req.params.careplanId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CAREPLANID_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.CareplanIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CAREPLANID)
+        validationErrors.push(req.t('Careplans.Error.UnsupportedCareplanID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Careplans'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -296,13 +299,13 @@ async function ApproveCareplan(req, res, next) {
     try {
         const careplan = await db.careplanModel.findOne({ where: { Uuid: Uuid } })
         if (!careplan) {
-            return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Careplans.Error.NotFound'), req.t('Careplans'), req.language))
         }
         if (careplan.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Careplans.Error.NotActive'), req.t('Careplans'), req.language))
         }
         if (careplan.Needapprove === false) {
-            return next(createNotfounderror([messages.ERROR.CAREPLAN_DONTNEEDAPPROVE], req.language))
+            return next(createNotFoundError(req.t('Careplans.Error.Approved'), req.t('Careplans'), req.language))
         }
 
         await db.careplanModel.update({
@@ -314,14 +317,15 @@ async function ApproveCareplan(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
 
-        const patient = await db.patientModel.findOne({ where: { Uuid: careplan?.PatientID } });
-        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
 
         await CreateNotification({
             type: types.Update,
-            service: 'Bireysel Bakım Planları',
+            service: req.t('Careplans'),
             role: 'careplannotification',
-            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Onaylandı.`,
+            message: {
+                tr: `${careplan?.Createdate} Tarihli Bakım Planı ${username} tarafından Onaylandı.`,
+                en: `${careplan?.Createdate} Dated Care Plan Approved By ${username}`
+            }[req.language],
             pushurl: '/Careplans'
         })
 
@@ -339,13 +343,13 @@ async function DeleteCareplan(req, res, next) {
     const Uuid = req.params.careplanId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CAREPLANID_REQUIRED)
+        validationErrors.push(req.t('Careplans.Error.CareplanIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CAREPLANID)
+        validationErrors.push(req.t('Careplans.Error.UnsupportedCareplanID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Careplans'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -354,10 +358,10 @@ async function DeleteCareplan(req, res, next) {
     try {
         const careplan = await db.careplanModel.findOne({ where: { Uuid: Uuid } })
         if (!careplan) {
-            return next(createNotfounderror([messages.ERROR.CAREPLAN_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Careplans.Error.NotFound'), req.t('Careplans'), req.language))
         }
         if (careplan.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CARE], req.language))
+            return next(createNotFoundError(req.t('Careplans.Error.NotActive'), req.t('Careplans'), req.language))
         }
 
         await db.careplanModel.update({
@@ -372,14 +376,15 @@ async function DeleteCareplan(req, res, next) {
             Isactive: false
         }, { where: { CareplanID: Uuid }, transaction: t })
 
-        const patient = await db.patientModel.findOne({ where: { Uuid: careplan?.PatientID } });
-        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Bireysel Bakım Planları',
+            service: req.t('Careplans'),
             role: 'careplannotification',
-            message: `${patientdefine?.Firstname} ${patientdefine?.Lastname} hastasına ait bireysel bakım planı ${username} tarafından Silindi.`,
+            message: {
+                tr: `${careplan?.Createdate} Tarihli Bakım Planı ${username} tarafından Silindi.`,
+                en: `${careplan?.Createdate} Dated Care Plan Deleted By ${username}`
+            }[req.language],
             pushurl: '/Careplans'
         })
 

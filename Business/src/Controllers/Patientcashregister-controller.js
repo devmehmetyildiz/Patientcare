@@ -1,9 +1,8 @@
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/Messages")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
@@ -21,13 +20,13 @@ async function GetPatientcashregister(req, res, next) {
 
     let validationErrors = []
     if (!req.params.cashregisterId) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASHREGISTERID_REQUIRED)
+        validationErrors.push(req.t('Patientcashregisters.Error.PatientcashregisterIDRequired'))
     }
     if (!validator.isUUID(req.params.cashregisterId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASHREGISTERID)
+        validationErrors.push(req.t('Patientcashregisters.Error.UnsupportedPatientcashregisterID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patientcashregisters'), req.language))
     }
 
     try {
@@ -47,11 +46,11 @@ async function AddPatientcashregister(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Patientcashregisters.Error.NameRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patientcashregisters'), req.language))
     }
 
     let cashregisteruuid = uuid()
@@ -70,9 +69,12 @@ async function AddPatientcashregister(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Hasta Para Türleri',
+            service: req.t('Patientcashregisters'),
             role: 'patientcashregisternotification',
-            message: `${Name} hasta para türü ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${Name} İsimli Hasta Para Türü ${username} tarafından Oluşturuldu.`,
+                en: `${Name} Patient Cash Register Created By ${username}`
+            }[req.language],
             pushurl: '/Patientcashregisters'
         })
         await t.commit()
@@ -92,13 +94,17 @@ async function UpdatePatientcashregister(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Patientcashregisters.Error.NameRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASHREGISTERID_REQUIRED)
+        validationErrors.push(req.t('Patientcashregisters.Error.PatientcashregisterIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASHREGISTERID)
+        validationErrors.push(req.t('Patientcashregisters.Error.UnsupportedPatientcashregisterID'))
+    }
+
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Patientcashregisters'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -107,10 +113,10 @@ async function UpdatePatientcashregister(req, res, next) {
     try {
         const patientcashregister = await db.patientcashregisterModel.findOne({ where: { Uuid: Uuid } })
         if (!patientcashregister) {
-            return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Patientcashmovements.Error.NotFound'), req.t('Patientcashregisters'), req.language))
         }
         if (patientcashregister.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Patientcashmovements.Error.NotActive'), req.t('Patientcashregisters'), req.language))
         }
 
         await db.patientcashregisterModel.update({
@@ -121,9 +127,12 @@ async function UpdatePatientcashregister(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Hasta Para Türleri',
+            service: req.t('Patientcashregisters'),
             role: 'patientcashregisternotification',
-            message: `${Name} hasta para türü ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Name} İsimli Hasta Para Türü ${username} tarafından Güncellendi.`,
+                en: `${Name} Patient Cash Register Updated By ${username}`
+            }[req.language],
             pushurl: '/Patientcashregisters'
         })
         await t.commit()
@@ -140,13 +149,14 @@ async function DeletePatientcashregister(req, res, next) {
     const Uuid = req.params.cashregisterId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELID_REQUIRED)
+        validationErrors.push(req.t('Patientcashregisters.Error.PatientcashregisterIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERSONELID)
+        validationErrors.push(req.t('Patientcashregisters.Error.UnsupportedPatientcashregisterID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Patientcashregisters'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -155,10 +165,10 @@ async function DeletePatientcashregister(req, res, next) {
     try {
         const patientcashregister = await db.patientcashregisterModel.findOne({ where: { Uuid: Uuid } })
         if (!patientcashregister) {
-            return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Patientcashmovements.Error.NotFound'), req.t('Patientcashregisters'), req.language))
         }
         if (patientcashregister.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.CASHREGISTER_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Patientcashmovements.Error.NotActive'), req.t('Patientcashregisters'), req.language))
         }
 
         await db.patientcashregisterModel.update({
@@ -169,9 +179,12 @@ async function DeletePatientcashregister(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Hasta Para Türleri',
+            service: req.t('Patientcashregisters'),
             role: 'patientcashregisternotification',
-            message: `${patientcashregister?.Name} hasta para türü ${username} tarafından Silindi.`,
+            message: {
+                tr: `${patientcashregister?.Name} İsimli Hasta Para Türü ${username} tarafından Silindi.`,
+                en: `${patientcashregister?.Name} Patient Cash Register Deleted By ${username}`
+            }[req.language],
             pushurl: '/Patientcashregisters'
         })
         await t.commit();

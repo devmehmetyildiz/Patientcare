@@ -2,12 +2,11 @@ const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
 const DoGet = require("../Utilities/DoGet")
-const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetStocks(req, res, next) {
     try {
@@ -21,13 +20,13 @@ async function GetStocks(req, res, next) {
 async function GetStocksByWarehouseID(req, res, next) {
     let validationErrors = []
     if (!req.params.warehouseId) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.WarehouseIDRequired'))
     }
     if (!validator.isUUID(req.params.warehouseId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
+        validationErrors.push(req.t('Stocks.Error.UnsupportedWarehouseID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocks'), req.language))
     }
     try {
         const stocks = await db.stockModel.findAll({ where: { WarehouseID: req.params.warehouseId } })
@@ -41,22 +40,22 @@ async function GetStock(req, res, next) {
 
     let validationErrors = []
     if (!req.params.stockId) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.StockIDRequired'))
     }
     if (!validator.isUUID(req.params.stockId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
+        validationErrors.push(req.t('Stocks.Error.UnsupportedStockID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocks'), req.language))
     }
 
     try {
         const stock = await db.stockModel.findOne({ where: { Uuid: req.params.stockId } });
         if (!stock) {
-            return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stocks.Error.NotFound'), req.t('Stocks'), req.language))
         }
         if (!stock.Isactive) {
-            return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Stocks.Error.NotActive'), req.t('Stocks'), req.language))
         }
         res.status(200).json(stock)
     } catch (error) {
@@ -76,17 +75,17 @@ async function AddStock(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.WarehouseIDRequired'))
     }
     if (!validator.isUUID(StockdefineID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.StockdefineIDRequired'))
     }
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.TypeRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocks'), req.language))
     }
 
     let stockuuid = uuid()
@@ -101,7 +100,7 @@ async function AddStock(req, res, next) {
 
         if (stocktype?.Issktneed) {
             if (!validator.isString(Skt)) {
-                next(createValidationError([messages.VALIDATION_ERROR.SKT_REQUIRED], req.language))
+                return next(createValidationError(req.t('Stocks.Error.SktRequired'), req.t('Stocks'), req.language))
             }
         }
 
@@ -131,12 +130,12 @@ async function AddStock(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: messages.NOTIFICATION.PAGE_NAME,
+            service: req.t('Stocks'),
             role: 'stocknotification',
             message: {
-                tr: `${req.body.Amount} ${unit?.Name} ${stockdefine?.Name} Ürünü ${username} tarafından eklendi.`,
+                tr: `${req.body.Amount} ${unit?.Name} ${stockdefine?.Name} Ürünü ${username} Tarafından Eklendi.`,
                 en: `${req.body.Amount} ${unit?.Name} ${stockdefine?.Name} Product Created By ${username}.`,
-            },
+            }[req.language],
             pushurl: '/Stocks'
         })
 
@@ -159,17 +158,17 @@ async function AddStockWithoutMovement(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.WarehouseIDRequired'))
     }
     if (!validator.isUUID(StockdefineID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.StockdefineIDRequired'))
     }
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.TypeRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocks'), req.language))
     }
 
     let stockuuid = uuid()
@@ -184,7 +183,7 @@ async function AddStockWithoutMovement(req, res, next) {
 
         if (stocktype?.Issktneed) {
             if (!validator.isString(Skt)) {
-                next(createValidationError([messages.VALIDATION_ERROR.SKT_REQUIRED], req.language))
+                return next(createValidationError(req.t('Stocks.Error.SktRequired'), req.t('Stocks'), req.language))
             }
         }
 
@@ -202,12 +201,12 @@ async function AddStockWithoutMovement(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Stoklar',
+            service: req.t('Stocks'),
             role: 'stocknotification',
             message: {
-                tr: `${stockdefine?.Name} Ürünü ${username} tarafından eklendi.`,
-                en: `${stockdefine?.Name} Product Created By ${username}.`,
-            },
+                tr: `${req.body.Amount} ${unit?.Name} ${stockdefine?.Name} Ürünü ${username} Tarafından Eklendi.`,
+                en: `${req.body.Amount} ${unit?.Name} ${stockdefine?.Name} Product Created By ${username}.`,
+            }[req.language],
             pushurl: '/Stocks'
         })
 
@@ -231,24 +230,25 @@ async function UpdateStock(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(WarehouseID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.WarehouseIDRequired'))
     }
     if (!validator.isUUID(StockdefineID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKDEFINEID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.StockdefineIDRequired'))
     }
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
-    }
-    if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
+        validationErrors.push(req.t('Stocks.Error.TypeRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.StockIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Stocks.Error.UnsupportedStockID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocks'), req.language))
     }
+
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
 
@@ -259,16 +259,16 @@ async function UpdateStock(req, res, next) {
 
         if (stocktype?.Issktneed) {
             if (!validator.isString(Skt)) {
-                next(createValidationError([messages.VALIDATION_ERROR.SKT_REQUIRED], req.language))
+                return next(createValidationError(req.t('Stocks.Error.SktRequired'), req.t('Stocks'), req.language))
             }
         }
 
         const stock = await db.stockModel.findOne({ where: { Uuid: Uuid } })
         if (!stock) {
-            return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stocks.Error.NotFound'), req.t('Stocks'), req.language))
         }
-        if (stock.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+        if (!stock.Isactive) {
+            return next(createNotFoundError(req.t('Stocks.Error.NotActive'), req.t('Stocks'), req.language))
         }
 
         await db.stockModel.update({
@@ -280,12 +280,12 @@ async function UpdateStock(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Stoklar',
+            service: req.t('Stocks'),
             role: 'stocknotification',
             message: {
-                tr: `${stockdefine?.Name} Ürünü ${username} tarafından eklendi.`,
-                en: `${stockdefine?.Name} Product Created By ${username}.`,
-            },
+                tr: `${stockdefine?.Name} Ürünü ${username} tarafından Güncellendi.`,
+                en: `${stockdefine?.Name} Stock Updated By ${username}.`,
+            }[req.language],
             pushurl: '/Stocks'
         })
 
@@ -303,25 +303,26 @@ async function ApproveStock(req, res, next) {
     const Uuid = req.params.stockId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.StockIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
+        validationErrors.push(req.t('Stocks.Error.UnsupportedStockID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocks'), req.language))
     }
+
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
 
     try {
         const stock = await db.stockModel.findOne({ where: { Uuid: Uuid } })
         if (!stock) {
-            return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Stocks.Error.NotFound'), req.t('Stocks'), req.language))
         }
-        if (stock.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+        if (!stock.Isactive) {
+            return next(createNotFoundError(req.t('Stocks.Error.NotActive'), req.t('Stocks'), req.language))
         }
 
         await db.stockModel.update({
@@ -335,9 +336,12 @@ async function ApproveStock(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Stoklar',
+            service: req.t('Stocks'),
             role: 'stocknotification',
-            message: `${stockdefine?.Name} ürünü  ${username} tarafından Onaylandı.`,
+            message: {
+                tr: `${stockdefine?.Name} Ürünü ${username} tarafından Onaylandı.`,
+                en: `${stockdefine?.Name} Stock Approved By ${username}.`,
+            }[req.language],
             pushurl: '/Stocks'
         })
 
@@ -360,21 +364,21 @@ async function ApproveStocks(req, res, next) {
     try {
         for (const data of (body || [])) {
             if (!data) {
-                validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+                validationErrors.push(req.t('Stocks.Error.StockIDRequired'))
             }
             if (!validator.isUUID(data)) {
-                validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
+                validationErrors.push(req.t('Stocks.Error.UnsupportedStockID'))
             }
             if (validationErrors.length > 0) {
-                return next(createValidationError(validationErrors, req.language))
+                return next(createValidationError(validationErrors, req.t('Stocks'), req.language))
             }
 
             const stock = await db.stockModel.findOne({ where: { Uuid: data } })
             if (!stock) {
-                return next(createNotfounderror([messages.ERROR.STOCK_NOT_FOUND], req.language))
+                return next(createNotFoundError(req.t('Stocks.Error.NotFound'), req.t('Stocks'), req.language))
             }
-            if (stock.Isactive === false) {
-                return next(createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE], req.language))
+            if (!stock.Isactive) {
+                return next(createNotFoundError(req.t('Stocks.Error.NotActive'), req.t('Stocks'), req.language))
             }
 
             await db.stockModel.update({
@@ -387,9 +391,12 @@ async function ApproveStocks(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Stoklar',
+            service: req.t('Stocks'),
             role: 'stocknotification',
-            message: `${username} toplu stok güncelleme yapıldı.`,
+            message: {
+                tr: `Toplu Ürün Onaylaması ${username} tarafından Yapıldı.`,
+                en: `Total Stock Approved By ${username}.`,
+            }[req.language],
             pushurl: '/Stocks'
         })
 
@@ -407,13 +414,13 @@ async function DeleteStock(req, res, next) {
     const Uuid = req.params.stockId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.StockIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_STOCKID)
+        validationErrors.push(req.t('Stocks.Error.UnsupportedStockID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocks'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -422,10 +429,10 @@ async function DeleteStock(req, res, next) {
     try {
         const stock = await db.stockModel.findOne({ where: { Uuid: req.params.stockId } });
         if (!stock) {
-            return createNotfounderror([messages.ERROR.STOCK_NOT_FOUND])
+            return next(createNotFoundError(req.t('Stocks.Error.NotFound'), req.t('Stocks'), req.language))
         }
         if (!stock.Isactive) {
-            return createNotfounderror([messages.ERROR.STOCK_NOT_ACTIVE])
+            return next(createNotFoundError(req.t('Stocks.Error.NotActive'), req.t('Stocks'), req.language))
         }
 
         await db.stockModel.update({
@@ -444,9 +451,12 @@ async function DeleteStock(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Stoklar',
+            service: req.t('Stocks'),
             role: 'stocknotification',
-            message: `${stockdefine?.Name}  ${username} tarafından silindi.`,
+            message: {
+                tr: `${stockdefine?.Name} Ürünü ${username} tarafından Silindi.`,
+                en: `${stockdefine?.Name} Stock Deleted By ${username}.`,
+            }[req.language],
             pushurl: '/Stocks'
         })
 
@@ -464,13 +474,13 @@ async function DeleteStockByWarehouseID(req, res, next) {
     const Uuid = req.params.warehouseId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.WAREHOUSEID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.WarehouseIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_WAREHOUSEID)
+        validationErrors.push(req.t('Stocks.Error.UnsupportedWarehouseID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocks'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -496,6 +506,20 @@ async function DeleteStockByWarehouseID(req, res, next) {
         }
 
         await t.commit();
+
+        const warehouse = await db.warehouseModel.findOne({ where: { Uuid: Uuid } })
+
+        await CreateNotification({
+            type: types.Delete,
+            service: req.t('Stocks'),
+            role: 'stocknotification',
+            message: {
+                tr: `${warehouse?.Name} Ambarına Ait Ürünler ${username} tarafından Silindi.`,
+                en: `${warehouse?.Name} Warehouse Stocks Deleted By ${username}.`,
+            }[req.language],
+            pushurl: '/Stocks'
+        })
+
     } catch (error) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
@@ -513,17 +537,17 @@ async function CreateStockFromStock(req, res, next) {
     } = req.body
 
     if (!validator.isUUID(ParentID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PARENTID_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.ParentIDRequired'))
     }
     if (!validator.isArray(Stocks)) {
-        validationErrors.push(messages.VALIDATION_ERROR.STOCKS_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.StocksRequired'))
     }
     if (!validator.isNumber(Type)) {
-        validationErrors.push(messages.VALIDATION_ERROR.TYPE_REQUIRED)
+        validationErrors.push(req.t('Stocks.Error.TypeRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Stocks'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -546,7 +570,7 @@ async function CreateStockFromStock(req, res, next) {
             });
 
             if (stock?.Value > amount) {
-                return next(createValidationError([messages.VALIDATION_ERROR.AMOUNT_LIMIT_ERROR], req.language))
+                return next(createValidationError(req.t('Stocks.Error.AmountlimitRequired'), req.t('Stocks'), req.language))
             } else {
 
                 let stockuuid = uuid()
@@ -593,15 +617,19 @@ async function CreateStockFromStock(req, res, next) {
             }
         }
 
+        await t.commit()
+
         await CreateNotification({
             type: types.Create,
-            service: 'Stoklar',
+            service: req.t('Stocks'),
             role: 'stocknotification',
-            message: `Stok transfer işlemi ${username} tarafından yapıldı.`,
+            message: {
+                tr: `Stok Transfer İşlemi ${username} tarafından Gerçekleştirildi.`,
+                en: `Stocks Transfer Created By ${username}.`,
+            }[req.language],
             pushurl: '/Stocks'
         })
 
-        await t.commit()
     } catch (err) {
         await t.rollback()
         return next(sequelizeErrorCatcher(err))
@@ -621,97 +649,4 @@ module.exports = {
     GetStocksByWarehouseID,
     AddStockWithoutMovement,
     CreateStockFromStock
-}
-
-
-const messages = {
-    NOTIFICATION: {
-        PAGE_NAME: {
-            en: 'Purchase Orders',
-            tr: 'Satın Almalar',
-        },
-    },
-    ERROR: {
-        STOCK_NOT_FOUND: {
-            code: 'STOCK_NOT_FOUND', description: {
-                en: 'Stock not found',
-                tr: 'Stok bulunamadı',
-            }
-        },
-        STOCK_NOT_ACTIVE: {
-            code: 'STOCK_NOT_ACTIVE', description: {
-                en: 'Stock not active',
-                tr: 'Stok aktif değil',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        AMOUNT_LIMIT_ERROR: {
-            code: 'AMOUNT_LIMIT_ERROR', description: {
-                en: 'The amount is too low',
-                tr: 'Bu işlem yeterli ürün yok',
-            }
-        },
-        STOCKS_REQUIRED: {
-            code: 'STOCKS_REQUIRED', description: {
-                en: 'The stocks required',
-                tr: 'Bu işlem için ürünler gerekli',
-            }
-        },
-        TYPE_REQUIRED: {
-            code: 'TYPE_REQUIRED', description: {
-                en: 'The type required',
-                tr: 'Bu işlem için tür gerekli',
-            }
-        },
-        UNITID_REQUIRED: {
-            code: 'UNITID_REQUIRED', description: {
-                en: 'The unit required',
-                tr: 'Bu işlem için birim gerekli',
-            }
-        },
-        STOCKDEFINEID_REQUIRED: {
-            code: 'STOCKDEFINEID_REQUIRED', description: {
-                en: 'The stockdefineid required',
-                tr: 'Bu işlem için stok tanımı id gerekli',
-            }
-        },
-        SKT_REQUIRED: {
-            code: 'SKT_REQUIRED', description: {
-                en: 'The skt required',
-                tr: 'Bu işlem için skt gerekli',
-            }
-        },
-        WAREHOUSEID_REQUIRED: {
-            code: 'WAREHOUSEID_REQUIRED', description: {
-                en: 'The warehouseid required',
-                tr: 'Bu işlem için ambar id gerekli',
-            }
-        },
-        PARENTID_REQUIRED: {
-            code: 'PARENTID_REQUIRED', description: {
-                en: 'The parent id required',
-                tr: 'Bu işlem için bağlı id gerekli',
-            }
-        },
-        STOCKID_REQUIRED: {
-            code: 'STOCKID_REQUIRED', description: {
-                en: 'The stockid required',
-                tr: 'Bu işlem için stok id gerekli',
-            }
-        },
-        UNSUPPORTED_STOCKID: {
-            code: 'UNSUPPORTED_STOCKID', description: {
-                en: 'The stock id is unsupported',
-                tr: 'geçersiz stok id si',
-            }
-        },
-        UNSUPPORTED_WAREHOUSEID: {
-            code: 'UNSUPPORTED_WAREHOUSEID', description: {
-                en: 'The warehouse id is unsupported',
-                tr: 'geçersiz warehouse id si',
-            }
-        },
-    }
-
 }

@@ -1,13 +1,10 @@
-const config = require("../Config")
 const { types } = require("../Constants/Defines")
-const messages = require("../Constants/PersonelshiftdetailMessages")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher,  requestErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
-const axios = require('axios')
 
 async function GetPersonelshiftdetails(req, res, next) {
     try {
@@ -22,13 +19,13 @@ async function GetPersonelshiftdetail(req, res, next) {
 
     let validationErrors = []
     if (!req.params.personelshiftdetailId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELSHIIFTDETAILID_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.PersonelshiftdetailIDRequired'))
     }
     if (!validator.isUUID(req.params.personelshiftdetailId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERSONELSHIIFTDETAILID)
+        validationErrors.push(req.t('Personelshiftdetails.Error.UnsupportedPersonelshiftdetailID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Personelshiftdetails'), req.language))
     }
 
     try {
@@ -55,32 +52,32 @@ async function AddPersonelshiftdetail(req, res, next) {
 
 
     if (validator.isUUID(PersonelshiftID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELSHIFTID_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.PersonelshiftIDRequired'))
     }
     if (validator.isUUID(ShiftID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHIFTID_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.ShiftIDRequired'))
     }
     if (validator.isUUID(PersonelID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELID_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.PersonelIDRequired'))
     }
     if (validator.isUUID(FloorID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FLOORID_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.FloorIDRequired'))
     }
     if (validator.isNumber(Day)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DAY_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.DayRequired'))
     }
     if (validator.isBoolean(Isworking)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISWORKING_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.IsworkingRequired'))
     }
     if (validator.isBoolean(Isonannual)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISONANNUAL_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.IsonannualRequired'))
     }
     if (validator.isNumber(Annualtype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ANNUALTYPE_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.AnnualtypeRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Personelshiftdetails'), req.language))
     }
 
     let personelshiftdetailuuid = uuid()
@@ -99,11 +96,15 @@ async function AddPersonelshiftdetail(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Personel Vardiya Detayları',
+            service: req.t('Personelshiftdetails'),
             role: 'personelshiftdetailnotification',
-            message: `${personelshiftdetailuuid} numaralı personel vardiya detayı ${username} tarafından Eklendi.`,
+            message: {
+                tr: `${PersonelshiftID} Id'li Personel Vardiya detayı ${username} tarafından Oluşturuldu.`,
+                en: `${PersonelshiftID} With ID Personel Shift Detail Created By ${username}`
+            }[req.language],
             pushurl: '/Personelshiftdetails'
         })
+
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -129,37 +130,37 @@ async function UpdatePersonelshiftdetail(req, res, next) {
     } = req.body
 
     if (validator.isUUID(PersonelshiftID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELSHIFTID_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.PersonelshiftIDRequired'))
     }
     if (validator.isUUID(ShiftID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SHIFTID_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.ShiftIDRequired'))
     }
     if (validator.isUUID(PersonelID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELID_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.PersonelIDRequired'))
     }
     if (validator.isUUID(FloorID)) {
-        validationErrors.push(messages.VALIDATION_ERROR.FLOORID_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.FloorIDRequired'))
     }
     if (validator.isNumber(Day)) {
-        validationErrors.push(messages.VALIDATION_ERROR.DAY_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.DayRequired'))
     }
     if (validator.isBoolean(Isworking)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISWORKING_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.IsworkingRequired'))
     }
     if (validator.isBoolean(Isonannual)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ISONANNUAL_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.IsonannualRequired'))
     }
     if (validator.isNumber(Annualtype)) {
-        validationErrors.push(messages.VALIDATION_ERROR.ANNUALTYPE_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.AnnualtypeRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELSHIIFTDETAILID_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.PersonelshiftdetailIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERSONELSHIIFTDETAILID)
+        validationErrors.push(req.t('Personelshiftdetails.Error.UnsupportedPersonelshiftdetailID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Personelshiftdetails'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -168,10 +169,10 @@ async function UpdatePersonelshiftdetail(req, res, next) {
     try {
         const personelshiftdetail = db.personelshiftdetailModel.findOne({ where: { Uuid: Uuid } })
         if (!personelshiftdetail) {
-            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFTDETAIL_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Personelshiftdetails.Error.NotFound'), req.t('Personelshiftdetails'), req.language))
         }
         if (personelshiftdetail.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFTDETAIL_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Personelshiftdetails.Error.NotActive'), req.t('Personelshiftdetails'), req.language))
         }
 
         await db.personelshiftdetailModel.update({
@@ -180,14 +181,17 @@ async function UpdatePersonelshiftdetail(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
 
-
         await CreateNotification({
             type: types.Update,
-            service: 'Personel Vardiya Detayları',
+            service: req.t('Personelshiftdetails'),
             role: 'personelshiftdetailnotification',
-            message: `${Uuid} numaralı personel vardiya detayı ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${PersonelshiftID} Id'li Personel Vardiya detayı ${username} tarafından Güncellendi.`,
+                en: `${PersonelshiftID} With ID Personel Shift Detail Updated By ${username}`
+            }[req.language],
             pushurl: '/Personelshiftdetails'
         })
+
         await t.commit()
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -201,13 +205,13 @@ async function DeletePersonelshiftdetail(req, res, next) {
     const Uuid = req.params.personelshiftdetailId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.PERSONELSHIFTID_REQUIRED)
+        validationErrors.push(req.t('Personelshiftdetails.Error.PersonelshiftdetailIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PERSONELSHIIFTDETAILID)
+        validationErrors.push(req.t('Personelshiftdetails.Error.UnsupportedPersonelshiftdetailID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Personelshiftdetails'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -216,10 +220,10 @@ async function DeletePersonelshiftdetail(req, res, next) {
     try {
         const personelshiftdetail = db.personelshiftdetailModel.findOne({ where: { Uuid: Uuid } })
         if (!personelshiftdetail) {
-            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFTDETAIL_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Personelshiftdetails.Error.NotFound'), req.t('Personelshiftdetails'), req.language))
         }
         if (personelshiftdetail.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.PERSONELSHIIFTDETAIL_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Personelshiftdetails.Error.NotActive'), req.t('Personelshiftdetails'), req.language))
         }
 
         await db.personelshiftdetailModel.update({
@@ -230,9 +234,12 @@ async function DeletePersonelshiftdetail(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Personel Vardiya Detayları',
+            service: req.t('Personelshiftdetails'),
             role: 'personelshiftdetailnotification',
-            message: `${Uuid} numaralı personel vardiya detayı ${username} tarafından Silindi.`,
+            message: {
+                tr: `${personelshiftdetail?.PersonelshiftID} Id'li Personel Vardiya detayı ${username} tarafından Silindi.`,
+                en: `${personelshiftdetail?.PersonelshiftID} With ID Personel Shift Detail Deleted By ${username}`
+            }[req.language],
             pushurl: '/Personelshiftdetails'
         })
 

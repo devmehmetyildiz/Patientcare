@@ -1,14 +1,11 @@
 const config = require("../Config")
-const messages = require("../Constants/Messages")
 const { sequelizeErrorCatcher } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 const fs = require('fs');
 const stream = require("stream");
-const Reconnectftp = require("../Utilities/Reconnectftp")
-const ftp = require('basic-ftp')
 const SftpClient = require('ssh2-sftp-client');
 
 async function GetFiles(req, res, next) {
@@ -24,13 +21,13 @@ async function GetbyparentID(req, res, next) {
 
     let validationErrors = []
     if (!req.params.parentId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PARENTID_REQUIRED)
+        validationErrors.push(req.t('Files.Error.ParentIDRequired'))
     }
     if (!validator.isUUID(req.params.parentId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PARENTID)
+        validationErrors.push(req.t('Files.Error.UnsupportedParentID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Files'), req.language))
     }
 
     try {
@@ -45,13 +42,13 @@ async function GetbyorderfileID(req, res, next) {
 
     let validationErrors = []
     if (!req.params.orderfileId) {
-        validationErrors.push(messages.VALIDATION_ERROR.PARENTID_REQUIRED)
+        validationErrors.push(req.t('Files.Error.ParentIDRequired'))
     }
     if (!validator.isUUID(req.params.orderfileId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_PARENTID)
+        validationErrors.push(req.t('Files.Error.UnsupportedParentID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Files'), req.language))
     }
 
     try {
@@ -66,13 +63,13 @@ async function GetFile(req, res, next) {
 
     let validationErrors = []
     if (!req.params.fileId) {
-        validationErrors.push(messages.VALIDATION_ERROR.FILEID_REQUIRED)
+        validationErrors.push(req.t('Files.Error.FileIDRequired'))
     }
     if (!validator.isUUID(req.params.fileId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_FILEID)
+        validationErrors.push(req.t('Files.Error.UnsupportedFileID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Files'), req.language))
     }
 
     try {
@@ -87,22 +84,22 @@ async function Downloadfile(req, res, next) {
 
     let validationErrors = []
     if (!req.params.fileId) {
-        validationErrors.push(messages.VALIDATION_ERROR.FILEID_REQUIRED)
+        validationErrors.push(req.t('Files.Error.FileIDRequired'))
     }
     if (!validator.isUUID(req.params.fileId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_FILEID)
+        validationErrors.push(req.t('Files.Error.UnsupportedFileID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Files'), req.language))
     }
 
     try {
         const file = await db.fileModel.findOne({ where: { Uuid: req.params.fileId } });
         if (!file) {
-            return next(createNotfounderror([messages.ERROR.FILE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Files.Error.NotFound'), req.t('Files'), req.language))
         }
         if (file.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.FILE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Files.Error.NotActive'), req.t('Files'), req.language))
         }
         const encodedFileName = encodeURIComponent(file.Filename);
         res.setHeader("Content-Disposition", `attachment; filename="${encodedFileName}"`);
@@ -139,7 +136,7 @@ async function Downloadfile(req, res, next) {
 
             } catch (err) {
                 console.log('err: ', err);
-                return next(createValidationError(messages.ERROR.FILE_DOWNLOAD_ERROR))
+                return next(createValidationError(req.t('Files.Error.Downloaderror'), req.t('Files'), req.language))
             }
         })();
     } catch (error) {
@@ -178,7 +175,7 @@ async function AddFile(req, res, next) {
 
             const fileuploaded = await Uploadfiletoftp(filedata)
             if (!fileuploaded) {
-                return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
+                return next(createValidationError(req.t('Files.Error.Uploaderror'), req.t('Files'), req.language))
             }
             await db.fileModel.create({
                 ...filedata,
@@ -232,7 +229,7 @@ async function UpdateFile(req, res, next) {
 
                 const fileuploaded = await Uploadfiletoftp(filedata)
                 if (!fileuploaded) {
-                    return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
+                    return next(createValidationError(req.t('Files.Error.Uploaderror'), req.t('Files'), req.language))
                 }
                 await db.fileModel.create({
                     ...filedata,
@@ -244,10 +241,10 @@ async function UpdateFile(req, res, next) {
 
                 const file = await db.fileModel.findOne({ where: { Uuid: filedata.Uuid } })
                 if (!file) {
-                    return next(createNotfounderror([messages.ERROR.FILE_NOT_FOUND], req.language))
+                    return next(createNotFoundError(req.t('Files.Error.NotFound'), req.t('Files'), req.language))
                 }
                 if (file.Isactive === false) {
-                    return next(createNotfounderror([messages.ERROR.FILE_NOT_ACTIVE], req.language))
+                    return next(createNotFoundError(req.t('Files.Error.NotActive'), req.t('Files'), req.language))
                 }
                 if (filedata.WillDelete) {
                     await db.fileModel.update({
@@ -269,7 +266,7 @@ async function UpdateFile(req, res, next) {
                         filedata.Filename = filedata.File.name
                         const fileuploaded = await Uploadfiletoftp(filedata)
                         if (!fileuploaded) {
-                            return next(createValidationError(messages.ERROR.FILE_UPLOAD_ERROR))
+                            return next(createValidationError(req.t('Files.Error.Uploaderror'), req.t('Files'), req.language))
                         }
                         await db.fileModel.create({
                             ...filedata,
@@ -302,13 +299,13 @@ async function DeleteFile(req, res, next) {
     const Uuid = req.params.fileId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.FILEID_REQUIRED)
+        validationErrors.push(req.t('Files.Error.FileIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_FILEID)
+        validationErrors.push(req.t('Files.Error.UnsupportedFileID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Files'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -317,10 +314,10 @@ async function DeleteFile(req, res, next) {
     try {
         const file = await db.fileModel.findOne({ where: { Uuid: req.params.fileId } });
         if (!file) {
-            return next(createNotfounderror([messages.ERROR.FILE_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Files.Error.NotFound'), req.t('Files'), req.language))
         }
         if (file.Isactive === false) {
-            return next(createNotfounderror([messages.ERROR.FILE_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Files.Error.NotActive'), req.t('Files'), req.language))
         }
 
         await db.fileModel.update({
@@ -341,14 +338,15 @@ async function DeleteFileByParentID(req, res, next) {
     const Uuid = req.params.parentID
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.FILEID_REQUIRED)
+        validationErrors.push(req.t('Files.Error.FileIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_FILEID)
+        validationErrors.push(req.t('Files.Error.UnsupportedFileID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Files'), req.language))
     }
+
 
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
@@ -423,7 +421,7 @@ async function Checkdirectoryfromftp(directoryname) {
         const directoryExists = dirList.some((item) => item.name === directoryname);
 
         if (!directoryExists) {
-            await client.mkdir(remoteFolderpath, true);  
+            await client.mkdir(remoteFolderpath, true);
         }
 
         isdirectoryactive = true;
@@ -435,37 +433,6 @@ async function Checkdirectoryfromftp(directoryname) {
     }
 
     return isdirectoryactive;
-}
-
-async function Removefileandfolderfromftp(fileObject) {
-    let isremoved = false
-
-    const ishavefolder = await Checkdirectoryfromftp(fileObject.Filefolder)
-    if (ishavefolder) {
-        const remoteFolderpath = `/${config.ftp.mainfolder}/${fileObject.Filefolder}/`;
-        const remoteFilePath = `/${remoteFolderpath}/${fileObject.Filename}`;
-
-
-
-        await (async () => {
-
-            try {
-                const client = new ftp.Client();
-                const server = {
-                    host: config.ftp.host,
-                    user: config.ftp.user,
-                    password: config.ftp.password
-                };
-                await client.access(server);
-
-                await client.removeDir(remoteFolderpath, remoteFilePath);
-                isremoved = true
-            } catch (err) {
-                isremoved = false
-            }
-        })();
-    }
-    return isremoved
 }
 
 module.exports = {

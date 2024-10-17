@@ -1,8 +1,8 @@
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
 const { sequelizeErrorCatcher, } = require("../Utilities/Error")
-const createValidationError = require("../Utilities/Error").createValidation
-const createNotfounderror = require("../Utilities/Error").createNotfounderror
+const createValidationError = require("../Utilities/Error").createValidationError
+const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
@@ -20,22 +20,22 @@ async function GetMailsetting(req, res, next) {
 
     let validationErrors = []
     if (!req.params.mailsettingId) {
-        validationErrors.push(messages.VALIDATION_ERROR.MAILSETTINGID_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.MailsettingIDRequired'))
     }
     if (!validator.isUUID(req.params.mailsettingId)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MAILSETTINGID)
+        validationErrors.push(req.t('Mailsettings.Error.UnsupportedMailsettingID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Mailsettings'), req.language))
     }
 
     try {
         const mailsetting = await db.mailsettingModel.findOne({ where: { Uuid: req.params.mailsettingId } });
         if (!mailsetting) {
-            return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Mailsettings.Error.NotFound'), req.t('Mailsettings'), req.language))
         }
         if (!mailsetting.Isactive) {
-            return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Mailsettings.Error.NotActive'), req.t('Mailsettings'), req.language))
         }
         res.status(200).json(mailsetting)
     } catch (error) {
@@ -47,10 +47,10 @@ async function GetActiveMailsetting(req, res, next) {
     try {
         const mailsetting = await db.mailsettingModel.findOne({ where: { Issettingactive: true } });
         if (!mailsetting) {
-            return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Mailsettings.Error.NotFound'), req.t('Mailsettings'), req.language))
         }
         if (!mailsetting.Isactive) {
-            return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Mailsettings.Error.NotActive'), req.t('Mailsettings'), req.language))
         }
         res.status(200).json(mailsetting)
     } catch (error) {
@@ -71,26 +71,26 @@ async function AddMailsetting(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.NameRequired'))
     }
     if (!validator.isString(User)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USER_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.UserRequired'))
     }
     if (!validator.isString(Password)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.PasswordRequired'))
     }
     if (!validator.isString(Smtphost)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SMTPHOST_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.SmtphostRequired'))
     }
     if (!validator.isString(Smtpport)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SMTPPORT_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.SmtpportRequired'))
     }
     if (!validator.isString(Mailaddress)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MAILADDRESS_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.MailaddressRequired'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Mailsettings'), req.language))
     }
 
     let mailsettinguuid = uuid()
@@ -109,11 +109,15 @@ async function AddMailsetting(req, res, next) {
 
         await CreateNotification({
             type: types.Create,
-            service: 'Mail Ayarları',
+            service: req.t('Mailsettings'),
             role: 'mailsettingnotification',
-            message: `${Name} mail ayarı ${username} tarafından Oluşturuldu.`,
+            message: {
+                tr: `${Name} Mail Ayarı ${username} tarafından Oluşturuldu.`,
+                en: `${Name} Mail Setting Created by ${username}`
+            }[req.language],
             pushurl: '/Mailsettings'
         })
+
         await t.commit()
     } catch (err) {
         await t.rollback()
@@ -136,32 +140,32 @@ async function UpdateMailsetting(req, res, next) {
     } = req.body
 
     if (!validator.isString(Name)) {
-        validationErrors.push(messages.VALIDATION_ERROR.NAME_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.NameRequired'))
     }
     if (!validator.isString(User)) {
-        validationErrors.push(messages.VALIDATION_ERROR.USER_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.UserRequired'))
     }
     if (!validator.isString(Password)) {
-        validationErrors.push(messages.VALIDATION_ERROR.PASSWORD_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.PasswordRequired'))
     }
     if (!validator.isString(Smtphost)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SMTPHOST_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.SmtphostRequired'))
     }
     if (!validator.isString(Smtpport)) {
-        validationErrors.push(messages.VALIDATION_ERROR.SMTPPORT_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.SmtpportRequired'))
     }
     if (!validator.isString(Mailaddress)) {
-        validationErrors.push(messages.VALIDATION_ERROR.MAILADDRESS_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.MailaddressRequired'))
     }
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.MAILSETTINGID_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.MailsettingIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_MAILSETTINGID)
+        validationErrors.push(req.t('Mailsettings.Error.UnsupportedMailsettingID'))
     }
 
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Mailsettings'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -170,10 +174,10 @@ async function UpdateMailsetting(req, res, next) {
     try {
         const mailsetting = await db.mailsettingModel.findOne({ where: { Uuid: Uuid } })
         if (!mailsetting) {
-            return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Mailsettings.Error.NotFound'), req.t('Mailsettings'), req.language))
         }
         if (!mailsetting.Isactive) {
-            return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Mailsettings.Error.NotActive'), req.t('Mailsettings'), req.language))
         }
 
         await db.mailsettingModel.update({
@@ -184,11 +188,15 @@ async function UpdateMailsetting(req, res, next) {
 
         await CreateNotification({
             type: types.Update,
-            service: 'Mail Ayarları',
+            service: req.t('Mailsettings'),
             role: 'mailsettingnotification',
-            message: `${Name} mail ayarı ${username} tarafından Güncellendi.`,
+            message: {
+                tr: `${Name} Mail Ayarı ${username} tarafından Güncellendi.`,
+                en: `${Name} Mail Setting Updated by ${username}`
+            }[req.language],
             pushurl: '/Mailsettings'
         })
+
         await t.commit()
     } catch (error) {
         await t.rollback()
@@ -203,13 +211,14 @@ async function DeleteMailsetting(req, res, next) {
     const Uuid = req.params.mailsettingId
 
     if (!Uuid) {
-        validationErrors.push(messages.VALIDATION_ERROR.CASEID_REQUIRED)
+        validationErrors.push(req.t('Mailsettings.Error.MailsettingIDRequired'))
     }
     if (!validator.isUUID(Uuid)) {
-        validationErrors.push(messages.VALIDATION_ERROR.UNSUPPORTED_CASEID)
+        validationErrors.push(req.t('Mailsettings.Error.UnsupportedMailsettingID'))
     }
+
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
+        return next(createValidationError(validationErrors, req.t('Mailsettings'), req.language))
     }
 
     const t = await db.sequelize.transaction();
@@ -218,10 +227,10 @@ async function DeleteMailsetting(req, res, next) {
     try {
         const mailsetting = await db.mailsettingModel.findOne({ where: { Uuid: Uuid } })
         if (!mailsetting) {
-            return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_FOUND], req.language))
+            return next(createNotFoundError(req.t('Mailsettings.Error.NotFound'), req.t('Mailsettings'), req.language))
         }
         if (!mailsetting.Isactive) {
-            return next(createNotfounderror([messages.ERROR.MAILSETTING_NOT_ACTIVE], req.language))
+            return next(createNotFoundError(req.t('Mailsettings.Error.NotActive'), req.t('Mailsettings'), req.language))
         }
 
         await db.mailsettingModel.update({
@@ -232,11 +241,15 @@ async function DeleteMailsetting(req, res, next) {
 
         await CreateNotification({
             type: types.Delete,
-            service: 'Mail Ayarları',
+            service: req.t('Mailsettings'),
             role: 'mailsettingnotification',
-            message: `${mailsetting?.Name} mail ayarı ${username} tarafından Silindi.`,
+            message: {
+                tr: `${mailsetting?.Name} Mail Ayarı ${username} tarafından Silindi.`,
+                en: `${mailsetting?.Name} Mail Setting Deleted by ${username}`
+            }[req.language],
             pushurl: '/Mailsettings'
         })
+
         await t.commit();
     } catch (error) {
         await t.rollback();
@@ -252,72 +265,4 @@ module.exports = {
     UpdateMailsetting,
     DeleteMailsetting,
     GetActiveMailsetting
-}
-
-const messages = {
-    ERROR: {
-        MAILSETTING_NOT_FOUND: {
-            code: 'MAILSETTING_NOT_FOUND', description: {
-                en: 'The mail setting not found',
-                tr: 'Mail ayarı bulunamadı',
-            }
-        },
-        MAILSETTING_NOT_ACTIVE: {
-            code: 'MAILSETTING_NOT_ACTIVE', description: {
-                en: 'The mail setting not active',
-                tr: 'Mail ayarı aktif değil',
-            }
-        },
-    },
-    VALIDATION_ERROR: {
-        NAME_REQUIRED: {
-            code: 'NAME_REQUIRED', description: {
-                en: 'The name required',
-                tr: 'Bu işlem için isim gerekli',
-            }
-        },
-        USER_REQUIRED: {
-            code: 'USER_REQUIRED', description: {
-                en: 'The user required',
-                tr: 'Bu işlem için kullanıcı gerekli',
-            }
-        },
-        PASSWORD_REQUIRED: {
-            code: 'PASSWORD_REQUIRED', description: {
-                en: 'The password required',
-                tr: 'Bu işlem için parola gerekli',
-            }
-        },
-        SMTPHOST_REQUIRED: {
-            code: 'SMTPHOST_REQUIRED', description: {
-                en: 'The smtp host required',
-                tr: 'Bu işlem için smtp host gerekli',
-            }
-        },
-        SMTPPORT_REQUIRED: {
-            code: 'SMTPPORT_REQUIRED', description: {
-                en: 'The smtp port required',
-                tr: 'Bu işlem için smtp port gerekli',
-            }
-        },
-        MAILADDRESS_REQUIRED: {
-            code: 'MAILADDRESS_REQUIRED', description: {
-                en: 'The mail address required',
-                tr: 'Bu işlem için mail adresi gerekli',
-            }
-        },
-        MAILSETTINGID_REQUIRED: {
-            code: 'MAILSETTINGID_REQUIRED', description: {
-                en: 'The mailsettingid required',
-                tr: 'Bu işlem için mailsettingid gerekli',
-            }
-        },
-        UNSUPPORTED_MAILSETTINGID: {
-            code: 'UNSUPPORTED_MAILSETTINGID', description: {
-                en: 'unsupported mailsettingid',
-                tr: 'Tanımsız mailsettingid',
-            }
-        },
-    }
-
 }

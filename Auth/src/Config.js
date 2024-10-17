@@ -28,10 +28,6 @@ const config = {
   }
 }
 
-function parseBoolean(str) {
-  return str === 'true' ? true : false
-}
-
 function parseDomain(urls) {
   let urlarray = urls.split(',').map(url => {
     return url

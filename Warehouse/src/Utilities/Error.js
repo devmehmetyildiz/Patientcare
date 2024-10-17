@@ -56,24 +56,29 @@ function createList(type, code) {
   return errorList
 }
 
-function createValidation(param, language) {
+function createValidationError(param, code, language) {
   let errorList = param
   if (!Array.isArray(param)) {
     errorList = [param]
   }
 
+  let type = {
+    en: "VALIDATION ITEM",
+    tr: "VERİ EKSİKLİĞİ"
+  }
+
   let description = {
     en: 'Validation failed. Look in list property for details',
     tr: 'Veri doğrulaması başarısız. Ayrıntılar için aşağıdaki listeyi inceleyin',
-    ru: 'Проверка данных не удалась. Подробности см. В приведенном ниже списке.',
   }
+
   return create('VALIDATION', 'VALIDATION_FAILED', description[language || 'en'],
     errorList.filter(u => u !== undefined).map(item => {
-      let description = item.description[language || 'en'] || item.code
-      return create('VALIDATION_ITEM', item.code, description)
+      return create(type[language || 'en'], code, item)
     })
   )
 }
+
 
 function createAutherror(param, language) {
   let errorList = param
@@ -93,10 +98,15 @@ function createAutherror(param, language) {
   )
 }
 
-function createNotfounderror(param, language) {
+function createNotFoundError(param, code, language) {
   let errorList = param
   if (!Array.isArray(param)) {
     errorList = [param]
+  }
+
+  let type = {
+    en: "NOT FOUND ITEM",
+    tr: "VERİ BULUNAMADI"
   }
 
   let description = {
@@ -105,8 +115,7 @@ function createNotfounderror(param, language) {
   }
   return create('NOT_FOUND', 'REQUEST_FAILED', description[language || 'en'],
     errorList.filter(u => u !== undefined).map(item => {
-      let description = (item.description ? (item.description[language || 'en']) : null) || item.code
-      return create('NOT_FOUND_ITEM', item.code, description)
+      return create(type[language || 'en'], code, item)
     })
   )
 }
@@ -140,7 +149,7 @@ function handleMiddlewareError(err, next) {
 }
 
 function isValidationError(error) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const validationError = {
       type: 'VALIDATION',
       code: 'VALIDATION_FAILED',
@@ -192,6 +201,7 @@ function requestErrorCatcher(err, serviceName = null) {
     try {
       parsedError = JSON.parse(err.error)
     } catch (parseError) {
+      console.log("parseError", parseError)
       throw err.error
     }
     throw parsedError
@@ -219,11 +229,11 @@ function sequelizeErrorCatcher(err) {
 module.exports.create = create
 module.exports.createList = createList
 module.exports.isValidationError = isValidationError
-module.exports.createValidation = createValidation
 module.exports.createAccessDenied = createAccessDenied
 module.exports.handleMiddlewareError = handleMiddlewareError
 module.exports.requestErrorCatcher = requestErrorCatcher
 module.exports.sequelizeErrorCatcher = sequelizeErrorCatcher
 module.exports.createResourceAccessDenied = createResourceAccessDenied
-module.exports.createNotfounderror = createNotfounderror
 module.exports.createAutherror = createAutherror
+module.exports.createValidationError = createValidationError
+module.exports.createNotFoundError = createNotFoundError
