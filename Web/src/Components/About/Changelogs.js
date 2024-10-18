@@ -183,6 +183,10 @@ const version1_1_0_7 = {
     ],
 }
 
+const version1_1_0_8 = {
+    version: "1.1.0.8",
+}
+
 export {
     version1_1_0_1,
     version1_1_0_2,
@@ -190,4 +194,5 @@ export {
     version1_1_0_5,
     version1_1_0_6,
     version1_1_0_7,
+    version1_1_0_8,
 }

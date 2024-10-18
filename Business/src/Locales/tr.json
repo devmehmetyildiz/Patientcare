@@ -123,7 +123,7 @@
     "Patienteventdefines.Error.NotActive": "Hasta Vaka Tanımı Aktif Değil",
     "Patienteventdefines.Error.PatienteventdefineIDRequired": "Hasta Vaka Tanımı ID'si Gerekli",
     "Patienteventdefines.Error.UnsupportedPatienteventdefineID": "Tanımsız Hasta Vaka Tanımı ID Değeri",
-    "Patientdefines.Error.EventnameRequired": "Vaka Tanımı İsmi Gerekli",
+    "Patienteventdefines.Error.EventnameRequired": "Vaka Tanımı İsmi Gerekli",
     "Personelpresettings": "Personel Ön Ayarları",
     "Personelpresettings.Error.NotFound": "Personel Ön Ayarları Bulunamadı",
     "Personelpresettings.Error.NotActive": "Personel Ön Ayarları Aktif Değil",
