@@ -29,8 +29,8 @@ async function GetPatienteventmovement(req, res, next) {
     }
 
     try {
-        const patienteventmovemen = await db.patienteventmovementModel.findOne({ where: { Uuid: req.params.patienteventmovementId } });
-        res.status(200).json(patienteventmovemen)
+        const patienteventmovement = await db.patienteventmovementModel.findOne({ where: { Uuid: req.params.patienteventmovementId } });
+        res.status(200).json(patienteventmovement)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }

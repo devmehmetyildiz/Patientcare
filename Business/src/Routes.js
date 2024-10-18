@@ -132,6 +132,12 @@ const Routes = [
     { method: 'post', path: '/Personelpresettings', controller: 'Personelpresetting', action: 'AddPersonelpresetting' },
     { method: 'put', path: '/Personelpresettings', controller: 'Personelpresetting', action: 'UpdatePersonelpresetting' },
     { method: 'delete', path: '/Personelpresettings/:personelpresettingId', controller: 'Personelpresetting', action: 'DeletePersonelpresetting' },
+
+    { method: 'get', path: '/Patienteventmovements/:PatienteventmovementId', controller: 'Patienteventmovement', action: 'GetPatienteventmovement' },
+    { method: 'get', path: '/Patienteventmovements', controller: 'Patienteventmovement', action: 'GetPatienteventmovements' },
+    { method: 'post', path: '/Patienteventmovements', controller: 'Patienteventmovement', action: 'AddPatienteventmovement' },
+    { method: 'put', path: '/Patienteventmovements', controller: 'Patienteventmovement', action: 'UpdatePatienteventmovement' },
+    { method: 'delete', path: '/Patienteventmovements/:patienteventmovementId', controller: 'Patienteventmovement', action: 'DeletePatienteventmovement' },
 ]
 
 module.exports = Routes
