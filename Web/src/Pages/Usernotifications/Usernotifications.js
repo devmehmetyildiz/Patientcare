@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Button, Confirm, Grid, GridColumn, Icon, Label, Menu, Modal, Sidebar, Transition, TransitionGroup } from 'semantic-ui-react'
+import { Breadcrumb, Button, Confirm, Grid, GridColumn, Icon, Label, Menu, Modal, Sidebar, Transition } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { Headerwrapper, LoadingPage, Pagedivider, Pagewrapper } from '../../Components'
 import Literals from './Literals'
@@ -56,7 +56,7 @@ export default function Usernotifications(props) {
     return (
         <Sidebar
             as={Menu}
-            animation={Profile.Ismobile ? 'overlay' : 'scale down' }
+            animation={Profile.Ismobile ? 'overlay' : 'scale down'}
             icon='labeled'
             vertical
             direction='right'

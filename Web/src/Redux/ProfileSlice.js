@@ -1,12 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
 export const logIn = createAsyncThunk(
     'Profile/logIn',
-    async ({ data, history, redirectUrl }, { dispatch }) => {
+    async ({ data, redirectUrl }, { dispatch }) => {
         try {
             const response = await instanse.post(config.services.Auth, `Oauth/Login`, data);
             localStorage.setItem('patientcare', response.data.accessToken)
@@ -176,7 +175,7 @@ export const ResetTableMeta = createAsyncThunk(
 
 export const SaveTableMeta = createAsyncThunk(
     'Profile/SaveTableMeta',
-    async ({ data, history }, { dispatch }) => {
+    async ({ data }, { dispatch }) => {
         try {
             const response = await instanse.post(config.services.Userrole, 'Profile/Savetablemeta', data);
             dispatch(fillnotification({
@@ -299,7 +298,7 @@ export const ProfileSlice = createSlice({
                 state.isLogging = true;
                 state.errMsg = null;
             })
-            .addCase(logIn.fulfilled, (state, action) => {
+            .addCase(logIn.fulfilled, (state) => {
                 state.auth = true;
                 state.isLogging = false;
             })
@@ -311,7 +310,7 @@ export const ProfileSlice = createSlice({
                 state.isLogging = true;
                 state.errMsg = null;
             })
-            .addCase(register.fulfilled, (state, action) => {
+            .addCase(register.fulfilled, (state) => {
                 state.isLogging = false;
             })
             .addCase(register.rejected, (state, action) => {
@@ -322,7 +321,7 @@ export const ProfileSlice = createSlice({
                 state.isLogging = true;
                 state.errMsg = null;
             })
-            .addCase(Changepassword.fulfilled, (state, action) => {
+            .addCase(Changepassword.fulfilled, (state,) => {
                 state.isLogging = false;
             })
             .addCase(Changepassword.rejected, (state, action) => {
@@ -425,7 +424,7 @@ export const ProfileSlice = createSlice({
                 state.passwordrequestsended = false;
                 state.errMsg = null;
             })
-            .addCase(Createpasswordforget.fulfilled, (state, action) => {
+            .addCase(Createpasswordforget.fulfilled, (state,) => {
                 state.isLogging = false;
                 state.passwordrequestsended = true;
             })
@@ -438,7 +437,7 @@ export const ProfileSlice = createSlice({
                 state.isLogging = true;
                 state.errMsg = null;
             })
-            .addCase(Resetpassword.fulfilled, (state, action) => {
+            .addCase(Resetpassword.fulfilled, (state,) => {
                 state.isLogging = false;
             })
             .addCase(Resetpassword.rejected, (state, action) => {
@@ -449,7 +448,7 @@ export const ProfileSlice = createSlice({
                 state.Istokenchecking = true;
                 state.errMsg = null;
             })
-            .addCase(Checktoken.fulfilled, (state, action) => {
+            .addCase(Checktoken.fulfilled, (state,) => {
                 state.Istokenchecking = false;
             })
             .addCase(Checktoken.rejected, (state, action) => {

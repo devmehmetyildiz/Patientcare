@@ -501,7 +501,7 @@ export const DeletePatient = createAsyncThunk(
 
 export const Editpatientcase = createAsyncThunk(
     'Patients/Editpatientcase',
-    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID, onSuccess }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl,  redirectID, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
@@ -569,7 +569,7 @@ export const Editpatientscase = createAsyncThunk(
 
 export const Transferpatientplace = createAsyncThunk(
     'Patients/Transferpatientplace',
-    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl,  redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
@@ -591,7 +591,7 @@ export const Transferpatientplace = createAsyncThunk(
 
 export const UpdatePatienttododefines = createAsyncThunk(
     'Patients/UpdatePatienttododefines',
-    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl,  redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
@@ -613,7 +613,7 @@ export const UpdatePatienttododefines = createAsyncThunk(
 
 export const UpdatePatientsupportplans = createAsyncThunk(
     'Patients/UpdatePatientsupportplans',
-    async ({ data, history, redirectUrl, closeModal, clearForm, redirectID }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
@@ -779,7 +779,7 @@ export const PatientsSlice = createSlice({
             .addCase(EditPatientmovements.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(EditPatientmovements.fulfilled, (state, action) => {
+            .addCase(EditPatientmovements.fulfilled, (state,) => {
                 state.isLoading = false;
             })
             .addCase(EditPatientmovements.rejected, (state, action) => {
@@ -897,7 +897,7 @@ export const PatientsSlice = createSlice({
             .addCase(DeletePatientmovements.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(DeletePatientmovements.fulfilled, (state, action) => {
+            .addCase(DeletePatientmovements.fulfilled, (state,) => {
                 state.isLoading = false;
             })
             .addCase(DeletePatientmovements.rejected, (state, action) => {
@@ -939,7 +939,7 @@ export const PatientsSlice = createSlice({
             .addCase(Editpatientcase.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(Editpatientcase.fulfilled, (state, action) => {
+            .addCase(Editpatientcase.fulfilled, (state,) => {
                 state.isLoading = false;
             })
             .addCase(Editpatientcase.rejected, (state, action) => {
@@ -980,7 +980,7 @@ export const PatientsSlice = createSlice({
             .addCase(UpdatePatienttododefines.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(UpdatePatienttododefines.fulfilled, (state, action) => {
+            .addCase(UpdatePatienttododefines.fulfilled, (state,) => {
                 state.isLoading = false;
             })
             .addCase(UpdatePatienttododefines.rejected, (state, action) => {
@@ -990,7 +990,7 @@ export const PatientsSlice = createSlice({
             .addCase(UpdatePatientsupportplans.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(UpdatePatientsupportplans.fulfilled, (state, action) => {
+            .addCase(UpdatePatientsupportplans.fulfilled, (state,) => {
                 state.isLoading = false;
             })
             .addCase(UpdatePatientsupportplans.rejected, (state, action) => {

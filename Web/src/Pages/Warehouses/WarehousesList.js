@@ -1,5 +1,5 @@
 import React from 'react'
-import { Label, Loader } from 'semantic-ui-react'
+import { Loader } from 'semantic-ui-react'
 import Literals from './Literals'
 import { DataTable } from '../../Components'
 
@@ -12,13 +12,6 @@ export default function WarehousesList({ Data, Columns, Stocks, initialConfig, P
     } else {
       return (Stockdefines.list || []).find(u => u.Uuid === col.value)?.Name
     }
-  }
-
-  const dateCellhandler = (col) => {
-    if (col.value) {
-      return col.value.split('T').length > 0 ? col.value.split('T')[0] : col.value
-    }
-    return null
   }
 
   const renderRowSubComponent = React.useCallback(

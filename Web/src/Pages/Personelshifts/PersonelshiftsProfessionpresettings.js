@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import Literals from "./Literals"
-import { Button, Label, Modal, Table } from "semantic-ui-react"
+import { Button,  Modal, Table } from "semantic-ui-react"
 
 export default function PersonelshiftsProfessionpresettings({ selectedProfessionpresettings, Floors, Profile }) {
 

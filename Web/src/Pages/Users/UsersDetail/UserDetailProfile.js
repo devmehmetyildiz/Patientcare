@@ -14,7 +14,7 @@ export default function UserDetailProfile(props) {
     const ppFile = (Files.list || []).find(u => u.ParentID === user?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
     const userName = `${user?.Name} ${user?.Surname}` || t('Common.NoDataFound')
-    const Isworker = user?.Isworker ? true : false
+    // const Isworker = user?.Isworker ? true : false
     const roles = (user?.Roleuuids || []).map(u => { return u.RoleID }).map(u => {
         return (Roles?.list || []).find(role => role?.Uuid === u)?.Name || t('Common.NoDataFound')
     }).join(',')

@@ -47,6 +47,7 @@ module.exports = async (req, res) => {
             originalSend.call(this, decoratedResponsebody);
         };
     } catch (error) {
+        console.log("error on create req", req)
         console.log("error on create log", error)
     }
 }

@@ -1,6 +1,5 @@
 import React from 'react'
 import { GENDER_OPTION } from '../../../Utils/Constants'
-import { Header } from 'semantic-ui-react'
 import Formatdate from '../../../Utils/Formatdate'
 
 export default function UsersDetailInfo(props) {

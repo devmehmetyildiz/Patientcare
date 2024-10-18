@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Card, Grid, GridColumn, Icon, Label, Loader, Tab } from 'semantic-ui-react'
-import { Contentwrapper, Headerwrapper, LoadingPage, NoDataScreen, Pagedivider, Pagewrapper, Profilephoto, Settings } from '../../Components'
+import { Breadcrumb, Grid, GridColumn, Icon, Label, Tab } from 'semantic-ui-react'
+import { Contentwrapper, Headerwrapper, LoadingPage, NoDataScreen, Pagedivider, Pagewrapper, Profilephoto } from '../../Components'
 
 export default function Placeviews(props) {
     const { GetPatients, GetPatientdefines, GetFloors, GetRooms, GetBeds, GetCases, GetFiles, GetUsagetypes,
@@ -137,7 +137,7 @@ export default function Placeviews(props) {
 
 function Viewrender(props) {
     const { list, Profile } = props
-   
+
     const t = Profile?.i18n?.t
 
     const roomList = [...new Set([...(list || []).map(u => u.roomID)])]

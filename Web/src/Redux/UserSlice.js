@@ -285,7 +285,7 @@ export const UsersSlice = createSlice({
             .addCase(EditUsercase.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(EditUsercase.fulfilled, (state, action) => {
+            .addCase(EditUsercase.fulfilled, (state,) => {
                 state.isLoading = false;
             })
             .addCase(EditUsercase.rejected, (state, action) => {
@@ -295,7 +295,7 @@ export const UsersSlice = createSlice({
             .addCase(EditUsermovements.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(EditUsermovements.fulfilled, (state, action) => {
+            .addCase(EditUsermovements.fulfilled, (state) => {
                 state.isLoading = false;
             })
             .addCase(EditUsermovements.rejected, (state, action) => {
@@ -305,7 +305,7 @@ export const UsersSlice = createSlice({
             .addCase(DeleteUsermovements.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(DeleteUsermovements.fulfilled, (state, action) => {
+            .addCase(DeleteUsermovements.fulfilled, (state) => {
                 state.isLoading = false;
             })
             .addCase(DeleteUsermovements.rejected, (state, action) => {

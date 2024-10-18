@@ -162,7 +162,6 @@ export const CasesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isLoading: false,
         isDeletemodalopen: false
     },
     reducers: {

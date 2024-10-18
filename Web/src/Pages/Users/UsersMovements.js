@@ -9,7 +9,7 @@ import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { Formatfulldate } from '../../Utils/Formatdate'
 
 export default function UsersMovements(props) {
-    const { GetCases, GetUser, GetUsers, DeleteUsermovements, EditUsermovements, fillUsernotification } = props
+    const { GetCases, GetUsers, DeleteUsermovements, EditUsermovements, fillUsernotification } = props
     const { Cases, Users, Profile } = props
     const { match, history, UserID } = props
 

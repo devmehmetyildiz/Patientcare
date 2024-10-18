@@ -6,7 +6,7 @@ import Literals from "./Literals";
 import validator from "../../Utils/Validator";
 
 
-export default function PersonelshiftsPrepareShiftsdetailDaycell({ personelshift, personelshifts, setPersonelshifts, Users, Professions, Usagetypes, shiftkey, index, fillPersonelshiftnotification, Profile }) {
+export default function PersonelshiftsPrepareShiftsdetailDaycell({ personelshift, personelshifts, setPersonelshifts, Users,  Usagetypes, shiftkey, index, fillPersonelshiftnotification, Profile }) {
     const dayValue = personelshift[shiftkey]
 
     const [open, setOpen] = useState(false)

@@ -139,7 +139,6 @@ export const BreakdownsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isLoading: false,
         isDeletemodalopen: false,
         isCompletemodalopen: false,
     },
