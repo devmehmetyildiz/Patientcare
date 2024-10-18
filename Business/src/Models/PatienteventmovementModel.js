@@ -7,6 +7,9 @@ module.exports = sequelize.define('patienteventmovementModel', {
     Uuid: {
         type: Sequelize.STRING
     },
+    Type: {
+        type: Sequelize.NUMBER
+    },
     PatientID: {
         type: Sequelize.STRING
     },

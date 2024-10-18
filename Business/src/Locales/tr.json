@@ -210,5 +210,18 @@
     "Tranings.Error.EducatoruserIDRequired": "Eğitmen Kullanıcı Gerekli",
     "Tranings.Error.TrainingusersRequired": "Katılımcılar Gerekli",
     "Tranings.Error.TraininguserIDRequired": "Katılımcı ID Değeri Gerekli",
-    "Tranings.Error.UnsupportedTraininguserID": "Tanımsız Eğitim Kullanıcısı ID Değeri"
+    "Tranings.Error.UnsupportedTraininguserID": "Tanımsız Eğitim Kullanıcısı ID Değeri",
+    "Patienteventmovements": "Hasta Vaka Hareketleri",
+    "Patienteventmovements.Error.NotFound": "Hasta Vaka Hareketi Bulunamadı",
+    "Patienteventmovements.Error.NotActive": "Hasta Vaka Hareketi Tanımı Aktif Değil",
+    "Patienteventmovements.Error.PatienteventmovementIDRequired": "Hasta Vaka Hareketi ID'si Gerekli",
+    "Patienteventmovements.Error.UnsupportedPatienteventmovementID": "Hasta Vaka Hareketi ID Değeri",
+    "Patienteventmovements.Error.TypeRequired": "Vaka Gerçekleşme Türü Gerekli",
+    "Patienteventmovements.Error.PatientIDRequired": "Hasta Gerekli",
+    "Patienteventmovements.Error.EventIDRequired": "Vaka Gerekli",
+    "Patienteventmovements.Error.UserIDRequired": "Olayı Bildiren Personel Gerekli",
+    "Patienteventmovements.Error.OccureddateRequired": "Gerçekleşme Tarihi Gerekli",
+    "Patienteventmovements.Error.RelatedpersonsRequired": "Olaya Dahil Kişiler Gerekli",
+    "Patienteventmovements.Error.SolutiontimeRequired": "Çözüm Süresi Gerekli",
+    "Patienteventmovements.Error.EventdetailRequired": "Vaka Detayı Gerekli"
 }

@@ -4,4 +4,10 @@ const types = {
     Delete: 'Silme'
 }
 
-module.exports = { types }
+const Eventtypes = {
+    Indoor: 0,
+    Outdoor: 1,
+}
+
+
+module.exports = { types, Eventtypes }
