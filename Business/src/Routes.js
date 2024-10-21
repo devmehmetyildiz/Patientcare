@@ -138,6 +138,12 @@ const Routes = [
     { method: 'post', path: '/Patienteventmovements', controller: 'Patienteventmovement', action: 'AddPatienteventmovement' },
     { method: 'put', path: '/Patienteventmovements', controller: 'Patienteventmovement', action: 'UpdatePatienteventmovement' },
     { method: 'delete', path: '/Patienteventmovements/:patienteventmovementId', controller: 'Patienteventmovement', action: 'DeletePatienteventmovement' },
+
+    { method: 'get', path: '/Surveys/:PatienteventmovementId', controller: 'Survey', action: 'GetSurvey' },
+    { method: 'get', path: '/Surveys', controller: 'Survey', action: 'GetSurveys' },
+    { method: 'post', path: '/Surveys', controller: 'Survey', action: 'AddSurvey' },
+    { method: 'put', path: '/Surveys', controller: 'Survey', action: 'UpdateSurvey' },
+    { method: 'delete', path: '/Surveys/:patienteventmovementId', controller: 'Survey', action: 'DeletePatienteventmovement' },
 ]
 
 module.exports = Routes

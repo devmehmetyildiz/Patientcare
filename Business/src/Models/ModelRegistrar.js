@@ -23,6 +23,9 @@ const trainingModel = require('./TrainingModel')
 const trainingusersModel = require('./TrainingusersModel')
 const patienteventdefineModel = require('./PatienteventdefineModel')
 const patienteventmovementModel = require('./PatienteventmovementModel')
+const surveyModel = require('./SurveyModel')
+const surveydetailModel = require('./SurveydetailModel')
+const surveyresultModel = require('./SurveyresultModel')
 
 module.exports = {
     applog_businessModel,
@@ -49,5 +52,8 @@ module.exports = {
     trainingModel,
     trainingusersModel,
     patienteventdefineModel,
-    patienteventmovementModel
+    patienteventmovementModel,
+    surveyModel,
+    surveydetailModel,
+    surveyresultModel
 }

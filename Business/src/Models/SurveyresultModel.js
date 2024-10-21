@@ -7,7 +7,24 @@ module.exports = sequelize.define('surveyresultModel', {
     Uuid: {
         type: Sequelize.STRING
     },
-   
+
+    SurveyID: {
+        type: Sequelize.STRING
+    },
+    SurveydetailID: {
+        type: Sequelize.STRING
+    },
+    UserID: {
+        type: Sequelize.STRING
+    },
+    User: {
+        type: Sequelize.STRING
+    },
+
+    Answer: {
+        type: Sequelize.INTEGER
+    },
+
     Createduser: {
         type: Sequelize.STRING
     },

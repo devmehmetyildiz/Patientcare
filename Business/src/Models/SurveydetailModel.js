@@ -7,6 +7,16 @@ module.exports = sequelize.define('surveydetailModel', {
     Uuid: {
         type: Sequelize.STRING
     },
+    
+    Order: {
+        type: Sequelize.INTEGER
+    },
+    SurveyID: {
+        type: Sequelize.STRING
+    },
+    Question: {
+        type: Sequelize.STRING
+    },
    
     Createduser: {
         type: Sequelize.STRING

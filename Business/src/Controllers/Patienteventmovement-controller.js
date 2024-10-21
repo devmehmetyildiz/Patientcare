@@ -49,19 +49,19 @@ async function AddPatienteventmovement(req, res, next) {
         Solutiontime,
     } = req.body
 
-    if (!validator.isString(Type)) {
+    if (!validator.isNumber(Type)) {
         validationErrors.push(req.t('Patienteventmovements.Error.TypeRequired'))
     }
-    if (!validator.isString(PatientID)) {
+    if (!validator.isUUID(PatientID)) {
         validationErrors.push(req.t('Patienteventmovements.Error.PatientIDRequired'))
     }
-    if (!validator.isString(EventID)) {
+    if (!validator.isUUID(EventID)) {
         validationErrors.push(req.t('Patienteventmovements.Error.EventIDRequired'))
     }
-    if (!validator.isString(UserID)) {
+    if (!validator.isUUID(UserID)) {
         validationErrors.push(req.t('Patienteventmovements.Error.UserIDRequired'))
     }
-    if (!validator.isString(Occureddate)) {
+    if (!validator.isISODate(Occureddate)) {
         validationErrors.push(req.t('Patienteventmovements.Error.OccureddateRequired'))
     }
     if (!validator.isString(Solutiontime)) {
@@ -122,19 +122,19 @@ async function UpdatePatienteventmovement(req, res, next) {
     } = req.body
 
 
-    if (!validator.isString(Type)) {
+    if (!validator.isNumber(Type)) {
         validationErrors.push(req.t('Patienteventmovements.Error.TypeRequired'))
     }
-    if (!validator.isString(PatientID)) {
+    if (!validator.isUUID(PatientID)) {
         validationErrors.push(req.t('Patienteventmovements.Error.PatientIDRequired'))
     }
-    if (!validator.isString(EventID)) {
+    if (!validator.isUUID(EventID)) {
         validationErrors.push(req.t('Patienteventmovements.Error.EventIDRequired'))
     }
-    if (!validator.isString(UserID)) {
+    if (!validator.isUUID(UserID)) {
         validationErrors.push(req.t('Patienteventmovements.Error.UserIDRequired'))
     }
-    if (!validator.isString(Occureddate)) {
+    if (!validator.isISODate(Occureddate)) {
         validationErrors.push(req.t('Patienteventmovements.Error.OccureddateRequired'))
     }
     if (!validator.isString(Solutiontime)) {
