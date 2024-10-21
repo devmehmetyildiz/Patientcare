@@ -41,6 +41,10 @@ async function RemoveSurveyanswer(req, res, next) {
     PermissionHandler(req, next, 'surveyupdate')
 }
 
+async function DeleteSurvey(req, res, next) {
+    PermissionHandler(req, next, 'surveydelete')
+}
+
 module.exports = {
     GetSurveys,
     GetSurvey,
@@ -51,5 +55,6 @@ module.exports = {
     CompleteSurvey,
     FillSurvey,
     RemoveSurveyanswer,
-    CleanSurvey
+    CleanSurvey,
+    DeleteSurvey
 }

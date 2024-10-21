@@ -662,6 +662,72 @@ async function RemoveSurveyanswer(req, res, next) {
     GetSurveys(req, res, next)
 }
 
+async function DeleteSurvey(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.surveyId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Surveys.Error.SurveyIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Surveys.Error.UnsupportedSurveyID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Surveys'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const survey = await db.surveyModel.findOne({ where: { Uuid: Uuid } })
+        if (!survey) {
+            return next(createNotFoundError(req.t('Surveys.Error.NotFound'), req.t('Surveys'), req.language))
+        }
+        if (survey.Isactive === false) {
+            return next(createNotFoundError(req.t('Surveys.Error.NotActive'), req.t('Surveys'), req.language))
+        }
+        if (survey.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Surveys.Error.Completed'), req.t('Surveys'), req.language))
+        }
+
+        await db.surveyModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        await db.surveydetailModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { SurveyID: Uuid }, transaction: t })
+
+        await db.surveyresultModel.update({
+            Deleteduser: username,
+            Deletetime: new Date(),
+            Isactive: false
+        }, { where: { SurveyID: Uuid }, transaction: t })
+
+        await CreateNotification({
+            type: types.Delete,
+            service: req.t('Surveys'),
+            role: 'surveynotification',
+            message: {
+                tr: `${survey?.Name} Anketi ${username} tarafından Silindi.`,
+                en: `${survey?.Name} Survey Deleted By ${username}`
+            }[req.language],
+            pushurl: '/Surveys'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetSurveys(req, res, next)
+}
+
 module.exports = {
     GetSurveys,
     GetSurvey,
@@ -672,5 +738,6 @@ module.exports = {
     CompleteSurvey,
     FillSurvey,
     RemoveSurveyanswer,
-    CleanSurvey
+    CleanSurvey,
+    DeleteSurvey
 }
