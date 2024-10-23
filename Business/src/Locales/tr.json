@@ -290,5 +290,5 @@
     "Userincidents.Error.UnsupportedUserincidentID": "Personel Olayı ID Değeri",
     "Userincidents.Error.UserIDRequired": "Kullanıcı Gerekli",
     "Userincidents.Error.TypeRequired": "Olay Türü Gerekli",
-    "Userincidents.Error.EventRequired": "Olay Gerekli",
+    "Userincidents.Error.EventRequired": "Olay Gerekli"
 }
