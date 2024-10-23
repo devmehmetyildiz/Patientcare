@@ -271,5 +271,16 @@
     "Patientactivities.Error.ParticipatedpatientsRequired": "Katılımcı Hastalar Gerekli",
     "Patientactivities.Error.ParticipatedusersRequired": "Düzenleyen Personeller Gerekli",
     "Patientactivities.Error.UnsupportedPatientID": "Tanımsız Hasta ID Değeri",
-    "Patientactivities.Error.UnsupportedUserID": "Tanımsız Kullanıcı ID Değeri"
+    "Patientactivities.Error.UnsupportedUserID": "Tanımsız Kullanıcı ID Değeri",
+    "Patientvisits": "Hasta Ziyaretleri",
+    "Patientvisits.Error.NotFound": "Hasta Ziyareti Bulunamadı",
+    "Patientvisits.Error.NotActive": "Hasta Ziyareti Aktif Değil",
+    "Patientvisits.Error.PatientvisitIDRequired": "Hasta Ziyareti ID'si Gerekli",
+    "Patientvisits.Error.UnsupportedPatientvisitID": "Hasta Ziyareti ID Değeri",
+    "Patientvisits.Error.PatientIDRequired": "Hasta Gerekli",
+    "Patientvisits.Error.ContactnameRequired": "Hasta Yakını Adı Gerekli",
+    "Patientvisits.Error.ContactstatusRequired": "Hasta Yakını Yakınlık Durumu Gerekli",
+    "Patientvisits.Error.StarttimeRequired": "Ziyaret Başlangıç Durumu Gerekli",
+    "Patientvisits.Error.EndtimeRequired": "Ziyaret Bitiş Durumu Gerekli",
+    "Patientvisits.Error.ParticipateuserIDRequired": "Eşlik Eden Kullanıcı Gerekli"
 }

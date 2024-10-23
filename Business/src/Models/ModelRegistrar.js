@@ -26,6 +26,10 @@ const patienteventmovementModel = require('./PatienteventmovementModel')
 const surveyModel = require('./SurveyModel')
 const surveydetailModel = require('./SurveydetailModel')
 const surveyresultModel = require('./SurveyresultModel')
+const patientactivityModel = require('./PatientactivityModel')
+const patientactivityparticipatedpatientModel = require('./PatientactivityparticipatedpatientModel')
+const patientactivityparticipateduserModel = require('./PatientactivityparticipateduserModel')
+const patientvisitModel = require('./PatientvisitModel')
 
 module.exports = {
     applog_businessModel,
@@ -55,5 +59,9 @@ module.exports = {
     patienteventmovementModel,
     surveyModel,
     surveydetailModel,
-    surveyresultModel
+    surveyresultModel,
+    patientactivityModel,
+    patientactivityparticipatedpatientModel,
+    patientactivityparticipateduserModel,
+    patientvisitModel
 }

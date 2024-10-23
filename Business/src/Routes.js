@@ -156,6 +156,12 @@ const Routes = [
     { method: 'put', path: '/Patientactivities/Complete/:activityId', controller: 'Patientactivity', action: 'CompletePatientactivity' },
     { method: 'put', path: '/Patientactivities', controller: 'Patientactivity', action: 'UpdatePatientactivity' },
     { method: 'delete', path: '/Patientactivities/:activityId', controller: 'Patientactivity', action: 'DeletePatientactivity' },
+
+    { method: 'get', path: '/Patientvisits/:patientvisitId', controller: 'Patientvisit', action: 'GetPatientvisit' },
+    { method: 'get', path: '/Patientvisits', controller: 'Patientvisit', action: 'GetPatientvisits' },
+    { method: 'post', path: '/Patientvisits', controller: 'Patientvisit', action: 'AddPatientvisit' },
+    { method: 'put', path: '/Patientvisits', controller: 'Patientvisit', action: 'UpdatePatientvisit' },
+    { method: 'delete', path: '/Patientvisits/:patientvisitId', controller: 'Patientvisit', action: 'DeletePatientvisit' },
 ]
 
 module.exports = Routes

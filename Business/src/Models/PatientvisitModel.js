@@ -7,7 +7,33 @@ module.exports = sequelize.define('patientvisitModel', {
     Uuid: {
         type: Sequelize.STRING
     },
-   
+
+    PatientID: {
+        type: Sequelize.STRING
+    },
+
+    Contactname: {
+        type: Sequelize.STRING
+    },
+    Contactstatus: {
+        type: Sequelize.STRING
+    },
+
+    Starttime: {
+        type: Sequelize.DATE
+    },
+    Endtime: {
+        type: Sequelize.DATE
+    },
+
+    Info: {
+        type: Sequelize.TEXT
+    },
+
+    ParticipateuserID: {
+        type: Sequelize.STRING
+    },
+
     Createduser: {
         type: Sequelize.STRING
     },
