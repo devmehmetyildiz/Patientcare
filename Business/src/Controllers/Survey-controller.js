@@ -95,8 +95,8 @@ async function AddSurvey(req, res, next) {
 
         for (const surveydetail of Surveydetails) {
 
-            if (!validator.isArray(surveydetail?.Question)) {
-                validationErrors.push(req.t('Surveys.Error.SurveydetailsRequired'))
+            if (!validator.isString(surveydetail?.Question)) {
+                validationErrors.push(req.t('Surveys.Error.SurveyQuestionRequired'))
             }
 
             const detailuuid = uuid()
@@ -214,8 +214,8 @@ async function UpdateSurvey(req, res, next) {
 
         for (const surveydetail of Surveydetails) {
 
-            if (!validator.isArray(surveydetail?.Question)) {
-                validationErrors.push(req.t('Surveys.Error.SurveydetailsRequired'))
+            if (!validator.isString(surveydetail?.Question)) {
+                validationErrors.push(req.t('Surveys.Error.SurveyQuestionRequired'))
             }
 
             const detailuuid = uuid()
@@ -473,7 +473,7 @@ async function CompleteSurvey(req, res, next) {
         }
 
         await db.surveyModel.update({
-            Isapproved: true,
+            Iscompleted: true,
             Updateduser: username,
             Updatetime: new Date(),
             Isactive: true
@@ -621,7 +621,7 @@ async function RemoveSurveyanswer(req, res, next) {
         if (survey.Isactive === false) {
             return next(createNotFoundError(req.t('Surveys.Error.NotActive'), req.t('Surveys'), req.language))
         }
-        if (survey.Isonpreview === false) {
+        if (survey.Isonpreview === true) {
             return next(createNotFoundError(req.t('Surveys.Error.OnPreview'), req.t('Surveys'), req.language))
         }
         if (survey.Isapproved === false) {
@@ -687,9 +687,6 @@ async function DeleteSurvey(req, res, next) {
         }
         if (survey.Isactive === false) {
             return next(createNotFoundError(req.t('Surveys.Error.NotActive'), req.t('Surveys'), req.language))
-        }
-        if (survey.Iscompleted === true) {
-            return next(createNotFoundError(req.t('Surveys.Error.Completed'), req.t('Surveys'), req.language))
         }
 
         await db.surveyModel.update({
