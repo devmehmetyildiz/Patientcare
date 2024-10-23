@@ -1,4 +1,4 @@
-module.exports = sequelize.define('patientactivityModel', {
+module.exports = sequelize.define('patientactivityparticipatedpatientModel', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -7,35 +7,15 @@ module.exports = sequelize.define('patientactivityModel', {
     Uuid: {
         type: Sequelize.STRING
     },
-    Name: {
-        type: Sequelize.STRING
-    },
-    Place: {
-        type: Sequelize.STRING
-    },
-    Starttime: {
-        type: Sequelize.STRING
-    },
-    Endtime: {
-        type: Sequelize.STRING
-    },
-    Budget: {
-        type: Sequelize.STRING
-    },
 
-    Isonpreview: {
-        type: Sequelize.BOOLEAN
-    },
-    Isapproved: {
-        type: Sequelize.BOOLEAN
-    },
-    Iscompleted: {
-        type: Sequelize.BOOLEAN
-    },
-
-    Approveduser: {
+    ActivityID: {
         type: Sequelize.STRING
     },
+    
+    PatientID: {
+        type: Sequelize.STRING
+    },
+    
     Createduser: {
         type: Sequelize.STRING
     },
@@ -58,6 +38,6 @@ module.exports = sequelize.define('patientactivityModel', {
         type: Sequelize.BOOLEAN
     }
 }, {
-    tableName: 'patientactivities',
+    tableName: 'patientactivityparticipatedpatients',
     timestamps: false
 });

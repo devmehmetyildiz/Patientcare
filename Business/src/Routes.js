@@ -133,7 +133,7 @@ const Routes = [
     { method: 'put', path: '/Personelpresettings', controller: 'Personelpresetting', action: 'UpdatePersonelpresetting' },
     { method: 'delete', path: '/Personelpresettings/:personelpresettingId', controller: 'Personelpresetting', action: 'DeletePersonelpresetting' },
 
-    { method: 'get', path: '/Patienteventmovements/:PatienteventmovementId', controller: 'Patienteventmovement', action: 'GetPatienteventmovement' },
+    { method: 'get', path: '/Patienteventmovements/:patienteventmovementId', controller: 'Patienteventmovement', action: 'GetPatienteventmovement' },
     { method: 'get', path: '/Patienteventmovements', controller: 'Patienteventmovement', action: 'GetPatienteventmovements' },
     { method: 'post', path: '/Patienteventmovements', controller: 'Patienteventmovement', action: 'AddPatienteventmovement' },
     { method: 'put', path: '/Patienteventmovements', controller: 'Patienteventmovement', action: 'UpdatePatienteventmovement' },
@@ -144,6 +144,15 @@ const Routes = [
     { method: 'post', path: '/Surveys', controller: 'Survey', action: 'AddSurvey' },
     { method: 'put', path: '/Surveys', controller: 'Survey', action: 'UpdateSurvey' },
     { method: 'delete', path: '/Surveys/:patienteventmovementId', controller: 'Survey', action: 'DeletePatienteventmovement' },
+
+    { method: 'get', path: '/Patientactivities/:activityId', controller: 'Patientactivity', action: 'GetPatientactivity' },
+    { method: 'get', path: '/Patientactivities', controller: 'Patientactivity', action: 'GetPatientactivities' },
+    { method: 'post', path: '/Patientactivities', controller: 'Patientactivity', action: 'AddPatientactivity' },
+    { method: 'put', path: '/Patientactivities/Savepreview/:activityId', controller: 'Patientactivity', action: 'SavepreviewPatientactivity' },
+    { method: 'put', path: '/Patientactivities/Approve/:activityId', controller: 'Patientactivity', action: 'ApprovePatientactivity' },
+    { method: 'put', path: '/Patientactivities/Complete/:activityId', controller: 'Patientactivity', action: 'CompletePatientactivity' },
+    { method: 'put', path: '/Patientactivities', controller: 'Patientactivity', action: 'UpdatePatientactivity' },
+    { method: 'delete', path: '/Patientactivities/:activityId', controller: 'Patientactivity', action: 'DeletePatientactivity' },
 ]
 
 module.exports = Routes
