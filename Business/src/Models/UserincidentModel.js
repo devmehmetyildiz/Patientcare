@@ -8,6 +8,23 @@ module.exports = sequelize.define('userincidentModel', {
         type: Sequelize.STRING
     },
 
+    UserID: {
+        type: Sequelize.STRING
+    },
+
+    Type: {
+        type: Sequelize.INTEGER
+    },
+
+    Event: {
+        type: Sequelize.TEXT
+    },
+    Eventdetail: {
+        type: Sequelize.TEXT
+    },
+    Result: {
+        type: Sequelize.TEXT
+    },
 
     Createduser: {
         type: Sequelize.STRING

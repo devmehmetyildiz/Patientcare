@@ -282,5 +282,13 @@
     "Patientvisits.Error.ContactstatusRequired": "Hasta Yakını Yakınlık Durumu Gerekli",
     "Patientvisits.Error.StarttimeRequired": "Ziyaret Başlangıç Durumu Gerekli",
     "Patientvisits.Error.EndtimeRequired": "Ziyaret Bitiş Durumu Gerekli",
-    "Patientvisits.Error.ParticipateuserIDRequired": "Eşlik Eden Kullanıcı Gerekli"
+    "Patientvisits.Error.ParticipateuserIDRequired": "Eşlik Eden Kullanıcı Gerekli",
+    "Userincidents": "Personel Olayları",
+    "Userincidents.Error.NotFound": "Personel Olayı Bulunamadı",
+    "Userincidents.Error.NotActive": "Personel Olayı Aktif Değil",
+    "Userincidents.Error.UserincidentIDRequired": "Personel Olayı ID'si Gerekli",
+    "Userincidents.Error.UnsupportedUserincidentID": "Personel Olayı ID Değeri",
+    "Userincidents.Error.UserIDRequired": "Kullanıcı Gerekli",
+    "Userincidents.Error.TypeRequired": "Olay Türü Gerekli",
+    "Userincidents.Error.EventRequired": "Olay Gerekli",
 }

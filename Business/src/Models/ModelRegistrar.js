@@ -30,6 +30,7 @@ const patientactivityModel = require('./PatientactivityModel')
 const patientactivityparticipatedpatientModel = require('./PatientactivityparticipatedpatientModel')
 const patientactivityparticipateduserModel = require('./PatientactivityparticipateduserModel')
 const patientvisitModel = require('./PatientvisitModel')
+const userincidentModel = require('./UserincidentModel')
 
 module.exports = {
     applog_businessModel,
@@ -63,5 +64,6 @@ module.exports = {
     patientactivityModel,
     patientactivityparticipatedpatientModel,
     patientactivityparticipateduserModel,
-    patientvisitModel
+    patientvisitModel,
+    userincidentModel
 }
