@@ -164,11 +164,12 @@ export const getSidebarroutes = (Profile) => {
             icon: <TbGauge className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: t('Pages.Overview.Page.Header'), url: "/Overview", permission: checkAuth('overviewview') },
-                { id: 5, subtitle: t('Pages.Patientfollowup.Page.Header'), url: "/Patientfollowup", permission: checkAuth('patientview') },
+                { id: 2, subtitle: t('Pages.Patientfollowup.Page.Header'), url: "/Patientfollowup", permission: checkAuth('patientview') },
                 { id: 3, subtitle: t('Pages.Placeviews.Page.Header'), url: "/Placeviews", permission: checkAuth('placeviewview') },
                 { id: 4, subtitle: t('Pages.Companycashmovements.Page.Header'), url: "/Companycashmovements", permission: checkAuth('companycashmovementview') },
-                { id: 1, subtitle: t('Pages.Approve.Page.Header'), url: "/Approve", permission: checkAuth('roleview') },
-                { id: 2, subtitle: t('Pages.Trainings.Page.Header'), url: "/Trainings", permission: checkAuth('roleview') },
+                { id: 5, subtitle: t('Pages.Approve.Page.Header'), url: "/Approve", permission: checkAuth('roleview') },
+                { id: 6, subtitle: t('Pages.Trainings.Page.Header'), url: "/Trainings", permission: checkAuth('roleview') },
+                { id: 7, subtitle: t('Pages.Surveys.Page.Header'), url: "/Surveys", permission: checkAuth('surveyview') },
             ]
         },
         {

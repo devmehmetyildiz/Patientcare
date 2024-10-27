@@ -9,7 +9,7 @@ module.exports = sequelize.define('surveyModel', {
     },
 
     Type: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
     },
 
     Name: {

@@ -27,6 +27,7 @@ export const ROUTES = {
     PERSONELSHIFT: 'Personelshifts',
     PERSONELSHIFTDETAIL: 'Personelshiftdetails',
     PATIENTEVENTDEFINE: 'Patienteventdefines',
+    SURVEY: 'Surveys',
 
     COSTUMERTYPE: 'Costumertypes',
     CASE: 'Cases',
@@ -91,6 +92,12 @@ export const PATIENTMOVEMENTTYPE = [
     { Name: "YER DEĞİŞİKLİĞİ", value: 7 },
     { Name: "İZİNDE", value: 8 },
 ]
+
+export const COL_PROPS = {
+    sortable: true,
+    canGroupBy: true,
+    canFilter: true
+}
 
 export const PERSONEL_CASE_TYPE_PASSIVE = 0
 export const PERSONEL_CASE_TYPE_START = 1
@@ -215,3 +222,7 @@ export const CAREPLANPARAMETER_TYPE_CURRENTSITUATIONRATİNG = 4
 export const CAREPLANPARAMETER_TYPE_PLANNEDSITUATIONRATİNG = 5
 export const CAREPLANPARAMETER_TYPE_PURPOSETARGET = 6
 export const CAREPLANPARAMETER_TYPE_PURPOSETARGETWORKS = 7
+
+export const SURVEY_TYPE_PATIENT = 0
+export const SURVEY_TYPE_PATIENTCONTACT = 1
+export const SURVEY_TYPE_USER = 2

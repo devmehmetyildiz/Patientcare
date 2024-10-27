@@ -51,6 +51,7 @@ import ClaimpaymentparameterSlice from "./ClaimpaymentparameterSlice";
 import ClaimpaymentSlice from "./ClaimpaymentSlice";
 import TrainingSlice from "./TrainingSlice";
 import PatienteventdefineSlice from "./PatienteventdefineSlice";
+import { authApi, businessApi, fileApi, logApi, settingApi, systemApi, userroleApi, warehouseApi } from "../Api";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -104,7 +105,15 @@ const Slices = combineReducers({
     Claimpaymentparameters: ClaimpaymentparameterSlice,
     Claimpayments: ClaimpaymentSlice,
     Trainings: TrainingSlice,
-    Patienteventdefines: PatienteventdefineSlice
+    Patienteventdefines: PatienteventdefineSlice,
+    [authApi.reducerPath]: authApi.reducer,
+    [businessApi.reducerPath]: businessApi.reducer,
+    [fileApi.reducerPath]: fileApi.reducer,
+    [logApi.reducerPath]: logApi.reducer,
+    [settingApi.reducerPath]: settingApi.reducer,
+    [systemApi.reducerPath]: systemApi.reducer,
+    [userroleApi.reducerPath]: userroleApi.reducer,
+    [warehouseApi.reducerPath]: warehouseApi.reducer,
 });
 
 export default Slices;

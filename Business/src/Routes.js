@@ -141,12 +141,14 @@ const Routes = [
 
     { method: 'get', path: '/Surveys/:surveyId', controller: 'Survey', action: 'GetSurvey' },
     { method: 'get', path: '/Surveys', controller: 'Survey', action: 'GetSurveys' },
+    { method: 'post', path: '/Surveys/FillSurvey', controller: 'Survey', action: 'FillSurvey' },
     { method: 'post', path: '/Surveys', controller: 'Survey', action: 'AddSurvey' },
     { method: 'put', path: '/Surveys/Savepreview/:activityId', controller: 'Survey', action: 'SavepreviewSurvey' },
     { method: 'put', path: '/Surveys/Approve/:activityId', controller: 'Survey', action: 'ApproveSurvey' },
     { method: 'put', path: '/Surveys/Complete/:activityId', controller: 'Survey', action: 'CompleteSurvey' },
     { method: 'put', path: '/Surveys', controller: 'Survey', action: 'UpdateSurvey' },
-    { method: 'delete', path: '/Surveys/:surveyId', controller: 'Survey', action: 'DeletePatienteventmovement' },
+    { method: 'delete', path: '/Surveys/RemoveSurveyanswer/:surveyresultId', controller: 'Survey', action: 'RemoveSurveyanswer' },
+    { method: 'delete', path: '/Surveys/:surveyId', controller: 'Survey', action: 'DeleteSurvey' },
 
     { method: 'get', path: '/Patientactivities/:activityId', controller: 'Patientactivity', action: 'GetPatientactivity' },
     { method: 'get', path: '/Patientactivities', controller: 'Patientactivity', action: 'GetPatientactivities' },

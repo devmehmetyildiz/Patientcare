@@ -1,6 +1,6 @@
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
-const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, createAccessDenied } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidationError
 const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
@@ -8,8 +8,11 @@ const uuid = require('uuid').v4
 
 async function GetSurveys(req, res, next) {
     try {
-        const survey = await db.surveyModel.findAll()
-        res.status(200).json(survey)
+        const surveys = await db.surveyModel.findAll()
+        for (const survey of surveys) {
+            survey.Surveydetails = await db.surveydetailModel.findAll({ where: { SurveyID: survey?.Uuid, Isactive: true } })
+        }
+        res.status(200).json(surveys)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
@@ -30,6 +33,7 @@ async function GetSurvey(req, res, next) {
 
     try {
         const survey = await db.surveyModel.findOne({ where: { Uuid: req.params.surveyId } });
+        survey.Surveydetails = await db.surveydetailModel.findAll({ where: { SurveyID: survey?.Uuid, Isactive: true } })
         res.status(200).json(survey)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -223,7 +227,7 @@ async function UpdateSurvey(req, res, next) {
             await db.surveydetailModel.create({
                 Uuid: detailuuid,
                 Order: surveydetail?.Order || 0,
-                SurveyID: surveyuuid,
+                SurveyID: Uuid,
                 Question: surveydetail?.Question || '',
                 Createduser: username,
                 Createtime: new Date(),

@@ -220,6 +220,10 @@ const Log = lazy(() => import('./Containers/Log/Log'));
 
 const Overview = lazy(() => import('./Containers/Overview/Overview'));
 
+const Surveys = lazy(() => import('./Pages/Surveys/Surveys'));
+const SurveysCreate = lazy(() => import('./Pages/Surveys/SurveysCreate'));
+const SurveysEdit = lazy(() => import('./Pages/Surveys/SurveysEdit'));
+
 const Home = lazy(() => import('./Pages/Home'));
 const Notfoundpage = lazy(() => import('./Components/Notfoundpage'));
 
@@ -441,6 +445,10 @@ class Routes extends Component {
       { exact: true, path: "/Trainings", auth: true, component: Trainings, permission: 'trainingview' },
       { exact: true, path: "/Trainings/Create", auth: true, component: TrainingsCreate, permission: 'trainingadd' },
       { exact: true, path: "/Trainings/:TrainingID/Edit", auth: true, component: TrainingsEdit, permission: 'trainingupdate' },
+
+      { exact: true, path: "/Surveys", auth: true, component: Surveys, permission: 'surveyview' },
+      { exact: true, path: "/Surveys/Create", auth: true, component: SurveysCreate, permission: 'surveyadd' },
+      { exact: true, path: "/Surveys/:SurveyID/Edit", auth: true, component: SurveysEdit, permission: 'surveyupdate' },
 
       { exact: true, path: "/Overview", auth: true, component: Overview, permission: 'overviewview' },
 
