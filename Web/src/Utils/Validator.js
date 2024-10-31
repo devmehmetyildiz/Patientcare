@@ -2,6 +2,10 @@ const isFile = function (value) {
   return value instanceof File;
 }
 
+const isNotNullorEmpty = function (value) {
+  return !(value === null || value === undefined)
+}
+
 const isUUID = function (value) {
   return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(value);
 }
@@ -99,7 +103,8 @@ const validator = {
   isObject,
   isUUID,
   isCountryID,
-  isFile
+  isFile,
+  isNotNullorEmpty
 }
 
 export default validator

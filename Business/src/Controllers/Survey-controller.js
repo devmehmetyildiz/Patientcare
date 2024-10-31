@@ -291,7 +291,7 @@ async function SavepreviewSurvey(req, res, next) {
         }
 
         await db.surveyModel.update({
-            Isonpreview: true,
+            Isonpreview: false,
             Updateduser: username,
             Updatetime: new Date(),
             Isactive: true

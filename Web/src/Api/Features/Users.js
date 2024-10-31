@@ -83,5 +83,6 @@ export const {
     useDeleteUserMovementMutation,
     useEditUsercaseMutation,
     useEditUserMovementMutation,
-    useGetUsersforshiftQuery
+    useGetUsersforshiftQuery,
+    useLazyGetUsersQuery,
 } = userApi;

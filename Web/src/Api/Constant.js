@@ -12,3 +12,6 @@ export const METHODS = {
     PUT: "PUT",
     DELETE: "DELETE",
 }
+
+
+export const SURVEY_REFETCH_TAG = "SURVEY_REFETCH_TAG"

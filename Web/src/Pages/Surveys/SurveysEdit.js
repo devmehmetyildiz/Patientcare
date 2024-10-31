@@ -2,7 +2,6 @@ import React, { Component, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form, Icon, Table } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
-import { FormContext } from '../../Provider/FormProvider'
 import {
   Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump,
   Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
@@ -10,8 +9,10 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { useGetUsersQuery } from '../../Api/Features/Users'
 import { fillnotification } from '../../Redux/ProfileSlice'
-import { useEditSurveyMutation, useGetSurveyQuery } from '../../Api/Features/Survey.ts'
+import { useEditSurveyMutation, useGetSurveyQuery } from '../../Api/Features/Survey'
 import { SURVEY_TYPE_PATIENT, SURVEY_TYPE_PATIENTCONTACT, SURVEY_TYPE_USER } from '../../Utils/Constants'
+import { DataContext } from '../../Provider/DataProvider'
+import Input from '../../Components/Input'
 
 
 export default function SurveysEdit(props) {
@@ -20,7 +21,7 @@ export default function SurveysEdit(props) {
   const dispatch = useDispatch()
   const { closeModal, history, match, SurveyID } = props
   const Id = SurveyID || match?.params?.SurveyID
-  const context = useContext(FormContext)
+  const context = useContext(DataContext)
   const Profile = useSelector((state) => state.Profile)
   const [surveydetails, setSurveydetails] = useState([])
 
@@ -52,6 +53,7 @@ export default function SurveysEdit(props) {
   const handleSubmit = (e) => {
     e.preventDefault()
     const data = context.getForm(PAGE_NAME)
+    console.log('data: ', data);
     let errors = []
     if (!validator.isNumber(data.Type)) {
       errors.push({ type: 'Error', code: t('Pages.Surveys.Page.Header'), description: t('Pages.Surveys.Messages.TypeRequired') })
@@ -129,16 +131,16 @@ export default function SurveysEdit(props) {
       <Contentwrapper>
         <Form>
           <Form.Group widths={'equal'}>
-            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Name')} name="Name" />
-            <FormInput page={PAGE_NAME} placeholder={t('Pages.Surveys.Column.Description')} name="Description" />
+            <Input page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Name')} name="Name" />
+            <Input page={PAGE_NAME} placeholder={t('Pages.Surveys.Column.Description')} name="Description" />
           </Form.Group>
           <Form.Group widths={'equal'}>
-            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Type')} name="Type" options={Surveytypeoption} formtype='dropdown' />
-            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Prepareduser')} name="PrepareduserID" options={Usersoptions} formtype='dropdown' />
+            <Input page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Type')} name="Type" options={Surveytypeoption} formtype='dropdown' />
+            <Input page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Prepareduser')} name="PrepareduserID" options={Usersoptions} formtype='dropdown' />
           </Form.Group>
           <Form.Group widths={'equal'}>
-            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Minnumber')} name="Minnumber" type="number" min={"0"} max={"100"} />
-            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Maxnumber')} name="Maxnumber" type="number" min={"0"} max={"100"} />
+            <Input page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Minnumber')} name="Minnumber" type="number" min={"-1"} max={"100"} />
+            <Input page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Maxnumber')} name="Maxnumber" type="number" min={"-1"} max={"100"} />
           </Form.Group>
           <Table celled className='list-table' >
             <Table.Header>

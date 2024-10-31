@@ -8,6 +8,7 @@ import thunk from 'redux-thunk'
 
 import AuthProvider from "./Provider/AuthProvider";
 import FormProvider from "./Provider/FormProvider";
+import DataProvider from "./Provider/DataProvider";
 
 import { handleauth } from "./Redux/ProfileSlice";
 import { tokenMiddleware, notificationMiddleware } from './Utils/Middlewares'
@@ -53,13 +54,15 @@ if (token) {
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(<AuthProvider>
-  <FormProvider>
-    <Provider store={store}>
-      <BrowserRouter >
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </FormProvider>
+  <DataProvider>
+    <FormProvider>
+      <Provider store={store}>
+        <BrowserRouter >
+          <App />
+        </BrowserRouter>
+      </Provider>
+    </FormProvider>
+  </DataProvider>
 </AuthProvider>);
 
 export default store
