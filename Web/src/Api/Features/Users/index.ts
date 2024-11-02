@@ -1,8 +1,8 @@
-import { globalOnQueryStarted, userroleApi } from "..";
-import { METHODS, ROUTES } from "../Constant";
+import { globalOnQueryStarted, userroleApi } from "Api";
+import { METHODS, ROUTES } from "Api/Constant";
 
 export const userApi = userroleApi.injectEndpoints({
-    endpoints: (builder) => ({
+    endpoints: (builder: any) => ({
         getUsers: builder.query({
             query: () => ({
                 url: ROUTES.USER,
@@ -11,7 +11,7 @@ export const userApi = userroleApi.injectEndpoints({
             onQueryStarted: globalOnQueryStarted
         }),
         getUsersforshift: builder.query({
-            query: ({ data }) => ({
+            query: ({ data }: any) => ({
                 url: `${ROUTES.USER}/GetUsersforshift`,
                 method: METHODS.POST,
                 body: data
@@ -19,14 +19,14 @@ export const userApi = userroleApi.injectEndpoints({
             onQueryStarted: globalOnQueryStarted
         }),
         getUser: builder.query({
-            query: (guid) => ({
+            query: (guid: any) => ({
                 url: `${ROUTES.USER}/${guid}`,
                 method: METHODS.GET,
             }),
             onQueryStarted: globalOnQueryStarted
         }),
         addUser: builder.mutation({
-            query: ({ data }) => ({
+            query: ({ data }: any) => ({
                 url: ROUTES.USER,
                 method: METHODS.POST,
                 body: data,
@@ -34,7 +34,7 @@ export const userApi = userroleApi.injectEndpoints({
             onQueryStarted: globalOnQueryStarted
         }),
         editUser: builder.mutation({
-            query: ({ data }) => ({
+            query: ({ data }: any) => ({
                 url: `${ROUTES.USER}`,
                 method: METHODS.PUT,
                 body: data,

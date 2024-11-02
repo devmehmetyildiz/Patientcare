@@ -1,8 +1,9 @@
-import { settingApi, } from "..";
-import { METHODS, ROUTES } from "../Constant";
+import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
+import { settingApi } from "Api";
+import { METHODS, ROUTES } from "Api/Constant";
 
 export const floorApi = settingApi.injectEndpoints({
-    endpoints: (builder) => ({
+    endpoints: (builder: EndpointBuilder<any, any, any>) => ({
         getFloors: builder.query({
             query: () => ({
                 url: ROUTES.FLOOR,

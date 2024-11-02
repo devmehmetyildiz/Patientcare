@@ -1,8 +1,9 @@
-import { settingApi } from "..";
-import { METHODS, ROUTES } from "../Constant";
+import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
+import { settingApi } from "Api";
+import { METHODS, ROUTES } from "Api/Constant";
 
 export const bedApi = settingApi.injectEndpoints({
-    endpoints: (builder) => ({
+    endpoints: (builder: EndpointBuilder<any, any, any>) => ({
         getBeds: builder.query({
             query: () => ({
                 url: ROUTES.BED,

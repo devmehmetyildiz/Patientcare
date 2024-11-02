@@ -4,6 +4,7 @@ export const ROUTES = {
     BED: 'Beds',
     SURVEY: 'Surveys',
     USER: 'Users',
+    PATIENT: 'Users',
 }
 
 export const METHODS = {

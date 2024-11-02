@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Checkbox, Dropdown, Form, Icon, Label, Popup } from 'semantic-ui-react'
 import validator from '../../Utils/Validator';
-import { AddModal } from '../../Components'
+import { AddModal } from '..'
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 import { DataContext } from '../../Provider/DataProvider';
 import { useSelector } from 'react-redux';
+
+
 
 export default function Input(props) {
     const context = React.useContext(DataContext)
@@ -80,7 +82,7 @@ export default function Input(props) {
     }
 
 
-    const getFormtime = React.useCallback(() => {
+    const getFormtime = useMemo(() => {
         switch (formtype) {
             case 'dropdown':
                 return <Dropdown
@@ -94,7 +96,8 @@ export default function Input(props) {
                             setFormvalue(data.value)
                         }
                         effect && effect()
-                    }}
+                    }
+                    }
                     {...contextProp}
                 />
             case 'checkbox':
@@ -127,7 +130,8 @@ export default function Input(props) {
                                     setFormvalue(e.target.value)
                                 }
                                 effect && effect()
-                            }}
+                            }
+                            }
                             onKeyPress={(e) => { handleKeyPress(e) }}
                             onKeyUp={onKeyUpinput}
                             fluid />
@@ -230,34 +234,39 @@ export default function Input(props) {
                         />
                 }
         }
-    })
+    }, [])
 
     return (
         (validator.isBoolean(isFormvisible) ? isFormvisible : true) &&
         <Form.Field>
-            <div className='flex flex-row m-2'>
-                {!dontshowlabel && <label className='text-[#000000de]'>{placeholder}{modal ? <AddModal Content={modal} /> : null}</label>}
+            <div className='flex flex-row m-2' >
+                {!dontshowlabel && <label className='text-[#000000de]' > {placeholder}{modal ? <AddModal Content={modal} /> : null}</label >}
                 {display && <Icon name={display} />}
                 {required && <Popup
                     trigger={<Icon className='cursor-pointer' name='attention' />}
-                    content={<Label color='red' ribbon>{Attention[language]}</Label>}
+                    content={< Label color='red' ribbon > {Attention[language]} </Label>
+                    }
                     on='click'
                     hideOnScroll
                     position='left center'
                 />}
-                {attention && <Popup
-                    trigger={<Icon link name='question circle' />}
-                    content={<Label color='blue' ribbon>{attention}</Label>}
-                    position='left center'
-                    on='click'
-                />}
+                {
+                    attention && <Popup
+                        trigger={<Icon link name='question circle' />}
+                        content={< Label color='blue' ribbon > {attention} </Label>
+                        }
+                        position='left center'
+                        on='click'
+                    />}
                 {additionalicon && additionalicon}
-                {validationmessage && (!valid && <Popup
-                    trigger={<Icon link color='red' name='bell' />}
-                    content={<Label color='red' ribbon>{validationmessage}</Label>}
-                    position='left center'
-                    on='click'
-                />)}
+                {
+                    validationmessage && (!valid && <Popup
+                        trigger={<Icon link color='red' name='bell' />}
+                        content={< Label color='red' ribbon > {validationmessage} </Label>
+                        }
+                        position='left center'
+                        on='click'
+                    />)}
             </div>
             {getFormtime()}
         </Form.Field>

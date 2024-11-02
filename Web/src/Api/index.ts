@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { BaseQueryApi, createApi, FetchArgs, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { fillnotification } from '../Redux/ProfileSlice';
 import config from '../Config';
 
@@ -111,7 +111,7 @@ export const globalOnQueryStarted = async (arg, api) => {
     }
 };
 
-const baseQuery = async (args, api, extraOptions, baseUrl) => {
+const baseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: Record<string, unknown>, baseUrl: string) => {
     try {
         const rawBaseQuery = fetchBaseQuery({
             baseUrl: baseUrl,
@@ -131,7 +131,7 @@ const baseQuery = async (args, api, extraOptions, baseUrl) => {
 
         const result = await rawBaseQuery(args, api, extraOptions);
         if (result.error) {
-            const { Profile } = api.getState()
+            const { Profile } = api.getState() as any
             if (result.error.data) {
                 throw errorhandling({ error: result.error, Profile });
             } else {
