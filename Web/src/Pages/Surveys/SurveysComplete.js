@@ -1,17 +1,11 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { Button, Dimmer, DimmerDimmable, Loader, Modal } from 'semantic-ui-react'
-import { useCompleteSurveyMutation } from '../../Api/Features/Survey'
 
 export default function SurveysComplete(props) {
 
-    const { open, setOpen, record, setRecord } = props
-    const Profile = useSelector(state => state.Profile)
+    const { open, setOpen, record, setRecord, Surveys, Profile, CompleteSurveys, GetSurveys } = props
 
     const t = Profile?.i18n?.t
-
-    const [CompleteSurvey, { isLoading }] = useCompleteSurveyMutation()
-
 
     return (
         <DimmerDimmable blurring >
@@ -22,7 +16,7 @@ export default function SurveysComplete(props) {
             >
                 <Modal.Header >{t('Pages.Surveys.Page.CompleteHeader')}</Modal.Header>
                 <Modal.Content image>
-                    <Dimmer inverted active={isLoading}>
+                    <Dimmer inverted active={Surveys.isLoading}>
                         <Loader inverted active />
                     </Dimmer>
                     <Modal.Description>
@@ -44,11 +38,12 @@ export default function SurveysComplete(props) {
                         labelPosition='right'
                         icon='checkmark'
                         onClick={() => {
-                            CompleteSurvey({
+                            CompleteSurveys({
                                 surveyID: record?.Uuid || '',
                                 onSuccess: () => {
                                     setOpen(false)
                                     setRecord(null)
+                                    GetSurveys()
                                 }
                             })
                         }}

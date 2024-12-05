@@ -68,6 +68,6 @@ module.exports = sequelize.define('surveyModel', {
         type: Sequelize.BOOLEAN
     }
 }, {
-    tableName: 'surveyModel', // replace with the name of your existing table
+    tableName: 'surveys', // replace with the name of your existing table
     timestamps: false
 });

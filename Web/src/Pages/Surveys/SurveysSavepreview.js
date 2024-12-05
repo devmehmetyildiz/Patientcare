@@ -1,16 +1,11 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { Button, Dimmer, DimmerDimmable, Loader, Modal } from 'semantic-ui-react'
-import { useSavePreviewSurveyMutation } from '../../Api/Features/Survey'
 
 export default function SurveysSavepreview(props) {
 
-    const { open, setOpen, record, setRecord } = props
-    const Profile = useSelector(state => state.Profile)
+    const { open, setOpen, record, setRecord, Surveys, Profile, SavepreviewSurveys, GetSurveys } = props
 
     const t = Profile?.i18n?.t
-
-    const [SavepreviewSurvey, { isLoading }] = useSavePreviewSurveyMutation()
 
     return (
         <DimmerDimmable blurring >
@@ -21,7 +16,7 @@ export default function SurveysSavepreview(props) {
             >
                 <Modal.Header >{t('Pages.Surveys.Page.SavepreviewHeader')}</Modal.Header>
                 <Modal.Content image>
-                    <Dimmer inverted active={isLoading}>
+                    <Dimmer inverted active={Surveys.isLoading}>
                         <Loader inverted active />
                     </Dimmer>
                     <Modal.Description>
@@ -43,11 +38,12 @@ export default function SurveysSavepreview(props) {
                         labelPosition='right'
                         icon='checkmark'
                         onClick={() => {
-                            SavepreviewSurvey({
+                            SavepreviewSurveys({
                                 surveyID: record?.Uuid || '',
                                 onSuccess: () => {
                                     setOpen(false)
                                     setRecord(null)
+                                    GetSurveys()
                                 }
                             })
                         }}

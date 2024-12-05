@@ -1,31 +1,22 @@
-import React, { Component, useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form, Icon, Table } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
-import { DataContext } from '../../Provider/DataProvider'
 import {
   Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump,
   Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
 } from '../../Components'
-import { useDispatch, useSelector } from 'react-redux'
-import { useGetUsersQuery } from '../../Api/Features/Users'
-import { fillnotification } from '../../Redux/ProfileSlice'
-import { useAddSurveyMutation } from '../../Api/Features/Survey'
 import { SURVEY_TYPE_PATIENT, SURVEY_TYPE_PATIENTCONTACT, SURVEY_TYPE_USER } from '../../Utils/Constants'
-import Input from '../../Components/Input'
-
+import { FormContext } from '../../Provider/FormProvider'
 
 export default function SurveysCreate(props) {
   const PAGE_NAME = "SurveysCreate"
 
-  const dispatch = useDispatch()
-  const { closeModal, history } = props
-  const context = useContext(DataContext)
-  const Profile = useSelector((state) => state.Profile)
-  const [surveydetails, setSurveydetails] = useState([])
+  const { Surveys, Users, Profile, closeModal, history } = props
+  const { GetUsers, AddSurveys, fillSurveynotification } = props
 
-  const { data: Users, isFetching: userIsfetching } = useGetUsersQuery()
-  const [AddSurvey, { isLoading }] = useAddSurveyMutation()
+  const context = useContext(FormContext)
+  const [surveydetails, setSurveydetails] = useState([])
 
   const t = Profile?.i18n?.t
 
@@ -42,7 +33,6 @@ export default function SurveysCreate(props) {
   const handleSubmit = (e) => {
     e.preventDefault()
     const data = context.getForm(PAGE_NAME)
-    console.log('data: ', data);
     let errors = []
     if (!validator.isNumber(data.Type)) {
       errors.push({ type: 'Error', code: t('Pages.Surveys.Page.Header'), description: t('Pages.Surveys.Messages.TypeRequired') })
@@ -64,16 +54,14 @@ export default function SurveysCreate(props) {
     }
     if (errors.length > 0) {
       errors.forEach(error => {
-        dispatch(fillnotification(error))
+        fillSurveynotification(error)
       })
     } else {
-      AddSurvey({
+      AddSurveys({
         data: { ...data, Surveydetails: surveydetails },
         history,
         redirectUrl: "/Surveys",
-        successMessage: t('Pages.Surveys.Messages.Success'),
-        reqType: t('Pages.Surveys.Page.Header'),
-        closeModal
+        closeModal,
       })
     }
   }
@@ -104,7 +92,11 @@ export default function SurveysCreate(props) {
     setSurveydetails([...details])
   }
 
-  return (userIsfetching || isLoading ? <LoadingPage /> :
+  useEffect(() => {
+    GetUsers()
+  }, [])
+
+  return (Surveys.isLoading || Users.isLoading ? <LoadingPage /> :
     <Pagewrapper>
       <Headerwrapper>
         <Headerbredcrump>
@@ -120,16 +112,16 @@ export default function SurveysCreate(props) {
       <Contentwrapper>
         <Form>
           <Form.Group widths={'equal'}>
-            <Input page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Name')} name="Name" />
-            <Input page={PAGE_NAME} placeholder={t('Pages.Surveys.Column.Description')} name="Description" />
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Name')} name="Name" />
+            <FormInput page={PAGE_NAME} placeholder={t('Pages.Surveys.Column.Description')} name="Description" />
           </Form.Group>
           <Form.Group widths={'equal'}>
-            <Input page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Type')} name="Type" options={Surveytypeoption} formtype='dropdown' />
-            <Input page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Prepareduser')} name="PrepareduserID" options={Usersoptions} formtype='dropdown' />
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Type')} name="Type" options={Surveytypeoption} formtype='dropdown' />
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Prepareduser')} name="PrepareduserID" options={Usersoptions} formtype='dropdown' />
           </Form.Group>
           <Form.Group widths={'equal'}>
-            <Input page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Minnumber')} name="Minnumber" type="number" min={"-1"} max={"100"} />
-            <Input page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Maxnumber')} name="Maxnumber" type="number" min={"-1"} max={"100"} />
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Minnumber')} name="Minnumber" type="number" min={"-1"} max={"100"} />
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Surveys.Column.Maxnumber')} name="Maxnumber" type="number" min={"-1"} max={"100"} />
           </Form.Group>
           <Table celled className='list-table' >
             <Table.Header>
@@ -185,7 +177,7 @@ export default function SurveysCreate(props) {
           buttonText={t('Common.Button.Goback')}
         />
         <Submitbutton
-          isLoading={isLoading}
+          isLoading={Surveys.isLoading}
           buttonText={t('Common.Button.Create')}
           submitFunction={handleSubmit}
         />

@@ -34,7 +34,7 @@ export const GetSurvey = createAsyncThunk(
 
 export const AddSurveys = createAsyncThunk(
     'Surveys/AddSurveys',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
@@ -46,6 +46,7 @@ export const AddSurveys = createAsyncThunk(
             }));
             clearForm && clearForm('SurveysCreate')
             closeModal && closeModal()
+            onSuccess && onSuccess()
             history && history.push(redirectUrl ? redirectUrl : '/Surveys');
             return response.data;
         } catch (error) {
@@ -58,7 +59,7 @@ export const AddSurveys = createAsyncThunk(
 
 export const FillSurveys = createAsyncThunk(
     'Surveys/FillSurveys',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
@@ -71,6 +72,7 @@ export const FillSurveys = createAsyncThunk(
             clearForm && clearForm('SurveysCreate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Surveys');
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -106,17 +108,17 @@ export const EditSurveys = createAsyncThunk(
 
 export const SavepreviewSurveys = createAsyncThunk(
     'Surveys/SavepreviewSurveys',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ surveyID, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
-            const response = await instanse.put(config.services.Business, `${ROUTES.SURVEY}/Savepreview/${data?.Uuid}`);
+            const response = await instanse.put(config.services.Business, `${ROUTES.SURVEY}/Savepreview/${surveyID}`);
             dispatch(fillSurveynotification({
                 type: 'Success',
                 code: t('Common.Code.Update'),
                 description: t('Redux.Surveys.Messages.Savepreview'),
             }));
-            history && history.push(redirectUrl ? redirectUrl : '/Surveys');
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -128,17 +130,17 @@ export const SavepreviewSurveys = createAsyncThunk(
 
 export const ApproveSurveys = createAsyncThunk(
     'Surveys/ApproveSurveys',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ surveyID, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
-            const response = await instanse.put(config.services.Business, `${ROUTES.SURVEY}/Approve/${data?.Uuid}`);
+            const response = await instanse.put(config.services.Business, `${ROUTES.SURVEY}/Approve/${surveyID}`);
             dispatch(fillSurveynotification({
                 type: 'Success',
                 code: t('Common.Code.Update'),
                 description: t('Redux.Surveys.Messages.Approve'),
             }));
-            history && history.push(redirectUrl ? redirectUrl : '/Surveys');
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -148,21 +150,19 @@ export const ApproveSurveys = createAsyncThunk(
     }
 );
 
-
-
 export const CompleteSurveys = createAsyncThunk(
     'Surveys/CompleteSurveys',
-    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+    async ({ surveyID, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
-            const response = await instanse.put(config.services.Business, `${ROUTES.SURVEY}/Complete/${data?.Uuid}`);
+            const response = await instanse.put(config.services.Business, `${ROUTES.SURVEY}/Complete/${surveyID}`);
             dispatch(fillSurveynotification({
                 type: 'Success',
                 code: t('Common.Code.Update'),
                 description: t('Redux.Surveys.Messages.Complete'),
             }));
-            history && history.push(redirectUrl ? redirectUrl : '/Surveys');
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -174,17 +174,18 @@ export const CompleteSurveys = createAsyncThunk(
 
 export const DeleteSurveys = createAsyncThunk(
     'Surveys/DeleteSurveys',
-    async (data, { dispatch, getState }) => {
+    async ({ surveyID, onSuccess }, { dispatch, getState }) => {
         try {
 
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
-            const response = await instanse.delete(config.services.Business, `${ROUTES.SURVEY}/${data.Uuid}`);
+            const response = await instanse.delete(config.services.Business, `${ROUTES.SURVEY}/${surveyID}`);
             dispatch(fillSurveynotification({
                 type: 'Success',
                 code: t('Common.Code.Delete'),
                 description: t('Redux.Surveys.Messages.Delete'),
             }));
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -196,7 +197,7 @@ export const DeleteSurveys = createAsyncThunk(
 
 export const RemoveSurveyanswer = createAsyncThunk(
     'Surveys/RemoveSurveyanswer',
-    async (data, { dispatch, getState }) => {
+    async ({ data, onSuccess }, { dispatch, getState }) => {
         try {
 
             const state = getState()
@@ -207,6 +208,30 @@ export const RemoveSurveyanswer = createAsyncThunk(
                 code: t('Common.Code.Delete'),
                 description: t('Redux.Surveys.Messages.DeleteSurveyAnswer'),
             }));
+            onSuccess && onSuccess()
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillSurveynotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const ClearSurvey = createAsyncThunk(
+    'Surveys/ClearSurvey',
+    async ({ data, onSuccess }, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.delete(config.services.Business, `${ROUTES.SURVEY}/ClearSurvey/${data.Uuid}`);
+            dispatch(fillSurveynotification({
+                type: 'Success',
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Surveys.Messages.CleanSurvey'),
+            }));
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -297,12 +322,71 @@ export const SurveysSlice = createSlice({
             })
             .addCase(DeleteSurveys.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.list = action.payload;
             })
             .addCase(DeleteSurveys.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
-            });
+            })
+            .addCase(SavepreviewSurveys.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(SavepreviewSurveys.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(SavepreviewSurveys.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ApproveSurveys.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(ApproveSurveys.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(ApproveSurveys.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(CompleteSurveys.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(CompleteSurveys.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(CompleteSurveys.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(RemoveSurveyanswer.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(RemoveSurveyanswer.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(RemoveSurveyanswer.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ClearSurvey.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(ClearSurvey.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(ClearSurvey.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(FillSurveys.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(FillSurveys.fulfilled, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(FillSurveys.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
     },
 });
 

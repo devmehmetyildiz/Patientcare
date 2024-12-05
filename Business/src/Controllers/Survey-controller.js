@@ -6,11 +6,16 @@ const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
+const SURVEY_TYPE_PATIENT = 0
+const SURVEY_TYPE_PATIENTCONTACT = 1
+const SURVEY_TYPE_USER = 2
+
 async function GetSurveys(req, res, next) {
     try {
         const surveys = await db.surveyModel.findAll()
         for (const survey of surveys) {
             survey.Surveydetails = await db.surveydetailModel.findAll({ where: { SurveyID: survey?.Uuid, Isactive: true } })
+            survey.Surveyresults = await db.surveyresultModel.findAll({ where: { SurveyID: survey?.Uuid, Isactive: true } })
         }
         res.status(200).json(surveys)
     } catch (error) {
@@ -377,7 +382,7 @@ async function ApproveSurvey(req, res, next) {
     GetSurveys(req, res, next)
 }
 
-async function CleanSurvey(req, res, next) {
+async function ClearSurvey(req, res, next) {
 
     let validationErrors = []
     const Uuid = req.params.surveyId
@@ -512,11 +517,12 @@ async function FillSurvey(req, res, next) {
         return next(createValidationError(req.t('Surveys.Error.AnswersRequired'), req.t('Surveys'), req.language))
     }
 
-    const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
 
-    try {
-        for (const answer of Answers) {
+    for (const answer of Answers) {
+        const t = await db.sequelize.transaction();
+
+        try {
             let validationErrors = []
 
             const {
@@ -556,14 +562,6 @@ async function FillSurvey(req, res, next) {
                 return next(createNotFoundError(req.t('Surveys.Error.Completed'), req.t('Surveys'), req.language))
             }
 
-            await db.surveyModel.update({
-                Completedusercount: (survey?.Completedusercount || 0) + 1,
-                Updateduser: username,
-                Updatetime: new Date(),
-                Isactive: true
-            }, { where: { Uuid: SurveyID }, transaction: t })
-
-
             await db.surveyresultModel.create({
                 ...answer,
                 Uuid: uuid(),
@@ -571,8 +569,58 @@ async function FillSurvey(req, res, next) {
                 Createtime: new Date(),
                 Isactive: true
             }, { transaction: t })
-        }
 
+            await t.commit()
+        } catch (error) {
+            await t.rollback()
+            return next(sequelizeErrorCatcher(error))
+        }
+    }
+
+    const UnSettedSurveyUuids = Answers.map(u => u.SurveyID)
+    const surveyUuids = [...new Set(UnSettedSurveyUuids)]
+
+    for (const surveyUuid of surveyUuids) {
+        const t = await db.sequelize.transaction();
+        try {
+
+            const survey = await db.surveyModel.findOne({ where: { Uuid: surveyUuid } })
+            if (!survey) {
+                return next(createNotFoundError(req.t('Surveys.Error.NotFound'), req.t('Surveys'), req.language))
+            }
+            if (survey.Isactive === false) {
+                return next(createNotFoundError(req.t('Surveys.Error.NotActive'), req.t('Surveys'), req.language))
+            }
+            if (survey.Isonpreview === true) {
+                return next(createNotFoundError(req.t('Surveys.Error.OnPreview'), req.t('Surveys'), req.language))
+            }
+            if (survey.Isapproved === false) {
+                return next(createNotFoundError(req.t('Surveys.Error.NotApproved'), req.t('Surveys'), req.language))
+            }
+            if (survey.Iscompleted === true) {
+                return next(createNotFoundError(req.t('Surveys.Error.Completed'), req.t('Surveys'), req.language))
+            }
+
+            const unSettedUserCountForSurvey = Answers.filter(u => u.SurveyID === surveyUuid).map(u => {
+                return survey?.Type === SURVEY_TYPE_PATIENTCONTACT ? u.User : u.UserID
+            })
+
+            const userCountForSurvey = [...new Set(unSettedUserCountForSurvey)].length
+
+            await db.surveyModel.update({
+                Completedusercount: (survey?.Completedusercount || 0) + userCountForSurvey,
+                Updateduser: username,
+                Updatetime: new Date(),
+                Isactive: true
+            }, { where: { Uuid: surveyUuid }, transaction: t })
+            t.commit()
+        } catch (error) {
+            await t.rollback()
+            return next(sequelizeErrorCatcher(error))
+        }
+    }
+
+    try {
         await CreateNotification({
             type: types.Update,
             service: req.t('Surveys'),
@@ -583,11 +631,10 @@ async function FillSurvey(req, res, next) {
             }[req.language],
             pushurl: '/Surveys'
         })
-        await t.commit()
     } catch (error) {
-        await t.rollback()
         return next(sequelizeErrorCatcher(error))
     }
+
     GetSurveys(req, res, next)
 }
 
@@ -611,6 +658,7 @@ async function RemoveSurveyanswer(req, res, next) {
 
     try {
         const surveyresult = await db.surveyresultModel.findOne({ where: { Uuid: Uuid } })
+
         if (!surveyresult) {
             return next(createNotFoundError(req.t('Surveys.Error.ResultNotFound'), req.t('Surveys'), req.language))
         }
@@ -619,6 +667,7 @@ async function RemoveSurveyanswer(req, res, next) {
         }
 
         const survey = await db.surveyModel.findOne({ where: { Uuid: surveyresult?.SurveyID || '' } })
+
         if (!survey) {
             return next(createNotFoundError(req.t('Surveys.Error.NotFound'), req.t('Surveys'), req.language))
         }
@@ -642,11 +691,20 @@ async function RemoveSurveyanswer(req, res, next) {
             Isactive: true
         }, { where: { Uuid: surveyresult?.SurveyID || '' }, transaction: t })
 
+        let whereClause = {}
+
+        if (survey?.Type === SURVEY_TYPE_PATIENTCONTACT) {
+            whereClause.User = surveyresult.User
+        } else {
+            whereClause.UserID = surveyresult.UserID
+        }
+        whereClause.SurveyID = survey?.Uuid || ''
+
         await db.surveyresultModel.update({
             Deleteduser: username,
             Deletetime: new Date(),
-            Isactive: true
-        }, { where: { Uuid: Uuid }, transaction: t })
+            Isactive: false
+        }, { where: whereClause, transaction: t })
 
         await CreateNotification({
             type: types.Update,
@@ -739,6 +797,6 @@ module.exports = {
     CompleteSurvey,
     FillSurvey,
     RemoveSurveyanswer,
-    CleanSurvey,
+    ClearSurvey,
     DeleteSurvey
 }

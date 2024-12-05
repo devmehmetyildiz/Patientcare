@@ -220,9 +220,9 @@ const Log = lazy(() => import('./Containers/Log/Log'));
 
 const Overview = lazy(() => import('./Containers/Overview/Overview'));
 
-const Surveys = lazy(() => import('./Pages/Surveys/Surveys'));
-const SurveysCreate = lazy(() => import('./Pages/Surveys/SurveysCreate'));
-const SurveysEdit = lazy(() => import('./Pages/Surveys/SurveysEdit'));
+const Surveys = lazy(() => import('./Containers/Surveys/Surveys'));
+const SurveysCreate = lazy(() => import('./Containers/Surveys/SurveysCreate'));
+const SurveysEdit = lazy(() => import('./Containers/Surveys/SurveysEdit'));
 
 const Home = lazy(() => import('./Pages/Home'));
 const Notfoundpage = lazy(() => import('./Components/Notfoundpage'));

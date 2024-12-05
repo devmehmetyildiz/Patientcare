@@ -11,7 +11,7 @@ const TWO_HUNDRED_MS = 200;
 
 
 
-export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
+export const DataTable = ({ Columns, Data, Config, renderRowSubComponent, disableGlobalFilter }) => {
 
     const columns = useMemo(() => {
         const data = (Columns || [])
@@ -104,7 +104,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
     useEffect(() => {
         gotoPage(0)
     }, [globalFilter])
-    
+
     useEffect(() => {
         if (Config?.hiddenColumns) {
             let isEqual = true
@@ -139,11 +139,13 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent }) => {
 
     return (
         <React.Fragment>
-            <GlobalFilter
-                preGlobalFilteredRows={preGlobalFilteredRows}
-                globalFilter={globalFilter}
-                setGlobalFilter={setGlobalFilter}
-            />
+            {!disableGlobalFilter ?
+                <GlobalFilter
+                    preGlobalFilteredRows={preGlobalFilteredRows}
+                    globalFilter={globalFilter}
+                    setGlobalFilter={setGlobalFilter}
+                />
+                : null}
             <div className='react-table-container'>
                 <div className='react-table-box max-h[calc(100vh-13.4rem)]'>
                     {

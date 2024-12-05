@@ -147,6 +147,7 @@ const Routes = [
     { method: 'put', path: '/Surveys/Approve/:surveyId', controller: 'Survey', action: 'ApproveSurvey' },
     { method: 'put', path: '/Surveys/Complete/:surveyId', controller: 'Survey', action: 'CompleteSurvey' },
     { method: 'put', path: '/Surveys', controller: 'Survey', action: 'UpdateSurvey' },
+    { method: 'delete', path: '/Surveys/ClearSurvey/:surveyId', controller: 'Survey', action: 'ClearSurvey' },
     { method: 'delete', path: '/Surveys/RemoveSurveyanswer/:surveyresultId', controller: 'Survey', action: 'RemoveSurveyanswer' },
     { method: 'delete', path: '/Surveys/:surveyId', controller: 'Survey', action: 'DeleteSurvey' },
 

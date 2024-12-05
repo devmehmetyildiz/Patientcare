@@ -13,7 +13,6 @@ import DataProvider from "./Provider/DataProvider";
 import { handleauth } from "./Redux/ProfileSlice";
 import { tokenMiddleware, notificationMiddleware } from './Utils/Middlewares'
 import { configureStore } from "@reduxjs/toolkit";
-import { authApi, businessApi, fileApi, logApi, settingApi, systemApi, userroleApi, warehouseApi } from "./Api";
 
 import config from "./Config";
 
@@ -28,14 +27,6 @@ const store = configureStore({
       serializableCheck: false,
     }).concat(
       thunk,
-      authApi.middleware,
-      businessApi.middleware,
-      fileApi.middleware,
-      logApi.middleware,
-      settingApi.middleware,
-      systemApi.middleware,
-      userroleApi.middleware,
-      warehouseApi.middleware,
       tokenMiddleware,
       notificationMiddleware
     ),

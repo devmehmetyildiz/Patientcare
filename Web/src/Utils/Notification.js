@@ -19,23 +19,27 @@ function Notification(notifications, removeNotification, Profile) {
 
     if (notifications && notifications.length > 0) {
         notifications.forEach((notification) => {
-            const { type, code, description } = notification
-            switch (type) {
-                case "Success":
-                    toast.success(<CustomToast title={code} message={description} />, config);
-                    break;
-                case "Information":
-                    toast.info(<CustomToast title={code} message={description} />, config);
-                    break;
-                case "Error":
-                    toast.error(<CustomToast title={code} message={description} />, config);
+            if (notification) {
+                const { type, code, description } = notification
+                switch (type) {
+                    case "Success":
+                        toast.success(<CustomToast title={code} message={description} />, config);
+                        break;
+                    case "Information":
+                        toast.info(<CustomToast title={code} message={description} />, config);
+                        break;
+                    case "Error":
+                        toast.error(<CustomToast title={code} message={description} />, config);
 
-                    break;
-                default:
-                    break;
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                toast.error(<CustomToast title={"Notification Error"} message={"Notification Object Can't Read"} />, config);
             }
             removeNotification()
-        });
+        })
     }
 }
 
