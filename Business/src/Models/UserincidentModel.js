@@ -26,6 +26,24 @@ module.exports = sequelize.define('userincidentModel', {
         type: Sequelize.TEXT
     },
 
+    Occuredtime: {
+        type: Sequelize.DATE
+    },
+
+    Isonpreview: {
+        type: Sequelize.BOOLEAN
+    },
+    Isapproved: {
+        type: Sequelize.BOOLEAN
+    },
+    Iscompleted: {
+        type: Sequelize.BOOLEAN
+    },
+
+    Approveduser: {
+        type: Sequelize.STRING
+    },
+
     Createduser: {
         type: Sequelize.STRING
     },

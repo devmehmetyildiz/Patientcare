@@ -21,13 +21,13 @@ async function GetUserincident(req, res, next) {
 
     let validationErrors = []
     if (!req.params.userincidentId) {
-        validationErrors.push(req.t('Patientvisits.Error.PatientvisitIDRequired'))
+        validationErrors.push(req.t('Userincidents.Error.UserincidentIDRequired'))
     }
     if (!validator.isUUID(req.params.userincidentId)) {
-        validationErrors.push(req.t('Patientvisits.Error.UnsupportedPatientvisitID'))
+        validationErrors.push(req.t('Userincidents.Error.UnsupportedUserincidentID'))
     }
     if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.t('Patientvisits'), req.language))
+        return next(createValidationError(validationErrors, req.t('Userincidents'), req.language))
     }
 
     try {
@@ -45,6 +45,7 @@ async function AddUserincident(req, res, next) {
         UserID,
         Type,
         Event,
+        Occuredtime
     } = req.body
 
     if (!validator.isUUID(UserID)) {
@@ -55,6 +56,9 @@ async function AddUserincident(req, res, next) {
     }
     if (!validator.isString(Event)) {
         validationErrors.push(req.t('Userincidents.Error.EventRequired'))
+    }
+    if (!validator.isISODate(Occuredtime)) {
+        validationErrors.push(req.t('Userincidents.Error.OccuredtimeRequired'))
     }
 
     if (validationErrors.length > 0) {
@@ -70,6 +74,9 @@ async function AddUserincident(req, res, next) {
         await db.userincidentModel.create({
             ...req.body,
             Uuid: incidentuuid,
+            Isonpreview: true,
+            Isapproved: false,
+            Iscompleted: false,
             Createduser: username,
             Createtime: new Date(),
             Isactive: true
@@ -104,6 +111,7 @@ async function UpdateUserincident(req, res, next) {
         UserID,
         Type,
         Event,
+        Occuredtime
     } = req.body
 
     if (!Uuid) {
@@ -121,6 +129,9 @@ async function UpdateUserincident(req, res, next) {
     if (!validator.isString(Event)) {
         validationErrors.push(req.t('Userincidents.Error.EventRequired'))
     }
+    if (!validator.isISODate(Occuredtime)) {
+        validationErrors.push(req.t('Userincidents.Error.OccuredtimeRequired'))
+    }
 
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.t('Userincidents'), req.language))
@@ -137,9 +148,21 @@ async function UpdateUserincident(req, res, next) {
         if (userincident.Isactive === false) {
             return next(createNotFoundError(req.t('Userincidents.Error.NotActive'), req.t('Userincidents'), req.language))
         }
+        if (userincident.Isonpreview === false) {
+            return next(createNotFoundError(req.t('Userincidents.Error.NotOnPreview'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Isapproved === true) {
+            return next(createNotFoundError(req.t('Userincidents.Error.Approved'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Userincidents.Error.Completed'), req.t('Userincidents'), req.language))
+        }
 
         await db.userincidentModel.update({
             ...req.body,
+            Isonpreview: true,
+            Isapproved: false,
+            Iscompleted: false,
             Updateduser: username,
             Updatetime: new Date(),
             Isactive: true
@@ -162,6 +185,196 @@ async function UpdateUserincident(req, res, next) {
     } catch (err) {
         await t.rollback()
         return next(sequelizeErrorCatcher(err))
+    }
+    GetUserincidents(req, res, next)
+}
+
+async function SavepreviewUserincident(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.userincidentId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Userincidents.Error.UserincidentIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Userincidents.Error.UnsupportedUserincidentID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Userincidents'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const userincident = await db.userincidentModel.findOne({ where: { Uuid: Uuid } })
+        if (!userincident) {
+            return next(createNotFoundError(req.t('Userincidents.Error.NotFound'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Isactive === false) {
+            return next(createNotFoundError(req.t('Userincidents.Error.NotActive'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Isonpreview === false) {
+            return next(createNotFoundError(req.t('Userincidents.Error.NotOnPreview'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Isapproved === true) {
+            return next(createNotFoundError(req.t('Userincidents.Error.Approved'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Userincidents.Error.Completed'), req.t('Userincidents'), req.language))
+        }
+
+        await db.userincidentModel.update({
+            Isonpreview: false,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+
+        const user = await DoGet(config.services.Userrole, 'Users/' + userincident?.UserID || '')
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Userincidents'),
+            role: 'userincidentnotification',
+            message: {
+                tr: `${user?.Name} ${user?.Surname} Kullanıcısına Ait Olay ${username} tarafından Kayıt Edildi.`,
+                en: `${user?.Name} ${user?.Surname} User Incident Saved By ${username}`
+            }[req.language],
+            pushurl: '/Userincidents'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetUserincidents(req, res, next)
+}
+
+async function ApproveUserincident(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.userincidentId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Userincidents.Error.UserincidentIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Userincidents.Error.UnsupportedUserincidentID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Userincidents'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const userincident = await db.userincidentModel.findOne({ where: { Uuid: Uuid } })
+        if (!userincident) {
+            return next(createNotFoundError(req.t('Userincidents.Error.NotFound'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Isactive === false) {
+            return next(createNotFoundError(req.t('Userincidents.Error.NotActive'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Isonpreview === true) {
+            return next(createNotFoundError(req.t('Userincidents.Error.OnPreview'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Isapproved === true) {
+            return next(createNotFoundError(req.t('Userincidents.Error.Approved'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Userincidents.Error.Completed'), req.t('Userincidents'), req.language))
+        }
+
+        await db.userincidentModel.update({
+            Isapproved: true,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        const user = await DoGet(config.services.Userrole, 'Users/' + userincident?.UserID || '')
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Userincidents'),
+            role: 'userincidentnotification',
+            message: {
+                tr: `${user?.Name} ${user?.Surname} Kullanıcısına Ait Olay ${username} tarafından Onaylandı.`,
+                en: `${user?.Name} ${user?.Surname} User Incident Approved By ${username}`
+            }[req.language],
+            pushurl: '/Userincidents'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetUserincidents(req, res, next)
+}
+
+async function CompleteUserincident(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.userincidentId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Userincidents.Error.UserincidentIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Userincidents.Error.UnsupportedUserincidentID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Userincidents'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const userincident = await db.userincidentModel.findOne({ where: { Uuid: Uuid } })
+        if (!userincident) {
+            return next(createNotFoundError(req.t('Userincidents.Error.NotFound'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Isactive === false) {
+            return next(createNotFoundError(req.t('Userincidents.Error.NotActive'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Isonpreview === true) {
+            return next(createNotFoundError(req.t('Userincidents.Error.OnPreview'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Isapproved === false) {
+            return next(createNotFoundError(req.t('Userincidents.Error.NotApproved'), req.t('Userincidents'), req.language))
+        }
+        if (userincident.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Userincidents.Error.Completed'), req.t('Userincidents'), req.language))
+        }
+
+        await db.userincidentModel.update({
+            Iscompleted: true,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        const user = await DoGet(config.services.Userrole, 'Users/' + userincident?.UserID || '')
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Userincidents'),
+            role: 'userincidentnotification',
+            message: {
+                tr: `${user?.Name} ${user?.Surname} Kullanıcısına Ait Olay ${username} tarafından Tamamlandı.`,
+                en: `${user?.Name} ${user?.Surname} User Incident Completed By ${username}`
+            }[req.language],
+            pushurl: '/Userincidents'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
     }
     GetUserincidents(req, res, next)
 }
@@ -199,7 +412,7 @@ async function DeleteUserincident(req, res, next) {
             Isactive: false
         }, { where: { Uuid: Uuid }, transaction: t })
 
-        const user = await DoGet(config.services.Userrole, 'Users/' + UserID)
+        const user = await DoGet(config.services.Userrole, 'Users/' + userincident?.UserID || '')
 
         await CreateNotification({
             type: types.Delete,
@@ -224,5 +437,8 @@ module.exports = {
     GetUserincident,
     AddUserincident,
     UpdateUserincident,
-    DeleteUserincident
+    DeleteUserincident,
+    SavepreviewUserincident,
+    ApproveUserincident,
+    CompleteUserincident,
 }

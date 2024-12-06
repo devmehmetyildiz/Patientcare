@@ -157,6 +157,9 @@ async function UpdatePatientvisit(req, res, next) {
 
     try {
         const patientvisit = await db.patientvisitModel.findOne({ where: { Uuid: Uuid } })
+        if (!patientvisit) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.NotFound'), req.t('Patientvisits'), req.language))
+        }
         if (patientvisit.Isactive === false) {
             return next(createNotFoundError(req.t('Patientvisits.Error.NotActive'), req.t('Patientvisits'), req.language))
         }

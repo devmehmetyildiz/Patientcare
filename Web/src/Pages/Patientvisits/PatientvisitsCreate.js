@@ -18,7 +18,7 @@ export default function PatientvisitsCreate(props) {
 
   const t = Profile?.i18n?.t
 
-  const Usersoptions = (Users?.list || []).filter(u => u.Isactive && u.Isworker).map(user => {
+  const Usersoptions = (Users?.list || []).filter(u => u.Isactive && u.Isworker && u.Isworking).map(user => {
     return { key: user.Uuid, text: `${user.Name} ${user.Surname}`, value: user.Uuid }
   })
 

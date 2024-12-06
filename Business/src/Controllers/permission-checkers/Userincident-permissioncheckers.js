@@ -17,6 +17,18 @@ async function UpdateUserincident(req, res, next) {
     PermissionHandler(req, next, 'userincidentupdate')
 }
 
+async function SavepreviewUserincident(req, res, next) {
+    PermissionHandler(req, next, 'userincidentupdate')
+}
+
+async function ApproveUserincident(req, res, next) {
+    PermissionHandler(req, next, 'userincidentupdate')
+}
+
+async function CompleteUserincident(req, res, next) {
+    PermissionHandler(req, next, 'userincidentupdate')
+}
+
 async function DeleteUserincident(req, res, next) {
     PermissionHandler(req, next, 'userincidentdelete')
 }
@@ -26,5 +38,8 @@ module.exports = {
     GetUserincident,
     AddUserincident,
     UpdateUserincident,
-    DeleteUserincident
+    DeleteUserincident,
+    SavepreviewUserincident,
+    ApproveUserincident,
+    CompleteUserincident,
 }

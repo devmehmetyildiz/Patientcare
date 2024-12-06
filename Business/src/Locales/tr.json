@@ -292,9 +292,16 @@
     "Userincidents": "Personel Olayları",
     "Userincidents.Error.NotFound": "Personel Olayı Bulunamadı",
     "Userincidents.Error.NotActive": "Personel Olayı Aktif Değil",
+    "Userincidents.Error.NotOnPreview": "Personel Olayı Taslakta Değil",
+    "Userincidents.Error.OnPreview": "Personel Olayı Taslakta",
+    "Userincidents.Error.Approved": "Personel Olayı Onaylanmış",
+    "Userincidents.Error.NotApproved": "Personel Olayı Onaylanmamış",
+    "Userincidents.Error.NotCompleted": "Personel Olayı Tamamlanmamış",
+    "Userincidents.Error.Completed": "Personel Olayı Tamamlanmış",
     "Userincidents.Error.UserincidentIDRequired": "Personel Olayı ID'si Gerekli",
     "Userincidents.Error.UnsupportedUserincidentID": "Personel Olayı ID Değeri",
     "Userincidents.Error.UserIDRequired": "Kullanıcı Gerekli",
     "Userincidents.Error.TypeRequired": "Olay Türü Gerekli",
-    "Userincidents.Error.EventRequired": "Olay Gerekli"
+    "Userincidents.Error.EventRequired": "Olay Gerekli",
+    "Userincidents.Error.OccuredtimeRequired": "Gerçekleşme Tarihi Gerekli"
 }

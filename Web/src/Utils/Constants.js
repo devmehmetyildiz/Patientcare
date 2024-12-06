@@ -30,6 +30,7 @@ export const ROUTES = {
     SURVEY: 'Surveys',
     PATIENTACTIVITY: 'Patientactivities',
     PATIENTVISIT: 'Patientvisits',
+    USERINCIDENT: 'Userincidents',
 
     COSTUMERTYPE: 'Costumertypes',
     CASE: 'Cases',
@@ -228,3 +229,7 @@ export const CAREPLANPARAMETER_TYPE_PURPOSETARGETWORKS = 7
 export const SURVEY_TYPE_PATIENT = 0
 export const SURVEY_TYPE_PATIENTCONTACT = 1
 export const SURVEY_TYPE_USER = 2
+
+export const USER_INCIDENT_TOPERSONELS = 0
+export const USER_INCIDENT_BYCONTACT = 1
+export const USER_INCIDENT_PHYSICAL = 2

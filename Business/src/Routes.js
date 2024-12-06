@@ -172,6 +172,9 @@ const Routes = [
     { method: 'get', path: '/Userincidents/:userincidentId', controller: 'Userincident', action: 'GetUserincident' },
     { method: 'get', path: '/Userincidents', controller: 'Userincident', action: 'GetUserincidents' },
     { method: 'post', path: '/Userincidents', controller: 'Userincident', action: 'AddUserincident' },
+    { method: 'put', path: '/Userincidents/Savepreview/:userincidentId', controller: 'Userincident', action: 'SavepreviewUserincident' },
+    { method: 'put', path: '/Userincidents/Approve/:userincidentId', controller: 'Userincident', action: 'ApproveUserincident' },
+    { method: 'put', path: '/Userincidents/Complete/:userincidentId', controller: 'Userincident', action: 'CompleteUserincident' },
     { method: 'put', path: '/Userincidents', controller: 'Userincident', action: 'UpdateUserincident' },
     { method: 'delete', path: '/Userincidents/:userincidentId', controller: 'Userincident', action: 'DeleteUserincident' },
 ]
