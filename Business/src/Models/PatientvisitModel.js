@@ -30,7 +30,21 @@ module.exports = sequelize.define('patientvisitModel', {
         type: Sequelize.TEXT
     },
 
+    Isonpreview: {
+        type: Sequelize.BOOLEAN
+    },
+    Isapproved: {
+        type: Sequelize.BOOLEAN
+    },
+    Iscompleted: {
+        type: Sequelize.BOOLEAN
+    },
+
     ParticipateuserID: {
+        type: Sequelize.STRING
+    },
+
+    Approveduser: {
         type: Sequelize.STRING
     },
 

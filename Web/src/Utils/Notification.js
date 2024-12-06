@@ -36,6 +36,7 @@ function Notification(notifications, removeNotification, Profile) {
                         break;
                 }
             } else {
+                console.log('notification: ', notification);
                 toast.error(<CustomToast title={"Notification Error"} message={"Notification Object Can't Read"} />, config);
             }
             removeNotification()

@@ -17,6 +17,18 @@ async function UpdatePatientvisit(req, res, next) {
     PermissionHandler(req, next, 'patientvisitupdate')
 }
 
+async function SavepreviewPatientvisit(req, res, next) {
+    PermissionHandler(req, next, 'patientvisitupdate')
+}
+
+async function ApprovePatientvisit(req, res, next) {
+    PermissionHandler(req, next, 'patientvisitupdate')
+}
+
+async function CompletePatientvisit(req, res, next) {
+    PermissionHandler(req, next, 'patientvisitupdate')
+}
+
 async function DeletePatientvisit(req, res, next) {
     PermissionHandler(req, next, 'patientvisitdelete')
 }
@@ -26,5 +38,8 @@ module.exports = {
     GetPatientvisit,
     AddPatientvisit,
     UpdatePatientvisit,
-    DeletePatientvisit
+    DeletePatientvisit,
+    SavepreviewPatientvisit,
+    ApprovePatientvisit,
+    CompletePatientvisit,
 }

@@ -163,6 +163,9 @@ const Routes = [
     { method: 'get', path: '/Patientvisits/:patientvisitId', controller: 'Patientvisit', action: 'GetPatientvisit' },
     { method: 'get', path: '/Patientvisits', controller: 'Patientvisit', action: 'GetPatientvisits' },
     { method: 'post', path: '/Patientvisits', controller: 'Patientvisit', action: 'AddPatientvisit' },
+    { method: 'put', path: '/Patientvisits/Savepreview/:patientvisitId', controller: 'Patientvisit', action: 'SavepreviewPatientvisit' },
+    { method: 'put', path: '/Patientvisits/Approve/:patientvisitId', controller: 'Patientvisit', action: 'ApprovePatientvisit' },
+    { method: 'put', path: '/Patientvisits/Complete/:patientvisitId', controller: 'Patientvisit', action: 'CompletePatientvisit' },
     { method: 'put', path: '/Patientvisits', controller: 'Patientvisit', action: 'UpdatePatientvisit' },
     { method: 'delete', path: '/Patientvisits/:patientvisitId', controller: 'Patientvisit', action: 'DeletePatientvisit' },
 

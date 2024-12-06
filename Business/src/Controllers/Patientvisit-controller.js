@@ -82,6 +82,9 @@ async function AddPatientvisit(req, res, next) {
             Uuid: visituuid,
             Createduser: username,
             Createtime: new Date(),
+            Isonpreview: true,
+            Isapproved: false,
+            Iscompleted: false,
             Isactive: true
         }, { transaction: t })
 
@@ -154,15 +157,24 @@ async function UpdatePatientvisit(req, res, next) {
 
     try {
         const patientvisit = await db.patientvisitModel.findOne({ where: { Uuid: Uuid } })
-        if (!patientvisit) {
-            return next(createNotFoundError(req.t('Patientvisits.Error.NotFound'), req.t('Patientvisits'), req.language))
-        }
         if (patientvisit.Isactive === false) {
             return next(createNotFoundError(req.t('Patientvisits.Error.NotActive'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Isonpreview === false) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.NotOnPreview'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Isapproved === true) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.Approved'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.Completed'), req.t('Patientvisits'), req.language))
         }
 
         await db.patientvisitModel.update({
             ...req.body,
+            Isonpreview: true,
+            Isapproved: false,
+            Iscompleted: false,
             Updateduser: username,
             Updatetime: new Date(),
             Isactive: true
@@ -187,6 +199,199 @@ async function UpdatePatientvisit(req, res, next) {
     } catch (err) {
         await t.rollback()
         return next(sequelizeErrorCatcher(err))
+    }
+    GetPatientvisits(req, res, next)
+}
+
+async function SavepreviewPatientvisit(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.patientvisitId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Patientvisits.Error.PatientvisitIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Patientvisits.Error.UnsupportedPatientvisitID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Patientvisits'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const patientvisit = await db.patientvisitModel.findOne({ where: { Uuid: Uuid } })
+        if (!patientvisit) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.NotFound'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Isactive === false) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.NotActive'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Isonpreview === false) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.NotOnPreview'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Isapproved === true) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.Approved'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.Completed'), req.t('Patientvisits'), req.language))
+        }
+
+        await db.patientvisitModel.update({
+            Isonpreview: false,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: patientvisit?.PatientID || '' } });
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Patientvisits'),
+            role: 'patientvisitnotification',
+            message: {
+                tr: `${patientdefine?.Firstname} ${patientdefine?.Lastname} Hastasına Ait Ziyaret ${username} tarafından Kayıt Edildi.`,
+                en: `${patientdefine?.Firstname} ${patientdefine?.Lastname} Patient Visit Saved By ${username}`
+            }[req.language],
+            pushurl: '/Patientvisits'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatientvisits(req, res, next)
+}
+
+async function ApprovePatientvisit(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.patientvisitId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Patientvisits.Error.PatientvisitIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Patientvisits.Error.UnsupportedPatientvisitID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Patientvisits'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const patientvisit = await db.patientvisitModel.findOne({ where: { Uuid: Uuid } })
+        if (!patientvisit) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.NotFound'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Isactive === false) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.NotActive'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Isonpreview === true) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.OnPreview'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Isapproved === true) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.Approved'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.Completed'), req.t('Patientvisits'), req.language))
+        }
+
+        await db.patientvisitModel.update({
+            Isapproved: true,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: patientvisit?.PatientID || '' } });
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Patientvisits'),
+            role: 'patientvisitnotification',
+            message: {
+                tr: `${patientdefine?.Firstname} ${patientdefine?.Lastname} Hastasına Ait Ziyaret ${username} tarafından Onaylandı.`,
+                en: `${patientdefine?.Firstname} ${patientdefine?.Lastname} Patient Visit Approved By ${username}`
+            }[req.language],
+            pushurl: '/Patientvisits'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPatientvisits(req, res, next)
+}
+
+async function CompletePatientvisit(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.patientvisitId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Patientvisits.Error.PatientvisitIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Patientvisits.Error.UnsupportedPatientvisitID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Patientvisits'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const patientvisit = await db.patientvisitModel.findOne({ where: { Uuid: Uuid } })
+        if (!patientvisit) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.NotFound'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Isactive === false) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.NotActive'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Isonpreview === true) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.OnPreview'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Isapproved === false) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.NotApproved'), req.t('Patientvisits'), req.language))
+        }
+        if (patientvisit.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Patientvisits.Error.Completed'), req.t('Patientvisits'), req.language))
+        }
+
+        await db.patientvisitModel.update({
+            Iscompleted: true,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: patientvisit?.PatientID || '' } });
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Patientvisits'),
+            role: 'patientvisitnotification',
+            message: {
+                tr: `${patientdefine?.Firstname} ${patientdefine?.Lastname} Hastasına Ait Ziyaret ${username} tarafından Tamamlandı.`,
+                en: `${patientdefine?.Firstname} ${patientdefine?.Lastname} Patient Visit Completed By ${username}`
+            }[req.language],
+            pushurl: '/Patientvisits'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
     }
     GetPatientvisits(req, res, next)
 }
@@ -251,5 +456,8 @@ module.exports = {
     GetPatientvisit,
     AddPatientvisit,
     UpdatePatientvisit,
+    SavepreviewPatientvisit,
+    ApprovePatientvisit,
+    CompletePatientvisit,
     DeletePatientvisit
 }
