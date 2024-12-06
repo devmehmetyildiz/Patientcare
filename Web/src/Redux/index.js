@@ -52,6 +52,7 @@ import ClaimpaymentSlice from "./ClaimpaymentSlice";
 import TrainingSlice from "./TrainingSlice";
 import PatienteventdefineSlice from "./PatienteventdefineSlice";
 import SurveySlice from "./SurveySlice";
+import PatientactivitySlice from "./PatientactivitySlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -106,7 +107,8 @@ const Slices = combineReducers({
     Claimpayments: ClaimpaymentSlice,
     Trainings: TrainingSlice,
     Patienteventdefines: PatienteventdefineSlice,
-    Surveys: SurveySlice
+    Surveys: SurveySlice,
+    Patientactivities: PatientactivitySlice
 });
 
 export default Slices;

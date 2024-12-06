@@ -53,6 +53,7 @@ import { removeTrainingnotification } from "../Redux/TrainingSlice"
 import { removePatienteventdefinenotification } from "../Redux/PatienteventdefineSlice"
 import { removeCareplanparameternotification } from "../Redux/CareplanparameterSlice"
 import { removeSurveynotification } from "../Redux/SurveySlice"
+import { removePatientactivitynotification } from "../Redux/PatientactivitySlice"
 import Notificationwrapper from './Notification'
 
 export function NotificationHandler(props) {
@@ -76,7 +77,8 @@ export function NotificationHandler(props) {
             removeSupportplannotification, removeSupportplanlistnotification, removeCareplannotification, removeProfessionnotification, removePersonelpresettingnotification,
             removeProfessionpresettingnotification, removePersonelshiftdetailnotification, removeStocktypenotification,
             removeStocktypegroupnotification, removePurchaseordernotification, removeClaimpaymentparameternotification, removeClaimpaymentnotification,
-            removeTrainingnotification, removePatienteventdefinenotification, removeCareplanparameternotification, removeSurveynotification
+            removeTrainingnotification, removePatienteventdefinenotification, removeCareplanparameternotification, removeSurveynotification,
+            removePatientactivitynotification
         } = props
 
         const {
@@ -91,7 +93,7 @@ export function NotificationHandler(props) {
             Supportplanlists, Supportplans, Careplans,
             Personelshiftdetails, Personelpresettings, Professionpresettings, Personelshifts, Stocktypes,
             Stocktypegroups, Purchaseorders, Claimpaymentparameters, Claimpayments, Trainings,
-            Patienteventdefines, Careplanparameters, Surveys
+            Patienteventdefines, Careplanparameters, Surveys, Patientactivities
         } = props.states
 
         Notification(Warehouses.notifications, removeWarehousenotification)
@@ -147,6 +149,7 @@ export function NotificationHandler(props) {
         Notification(Patienteventdefines.notifications, removePatienteventdefinenotification)
         Notification(Careplanparameters.notifications, removeCareplanparameternotification)
         Notification(Surveys.notifications, removeSurveynotification)
+        Notification(Patientactivities.notifications, removePatientactivitynotification)
     })
 
     return null
@@ -172,7 +175,7 @@ const mapDispatchToProps = {
     removePersonelpresettingnotification, removeProfessionpresettingnotification, removePersonelshiftdetailnotification,
     removeStocktypenotification, removeStocktypegroupnotification, removePurchaseordernotification, removeClaimpaymentparameternotification,
     removeClaimpaymentnotification, removeTrainingnotification, removePatienteventdefinenotification, removeCareplanparameternotification,
-    removeSurveynotification
+    removeSurveynotification, removePatientactivitynotification
 
 }
 

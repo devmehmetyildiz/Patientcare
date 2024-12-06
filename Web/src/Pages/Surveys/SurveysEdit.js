@@ -34,15 +34,6 @@ export default function SurveysEdit(props) {
     { key: 3, text: t('Option.Surveytypes.User'), value: SURVEY_TYPE_USER },
   ]
 
-  /*  useEffect(() => {
-     if (isSurveySuccess) {
-       setSurveydetails((data?.Surveydetails || []).map(u => {
-         return { ...u, key: Math.random() }
-       }))
-       context.setForm(PAGE_NAME, data)
-     }
-   }, [isSurveySuccess]) */
-
   const handleSubmit = (e) => {
     e.preventDefault()
     const data = context.getForm(PAGE_NAME)

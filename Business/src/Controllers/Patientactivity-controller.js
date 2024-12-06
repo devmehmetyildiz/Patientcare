@@ -57,16 +57,16 @@ async function AddPatientactivity(req, res, next) {
         validationErrors.push(req.t('Patientactivities.Error.NameRequired'))
     }
     if (!validator.isString(Starttime)) {
-        validationErrors.push(req.t('Patientactivities.Error.NameRequired'))
+        validationErrors.push(req.t('Patientactivities.Error.StarttimeRequired'))
     }
     if (!validator.isString(Endtime)) {
-        validationErrors.push(req.t('Patientactivities.Error.NameRequired'))
+        validationErrors.push(req.t('Patientactivities.Error.EndtimeRequired'))
     }
     if (!validator.isArray(Participatedpatients)) {
-        validationErrors.push(req.t('Patientactivities.Error.NameRequired'))
+        validationErrors.push(req.t('Patientactivities.Error.ParticipatedpatientsRequired'))
     }
     if (!validator.isArray(Participatedusers)) {
-        validationErrors.push(req.t('Patientactivities.Error.NameRequired'))
+        validationErrors.push(req.t('Patientactivities.Error.ParticipatedusersRequired'))
     }
 
     if (validationErrors.length > 0) {
@@ -116,7 +116,7 @@ async function AddPatientactivity(req, res, next) {
 
             const useruuid = uuid()
 
-            await db.patientactivityparticipatedpatientModel.create({
+            await db.patientactivityparticipateduserModel.create({
                 Uuid: useruuid,
                 ActivityID: activityuuid,
                 UserID: user || '',
@@ -227,7 +227,7 @@ async function UpdatePatientactivity(req, res, next) {
 
             await db.patientactivityparticipatedpatientModel.create({
                 Uuid: patientuuid,
-                ActivityID: activityuuid,
+                ActivityID: Uuid,
                 PatientID: patient || '',
                 Createduser: username,
                 Createtime: new Date(),
@@ -243,9 +243,9 @@ async function UpdatePatientactivity(req, res, next) {
 
             const useruuid = uuid()
 
-            await db.patientactivityparticipatedpatientModel.create({
+            await db.patientactivityparticipateduserModel.create({
                 Uuid: useruuid,
-                ActivityID: activityuuid,
+                ActivityID: Uuid,
                 UserID: user || '',
                 Createduser: username,
                 Createtime: new Date(),
@@ -309,7 +309,7 @@ async function SavepreviewPatientactivity(req, res, next) {
         }
 
         await db.patientactivityModel.update({
-            Isonpreview: true,
+            Isonpreview: false,
             Updateduser: username,
             Updatetime: new Date(),
             Isactive: true

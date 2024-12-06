@@ -28,6 +28,7 @@ export const ROUTES = {
     PERSONELSHIFTDETAIL: 'Personelshiftdetails',
     PATIENTEVENTDEFINE: 'Patienteventdefines',
     SURVEY: 'Surveys',
+    PATIENTACTIVITY: 'Patientactivities',
 
     COSTUMERTYPE: 'Costumertypes',
     CASE: 'Cases',

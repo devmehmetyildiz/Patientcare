@@ -20,7 +20,11 @@ module.exports = sequelize.define('patientactivityModel', {
         type: Sequelize.STRING
     },
     Budget: {
-        type: Sequelize.STRING
+        type: Sequelize.FLOAT
+    },
+
+    Description: {
+        type: Sequelize.TEXT
     },
 
     Isonpreview: {
