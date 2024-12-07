@@ -231,6 +231,7 @@ const Patientfollowup = lazy(() => import('./Containers/Patientfollowup/Patientf
 const Log = lazy(() => import('./Containers/Log/Log'));
 
 const Overview = lazy(() => import('./Containers/Overview/Overview'));
+const Overviewcard = lazy(() => import('./Containers/Overviewcard/Overviewcard'));
 
 const Surveys = lazy(() => import('./Containers/Surveys/Surveys'));
 const SurveysCreate = lazy(() => import('./Containers/Surveys/SurveysCreate'));
@@ -475,6 +476,7 @@ class Routes extends Component {
       { exact: true, path: "/Userincidents/:UserincidentID/Edit", auth: true, component: UserincidentsEdit, permission: 'userincidentupdate' },
 
       { exact: true, path: "/Overview", auth: true, component: Overview, permission: 'overviewview' },
+      { exact: true, path: "/Overviewcard", auth: true, component: Overviewcard, permission: 'overviewcardview' },
 
       { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit, permission: 'basic' },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange, permission: 'basic' },

@@ -1689,6 +1689,7 @@
         "Pages.Overview.Patients.Label.Caseprefix": "Hasta Durumu :",
         "Pages.Overview.Patients.Label.Eventprefix": " Adet Hasta da ",
         "Pages.Overview.Patients.Label.Eventprefix1": " Vakası Gerçekleşti ",
+        "Pages.Overviewcard.Page.Header": "Gösterge Kartları",
         "Pages.Supportplans.Page.Header": "Destek Planları",
         "Pages.Supportplans.Page.CreateHeader": "Oluştur",
         "Pages.Supportplans.Page.EditHeader": "Güncelle",
