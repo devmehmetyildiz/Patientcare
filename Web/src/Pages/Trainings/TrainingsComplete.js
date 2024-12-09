@@ -3,7 +3,7 @@ import { Button, Modal } from 'semantic-ui-react'
 
 export default class TrainingsComplete extends Component {
   render() {
-    const { Profile, Trainings, CompleteTrainings, handleCompletemodal, handleSelectedTraining } = this.props
+    const { Profile, Trainings, CompleteTrainings, CompleteAllTrainings, handleCompletemodal, handleSelectedTraining } = this.props
 
     const t = Profile?.i18n?.t
 
@@ -37,6 +37,17 @@ export default class TrainingsComplete extends Component {
             icon='checkmark'
             onClick={() => {
               CompleteTrainings({ data: selected_record })
+              handleCompletemodal(false)
+              handleSelectedTraining({})
+            }}
+            positive
+          />
+          <Button
+            content={t('Pages.Trainings.Label.CompleteAll')}
+            labelPosition='right'
+            icon='checkmark'
+            onClick={() => {
+              CompleteAllTrainings({ data: selected_record })
               handleCompletemodal(false)
               handleSelectedTraining({})
             }}

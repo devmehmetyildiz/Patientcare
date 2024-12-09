@@ -202,6 +202,7 @@
     "Tranings.Error.TrainingIDRequired": "Eğitim ID'si Gerekli",
     "Tranings.Error.UnsupportedTrainingID": "Tanımsız Eğitim ID Değeri",
     "Tranings.Error.TypeRequired": "Tür Gerekli",
+    "Tranings.Error.TypedetailRequired": "Eğitim Kullanıcıları Türü Gerekli",
     "Tranings.Error.NameRequired": "Eğitim Adı Gerekli",
     "Tranings.Error.TrainingdateRequired": "Eğitim Tarihi Gerekli",
     "Tranings.Error.CompanynameRequired": "Firma Adı Gerekli",
@@ -209,7 +210,9 @@
     "Tranings.Error.EducatorRequired": "Eğitmen Gerekli",
     "Tranings.Error.EducatoruserIDRequired": "Eğitmen Kullanıcı Gerekli",
     "Tranings.Error.TrainingusersRequired": "Katılımcılar Gerekli",
-    "Tranings.Error.TraininguserIDRequired": "Katılımcı ID Değeri Gerekli",
+    "Tranings.Error.TraininguserIDRequired": "Katılımcı Kullanıcı Gerekli",
+    "Tranings.Error.TraininpatientIDRequired": "Katılımcı Hasta Gerekli",
+    "Tranings.Error.TrainingpatientcontactRequired": "Katılımcı Hasta Yakını Gerekli",
     "Tranings.Error.UnsupportedTraininguserID": "Tanımsız Eğitim Kullanıcısı ID Değeri",
     "Patienteventmovements": "Hasta Vaka Hareketleri",
     "Patienteventmovements.Error.NotFound": "Hasta Vaka Hareketi Bulunamadı",
@@ -303,5 +306,9 @@
     "Userincidents.Error.UserIDRequired": "Kullanıcı Gerekli",
     "Userincidents.Error.TypeRequired": "Olay Türü Gerekli",
     "Userincidents.Error.EventRequired": "Olay Gerekli",
-    "Userincidents.Error.OccuredtimeRequired": "Gerçekleşme Tarihi Gerekli"
+    "Userincidents.Error.OccuredtimeRequired": "Gerçekleşme Tarihi Gerekli",
+    "Overviewcards": "Gösterge Kartları",
+    "Overviewcards.Error.StartdateRequired": "Başlangıç Tarihi Gerekli",
+    "Overviewcards.Error.EnddateRequired": "Bitiş Tarihi Gerekli",
+    "Overviewcards.Error.TraningtypeRequired": "Eğitim Katılımcı Türü Gerekli"
 }

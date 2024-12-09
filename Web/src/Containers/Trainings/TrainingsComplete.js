@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import TrainingsComplete from '../../Pages/Trainings/TrainingsComplete'
-import { CompleteTrainings, handleCompletemodal, handleSelectedTraining } from '../../Redux/TrainingSlice'
+import { CompleteTrainings, CompleteAllTrainings, handleCompletemodal, handleSelectedTraining } from '../../Redux/TrainingSlice'
 
 const mapStateToProps = (state) => ({
     Trainings: state.Trainings,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    CompleteTrainings, handleCompletemodal, handleSelectedTraining
+    CompleteTrainings, handleCompletemodal, handleSelectedTraining, CompleteAllTrainings
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrainingsComplete)

@@ -15,6 +15,12 @@ module.exports = sequelize.define('trainingusersModel', {
     UserID: {
         type: Sequelize.STRING
     },
+    Patientcontact: {
+        type: Sequelize.STRING
+    },
+    PatientID: {
+        type: Sequelize.STRING
+    },
 
     Iscompleted: {
         type: Sequelize.BOOLEAN

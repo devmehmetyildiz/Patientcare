@@ -41,6 +41,7 @@ const Routes = [
     { method: 'post', path: '/Trainings', controller: 'Training', action: 'AddTraining' },
     { method: 'put', path: '/Trainings/CompleteTraininguser/:traininguserId', controller: 'Training', action: 'CompleteTraininguser' },
     { method: 'put', path: '/Trainings/Savepreview/:trainingId', controller: 'Training', action: 'SavepreviewTraining' },
+    { method: 'put', path: '/Trainings/CompleteAll/:trainingId', controller: 'Training', action: 'CompleteTrainingAll' },
     { method: 'put', path: '/Trainings/Complete/:trainingId', controller: 'Training', action: 'CompleteTraining' },
     { method: 'put', path: '/Trainings/Approve/:trainingId', controller: 'Training', action: 'ApproveTraining' },
     { method: 'put', path: '/Trainings', controller: 'Training', action: 'UpdateTraining' },
@@ -177,6 +178,10 @@ const Routes = [
     { method: 'put', path: '/Userincidents/Complete/:userincidentId', controller: 'Userincident', action: 'CompleteUserincident' },
     { method: 'put', path: '/Userincidents', controller: 'Userincident', action: 'UpdateUserincident' },
     { method: 'delete', path: '/Userincidents/:userincidentId', controller: 'Userincident', action: 'DeleteUserincident' },
+
+    { method: 'get', path: '/Overviewcards/GetTrainingCount', controller: 'Overviewcard', action: 'GetTrainingCount' },
+    { method: 'get', path: '/Overviewcards/GetPatientvisitCount', controller: 'Overviewcard', action: 'GetPatientvisitCount' },
+    { method: 'get', path: '/Overviewcards/GetUserincidentCount', controller: 'Overviewcard', action: 'GetUserincidentCount' },
 ]
 
 module.exports = Routes

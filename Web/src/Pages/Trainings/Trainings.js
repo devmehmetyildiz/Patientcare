@@ -6,7 +6,7 @@ import { Contentwrapper, DataTable, Headerwrapper, LoadingPage, MobileTable, NoD
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import validator from '../../Utils/Validator'
 import { Formatfulldate } from '../../Utils/Formatdate'
-import { TRAINING_TYPE_COMPANY, TRAINING_TYPE_ORGANIZATION } from '../../Utils/Constants'
+import { TRAINING_TYPE_COMPANY, TRAINING_TYPE_ORGANIZATION, TRAINING_TYPEDETAIL_PATIENT, TRAINING_TYPEDETAIL_PATIENTCONTACT, TRAINING_TYPEDETAIL_USER } from '../../Utils/Constants'
 import TrainingsSavepreview from '../../Containers/Trainings/TrainingsSavepreview'
 import TrainingsApprove from '../../Containers/Trainings/TrainingsApprove'
 import TrainingsComplete from '../../Containers/Trainings/TrainingsComplete'
@@ -38,6 +38,7 @@ export default class Trainings extends Component {
             { Header: t('Common.Column.Id'), accessor: 'Id' },
             { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
             { Header: t('Pages.Trainings.Column.Name'), accessor: 'Name' },
+            { Header: t('Pages.Trainings.Column.Typedetail'), accessor: row => this.typedetailCellhandler(row?.Typedetail), },
             { Header: t('Pages.Trainings.Column.Trainingdate'), accessor: row => this.dateCellhandler(row?.Trainingdate), },
             { Header: t('Pages.Trainings.Column.Description'), accessor: 'Description' },
             { Header: t('Pages.Trainings.Column.Place'), accessor: 'Place' },
@@ -274,6 +275,19 @@ export default class Trainings extends Component {
             return Formatfulldate(value, true)
         }
         return value
+    }
+
+    typedetailCellhandler = (value) => {
+        const { Profile } = this.props
+
+        const t = Profile?.i18n?.t
+
+        const typedetailOption = [
+            { text: t('Option.Training.TypedetailUser'), value: TRAINING_TYPEDETAIL_USER },
+            { text: t('Option.Training.TypedetailPatient'), value: TRAINING_TYPEDETAIL_PATIENT },
+            { text: t('Option.Training.TypedetailPatientcontact'), value: TRAINING_TYPEDETAIL_PATIENTCONTACT },
+        ]
+        return typedetailOption.find(u => u.value === value)?.text || t('Common.NoDataFound')
     }
 
     userCellhandler = (value) => {

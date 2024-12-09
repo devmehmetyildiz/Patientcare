@@ -10,6 +10,9 @@ module.exports = sequelize.define('trainingModel', {
     Type: {
         type: Sequelize.INTEGER
     },
+    Typedetail: {
+        type: Sequelize.INTEGER
+    },
 
     Name: {
         type: Sequelize.STRING

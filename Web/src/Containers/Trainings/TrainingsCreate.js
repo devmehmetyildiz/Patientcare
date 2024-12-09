@@ -4,9 +4,13 @@ import { AddTrainings, fillTrainingnotification } from '../../Redux/TrainingSlic
 import { GetUsers } from '../../Redux/UserSlice'
 import { GetProfessions } from '../../Redux/ProfessionSlice'
 import { GetUsagetypes } from '../../Redux/UsagetypeSlice'
+import { GetPatients } from '../../Redux/PatientSlice'
+import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
 
 const mapStateToProps = (state) => ({
     Trainings: state.Trainings,
+    Patients: state.Patients,
+    Patientdefines: state.Patientdefines,
     Users: state.Users,
     Usagetypes: state.Usagetypes,
     Professions: state.Professions,
@@ -14,7 +18,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    AddTrainings, fillTrainingnotification, GetUsers, GetProfessions, GetUsagetypes
+    AddTrainings, fillTrainingnotification, GetUsers, GetProfessions, GetUsagetypes,
+    GetPatients, GetPatientdefines
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrainingsCreate)

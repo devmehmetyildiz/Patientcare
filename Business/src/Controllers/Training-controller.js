@@ -9,6 +9,10 @@ const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
 
+const TRAINING_TYPEDETAIL_USER = 0
+const TRAINING_TYPEDETAIL_PATIENT = 1
+const TRAINING_TYPEDETAIL_PATIENTCONTACT = 2
+
 async function GetTrainings(req, res, next) {
     try {
         let data = null
@@ -61,17 +65,21 @@ async function AddTraining(req, res, next) {
     let validationErrors = []
     const {
         Type,
+        Typedetail,
         Name,
         Trainingdate,
         Companyname,
         Duration,
         Educator,
         EducatoruserID,
-        Trainingusers
+        Trainingusers,
     } = req.body
 
     if (!validator.isNumber(Type)) {
         validationErrors.push(req.t('Tranings.Error.TypeRequired'))
+    }
+    if (!validator.isNumber(Typedetail)) {
+        validationErrors.push(req.t('Tranings.Error.TypedetailRequired'))
     }
     if (!validator.isString(Name)) {
         validationErrors.push(req.t('Tranings.Error.NameRequired'))
@@ -95,8 +103,22 @@ async function AddTraining(req, res, next) {
         validationErrors.push(req.t('Tranings.Error.TrainingusersRequired'))
     } else {
         for (const user of Trainingusers) {
-            if (!validator.isUUID(user)) {
-                validationErrors.push(req.t('Tranings.Error.TraininguserIDRequired'))
+            switch (Typedetail) {
+                case TRAINING_TYPEDETAIL_USER:
+                    if (!validator.isUUID(user)) {
+                        validationErrors.push(req.t('Tranings.Error.TraininguserIDRequired'))
+                    }
+                    break;
+                case TRAINING_TYPEDETAIL_PATIENT:
+                    if (!validator.isUUID(user)) {
+                        validationErrors.push(req.t('Tranings.Error.TraininpatientIDRequired'))
+                    }
+                    break;
+                case TRAINING_TYPEDETAIL_PATIENTCONTACT:
+                    if (!validator.isString(user)) {
+                        validationErrors.push(req.t('Tranings.Error.TrainingpatientcontactRequired'))
+                    }
+                    break;
             }
         }
     }
@@ -123,14 +145,26 @@ async function AddTraining(req, res, next) {
         }, { transaction: t })
 
         for (const user of Trainingusers) {
+            let userValue = {}
+            switch (Typedetail) {
+                case TRAINING_TYPEDETAIL_USER:
+                    userValue.UserID = user
+                    break;
+                case TRAINING_TYPEDETAIL_PATIENT:
+                    userValue.PatientID = user
+                    break;
+                case TRAINING_TYPEDETAIL_PATIENTCONTACT:
+                    userValue.Patientcontact = user
+                    break;
+            }
             await db.trainingusersModel.create({
                 Uuid: uuid(),
                 TrainingID: traininguuid,
-                UserID: user,
                 Iscompleted: false,
                 Createduser: username,
                 Createtime: new Date(),
-                Isactive: true
+                Isactive: true,
+                ...userValue
             }, { transaction: t })
         }
 
@@ -160,6 +194,7 @@ async function UpdateTraining(req, res, next) {
     const {
         Uuid,
         Type,
+        Typedetail,
         Name,
         Trainingdate,
         Companyname,
@@ -177,6 +212,9 @@ async function UpdateTraining(req, res, next) {
     }
     if (!validator.isNumber(Type)) {
         validationErrors.push(req.t('Tranings.Error.TypeRequired'))
+    }
+    if (!validator.isNumber(Typedetail)) {
+        validationErrors.push(req.t('Tranings.Error.TypedetailRequired'))
     }
     if (!validator.isString(Name)) {
         validationErrors.push(req.t('Tranings.Error.NameRequired'))
@@ -200,8 +238,22 @@ async function UpdateTraining(req, res, next) {
         validationErrors.push(req.t('Tranings.Error.TrainingusersRequired'))
     } else {
         for (const user of Trainingusers) {
-            if (!validator.isUUID(user)) {
-                validationErrors.push(req.t('Tranings.Error.TraininguserIDRequired'))
+            switch (Typedetail) {
+                case TRAINING_TYPEDETAIL_USER:
+                    if (!validator.isUUID(user)) {
+                        validationErrors.push(req.t('Tranings.Error.TraininguserIDRequired'))
+                    }
+                    break;
+                case TRAINING_TYPEDETAIL_PATIENT:
+                    if (!validator.isUUID(user)) {
+                        validationErrors.push(req.t('Tranings.Error.TraininguserIDRequired'))
+                    }
+                    break;
+                case TRAINING_TYPEDETAIL_PATIENTCONTACT:
+                    if (!validator.isString(user)) {
+                        validationErrors.push(req.t('Tranings.Error.TraininguserIDRequired'))
+                    }
+                    break;
             }
         }
     }
@@ -231,14 +283,26 @@ async function UpdateTraining(req, res, next) {
         await db.trainingusersModel.destroy({ where: { TrainingID: Uuid }, transaction: t });
 
         for (const user of Trainingusers) {
+            let userValue = {}
+            switch (Typedetail) {
+                case TRAINING_TYPEDETAIL_USER:
+                    userValue.UserID = user
+                    break;
+                case TRAINING_TYPEDETAIL_PATIENT:
+                    userValue.PatientID = user
+                    break;
+                case TRAINING_TYPEDETAIL_PATIENTCONTACT:
+                    userValue.Patientcontact = user
+                    break;
+            }
             await db.trainingusersModel.create({
                 Uuid: uuid(),
                 TrainingID: Uuid,
-                UserID: user,
                 Iscompleted: false,
                 Createduser: username,
                 Createtime: new Date(),
-                Isactive: true
+                Isactive: true,
+                ...userValue
             }, { transaction: t })
         }
 
@@ -540,6 +604,68 @@ async function CompleteTraining(req, res, next) {
     GetTrainings(req, res, next)
 }
 
+async function CompleteTrainingAll(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.trainingId
+    console.log('Uuid: ', Uuid);
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Tranings.Error.TrainingIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Tranings.Error.UnsupportedTrainingID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Tranings'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const training = await db.trainingModel.findOne({ where: { Uuid: Uuid } })
+        if (!training) {
+            return next(createNotFoundError(req.t('Tranings.Error.NotFound'), req.t('Tranings'), req.language))
+        }
+        if (training.Isactive === false) {
+            return next(createNotFoundError(req.t('Tranings.Error.NotActive'), req.t('Tranings'), req.language))
+        }
+
+        await db.trainingModel.update({
+            Iscompleted: true,
+            Completeduser: username,
+            Completedtime: new Date(),
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        await db.trainingusersModel.update({
+            Iscompleted: true,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { TrainingID: Uuid }, transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Tranings'),
+            role: 'traningnotification',
+            message: {
+                tr: `${training?.Name} Eğitimi ${username} tarafından Tamamlandı.`,
+                en: `${training?.Name} Training Completed By ${username}`
+            }[req.language],
+            pushurl: '/Tranings'
+        })
+
+        await t.commit();
+    } catch (error) {
+        await t.rollback();
+        return next(sequelizeErrorCatcher(error))
+    }
+    req.Uuid = Uuid
+    GetTrainings(req, res, next)
+}
+
 module.exports = {
     GetTrainings,
     GetTraining,
@@ -549,5 +675,6 @@ module.exports = {
     SavepreviewTraining,
     ApproveTraining,
     CompleteTraining,
-    CompleteTraininguser
+    CompleteTraininguser,
+    CompleteTrainingAll
 }

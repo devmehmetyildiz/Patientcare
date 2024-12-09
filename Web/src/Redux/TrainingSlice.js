@@ -178,6 +178,28 @@ export const CompleteTrainings = createAsyncThunk(
     }
 );
 
+export const CompleteAllTrainings = createAsyncThunk(
+    'Trainings/CompleteAllTrainings',
+    async ({ data, history, redirectUrl }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.TRAINING}/CompleteAll/${data?.Uuid}`);
+            dispatch(fillTrainingnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Trainings.Messages.Complete'),
+            }));
+            history && history.push(redirectUrl ? redirectUrl : '/Trainings');
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillTrainingnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const DeleteTrainings = createAsyncThunk(
     'Trainings/DeleteTrainings',
     async (data, { dispatch, getState }) => {
@@ -318,6 +340,17 @@ export const TrainingsSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(CompleteTrainings.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(CompleteAllTrainings.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(CompleteAllTrainings.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(CompleteAllTrainings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
