@@ -103,6 +103,28 @@ export const EditUsers = createAsyncThunk(
     }
 );
 
+export const RemoveUsers = createAsyncThunk(
+    'Users/RemoveUsers',
+    async ({ data, onSuccess }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Userrole, `${ROUTES.USER}/RemoveUsers`, data);
+            dispatch(fillUsernotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Users.Messages.Remove'),
+            }));
+            onSuccess && onSuccess()
+            return response?.data?.list || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillUsernotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const DeleteUsers = createAsyncThunk(
     'Users/DeleteUsers',
     async (data, { dispatch, getState }) => {
@@ -320,6 +342,17 @@ export const UsersSlice = createSlice({
                 state.list = action.payload;
             })
             .addCase(DeleteUsers.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(RemoveUsers.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(RemoveUsers.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(RemoveUsers.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             });

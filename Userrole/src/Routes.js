@@ -4,6 +4,7 @@ const Routes = [
   { method: 'post', path: '/Users/GetUsersforshift', controller: 'User', action: 'GetUsersforshift' },
   { method: 'post', path: '/Users/Register', controller: 'User', action: 'Register' },
   { method: 'post', path: '/Users', controller: 'User', action: 'AddUser' },
+  { method: 'put', path: '/Users/RemoveUsers', controller: 'User', action: 'RemoveUsers' },
   { method: 'put', path: '/Users/UpdateUsercase', controller: 'User', action: 'UpdateUsercase' },
   { method: 'put', path: '/Users/UpdateUsermovement', controller: 'User', action: 'UpdateUsermovement' },
   { method: 'put', path: '/Users', controller: 'User', action: 'UpdateUser' },

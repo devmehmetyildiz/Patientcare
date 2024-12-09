@@ -666,6 +666,74 @@ async function GetUsersforshift(req, res, next) {
     }
 }
 
+async function RemoveUsers(req, res, next) {
+
+    let validationErrors = []
+    const {
+        Uuid,
+        Workendtime,
+        Leftinfo
+    } = req.body
+
+    if (!validator.isISODate(Workendtime)) {
+        validationErrors.push(req.t('Users.Error.WorkendtimeRequired'))
+    }
+    if (!Uuid) {
+        validationErrors.push(req.t('Users.Error.UserIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Users.Error.UnsupportedUserID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Users'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+
+        const user = await db.userModel.findOne({ where: { Uuid: Uuid } })
+        if (!user) {
+            return next(createNotFoundError(req.t('Users.Error.NotFound'), req.t('Users'), req.language))
+        }
+        if (!user.Isactive) {
+            return next(createNotFoundError(req.t('Users.Error.NotActive'), req.t('Users'), req.language))
+        }
+        if (user.Isleft) {
+            return next(createNotFoundError(req.t('Users.Error.Alreadyleft'), req.t('Users'), req.language))
+        }
+        if (!user.Isworker) {
+            return next(createNotFoundError(req.t('Users.Error.Isnotworker'), req.t('Users'), req.language))
+        }
+
+        await db.userModel.update({
+            Isworking: false,
+            Leftinfo: Leftinfo,
+            Workendtime: Workendtime,
+            Updateduser: username,
+            Updatetime: new Date(),
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        await t.commit()
+
+        await CreateNotification({
+            type: notificationTypes.Update,
+            service: req.t('Users'),
+            role: 'usernotification',
+            message: {
+                tr: `${user?.Username} Kullanıcısı ${username} Tarafından İşten Ayrıldı Olarak Güncellendi.`,
+                en: `${user?.Username} User Left  By ${username}`
+            }[req.language],
+            pushurl: '/Users'
+        })
+    } catch (error) {
+        await t.rollback()
+        next(sequelizeErrorCatcher(error))
+    }
+    GetUsers(req, res, next)
+}
+
 function GetUserByEmail(next, Email) {
     return new Promise((resolve) => {
         db.userModel.findOne({ where: { Email: Email, Isactive: true } })
@@ -712,5 +780,6 @@ module.exports = {
     GetUsersforshift,
     UpdateUsercase,
     UpdateUsermovement,
-    DeleteUsermovement
+    DeleteUsermovement,
+    RemoveUsers
 }

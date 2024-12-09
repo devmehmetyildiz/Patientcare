@@ -1,14 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn, Tab, Loader } from 'semantic-ui-react'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
 import UsersDelete from '../../Containers/Users/UsersDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import Formatdate from '../../Utils/Formatdate'
+import UsersLeft from '../../Containers/Users/UsersLeft'
 
 export default function Users(props) {
 
   const { GetUsers, GetRoles, GetCases, GetProfessions, Users, Profile, handleDeletemodal, handleSelectedUser, Cases, Professions } = props
+
+  const [record, setRecord] = useState(null)
+  const [isLeftModalOpen, setIsLeftModalOpen] = useState(false)
 
   const t = Profile?.i18n?.t
   const { isLoading } = Users
@@ -28,11 +32,16 @@ export default function Users(props) {
       delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
         handleSelectedUser(item)
         handleDeletemodal(true)
+      }} />,
+      remove: <Icon link size='large' color='red' name='recycle' onClick={() => {
+        setRecord(item)
+        setIsLeftModalOpen(true)
       }} />
     }
   })
 
-  const workerList = list.filter(u => u.Isworker)
+  const workerList = list.filter(u => u.Isworker && u.Isworking)
+  const leftList = list.filter(u => u.Isworker && !u.Isworking)
   const appList = list.filter(u => !u.Isworker)
 
   return (
@@ -69,7 +78,18 @@ export default function Users(props) {
                       Profile={Profile}
                       Cases={Cases}
                       Professions={Professions}
-                      list={workerList}
+                      list={workerList.filter(u => u.Isworking)}
+                    />
+                  }
+                },
+                {
+                  menuItem: `${t('Pages.Users.Page.Tab.LeftWorketlist')} (${leftList.length})`,
+                  pane: {
+                    key: 'workerleft',
+                    content: <UsersWorkerleftList
+                      Profile={Profile}
+                      Professions={Professions}
+                      list={leftList}
                     />
                   }
                 },
@@ -89,6 +109,12 @@ export default function Users(props) {
           </Contentwrapper>
         </Pagewrapper>
         <UsersDelete />
+        <UsersLeft
+          record={record}
+          setRecord={setRecord}
+          open={isLeftModalOpen}
+          setOpen={setIsLeftModalOpen}
+        />
       </React.Fragment>
   )
 }
@@ -149,9 +175,81 @@ function UsersWorkerList({ Profile, list, Cases, Professions }) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser', },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime', },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime', },
+    { Header: t('Common.Column.remove'), accessor: 'remove', disableProps: true },
     { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
     { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
     { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true }
+  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+
+  return (
+    <>
+      <Headerwrapper>
+        <Grid columns='2' >
+          <GridColumn width={8} />
+          <Settings
+            Profile={Profile}
+            Columns={Columns}
+            list={list}
+            initialConfig={initialConfig}
+            metaKey={metaKey}
+            Showcolumnchooser
+            Showexcelexport
+          />
+        </Grid>
+      </Headerwrapper>
+      {list.length > 0 ?
+        <div className='w-full mx-auto '>
+          {Profile.Ismobile ?
+            <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+            <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
+      }
+    </>
+  )
+}
+
+function UsersWorkerleftList({ Profile, list,  Professions }) {
+
+  const colProps = {
+    sortable: true,
+    canGroupBy: true,
+    canFilter: true
+  }
+
+  const metaKey = "user"
+  let initialConfig = GetInitialconfig(Profile, metaKey)
+  const t = Profile?.i18n?.t || null
+
+  const professionCellhandler = (value) => {
+    if (Professions.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      return `${(Professions.list || []).find(u => u.Uuid === value)?.Name || ''}`
+    }
+  }
+
+  const dateCellhandler = (value) => {
+    if (value) {
+      return Formatdate(value, true)
+    }
+    return null
+  }
+
+  const Columns = [
+    { Header: t('Common.Column.Id'), accessor: 'Id', },
+    { Header: t('Common.Column.Uuid'), accessor: 'Uuid', },
+    { Header: t('Pages.Users.Columns.Username'), accessor: 'Username', Title: true },
+    { Header: t('Pages.Users.Columns.Email'), accessor: 'Email', Subheader: true, Subtitle: true },
+    { Header: t('Pages.Users.Columns.Name'), accessor: 'Name', },
+    { Header: t('Pages.Users.Columns.Surname'), accessor: 'Surname', },
+    { Header: t('Pages.Users.Columns.Workstarttime'), accessor: row => dateCellhandler(row?.Workstarttime), Subtitle: true },
+    { Header: t('Pages.Users.Columns.Workendtime'), accessor: row => dateCellhandler(row?.Workendtime), Subtitle: true },
+    { Header: t('Pages.Users.Columns.Profession'), accessor: row => professionCellhandler(row?.ProfessionID), Subtitle: true },
+    { Header: t('Pages.Users.Columns.Leftinfo'), accessor: 'Leftinfo', },
+    { Header: t('Common.Column.Createduser'), accessor: 'Createduser', },
+    { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser', },
+    { Header: t('Common.Column.Createtime'), accessor: 'Createtime', },
+    { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime', },
   ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
   return (

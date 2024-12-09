@@ -44,6 +44,10 @@ module.exports = sequelize.define('userModel', {
     Workendtime: {
         type: Sequelize.DATE
     },
+    
+    Leftinfo:{
+        type: Sequelize.TEXT
+    },
 
     CaseID: {
         type: Sequelize.STRING
