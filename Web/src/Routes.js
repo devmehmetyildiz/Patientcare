@@ -237,6 +237,10 @@ const Surveys = lazy(() => import('./Containers/Surveys/Surveys'));
 const SurveysCreate = lazy(() => import('./Containers/Surveys/SurveysCreate'));
 const SurveysEdit = lazy(() => import('./Containers/Surveys/SurveysEdit'));
 
+const Patienteventmovements = lazy(() => import('./Containers/Patienteventmovements/Patienteventmovements'));
+const PatienteventmovementsCreate = lazy(() => import('./Containers/Patienteventmovements/PatienteventmovementsCreate'));
+const PatienteventmovementsEdit = lazy(() => import('./Containers/Patienteventmovements/PatienteventmovementsEdit'));
+
 const Home = lazy(() => import('./Pages/Home'));
 const Notfoundpage = lazy(() => import('./Components/Notfoundpage'));
 
@@ -474,6 +478,10 @@ class Routes extends Component {
       { exact: true, path: "/Userincidents", auth: true, component: Userincidents, permission: 'userincidentview' },
       { exact: true, path: "/Userincidents/Create", auth: true, component: UserincidentsCreate, permission: 'userincidentadd' },
       { exact: true, path: "/Userincidents/:UserincidentID/Edit", auth: true, component: UserincidentsEdit, permission: 'userincidentupdate' },
+
+      { exact: true, path: "/Patienteventmovements", auth: true, component: Patienteventmovements, permission: 'patienteventmovementview' },
+      { exact: true, path: "/Patienteventmovements/Create", auth: true, component: PatienteventmovementsCreate, permission: 'patienteventmovementadd' },
+      { exact: true, path: "/Patienteventmovements/:PatienteventmovementID/Edit", auth: true, component: PatienteventmovementsEdit, permission: 'patienteventmovementupdate' },
 
       { exact: true, path: "/Overview", auth: true, component: Overview, permission: 'overviewview' },
       { exact: true, path: "/Overviewcard", auth: true, component: Overviewcard, permission: 'overviewcardview' },

@@ -46,7 +46,7 @@ async function AddPatienteventmovement(req, res, next) {
         EventID,
         UserID,
         Occureddate,
-        Solutiontime,
+        Solutionsecond,
     } = req.body
 
     if (!validator.isNumber(Type)) {
@@ -64,7 +64,7 @@ async function AddPatienteventmovement(req, res, next) {
     if (!validator.isISODate(Occureddate)) {
         validationErrors.push(req.t('Patienteventmovements.Error.OccureddateRequired'))
     }
-    if (!validator.isString(Solutiontime)) {
+    if (!validator.isNumber(Solutionsecond)) {
         validationErrors.push(req.t('Patienteventmovements.Error.SolutiontimeRequired'))
     }
 
@@ -117,7 +117,7 @@ async function UpdatePatienteventmovement(req, res, next) {
         EventID,
         UserID,
         Occureddate,
-        Solutiontime,
+        Solutionsecond,
         Uuid
     } = req.body
 
@@ -137,7 +137,7 @@ async function UpdatePatienteventmovement(req, res, next) {
     if (!validator.isISODate(Occureddate)) {
         validationErrors.push(req.t('Patienteventmovements.Error.OccureddateRequired'))
     }
-    if (!validator.isString(Solutiontime)) {
+    if (!validator.isNumber(Solutionsecond)) {
         validationErrors.push(req.t('Patienteventmovements.Error.SolutiontimeRequired'))
     }
 
@@ -169,6 +169,9 @@ async function UpdatePatienteventmovement(req, res, next) {
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: PatientID } });
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID } });
 
         await CreateNotification({
             type: types.Update,
@@ -221,6 +224,9 @@ async function DeletePatienteventmovement(req, res, next) {
             Deletetime: new Date(),
             Isactive: false
         }, { where: { Uuid: Uuid }, transaction: t })
+
+        const patient = await db.patientModel.findOne({ where: { Uuid: patienteventmovement?.PatientID || '' } });
+        const patientdefine = await db.patientdefineModel.findOne({ where: { Uuid: patient?.PatientdefineID || '' } });
 
         await CreateNotification({
             type: types.Delete,

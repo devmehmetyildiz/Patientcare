@@ -215,10 +215,70 @@ async function GetPatientvisitCount(req, res, next) {
     }
 }
 
+async function GetUserLeftCount(req, res, next) {
+    try {
+        let validationErrors = []
+        const {
+            Startdate,
+            Enddate,
+        } = req.body
+
+        if (!validator.isISODate(Startdate)) {
+            validationErrors.push(req.t('Overviewcards.Error.StartdateRequired'))
+        }
+        if (!validator.isISODate(Enddate)) {
+            validationErrors.push(req.t('Overviewcards.Error.EnddateRequired'))
+        }
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Overviewcards'), req.language))
+        }
+
+        const Users = await DoGet(config.services.Userrole, 'Users')
+
+        const users = (Users?.list || []).filter(user =>
+            user.Isworker && !user.Isworking && user.Isactive &&
+            new Date(user.Workendtime).getTime() <= new Date(Enddate).getTime() &&
+            new Date(user.Workendtime).getTime() >= new Date(Startdate).getTime()
+        )
+
+        let resArr = []
+
+        for (const user of users) {
+            const rawEnddate = new Date(user?.Workendtime)
+            rawEnddate.setDate(1)
+            const workEndDate = rawEnddate.toLocaleDateString('tr')
+
+            const isArrayHaveDate = resArr.some(item => item.key === workEndDate)
+
+            if (isArrayHaveDate) {
+                const old = resArr.find(item => item.key === workEndDate)
+                resArr = [
+                    ...resArr.filter(u => u.key !== workEndDate),
+                    {
+                        key: workEndDate,
+                        value: 1 + old?.value || 0
+                    }
+                ]
+            } else {
+                resArr.push({
+                    key: workEndDate,
+                    value: 1
+                })
+            }
+        }
+
+        res.json(resArr)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
 
 
 module.exports = {
     GetTrainingCount,
     GetPatientvisitCount,
-    GetUserincidentCount
+    GetUserincidentCount,
+    GetUserLeftCount
 }

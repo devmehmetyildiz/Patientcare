@@ -25,8 +25,8 @@ module.exports = sequelize.define('patienteventmovementModel', {
     Relatedpersons: {
         type: Sequelize.STRING
     },
-    Solutiontime: {
-        type: Sequelize.STRING
+    Solutionsecond: {
+        type: Sequelize.INTEGER
     },
     Eventdetail: {
         type: Sequelize.TEXT

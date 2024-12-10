@@ -27,6 +27,7 @@ export const ROUTES = {
     PERSONELSHIFT: 'Personelshifts',
     PERSONELSHIFTDETAIL: 'Personelshiftdetails',
     PATIENTEVENTDEFINE: 'Patienteventdefines',
+    PATIENTEVENTMOVEMENT: 'Patienteventmovements',
     SURVEY: 'Surveys',
     PATIENTACTIVITY: 'Patientactivities',
     PATIENTVISIT: 'Patientvisits',
@@ -237,3 +238,6 @@ export const USER_INCIDENT_PHYSICAL = 2
 export const TRAINING_TYPEDETAIL_USER = 0
 export const TRAINING_TYPEDETAIL_PATIENT = 1
 export const TRAINING_TYPEDETAIL_PATIENTCONTACT = 2
+
+export const PATIENTEVENT_MOVEMENT_TYPE_INDOOR = 0
+export const PATIENTEVENT_MOVEMENT_TYPE_OUTDOOR = 1

@@ -43,7 +43,7 @@ export default function SurveysFill(props) {
                         const contactName1 = `${contactname1Base} (${patientdefine?.Firstname} ${patientdefine?.Lastname})`
                         const contactName2 = `${contactname2Base} (${patientdefine?.Firstname} ${patientdefine?.Lastname})`
 
-                        if (contactname1Base && (contactname1Base || '').trim().length > 0) {
+                        if (contactname1Base && (contactname1Base || '').trim().length > 0 && !surveyResults.includes(contactName1)) {
                             data.push({
                                 key: `${patientdefine?.Uuid}-1`,
                                 text: contactName1,
@@ -51,7 +51,7 @@ export default function SurveysFill(props) {
                             })
                         }
 
-                        if (contactname2Base && (contactname2Base || '').trim().length > 0) {
+                        if (contactname2Base && (contactname2Base || '').trim().length > 0 && !surveyResults.includes(contactName2)) {
                             data.push({
                                 key: `${patientdefine?.Uuid}-1`,
                                 text: contactName2,
@@ -62,7 +62,7 @@ export default function SurveysFill(props) {
                 break;
             case SURVEY_TYPE_USER:
                 data = (Users.list || [])
-                    .filter(u => u.Isactive && u.Isalive && !u.Isleft && !u.Ispreregistration)
+                    .filter(u => u.Isactive && u.Isworker && u.Isworking)
                     .filter(u => !surveyResults.includes(u.Uuid || ''))
                     .map(user => {
                         return { key: user.Uuid, text: `${user?.Name} ${user?.Surname}`, value: user.Uuid }

@@ -73,7 +73,7 @@ export default function Surveys(props) {
                     case SURVEY_TYPE_PATIENT:
                         return patientCellhandler(row?.UserID)
                     case SURVEY_TYPE_PATIENTCONTACT:
-                        return patientCellhandler(row?.UserID)
+                        return row.User
                     case SURVEY_TYPE_USER:
                         return userCellhandler(row?.UserID)
                     default:

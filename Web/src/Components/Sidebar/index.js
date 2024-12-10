@@ -208,6 +208,7 @@ export const getSidebarroutes = (Profile) => {
                 { id: 4, subtitle: t('Pages.Patientcashmovements.Page.Header'), url: "/Patientcashmovements", permission: checkAuth('patientcashmovementview') },
                 { id: 5, subtitle: t('Pages.Patientactivities.Page.Header'), url: "/Patientactivities", permission: checkAuth('patientactivityview') },
                 { id: 6, subtitle: t('Pages.Patientvisits.Page.Header'), url: "/Patientvisits", permission: checkAuth('patientvisitview') },
+                { id: 6, subtitle: t('Pages.Patienteventmovements.Page.Header'), url: "/Patienteventmovements", permission: checkAuth('patienteventmovementview') },
                 { id: 7, subtitle: t('Pages.Careplans.Page.Header'), url: "/Careplans", permission: checkAuth('careplanview') },
             ]
         },
