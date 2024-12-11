@@ -274,11 +274,171 @@ async function GetUserLeftCount(req, res, next) {
     }
 }
 
+async function GetPatientEnterCount(req, res, next) {
+    try {
+        let validationErrors = []
+        const {
+            Startdate,
+            Enddate,
+        } = req.body
+
+        if (!validator.isISODate(Startdate)) {
+            validationErrors.push(req.t('Overviewcards.Error.StartdateRequired'))
+        }
+        if (!validator.isISODate(Enddate)) {
+            validationErrors.push(req.t('Overviewcards.Error.EnddateRequired'))
+        }
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Overviewcards'), req.language))
+        }
+
+
+        const patients = await db.patientModel.findAll({
+            where: {
+                Approvaldate: {
+                    [Sequelize.Op.between]: [Startdate, Enddate],
+                },
+                Ischecked: true,
+                Isapproved: true,
+                Ispreregistration: false,
+                Isactive: true,
+                Isleft: false,
+                Isalive: true
+            },
+        });
+
+        let resArr = []
+
+        for (const patient of patients) {
+            const rawApprovaldate = new Date(patient?.Approvaldate)
+            rawApprovaldate.setDate(1)
+            const approvalDate = rawApprovaldate.toLocaleDateString('tr')
+
+            const isArrayHaveDate = resArr.some(item => item.key === approvalDate)
+
+            if (isArrayHaveDate) {
+                const old = resArr.find(item => item.key === approvalDate)
+                resArr = [
+                    ...resArr.filter(u => u.key !== approvalDate),
+                    {
+                        key: approvalDate,
+                        value: 1 + old?.value || 0
+                    }
+                ]
+            } else {
+                resArr.push({
+                    key: approvalDate,
+                    value: 1
+                })
+            }
+        }
+        res.json(resArr)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function GetRequiredFileCountForPatients(req, res, next) {
+    try {
+        let validationErrors = []
+        const {
+            Startdate,
+            Enddate,
+        } = req.body
+
+        if (!validator.isISODate(Startdate)) {
+            validationErrors.push(req.t('Overviewcards.Error.StartdateRequired'))
+        }
+        if (!validator.isISODate(Enddate)) {
+            validationErrors.push(req.t('Overviewcards.Error.EnddateRequired'))
+        }
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Overviewcards'), req.language))
+        }
+
+        function generateMonthArray(startDate, endDate) {
+            const start = new Date(startDate);
+            start.setDate(1)
+            const end = new Date(endDate);
+            end.setDate(1)
+            const months = [];
+
+            while (start <= end) {
+                const month = start.toLocaleDateString('tr')
+                months.push(month);
+                start.setMonth(start.getMonth() + 1);
+            }
+
+            return months;
+        }
+
+        const monthArray = generateMonthArray(Startdate, Enddate);
+
+        let resArr = []
+
+        for (const month of monthArray) {
+
+            const startOfMonth = new Date(month)
+            startOfMonth.setDate(1)
+            const endtOfMonth = new Date(month)
+            endtOfMonth.setDate(0)
+            endtOfMonth.setMonth(endtOfMonth.getMonth() + 1)
+
+            const patients = await db.patientModel.count({
+                where: {
+                    Approvaldate: {
+                        [Sequelize.Op.lte]: endtOfMonth,
+                    },
+                    [Sequelize.Op.or]: [
+                        { Isleft: true, Leavedate: { [Sequelize.Op.gt]: endtOfMonth } }, // Left after the month
+                        { Isleft: false, Leavedate: null } // Hasn't left
+                    ],
+                    [Sequelize.Op.or]: [
+                        { Isalive: false, Deathdate: { [Sequelize.Op.gt]: endtOfMonth } }, // Died after the month
+                        { Isalive: true, Deathdate: null } // Is still alive
+                    ],
+                    Ischecked: true,
+                    Isapproved: true,
+                    Ispreregistration: false,
+                    Isactive: true,
+                }
+            });
+
+            const targetDate = startOfMonth.toLocaleDateString('tr')
+
+            const isArrayHaveDate = resArr.some(item => item.key === targetDate)
+
+            if (isArrayHaveDate) {
+                const old = resArr.find(item => item.key === targetDate)
+                resArr = [
+                    ...resArr.filter(u => u.key !== targetDate),
+                    {
+                        key: targetDate,
+                        value: patients + old?.value || 0
+                    }
+                ]
+            } else {
+                resArr.push({
+                    key: targetDate,
+                    value: patients
+                })
+            }
+        }
+        res.json(resArr)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
 
 
 module.exports = {
     GetTrainingCount,
     GetPatientvisitCount,
     GetUserincidentCount,
-    GetUserLeftCount
+    GetUserLeftCount,
+    GetPatientEnterCount,
+    GetRequiredFileCountForPatients
 }

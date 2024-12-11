@@ -16,9 +16,19 @@ async function GetUserLeftCount(req, res, next) {
     PermissionHandler(req, next, 'overviewcardscreen')
 }
 
+async function GetPatientEnterCount(req, res, next) {
+    PermissionHandler(req, next, 'overviewcardscreen')
+}
+
+async function GetRequiredFileCountForPatients(req, res, next) {
+    PermissionHandler(req, next, 'overviewcardscreen')
+}
+
 module.exports = {
     GetTrainingCount,
     GetPatientvisitCount,
     GetUserincidentCount,
-    GetUserLeftCount
+    GetUserLeftCount,
+    GetPatientEnterCount,
+    GetRequiredFileCountForPatients
 }
