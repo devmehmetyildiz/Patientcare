@@ -185,6 +185,7 @@ const Routes = [
     { method: 'get', path: '/Overviewcards/GetUserLeftCount', controller: 'Overviewcard', action: 'GetUserLeftCount' },
     { method: 'get', path: '/Overviewcards/GetRequiredFileCountForPatients', controller: 'Overviewcard', action: 'GetRequiredFileCountForPatients' },
     { method: 'get', path: '/Overviewcards/GetPatientEnterCount', controller: 'Overviewcard', action: 'GetPatientEnterCount' },
+    { method: 'get', path: '/Overviewcards/GetStayedPatientCount', controller: 'Overviewcard', action: 'GetStayedPatientCount' },
 ]
 
 module.exports = Routes

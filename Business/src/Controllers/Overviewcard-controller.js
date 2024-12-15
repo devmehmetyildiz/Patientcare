@@ -303,8 +303,6 @@ async function GetPatientEnterCount(req, res, next) {
                 Isapproved: true,
                 Ispreregistration: false,
                 Isactive: true,
-                Isleft: false,
-                Isalive: true
             },
         });
 
@@ -330,6 +328,113 @@ async function GetPatientEnterCount(req, res, next) {
                 resArr.push({
                     key: approvalDate,
                     value: 1
+                })
+            }
+        }
+        res.json(resArr)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function GetStayedPatientCount(req, res, next) {
+    try {
+        let validationErrors = []
+        const {
+            Startdate,
+            Enddate,
+        } = req.body
+
+        if (!validator.isISODate(Startdate)) {
+            validationErrors.push(req.t('Overviewcards.Error.StartdateRequired'))
+        }
+        if (!validator.isISODate(Enddate)) {
+            validationErrors.push(req.t('Overviewcards.Error.EnddateRequired'))
+        }
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Overviewcards'), req.language))
+        }
+
+        function generateMonthArray(startDate, endDate) {
+            const start = new Date(startDate);
+            start.setDate(1)
+            const end = new Date(endDate);
+            end.setDate(1)
+            const months = [];
+
+            while (start <= end) {
+                const month = start.toDateString()
+                months.push(month);
+                start.setMonth(start.getMonth() + 1);
+            }
+
+            return months;
+        }
+
+        const monthArray = generateMonthArray(Startdate, Enddate);
+
+        let resArr = []
+
+        for (const month of monthArray) {
+
+            const startOfMonth = new Date(month)
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0); 
+            const endtOfMonth = new Date(month)
+            endtOfMonth.setMonth(endtOfMonth.getMonth() + 1);
+            endtOfMonth.setDate(0);
+            endtOfMonth.setHours(23, 59, 59, 999); 
+
+            const patients = await db.patientModel.count({
+                where: {
+                    Approvaldate: {
+                        [Sequelize.Op.lt]: endtOfMonth,
+                    },
+                    [Sequelize.Op.or]: [
+                        {
+                            Isleft: false,
+                            Isalive: true,
+                        },
+                        {
+                            Isalive: true,
+                            Isleft: true,
+                            Leavedate: {
+                                [Sequelize.Op.gt]: startOfMonth,
+                            },
+                        },
+                        {
+                            Isleft: false,
+                            Isalive: false,
+                            Deathdate: {
+                                [Sequelize.Op.gt]: startOfMonth,
+                            },
+                        },
+                    ],
+                    Ischecked: true,
+                    Isapproved: true,
+                    Ispreregistration: false,
+                    Isactive: true,
+                },
+            });
+
+            const targetDate = startOfMonth.toLocaleDateString('tr')
+
+            const isArrayHaveDate = resArr.some(item => item.key === targetDate)
+
+            if (isArrayHaveDate) {
+                const old = resArr.find(item => item.key === targetDate)
+                resArr = [
+                    ...resArr.filter(u => u.key !== targetDate),
+                    {
+                        key: targetDate,
+                        value: patients + old?.value || 0
+                    }
+                ]
+            } else {
+                resArr.push({
+                    key: targetDate,
+                    value: patients
                 })
             }
         }
@@ -440,5 +545,6 @@ module.exports = {
     GetUserincidentCount,
     GetUserLeftCount,
     GetPatientEnterCount,
-    GetRequiredFileCountForPatients
+    GetRequiredFileCountForPatients,
+    GetStayedPatientCount
 }
