@@ -74,6 +74,8 @@
     "Patients.Error.PatientdefineRequired": "Hasta Tanımı Gerekli",
     "Patients.Error.DepartmentIDRequired": "Departman Gerekli",
     "Patients.Error.CaseIDRequired": "Durum Gerekli",
+    "Patients.Error.LeavedateRequired": "Ayrılma Tarihi Gerekli",
+    "Patients.Error.DeathdateRequired": "Vefat Tarihi Gerekli",
     "Patients.Error.ApprovaldateRequired": "Kuruma Giriş Tarihi Gerekli",
     "Patients.Error.HappensdataRequired": "Olur Tarihi Gerekli",
     "Patients.Error.StockdefineIDRequired": "Stok Tanımı Gerekli",

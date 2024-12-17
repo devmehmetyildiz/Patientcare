@@ -185,6 +185,50 @@ const version1_1_0_7 = {
 
 const version1_1_0_8 = {
     version: "1.1.0.8",
+    bugs: [
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Kurum Hasta Genel Görünümde Yer Alan Aylık Kurum Kapasite Değişim Grafiği Düzeltildi.",
+                "Kurum Hasta Genel Görünümde Yer Alan Aylık Aylık Kurum Hareketleri Düzeltildi.",
+            ],
+        },
+    ],
+    changes: [
+        {
+            title: "Hastalar", commits: [
+                "Hasta Vakaları Daha Detaylı Hale Getirildi, Vaka Türü Olaya Dahil Kişiler vb. Parametreler Eklendi.",
+            ],
+        },
+        {
+            title: "Ayarlar", commits: [
+                "Kullanım Türlerine Hastalar için Zorunlumu, Personeller için Zorunlumu Durumları Eklendi.",
+            ],
+        },
+    ],
+    features: [
+        {
+            title: "Hastalar", commits: [
+                "Hasta Vakaları Ekranı Eklendi, Vakalar Hem Hasta Detayından Hemde Bu Ekrandan Takip Edilebilecek.",
+                "Hasta Etkinlikleri Ekranı Eklendi, Hastaların Yaptıkları Etkinlikler Bu Ekrandan Takip Edilecek.",
+                "Hasta Ziyaretleri Ekranı Eklendi, Hasta Yakınlarının Etkinlikleri Takip Edilecek.",
+                "Hasta Vefat Girme ve Hasta Ayrılma Ekranlarında Tarih Girme Özelliği Eklendi.",
+            ],
+        },
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Eğitimlere Eğitim Kullanıcı Türü Eklendi. Hastalara, Hasta Yakınlarına, Personellere Ayrı Ayrı Eğitim Oluşturulabilecek.",
+                "Eğitimler Tamamlanırken, Herkes Katıldı Olarak Tamamla Butonu Eklendi.",
+                "Personel Olayları Ekranı Eklendi. Personellere Yönelik Vakalar,İstenmeyen Olaylar Bu Ekrandan Takip Edilecek.",
+                "Anketler Ekranı Eklendi. Personel, Hasta Yakını ve Hastalar İçin Anket Oluşturulabilecek.",
+                "Gösterge Kartları Eklendi.",
+            ],
+        },
+        {
+            title: "Ayarlar", commits: [
+                "Kullanııclar Ekranına İşten Ayrılma Butonu Eklendi.",
+            ],
+        },
+    ],
 }
 
 export {

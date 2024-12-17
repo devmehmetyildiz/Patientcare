@@ -1350,7 +1350,8 @@ async function PatientsRemove(req, res, next) {
     const {
         Uuid,
         CaseID,
-        Leftinfo
+        Leftinfo,
+        Leavedate
     } = req.body
 
     if (!Uuid) {
@@ -1361,6 +1362,9 @@ async function PatientsRemove(req, res, next) {
     }
     if (!validator.isUUID(CaseID)) {
         validationErrors.push(req.t('Patients.Error.CaseIDRequired'))
+    }
+    if (!validator.isISODate(Leavedate)) {
+        validationErrors.push(req.t('Patients.Error.LeavedateRequired'))
     }
 
     if (validationErrors.length > 0) {
@@ -1449,7 +1453,7 @@ async function PatientsRemove(req, res, next) {
             BedID: null,
             RoomID: null,
             FloorID: null,
-            Leavedate: new Date(),
+            Leavedate: Leavedate,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
@@ -1462,7 +1466,7 @@ async function PatientsRemove(req, res, next) {
             CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Leftinfo || '',
-            Occureddate: new Date(),
+            Occureddate: Leavedate,
             Createduser: username,
             Createtime: new Date(),
             Isactive: true
@@ -1497,7 +1501,8 @@ async function PatientsDead(req, res, next) {
     const {
         Uuid,
         CaseID,
-        Deadinfo
+        Deadinfo,
+        Deathdate
     } = req.body
 
     if (!Uuid) {
@@ -1508,6 +1513,9 @@ async function PatientsDead(req, res, next) {
     }
     if (!validator.isUUID(CaseID)) {
         validationErrors.push(req.t('Patients.Error.CaseIDRequired'))
+    }
+    if (!validator.isISODate(Deathdate)) {
+        validationErrors.push(req.t('Patients.Error.DeathdateRequired'))
     }
 
     if (validationErrors.length > 0) {
@@ -1596,7 +1604,7 @@ async function PatientsDead(req, res, next) {
             RoomID: null,
             FloorID: null,
             Deadinfo: Deadinfo,
-            Deathdate: new Date(),
+            Deathdate: Deathdate,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
@@ -1608,7 +1616,7 @@ async function PatientsDead(req, res, next) {
             CaseID: CaseID,
             UserID: req?.identity?.user?.Uuid || username,
             Info: Deadinfo || '',
-            Occureddate: new Date(),
+            Occureddate: Deathdate,
             Createduser: username,
             Createtime: new Date(),
             Isactive: true

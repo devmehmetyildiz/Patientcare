@@ -38,8 +38,9 @@ export default function PatientsLeftModal(props) {
                     <Form>
                         <Form.Group widths='equal'>
                             <FormInput page={PAGE_NAME} required placeholder={t('Pages.Patients.PatientsLeftModal.Column.Case')} name="CaseID" options={Caseoptions} formtype='dropdown' />
-                            <FormInput page={PAGE_NAME} placeholder={t('Pages.Patients.PatientsLeftModal.Column.Leftinfo')} name="Leftinfo" />
+                            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Patients.PatientsLeftModal.Column.Leavedate')} name="Leavedate" type='datetime-local' />
                         </Form.Group>
+                        <FormInput page={PAGE_NAME} placeholder={t('Pages.Patients.PatientsLeftModal.Column.Leftinfo')} name="Leftinfo" />
                     </Form>
                 </Contentwrapper>
                 : null}
@@ -62,6 +63,9 @@ export default function PatientsLeftModal(props) {
                     if (!validator.isUUID(data.CaseID)) {
                         errors.push({ type: 'Error', code: t('Pages.Patients.PatientsLeftModal.Page.Header'), description: t('Pages.Patients.PatientsLeftModal.Messages.CaseRequired') })
                     }
+                    if (!validator.isISODate(data.Leavedate)) {
+                        errors.push({ type: 'Error', code: t('Pages.Patients.PatientsLeftModal.Page.Header'), description: t('Pages.Patients.PatientsLeftModal.Messages.LeavedateRequired') })
+                    }
 
                     if (errors.length > 0) {
                         errors.forEach(error => {
@@ -71,7 +75,8 @@ export default function PatientsLeftModal(props) {
                         RemovePatients({
                             Uuid: Uuid,
                             CaseID: data.CaseID,
-                            Leftinfo: data.Leftinfo
+                            Leftinfo: data.Leftinfo,
+                            Leavedate: data.Leavedate
                         })
                         setOpen(false)
                         setRecord(null)

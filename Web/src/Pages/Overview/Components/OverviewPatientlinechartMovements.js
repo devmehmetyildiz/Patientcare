@@ -78,33 +78,33 @@ export default function OverviewPatientlinechartMovements(props) {
     let leftData = []
     let deadData = []
 
-    for (let index = 1; index <= 12; index++) {
+    for (let index = 0; index <= 11; index++) {
         const monthstart = createMonth(index)
         const monthend = createMonth(index + 1)
 
-        const monthlyenters = patients.filter(u => u.Isalive && checkDateIfItsBigger(u.Approvaldate, monthstart) && !checkDateIfItsBigger(u.Approvaldate, monthend))
+        const monthlyenters = patients.filter(u => u.Isactive && checkDateIfItsBigger(u.Approvaldate, monthstart) && !checkDateIfItsBigger(u.Approvaldate, monthend))
 
         enterData.push(
             monthlyenters.length || 0
         )
     }
 
-    for (let index = 1; index <= 12; index++) {
+    for (let index = 0; index <= 11; index++) {
         const monthstart = createMonth(index)
         const monthend = createMonth(index + 1)
 
-        const monthlydead = patients.filter(u => u.Isalive && checkDateIfItsBigger(u.Deathdate, monthstart) && !checkDateIfItsBigger(u.Deathdate, monthend))
+        const monthlydead = patients.filter(u => u.Isactive && checkDateIfItsBigger(u.Deathdate, monthstart) && !checkDateIfItsBigger(u.Deathdate, monthend))
 
         deadData.push(
             monthlydead.length || 0
         )
     }
 
-    for (let index = 1; index <= 12; index++) {
+    for (let index = 0; index <= 11; index++) {
         const monthstart = createMonth(index)
         const monthend = createMonth(index + 1)
 
-        const monthlyleft = patients.filter(u => u.Isalive && checkDateIfItsBigger(u.Leavedate, monthstart) && !checkDateIfItsBigger(u.Leavedate, monthend))
+        const monthlyleft = patients.filter(u => u.Isactive && checkDateIfItsBigger(u.Leavedate, monthstart) && !checkDateIfItsBigger(u.Leavedate, monthend))
 
         leftData.push(
             monthlyleft.length || 0
