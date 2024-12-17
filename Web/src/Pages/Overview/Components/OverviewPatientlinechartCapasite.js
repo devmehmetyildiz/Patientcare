@@ -63,8 +63,19 @@ export default function OverviewPatientlinechartCapasite(props) {
         const monthend = createMonth(index)
 
         const count = patients
-            .filter(u => !(checkDateIfItsBigger(u.Leavedate, monthstart) && !checkDateIfItsBigger(u.Leavedate, monthend)))
-            .filter(u => !(checkDateIfItsBigger(u.Deathdate, monthstart) && !checkDateIfItsBigger(u.Deathdate, monthend)))
+            .filter(u => new Date(u.Approvaldate).getTime() < monthend.getTime() && u.Ischecked && u.Isapproved && !u.Ispreregistration && u.Isactive)
+            .filter(u => {
+                if (!u.Isleft && u.Isalive) {
+                    return true
+                }
+                if (u.Isalive && u.Isleft && new Date(u.Leavedate).getTime() > monthstart.getTime()) {
+                    return true
+                }
+                if (!u.Isleft && !u.Isalive && new Date(u.Deathdate).getTime() > monthstart.getTime()) {
+                    return true
+                }
+            })
+
 
         patientcount.push(
             count.length || 0

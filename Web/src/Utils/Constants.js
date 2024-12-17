@@ -32,6 +32,7 @@ export const ROUTES = {
     PATIENTACTIVITY: 'Patientactivities',
     PATIENTVISIT: 'Patientvisits',
     USERINCIDENT: 'Userincidents',
+    OVERVIEWCARD: 'Overviewcards',
 
     COSTUMERTYPE: 'Costumertypes',
     CASE: 'Cases',

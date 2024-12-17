@@ -179,13 +179,15 @@ const Routes = [
     { method: 'put', path: '/Userincidents', controller: 'Userincident', action: 'UpdateUserincident' },
     { method: 'delete', path: '/Userincidents/:userincidentId', controller: 'Userincident', action: 'DeleteUserincident' },
 
-    { method: 'get', path: '/Overviewcards/GetTrainingCount', controller: 'Overviewcard', action: 'GetTrainingCount' },
+    { method: 'get', path: '/Overviewcards/GetTrainingCountPersonel', controller: 'Overviewcard', action: 'GetTrainingCountPersonel' },
+    { method: 'get', path: '/Overviewcards/GetTrainingCountPatientcontact', controller: 'Overviewcard', action: 'GetTrainingCountPatientcontact' },
     { method: 'get', path: '/Overviewcards/GetPatientvisitCount', controller: 'Overviewcard', action: 'GetPatientvisitCount' },
     { method: 'get', path: '/Overviewcards/GetUserincidentCount', controller: 'Overviewcard', action: 'GetUserincidentCount' },
     { method: 'get', path: '/Overviewcards/GetUserLeftCount', controller: 'Overviewcard', action: 'GetUserLeftCount' },
-    { method: 'get', path: '/Overviewcards/GetRequiredFileCountForPatients', controller: 'Overviewcard', action: 'GetRequiredFileCountForPatients' },
+    { method: 'get', path: '/Overviewcards/GetCompletedFileCountForPatients', controller: 'Overviewcard', action: 'GetCompletedFileCountForPatients' },
     { method: 'get', path: '/Overviewcards/GetPatientEnterCount', controller: 'Overviewcard', action: 'GetPatientEnterCount' },
     { method: 'get', path: '/Overviewcards/GetStayedPatientCount', controller: 'Overviewcard', action: 'GetStayedPatientCount' },
+    { method: 'get', path: '/Overviewcards/GetTrainingCountPatientcontact', controller: 'Overviewcard', action: 'GetTrainingCountPatientcontact' },
 ]
 
 module.exports = Routes

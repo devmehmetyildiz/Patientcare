@@ -55,7 +55,10 @@ export default class UsagetypesCreate extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Name')} name="Name" additionalicon={additionalicon} />
                 {this.state.isHavevalue && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Value')} name="Value" />}
               </Form.Group>
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Isrequired')} name="Isrequired" formtype={'checkbox'} />
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Isrequiredpatientusagetype')} name="Isrequiredpatientusagetype" formtype={'checkbox'} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Isrequiredpersonelusagetype')} name="Isrequiredpersonelusagetype" formtype={'checkbox'} />
+              </Form.Group>
             </Form>
           </Contentwrapper>
           <Footerwrapper>

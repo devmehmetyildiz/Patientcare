@@ -1,6 +1,6 @@
 const PermissionHandler = require("../../Utilities/PermissionHandler")
 
-async function GetTrainingCount(req, res, next) {
+async function GetTrainingCountPersonel(req, res, next) {
     PermissionHandler(req, next, 'overviewcardscreen')
 }
 
@@ -20,7 +20,7 @@ async function GetPatientEnterCount(req, res, next) {
     PermissionHandler(req, next, 'overviewcardscreen')
 }
 
-async function GetRequiredFileCountForPatients(req, res, next) {
+async function GetCompletedFileCountForPatients(req, res, next) {
     PermissionHandler(req, next, 'overviewcardscreen')
 }
 
@@ -28,12 +28,17 @@ async function GetStayedPatientCount(req, res, next) {
     PermissionHandler(req, next, 'overviewcardscreen')
 }
 
+async function GetTrainingCountPatientcontact(req, res, next) {
+    PermissionHandler(req, next, 'GetTrainingCountPatientcontact')
+}
+
 module.exports = {
-    GetTrainingCount,
+    GetTrainingCountPersonel,
     GetPatientvisitCount,
     GetUserincidentCount,
     GetUserLeftCount,
     GetPatientEnterCount,
-    GetRequiredFileCountForPatients,
-    GetStayedPatientCount
+    GetCompletedFileCountForPatients,
+    GetStayedPatientCount,
+    GetTrainingCountPatientcontact
 }

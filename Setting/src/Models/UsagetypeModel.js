@@ -13,7 +13,10 @@ module.exports = sequelize.define('usagetypeModel', {
     Value: {
         type: Sequelize.STRING
     },
-    Isrequired: {
+    Isrequiredpatientusagetype: {
+        type: Sequelize.BOOLEAN
+    },
+    Isrequiredpersonelusagetype: {
         type: Sequelize.BOOLEAN
     },
     Createduser: {

@@ -13,14 +13,13 @@ const { patientmovementtypes } = require('../Constants/Patientmovementypes')
 const DoDelete = require("../Utilities/DoDelete")
 const DoPut = require("../Utilities/DoPut")
 
-async function GetTrainingCount(req, res, next) {
+async function GetTrainingCountPersonel(req, res, next) {
     try {
         let validationErrors = []
         const {
             Startdate,
             Enddate,
-            Traningtype
-        } = req.body
+        } = req.query
 
         if (!validator.isISODate(Startdate)) {
             validationErrors.push(req.t('Overviewcards.Error.StartdateRequired'))
@@ -28,61 +27,228 @@ async function GetTrainingCount(req, res, next) {
         if (!validator.isISODate(Enddate)) {
             validationErrors.push(req.t('Overviewcards.Error.EnddateRequired'))
         }
-        if (!validator.isNumber(Traningtype)) {
-            validationErrors.push(req.t('Overviewcards.Error.TraningtypeRequired'))
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Overviewcards'), req.language))
+        }
+
+        const users = await DoGet(config.services.Userrole, 'Users')
+
+        const monthArray = generateMonthArray(Startdate, Enddate);
+
+        let resArr = []
+
+        for (const month of monthArray) {
+
+            let totalUserCount = 0
+            let totalParticipatedUserCount = 0
+            let totalTraningCount = 0
+
+            const startOfMonth = new Date(month)
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0);
+            const endtOfMonth = new Date(month)
+            endtOfMonth.setMonth(endtOfMonth.getMonth() + 1);
+            endtOfMonth.setDate(0);
+            endtOfMonth.setHours(23, 59, 59, 999);
+
+            const trainings = await db.trainingModel.findAll({
+                where: {
+                    Trainingdate: {
+                        [Sequelize.Op.between]: [startOfMonth, endtOfMonth],
+                    },
+                    Typedetail: 0,
+                    Iscompleted: true,
+                    Isapproved: true,
+                    Isonpreview: false,
+                    Isactive: true,
+                },
+            });
+
+            const workingUsersBetweenMonth = (users.list || []).filter(u =>
+                u.Isactive &&
+                u.Isworker &&
+                (
+                    (u.Isworking && CheckDate(u.Workstarttime, endtOfMonth) < 0) ||
+                    (!u.Isworking && CheckDate(u.Workstarttime, startOfMonth) < 0 && CheckDate(u.Workendtime, startOfMonth) > 0)
+                )
+            )
+
+            totalTraningCount = trainings.length
+            totalUserCount = workingUsersBetweenMonth.length
+            for (const training of trainings) {
+                const trainingUsercount = await db.trainingusersModel.count({
+                    where: {
+                        TrainingID: training?.Uuid,
+                        Iscompleted: true,
+                        Isactive: true
+                    },
+                });
+                totalParticipatedUserCount += trainingUsercount
+            }
+
+            const targetDate = startOfMonth.toDateString()
+
+            const isArrayHaveDate = resArr.some(item => item.key === targetDate)
+
+            if (isArrayHaveDate) {
+                const old = resArr.find(item => item.key === targetDate)
+                resArr = [
+                    ...resArr.filter(u => u.key !== targetDate),
+                    {
+                        key: targetDate,
+                        totalTraningCount: totalTraningCount + old?.totalTraningCount || 0,
+                        totalParticipatedUserCount: totalParticipatedUserCount + old?.totalParticipatedUserCount || 0,
+                        totalUserCount: totalUserCount + old?.totalUserCount || 0,
+                    }
+                ]
+            } else {
+                resArr.push({
+                    key: targetDate,
+                    totalTraningCount: totalTraningCount,
+                    totalParticipatedUserCount: totalParticipatedUserCount,
+                    totalUserCount: totalUserCount,
+                })
+            }
+        }
+        res.json(resArr)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function GetTrainingCountPatientcontact(req, res, next) {
+    try {
+        let validationErrors = []
+        const {
+            Startdate,
+            Enddate,
+        } = req.query
+
+        if (!validator.isISODate(Startdate)) {
+            validationErrors.push(req.t('Overviewcards.Error.StartdateRequired'))
+        }
+        if (!validator.isISODate(Enddate)) {
+            validationErrors.push(req.t('Overviewcards.Error.EnddateRequired'))
         }
 
         if (validationErrors.length > 0) {
             return next(createValidationError(validationErrors, req.t('Overviewcards'), req.language))
         }
 
-        const trainings = await db.trainingModel.findAll({
-            where: {
-                Trainingdate: {
-                    [Sequelize.Op.between]: [Startdate, Enddate],
-                },
-                Typedetail: Traningtype,
-                Iscompleted: true,
-                Isapproved: true,
-                Isonpreview: false,
-                Isactive: true,
-            },
-        });
+
+        const monthArray = generateMonthArray(Startdate, Enddate);
 
         let resArr = []
 
-        for (const training of trainings) {
-            const rawTrainingDate = new Date(training?.Trainingdate)
-            rawTrainingDate.setDate(1)
-            const trainingDate = rawTrainingDate.toLocaleDateString('tr')
+        for (const month of monthArray) {
 
-            const isArrayHaveDate = resArr.some(item => item.key === trainingDate)
-            const trainingUsercount = await db.trainingusersModel.count({
+            let totalParticipatedPatientContactCount = 0
+            let totalTraningCount = 0
+            let totalPatientcontactCount = 0
+
+            const startOfMonth = new Date(month)
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0);
+            const endtOfMonth = new Date(month)
+            endtOfMonth.setMonth(endtOfMonth.getMonth() + 1);
+            endtOfMonth.setDate(0);
+            endtOfMonth.setHours(23, 59, 59, 999);
+
+            const trainings = await db.trainingModel.findAll({
                 where: {
-                    TrainingID: training?.Uuid,
+                    Trainingdate: {
+                        [Sequelize.Op.between]: [startOfMonth, endtOfMonth],
+                    },
+                    Typedetail: 2,
                     Iscompleted: true,
-                    Isactive: true
+                    Isapproved: true,
+                    Isonpreview: false,
+                    Isactive: true,
                 },
             });
-            if (trainingUsercount > 0) {
-                if (isArrayHaveDate) {
-                    const old = resArr.find(item => item.key === trainingDate)
-                    resArr = [
-                        ...resArr.filter(u => u.key !== trainingDate),
+
+            totalTraningCount = trainings.length
+
+            for (const training of trainings) {
+                const trainingUsercount = await db.trainingusersModel.count({
+                    where: {
+                        TrainingID: training?.Uuid,
+                        Iscompleted: true,
+                        Isactive: true
+                    },
+                });
+                totalParticipatedPatientContactCount += trainingUsercount
+            }
+
+            const patients = await db.patientModel.findAll({
+                where: {
+                    Approvaldate: {
+                        [Sequelize.Op.lt]: endtOfMonth,
+                    },
+                    [Sequelize.Op.or]: [
                         {
-                            key: trainingDate,
-                            value: trainingUsercount + old?.value || 0
-                        }
-                    ]
-                } else {
-                    resArr.push({
-                        key: trainingDate,
-                        value: trainingUsercount
-                    })
+                            Isleft: false,
+                            Isalive: true,
+                        },
+                        {
+                            Isalive: true,
+                            Isleft: true,
+                            Leavedate: {
+                                [Sequelize.Op.gt]: startOfMonth,
+                            },
+                        },
+                        {
+                            Isleft: false,
+                            Isalive: false,
+                            Deathdate: {
+                                [Sequelize.Op.gt]: startOfMonth,
+                            },
+                        },
+                    ],
+                    Ischecked: true,
+                    Isapproved: true,
+                    Ispreregistration: false,
+                    Isactive: true,
+                },
+            });
+
+            for (const patient of patients) {
+                const patientdefine = await db.patientdefineModel.findOne({ where: { Isactive: true, Uuid: patient?.PatientdefineID || '' } })
+                const firstcontact = (validator.isString(patientdefine.Contactname1) && ((patientdefine.Contactname1 || '').length > 0)) ? patientdefine.Contactname1 : null
+                const secondcontact = (validator.isString(patientdefine.Contactname2) && ((patientdefine.Contactname2 || '').length > 0)) ? patientdefine.Contactname2 : null
+                if (firstcontact) {
+                    totalPatientcontactCount++;
+                }
+                if (secondcontact) {
+                    totalPatientcontactCount++;
                 }
             }
-        }
 
+            const targetDate = startOfMonth.toDateString()
+
+            const isArrayHaveDate = resArr.some(item => item.key === targetDate)
+
+            if (isArrayHaveDate) {
+                const old = resArr.find(item => item.key === targetDate)
+                resArr = [
+                    ...resArr.filter(u => u.key !== targetDate),
+                    {
+                        key: targetDate,
+                        totalTraningCount: totalTraningCount + old?.totalTraningCount || 0,
+                        totalParticipatedPatientContactCount: totalParticipatedPatientContactCount + old?.totalParticipatedPatientContactCount || 0,
+                        totalPatientcontactCount: totalPatientcontactCount + old?.totalPatientcontactCount || 0,
+                    }
+                ]
+            } else {
+                resArr.push({
+                    key: targetDate,
+                    totalTraningCount: totalTraningCount,
+                    totalParticipatedPatientContactCount: totalParticipatedPatientContactCount,
+                    totalPatientcontactCount: totalPatientcontactCount
+                })
+            }
+        }
         res.json(resArr)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -95,7 +261,7 @@ async function GetUserincidentCount(req, res, next) {
         const {
             Startdate,
             Enddate,
-        } = req.body
+        } = req.query
 
         if (!validator.isISODate(Startdate)) {
             validationErrors.push(req.t('Overviewcards.Error.StartdateRequired'))
@@ -108,43 +274,58 @@ async function GetUserincidentCount(req, res, next) {
             return next(createValidationError(validationErrors, req.t('Overviewcards'), req.language))
         }
 
-        const incidents = await db.userincidentModel.findAll({
-            where: {
-                Occuredtime: {
-                    [Sequelize.Op.between]: [Startdate, Enddate],
-                },
-                Iscompleted: true,
-                Isapproved: true,
-                Isonpreview: false,
-                Isactive: true,
-            },
-        });
+        const monthArray = generateMonthArray(Startdate, Enddate);
 
         let resArr = []
 
-        for (const incident of incidents) {
-            const rawOccuredtime = new Date(incident?.Occuredtime)
-            rawOccuredtime.setDate(1)
-            const incidentOccuredtime = rawOccuredtime.toLocaleDateString('tr')
+        for (const month of monthArray) {
 
-            const isArrayHaveDate = resArr.some(item => item.key === incidentOccuredtime)
+            let totalIncidentCount = 0
+
+            const startOfMonth = new Date(month)
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0);
+            const endtOfMonth = new Date(month)
+            endtOfMonth.setMonth(endtOfMonth.getMonth() + 1);
+            endtOfMonth.setDate(0);
+            endtOfMonth.setHours(23, 59, 59, 999);
+
+            const incidents = await db.userincidentModel.count({
+                where: {
+                    Occuredtime: {
+                        [Sequelize.Op.between]: [startOfMonth, endtOfMonth],
+                    },
+                    Iscompleted: true,
+                    Isapproved: true,
+                    Isonpreview: false,
+                    Isactive: true,
+                },
+            });
+
+            totalIncidentCount = incidents
+
+            const targetDate = startOfMonth.toDateString()
+
+            const isArrayHaveDate = resArr.some(item => item.key === targetDate)
 
             if (isArrayHaveDate) {
-                const old = resArr.find(item => item.key === incidentOccuredtime)
+                const old = resArr.find(item => item.key === targetDate)
                 resArr = [
-                    ...resArr.filter(u => u.key !== incidentOccuredtime),
+                    ...resArr.filter(u => u.key !== targetDate),
                     {
-                        key: incidentOccuredtime,
-                        value: 1 + old?.value || 0
+                        key: targetDate,
+                        totalIncidentCount: totalIncidentCount + old?.totalIncidentCount || 0,
                     }
                 ]
             } else {
                 resArr.push({
-                    key: incidentOccuredtime,
-                    value: 1
+                    key: targetDate,
+                    totalIncidentCount: totalIncidentCount,
                 })
             }
         }
+
+
 
         res.json(resArr)
     } catch (error) {
@@ -158,7 +339,7 @@ async function GetPatientvisitCount(req, res, next) {
         const {
             Startdate,
             Enddate,
-        } = req.body
+        } = req.query
 
         if (!validator.isISODate(Startdate)) {
             validationErrors.push(req.t('Overviewcards.Error.StartdateRequired'))
@@ -171,44 +352,104 @@ async function GetPatientvisitCount(req, res, next) {
             return next(createValidationError(validationErrors, req.t('Overviewcards'), req.language))
         }
 
-        const visits = await db.patientvisitModel.findAll({
-            where: {
-                Starttime: {
-                    [Sequelize.Op.between]: [Startdate, Enddate],
-                },
-                Iscompleted: true,
-                Isapproved: true,
-                Isonpreview: false,
-                Isactive: true,
-            },
-        });
+        const monthArray = generateMonthArray(Startdate, Enddate);
 
         let resArr = []
 
-        for (const visit of visits) {
-            const rawStartdate = new Date(visit?.Starttime)
-            rawStartdate.setDate(1)
-            const visitStartDate = rawStartdate.toLocaleDateString('tr')
+        for (const month of monthArray) {
 
-            const isArrayHaveDate = resArr.some(item => item.key === visitStartDate)
+            let totalVisitCount = 0
+            let totalPatientContactCount = 0
+
+            const startOfMonth = new Date(month)
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0);
+            const endtOfMonth = new Date(month)
+            endtOfMonth.setMonth(endtOfMonth.getMonth() + 1);
+            endtOfMonth.setDate(0);
+            endtOfMonth.setHours(23, 59, 59, 999);
+
+
+            const visits = await db.patientvisitModel.count({
+                where: {
+                    Starttime: {
+                        [Sequelize.Op.between]: [startOfMonth, endtOfMonth],
+                    },
+                    Iscompleted: true,
+                    Isapproved: true,
+                    Isonpreview: false,
+                    Isactive: true,
+                },
+            });
+
+            totalVisitCount = visits
+
+            const patients = await db.patientModel.findAll({
+                where: {
+                    Approvaldate: {
+                        [Sequelize.Op.lt]: endtOfMonth,
+                    },
+                    [Sequelize.Op.or]: [
+                        {
+                            Isleft: false,
+                            Isalive: true,
+                        },
+                        {
+                            Isalive: true,
+                            Isleft: true,
+                            Leavedate: {
+                                [Sequelize.Op.gt]: startOfMonth,
+                            },
+                        },
+                        {
+                            Isleft: false,
+                            Isalive: false,
+                            Deathdate: {
+                                [Sequelize.Op.gt]: startOfMonth,
+                            },
+                        },
+                    ],
+                    Ischecked: true,
+                    Isapproved: true,
+                    Ispreregistration: false,
+                    Isactive: true,
+                },
+            });
+
+            for (const patient of patients) {
+                const patientdefine = await db.patientdefineModel.findOne({ where: { Isactive: true, Uuid: patient?.PatientdefineID || '' } })
+                const firstcontact = (validator.isString(patientdefine.Contactname1) && ((patientdefine.Contactname1 || '').length > 0)) ? patientdefine.Contactname1 : null
+                const secondcontact = (validator.isString(patientdefine.Contactname2) && ((patientdefine.Contactname2 || '').length > 0)) ? patientdefine.Contactname2 : null
+                if (firstcontact) {
+                    totalPatientContactCount++;
+                }
+                if (secondcontact) {
+                    totalPatientContactCount++;
+                }
+            }
+
+            const targetDate = startOfMonth.toDateString()
+
+            const isArrayHaveDate = resArr.some(item => item.key === targetDate)
 
             if (isArrayHaveDate) {
-                const old = resArr.find(item => item.key === visitStartDate)
+                const old = resArr.find(item => item.key === targetDate)
                 resArr = [
-                    ...resArr.filter(u => u.key !== visitStartDate),
+                    ...resArr.filter(u => u.key !== targetDate),
                     {
-                        key: visitStartDate,
-                        value: 1 + old?.value || 0
+                        key: targetDate,
+                        totalVisitCount: totalVisitCount + old?.totalVisitCount || 0,
+                        totalPatientContactCount: totalPatientContactCount + old?.totalPatientContactCount || 0,
                     }
                 ]
             } else {
                 resArr.push({
-                    key: visitStartDate,
-                    value: 1
+                    key: targetDate,
+                    totalVisitCount: totalVisitCount,
+                    totalPatientContactCount: totalPatientContactCount
                 })
             }
         }
-
         res.json(resArr)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -221,7 +462,7 @@ async function GetUserLeftCount(req, res, next) {
         const {
             Startdate,
             Enddate,
-        } = req.body
+        } = req.query
 
         if (!validator.isISODate(Startdate)) {
             validationErrors.push(req.t('Overviewcards.Error.StartdateRequired'))
@@ -234,36 +475,62 @@ async function GetUserLeftCount(req, res, next) {
             return next(createValidationError(validationErrors, req.t('Overviewcards'), req.language))
         }
 
-        const Users = await DoGet(config.services.Userrole, 'Users')
+        const users = await DoGet(config.services.Userrole, 'Users')
 
-        const users = (Users?.list || []).filter(user =>
-            user.Isworker && !user.Isworking && user.Isactive &&
-            new Date(user.Workendtime).getTime() <= new Date(Enddate).getTime() &&
-            new Date(user.Workendtime).getTime() >= new Date(Startdate).getTime()
-        )
+        const monthArray = generateMonthArray(Startdate, Enddate);
 
         let resArr = []
 
-        for (const user of users) {
-            const rawEnddate = new Date(user?.Workendtime)
-            rawEnddate.setDate(1)
-            const workEndDate = rawEnddate.toLocaleDateString('tr')
+        for (const month of monthArray) {
 
-            const isArrayHaveDate = resArr.some(item => item.key === workEndDate)
+            let totalLeftCount = 0
+            let totalUserCount = 0
+
+            const startOfMonth = new Date(month)
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0);
+            const endtOfMonth = new Date(month)
+            endtOfMonth.setMonth(endtOfMonth.getMonth() + 1);
+            endtOfMonth.setDate(0);
+            endtOfMonth.setHours(23, 59, 59, 999);
+
+            const leftUsers = (users?.list || []).filter(user =>
+                user.Isworker && !user.Isworking && user.Isactive &&
+                new Date(user.Workendtime).getTime() <= new Date(endtOfMonth).getTime() &&
+                new Date(user.Workendtime).getTime() >= new Date(startOfMonth).getTime()
+            )
+
+            const workingUsersBetweenMonth = (users.list || []).filter(u =>
+                u.Isactive &&
+                u.Isworker &&
+                (
+                    (u.Isworking && CheckDate(u.Workstarttime, endtOfMonth) < 0) ||
+                    (!u.Isworking && CheckDate(u.Workstarttime, startOfMonth) < 0 && CheckDate(u.Workendtime, startOfMonth) > 0)
+                )
+            )
+
+            totalLeftCount = leftUsers.length
+            totalUserCount = workingUsersBetweenMonth.length
+
+            const targetDate = startOfMonth.toDateString()
+
+            const isArrayHaveDate = resArr.some(item => item.key === targetDate)
 
             if (isArrayHaveDate) {
-                const old = resArr.find(item => item.key === workEndDate)
+                const old = resArr.find(item => item.key === targetDate)
                 resArr = [
-                    ...resArr.filter(u => u.key !== workEndDate),
+                    ...resArr.filter(u => u.key !== targetDate),
                     {
-                        key: workEndDate,
-                        value: 1 + old?.value || 0
+                        key: targetDate,
+                        totalLeftCount: totalLeftCount + old?.totalLeftCount || 0,
+                        totalUserCount: totalUserCount + old?.totalUserCount || 0,
                     }
                 ]
             } else {
                 resArr.push({
-                    key: workEndDate,
-                    value: 1
+                    key: targetDate,
+                    totalLeftCount: totalLeftCount,
+                    totalUserCount: totalUserCount
                 })
             }
         }
@@ -356,22 +623,6 @@ async function GetStayedPatientCount(req, res, next) {
             return next(createValidationError(validationErrors, req.t('Overviewcards'), req.language))
         }
 
-        function generateMonthArray(startDate, endDate) {
-            const start = new Date(startDate);
-            start.setDate(1)
-            const end = new Date(endDate);
-            end.setDate(1)
-            const months = [];
-
-            while (start <= end) {
-                const month = start.toDateString()
-                months.push(month);
-                start.setMonth(start.getMonth() + 1);
-            }
-
-            return months;
-        }
-
         const monthArray = generateMonthArray(Startdate, Enddate);
 
         let resArr = []
@@ -380,11 +631,12 @@ async function GetStayedPatientCount(req, res, next) {
 
             const startOfMonth = new Date(month)
             startOfMonth.setDate(1);
-            startOfMonth.setHours(0, 0, 0, 0); 
+            startOfMonth.setHours(0, 0, 0, 0);
             const endtOfMonth = new Date(month)
             endtOfMonth.setMonth(endtOfMonth.getMonth() + 1);
             endtOfMonth.setDate(0);
-            endtOfMonth.setHours(23, 59, 59, 999); 
+            endtOfMonth.setHours(23, 59, 59, 999);
+
 
             const patients = await db.patientModel.count({
                 where: {
@@ -444,13 +696,13 @@ async function GetStayedPatientCount(req, res, next) {
     }
 }
 
-async function GetRequiredFileCountForPatients(req, res, next) {
+async function GetCompletedFileCountForPatients(req, res, next) {
     try {
         let validationErrors = []
         const {
             Startdate,
             Enddate,
-        } = req.body
+        } = req.query
 
         if (!validator.isISODate(Startdate)) {
             validationErrors.push(req.t('Overviewcards.Error.StartdateRequired'))
@@ -463,55 +715,71 @@ async function GetRequiredFileCountForPatients(req, res, next) {
             return next(createValidationError(validationErrors, req.t('Overviewcards'), req.language))
         }
 
-        function generateMonthArray(startDate, endDate) {
-            const start = new Date(startDate);
-            start.setDate(1)
-            const end = new Date(endDate);
-            end.setDate(1)
-            const months = [];
-
-            while (start <= end) {
-                const month = start.toLocaleDateString('tr')
-                months.push(month);
-                start.setMonth(start.getMonth() + 1);
-            }
-
-            return months;
-        }
-
         const monthArray = generateMonthArray(Startdate, Enddate);
+        const usagetypes = await DoGet(config.services.Setting, 'Usagetypes')
+        const files = await DoGet(config.services.File, 'Files')
 
         let resArr = []
 
         for (const month of monthArray) {
 
             const startOfMonth = new Date(month)
-            startOfMonth.setDate(1)
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0);
             const endtOfMonth = new Date(month)
-            endtOfMonth.setDate(0)
-            endtOfMonth.setMonth(endtOfMonth.getMonth() + 1)
+            endtOfMonth.setMonth(endtOfMonth.getMonth() + 1);
+            endtOfMonth.setDate(0);
+            endtOfMonth.setHours(23, 59, 59, 999);
 
-            const patients = await db.patientModel.count({
+            const patients = await db.patientModel.findAll({
                 where: {
                     Approvaldate: {
-                        [Sequelize.Op.lte]: endtOfMonth,
+                        [Sequelize.Op.lt]: endtOfMonth,
                     },
                     [Sequelize.Op.or]: [
-                        { Isleft: true, Leavedate: { [Sequelize.Op.gt]: endtOfMonth } }, // Left after the month
-                        { Isleft: false, Leavedate: null } // Hasn't left
-                    ],
-                    [Sequelize.Op.or]: [
-                        { Isalive: false, Deathdate: { [Sequelize.Op.gt]: endtOfMonth } }, // Died after the month
-                        { Isalive: true, Deathdate: null } // Is still alive
+                        {
+                            Isleft: false,
+                            Isalive: true,
+                        },
+                        {
+                            Isalive: true,
+                            Isleft: true,
+                            Leavedate: {
+                                [Sequelize.Op.gt]: startOfMonth,
+                            },
+                        },
+                        {
+                            Isleft: false,
+                            Isalive: false,
+                            Deathdate: {
+                                [Sequelize.Op.gt]: startOfMonth,
+                            },
+                        },
                     ],
                     Ischecked: true,
                     Isapproved: true,
                     Ispreregistration: false,
                     Isactive: true,
-                }
+                },
             });
 
-            const targetDate = startOfMonth.toLocaleDateString('tr')
+            let completedFileCount = 0
+            let patientCount = 0
+
+            patients.forEach(patient => {
+                const requiredUsagetypes = (usagetypes || []).filter(u => u.Isactive && u.Isrequiredpatientusagetype)
+                const requiredUsagetypesCount = (requiredUsagetypes || []).length
+                const patientfiles = (files || []).filter(u => u.Isactive && u.ParentID === patient?.Uuid).flatMap(file => {
+                    return (file?.Usagetype || '').split(',')
+                })
+
+                const missingTypes = requiredUsagetypes.filter(requiredType => (patientfiles || []).includes(requiredType))
+                const missingTypesCount = (missingTypes || []).length
+                completedFileCount += requiredUsagetypesCount - missingTypesCount
+            });
+            patientCount = (patients || []).length
+
+            const targetDate = startOfMonth.toDateString()
 
             const isArrayHaveDate = resArr.some(item => item.key === targetDate)
 
@@ -521,13 +789,15 @@ async function GetRequiredFileCountForPatients(req, res, next) {
                     ...resArr.filter(u => u.key !== targetDate),
                     {
                         key: targetDate,
-                        value: patients + old?.value || 0
+                        completedFileCount: completedFileCount + old?.completedFileCount || 0,
+                        patientCount: patientCount + old?.patientCount || 0,
                     }
                 ]
             } else {
                 resArr.push({
                     key: targetDate,
-                    value: patients
+                    completedFileCount: completedFileCount,
+                    patientCount: patientCount,
                 })
             }
         }
@@ -537,14 +807,48 @@ async function GetRequiredFileCountForPatients(req, res, next) {
     }
 }
 
+function generateMonthArray(startDate, endDate) {
+    const start = new Date(startDate);
+    start.setDate(1)
+    const end = new Date(endDate);
+    end.setDate(1)
+    const months = [];
+
+    while (start <= end) {
+        const month = start.toDateString()
+        months.push(month);
+        start.setMonth(start.getMonth() + 1);
+    }
+
+    return months;
+}
+
+function CheckDate(targetDate, checkDate) {
+
+    const target = validator.isISODate(targetDate) ? new Date(targetDate).getTime() : null
+    const check = validator.isISODate(checkDate) ? new Date(checkDate).getTime() : null
+
+    if (!target && !check) {
+        return null
+    }
+    const diff = target - check
+    if (diff < 0) {
+        return -1
+    }
+    if (diff > 0) {
+        return 1
+    }
+    return 0
+}
 
 
 module.exports = {
-    GetTrainingCount,
+    GetTrainingCountPersonel,
     GetPatientvisitCount,
     GetUserincidentCount,
     GetUserLeftCount,
     GetPatientEnterCount,
-    GetRequiredFileCountForPatients,
-    GetStayedPatientCount
+    GetCompletedFileCountForPatients,
+    GetStayedPatientCount,
+    GetTrainingCountPatientcontact
 }

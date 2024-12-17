@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 
-function getRequest(service, url) {
+function getRequest(service, url, params) {
     return new Promise((resolve, reject) => {
         const token = localStorage.getItem('patientcare')
         const language = localStorage.getItem('Language')
@@ -11,7 +11,8 @@ function getRequest(service, url) {
                 headers: {
                     Authorization: "Bearer " + token,
                     Language: language
-                }
+                },
+                params: (params && { ...params })
             })
             .then(response => resolve(response))
             .catch(error => reject(error))

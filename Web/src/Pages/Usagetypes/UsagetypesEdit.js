@@ -33,10 +33,9 @@ export default class UsagetypesEdit extends Component {
     const { selected_record, isLoading } = Usagetypes
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
       && !isLoading && !this.state.isDatafetched) {
-      if (selected_record?.Name !== selected_record?.Value)
         this.setState({
           isDatafetched: true,
-          isHavevalue: !(selected_record?.Name !== selected_record?.Value)
+          isHavevalue: !(selected_record?.Name === selected_record?.Value)
         })
       this.context.setForm(this.PAGE_NAME, selected_record)
     }
@@ -76,7 +75,10 @@ export default class UsagetypesEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Name')} name="Name" additionalicon={additionalicon} />
                 {this.state.isHavevalue && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Value')} name="Value" />}
               </Form.Group>
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Isrequired')} name="Isrequired" formtype={'checkbox'} />
+              <Form.Group widths={'equal'}>
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Isrequiredpatientusagetype')} name="Isrequiredpatientusagetype" formtype={'checkbox'} />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Usagetypes.Column.Isrequiredpersonelusagetype')} name="Isrequiredpersonelusagetype" formtype={'checkbox'} />
+              </Form.Group>
             </Form>
           </Contentwrapper>
           <Footerwrapper>
