@@ -1,5 +1,6 @@
 const { sequelizeErrorCatcher } = require("../Utilities/Error")
 const uuid = require('uuid').v4
+const validator = require("../Utilities/Validator")
 
 async function GetLogsByQuerry(req, res, next) {
     try {
@@ -95,15 +96,35 @@ async function AddLog(req, res, next) {
 
 async function GetUsagecountbyUserMontly(req, res, next) {
     try {
+        let validationErrors = []
+        const {
+            Startdate,
+            Enddate,
+        } = req.query
+
+        if (!validator.isISODate(Startdate)) {
+            validationErrors.push(req.t('Logs.Error.StartdateRequired'))
+        }
+        if (!validator.isISODate(Enddate)) {
+            validationErrors.push(req.t('Logs.Error.EnddateRequired'))
+        }
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Logs'), req.language))
+        }
+
         const logs = await db.logModel.findAll({
             attributes: [
                 'UserID',
-                [Sequelize.fn('DATE_FORMAT', Sequelize.col('Createtime'), '%Y'), 'Year'],
-                [Sequelize.fn('DATE_FORMAT', Sequelize.col('Createtime'), '%m'), 'Month'],
                 [Sequelize.fn('COUNT', Sequelize.col('UserID')), 'UsageCount']
             ],
-            group: ['UserID', 'Year', 'Month'],
-            order: [['Year', 'ASC'], ['UserID', 'ASC']]
+            group: ['UserID'],
+            order: [['UserID', 'ASC']],
+            where: {
+                Createtime: {
+                    [Sequelize.Op.between]: [Startdate, Enddate],
+                },
+            },
         });
         res.status(200).json(logs)
     } catch (error) {
@@ -113,15 +134,36 @@ async function GetUsagecountbyUserMontly(req, res, next) {
 
 async function GetProcessCount(req, res, next) {
     try {
+        let validationErrors = []
+        const {
+            Startdate,
+            Enddate,
+        } = req.query
+
+        if (!validator.isISODate(Startdate)) {
+            validationErrors.push(req.t('Logs.Error.StartdateRequired'))
+        }
+        if (!validator.isISODate(Enddate)) {
+            validationErrors.push(req.t('Logs.Error.EnddateRequired'))
+        }
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Logs'), req.language))
+        }
+
         const logs = await db.logModel.findAll({
             attributes: [
                 'UserID',
                 'Requesttype',
-                [Sequelize.fn('DATE_FORMAT', Sequelize.col('Createtime'), '%Y-%m'), 'Month'],
                 [Sequelize.fn('COUNT', Sequelize.col('UserID')), 'Count']
             ],
-            group: ['UserID', 'Month', 'Requesttype'],
-            order: [['Month', 'ASC'], ['UserID', 'ASC']]
+            group: ['UserID', 'Requesttype'],
+            order: [['UserID', 'ASC']],
+            where: {
+                Createtime: {
+                    [Sequelize.Op.between]: [Startdate, Enddate],
+                },
+            },
         });
         res.status(200).json(logs)
     } catch (error) {
@@ -131,15 +173,36 @@ async function GetProcessCount(req, res, next) {
 
 async function GetServiceUsageCount(req, res, next) {
     try {
+        let validationErrors = []
+        const {
+            Startdate,
+            Enddate,
+        } = req.query
+
+        if (!validator.isISODate(Startdate)) {
+            validationErrors.push(req.t('Logs.Error.StartdateRequired'))
+        }
+        if (!validator.isISODate(Enddate)) {
+            validationErrors.push(req.t('Logs.Error.EnddateRequired'))
+        }
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Logs'), req.language))
+        }
+
         const logs = await db.logModel.findAll({
             attributes: [
                 'Service',
                 'Requesttype',
-                [Sequelize.fn('DATE_FORMAT', Sequelize.col('Createtime'), '%Y-%m'), 'Month'],
                 [Sequelize.fn('COUNT', Sequelize.col('Service')), 'Count']
             ],
-            group: ['Service', 'Month', 'Requesttype'],
-            order: [['Month', 'ASC'], ['Service', 'ASC']]
+            group: ['Service', 'Requesttype'],
+            order: [['Service', 'ASC']],
+            where: {
+                Createtime: {
+                    [Sequelize.Op.between]: [Startdate, Enddate],
+                },
+            },
         });
         res.status(200).json(logs)
     } catch (error) {
@@ -149,15 +212,36 @@ async function GetServiceUsageCount(req, res, next) {
 
 async function GetServiceUsageCountDaily(req, res, next) {
     try {
+        let validationErrors = []
+        const {
+            Startdate,
+            Enddate,
+        } = req.query
+
+        if (!validator.isISODate(Startdate)) {
+            validationErrors.push(req.t('Logs.Error.StartdateRequired'))
+        }
+        if (!validator.isISODate(Enddate)) {
+            validationErrors.push(req.t('Logs.Error.EnddateRequired'))
+        }
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Logs'), req.language))
+        }
+
         const logs = await db.logModel.findAll({
             attributes: [
                 'Service',
                 'Requesttype',
-                [Sequelize.fn('DATE_FORMAT', Sequelize.col('Createtime'), '%Y-%m-%d'), 'Daily'],
                 [Sequelize.fn('COUNT', Sequelize.col('Service')), 'Count']
             ],
-            group: ['Service', 'Daily', 'Requesttype'],
-            order: [['Daily', 'ASC'], ['Service', 'ASC']]
+            group: ['Service', 'Requesttype'],
+            order: [['Service', 'ASC']],
+            where: {
+                Createtime: {
+                    [Sequelize.Op.between]: [Startdate, Enddate],
+                },
+            },
         });
         res.status(200).json(logs)
     } catch (error) {

@@ -34,9 +34,9 @@ export const GetLogsByQuerry = createAsyncThunk(
 
 export const GetUsagecountbyUserMontly = createAsyncThunk(
     'ReportsSlice/GetUsagecountbyUserMontly',
-    async (_, { dispatch }) => {
+    async ({ data }, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Log, `${ROUTES.LOG}/GetUsagecountbyUserMontly`);
+            const response = await instanse.get(config.services.Log, `${ROUTES.LOG}/GetUsagecountbyUserMontly`, data);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -48,9 +48,9 @@ export const GetUsagecountbyUserMontly = createAsyncThunk(
 
 export const GetProcessCount = createAsyncThunk(
     'ReportsSlice/GetProcessCount',
-    async (_, { dispatch }) => {
+    async ({ data }, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Log, `${ROUTES.LOG}/GetProcessCount`);
+            const response = await instanse.get(config.services.Log, `${ROUTES.LOG}/GetProcessCount`, data);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -62,9 +62,9 @@ export const GetProcessCount = createAsyncThunk(
 
 export const GetServiceUsageCount = createAsyncThunk(
     'ReportsSlice/GetServiceUsageCount',
-    async (_, { dispatch }) => {
+    async ({ data }, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Log, `${ROUTES.LOG}/GetServiceUsageCount`);
+            const response = await instanse.get(config.services.Log, `${ROUTES.LOG}/GetServiceUsageCount`, data);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -76,9 +76,9 @@ export const GetServiceUsageCount = createAsyncThunk(
 
 export const GetServiceUsageCountDaily = createAsyncThunk(
     'ReportsSlice/GetServiceUsageCountDaily',
-    async (_, { dispatch }) => {
+    async ({ data }, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Log, `${ROUTES.LOG}/GetServiceUsageCountDaily`);
+            const response = await instanse.get(config.services.Log, `${ROUTES.LOG}/GetServiceUsageCountDaily`, data);
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

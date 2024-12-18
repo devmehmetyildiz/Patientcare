@@ -1,1 +1,5 @@
-{}
+{
+    "Logs": "Loglar",
+    "Logs.Error.StartdateRequired": "Başlangıç Tarihi Gerekli",
+    "Logs.Error.EnddateRequired": "Bitiş Tarihi Gerekli"
+}
