@@ -188,3 +188,15 @@ SET
     Contactname2="",
     Dateofbirth = STR_TO_DATE(CONCAT(FLOOR(1937 + (RAND() * (1950-1937 + 1))), '-', LPAD(FLOOR(1 + RAND() * 12), 2, '0'), '-', LPAD(FLOOR(1 + RAND() * 28), 2, '0')), '%Y-%m-%d') -- Random date between 1937 and 1950
 WHERE id = 1;
+
+
+
+13. mysql database export etme
+
+var apps backups databases klasörüne git 
+
+mysqldump -u root -p patientcare > patientcareexport.sql
+
+14. mysql database import etme 
+
+mysql -u root -p patientcare < patientcareexport.sql

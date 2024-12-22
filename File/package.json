@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon src/App.js",
     "build": "cpy .env eslint.config.js web.config dist && cpy 'src/**/*' dist && cp -r src/Locales dist/ && esbuild src/App.js --bundle --minify --platform=node --outfile=dist/bundle.js --external:i18next --external:i18next-http-middleware --external:i18next-fs-backend",
-   "lint": "eslint ./src --config eslint.config.js"
+    "lint": "eslint ./src --config eslint.config.js"
   },
   "author": "mehmetyildiz",
   "license": "ISC",
@@ -42,6 +42,8 @@
     "sequelize": "^6.31.1",
     "session-memory-store": "^1.0.0",
     "ssh2-sftp-client": "^11.0.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.0",
     "xpress-router": "^1.0.11"
   }

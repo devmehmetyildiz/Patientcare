@@ -37,6 +37,8 @@
     "request-promise-native": "^1.0.9",
     "sequelize": "^6.31.1",
     "session-memory-store": "^1.0.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.0",
     "xpress-router": "^1.0.11"
   }

@@ -1,49 +1,30 @@
 const express = require('express');
 const app = express();
-const config = require('./Config');
 const i18next = require('./i18n');
 const middleware = require('i18next-http-middleware');
 
 require("./Middlewares/Databaseconnector")()
   .then(() => {
-
+    const swaggerUI = require('swagger-ui-express');
+    const swaggerSpec = require('./Middlewares/SwaggerEnabler');
     const cors = require('cors');
     const bodyParser = require('body-parser')
     const session = require('express-session')
     const router = require('xpress-router')
     const routes = require('./Routes')
-    const MemoryStore = require('session-memory-store')(session)
     const errorHandlers = require('./Middlewares/Errorhandlers')
     const authorizationChecker = require('./Middlewares/Authorizationchecker');
     const reqbodyhelper = require("./Middlewares/Reqbodyhelper")
-    const crossDomainEnabler = require('./Middlewares/Crossdomainenabler');
     const languageHelper = require('./Middlewares/LanguageHelper')
     const requestloghelper = require('./Middlewares/Requestloghelper')
     const databaseconnectionchecker = require('./Middlewares/Databaseconnectionchecker')
-    const whitelist = config.session.corsdomains
-    const corsOptions = {
-      origin: function (origin, callback) {
-        if (!origin || whitelist.indexOf(origin) !== -1) {
-          callback(null, true)
-        } else {
-          callback(new Error("Not allowed by CORS"))
-        }
-      },
-      credentials: true,
-    }
-    app.use(cors(corsOptions))
+    const { crossDomainEnabler, getCorsOptions, getSessionOption, CreateApp } = require('./Middlewares/AppOptions');
+
+    app.use(cors(getCorsOptions()))
     app.use(express.static('./dist'))
     app.set('view engine', 'pug')
     app.disable('x-powered-by')
-
-    app.use(session({
-      secret: config.session.secret,
-      name: config.session.name,
-      resave: false,
-      store: new MemoryStore(),
-      saveUninitialized: false,
-    }))
-
+    app.use(session(getSessionOption(session)))
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(middleware.handle(i18next));
@@ -53,23 +34,14 @@ require("./Middlewares/Databaseconnector")()
     app.use(authorizationChecker)
     app.use(reqbodyhelper)
     app.use(requestloghelper)
+    app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/permission-checkers/`, controllerFileSuffix: '-permissioncheckers.js', logRoutesList: false })
     router(app, routes, { controllerDirectory: `${process.cwd()}/src/Controllers/`, controllerFileSuffix: '-controller.js', logRoutesList: false })
 
     errorHandlers.init(app)
 
-    if (config.env === 'development' || config.env === 'production') {
-      const http = require('http')
-      const httpServer = http.createServer(app)
-      httpServer.listen(config.env === 'development' ? config.port : process.env.PORT, () => {
-        if (config.env === 'development') {
-          console.log(`${config.session.name} service is running at http://localhost:${httpServer.address().port} for public usage`)
-        }
-        db.applog_settingModel.create({
-          Event: "App opened at: " + new Date()
-        }).catch(() => { })
-      })
-    }
+    CreateApp(app)
 
     module.exports = app
   })

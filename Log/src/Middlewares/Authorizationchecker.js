@@ -10,7 +10,7 @@ const INVALID_AUTHORIZATION_HEADER = createErrorList('FORBIDDEN', 'INVALID_AUTHO
 })
 
 const PUBLIC_URLS = [
-
+    { method: 'GET', url: 'api-docs' }
 ]
 
 async function authorizationChecker(req, res, next) {
@@ -129,8 +129,9 @@ function getBearerToken(headers) {
 }
 
 function isPublicUrlRequest(method, url) {
+    const clearedUrl = (url || '').toLocaleLowerCase().replace('/', '')
     let res = false
-    let route = PUBLIC_URLS.find(u => u.method === method.toLowerCase() && u.url === url)
+    let route = PUBLIC_URLS.find(u => u.method.toLowerCase() === method.toLowerCase() && clearedUrl.includes(u.url.toLocaleLowerCase()))
     if (route) {
         res = true
     }
