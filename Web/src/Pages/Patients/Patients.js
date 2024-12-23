@@ -16,6 +16,7 @@ import PatientsInsertstockModal from '../../Containers/Patients/PatientsInsertst
 import PatientsReducestockModal from '../../Containers/Patients/PatientsReducestockModal'
 import PatientsMakeactiveModal from '../../Containers/Patients/PatientsMakeactiveModal'
 import PatientsEntereventModal from '../../Containers/Patients/PatientsEntereventModal'
+import PatientsEnterhealthcaseModal from '../../Containers/Patients/PatientsEnterhealthcaseModal'
 
 export default function Patients(props) {
 
@@ -27,7 +28,7 @@ export default function Patients(props) {
   const Columns = [
     { Header: t('Common.Column.Id'), accessor: 'Id' },
     { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
-    { Header: t('Pages.Patients.Column.Name'), accessor: row => nameCellhandler(row),Title: true },
+    { Header: t('Pages.Patients.Column.Name'), accessor: row => nameCellhandler(row), Title: true },
     { Header: t('Pages.Patients.Column.Gender'), accessor: row => genderCellhandler(row) },
     { Header: t('Pages.Patients.Column.Approvaldate'), accessor: row => dateCellhandler(row?.Approvaldate) },
     { Header: t('Pages.Patients.Column.Leavedate'), accessor: row => dateCellhandler(row?.Leavedate), key: 'left' },
@@ -242,6 +243,7 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
 
   const [selectedRecords, setSelectedRecords] = useState([])
   const [openMulti, setOpenMulti] = useState(false)
+  const [openhealthcase, setOpenhealthcase] = useState(false)
   const [openaddmovement, setOpenaddmovement] = useState(false)
   const [openinsertstock, setOpeninsertstock] = useState(false)
   const [openreducestock, setOpenreducestock] = useState(false)
@@ -288,6 +290,17 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
       process: <Popup
         content={
           <List>
+            <List.Item>
+              <Button
+                size='small'
+                onClick={() => {
+                  setRecord(item)
+                  setOpenhealthcase(true)
+                }}
+                fluid color='instagram'>
+                <Icon name='exchange' /> {t('Pages.Patients.Column.Enterhealthcase')}
+              </Button>
+            </List.Item>
             <List.Item>
               <Button
                 size='small'
@@ -487,6 +500,13 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
         isPatientspage
         open={openaddmovement}
         setOpen={setOpenaddmovement}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PatientsEnterhealthcaseModal
+        isPatientspage
+        open={openhealthcase}
+        setOpen={setOpenhealthcase}
         record={record}
         setRecord={setRecord}
       />

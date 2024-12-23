@@ -133,6 +133,14 @@ const Patienteventdefines = lazy(() => import('./Containers/Patienteventdefines/
 const PatienteventdefinesCreate = lazy(() => import('./Containers/Patienteventdefines/PatienteventdefinesCreate'));
 const PatienteventdefinesEdit = lazy(() => import('./Containers/Patienteventdefines/PatienteventdefinesEdit'));
 
+const Patienthealthcasedefines = lazy(() => import('./Containers/Patienthealthcasedefines/Patienthealthcasedefines'));
+const PatienthealthcasedefinesCreate = lazy(() => import('./Containers/Patienthealthcasedefines/PatienthealthcasedefinesCreate'));
+const PatienthealthcasedefinesEdit = lazy(() => import('./Containers/Patienthealthcasedefines/PatienthealthcasedefinesEdit'));
+
+const Patienthealthcases = lazy(() => import('./Containers/Patienthealthcases/Patienthealthcases'));
+const PatienthealthcasesCreate = lazy(() => import('./Containers/Patienthealthcases/PatienthealthcasesCreate'));
+const PatienthealthcasesEdit = lazy(() => import('./Containers/Patienthealthcases/PatienthealthcasesEdit'));
+
 const Floors = lazy(() => import('./Containers/Floors/Floors'));
 const FloorsCreate = lazy(() => import('./Containers/Floors/FloorsCreate'));
 const FloorsEdit = lazy(() => import('./Containers/Floors/FloorsEdit'));
@@ -443,6 +451,14 @@ class Routes extends Component {
       { exact: true, path: "/Patienteventdefines", auth: true, component: Patienteventdefines, permission: 'patienteventdefineview' },
       { exact: true, path: "/Patienteventdefines/Create", auth: true, component: PatienteventdefinesCreate, permission: 'patienteventdefineadd' },
       { exact: true, path: "/Patienteventdefines/:PatienteventdefineID/Edit", auth: true, component: PatienteventdefinesEdit, permission: 'patienteventdefineupdate' },
+
+      { exact: true, path: "/Patienthealthcasedefines", auth: true, component: Patienthealthcasedefines, permission: 'patienthealthcasedefineview' },
+      { exact: true, path: "/Patienthealthcasedefines/Create", auth: true, component: PatienthealthcasedefinesCreate, permission: 'patienthealthcasedefineadd' },
+      { exact: true, path: "/Patienthealthcasedefines/:PatienthealthcasedefineID/Edit", auth: true, component: PatienthealthcasedefinesEdit, permission: 'patienthealthcasedefineupdate' },
+
+      { exact: true, path: "/Patienthealthcases", auth: true, component: Patienthealthcases, permission: 'patienthealthcaseview' },
+      { exact: true, path: "/Patienthealthcases/Create", auth: true, component: PatienthealthcasesCreate, permission: 'patienthealthcaseadd' },
+      { exact: true, path: "/Patienthealthcases/:PatienthealthcaseID/Edit", auth: true, component: PatienthealthcasesEdit, permission: 'patienthealthcaseupdate' },
 
       { exact: true, path: "/Appreports", auth: true, component: Appreports, permission: 'admin' },
       { exact: true, path: "/Logs", auth: true, component: Log, permission: 'admin' },

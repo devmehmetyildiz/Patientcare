@@ -51,6 +51,7 @@ export default function AxiosErrorHelper(error) {
             }
             return notifications
         }
+        console.log('error: ', error);
     }
 
     return null
@@ -63,7 +64,7 @@ function handle401Error(error) {
     localStorage.removeItem("patientcareRefresh")
     localStorage.removeItem("patientcarelanguage")
     if (window.location.pathname !== "/Login") {
-    const params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(window.location.search);
         const redirecturl = params.get('redirecturl');
         if (redirecturl) {
             params.set('redirecturl', window.location.pathname)

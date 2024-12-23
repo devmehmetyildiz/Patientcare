@@ -82,6 +82,18 @@ const Routes = [
     { method: 'put', path: '/Patienteventdefines', controller: 'Patienteventdefine', action: 'UpdatePatienteventdefine' },
     { method: 'delete', path: '/Patienteventdefines/:patienteventdefineId', controller: 'Patienteventdefine', action: 'DeletePatienteventdefine' },
 
+    { method: 'get', path: '/Patienthealthcasedefines/:patienthealthcasedefineId', controller: 'Patienthealthcasedefine', action: 'GetPatienthealthcasedefine' },
+    { method: 'get', path: '/Patienthealthcasedefines', controller: 'Patienthealthcasedefine', action: 'GetPatienthealthcasedefines' },
+    { method: 'post', path: '/Patienthealthcasedefines', controller: 'Patienthealthcasedefine', action: 'AddPatienthealthcasedefine' },
+    { method: 'put', path: '/Patienthealthcasedefines', controller: 'Patienthealthcasedefine', action: 'UpdatePatienthealthcasedefine' },
+    { method: 'delete', path: '/Patienthealthcasedefines/:patienthealthcasedefineId', controller: 'Patienthealthcasedefine', action: 'DeletePatienthealthcasedefine' },
+
+    { method: 'get', path: '/Patienthealthcases/:patienthealthcaseId', controller: 'Patienthealthcase', action: 'GetPatienthealthcase' },
+    { method: 'get', path: '/Patienthealthcases', controller: 'Patienthealthcase', action: 'GetPatienthealthcases' },
+    { method: 'post', path: '/Patienthealthcases', controller: 'Patienthealthcase', action: 'AddPatienthealthcase' },
+    { method: 'put', path: '/Patienthealthcases', controller: 'Patienthealthcase', action: 'UpdatePatienthealthcase' },
+    { method: 'delete', path: '/Patienthealthcases/:patienthealthcaseId', controller: 'Patienthealthcase', action: 'DeletePatienthealthcase' },
+
     { method: 'get', path: '/Companycashmovements/:movementId', controller: 'Companycashmovement', action: 'GetCompanycashmovement' },
     { method: 'get', path: '/Companycashmovements', controller: 'Companycashmovement', action: 'GetCompanycashmovements' },
     { method: 'post', path: '/Companycashmovements', controller: 'Companycashmovement', action: 'AddCompanycashmovement' },

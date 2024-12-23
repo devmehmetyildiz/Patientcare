@@ -215,8 +215,8 @@ async function GetTrainingCountPatientcontact(req, res, next) {
 
             for (const patient of patients) {
                 const patientdefine = await db.patientdefineModel.findOne({ where: { Isactive: true, Uuid: patient?.PatientdefineID || '' } })
-                const firstcontact = (validator.isString(patientdefine.Contactname1) && ((patientdefine.Contactname1 || '').length > 0)) ? patientdefine.Contactname1 : null
-                const secondcontact = (validator.isString(patientdefine.Contactname2) && ((patientdefine.Contactname2 || '').length > 0)) ? patientdefine.Contactname2 : null
+                const firstcontact = (validator.isString(patientdefine?.Contactname1) && ((patientdefine?.Contactname1 || '').length > 0)) ? patientdefine?.Contactname1 : null
+                const secondcontact = (validator.isString(patientdefine?.Contactname2) && ((patientdefine?.Contactname2 || '').length > 0)) ? patientdefine?.Contactname2 : null
                 if (firstcontact) {
                     totalPatientcontactCount++;
                 }
@@ -418,8 +418,8 @@ async function GetPatientvisitCount(req, res, next) {
 
             for (const patient of patients) {
                 const patientdefine = await db.patientdefineModel.findOne({ where: { Isactive: true, Uuid: patient?.PatientdefineID || '' } })
-                const firstcontact = (validator.isString(patientdefine.Contactname1) && ((patientdefine.Contactname1 || '').length > 0)) ? patientdefine.Contactname1 : null
-                const secondcontact = (validator.isString(patientdefine.Contactname2) && ((patientdefine.Contactname2 || '').length > 0)) ? patientdefine.Contactname2 : null
+                const firstcontact = (validator.isString(patientdefine?.Contactname1) && ((patientdefine?.Contactname1 || '').length > 0)) ? patientdefine?.Contactname1 : null
+                const secondcontact = (validator.isString(patientdefine?.Contactname2) && ((patientdefine?.Contactname2 || '').length > 0)) ? patientdefine?.Contactname2 : null
                 if (firstcontact) {
                     totalPatientContactCount++;
                 }

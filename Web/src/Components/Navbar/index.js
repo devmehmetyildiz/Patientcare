@@ -63,8 +63,8 @@ export class Navbar extends Component {
             <div className='h-[2px] group-hover:bg-[#747474] bg-white dark:bg-[#3d3d3d] my-[3px] w-[20px]' />
             <div className='h-[2px] group-hover:bg-[#747474] bg-white dark:bg-[#3d3d3d]  w-[20px]' />
           </div>
-          <div onClick={this.handleOpendefaultpage} className={`absolute left-0 right-0 -z-10 flex flex-row justify-center items-center group cursor-pointer`}   >
-            <div className='flex flex-row justify-center items-center group cursor-pointer'>
+          <div  className={`absolute left-0 right-0 -z-10 flex flex-row justify-center items-center group `}   >
+            <div onClick={this.handleOpendefaultpage} className='flex flex-row justify-center items-center group cursor-pointer'>
               <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-white dark:text-TextColor'>ELDER</p>
               <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-[#7eabc5] dark:text-TextColor'>CAMP</p>
             </div>

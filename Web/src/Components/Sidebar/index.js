@@ -209,6 +209,7 @@ export const getSidebarroutes = (Profile) => {
                 { id: 5, subtitle: t('Pages.Patientactivities.Page.Header'), url: "/Patientactivities", permission: checkAuth('patientactivityview') },
                 { id: 6, subtitle: t('Pages.Patientvisits.Page.Header'), url: "/Patientvisits", permission: checkAuth('patientvisitview') },
                 { id: 6, subtitle: t('Pages.Patienteventmovements.Page.Header'), url: "/Patienteventmovements", permission: checkAuth('patienteventmovementview') },
+                { id: 6, subtitle: t('Pages.Patienthealthcases.Page.Header'), url: "/Patienthealthcases", permission: checkAuth('patienthealthcaseview') },
                 { id: 7, subtitle: t('Pages.Careplans.Page.Header'), url: "/Careplans", permission: checkAuth('careplanview') },
             ]
         },
@@ -253,6 +254,7 @@ export const getSidebarroutes = (Profile) => {
                 { id: 3, subtitle: t('Pages.Users.Page.Header'), url: "/Users", permission: checkAuth('userview') },
                 { id: 4, subtitle: t('Pages.Cases.Page.Header'), url: "/Cases", permission: checkAuth('caseview') },
                 { id: 4, subtitle: t('Pages.Patienteventdefines.Page.Header'), url: "/Patienteventdefines", permission: checkAuth('patienteventdefineview') },
+                { id: 4, subtitle: t('Pages.Patienthealthcasedefines.Page.Header'), url: "/Patienthealthcasedefines", permission: checkAuth('patienthealthcasedefineview') },
                 { id: 5, subtitle: t('Pages.Units.Page.Header'), url: "/Units", permission: checkAuth('unitview') },
                 { id: 6, subtitle: t('Pages.Stocktypes.Page.Header'), url: "/Stocktypes", permission: checkAuth('stocktypeview') },
                 { id: 7, subtitle: t('Pages.Stocktypegroups.Page.Header'), url: "/Stocktypegroups", permission: checkAuth('stocktypegroupview') },

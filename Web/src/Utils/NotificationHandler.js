@@ -58,6 +58,8 @@ import { removePatientvisitnotification } from "../Redux/PatientvisitSlice"
 import { removeUserincidentnotification } from "../Redux/UserincidentSlice"
 import { removePatienteventmovementnotification } from "../Redux/PatienteventmovementSlice"
 import { removeOverviewcardnotification } from "../Redux/OverviewcardSlice"
+import { removePatienthealthcasedefinenotification } from "../Redux/PatienthealthcasedefineSlice"
+import { removePatienthealthcasenotification } from "../Redux/PatienthealthcaseSlice"
 import Notificationwrapper from './Notification'
 
 export function NotificationHandler(props) {
@@ -83,7 +85,7 @@ export function NotificationHandler(props) {
             removeStocktypegroupnotification, removePurchaseordernotification, removeClaimpaymentparameternotification, removeClaimpaymentnotification,
             removeTrainingnotification, removePatienteventdefinenotification, removeCareplanparameternotification, removeSurveynotification,
             removePatientactivitynotification, removePatientvisitnotification, removeUserincidentnotification, removePatienteventmovementnotification,
-            removeOverviewcardnotification
+            removeOverviewcardnotification, removePatienthealthcasedefinenotification, removePatienthealthcasenotification
         } = props
 
         const {
@@ -99,7 +101,8 @@ export function NotificationHandler(props) {
             Personelshiftdetails, Personelpresettings, Professionpresettings, Personelshifts, Stocktypes,
             Stocktypegroups, Purchaseorders, Claimpaymentparameters, Claimpayments, Trainings,
             Patienteventdefines, Careplanparameters, Surveys, Patientactivities, Patientvisits,
-            Userincidents, Patienteventmovements, Overviewcards
+            Userincidents, Patienteventmovements, Overviewcards, Patienthealthcasedefines,
+            Patienthealthcases
         } = props.states
 
         Notification(Warehouses.notifications, removeWarehousenotification)
@@ -160,6 +163,8 @@ export function NotificationHandler(props) {
         Notification(Userincidents.notifications, removeUserincidentnotification)
         Notification(Patienteventmovements.notifications, removePatienteventmovementnotification)
         Notification(Overviewcards.notifications, removeOverviewcardnotification)
+        Notification(Patienthealthcasedefines.notifications, removePatienthealthcasedefinenotification)
+        Notification(Patienthealthcases.notifications, removePatienthealthcasenotification)
     })
 
     return null
@@ -186,8 +191,8 @@ const mapDispatchToProps = {
     removeStocktypenotification, removeStocktypegroupnotification, removePurchaseordernotification, removeClaimpaymentparameternotification,
     removeClaimpaymentnotification, removeTrainingnotification, removePatienteventdefinenotification, removeCareplanparameternotification,
     removeSurveynotification, removePatientactivitynotification, removePatientvisitnotification, removeUserincidentnotification,
-    removePatienteventmovementnotification, removeOverviewcardnotification
-
+    removePatienteventmovementnotification, removeOverviewcardnotification, removePatienthealthcasedefinenotification,
+    removePatienthealthcasenotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationHandler)

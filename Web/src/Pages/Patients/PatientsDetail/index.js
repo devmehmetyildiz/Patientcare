@@ -20,7 +20,9 @@ import PatientsEditplaceModal from '../../../Containers/Patients/PatientsEditpla
 import PatientsInsertstockModal from '../../../Containers/Patients/PatientsInsertstockModal'
 import PatientsReducestockModal from '../../../Containers/Patients/PatientsReducestockModal'
 import PatientsEntereventModal from '../../../Containers/Patients/PatientsEntereventModal'
+import PatientsEnterhealthcaseModal from '../../../Containers/Patients/PatientsEnterhealthcaseModal'
 import PatientsDetailEvents from './PatientsDetailEvents'
+import PatientsDetailHealthcases from './PatientsDetailHealthcases'
 
 export default function Patientsdetail(props) {
 
@@ -28,13 +30,13 @@ export default function Patientsdetail(props) {
         GetPatient, fillPatientnotification, GetPatienttypes, GetCostumertypes,
         GetPatientdefines, GetFiles, GetUsagetypes, GetCases, GetDepartments, GetFloors, GetRooms, GetBeds,
         GetPatientcashmovements, GetPatientcashregisters, GetStocks, GetStockdefines, GetStockmovements, GetUsers,
-        GetStocktypes, GetStocktypegroups, GetUnits, GetPatienteventdefines, AddStockmovements
+        GetStocktypes, GetStocktypegroups, GetUnits, GetPatienteventdefines, AddStockmovements, GetPatienthealthcases, GetPatienthealthcasedefines
     } = props
 
     const { Patients, Patientdefines, Files, Cases, Departments, Usagetypes, Floors, Beds, Rooms,
         Patientcashregisters, Patientcashmovements, Costumertypes, Patienttypes, Stocks, Stockdefines,
-        Stockmovements, Users, Stocktypes, Stocktypegroups, Units, Patienteventdefines,
-        PatientID, Profile } = props
+        Stockmovements, Users, Stocktypes, Stocktypegroups, Units, Patienteventdefines, Patienthealthcases,
+        Patienthealthcasedefines, PatientID, Profile } = props
 
     const [openaddmovement, setOpenaddmovement] = useState(false)
     const [openreducestock, setOpenreducestock] = useState(false)
@@ -45,6 +47,7 @@ export default function Patientsdetail(props) {
     const [openstatus, setOpenstatus] = useState(false)
     const [opendead, setOpendead] = useState(false)
     const [openleft, setOpenleft] = useState(false)
+    const [openhealthcase, setOpenhealthcase] = useState(false)
     const [record, setRecord] = useState(null)
     const params = useParams()
     const history = useHistory()
@@ -77,6 +80,8 @@ export default function Patientsdetail(props) {
             GetStocktypegroups()
             GetUnits()
             GetPatienteventdefines()
+            GetPatienthealthcases()
+            GetPatienthealthcasedefines()
         } else {
             fillPatientnotification({
                 type: 'Success',
@@ -108,6 +113,8 @@ export default function Patientsdetail(props) {
         Stocktypes.isLoading ||
         Stocktypegroups.isLoading ||
         Patienteventdefines.isLoading ||
+        Patienthealthcases.isLoading ||
+        Patienthealthcasedefines.isLoading ||
         Units.isLoading
 
     return (
@@ -221,15 +228,24 @@ export default function Patientsdetail(props) {
                                         <Icon name='conversation' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Addeventmovements')}
                                     </Dropdown.Item>
+                                    <Dropdown.Item
+                                        onClick={() => {
+                                            setRecord(patient)
+                                            setOpenhealthcase(true)
+                                        }}
+                                    >
+                                        <Icon name='conversation' className='right floated' />
+                                        {t('Pages.Patients.PatientsDetail.Button.Addenterhealthcase')}
+                                    </Dropdown.Item>
                                     <Dropdown.Header icon='setting' content={t('Pages.Patients.PatientsDetail.Button.Settingtag')} />
                                     <Dropdown.Divider />
                                     <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Movements`) }}>
                                         <Icon name='conversation' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editmovements')}
                                     </Dropdown.Item>
-                                    <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Eventmovements`) }}>
+                                    <Dropdown.Item onClick={() => { history.push(`/Patienthealthcases?PatientID=${patientID}`) }}>
                                         <Icon name='conversation' className='right floated' />
-                                        {t('Pages.Patients.PatientsDetail.Button.Editeventmovements')}
+                                        {t('Pages.Patients.PatientsDetail.Button.Edithealthcares')}
                                     </Dropdown.Item>
                                     <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Editcash`) }}>
                                         <Icon name='conversation' className='right floated' />
@@ -316,6 +332,12 @@ export default function Patientsdetail(props) {
                             Users={Users}
                             Profile={Profile}
                         />
+                        <PatientsDetailHealthcases
+                            patient={patient}
+                            Patienthealthcases={Patienthealthcases}
+                            Patienthealthcasedefines={Patienthealthcasedefines}
+                            Profile={Profile}
+                        />
                     </div>
                 </div>
             </DimmerDimmable>
@@ -378,6 +400,13 @@ export default function Patientsdetail(props) {
                 isPatientdetailpage
                 open={openaddmovement}
                 setOpen={setOpenaddmovement}
+                record={record}
+                setRecord={setRecord}
+            />
+            <PatientsEnterhealthcaseModal
+                isPatientdetailpage
+                open={openhealthcase}
+                setOpen={setOpenhealthcase}
                 record={record}
                 setRecord={setRecord}
             />
