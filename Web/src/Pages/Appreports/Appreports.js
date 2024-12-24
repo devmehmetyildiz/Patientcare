@@ -35,37 +35,121 @@ export default function Appreports(props) {
 
     const isLoadingStatus = isLoading || isProcessCountLoading || isServiceUsageCountDailyLoading || isServiceUsageCountLoading || isUsagecountbyUserMontlyLoading || Users.isLoading
 
-   /*  const ServiceUsageCountOptions = {
+    const UserUsageoptions = {
         chart: {
-            type: 'pie',
-            className: ' !w-full !h-auto !min-w-0'
+            type: 'column',
         },
         title: {
-            text: ,
+            text: t('Pages.Appreports.Userusagecount.Label.Title'),
         },
-        legend: {
-            enabled: true,
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
-            itemMarginBottom: 5,
-            itemStyle: {
-                fontSize: '12px',
+        xAxis: {
+            categories: [...new Set(usagecountbyUserMontly.map(u => u.UserID))],
+            title: {
+                text: t('Pages.Appreports.Userusagecount.Label.Services'),
             },
         },
-        series: {
-            name: legendname[Profile.Language],
-            data: data,
-            showInLegend: true,
+        yAxis: {
+            min: 0,
+            title: {
+                text: t('Pages.Appreports.Userusagecount.Label.UsageCounts'),
+                align: 'high',
+            },
+            labels: {
+                overflow: 'justify',
+            },
+        },
+        tooltip: {
+            valueSuffix: t('Pages.Appreports.Userusagecount.Label.Unit'),
         },
         plotOptions: {
-            pie: {
+            column: {
                 dataLabels: {
-                    enabled: false,
+                    enabled: true,
                 },
             },
         },
-    }; */
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: -10,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor:
+                Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+            shadow: true,
+        },
+        credits: {
+            enabled: false,
+        },
+        series: [
+            {
+                name: t('Pages.Appreports.Userusagecount.Label.Services'),
+                data: [...new Set(usagecountbyUserMontly.map(u => u.UserID))].map((userKey) => {
+                    return usagecountbyUserMontly.filter(u => u.UserID === userKey).reduce((total, value) => { return total + value.UsageCount }, 0)
+                }),
+            },
+        ],
+    };
+
+    const ServiceUsageoptions = {
+        chart: {
+            type: 'column',
+        },
+        title: {
+            text: t('Pages.Appreports.Serviceusagecount.Label.Title'),
+        },
+        xAxis: {
+            categories: [...new Set(serviceUsageCount.map(u => u.Service))],
+            title: {
+                text: t('Pages.Appreports.Serviceusagecount.Label.Services'),
+            },
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: t('Pages.Appreports.Serviceusagecount.Label.UsageCounts'),
+                align: 'high',
+            },
+            labels: {
+                overflow: 'justify',
+            },
+        },
+        tooltip: {
+            valueSuffix: t('Pages.Appreports.Serviceusagecount.Label.Unit'),
+        },
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true,
+                },
+            },
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: -10,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor:
+                Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+            shadow: true,
+        },
+        credits: {
+            enabled: false,
+        },
+        series: [
+            {
+                name: t('Pages.Appreports.Serviceusagecount.Label.Services'),
+                data: [...new Set(serviceUsageCount.map(u => u.Service))].map((serviceKey) => {
+                    return serviceUsageCount.filter(u => u.Service === serviceKey).reduce((total, value) => { return total + value.Count }, 0)
+                }),
+            },
+        ],
+    };
 
     const getDateOption = useCallback((props) => {
         const isEndDate = props?.isEndDate
@@ -198,7 +282,13 @@ export default function Appreports(props) {
                         </Form>
                     </Contentwrapper>
                     <Pagedivider />
-                  {/*   <HighchartsReact highcharts={Highcharts} options={ServiceUsageCountOptions} /> */}
+                    <div className='w-full flex flex-col gap-8 justify-center items-center lg:flex-row '>
+                        <div className='w-full'>
+                            <HighchartsReact highcharts={Highcharts} options={ServiceUsageoptions} />
+                        </div>
+                    </div>
+                    <Pagedivider />
+                    <HighchartsReact highcharts={Highcharts} options={UserUsageoptions} />
                 </Pagewrapper >
             </React.Fragment >
     )

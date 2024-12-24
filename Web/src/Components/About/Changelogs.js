@@ -231,6 +231,36 @@ const version1_1_0_8 = {
     ],
 }
 
+const version1_1_0_9 = {
+    version: "1.1.0.9",
+    bugs: [
+        {
+            title: "Hastalar", commits: [
+                "Dosya Silme Sorunu Giderildi.",
+            ],
+        },
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Gösterge Kartlarındaki Yüklenmeme sorunu giderildi.",
+            ],
+        },
+    ],
+    changes: [
+        {
+            title: "Sistem", commits: [
+                "Uygulama Raporları değiştirildi.",
+            ],
+        },
+    ],
+    features: [
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Bakım Hizmetleri Gösterge Kartları Eklendi",
+            ],
+        },
+    ],
+}
+
 export {
     version1_1_0_1,
     version1_1_0_2,
@@ -239,4 +269,5 @@ export {
     version1_1_0_6,
     version1_1_0_7,
     version1_1_0_8,
+    version1_1_0_9,
 }
