@@ -164,6 +164,7 @@ export const getSidebarroutes = (Profile) => {
             icon: <TbGauge className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: t('Pages.Overview.Page.Header'), url: "/Overview", permission: checkAuth('overviewview') },
+                { id: 1, subtitle: t('Pages.Overviewhealthcarecard.Page.Header'), url: "/Overviewhealthcarecard", permission: checkAuth('overviewhealthcarecardview') },
                 { id: 1, subtitle: t('Pages.Overviewcard.Page.Header'), url: "/Overviewcard", permission: checkAuth('overviewcardview') },
                 { id: 2, subtitle: t('Pages.Patientfollowup.Page.Header'), url: "/Patientfollowup", permission: checkAuth('patientview') },
                 { id: 3, subtitle: t('Pages.Placeviews.Page.Header'), url: "/Placeviews", permission: checkAuth('placeviewview') },

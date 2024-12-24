@@ -9,7 +9,7 @@ export default function PatientsDetailFiles(props) {
 
   const t = Profile?.i18n?.t
 
-  const patientfiles = (Files.list || []).filter(u => u.ParentID === patient?.Uuid)
+  const patientfiles = (Files.list || []).filter(u => u.ParentID === patient?.Uuid && u.Isactive)
 
   const decoratedList = (patientfiles || []).map(file => {
     const usagetype = ((file?.Usagetype || '').split(',') || []).map(usagetypeID => {

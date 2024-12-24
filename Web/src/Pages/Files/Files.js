@@ -46,7 +46,7 @@ export class Files extends Component {
     const metaKey = "file"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Files.list || []).map(item => {
+    const list = (Files.list || []).filter(u=>u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Files/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

@@ -92,7 +92,7 @@ export default function PurchaseordersComplete(props) {
       Skt: validator.isISODate(element.Skt) ? Formatdate(element.Skt) : element.Skt
     }
   });
-  const files = (Files.list || []).filter(u => u.ParentID === Uuid).map(element => {
+  const files = (Files.list || []).filter(u => u.Isactive && u.ParentID === Uuid).map(element => {
     return {
       ...element,
       key: Math.random(),

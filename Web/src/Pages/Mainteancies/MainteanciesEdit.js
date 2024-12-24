@@ -41,7 +41,7 @@ export default class MainteanciesEdit extends Component {
       && !isLoading && !this.state.isDatafetched) {
       const equipment = (Equipments.list || []).find(u => u.Uuid === selected_record?.EquipmentID)
       const equipmentgroup = (Equipmentgroups.list || []).find(u => u.Uuid === equipment?.EquipmentgroupID)
-      var response = (Files.list || []).filter(u => u.ParentID === selected_record?.Uuid).map(element => {
+      var response = (Files.list || []).filter(u => u.Isactive && u.ParentID === selected_record?.Uuid).map(element => {
         return {
           ...element,
           key: Math.random(),

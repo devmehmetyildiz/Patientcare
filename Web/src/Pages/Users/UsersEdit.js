@@ -43,7 +43,7 @@ export default class UsersEdit extends Component {
 
     const { selected_record } = Users
     if (!isLoadingstatus && !this.state.isDatafetched && validator.isUUID(selected_record?.Uuid)) {
-      var response = (Files.list || []).filter(u => u.ParentID === selected_record?.Uuid).map(element => {
+      var response = (Files.list || []).filter(u => u.Isactive && u.ParentID === selected_record?.Uuid).map(element => {
         return {
           ...element,
           key: Math.random(),

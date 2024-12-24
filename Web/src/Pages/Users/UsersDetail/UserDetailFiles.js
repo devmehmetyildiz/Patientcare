@@ -11,7 +11,7 @@ export default function UserDetailFiles(props) {
 
     const t = Profile?.i18n?.t
 
-    const userFiles = (Files.list || []).filter(u => u.ParentID === user?.Uuid)
+    const userFiles = (Files.list || []).filter(u => u.Isactive && u.ParentID === user?.Uuid)
 
     const decoratedList = (userFiles || []).map(file => {
         const usagetype = ((file?.Usagetype || '').split(',') || []).map(usagetypeID => {

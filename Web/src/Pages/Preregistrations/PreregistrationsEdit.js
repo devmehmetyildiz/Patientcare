@@ -35,7 +35,7 @@ export default class PreregistrationsEdit extends Component {
     const { selected_record, isLoading } = Patients
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
       && !isLoading && !Files.isLoading && !Stocks.isLoading && !this.state.isDatafetched) {
-      var files = (Files.list || []).filter(u => u.ParentID === selected_record?.Uuid).map(element => {
+      var files = (Files.list || []).filter(u => u.Isactive && u.ParentID === selected_record?.Uuid).map(element => {
         return {
           ...element,
           key: Math.random(),

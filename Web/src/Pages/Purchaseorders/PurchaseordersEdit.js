@@ -35,7 +35,7 @@ export default class PurchaseordersEdit extends Component {
     const { Purchaseorders, Files, Stocks } = this.props
     const { selected_record, isLoading } = Purchaseorders
     if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !Files.isLoading && !Stocks.isLoading && !isLoading && !this.state.isDatafetched) {
-      var files = (Files.list || []).filter(u => u.ParentID === selected_record?.Uuid).map(element => {
+      var files = (Files.list || []).filter(u => u.Isactive && u.ParentID === selected_record?.Uuid).map(element => {
         return {
           ...element,
           key: Math.random(),
