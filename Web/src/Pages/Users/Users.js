@@ -24,7 +24,7 @@ export default function Users(props) {
     GetProfessions()
   }, [])
 
-  const list = (Users.list || []).map(item => {
+  const list = (Users.list || []).filter(u => u.Isactive).map(item => {
     return {
       ...item,
       detail: <Link to={`/Users/${item.Uuid}`} ><Icon size='large' color='grey' name='history' /></Link>,
@@ -208,7 +208,7 @@ function UsersWorkerList({ Profile, list, Cases, Professions }) {
   )
 }
 
-function UsersWorkerleftList({ Profile, list,  Professions }) {
+function UsersWorkerleftList({ Profile, list, Professions }) {
 
   const colProps = {
     sortable: true,

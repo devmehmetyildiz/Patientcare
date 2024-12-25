@@ -13,6 +13,7 @@ const TWO_HUNDRED_MS = 200;
 
 export const DataTable = ({ Columns, Data, Config, renderRowSubComponent, disableGlobalFilter }) => {
 
+    const [selectedRowId, setSelectedRowId] = useState([])
     const columns = useMemo(() => {
         const data = (Columns || [])
             .map(u => {
@@ -225,13 +226,16 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent, disabl
                                     prepareRow(row)
                                     return (
                                         <React.Fragment key={index}>
-                                            <tr {...row.getRowProps()} style={{ backgroundColor: row.original?.Case ? row.original.Case?.Casecolor : null }} >
+                                            <tr {...row.getRowProps()} style={{ ...(selectedRowId.includes(index) && ({ backgroundColor: '#f5f5f5' })) }} >
                                                 {row.cells.map(cell => {
                                                     const Isicon = cell?.column?.disableProps
                                                     return (
-                                                        <td  {...cell.getCellProps({ className: cell.column.className })} >
+                                                        <td  {...cell.getCellProps({ className: cell.column.className })} onClick={() => {
+                                                            if (!Isicon) {
+                                                                setSelectedRowId(prev => prev.includes(index) ? prev.filter(u => u !== index) : [...prev, index])
+                                                            }
+                                                        }}>
                                                             {cell.isGrouped ? (
-                                                                // If it's a grouped cell, add an expander and row count
                                                                 <React.Fragment>
                                                                     <span {...row.getToggleRowExpandedProps()}>
                                                                         {row.isExpanded ? <Icon className='text-info' name='minus' /> : <Icon className='text-info' name='plus' />}

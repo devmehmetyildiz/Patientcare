@@ -68,6 +68,7 @@ async function Register(req, res, next) {
                 Surname: "Sys",
                 Language: "tr",
                 PasswordHash: hash,
+                Isworking: true,
                 Createduser: "System",
                 Createtime: new Date(),
                 Isactive: true,
@@ -236,6 +237,7 @@ async function AddUser(req, res, next) {
             Uuid: useruuid,
             PasswordHash: hash,
             Createduser: username,
+            Isworking: true,
             Createtime: new Date(),
             Isactive: true,
         }, { transaction: t })

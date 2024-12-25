@@ -261,6 +261,24 @@ const version1_1_0_9 = {
     ],
 }
 
+const version1_1_0_10 = {
+    version: "1.1.0.10",
+    bugs: [
+        {
+            title: "Kullanıcılar", commits: [
+                "Kullanıcı eklemesinde işten ayrılanlara otomatik gitme sorunu düzeltildi.",
+            ],
+        },
+    ],
+    features: [
+        {
+            title: "Sistem", commits: [
+                "Grid Ekranlarda satıra tıklanıldığında arka plan farklı olabilecek.",
+            ],
+        },
+    ],
+}
+
 export {
     version1_1_0_1,
     version1_1_0_2,
@@ -270,4 +288,5 @@ export {
     version1_1_0_7,
     version1_1_0_8,
     version1_1_0_9,
+    version1_1_0_10,
 }
