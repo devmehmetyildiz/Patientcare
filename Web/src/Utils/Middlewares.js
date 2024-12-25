@@ -2,8 +2,9 @@ import config from "../Config";
 import instanse from "../Redux/axios";
 import validator from "./Validator";
 import { fillnotification, handleTokeninterval } from "../Redux/ProfileSlice";
+import { STORAGE_KEY_PATIENTCARE_ACCESSTOKEN, STORAGE_KEY_PATIENTCARE_EXPIRETIME, STORAGE_KEY_PATIENTCARE_REFRESHTOKEN } from "./Constants";
 
-const TOKENINTERVAL = 1000 * 60 * 5
+const TOKENINTERVAL = 1000 * 10
 const NOTIFICATIONINTERVAL = 1000 * 60 * 5
 
 const tokenMiddleware = store => next => action => {
@@ -13,17 +14,33 @@ const tokenMiddleware = store => next => action => {
                 type: 'EXECUTED_TOKEN_TIMER'
             })
             try {
-                let token = localStorage.getItem('patientcareRefresh')
-                const response = await instanse.post(config.services.Auth, `Oauth/Login`, {
-                    grant_type: 'refresh_token',
-                    refreshToken: token
-                });
-                localStorage.setItem('patientcare', response.data.accessToken)
-                localStorage.setItem('patientcareRefresh', response.data.refreshToken)
-                console.log("executed timer at ", new Date())
-            } catch (error) {
-            }
+                const accessToken = localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
+                const refreshToken = localStorage.getItem(STORAGE_KEY_PATIENTCARE_REFRESHTOKEN)
+                const rawExpireTime = localStorage.getItem(STORAGE_KEY_PATIENTCARE_EXPIRETIME)
 
+                if (validator.isISODate(rawExpireTime) && accessToken && refreshToken) {
+                    const expireTime = new Date(rawExpireTime)
+                    const now = new Date()
+                    now.setMinutes(now.getMinutes() + 30)
+
+                    if (now.getTime() > expireTime.getTime()) {
+                        const response = await instanse.post(config.services.Auth, `Oauth/Login`, {
+                            grant_type: 'refresh_token',
+                            refreshToken: refreshToken
+                        });
+
+                        localStorage.setItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN, response.data.accessToken)
+                        localStorage.setItem(STORAGE_KEY_PATIENTCARE_REFRESHTOKEN, response.data.refreshToken)
+                        localStorage.setItem(STORAGE_KEY_PATIENTCARE_EXPIRETIME, response.data.ExpiresAt)
+
+                        console.log("Token Refreshed ", new Date())
+                    } else {
+                    }
+                } else {
+                }
+            } catch (error) {
+                console.log('Refresh Token Error: ', error);
+            }
         }, TOKENINTERVAL);
 
         store.dispatch(handleTokeninterval(intervalId))

@@ -1,5 +1,5 @@
 import config from "../Config";
-import { ROUTES } from "./Constants";
+import { ROUTES, STORAGE_KEY_PATIENTCARE_ACCESSTOKEN } from "./Constants";
 import axios from 'axios'
 import validator from "./Validator";
 
@@ -10,8 +10,8 @@ const errorMessage = {
 
 const DownloadPngFile = ({ fileID, Profile, fillnotification, setImg }) => {
     if (validator.isUUID(fileID) && Profile && fillnotification && setImg) {
-        const token = localStorage.getItem('patientcare')
-        const language = localStorage.getItem('Language')
+        const token = localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
+        const language = localStorage.getItem(STORAGE_KEY_PATIENTCARE_LANGUAGE)
         axios.get(`${config.services.File}${ROUTES.FILE}/Downloadfile/${fileID}`, {
             responseType: 'blob',
             headers: {

@@ -19,6 +19,7 @@ import config from "./Config";
 import './index.css';
 import 'semantic-ui-css/semantic.min.css'
 import './i18n';
+import { STORAGE_KEY_PATIENTCARE_ACCESSTOKEN } from "./Utils/Constants";
 
 const store = configureStore({
   reducer: rootSlice,
@@ -37,7 +38,7 @@ store.dispatch({
   type: 'START_MIDDLEWARES'
 })
 
-let token = localStorage.getItem('patientcare')
+let token = localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
 if (token) {
   store.dispatch(handleauth())
 }

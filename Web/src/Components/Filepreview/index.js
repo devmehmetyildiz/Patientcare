@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import config from '../../Config'
-import { ROUTES } from '../../Utils/Constants'
+import { ROUTES, STORAGE_KEY_PATIENTCARE_ACCESSTOKEN, STORAGE_KEY_PATIENTCARE_LANGUAGE } from '../../Utils/Constants'
 import { Button, Dimmer, Loader, Modal } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import NoDataScreen from '../NoDataScreen'
@@ -28,8 +28,8 @@ export default function Filepreview(props) {
 
   const fetchFile = (fileID) => {
     setfileDownloading(true)
-    const token = localStorage.getItem('patientcare')
-    const language = localStorage.getItem('Language')
+    const token = localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
+    const language = localStorage.getItem(STORAGE_KEY_PATIENTCARE_LANGUAGE)
     axios.get(`${config.services.File}${ROUTES.FILE}/${fileID}`, {
       headers: {
         Authorization: "Bearer " + token,
@@ -62,8 +62,8 @@ export default function Filepreview(props) {
 
   const downloadFile = (fileID, fileName) => {
     setfileDownloading(true)
-    const token = localStorage.getItem('patientcare')
-    const language = localStorage.getItem('Language')
+    const token = localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
+    const language = localStorage.getItem(STORAGE_KEY_PATIENTCARE_LANGUAGE)
     axios.get(`${config.services.File}${ROUTES.FILE}/Downloadfile/${fileID}`, {
       responseType: 'blob',
       headers: {

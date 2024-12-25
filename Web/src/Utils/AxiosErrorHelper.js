@@ -1,4 +1,5 @@
 import config from "../Config";
+import { STORAGE_KEY_PATIENTCARE_ACCESSTOKEN, STORAGE_KEY_PATIENTCARE_EXPIRETIME, STORAGE_KEY_PATIENTCARE_LANGUAGE, STORAGE_KEY_PATIENTCARE_REFRESHTOKEN } from "./Constants";
 
 export default function AxiosErrorHelper(error) {
     if (error) {
@@ -60,9 +61,10 @@ export default function AxiosErrorHelper(error) {
 
 
 function handle401Error(error) {
-    localStorage.removeItem("patientcare")
-    localStorage.removeItem("patientcareRefresh")
-    localStorage.removeItem("patientcarelanguage")
+    localStorage.removeItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
+    localStorage.removeItem(STORAGE_KEY_PATIENTCARE_REFRESHTOKEN)
+    localStorage.removeItem(STORAGE_KEY_PATIENTCARE_LANGUAGE)
+    localStorage.removeItem(STORAGE_KEY_PATIENTCARE_EXPIRETIME)
     if (window.location.pathname !== "/Login") {
         const params = new URLSearchParams(window.location.search);
         const redirecturl = params.get('redirecturl');

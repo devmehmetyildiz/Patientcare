@@ -2,14 +2,16 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
+import { STORAGE_KEY_PATIENTCARE_ACCESSTOKEN, STORAGE_KEY_PATIENTCARE_EXPIRETIME, STORAGE_KEY_PATIENTCARE_LANGUAGE, STORAGE_KEY_PATIENTCARE_REFRESHTOKEN } from '../Utils/Constants';
 
 export const logIn = createAsyncThunk(
     'Profile/logIn',
     async ({ data, redirectUrl }, { dispatch }) => {
         try {
             const response = await instanse.post(config.services.Auth, `Oauth/Login`, data);
-            localStorage.setItem('patientcare', response.data.accessToken)
-            localStorage.setItem('patientcareRefresh', response.data.refreshToken)
+            localStorage.setItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN, response.data.accessToken)
+            localStorage.setItem(STORAGE_KEY_PATIENTCARE_REFRESHTOKEN, response.data.refreshToken)
+            localStorage.setItem(STORAGE_KEY_PATIENTCARE_EXPIRETIME, response.data.ExpiresAt)
             dispatch(fillnotification({
                 type: 'Success',
                 code: 'Elder Camp',
@@ -286,9 +288,10 @@ export const ProfileSlice = createSlice({
             state.tokenInterval = action.payload
         },
         logOut: () => {
-            localStorage.removeItem('patientcare')
-            localStorage.removeItem('patientcareRefresh')
-            localStorage.removeItem('language')
+            localStorage.removeItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
+            localStorage.removeItem(STORAGE_KEY_PATIENTCARE_REFRESHTOKEN)
+            localStorage.removeItem(STORAGE_KEY_PATIENTCARE_LANGUAGE)
+            localStorage.removeItem(STORAGE_KEY_PATIENTCARE_EXPIRETIME)
             window.location = '/Login'
         }
     },

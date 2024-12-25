@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ROUTES } from "../Utils/Constants";
+import { ROUTES, STORAGE_KEY_PATIENTCARE_ACCESSTOKEN } from "../Utils/Constants";
 import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
@@ -83,7 +83,7 @@ export const AddFiles = createAsyncThunk(
             const response = await axios({
                 method: `post`,
                 url: config.services.File + `${ROUTES.FILE}`,
-                headers: { Authorization: "Bearer " + localStorage.getItem('patientcare'), contentType: 'mime/form-data' },
+                headers: { Authorization: "Bearer " + localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN), contentType: 'mime/form-data' },
                 data: data
             })
             dispatch(fillFilenotification({
@@ -116,7 +116,7 @@ export const EditFiles = createAsyncThunk(
             const response = await axios({
                 method: `put`,
                 url: config.services.File + `${ROUTES.FILE}`,
-                headers: { Authorization: "Bearer " + localStorage.getItem('patientcare'), contentType: 'mime/form-data' },
+                headers: { Authorization: "Bearer " + localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN), contentType: 'mime/form-data' },
                 data: data
             })
             dispatch(fillFilenotification({

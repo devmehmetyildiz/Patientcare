@@ -1,11 +1,12 @@
 import axios from 'axios';
+import { STORAGE_KEY_PATIENTCARE_ACCESSTOKEN, STORAGE_KEY_PATIENTCARE_LANGUAGE } from '../Utils/Constants';
 
 
 
 function getRequest(service, url, params) {
     return new Promise((resolve, reject) => {
-        const token = localStorage.getItem('patientcare')
-        const language = localStorage.getItem('Language')
+        const token = localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
+        const language = localStorage.getItem(STORAGE_KEY_PATIENTCARE_LANGUAGE)
         axios.get(service + url,
             {
                 headers: {
@@ -21,8 +22,8 @@ function getRequest(service, url, params) {
 
 function postRequest(service, url, data) {
     return new Promise((resolve, reject) => {
-        const token = localStorage.getItem('patientcare')
-        const language = localStorage.getItem('Language')
+        const token = localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
+        const language = localStorage.getItem(STORAGE_KEY_PATIENTCARE_LANGUAGE)
         axios.post(service + url, data,
             {
                 headers: {
@@ -37,8 +38,8 @@ function postRequest(service, url, data) {
 
 function putRequest(service, url, data, contentType) {
     return new Promise((resolve, reject) => {
-        const token = localStorage.getItem('patientcare')
-        const language = localStorage.getItem('Language')
+        const token = localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
+        const language = localStorage.getItem(STORAGE_KEY_PATIENTCARE_LANGUAGE)
         axios.put(service + url, data,
             {
                 headers: {
@@ -54,8 +55,8 @@ function putRequest(service, url, data, contentType) {
 
 function deleteRequest(service, url, data) {
     return new Promise((resolve, reject) => {
-        const token = localStorage.getItem('patientcare')
-        const language = localStorage.getItem('Language')
+        const token = localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
+        const language = localStorage.getItem(STORAGE_KEY_PATIENTCARE_LANGUAGE)
         axios.delete(service + url,
             {
                 headers: {

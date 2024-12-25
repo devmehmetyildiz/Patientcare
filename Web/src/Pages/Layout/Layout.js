@@ -3,6 +3,7 @@ import Routes from '../../Routes'
 import { Sidebar as Sidebarcomponent, LoadingPage, Navbar } from '../../Components'
 import { Icon, Menu, Segment, SidebarPushable, SidebarPusher, Sidebar, Label } from 'semantic-ui-react';
 import Usernotifications from '../../Containers/Usernotifications/Usernotifications';
+import { STORAGE_KEY_PATIENTCARE_ACCESSTOKEN, STORAGE_KEY_PATIENTCARE_LANGUAGE } from '../../Utils/Constants';
 export default class Layout extends Component {
 
   constructor(props) {
@@ -30,7 +31,7 @@ export default class Layout extends Component {
     const currentPath = window.location.pathname;
 
     if (!routes.some(route => currentPath.toLowerCase().startsWith(route.toLowerCase()))) {
-      const token = localStorage.getItem('patientcare')
+      const token = localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
       GetActiveUser()
       GetUserRoles()
       GetTableMeta()
@@ -117,7 +118,7 @@ export default class Layout extends Component {
       if (Profile?.i18n && (Profile?.i18n?.i18n?.language !== Profile.meta.Language)) {
         Profile?.i18n?.i18n?.changeLanguage(Profile.meta.Language || 'tr');
       }
-      localStorage.setItem('Language', Profile.meta.Language)
+      localStorage.setItem(STORAGE_KEY_PATIENTCARE_LANGUAGE, Profile.meta.Language)
     }
   }
 }
