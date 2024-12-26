@@ -236,6 +236,8 @@ const UserincidentsEdit = lazy(() => import('./Containers/Userincidents/Userinci
 
 const Patientfollowup = lazy(() => import('./Containers/Patientfollowup/Patientfollowup'));
 
+const Patientsrollcall = lazy(() => import('./Containers/Patientsrollcall/Patientsrollcall'));
+
 const Log = lazy(() => import('./Containers/Log/Log'));
 
 const Overview = lazy(() => import('./Containers/Overview/Overview'));
@@ -333,6 +335,7 @@ class Routes extends Component {
       { exact: true, path: "/Patients/:PatientID/Editroutine", auth: true, component: PatientsEditroutine, permission: 'patientupdate' },
       { exact: true, path: "/Patients/:PatientID/Editfile", auth: true, component: PatientsFiles, permission: 'patientupdate' },
 
+      { exact: true, path: "/Patientsrollcall", auth: true, component: Patientsrollcall, permission: 'patientsrollcallview' },
       { exact: true, path: "/Patientfollowup", auth: true, component: Patientfollowup, permission: 'patientview' },
 
       { exact: true, path: "/Purchaseorders", auth: true, component: Purchaseorders, permission: 'purchaseorderview' },

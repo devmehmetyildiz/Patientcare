@@ -173,6 +173,7 @@ export const getSidebarroutes = (Profile) => {
                 { id: 6, subtitle: t('Pages.Trainings.Page.Header'), url: "/Trainings", permission: checkAuth('roleview') },
                 { id: 7, subtitle: t('Pages.Surveys.Page.Header'), url: "/Surveys", permission: checkAuth('surveyview') },
                 { id: 8, subtitle: t('Pages.Userincidents.Page.Header'), url: "/Userincidents", permission: checkAuth('userincidentview') },
+                { id: 9, subtitle: t('Pages.Patientsrollcall.Page.Header'), url: "/Patientsrollcall", permission: checkAuth('patientsrollcallview') },
             ]
         },
         {

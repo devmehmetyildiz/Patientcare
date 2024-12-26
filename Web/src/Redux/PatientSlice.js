@@ -89,6 +89,20 @@ export const AddPatients = createAsyncThunk(
     }
 );
 
+export const GetPatientsRollCall = createAsyncThunk(
+    'Patients/GetPatientsRollCall',
+    async ({ data }, { dispatch }) => {
+        try {
+            const response = await instanse.post(config.services.Business, `${ROUTES.PATIENT}/GetPatientRollCall`, data);
+            return response?.data || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPatientnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const AddPatienteventmovements = createAsyncThunk(
     'Patients/AddPatienteventmovements',
     async ({ data, onSuccess }, { dispatch, getState }) => {
@@ -501,7 +515,7 @@ export const DeletePatient = createAsyncThunk(
 
 export const Editpatientcase = createAsyncThunk(
     'Patients/Editpatientcase',
-    async ({ data, history, redirectUrl,  redirectID, onSuccess }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, redirectID, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
@@ -569,7 +583,7 @@ export const Editpatientscase = createAsyncThunk(
 
 export const Transferpatientplace = createAsyncThunk(
     'Patients/Transferpatientplace',
-    async ({ data, history, redirectUrl,  redirectID }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
@@ -591,7 +605,7 @@ export const Transferpatientplace = createAsyncThunk(
 
 export const UpdatePatienttododefines = createAsyncThunk(
     'Patients/UpdatePatienttododefines',
-    async ({ data, history, redirectUrl,  redirectID }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, redirectID }, { dispatch, getState }) => {
         try {
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
@@ -638,12 +652,14 @@ export const PatientsSlice = createSlice({
     name: 'Patients',
     initialState: {
         list: [],
+        patientRollCallList: [],
         listsearch: [],
         patientByPlace: {},
         selected_record: {},
         errMsg: null,
         notifications: [],
         isLoading: false,
+        isPatientRollCallListLoading: false,
         isPatientByPlaceLoading: false,
         isLoadingsearch: false,
         selected_patient: {},
@@ -995,6 +1011,18 @@ export const PatientsSlice = createSlice({
             })
             .addCase(UpdatePatientsupportplans.rejected, (state, action) => {
                 state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetPatientsRollCall.pending, (state) => {
+                state.isPatientRollCallListLoading = true;
+                state.patientRollCallList = [];
+            })
+            .addCase(GetPatientsRollCall.fulfilled, (state, action) => {
+                state.isPatientRollCallListLoading = false;
+                state.patientRollCallList = action.payload;
+            })
+            .addCase(GetPatientsRollCall.rejected, (state, action) => {
+                state.isPatientRollCallListLoading = false;
                 state.errMsg = action.error.message;
             })
     },

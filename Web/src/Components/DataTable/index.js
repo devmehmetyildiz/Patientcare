@@ -107,6 +107,10 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent, disabl
     }, [globalFilter])
 
     useEffect(() => {
+        setSelectedRowId([])
+    }, [page])
+
+    useEffect(() => {
         if (Config?.hiddenColumns) {
             let isEqual = true
             if (tableHiddenColumns?.length > 0 && Config?.hiddenColumns?.length > 0) {
@@ -226,7 +230,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent, disabl
                                     prepareRow(row)
                                     return (
                                         <React.Fragment key={index}>
-                                            <tr {...row.getRowProps()} style={{ ...(selectedRowId.includes(index) && ({ backgroundColor: '#f5f5f5' })) }} >
+                                            <tr {...row.getRowProps()} style={{ ...(selectedRowId.includes(index) && ({ backgroundColor: '#ebf5f8' })) }} >
                                                 {row.cells.map(cell => {
                                                     const Isicon = cell?.column?.disableProps
                                                     return (

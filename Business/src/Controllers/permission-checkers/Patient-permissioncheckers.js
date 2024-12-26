@@ -103,6 +103,10 @@ async function DeletePatienteventmovement(req, res, next) {
     PermissionHandler(req, next, 'patientdelete')
 }
 
+async function GetPatientRollCall(req, res, next) {
+    PermissionHandler(req, next, 'patientscreen')
+}
+
 module.exports = {
     GetPatients,
     GetPatient,
@@ -131,5 +135,6 @@ module.exports = {
     UpdatePatientmovements,
     AddPatienteventmovement,
     UpdatePatienteventmovements,
-    DeletePatienteventmovement
+    DeletePatienteventmovement,
+    GetPatientRollCall
 }

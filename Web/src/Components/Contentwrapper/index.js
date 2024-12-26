@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-export default function Contentwrapper({ children, additionalStyle, isfullscreen }) {
+export default function Contentwrapper({ children, additionalStyle, isfullscreen, scrollable }) {
     const [isOverflowing, setIsOverflowing] = useState(false);
 
     const checkOverflow = () => {

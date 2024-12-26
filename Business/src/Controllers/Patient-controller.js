@@ -2957,6 +2957,140 @@ function Checkdatelowerthanother(startDate, endDate) {
 
 }
 
+async function GetPatientRollCall(req, res, next) {
+    try {
+        let validationErrors = []
+        const {
+            Month,
+        } = req.body
+
+        if (!validator.isISODate(Month)) {
+            validationErrors.push(req.t('Patients.Error.MonthRequired'))
+        }
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Patients'), req.language))
+        }
+
+        const startOfMonth = new Date(Month)
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+        const endtOfMonth = new Date(Month)
+        endtOfMonth.setMonth(endtOfMonth.getMonth() + 1);
+        endtOfMonth.setDate(0);
+        endtOfMonth.setHours(23, 59, 59, 999);
+
+        const dayArray = generateDateArray(Month);
+
+        let resArr = []
+
+        const patients = await db.patientModel.findAll({
+            where: {
+                Approvaldate: {
+                    [Sequelize.Op.lt]: endtOfMonth,
+                },
+                [Sequelize.Op.or]: [
+                    {
+                        Isleft: false,
+                        Isalive: true,
+                    },
+                    {
+                        Isalive: true,
+                        Isleft: true,
+                        Leavedate: {
+                            [Sequelize.Op.gt]: startOfMonth,
+                        },
+                    },
+                    {
+                        Isleft: false,
+                        Isalive: false,
+                        Deathdate: {
+                            [Sequelize.Op.gt]: startOfMonth,
+                        },
+                    },
+                ],
+                Ischecked: true,
+                Isapproved: true,
+                Ispreregistration: false,
+                Isactive: true,
+            },
+        });
+
+        for (const patient of patients) {
+
+            const patientdefine = await db.patientdefineModel.findOne({ where: { Isactive: true, Uuid: patient?.PatientdefineID || '' } })
+
+            let rollcallArr = []
+
+            for (const day of dayArray) {
+
+                const dayStart = new Date(day)
+                dayStart.setHours(0, 0, 0, 0);
+                const dayEnd = new Date(day)
+                dayEnd.setHours(23, 59, 59, 999);
+
+                const now = new Date()
+                now.setHours(23, 59, 59, 999);
+
+                if (dayEnd.getTime() <= now.getTime()) {
+                    const lastPatientmovement = await db.patientmovementModel.findOne({
+                        where: {
+                            Isactive: true,
+                            PatientID: patient?.Uuid || '',
+                            Occureddate: {
+                                [Sequelize.Op.lte]: dayEnd,
+                            }
+                        },
+                        order: [['Occureddate', 'DESC']],
+                        limit: 1,
+                    })
+                    rollcallArr.push({
+                        Day: day.toDateString(),
+                        CaseID: lastPatientmovement?.CaseID,
+                    })
+
+                } else {
+                    rollcallArr.push({
+                        Day: day.toDateString(),
+                        CaseID: null,
+                    })
+                }
+            }
+
+            resArr.push({
+                Uuid: patient?.Uuid,
+                Name: `${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`,
+                CostumertypeID: patientdefine?.CostumertypeID,
+                PatienttypeID: patientdefine?.PatienttypeID,
+                Rollcall: rollcallArr
+            })
+        }
+        res.json(resArr)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
+function generateDateArray(month) {
+    const start = new Date(month)
+    start.setDate(1);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(month)
+    end.setMonth(end.getMonth() + 1);
+    end.setDate(0);
+    end.setHours(23, 59, 59, 999);
+
+    const days = [];
+
+    while (start.getTime() <= end.getTime()) {
+        const day = new Date(start)
+        days.push(day);
+        start.setDate(start.getDate() + 1);
+    }
+
+    return days;
+}
+
 module.exports = {
     GetPatients,
     GetPatient,
@@ -2985,5 +3119,6 @@ module.exports = {
     UpdatePatientmovements,
     AddPatienteventmovement,
     UpdatePatienteventmovements,
-    DeletePatienteventmovement
+    DeletePatienteventmovement,
+    GetPatientRollCall
 }

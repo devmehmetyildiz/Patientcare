@@ -97,6 +97,7 @@
     "Patients.Error.UnsupportedSupportplanID": "Tanımsız Destek Plan ID Değeri",
     "Patients.Error.MovementEndDateRequired": "Hareket Sona Erme Tarihi Gerekli",
     "Patients.Error.MovementEndDateTooBig": "Hareket Sona Erme Tarihi Bir Sonraki Hareketin Başlangıç Tarihinden Büyük",
+    "Patients.Error.MonthRequired": "Geçerli Ay Gerekli",
     "Patientcashmovements": "Hasta Para Hareketleri",
     "Patientcashmovements.Error.NotFound": "Hasta Para Hareketi Bulunamadı",
     "Patientcashmovements.Error.NotActive": "Hasta Para Hareketi Aktif Değil",

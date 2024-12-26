@@ -1,5 +1,5 @@
 import config from "../Config";
-import { ROUTES, STORAGE_KEY_PATIENTCARE_ACCESSTOKEN } from "./Constants";
+import { ROUTES, STORAGE_KEY_PATIENTCARE_ACCESSTOKEN, STORAGE_KEY_PATIENTCARE_LANGUAGE } from "./Constants";
 import axios from 'axios'
 import validator from "./Validator";
 

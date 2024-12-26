@@ -1,6 +1,7 @@
 const Routes = [
     { method: 'get', path: '/Patients/:patientId', controller: 'Patient', action: 'GetPatient' },
     { method: 'get', path: '/Patients', controller: 'Patient', action: 'GetPatients' },
+    { method: 'post', path: '/Patients/GetPatientRollCall', controller: 'Patient', action: 'GetPatientRollCall' },
     { method: 'post', path: '/Patients/GetPatientByPlace', controller: 'Patient', action: 'GetPatientByPlace' },
     { method: 'post', path: '/Patients/Createfromtemplate', controller: 'Patient', action: 'Createfromtemplate' },
     { method: 'post', path: '/Patients/AddPatienteventmovement', controller: 'Patient', action: 'AddPatienteventmovement' },
