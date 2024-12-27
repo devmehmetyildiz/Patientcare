@@ -292,7 +292,7 @@ async function DeleteRole(req, res, next) {
             return next(createNotFoundError(req.t('Roles.Error.NotActive'), req.t('Roles'), req.language))
         }
 
-        await db.ruleModel.update({
+        await db.roleModel.update({
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
