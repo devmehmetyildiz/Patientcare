@@ -4,23 +4,14 @@ async function GetUsernotifications(req, res, next) {
     PermissionHandler(req, next, 'usernotificationscreen')
 }
 
-async function GetUsernotification(req, res, next) {
-    PermissionHandler(req, next, 'usernotificationscreen')
-}
-
 async function GetUsernotificationsbyUserid(req, res, next) {
     PermissionHandler(req, next, 'usernotificationscreen')
 }
-async function AddUsernotification(req, res, next) {
-    PermissionHandler(req, next, 'usernotificationadd')
-}
+
 async function AddUsernotificationbyrole(req, res, next) {
     PermissionHandler(req, next, 'usernotificationadd')
 }
 
-async function UpdateUsernotification(req, res, next) {
-    PermissionHandler(req, next, 'usernotificationupdate')
-}
 async function UpdateUsernotifications(req, res, next) {
     PermissionHandler(req, next, 'usernotificationupdate')
 }
@@ -37,16 +28,37 @@ async function DeleteUsernotificationbyidreaded(req, res, next) {
     PermissionHandler(req, next, 'usernotificationdelete')
 }
 
+async function GetLastUsernotificationsbyUserid(req, res, next) {
+    PermissionHandler(req, next, 'usernotificationscreen')
+}
+
+async function ReadAllNotificationByUser(req, res, next) {
+    PermissionHandler(req, next, 'usernotificationscreen')
+}
+
+async function ShowAllNotificationByUser(req, res, next) {
+    PermissionHandler(req, next, 'usernotificationscreen')
+}
+
+async function GetUnreadNotificationCountByUser(req, res, next) {
+    PermissionHandler(req, next, 'usernotificationscreen')
+}
+
+async function GetUnshowedNotificationCountByUser(req, res, next) {
+    PermissionHandler(req, next, 'usernotificationscreen')
+}
 
 module.exports = {
     GetUsernotifications,
-    GetUsernotification,
-    AddUsernotification,
-    UpdateUsernotification,
     DeleteUsernotification,
     GetUsernotificationsbyUserid,
     UpdateUsernotifications,
     DeleteUsernotificationbyid,
     DeleteUsernotificationbyidreaded,
-    AddUsernotificationbyrole
+    AddUsernotificationbyrole,
+    GetLastUsernotificationsbyUserid,
+    ReadAllNotificationByUser,
+    ShowAllNotificationByUser,
+    GetUnreadNotificationCountByUser,
+    GetUnshowedNotificationCountByUser,
 }

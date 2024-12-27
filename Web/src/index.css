@@ -923,3 +923,12 @@ code {
   display: flex;
   flex-direction: col;
 }
+
+.ui.sidebar.notificationContainer {
+  overflow-y: hidden !important;
+  height: 90vh !important;
+  border-radius: 1rem 0 0 1rem !important;
+  margin-top: 58.61px !important;
+  margin-left: auto !important;
+  margin-bottom: auto !important;
+}

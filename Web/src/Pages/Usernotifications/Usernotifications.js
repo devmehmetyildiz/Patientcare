@@ -1,328 +1,175 @@
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Button, Confirm, Grid, GridColumn, Icon, Label, Menu, Modal, Sidebar, Transition } from 'semantic-ui-react'
+import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
+import { Breadcrumb, Button, Confirm, Grid, GridColumn, Icon } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import GetInitialconfig from '../../Utils/GetInitialconfig'
+import { COL_PROPS } from '../../Utils/Constants'
 import validator from '../../Utils/Validator'
-import { Headerwrapper, LoadingPage, Pagedivider, Pagewrapper } from '../../Components'
-import Literals from './Literals'
 import { Formatfulldate } from '../../Utils/Formatdate'
-import { useHistory } from 'react-router-dom'
-import { motion, AnimatePresence } from "framer-motion"
+import UsernotificationsNotificationView from '../../Containers/Usernotifications/UsernotificationsNotificationView'
 
-export default function Usernotifications(props) {
+const Usernotifications = (props) => {
 
-    const [viewopen, setViewopen] = useState(false)
+    const { Usernotifications, Profile, GetUsernotifications, DeleteUsernotifications, DeleteByUserID, DeleteReadByUserID } = props
+
+    const t = Profile?.i18n?.t
+    const meta = Profile?.meta
+    
     const [record, setRecord] = useState(null)
-    const [utils, setUtils] = useState(false)
-    const history = useHistory()
-    const {
-        GetUsernotifications,
-        EditRecordUsernotifications,
-        DeleteUsernotifications,
-        DeleteUsernotificationbyidreaded,
-        DeleteUsernotificationbyid,
-        handleOpen,
-        Usernotifications,
-        Profile
-    } = props
-    const { open, isLoading, list } = Usernotifications
-    const { meta } = Profile
+    const [viewOpen, setViewOpen] = useState(false)
+    const [deleteOpen, setDeleteOpen] = useState(false)
+    const [deleteAllOpen, setDeleteAllOpen] = useState(false)
+    const [deleteReadOpen, setDeleteReadOpen] = useState(false)
 
-
-    useEffect(() => {
-        if (open && validator.isUUID(meta?.Uuid)) {
-            GetUsernotifications(meta?.Uuid)
+    const dateCellhandler = (value) => {
+        if (value) {
+            return Formatfulldate(value, true)
         }
-    }, [meta, open])
+        return value
+    }
 
+    const Columns = [
+        { Header: t('Common.Column.Id'), accessor: 'Id' },
+        { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+        { Header: t('Pages.Usernotifications.Column.Notificationtime'), accessor: row => dateCellhandler(row?.Notificationtime), },
+        { Header: t('Pages.Usernotifications.Column.Subject'), accessor: 'Subject', },
+        { Header: t('Pages.Usernotifications.Column.Message'), accessor: 'Message', },
+        { Header: t('Pages.Usernotifications.Column.Showedtime'), accessor: row => dateCellhandler(row?.Showedtime), },
+        { Header: t('Pages.Usernotifications.Column.Readtime'), accessor: row => dateCellhandler(row?.Readtime), },
+        { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+        { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+        { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+        { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+        { Header: t('Common.Column.view'), accessor: 'view', disableProps: true },
+        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+    ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
+
+    const metaKey = "usernotification"
+    let initialConfig = GetInitialconfig(Profile, metaKey)
+
+    const list = (Usernotifications.list || []).filter(u => u.Isactive).map(item => {
+        return {
+            ...item,
+            view: <Icon link size='large' color='blue' name='sticky note' onClick={() => {
+                setRecord(item)
+                setViewOpen(true)
+            }} />,
+            delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+                setRecord(item)
+                setDeleteOpen(true)
+            }} />
+        }
+    })
 
     useEffect(() => {
-        if (open && !isLoading && (list || []).length > 0 && (list || []).filter(u => !u.Isshowed).slice(0, 1000).length > 0) {
-            let data = []
-            for (const notification of (list || []).filter(u => !u.Isshowed).slice(0, 1000)) {
-                data.push({
-                    Uuid: notification?.Uuid,
-                    Showedtime: new Date(),
-                    Isshowed: true
-                })
-            }
-            EditRecordUsernotifications({
-                data: data,
-                dontShownotification: true
+        if (validator.isUUID(Profile?.meta?.Uuid)) {
+            GetUsernotifications({
+                guid: Profile?.meta?.Uuid
             })
         }
+    }, [])
 
-    }, [open, isLoading, list])
+    const buttons = [
+        <Button onClick={() => setDeleteAllOpen(true)} className='!bg-[#2355a0] !text-white' floated='right'  >{t('Pages.Usernotifications.Column.DeleteAllNotification')}</Button>,
+        <Button onClick={() => setDeleteReadOpen(true)} className='!bg-[#2355a0] !text-white' floated='right'  >{t('Pages.Usernotifications.Column.DeleteReadedNotification')}</Button>
+    ]
 
-
-    return (
-        <Sidebar
-            as={Menu}
-            animation={Profile.Ismobile ? 'overlay' : 'scale down'}
-            icon='labeled'
-            vertical
-            direction='right'
-            visible={open}
-            width='wide'
-        >
-            {isLoading ? <LoadingPage />
-                : <Pagewrapper>
-                    <Headerwrapper>
-                        <Grid columns='2' className='relative' >
-                            <GridColumn width={8}>
-                                <div className='cursor-pointer' onClick={() => {
-                                    setUtils(!utils)
-                                }}>
-                                    <Breadcrumb size='big'>
-                                        <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-                                    </Breadcrumb>
-                                </div>
-                            </GridColumn>
-                            <GridColumn width={8}>
-                                <div
-                                    className='absolute right-1 cursor-pointer'
-                                    onClick={() => {
-                                        handleOpen(false)
-                                    }}>
-                                    <Icon size='small' name='sign-out' className='text-[#2355a0]' />
-                                </div>
-                            </GridColumn>
-                        </Grid>
-                    </Headerwrapper>
-                    <Pagedivider />
-                    <Transition visible={utils} animation='fade down' duration={500}>
-                        <div className='px-4 flex flex-row w-full justify-between items-center'>
-                            <Deleteallnotification
-                                Profile={Profile}
-                                DeleteUsernotificationbyid={DeleteUsernotificationbyid}
-                            />
-                            <Deletereadednotification
-                                Profile={Profile}
-                                DeleteUsernotificationbyidreaded={DeleteUsernotificationbyidreaded}
-                            />
-                        </div>
-                    </Transition>
-                    {utils && <Pagedivider />}
-                    <AnimatePresence>
-                        {(list || []).map((notification, index) => {
-                            return <Notification
-                                notification={notification}
-                                key={index}
-                                setOpen={setViewopen}
-                                setRecord={setRecord}
-                                DeleteUsernotifications={DeleteUsernotifications}
-                            />
-                        })}
-                    </AnimatePresence>
-                    <Viewnotification
-                        open={viewopen}
-                        setOpen={setViewopen}
-                        handleSidebaropen={handleOpen}
-                        setRecord={setRecord}
-                        notification={record}
-                        Profile={Profile}
-                        history={history}
-                        EditRecordUsernotifications={EditRecordUsernotifications}
-                    />
-                </Pagewrapper>
-            }
-        </Sidebar>
-    )
-}
-
-
-function Notification({ notification, setOpen, setRecord, DeleteUsernotifications }) {
-
-    const [confirmopen, setConfirmopen] = useState(false)
-
-    const onConfirm = () => {
-        DeleteUsernotifications(notification)
-        setRecord(null)
-        setConfirmopen(false)
-    }
-
-    const onCancel = () => {
-        setRecord(null)
-        setConfirmopen(false)
-    }
-
-    return (<motion.div
-        initial={{ x: 400 }}
-        animate={{ x: 0 }}
-        exit={{ x: 400 }}
-        transition={{ duration: 1 }}
-        className='w-full flex justify-center items-center'
-    >
-        <div className='cursor-pointer w-[300px] flex flex-row items-center justify-between shadow-md h-16  m-4 p-2 rounded-lg shadow-[#DDDD] border-[#DDDD] hover:border-[#2355a0] border-[1px]  transition-all ease-in-out duration-300  border-b-[#2355a0] border-b-4 hover:border-b-4'>
-            <div className='flex flex-row justify-center items-center'
-                onClick={() => {
-                    setRecord(notification)
-                    setOpen(true)
-                }}>
-                {notification.Isreaded
-                    ? <Icon name='checkmark' className='text-[#2355a0]' />
-                    : <Icon name='attention' className='text-[#2355a0]' />
+    return (Usernotifications.isLoading ? <LoadingPage />
+        : <React.Fragment>
+            <Pagewrapper>
+                <Headerwrapper>
+                    <Grid columns='2' >
+                        <GridColumn width={8}>
+                            <Breadcrumb size='big'>
+                                <Link to={"/Usernotifications"}>
+                                    <Breadcrumb.Section>{t('Pages.Usernotifications.Page.Header')}</Breadcrumb.Section>
+                                </Link>
+                            </Breadcrumb>
+                        </GridColumn>
+                        <Settings
+                            Profile={Profile}
+                            ExtendedButtons={buttons}
+                        />
+                    </Grid>
+                </Headerwrapper>
+                <Pagedivider />
+                {list.length > 0 ?
+                    <div className='w-full mx-auto '>
+                        {Profile.Ismobile ?
+                            <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                            <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+                    </div> : <NoDataScreen message={t('Common.NoDataFound')} />
                 }
-                <div className=' text-left flex flex-col justify-start items-start'>
-                    <div className='font-bold'>{notification?.Subject}</div>
-                    <div className='text-[#868686dd] text-sm'>{Formatfulldate(notification?.Createtime)}</div>
-                </div>
-            </div>
-            <div className='flex flex-row justify-center items-center'>
-                <div onClick={() => {
-                    setRecord(notification)
-                    setConfirmopen(true)
-                }}>
-                    <Icon name='delete' className='text-[#2355a0]' />
-                </div>
-            </div>
-        </div>
-        <Confirm
-            open={confirmopen}
-            content="Bildirimi silmek istediğinize eminmisiniz?"
-            header="Bildirimi silme"
-            cancelButton="Vazgeç"
-            confirmButton="Sil"
-            onCancel={() => { onCancel() }}
-            onConfirm={() => { onConfirm() }}
-        />
-    </motion.div>
-    )
-}
-
-function Viewnotification({ open, notification, setOpen, Profile, history, setRecord, handleSidebaropen, EditRecordUsernotifications }) {
-
-    useEffect(() => {
-        if (open && notification && !notification?.Isreaded && Object.keys(notification).length > 0) {
-            EditRecordUsernotifications({
-                data: [{
-                    Uuid: notification?.Uuid,
-                    Readtime: new Date(),
-                    Isreaded: true
-                }],
-                UserID: Profile?.meta?.user?.Uuid,
-                dontShownotification: true
-            })
-        }
-    }, [open, EditRecordUsernotifications, notification])
-
-    return (notification && Object.keys(notification).length > 0 &&
-        <Modal
-            onClose={() => {
-                setOpen(false)
-                setRecord(null)
-            }}
-            onOpen={() => {
-                setOpen(true)
-
-            }}
-            open={open}
-        >
-            <Modal.Header>{Literals.Page.Pageheader[Profile.Language]}</Modal.Header>
-            <Modal.Content image>
-                <Modal.Description>
-                    <div className='w-full justify-start items-start flex flex-col gap-6'>
-                        <div className='font-bold w-full flex justify-between items-center'>
-                            <div>
-                                {notification.Subject}
-                            </div>
-                            <div className='flex flex-col justify-end items-end gap-2'>
-                                {notification.Createtime && <Label as='a' className='!bg-[#2355a0] !text-white' image>  Oluşturma Tarihi :  <Label.Detail>{Formatfulldate(notification.Createtime)}</Label.Detail></Label>}
-                                {notification.Showedtime && <Label as='a' className='!bg-[#2355a0] !text-white' image>  Görülme Tarihi :  <Label.Detail>{Formatfulldate(notification.Showedtime)}</Label.Detail></Label>}
-                                {notification.Readtime && <Label as='a' className='!bg-[#2355a0] !text-white' image>  Okunma Tarihi :  <Label.Detail>{Formatfulldate(notification.Readtime)}</Label.Detail></Label>}
-                            </div>
-                        </div>
-                        <div>
-                            {notification.Message}
-                        </div>
-                    </div>
-                </Modal.Description>
-            </Modal.Content>
-            {validator.isString(notification?.Pushurl) && history &&
-                <Modal.Actions>
-                    <Button color='black'
-                        onClick={() => {
-                            setOpen(false)
-                            setRecord(null)
-                        }}>
-                        {Literals.Button.Giveup[Profile.Language]}
-                    </Button>
-                    <Button
-                        content={Literals.Button.Go[Profile.Language]}
-                        labelPosition='right'
-                        icon='checkmark'
-                        onClick={() => {
-                            history && history.push(notification.Pushurl)
-                            setOpen(false)
-                            handleSidebaropen(false)
-                            setRecord(null)
-                        }}
-                        positive
-                    />
-                </Modal.Actions>
-            }
-        </Modal>
-    )
-}
-
-function Deleteallnotification({ Profile, DeleteUsernotificationbyid }) {
-
-    const [open, setOpen] = useState(false)
-
-    const onConfirm = () => {
-
-        const { meta } = Profile
-        if (validator.isUUID(meta?.Uuid)) {
-            DeleteUsernotificationbyid(meta?.Uuid)
-            setOpen(false)
-        }
-    }
-
-
-    return (
-        <>
-            <Button onClick={() => { setOpen(true) }} className='!bg-[#2355a0] !text-white ' floated='left'>
-                {Literals.Button.Deleteall[Profile.Language]}
-            </Button>
-            <Confirm
-                open={open}
-                content="Tüm Bildirimleri silmek istediğinize eminmisiniz?"
-                header="Bildirim silme"
-                cancelButton="Vazgeç"
-                confirmButton="Sil"
-                onCancel={() => { setOpen(false) }}
-                onConfirm={() => { onConfirm() }}
+            </Pagewrapper>
+            <UsernotificationsNotificationView
+                willFetchFullLayout
+                open={viewOpen}
+                setOpen={setViewOpen}
+                record={record}
+                setRecord={setRecord}
             />
-        </>
-    )
-}
-
-function Deletereadednotification({ Profile, DeleteUsernotificationbyidreaded }) {
-
-    const [open, setOpen] = useState(false)
-
-    const onConfirm = () => {
-
-        const { meta } = Profile
-        if (validator.isUUID(meta?.Uuid)) {
-            DeleteUsernotificationbyidreaded(meta?.Uuid)
-            setOpen(false)
-        }
-    }
-
-
-    return (
-        <>
-            <Button onClick={() => { setOpen(true) }} className='!bg-[#2355a0] !text-white ' floated='left'>
-                {Literals.Button.Deletereaded[Profile.Language]}
-            </Button>
             <Confirm
-                open={open}
-                content="Sadece Okunan Bildirimleri silmek istediğinize emin misiniz?"
-                header="Bildirim silme"
-                cancelButton="Vazgeç"
-                confirmButton="Sil"
-                onCancel={() => { setOpen(false) }}
-                onConfirm={() => { onConfirm() }}
+                open={deleteOpen}
+                content={t('Pages.Usernotifications.Column.DeleteNotificationContent')}
+                header={t('Pages.Usernotifications.Column.DeleteNotificationHeader')}
+                cancelButton={t('Common.Button.Cancel')}
+                confirmButton={t('Common.Button.Delete')}
+                onCancel={() => { setConfirmopen(false) }}
+                onConfirm={() => {
+                    DeleteUsernotifications({
+                        data: record,
+                    })
+                    setDeleteOpen(false)
+                }}
             />
-        </>
+            <Confirm
+                open={deleteAllOpen}
+                content={t('Pages.Usernotifications.UsernotificationsNotificationView.DeleteAllContent')}
+                header={t('Pages.Usernotifications.UsernotificationsNotificationView.DeleteHeader')}
+                cancelButton={t('Common.Button.Cancel')}
+                confirmButton={t('Common.Button.Delete')}
+                onCancel={() => { setDeleteAllOpen(false) }}
+                onConfirm={() => {
+                    if (validator.isUUID(meta?.Uuid)) {
+                        DeleteByUserID({
+                            data: meta?.Uuid,
+                            onSuccess: () => {
+                                if (validator.isUUID(meta?.Uuid)) {
+                                    GetUsernotifications({
+                                        guid: meta?.Uuid
+                                    })
+                                }
+                                setDeleteAllOpen(false)
+                            }
+                        })
+                    }
+                }}
+            />
+            <Confirm
+                open={deleteReadOpen}
+                content={t('Pages.Usernotifications.UsernotificationsNotificationView.DeleteReadedContent')}
+                header={t('Pages.Usernotifications.UsernotificationsNotificationView.DeleteHeader')}
+                cancelButton={t('Common.Button.Cancel')}
+                confirmButton={t('Common.Button.Delete')}
+                onCancel={() => { setDeleteReadOpen(false) }}
+                onConfirm={() => {
+                    if (validator.isUUID(meta?.Uuid)) {
+                        DeleteReadByUserID({
+                            data: meta?.Uuid,
+                            onSuccess: () => {
+                                if (validator.isUUID(meta?.Uuid)) {
+                                    GetUsernotifications({
+                                        guid: meta?.Uuid
+                                    })
+                                }
+                                setDeleteReadOpen(false)
+                            }
+                        })
+                    }
+                }}
+            />
+        </React.Fragment>
     )
 }
+
+export default Usernotifications

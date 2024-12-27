@@ -10,7 +10,7 @@ const Routes = [
   { method: 'put', path: '/Users', controller: 'User', action: 'UpdateUser' },
   { method: 'delete', path: '/Users/DeleteUsermovement/:usermovementId', controller: 'User', action: 'DeleteUsermovement' },
   { method: 'delete', path: '/Users/:userId', controller: 'User', action: 'DeleteUser' },
-  
+
   { method: 'get', path: '/Profile/Getusersalt/:userId', controller: 'Profile', action: 'Getusersalt' },
   { method: 'get', path: '/Profile/Getuserbyemail/:email', controller: 'Profile', action: 'Getuserbyemail' },
   { method: 'get', path: '/Profile/Getuserbyusername/:username', controller: 'Profile', action: 'Getuserbyusername' },
@@ -33,13 +33,15 @@ const Routes = [
   { method: 'put', path: '/Roles', controller: 'Role', action: 'UpdateRole' },
   { method: 'delete', path: '/Roles/:roleId', controller: 'Role', action: 'DeleteRole' },
 
+  { method: 'get', path: '/Usernotifications/GetLastUsernotificationsbyUserid/:userId', controller: 'Usernotification', action: 'GetLastUsernotificationsbyUserid' },
+  { method: 'get', path: '/Usernotifications/ReadAllNotificationByUser/:userId', controller: 'Usernotification', action: 'ReadAllNotificationByUser' },
+  { method: 'get', path: '/Usernotifications/ShowAllNotificationByUser/:userId', controller: 'Usernotification', action: 'ShowAllNotificationByUser' },
+  { method: 'get', path: '/Usernotifications/GetUnreadNotificationCountByUser/:userId', controller: 'Usernotification', action: 'GetUnreadNotificationCountByUser' },
+  { method: 'get', path: '/Usernotifications/GetUnshowedNotificationCountByUser/:userId', controller: 'Usernotification', action: 'GetUnshowedNotificationCountByUser' },
   { method: 'get', path: '/Usernotifications/GetUsernotificationsbyUserid/:userId', controller: 'Usernotification', action: 'GetUsernotificationsbyUserid' },
-  { method: 'get', path: '/Usernotifications/:notificationId', controller: 'Usernotification', action: 'GetUsernotification' },
   { method: 'get', path: '/Usernotifications', controller: 'Usernotification', action: 'GetUsernotifications' },
   { method: 'post', path: '/Usernotifications/AddUsernotificationbyrole', controller: 'Usernotification', action: 'AddUsernotificationbyrole' },
-  { method: 'post', path: '/Usernotifications', controller: 'Usernotification', action: 'AddUsernotification' },
   { method: 'put', path: '/Usernotifications/Editrecord', controller: 'Usernotification', action: 'UpdateUsernotifications' },
-  { method: 'put', path: '/Usernotifications', controller: 'Usernotification', action: 'UpdateUsernotification' },
   { method: 'delete', path: '/Usernotifications/DeleteUsernotificationbyidreaded/:userId', controller: 'Usernotification', action: 'DeleteUsernotificationbyidreaded' },
   { method: 'delete', path: '/Usernotifications/DeleteUsernotificationbyid/:userId', controller: 'Usernotification', action: 'DeleteUsernotificationbyid' },
   { method: 'delete', path: '/Usernotifications/:notificationId', controller: 'Usernotification', action: 'DeleteUsernotification' },

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Routes from '../../Routes'
 import { Sidebar as Sidebarcomponent, LoadingPage, Navbar } from '../../Components'
 import { Icon, Menu, Segment, SidebarPushable, SidebarPusher, Sidebar, Label } from 'semantic-ui-react';
-import Usernotifications from '../../Containers/Usernotifications/Usernotifications';
+import UsernotificationSidebar from '../../Containers/Usernotifications/UsernotificationSidebar';
 import { STORAGE_KEY_PATIENTCARE_ACCESSTOKEN, STORAGE_KEY_PATIENTCARE_LANGUAGE } from '../../Utils/Constants';
 export default class Layout extends Component {
 
@@ -65,14 +65,14 @@ export default class Layout extends Component {
 
   render() {
 
-    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal, Istokenchecking, Usagetypes, handleOpen, fillnotification } = this.props
+    const { Profile, Files, iconOnly, seticonOnly, history, logOut, isMobile, hideMobile, sethideMobile, handleViewmodal, Istokenchecking, Usagetypes, handleNotificationSidebar, fillnotification } = this.props
 
     return (
       Istokenchecking || Profile.isLogging || Profile.isFetching ?
         <LoadingPage />
         :
         <SidebarPushable className='!-m-2' as={Segment} style={{ overflow: 'hidden' }}>
-          <Usernotifications />
+          <UsernotificationSidebar />
           <SidebarPusher >
             <div className=' dark:bg-Contentbg overflow-hidden bg-white' >
               <Navbar
@@ -88,7 +88,7 @@ export default class Layout extends Component {
                 handleViewmodal={handleViewmodal}
                 fillnotification={fillnotification}
                 history={history}
-                handleNotification={handleOpen}
+                handleNotificationSidebar={handleNotificationSidebar}
                 setVisible={() => { this.setState({ visible: !this.state.visible }) }}
               />
               <div className='flex flex-row justify-start items-start '>

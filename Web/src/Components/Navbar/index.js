@@ -22,7 +22,7 @@ export class Navbar extends Component {
   }
 
   render() {
-    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, Usagetypes, history, onlyTitle, handleNotification, fillnotification, Files } = this.props
+    const { iconOnly, seticonOnly, Profile, isMobile, sethideMobile, hideMobile, Usagetypes, history, onlyTitle, handleNotificationSidebar, fillnotification, Files } = this.props
 
     const t = Profile?.i18n?.t
 
@@ -63,7 +63,7 @@ export class Navbar extends Component {
             <div className='h-[2px] group-hover:bg-[#747474] bg-white dark:bg-[#3d3d3d] my-[3px] w-[20px]' />
             <div className='h-[2px] group-hover:bg-[#747474] bg-white dark:bg-[#3d3d3d]  w-[20px]' />
           </div>
-          <div  className={`absolute left-0 right-0 -z-10 flex flex-row justify-center items-center group `}   >
+          <div className={`absolute left-0 right-0 -z-10 flex flex-row justify-center items-center group `}   >
             <div onClick={this.handleOpendefaultpage} className='flex flex-row justify-center items-center group cursor-pointer'>
               <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-white dark:text-TextColor'>ELDER</p>
               <p className='select-none m-0 font-Common font-bold text-[1.84em] line-none text-[#7eabc5] dark:text-TextColor'>CAMP</p>
@@ -74,7 +74,7 @@ export class Navbar extends Component {
             <div
               className='cursor-pointer group'
               onClick={() => {
-                handleNotification(true)
+                handleNotificationSidebar()
               }}
             >
               <Icon name='bell' className='text-white group-hover:text-gray-300 transition-all duration-500' />

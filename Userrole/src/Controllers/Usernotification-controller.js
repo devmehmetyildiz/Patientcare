@@ -13,33 +13,6 @@ async function GetUsernotifications(req, res, next) {
     }
 }
 
-async function GetUsernotification(req, res, next) {
-
-    let validationErrors = []
-    if (req.params.notificationId === undefined) {
-        validationErrors.push(req.t('Usernotifications.Error.UsernotificationIDRequired'))
-    }
-    if (!validator.isUUID(req.params.notificationId)) {
-        validationErrors.push(req.t('Usernotifications.Error.UnsupportedUsernotificationID'))
-    }
-    if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.t('Usernotifications'), req.language))
-    }
-
-    try {
-        const notification = await db.usernotificationModel.findOne({ where: { Uuid: req.params.notificationId } });
-        if (!notification) {
-            return next(createNotFoundError(req.t('Usernotifications.Error.NotFound'), req.t('Usernotifications'), req.language))
-        }
-        if (!notification.Isactive) {
-            return next(createNotFoundError(req.t('Usernotifications.Error.NotActive'), req.t('Usernotifications'), req.language))
-        }
-        res.status(200).json(notification)
-    } catch (error) {
-        return next(sequelizeErrorCatcher(error))
-    }
-}
-
 async function GetUsernotificationsbyUserid(req, res, next) {
     try {
         let validationErrors = []
@@ -60,6 +33,38 @@ async function GetUsernotificationsbyUserid(req, res, next) {
             order: [
                 ['Createtime', 'DESC'],
             ],
+        })
+        if (!notifications) {
+            return next(createNotFoundError(req.t('Usernotifications.Error.NotFound'), req.t('Usernotifications'), req.language))
+        }
+        res.status(200).json(notifications)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function GetLastUsernotificationsbyUserid(req, res, next) {
+    try {
+        let validationErrors = []
+        if (req.params.userId === undefined) {
+            validationErrors.push(req.t('Usernotifications.Error.UsernotificationIDRequired'))
+        }
+        if (!validator.isUUID(req.params.userId)) {
+            validationErrors.push(req.t('Usernotifications.Error.UnsupportedUsernotificationID'))
+        }
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Usernotifications'), req.language))
+        }
+        const notifications = await db.usernotificationModel.findAll({
+            where: {
+                Isreaded: false,
+                UserID: req.params.userId,
+                Isactive: true,
+            },
+            order: [
+                ['Createtime', 'DESC'],
+            ],
+            limit: 50
         })
         if (!notifications) {
             return next(createNotFoundError(req.t('Usernotifications.Error.NotFound'), req.t('Usernotifications'), req.language))
@@ -112,54 +117,6 @@ async function AddUsernotificationbyrole(req, res, next) {
     res.status(200).json({ message: 'NotificationCreated' })
 }
 
-async function AddUsernotification(req, res, next) {
-
-    let notificationuuid = uuid()
-
-    const t = await db.sequelize.transaction();
-
-    try {
-        await db.usernotificationModel.create({
-            ...req.body,
-            Uuid: notificationuuid,
-            Createduser: "System",
-            Createtime: new Date(),
-            Isactive: true
-        }, { transaction: t })
-
-        await t.commit()
-    } catch (err) {
-        await t.rollback()
-        return next(sequelizeErrorCatcher(err))
-    }
-    GetUsernotifications(req, res, next)
-}
-
-async function UpdateUsernotification(req, res, next) {
-
-    const t = await db.sequelize.transaction();
-    try {
-        const notification = await db.usernotificationModel.findOne({ where: { Uuid: req.body.Uuid } })
-        if (!notification) {
-            return next(createNotFoundError(req.t('Usernotifications.Error.NotFound'), req.t('Usernotifications'), req.language))
-        }
-        if (notification.Isactive === false) {
-            return next(createNotFoundError(req.t('Usernotifications.Error.NotActive'), req.t('Usernotifications'), req.language))
-        }
-
-        await db.usernotificationModel.update({
-            ...req.body,
-            Updateduser: "System",
-            Updatetime: new Date(),
-        }, { where: { Uuid: req.body?.Uuid }, transaction: t })
-
-        await t.commit()
-    } catch (error) {
-        return next(sequelizeErrorCatcher(error))
-    }
-    GetUsernotifications(req, res, next)
-}
-
 async function UpdateUsernotifications(req, res, next) {
 
     const t = await db.sequelize.transaction();
@@ -185,7 +142,7 @@ async function UpdateUsernotifications(req, res, next) {
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
-    GetUsernotifications(req, res, next)
+    res.status(200).json({ message: 'NotificationUpdated' })
 }
 
 async function DeleteUsernotification(req, res, next) {
@@ -224,7 +181,7 @@ async function DeleteUsernotification(req, res, next) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
-    GetUsernotifications(req, res, next)
+    res.status(200).json({ message: 'NotificationDeleted' })
 }
 
 async function DeleteUsernotificationbyid(req, res, next) {
@@ -254,7 +211,7 @@ async function DeleteUsernotificationbyid(req, res, next) {
         await t.rollback();
         return next(sequelizeErrorCatcher(error))
     }
-    GetUsernotifications(req, res, next)
+    res.status(200).json({ message: 'NotificationDeleted' })
 }
 
 async function DeleteUsernotificationbyidreaded(req, res, next) {
@@ -285,18 +242,119 @@ async function DeleteUsernotificationbyidreaded(req, res, next) {
         return next(sequelizeErrorCatcher(error))
     }
 
-    GetUsernotifications(req, res, next)
+    res.status(200).json({ message: 'NotificationDeleted' })
+}
+
+async function ReadAllNotificationByUser(req, res, next) {
+    try {
+        let validationErrors = []
+        if (req.params.userId === undefined) {
+            validationErrors.push(req.t('Usernotifications.Error.UsernotificationIDRequired'))
+        }
+        if (!validator.isUUID(req.params.userId)) {
+            validationErrors.push(req.t('Usernotifications.Error.UnsupportedUsernotificationID'))
+        }
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Usernotifications'), req.language))
+        }
+        const notifications = await db.usernotificationModel.count({
+            where: {
+                Isreaded: false,
+                UserID: req.params.userId,
+                Isactive: true,
+            },
+        })
+        res.status(200).json(notifications)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function ShowAllNotificationByUser(req, res, next) {
+    try {
+        let validationErrors = []
+        if (req.params.userId === undefined) {
+            validationErrors.push(req.t('Usernotifications.Error.UsernotificationIDRequired'))
+        }
+        if (!validator.isUUID(req.params.userId)) {
+            validationErrors.push(req.t('Usernotifications.Error.UnsupportedUsernotificationID'))
+        }
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Usernotifications'), req.language))
+        }
+        await db.usernotificationModel.update({
+            Isshowed: true,
+            Updateduser: "System",
+            Updatetime: new Date(),
+        }, { where: { UserID: req.params.userId, }, transaction: t })
+
+        res.status(200).json({ message: 'success' })
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function GetUnreadNotificationCountByUser(req, res, next) {
+    try {
+        let validationErrors = []
+        if (req.params.userId === undefined) {
+            validationErrors.push(req.t('Usernotifications.Error.UsernotificationIDRequired'))
+        }
+        if (!validator.isUUID(req.params.userId)) {
+            validationErrors.push(req.t('Usernotifications.Error.UnsupportedUsernotificationID'))
+        }
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Usernotifications'), req.language))
+        }
+        const notifications = await db.usernotificationModel.count({
+            where: {
+                Isreaded: false,
+                UserID: req.params.userId,
+                Isactive: true,
+            },
+        })
+        res.status(200).json(notifications)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
+async function GetUnshowedNotificationCountByUser(req, res, next) {
+    try {
+        let validationErrors = []
+        if (req.params.userId === undefined) {
+            validationErrors.push(req.t('Usernotifications.Error.UsernotificationIDRequired'))
+        }
+        if (!validator.isUUID(req.params.userId)) {
+            validationErrors.push(req.t('Usernotifications.Error.UnsupportedUsernotificationID'))
+        }
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Usernotifications'), req.language))
+        }
+        const notifications = await db.usernotificationModel.count({
+            where: {
+                Isshowed: false,
+                UserID: req.params.userId,
+                Isactive: true,
+            },
+        })
+        res.status(200).json(notifications)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
 }
 
 module.exports = {
     GetUsernotifications,
-    GetUsernotification,
-    AddUsernotification,
-    UpdateUsernotification,
     DeleteUsernotification,
     GetUsernotificationsbyUserid,
     UpdateUsernotifications,
     DeleteUsernotificationbyid,
     DeleteUsernotificationbyidreaded,
-    AddUsernotificationbyrole
+    AddUsernotificationbyrole,
+    GetLastUsernotificationsbyUserid,
+    ReadAllNotificationByUser,
+    ShowAllNotificationByUser,
+    GetUnreadNotificationCountByUser,
+    GetUnshowedNotificationCountByUser,
 }

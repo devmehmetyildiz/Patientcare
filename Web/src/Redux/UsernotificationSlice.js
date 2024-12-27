@@ -5,38 +5,12 @@ import instanse from "./axios";
 import config from "../Config";
 import validator from '../Utils/Validator';
 
-const Literals = {
-    addcode: {
-        en: 'Data Save',
-        tr: 'Veri Kaydetme'
-    },
-    adddescription: {
-        en: 'Notification added successfully',
-        tr: 'Bildirim Başarı ile eklendi'
-    },
-    updatecode: {
-        en: 'Data Update',
-        tr: 'Veri Güncelleme'
-    },
-    updatedescription: {
-        en: 'Notification updated successfully',
-        tr: 'Bildirim Başarı ile güncellendi'
-    },
-    deletecode: {
-        en: 'Data Delete',
-        tr: 'Veri Silme'
-    },
-    deletedescription: {
-        en: 'Notification Deleted successfully',
-        tr: 'Bildirim Başarı ile Silindi'
-    },
-}
-
 export const GetUsernotifications = createAsyncThunk(
     'Usernotifications/GetUsernotifications',
-    async (guid, { dispatch }) => {
+    async ({ guid, onSuccess }, { dispatch }) => {
         try {
             const response = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetUsernotificationsbyUserid/' + guid);
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -46,11 +20,12 @@ export const GetUsernotifications = createAsyncThunk(
     }
 );
 
-export const GetUsernotification = createAsyncThunk(
-    'Usernotifications/GetUsernotification',
-    async (guid, { dispatch }) => {
+export const GetUsernotificationsFreezed = createAsyncThunk(
+    'Usernotifications/GetUsernotificationsFreezed',
+    async ({ guid, onSuccess }, { dispatch }) => {
         try {
-            const response = await instanse.get(config.services.Userrole, `${ROUTES.USERNOTIFICATION}/${guid}`);
+            const response = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetUsernotificationsbyUserid/' + guid);
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -60,21 +35,12 @@ export const GetUsernotification = createAsyncThunk(
     }
 );
 
-export const AddUsernotifications = createAsyncThunk(
-    'Usernotifications/AddUsernotifications',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+export const GetLastUsernotificationsbyUserid = createAsyncThunk(
+    'Usernotifications/GetLastUsernotificationsbyUserid',
+    async ({ guid, onSuccess }, { dispatch }) => {
         try {
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Userrole, ROUTES.USERNOTIFICATION, data);
-            dispatch(fillUsernotificationnotification({
-                type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
-            }));
-            clearForm && clearForm('UsernotificationsCreate')
-            closeModal && closeModal()
-            history && history.push(redirectUrl ? redirectUrl : '/Usernotifications');
+            const response = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetLastUsernotificationsbyUserid/' + guid);
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -84,22 +50,72 @@ export const AddUsernotifications = createAsyncThunk(
     }
 );
 
-export const EditUsernotifications = createAsyncThunk(
-    'Usernotifications/EditUsernotifications',
-    async ({ data, history, redirectUrl, closeModal, clearForm, dontShownotification }, { dispatch, getState }) => {
+export const GetLastUsernotificationsbyUseridFreezed = createAsyncThunk(
+    'Usernotifications/GetLastUsernotificationsbyUseridFreezed',
+    async ({ guid, onSuccess }, { dispatch }) => {
         try {
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Userrole, ROUTES.USERNOTIFICATION, data);
-            !dontShownotification && dispatch(fillUsernotificationnotification({
-                type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
-            }));
-            clearForm && clearForm('UsernotificationsUpdate')
-            closeModal && closeModal()
-            history && history.push(redirectUrl ? redirectUrl : '/Usernotifications');
+            const response = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetLastUsernotificationsbyUserid/' + guid);
+            onSuccess && onSuccess()
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillUsernotificationnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
 
+export const GetUnreadNotificationCountByUser = createAsyncThunk(
+    'Usernotifications/GetUnreadNotificationCountByUser',
+    async ({ guid, onSuccess }, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetUnreadNotificationCountByUser/' + guid);
+            onSuccess && onSuccess()
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillUsernotificationnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const GetUnshowedNotificationCountByUser = createAsyncThunk(
+    'Usernotifications/GetUnshowedNotificationCountByUser',
+    async ({ guid, onSuccess }, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetUnshowedNotificationCountByUser/' + guid);
+            onSuccess && onSuccess()
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillUsernotificationnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const ReadAllNotificationByUser = createAsyncThunk(
+    'Usernotifications/ReadAllNotificationByUser',
+    async ({ guid, onSuccess }, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/ReadAllNotificationByUser/' + guid);
+            onSuccess && onSuccess()
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillUsernotificationnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const ShowAllNotificationByUser = createAsyncThunk(
+    'Usernotifications/ShowAllNotificationByUser',
+    async ({ guid, onSuccess }, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/ShowAllNotificationByUser/' + guid);
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -111,24 +127,20 @@ export const EditUsernotifications = createAsyncThunk(
 
 export const EditRecordUsernotifications = createAsyncThunk(
     'Usernotifications/EditRecordUsernotifications',
-    async ({ data, history, redirectUrl, closeModal, clearForm, dontShownotification }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, dontShownotification, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Userrole, ROUTES.USERNOTIFICATION + '/Editrecord', data);
             !dontShownotification && dispatch(fillUsernotificationnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Usernotifications.Messages.Update'),
             }));
             clearForm && clearForm('UsernotificationsUpdate')
             closeModal && closeModal()
             history && history.push(redirectUrl ? redirectUrl : '/Usernotifications');
-            const userId = state.Profile?.meta?.Uuid
-            if (validator.isUUID(userId)) {
-                const notificaitonResponse = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetUsernotificationsbyUserid/' + userId);
-                return notificaitonResponse.data
-            }
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -140,22 +152,23 @@ export const EditRecordUsernotifications = createAsyncThunk(
 
 export const DeleteUsernotifications = createAsyncThunk(
     'Usernotifications/DeleteUsernotifications',
-    async (data, { dispatch, getState }) => {
+    async ({ data, onSuccess }, { dispatch, getState }) => {
         try {
 
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.Userrole, `${ROUTES.USERNOTIFICATION}/${data.Uuid}`);
             dispatch(fillUsernotificationnotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Usernotifications.Messages.Delete'),
             }));
             const userId = state.Profile?.meta?.Uuid
             if (validator.isUUID(userId)) {
                 const notificaitonResponse = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetUsernotificationsbyUserid/' + userId);
                 return notificaitonResponse.data
             }
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -165,24 +178,20 @@ export const DeleteUsernotifications = createAsyncThunk(
     }
 );
 
-export const DeleteUsernotificationbyidreaded = createAsyncThunk(
+export const DeleteReadByUserID = createAsyncThunk(
     'Usernotifications/DeleteUsernotificationbyidreaded',
-    async (data, { dispatch, getState }) => {
+    async ({ data, onSuccess }, { dispatch, getState }) => {
         try {
 
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.Userrole, `${ROUTES.USERNOTIFICATION}/DeleteUsernotificationbyidreaded/${data}`);
             dispatch(fillUsernotificationnotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Usernotifications.Messages.Delete'),
             }));
-            const userId = state.Profile?.meta?.Uuid
-            if (validator.isUUID(userId)) {
-                const notificaitonResponse = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetUsernotificationsbyUserid/' + userId);
-                return notificaitonResponse.data
-            }
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -192,24 +201,19 @@ export const DeleteUsernotificationbyidreaded = createAsyncThunk(
     }
 );
 
-export const DeleteUsernotificationbyid = createAsyncThunk(
+export const DeleteByUserID = createAsyncThunk(
     'Usernotifications/DeleteUsernotificationbyid',
-    async (data, { dispatch, getState }) => {
+    async ({ data, onSuccess }, { dispatch, getState }) => {
         try {
-
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.Userrole, `${ROUTES.USERNOTIFICATION}/DeleteUsernotificationbyid/${data}`);
             dispatch(fillUsernotificationnotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Usernotifications.Messages.Delete'),
             }));
-            const userId = state.Profile?.meta?.Uuid
-            if (validator.isUUID(userId)) {
-                const notificaitonResponse = await instanse.get(config.services.Userrole, ROUTES.USERNOTIFICATION + '/GetUsernotificationsbyUserid/' + userId);
-                return notificaitonResponse.data
-            }
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -218,23 +222,42 @@ export const DeleteUsernotificationbyid = createAsyncThunk(
         }
     }
 );
+
 
 export const UsernotificationsSlice = createSlice({
     name: 'Usernotifications',
     initialState: {
         open: false,
+        modalList: [],
         list: [],
         selected_record: {},
         errMsg: null,
         notifications: [],
+        unShowedCount: 0,
+        unReadCount: 0,
+        isUnShowedCountLoading: false,
+        isUnReadCountLoading: false,
+        isModalListLoading: false,
         isLoading: false,
         isEditLoading: false,
         isDeletemodalopen: false,
         isViewmodalopen: false,
     },
     reducers: {
+        handleNotificationSidebar: (state) => {
+            state.open = !state.open;
+        },
         handleOpen: (state, action) => {
             state.open = action.payload;
+        },
+        openSidebar: (state) => {
+            state.open = true;
+        },
+        closeSidebar: (state) => {
+            state.open = false;
+        },
+        toggleSidebar: (state) => {
+            state.open = !state.open;
         },
         handleSelectedUsernotification: (state, action) => {
             state.selected_record = action.payload;
@@ -256,10 +279,78 @@ export const UsernotificationsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(ShowAllNotificationByUser.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+            })
+            .addCase(ShowAllNotificationByUser.fulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(ShowAllNotificationByUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ReadAllNotificationByUser.pending, (state) => {
+                state.isLoading = true;
+                state.errMsg = null;
+            })
+            .addCase(ReadAllNotificationByUser.fulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(ReadAllNotificationByUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetUnshowedNotificationCountByUser.pending, (state) => {
+                state.isUnShowedCountLoading = true;
+                state.errMsg = null;
+                state.unShowedCount = 0;
+            })
+            .addCase(GetUnshowedNotificationCountByUser.fulfilled, (state, action) => {
+                state.isUnShowedCountLoading = false;
+                state.unShowedCount = action.payload;
+            })
+            .addCase(GetUnshowedNotificationCountByUser.rejected, (state, action) => {
+                state.isUnShowedCountLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetUnreadNotificationCountByUser.pending, (state) => {
+                state.isUnReadCountLoading = true;
+                state.errMsg = null;
+                state.unReadCount = 0;
+            })
+            .addCase(GetUnreadNotificationCountByUser.fulfilled, (state, action) => {
+                state.isUnReadCountLoading = false;
+                state.unReadCount = action.payload;
+            })
+            .addCase(GetUnreadNotificationCountByUser.rejected, (state, action) => {
+                state.isUnReadCountLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetLastUsernotificationsbyUseridFreezed.pending, (state) => {
+                state.errMsg = null;
+            })
+            .addCase(GetLastUsernotificationsbyUseridFreezed.fulfilled, (state, action) => {
+                state.modalList = action.payload;
+            })
+            .addCase(GetLastUsernotificationsbyUseridFreezed.rejected, (state, action) => {
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetLastUsernotificationsbyUserid.pending, (state) => {
+                state.isModalListLoading = true;
+                state.errMsg = null;
+            })
+            .addCase(GetLastUsernotificationsbyUserid.fulfilled, (state, action) => {
+                state.isModalListLoading = false;
+                state.modalList = action.payload;
+            })
+            .addCase(GetLastUsernotificationsbyUserid.rejected, (state, action) => {
+                state.isModalListLoading = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(GetUsernotifications.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                // state.list = [];
             })
             .addCase(GetUsernotifications.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -269,47 +360,20 @@ export const UsernotificationsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(GetUsernotification.pending, (state) => {
-                state.isLoading = true;
+            .addCase(GetUsernotificationsFreezed.pending, (state) => {
                 state.errMsg = null;
-                state.selected_record = {};
             })
-            .addCase(GetUsernotification.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.selected_record = action.payload;
-            })
-            .addCase(GetUsernotification.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errMsg = action.error.message;
-            })
-            .addCase(AddUsernotifications.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(AddUsernotifications.fulfilled, (state, action) => {
-                state.isLoading = false;
+            .addCase(GetUsernotificationsFreezed.fulfilled, (state, action) => {
                 state.list = action.payload;
             })
-            .addCase(AddUsernotifications.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errMsg = action.error.message;
-            })
-            .addCase(EditUsernotifications.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(EditUsernotifications.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.list = action.payload;
-            })
-            .addCase(EditUsernotifications.rejected, (state, action) => {
-                state.isLoading = false;
+            .addCase(GetUsernotificationsFreezed.rejected, (state, action) => {
                 state.errMsg = action.error.message;
             })
             .addCase(EditRecordUsernotifications.pending, (state) => {
                 state.isEditLoading = true;
             })
-            .addCase(EditRecordUsernotifications.fulfilled, (state, action) => {
+            .addCase(EditRecordUsernotifications.fulfilled, (state) => {
                 state.isEditLoading = false;
-                state.list = action.payload;
             })
             .addCase(EditRecordUsernotifications.rejected, (state, action) => {
                 state.isEditLoading = false;
@@ -318,33 +382,30 @@ export const UsernotificationsSlice = createSlice({
             .addCase(DeleteUsernotifications.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(DeleteUsernotifications.fulfilled, (state, action) => {
+            .addCase(DeleteUsernotifications.fulfilled, (state) => {
                 state.isLoading = false;
-                state.list = action.payload;
             })
             .addCase(DeleteUsernotifications.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteUsernotificationbyidreaded.pending, (state) => {
+            .addCase(DeleteReadByUserID.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(DeleteUsernotificationbyidreaded.fulfilled, (state, action) => {
+            .addCase(DeleteReadByUserID.fulfilled, (state) => {
                 state.isLoading = false;
-                state.list = action.payload;
             })
-            .addCase(DeleteUsernotificationbyidreaded.rejected, (state, action) => {
+            .addCase(DeleteReadByUserID.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeleteUsernotificationbyid.pending, (state) => {
+            .addCase(DeleteByUserID.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(DeleteUsernotificationbyid.fulfilled, (state, action) => {
+            .addCase(DeleteByUserID.fulfilled, (state) => {
                 state.isLoading = false;
-                state.list = action.payload;
             })
-            .addCase(DeleteUsernotificationbyid.rejected, (state, action) => {
+            .addCase(DeleteByUserID.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             });
@@ -357,7 +418,11 @@ export const {
     removeUsernotificationnotification,
     handleDeletemodal,
     handleViewmodal,
-    handleOpen
+    handleOpen,
+    handleNotificationSidebar,
+    openSidebar,
+    closeSidebar,
+    toggleSidebar
 } = UsernotificationsSlice.actions;
 
 export default UsernotificationsSlice.reducer;

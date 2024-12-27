@@ -25,6 +25,7 @@ export default function Settings(props) {
         Showcreatebutton,
         Additionalfunctiontxt,
         Additionalfunction,
+        ExtendedButtons
     } = props
 
     const { roles, i18n } = Profile
@@ -77,6 +78,9 @@ export default function Settings(props) {
                                 <Button basic color='red' inverted onClick={() => { setmodalOpen(false) }}>
                                     <Icon name='remove' /> {t('Components.Setting.Label.Close')}
                                 </Button>
+                                {(ExtendedButtons || []).map(button => {
+                                    return button
+                                })}
                             </GridColumn>
                         </Grid>
                     </div>
@@ -92,6 +96,9 @@ export default function Settings(props) {
                 {Showcolumnchooser && willshowmanageview && <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />}
                 {Showexcelimport && willshowreport && <ExcelImport columns={Columns} addData={AddRecord} />}
                 {Showexcelexport && willshowreport && <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />}
+                {(ExtendedButtons || []).map(button => {
+                    return button
+                })}
             </GridColumn>
     )
 }
