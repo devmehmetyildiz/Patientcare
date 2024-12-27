@@ -279,6 +279,33 @@ const version1_1_0_10 = {
     ],
 }
 
+const version1_1_0_11 = {
+    version: "1.1.0.11",
+    bugs: [
+        {
+            title: "Sistem", commits: [
+                "Uzun süreli kullanımlarda uygulamanın çıkış yapma sorunu ile alakalı geliştirme yapıldı.",
+                "Grid Ekranlardaki tıklanıldığı zaman renk değişiminde geliştirme yapıldı. Sayfalar arası geçişte tıklamanın takılı kalma sorunu giderildi.",
+            ],
+        },
+    ],
+    changes: [
+        {
+            title: "Sistem", commits: [
+                "Bildirimler ekranı yenilendi. Sadece okunmamış en güncel 50 bildirim gözükecek.",
+                "Detayına bakıldığında liste güncellelecek, okunan veya okunmayan bildirimler için tüm bildirimler satırına tıklamak yeterli, ayrı sayfa üzerinden takip edilecek.",
+            ],
+        },
+    ],
+    features: [
+        {
+            title: "Hastalar", commits: [
+                "Hasta Yoklama Ekranı Eklendi.",
+            ],
+        },
+    ],
+}
+
 export {
     version1_1_0_1,
     version1_1_0_2,
@@ -289,4 +316,5 @@ export {
     version1_1_0_8,
     version1_1_0_9,
     version1_1_0_10,
+    version1_1_0_11,
 }
