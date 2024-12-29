@@ -3072,21 +3072,15 @@ async function GetPatientRollCall(req, res, next) {
 }
 
 function generateDateArray(month) {
-    const start = new Date(month);
-    start.setUTCDate(1);
-    start.setUTCHours(0, 0, 0, 0);
-
-    const end = new Date(month);
-    end.setUTCMonth(end.getUTCMonth() + 1);
-    end.setUTCDate(0);
-    end.setUTCHours(23, 59, 59, 999);
+    const inputDate = new Date(month);
+    const start = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth(), 1));
+    const end = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth() + 1, 0, 23, 59, 59, 999));
 
     const days = [];
 
     while (start.getTime() <= end.getTime()) {
-        const day = new Date(start); 
-        days.push(day);
-        start.setUTCDate(start.getUTCDate() + 1);
+        days.push(new Date(start));
+        start.setUTCDate(start.getUTCDate() + 1); 
     }
 
     return days;
