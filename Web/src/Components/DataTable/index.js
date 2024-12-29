@@ -234,7 +234,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent, disabl
                                                 {row.cells.map(cell => {
                                                     const Isicon = cell?.column?.disableProps
                                                     return (
-                                                        <td  {...cell.getCellProps({ className: cell.column.className })} onClick={() => {
+                                                        <td  {...cell.getCellProps({ className: cell.column.className })} onClick={(e) => {
                                                             if (!Isicon) {
                                                                 setSelectedRowId(prev => prev.includes(index) ? prev.filter(u => u !== index) : [...prev, index])
                                                             }

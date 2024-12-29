@@ -66,18 +66,18 @@ export default class PrinttemplatesEdit extends Component {
               <Tab className='station-tab'
                 panes={[
                   {
-                    menuItem: t('Pages.Printtemplates.Columns.Savescreen'),
+                    menuItem: t('Pages.Printtemplates.Column.Savescreen'),
                     pane: {
                       key: 'save',
                       content: <React.Fragment>
                         <Form.Group widths={"equal"}>
-                          <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Printtemplates.Columns.Name')} name="Name" />
+                          <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Printtemplates.Column.Name')} name="Name" />
                         </Form.Group>
                       </React.Fragment>
                     }
                   },
                   {
-                    menuItem: t('Pages.Printtemplates.Columns.Editorscreen'),
+                    menuItem: t('Pages.Printtemplates.Column.Editorscreen'),
                     pane: {
                       key: 'design',
                       content: <div className='max-h-[calc(66vh-10px)] overflow-y-auto overflow-x-hidden'>
@@ -133,9 +133,9 @@ export default class PrinttemplatesEdit extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
-    const t = Profile?.i18n?.t
-
     const { EditPrinttemplates, history, fillPrinttemplatenotification, Printtemplates, Profile } = this.props
+
+    const t = Profile?.i18n?.t
 
     const data = this.context.getForm(this.PAGE_NAME)
     data.Printtemplate = this.state.template

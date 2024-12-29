@@ -52,7 +52,7 @@ export default class Supportplanlists extends Component {
         const metaKey = "supportplanlist"
         let initialConfig = GetInitialconfig(Profile, metaKey)
 
-        const list = (Supportplanlists.list || []).map(item => {
+        const list = (Supportplanlists.list || []).filter(u => u.Isactive).map(item => {
             return {
                 ...item,
                 edit: <Link to={`/Supportplanlists/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

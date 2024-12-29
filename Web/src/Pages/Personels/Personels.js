@@ -45,7 +45,7 @@ export default class Periods extends Component {
     const metaKey = "personel"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Personels.list || []).map(item => {
+    const list = (Personels.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Personels/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
@@ -94,7 +94,7 @@ export default class Periods extends Component {
 
 
     return (
-      isLoading  ? <LoadingPage /> :
+      isLoading ? <LoadingPage /> :
         <React.Fragment>
           <Pagewrapper>
             <Headerwrapper>

@@ -42,7 +42,7 @@ export default class Patientcashregisters extends Component {
     const metaKey = "patientcashregister"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Patientcashregisters.list || []).map(item => {
+    const list = (Patientcashregisters.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Patientcashregisters/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

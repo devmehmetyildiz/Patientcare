@@ -17,7 +17,7 @@ export default function Departments(props) {
   }, [])
 
   useEffect(() => {
-    const departmentlist = (Departments.list || []).map(item => {
+    const departmentlist = (Departments.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Departments/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

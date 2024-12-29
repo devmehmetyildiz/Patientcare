@@ -9,7 +9,7 @@ export default function PatientsDetailStocks(props) {
 
     const t = Profile?.i18n?.t
 
-    const PatientStocks = (Stocks.list || []).filter(u => u.WarehouseID === patient?.Uuid)
+    const PatientStocks = (Stocks.list || []).filter(u => u.WarehouseID === patient?.Uuid && u.Isactive)
 
     const List = (PatientStocks || []).map(item => {
 

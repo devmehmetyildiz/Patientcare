@@ -46,7 +46,7 @@ export default class Mailsettings extends Component {
     const metaKey = "mailsetting"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Mailsettings.list || []).map(item => {
+    const list = (Mailsettings.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Mailsettings/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

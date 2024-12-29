@@ -216,8 +216,8 @@ function CareplansCreatePatientcard(props) {
 
   const { isValid, Files, patient, patientdefine, Usagetypes, fillnotification, Profile } = props
 
-  const usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
-  const file = (Files.list || []).find(u => u.ParentID === patient?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
+  const usagetypePP = (Usagetypes.list || []).filter(u => u.Isactive).find(u => u.Value === 'PP')?.Uuid || null
+  const file = (Files.list || []).filter(u => u.Isactive).find(u => u.ParentID === patient?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
   return (isValid ?
     <React.Fragment>

@@ -50,7 +50,7 @@ export default class Todogroupdefines extends Component {
         const metaKey = "todogroupdefine"
         let initialConfig = GetInitialconfig(Profile, metaKey)
 
-        const list = (Todogroupdefines.list || []).map(item => {
+        const list = (Todogroupdefines.list || []).filter(u => u.Isactive).map(item => {
             return {
                 ...item,
                 edit: <Link to={`/Todogroupdefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

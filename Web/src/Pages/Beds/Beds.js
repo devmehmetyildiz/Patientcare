@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Confirm, Icon, } from 'semantic-ui-react'
+import { Confirm, Icon, Loader, } from 'semantic-ui-react'
 import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import BedsDelete from '../../Containers/Beds/BedsDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
-import { bedPatientCellhandler, boolCellhandler, roomCellhandler } from '../../Utils/cellRenderers'
 
 export default function Beds(props) {
   const [bedID, setBedID] = useState(null)
@@ -16,6 +15,60 @@ export default function Beds(props) {
 
   const t = Profile?.i18n?.t
   const { isLoading } = Beds
+
+  const roomCellhandler = ({ value, props }) => {
+    const { Rooms, Floors } = props
+    if (Rooms.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const room = (Rooms.list || []).find(u => u.Uuid === value)
+      const floor = (Floors.list || []).find(u => u.Uuid === room?.FloorID)
+      return `${room?.Name} (${floor?.Name})`
+    }
+  }
+
+  const bedPatientCellhandler = ({ value, bedID, props }) => {
+    const { Patients, Patientdefines, Beds } = props
+    if (Patients.isLoading || Patientdefines.isLoading) {
+      return <Loader size='small' active inline='centered' ></Loader>
+    } else {
+      const bed = (Beds.list || []).find(u => u.Uuid === bedID)
+      const patient = (Patients.list || []).find(u => u.Uuid === value)
+      const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+      return patientdefine
+        ? <div
+          className='group cursor-pointer flex flex-row flex-nowrap'
+        >
+          {`${patientdefine?.Firstname} ${patientdefine?.Lastname} (${patientdefine?.CountryID})`}
+          <div
+            onClick={() => {
+              setBedID(bedID)
+              setOpenConfirm(true)
+            }}
+            className='opacity-0 group-hover:opacity-100 transition-all ease-in-out duration-500'>
+            <Icon color='red' name='delete' />
+          </div>
+        </div>
+        : bed
+          ? bed?.Isoccupied ? <div
+            onClick={() => {
+              setBedID(bedID)
+              setOpenConfirm(true)
+            }}
+            className='cursor-pointer'
+          >
+            <Icon color='red' name='delete' />
+          </div>
+            : null
+          : null
+    }
+  }
+
+  const boolCellhandler = ({ value, props }) => {
+    const { Profile } = props
+    const t = Profile?.i18n?.t
+    return value !== null && (value ? t('Pages.Beds.Label.Filled') : t('Pages.Beds.Label.Empty'))
+  }
 
   const colProps = {
     sortable: true,

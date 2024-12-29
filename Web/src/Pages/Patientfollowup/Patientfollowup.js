@@ -20,9 +20,9 @@ export default class Patientfollowup extends Component {
 
     render() {
         const { Patients, Patientdefines, Profile, closeModal, Cases, Patienttypes, Costumertypes } = this.props
-        
+
         const t = Profile?.i18n?.t
-        
+
         const isLoading =
             Patients.isLoading ||
             Patientdefines.isLoading ||
@@ -31,7 +31,7 @@ export default class Patientfollowup extends Component {
             Patienttypes.isLoading
 
 
-        const disbandedCases = (Cases.list || []).filter(u => u.Patientstatus === 4 || u.Patientstatus === 6).map(u => u?.Uuid)
+        const disbandedCases = (Cases.list || []).filter(u => u.Isactive).filter(u => u.Patientstatus === 4 || u.Patientstatus === 6).map(u => u?.Uuid)
 
         const patients = (Patients.list || [])
             .filter(u => u.Isactive && !u.Iswaitingactivation)

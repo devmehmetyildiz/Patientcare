@@ -10,28 +10,28 @@ const Literals = {
         tr: 'Veri Kaydetme'
     },
     adddescription: {
-        en: 'Care plan added successfully',
-        tr: 'Bakım planı Başarı ile eklendi'
+        en: 'Profession added successfully',
+        tr: 'Meslek Başarı ile eklendi'
     },
     updatecode: {
         en: 'Data Update',
         tr: 'Veri Güncelleme'
     },
     updatedescription: {
-        en: 'Care plan updated successfully',
-        tr: 'Bakım planı Başarı ile güncellendi'
+        en: 'Profession updated successfully',
+        tr: 'Meslek Başarı ile güncellendi'
     },
     deletecode: {
         en: 'Data Delete',
         tr: 'Veri Silme'
     },
     deletedescription: {
-        en: 'Care plan Deleted successfully',
-        tr: 'Bakım planı Başarı ile Silindi'
+        en: 'Profession Deleted successfully',
+        tr: 'Meslek Başarı ile Silindi'
     },
     approvedescription: {
-        en: 'Care Plan approved successfully',
-        tr: 'Bakım PLanı Başarı ile Onaylandı'
+        en: 'Profession approved successfully',
+        tr: 'Meslek Başarı ile Onaylandı'
     },
 }
 

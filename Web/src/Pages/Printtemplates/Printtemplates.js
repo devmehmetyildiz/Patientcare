@@ -46,7 +46,7 @@ export default class Printtemplates extends Component {
     const metaKey = "printtemplate"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Printtemplates.list || []).map(item => {
+    const list = (Printtemplates.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Printtemplates/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

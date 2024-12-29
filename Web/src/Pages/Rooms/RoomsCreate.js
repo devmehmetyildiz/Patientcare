@@ -46,8 +46,8 @@ export default class RoomsCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Label.Name')} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Label.Floor')} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Floor')} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>

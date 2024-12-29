@@ -42,7 +42,7 @@ export default class Professions extends Component {
     const metaKey = "profession"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Professions.list || []).map(item => {
+    const list = (Professions.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Professions/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

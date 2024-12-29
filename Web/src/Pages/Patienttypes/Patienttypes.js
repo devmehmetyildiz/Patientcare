@@ -14,9 +14,9 @@ export default class Patienttypes extends Component {
 
   render() {
     const { Patienttypes, Profile, handleDeletemodal, handleSelectedPatienttype } = this.props
-   
+
     const t = Profile?.i18n?.t
-   
+
     const { isLoading } = Patienttypes
 
     const colProps = {
@@ -40,7 +40,7 @@ export default class Patienttypes extends Component {
     const metaKey = "patienttype"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Patienttypes.list || []).map(item => {
+    const list = (Patienttypes.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Patienttypes/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

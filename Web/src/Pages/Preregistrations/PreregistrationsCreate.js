@@ -89,7 +89,6 @@ export default class PreregistrationsCreate extends Component {
 
     let errors = []
     if (!validator.isUUID(data.DepartmentID)) {
-      console.log('data.DepartmentID: ', data.DepartmentID);
 
       errors.push({ type: 'Error', code: t('Pages.Preregistrations.Page.Header'), description: t('Pages.Preregistrations.Create.Messages.Departmentrequired') })
     }

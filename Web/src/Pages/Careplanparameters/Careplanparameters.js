@@ -42,7 +42,7 @@ export default class Careplanparameters extends Component {
     const metaKey = "careplanparameter"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Careplanparameters.list || []).map(item => {
+    const list = (Careplanparameters.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Careplanparameters/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

@@ -49,7 +49,7 @@ export default class Costumertypes extends Component {
     const metaKey = "costumertype"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Costumertypes.list || []).map(item => {
+    const list = (Costumertypes.list || []).filter(u => u.Isactive).map(item => {
       var text = (item.Departmentuuids || []).map(u => {
         return (Departments.list || []).find(department => department.Uuid === u.DepartmentID)?.Name
       }).join(", ")

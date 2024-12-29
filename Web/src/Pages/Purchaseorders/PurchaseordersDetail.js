@@ -60,7 +60,7 @@ export default function PurchaseordersDetail(props) {
   }, [isDetailmodalopen])
 
 
-  const stocks = (Stocks.list || []).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
+  const stocks = (Stocks.list || []).filter(u => u.WarehouseID === selected_record?.Uuid && u.Isactive).map(element => {
     return {
       ...element,
       key: Math.random(),

@@ -28,7 +28,7 @@ export default class Equipmentgroups extends Component {
     const { Equipmentgroups, Profile, handleSelectedEquipmentgroup, handleDeletemodal } = this.props
 
     const t = Profile?.i18n?.t
-    
+
     const { isLoading } = Equipmentgroups
 
     const colProps = {
@@ -54,7 +54,7 @@ export default class Equipmentgroups extends Component {
     const metaKey = "equipmentgroup"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Equipmentgroups.list || []).map(item => {
+    const list = (Equipmentgroups.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Equipmentgroups/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

@@ -34,8 +34,8 @@ export default class PatientcashregistersCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientcashregisters.Columns.Name')} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientcashregisters.Columns.Iseffectcompany')} name="Iseffectcompany" formtype='checkbox' />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientcashregisters.Column.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientcashregisters.Column.Iseffectcompany')} name="Iseffectcompany" formtype='checkbox' />
             </Form>
           </Contentwrapper>
           <Footerwrapper>

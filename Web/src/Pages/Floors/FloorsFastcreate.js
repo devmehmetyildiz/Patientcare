@@ -67,7 +67,7 @@ export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, ha
                         <Form.Group widths={'equal'}>
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Formatroomstringstart': e.target.value }) }}
-                                label={t('"Pages.Floors.Column.Formatroomstringstart')}
+                                label={t('Pages.Floors.Column.Formatroomstringstart')}
                                 placeholder={t('"Pages.Floors.Column.Formatroomstringstart')}
                             />
                             <Form.Input
@@ -124,7 +124,7 @@ export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, ha
                     {t('Common.Button.Giveup')}
                 </Button>
                 <Button
-                    content={t('Common.Button.Delete')}
+                    content={t('Common.Button.Create')}
                     labelPosition='right'
                     icon='checkmark'
                     onClick={() => {

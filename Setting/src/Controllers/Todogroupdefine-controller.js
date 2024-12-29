@@ -223,7 +223,7 @@ async function DeleteTodogroupdefine(req, res, next) {
             Deleteduser: username,
             Deletetime: new Date(),
             Isactive: false
-        }, { where: { Uuid: Uuid, transaction: t } })
+        }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
             type: types.Delete,

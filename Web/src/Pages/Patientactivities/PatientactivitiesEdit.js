@@ -34,9 +34,6 @@ export default function PatientactivitiesEdit(props) {
         e.preventDefault()
         const data = context.getForm(PAGE_NAME)
         let errors = []
-        console.log('data.Budget: ', data.Budget);
-        console.log('validator.isNumber(data.Budget): ', validator.isNumber(data.Budget));
-        console.log('data.Budget: ', typeof data.Budget);
         data.Budget = validator.isNumber(data.Budget) ? parseFloat(data.Budget) : data.Budget
 
         if (!validator.isString(data.Name)) {

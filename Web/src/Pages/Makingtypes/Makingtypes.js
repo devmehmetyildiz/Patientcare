@@ -40,7 +40,7 @@ export default class Makingtypes extends Component {
     const metaKey = "makingtype"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Makingtypes.list || []).map(item => {
+    const list = (Makingtypes.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Makingtypes/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

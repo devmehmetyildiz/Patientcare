@@ -33,7 +33,7 @@ export default class PatienttypesCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patienttypes.Columns.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patienttypes.Column.Name')} name="Name" />
             </Form>
           </Contentwrapper>
           <Footerwrapper>

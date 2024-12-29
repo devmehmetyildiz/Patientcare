@@ -14,12 +14,12 @@ export default class PatientcashregistersDelete extends Component {
         onOpen={() => handleDeletemodal(true)}
         open={isDeletemodalopen}
       >
-        <Modal.Header>{t('Pages.PatientcashregistersDelete.Page.Header')}</Modal.Header>
+        <Modal.Header>{t('Pages.Patientcashregisters.Page.Header')}</Modal.Header>
         <Modal.Content image>
           <Modal.Description>
             <p>
               <span className='font-bold'>{selected_record?.Name} </span>
-              {t('Pages.PatientcashregistersDelete.Delete.Label.Check')}
+              {t('Pages.Patientcashregisters.Delete.Label.Check')}
             </p>
           </Modal.Description>
         </Modal.Content>

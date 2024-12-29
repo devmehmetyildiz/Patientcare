@@ -55,7 +55,7 @@ export default class Equipments extends Component {
     const metaKey = "equipment"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Equipments.list || []).map(item => {
+    const list = (Equipments.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Equipments/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

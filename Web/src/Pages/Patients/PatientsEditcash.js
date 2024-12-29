@@ -66,7 +66,7 @@ export default class PatientsEditcash extends Component {
             Patientcashmovements.isLoading ||
             Patientcashregisters.isLoading
 
-        const list = (Patientcashmovements.list || []).filter(u => u.PatientID === Id).map(item => {
+        const list = (Patientcashmovements.list || []).filter(u => u.Isactive).filter(u => u.PatientID === Id).map(item => {
             return {
                 ...item,
                 edit: <Link to={`/Patientcashmovements/${item.Uuid}/edit?PatientID=${item?.Uuid}`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

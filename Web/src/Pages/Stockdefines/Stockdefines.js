@@ -47,7 +47,7 @@ export default class Stockdefines extends Component {
     const metaKey = "stockdefine"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Stockdefines.list || []).map(item => {
+    const list = (Stockdefines.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Stockdefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

@@ -42,8 +42,8 @@ export default class CostumertypesCreate extends Component {
           <Pagedivider />
           <Contentwrapper>
             <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Costumertypes.Columns.Name')} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Costumertypes.Columns.Department')} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Costumertypes.Column.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Costumertypes.Column.Department')} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
             </Form>
           </Contentwrapper>
           <Footerwrapper>

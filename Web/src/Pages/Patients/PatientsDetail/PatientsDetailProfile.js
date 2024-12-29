@@ -11,8 +11,8 @@ export default function PatientsDetailProfile(props) {
   const history = useHistory()
   const t = Profile?.i18n?.t
 
-  const usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
-  const file = (Files.list || []).find(u => u.ParentID === patient?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
+  const usagetypePP = (Usagetypes.list || []).filter(u => u.Isactive).find(u => u.Value === 'PP')?.Uuid || null
+  const file = (Files.list || []).filter(u => u.Isactive).find(u => u.ParentID === patient?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
 
   const patientname = `${patientdefine?.Firstname} ${patientdefine?.Lastname}` || t('Common.NoDataFound')
   const Approvaldate = patient?.Approvaldate ? Formatdate(patient?.Approvaldate, true) : t('Common.NoDataFound')

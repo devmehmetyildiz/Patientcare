@@ -45,9 +45,6 @@ export default function PurchaseorderPrepareStepTwo(props) {
         }
     })
 
-
-
-
     return (
         <>
             <Dimmer inverted active={isLoadingstatus}>

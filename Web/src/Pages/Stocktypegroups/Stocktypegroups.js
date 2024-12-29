@@ -43,7 +43,7 @@ export default class Stocktypegroups extends Component {
     const metaKey = "stocktypegroup"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Stocktypegroups.list || []).map(item => {
+    const list = (Stocktypegroups.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Stocktypegroups/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

@@ -52,7 +52,7 @@ export default class Units extends Component {
     const metaKey = "unit"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Units.list || []).map(item => {
+    const list = (Units.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Units/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

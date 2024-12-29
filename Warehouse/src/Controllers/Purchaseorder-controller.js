@@ -201,7 +201,6 @@ async function UpdatePurchaseorder(req, res, next) {
 
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
-
     try {
         const purchaseorder = await db.purchaseorderModel.findOne({ where: { Uuid: Uuid } });
         if (!purchaseorder) {
@@ -265,6 +264,10 @@ async function UpdatePurchaseorder(req, res, next) {
                 }
             }
 
+            await db.stockModel.destroy({ where: { WarehouseID: Uuid }, transaction: t });
+            if (stock.Id) {
+                delete stock.Id
+            }
             await db.stockModel.create({
                 ...stock,
                 Uuid: stockuuid,
@@ -288,6 +291,7 @@ async function UpdatePurchaseorder(req, res, next) {
 
         await t.commit()
     } catch (error) {
+        console.log('error: ', error);
         await t.rollback()
         return next(sequelizeErrorCatcher(error))
     }

@@ -65,7 +65,7 @@ export default class Cases extends Component {
     const metaKey = "case"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Cases.list || []).map(item => {
+    const list = (Cases.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Cases/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

@@ -94,22 +94,22 @@ export default class EquipmentsEdit extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Columns.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Columns.Equipmentgroup')} name="EquipmentgroupID" options={Equipmentgroupoptions} formtype="dropdown" />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Columns.User')} name="UserID" options={Usersoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Column.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Column.Equipmentgroup')} name="EquipmentgroupID" options={Equipmentgroupoptions} formtype="dropdown" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Column.User')} name="UserID" options={Usersoptions} formtype="dropdown" />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Columns.Floor')} name="FloorID" options={Flooroptions} formtype="dropdown" />
-                {validator.isUUID(data?.FloorID) && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Columns.Room')} name="RoomID" options={Roomsoptions} formtype="dropdown" />}
-                {validator.isUUID(data?.FloorID) && validator.isUUID(data?.RoomID) && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Columns.Bed')} name="BedID" options={Bedsoptions} formtype="dropdown" />}
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Column.Floor')} name="FloorID" options={Flooroptions} formtype="dropdown" />
+                {validator.isUUID(data?.FloorID) && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Column.Room')} name="RoomID" options={Roomsoptions} formtype="dropdown" />}
+                {validator.isUUID(data?.FloorID) && validator.isUUID(data?.RoomID) && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Column.Bed')} name="BedID" options={Bedsoptions} formtype="dropdown" />}
               </Form.Group>
               <Table celled className='overflow-x-auto' key='table' >
                 <Table.Header>
                   <Table.Row>
-                    <Table.HeaderCell width={1}>{t('Pages.Equipments.Columns.Order')}</Table.HeaderCell>
-                    <Table.HeaderCell width={3}>{t('Pages.Equipments.Columns.Propertyname')}</Table.HeaderCell>
-                    <Table.HeaderCell width={6}>{t('Pages.Equipments.Columns.Propertyvalue')}</Table.HeaderCell>
-                    <Table.HeaderCell width={1}>{t('Pages.Equipments.Columns.Remove')}</Table.HeaderCell>
+                    <Table.HeaderCell width={1}>{t('Pages.Equipments.Column.Order')}</Table.HeaderCell>
+                    <Table.HeaderCell width={3}>{t('Pages.Equipments.Column.Propertyname')}</Table.HeaderCell>
+                    <Table.HeaderCell width={6}>{t('Pages.Equipments.Column.Propertyvalue')}</Table.HeaderCell>
+                    <Table.HeaderCell width={1}>{t('Pages.Equipments.Column.Remove')}</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -123,11 +123,11 @@ export default class EquipmentsEdit extends Component {
                       </Table.Cell>
                       <Table.Cell>
                         <Form.Field>
-                          <Form.Input value={property.Propertyname} placeholder={t('Pages.Equipments.Columns.Propertyname')} name="Propertyname" onChange={(e) => { this.changeHandler(property.key, 'Propertyname', e.target.value) }} />
+                          <Form.Input value={property.Propertyname} placeholder={t('Pages.Equipments.Column.Propertyname')} name="Propertyname" onChange={(e) => { this.changeHandler(property.key, 'Propertyname', e.target.value) }} />
                         </Form.Field>
                       </Table.Cell>
                       <Table.Cell>
-                        <Form.Input value={property.Propertyvalue} placeholder={t('Pages.Equipments.Columns.Propertyvalue')} name="Propertyvalue" onChange={(e) => { this.changeHandler(property.key, 'Propertyvalue', e.target.value) }} />
+                        <Form.Input value={property.Propertyvalue} placeholder={t('Pages.Equipments.Column.Propertyvalue')} name="Propertyvalue" onChange={(e) => { this.changeHandler(property.key, 'Propertyvalue', e.target.value) }} />
                       </Table.Cell>
                       <Table.Cell className='table-last-section'>
                         {!property.Uuid && <Icon className='type-conversion-remove-icon' link color='red' name='minus circle'

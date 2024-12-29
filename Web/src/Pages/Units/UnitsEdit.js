@@ -46,7 +46,7 @@ export default class UnitsEdit extends Component {
 
     const t = Profile?.i18n?.t
 
-    const Departmentoptions = (Departments.list || []).map(department => {
+    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
       return { key: department.Uuid, text: department.Name, value: department.Uuid }
     })
 

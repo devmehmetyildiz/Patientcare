@@ -306,6 +306,17 @@ const version1_1_0_11 = {
     ],
 }
 
+const version1_1_0_12 = {
+    version: "1.1.0.12",
+    bugs: [
+        {
+            title: "Genel", commits: [
+                "Genel Ekran Testleri Yapıldı, Hata Çözümleri Yapıldı",
+            ],
+        },
+    ],
+}
+
 export {
     version1_1_0_1,
     version1_1_0_2,
@@ -317,4 +328,5 @@ export {
     version1_1_0_9,
     version1_1_0_10,
     version1_1_0_11,
+    version1_1_0_12,
 }

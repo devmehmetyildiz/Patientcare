@@ -52,7 +52,7 @@ export default class Tododefines extends Component {
     const metaKey = "tododefine"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Tododefines.list || []).map(item => {
+    const list = (Tododefines.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Tododefines/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

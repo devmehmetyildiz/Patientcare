@@ -44,7 +44,7 @@ export default class Periods extends Component {
     const metaKey = "period"
     let initialConfig = GetInitialconfig(Profile, metaKey)
 
-    const list = (Periods.list || []).map(item => {
+    const list = (Periods.list || []).filter(u => u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Periods/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,

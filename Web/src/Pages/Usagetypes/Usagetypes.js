@@ -31,8 +31,8 @@ export default class Usagetypes extends Component {
       { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
       { Header: t('Pages.Usagetypes.Column.Name'), accessor: 'Name', Title: true },
       { Header: t('Pages.Usagetypes.Column.Value'), accessor: 'Value' },
-      { Header: t('Pages.Usagetypes.Column.Isrequiredpatientusagetype'), accessor: row => this.boolCellhandler(row?.Isrequired), Lowtitle: true, Withtext: true },
-      { Header: t('Pages.Usagetypes.Column.Isrequiredpersonelusagetype'), accessor: row => this.boolCellhandler(row?.Isrequired), Lowtitle: true, Withtext: true },
+      { Header: t('Pages.Usagetypes.Column.Isrequiredpatientusagetype'), accessor: row => this.boolCellhandler(row?.Isrequiredpatientusagetype), Lowtitle: true, Withtext: true },
+      { Header: t('Pages.Usagetypes.Column.Isrequiredpersonelusagetype'), accessor: row => this.boolCellhandler(row?.Isrequiredpersonelusagetype), Lowtitle: true, Withtext: true },
       { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
@@ -99,6 +99,6 @@ export default class Usagetypes extends Component {
   boolCellhandler = (value) => {
     const { Profile } = this.props
     const t = Profile?.i18n?.t
-    return value !== null && (value ? t('Common.Yes') : t('Common.No'))
+    return value !== null ? (value ? t('Common.Yes') : t('Common.No')) : t('Common.No')
   }
 }

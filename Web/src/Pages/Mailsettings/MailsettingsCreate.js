@@ -33,20 +33,20 @@ export default class MailsettingsCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mailsettings.Columns.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mailsettings.Columns.User')} name="User" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mailsettings.Column.Name')} name="Name" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mailsettings.Column.User')} name="User" />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mailsettings.Columns.Password')} name="Password" type='password' />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mailsettings.Columns.Smtpport')} name="Smtpport" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mailsettings.Column.Password')} name="Password" type='password' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mailsettings.Column.Smtpport')} name="Smtpport" />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mailsettings.Columns.Smtphost')} name="Smtphost" />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mailsettings.Columns.Mailaddress')} name="Mailaddress" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mailsettings.Column.Smtphost')} name="Smtphost" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Mailsettings.Column.Mailaddress')} name="Mailaddress" />
               </Form.Group>
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Mailsettings.Columns.Isbodyhtml')} name="Isbodyhtml" formtype="checkbox" />
-                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Mailsettings.Columns.Issettingactive')} name="Issettingactive" formtype="checkbox" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Mailsettings.Column.Isbodyhtml')} name="Isbodyhtml" formtype="checkbox" />
+                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Mailsettings.Column.Issettingactive')} name="Issettingactive" formtype="checkbox" />
               </Form.Group>
             </Form>
           </Contentwrapper>

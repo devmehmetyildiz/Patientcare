@@ -61,7 +61,7 @@ export default class Purchaseorders extends Component {
       { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, disableOncomplete: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
-    const list = (Purchaseorders.list || []).map(item => {
+    const list = (Purchaseorders.list || []).filter(u =>u.Isactive).map(item => {
       return {
         ...item,
         edit: <Link to={`/Purchaseorders/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
