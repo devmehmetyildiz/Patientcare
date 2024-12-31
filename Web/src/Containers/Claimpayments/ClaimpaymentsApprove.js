@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import ClaimpaymentsApprove from '../../Pages/Claimpayments/ClaimpaymentsApprove'
-import { ApproveClaimpayments, handleApprovemodal, handleSelectedClaimpayment } from '../../Redux/ClaimpaymentSlice'
+import { ApproveClaimpayments, } from '../../Redux/ClaimpaymentSlice'
 
 const mapStateToProps = (state) => ({
     Claimpayments: state.Claimpayments,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    ApproveClaimpayments, handleApprovemodal, handleSelectedClaimpayment
+    ApproveClaimpayments,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClaimpaymentsApprove)

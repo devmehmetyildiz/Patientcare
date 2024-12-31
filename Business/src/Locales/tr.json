@@ -21,6 +21,7 @@
     "Claimpayments.Error.UnsupportedClaimpaymentID": "Tanımsız Hakediş ID Değeri",
     "Claimpayments.Error.TypeRequired": "Hakediş Türü Gerekli",
     "Claimpayments.Error.NameRequired": "Hakediş Adı Gerekli",
+    "Claimpayments.Error.ReportdateRequired": "Hakediş Rapor Tarihi Gerekli",
     "Claimpayments.Error.StarttimeRequired": "Hakediş Başlangıç Tarihi Gerekli",
     "Claimpayments.Error.EndtimeRequired": "Hakediş Bitiş Tarihi Gerekli",
     "Claimpayments.Error.Unsupportedtype": "Tanımsız Hakediş Türü",

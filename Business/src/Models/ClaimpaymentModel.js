@@ -24,16 +24,24 @@ module.exports = sequelize.define('claimpaymentModel', {
         type: Sequelize.INTEGER
     },
     Totalcalculatedpayment: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(20, 4),
+        allowNull: false,
+        defaultValue: 0.0000
     },
     Totalcalculatedkdv: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(20, 4),
+        allowNull: false,
+        defaultValue: 0.0000
     },
     Totalcalculatedfinal: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(20, 4),
+        allowNull: false,
+        defaultValue: 0.0000
     },
     Totalcalculatedwithholding: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(20, 4),
+        allowNull: false,
+        defaultValue: 0.0000
     },
 
     Isonpreview: {
@@ -49,10 +57,7 @@ module.exports = sequelize.define('claimpaymentModel', {
         type: Sequelize.DATE
     },
 
-    Starttime: {
-        type: Sequelize.DATE
-    },
-    Endtime: {
+    Reportdate: {
         type: Sequelize.DATE
     },
 

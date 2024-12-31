@@ -18,19 +18,19 @@ module.exports = sequelize.define('claimpaymentdetailModel', {
         type: Sequelize.INTEGER
     },
     Unitpayment: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(20, 4),
     },
     Calculatedpayment: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(20, 4),
     },
     Calculatedkdv: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(20, 4),
     },
     Calculatedfinal: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(20, 4),
     },
     Calculatedwithholding: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(20, 4),
     },
 
     Createduser: {

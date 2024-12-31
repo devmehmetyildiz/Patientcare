@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import ClaimpaymentsDelete from '../../Pages/Claimpayments/ClaimpaymentsDelete'
-import { DeleteClaimpayments, handleDeletemodal, handleSelectedClaimpayment } from '../../Redux/ClaimpaymentSlice'
+import { DeleteClaimpayments, } from '../../Redux/ClaimpaymentSlice'
 
 const mapStateToProps = (state) => ({
     Claimpayments: state.Claimpayments,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    DeleteClaimpayments, handleDeletemodal, handleSelectedClaimpayment
+    DeleteClaimpayments,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClaimpaymentsDelete)

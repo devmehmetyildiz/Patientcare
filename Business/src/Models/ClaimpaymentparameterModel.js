@@ -15,7 +15,9 @@ module.exports = sequelize.define('claimpaymentparameterModel', {
         type: Sequelize.STRING
     },
     Patientclaimpaymentperpayment: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(20, 4),
+        allowNull: false,
+        defaultValue: 0.0000
     },
     Perpaymentkdvpercent: {
         type: Sequelize.FLOAT
