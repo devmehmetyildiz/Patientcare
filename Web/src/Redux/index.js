@@ -59,6 +59,7 @@ import PatienteventmovementSlice from "./PatienteventmovementSlice";
 import OverviewcardSlice from "./OverviewcardSlice";
 import PatienthealthcasedefineSlice from "./PatienthealthcasedefineSlice";
 import PatienthealthcaseSlice from "./PatienthealthcaseSlice";
+import MainteanceplanSlice from "./MainteanceplanSlice";
 
 const Slices = combineReducers({
     Rooms: RoomSlice,
@@ -121,6 +122,7 @@ const Slices = combineReducers({
     Overviewcards: OverviewcardSlice,
     Patienthealthcasedefines: PatienthealthcasedefineSlice,
     Patienthealthcases: PatienthealthcaseSlice,
+    Mainteanceplans: MainteanceplanSlice,
 });
 
 export default Slices;

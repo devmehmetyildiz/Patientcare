@@ -13,6 +13,7 @@ const warehouseModel = require('./WarehouseModel')
 const purchaseorderModel = require('./PurchaseorderModel')
 const purchaseordernumeratorModel = require('./PurchaseordernumeratorModel')
 const purchaseordermovementModel = require('./PurchaseordermovementModel')
+const mainteanceplanModel = require('./MainteanceplanModel')
 
 module.exports = {
     breakdownModel,
@@ -29,5 +30,6 @@ module.exports = {
     warehouseModel,
     purchaseorderModel,
     purchaseordernumeratorModel,
-    purchaseordermovementModel
+    purchaseordermovementModel,
+    mainteanceplanModel
 }

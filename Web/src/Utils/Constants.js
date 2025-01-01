@@ -59,6 +59,7 @@ export const ROUTES = {
     EQUIPMENTGROUP: 'Equipmentgroups',
     EQUIPMENT: 'Equipments',
     BREAKDOWN: 'Breakdowns',
+    MAINTEANCEPLAN: 'Mainteanceplans',
     MAINTEANCE: 'Mainteancies',
 
     TODODEFINE: 'Tododefines',

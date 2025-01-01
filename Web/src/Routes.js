@@ -254,6 +254,10 @@ const Patienteventmovements = lazy(() => import('./Containers/Patienteventmoveme
 const PatienteventmovementsCreate = lazy(() => import('./Containers/Patienteventmovements/PatienteventmovementsCreate'));
 const PatienteventmovementsEdit = lazy(() => import('./Containers/Patienteventmovements/PatienteventmovementsEdit'));
 
+const Mainteanceplans = lazy(() => import('./Containers/Mainteanceplans/Mainteanceplans'));
+const MainteanceplansCreate = lazy(() => import('./Containers/Mainteanceplans/MainteanceplansCreate'));
+const MainteanceplansEdit = lazy(() => import('./Containers/Mainteanceplans/MainteanceplansEdit'));
+
 const Home = lazy(() => import('./Pages/Home'));
 const Notfoundpage = lazy(() => import('./Components/Notfoundpage'));
 
@@ -504,6 +508,10 @@ class Routes extends Component {
       { exact: true, path: "/Patienteventmovements", auth: true, component: Patienteventmovements, permission: 'patienteventmovementview' },
       { exact: true, path: "/Patienteventmovements/Create", auth: true, component: PatienteventmovementsCreate, permission: 'patienteventmovementadd' },
       { exact: true, path: "/Patienteventmovements/:PatienteventmovementID/Edit", auth: true, component: PatienteventmovementsEdit, permission: 'patienteventmovementupdate' },
+
+      { exact: true, path: "/Mainteanceplans", auth: true, component: Mainteanceplans, permission: 'mainteanceplanview' },
+      { exact: true, path: "/Mainteanceplans/Create", auth: true, component: MainteanceplansCreate, permission: 'mainteanceplanadd' },
+      { exact: true, path: "/Mainteanceplans/:MainteanceplanID/Edit", auth: true, component: MainteanceplansEdit, permission: 'mainteanceplanupdate' },
 
       { exact: true, path: "/Overview", auth: true, component: Overview, permission: 'overviewview' },
       { exact: true, path: "/Overviewcard", auth: true, component: Overviewcard, permission: 'overviewcardview' },

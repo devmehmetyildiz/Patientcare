@@ -174,6 +174,7 @@ export const getSidebarroutes = (Profile) => {
                 { id: 7, subtitle: t('Pages.Surveys.Page.Header'), url: "/Surveys", permission: checkAuth('surveyview') },
                 { id: 8, subtitle: t('Pages.Userincidents.Page.Header'), url: "/Userincidents", permission: checkAuth('userincidentview') },
                 { id: 9, subtitle: t('Pages.Patientsrollcall.Page.Header'), url: "/Patientsrollcall", permission: checkAuth('patientsrollcallview') },
+                { id: 9, subtitle: t('Pages.Mainteanceplans.Page.Header'), url: "/Mainteanceplans", permission: checkAuth('mainteanceplanview') },
             ]
         },
         {

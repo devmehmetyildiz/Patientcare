@@ -81,6 +81,17 @@ const Routes = [
   { method: 'put', path: '/Mainteancies', controller: 'Mainteance', action: 'UpdateMainteance' },
   { method: 'delete', path: '/Mainteancies/:mainteanceId', controller: 'Mainteance', action: 'DeleteMainteance' },
 
+  { method: 'get', path: '/Mainteanceplans/:mainteanceplanId', controller: 'Mainteanceplan', action: 'GetMainteanceplan' },
+  { method: 'get', path: '/Mainteanceplans', controller: 'Mainteanceplan', action: 'GetMainteanceplans' },
+  { method: 'post', path: '/Mainteanceplans', controller: 'Mainteanceplan', action: 'AddMainteanceplan' },
+  { method: 'put', path: '/Mainteanceplans/Savepreview/:mainteanceplanId', controller: 'Mainteanceplan', action: 'SavepreviewMainteanceplan' },
+  { method: 'put', path: '/Mainteanceplans/Approve/:mainteanceplanId', controller: 'Mainteanceplan', action: 'ApproveMainteanceplan' },
+  { method: 'put', path: '/Mainteanceplans/Complete/:mainteanceplanId', controller: 'Mainteanceplan', action: 'CompleteMainteanceplan' },
+  { method: 'put', path: '/Mainteanceplans/Work/:mainteanceplanId', controller: 'Mainteanceplan', action: 'WorkMainteanceplan' },
+  { method: 'put', path: '/Mainteanceplans/Stop/:mainteanceplanId', controller: 'Mainteanceplan', action: 'StopMainteanceplan' },
+  { method: 'put', path: '/Mainteanceplans', controller: 'Mainteanceplan', action: 'UpdateMainteanceplan' },
+  { method: 'delete', path: '/Mainteanceplans/:mainteanceplanId', controller: 'Mainteanceplan', action: 'DeleteMainteanceplan' },
+
 ]
 
 module.exports = Routes

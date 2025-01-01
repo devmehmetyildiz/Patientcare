@@ -60,6 +60,7 @@ import { removePatienteventmovementnotification } from "../Redux/Patienteventmov
 import { removeOverviewcardnotification } from "../Redux/OverviewcardSlice"
 import { removePatienthealthcasedefinenotification } from "../Redux/PatienthealthcasedefineSlice"
 import { removePatienthealthcasenotification } from "../Redux/PatienthealthcaseSlice"
+import { removeMainteanceplannotification } from "../Redux/MainteanceplanSlice"
 import Notificationwrapper from './Notification'
 
 export function NotificationHandler(props) {
@@ -85,7 +86,8 @@ export function NotificationHandler(props) {
             removeStocktypegroupnotification, removePurchaseordernotification, removeClaimpaymentparameternotification, removeClaimpaymentnotification,
             removeTrainingnotification, removePatienteventdefinenotification, removeCareplanparameternotification, removeSurveynotification,
             removePatientactivitynotification, removePatientvisitnotification, removeUserincidentnotification, removePatienteventmovementnotification,
-            removeOverviewcardnotification, removePatienthealthcasedefinenotification, removePatienthealthcasenotification
+            removeOverviewcardnotification, removePatienthealthcasedefinenotification, removePatienthealthcasenotification,
+            removeMainteanceplannotification
         } = props
 
         const {
@@ -102,7 +104,7 @@ export function NotificationHandler(props) {
             Stocktypegroups, Purchaseorders, Claimpaymentparameters, Claimpayments, Trainings,
             Patienteventdefines, Careplanparameters, Surveys, Patientactivities, Patientvisits,
             Userincidents, Patienteventmovements, Overviewcards, Patienthealthcasedefines,
-            Patienthealthcases
+            Patienthealthcases, Mainteanceplans
         } = props.states
 
         Notification(Warehouses.notifications, removeWarehousenotification)
@@ -165,6 +167,7 @@ export function NotificationHandler(props) {
         Notification(Overviewcards.notifications, removeOverviewcardnotification)
         Notification(Patienthealthcasedefines.notifications, removePatienthealthcasedefinenotification)
         Notification(Patienthealthcases.notifications, removePatienthealthcasenotification)
+        Notification(Mainteanceplans.notifications, removeMainteanceplannotification)
     })
 
     return null
@@ -192,7 +195,7 @@ const mapDispatchToProps = {
     removeClaimpaymentnotification, removeTrainingnotification, removePatienteventdefinenotification, removeCareplanparameternotification,
     removeSurveynotification, removePatientactivitynotification, removePatientvisitnotification, removeUserincidentnotification,
     removePatienteventmovementnotification, removeOverviewcardnotification, removePatienthealthcasedefinenotification,
-    removePatienthealthcasenotification
+    removePatienthealthcasenotification, removeMainteanceplannotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationHandler)
