@@ -317,6 +317,36 @@ const version1_1_0_12 = {
     ],
 }
 
+const version1_1_0_13 = {
+    version: "1.1.0.13",
+    bugs: [
+        {
+            title: "Hakedişler", commits: [
+                "Hakediş Hesaplamaları, virgülden sonra hesap edilecek basamak sayıları değiştirildi / düzeltildi",
+            ],
+        },
+        {
+            title: "Hastalar", commits: [
+                "Hasta Hareketlerinde, durum güncellenirken herhangi bir tarih seçilmez ise haketet tarihini belirlemiyor, bu durum düzeltildi, hasta yoklamalarındaki hata düzelmiş oldu.",
+            ],
+        },
+    ],
+    changes: [
+        {
+            title: "Hastalar", commits: [
+                "Hasta Detayındaki işlemler kısmındaki seçeneklerin iconlarında kücük düzenlemeler yapıldı",
+            ],
+        },
+    ],
+    features: [
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Bakım Planı periyotları eklendi, otomatik olarak kontrol edilecek envanterler için periyot oluşturabilecek, kurallarda ekleme yapıldıktan sonra çalışır hale gelecek",
+            ],
+        },
+    ],
+}
+
 export {
     version1_1_0_1,
     version1_1_0_2,
@@ -329,4 +359,5 @@ export {
     version1_1_0_10,
     version1_1_0_11,
     version1_1_0_12,
+    version1_1_0_13
 }

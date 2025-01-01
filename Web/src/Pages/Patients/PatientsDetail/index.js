@@ -171,7 +171,7 @@ export default function Patientsdetail(props) {
                                             setRecord(patient)
                                             setOpeninsertstock(true)
                                         }}>
-                                        <Icon name='attention' className='right floated' />
+                                        <Icon name='arrow right' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Insertstock')}
                                     </Dropdown.Item>
                                     <Dropdown.Item
@@ -180,7 +180,7 @@ export default function Patientsdetail(props) {
                                             setOpenreducestock(true)
                                         }}
                                     >
-                                        <Icon name='comment' className='right floated' />
+                                        <Icon name='arrow left' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Reducestock')}
                                     </Dropdown.Item>
                                     <Dropdown.Item
@@ -189,7 +189,7 @@ export default function Patientsdetail(props) {
                                             setOpeneditplace(true)
                                         }}
                                     >
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='exchange' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editplace')}
                                     </Dropdown.Item>
                                     <Dropdown.Item
@@ -198,7 +198,7 @@ export default function Patientsdetail(props) {
                                             setOpenentercash(true)
                                         }}
                                     >
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='money bill alternate' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Insertcash')}
                                     </Dropdown.Item>
                                     <Dropdown.Item
@@ -207,7 +207,7 @@ export default function Patientsdetail(props) {
                                             setOpeneditcase(true)
                                         }}
                                     >
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='male' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editcase')}
                                     </Dropdown.Item>
                                     <Dropdown.Item
@@ -216,7 +216,7 @@ export default function Patientsdetail(props) {
                                             setOpenstatus(true)
                                         }}
                                     >
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='wheelchair' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editstatus')}
                                     </Dropdown.Item>
                                     <Dropdown.Item
@@ -225,7 +225,7 @@ export default function Patientsdetail(props) {
                                             setOpenaddmovement(true)
                                         }}
                                     >
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='blind' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Addeventmovements')}
                                     </Dropdown.Item>
                                     <Dropdown.Item
@@ -234,37 +234,37 @@ export default function Patientsdetail(props) {
                                             setOpenhealthcase(true)
                                         }}
                                     >
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='share' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Addenterhealthcase')}
                                     </Dropdown.Item>
                                     <Dropdown.Header icon='setting' content={t('Pages.Patients.PatientsDetail.Button.Settingtag')} />
                                     <Dropdown.Divider />
                                     <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Movements`) }}>
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='undo' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editmovements')}
                                     </Dropdown.Item>
                                     <Dropdown.Item onClick={() => { history.push(`/Patienthealthcases?PatientID=${patientID}`) }}>
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='undo' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Edithealthcares')}
                                     </Dropdown.Item>
                                     <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Editcash`) }}>
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='undo' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editcash')}
                                     </Dropdown.Item>
                                     <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Editroutine`) }}>
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='undo' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editroutine')}
                                     </Dropdown.Item>
                                     <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Editsupportplan`) }}>
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='undo' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editsupportplans')}
                                     </Dropdown.Item>
                                     <Dropdown.Item onClick={() => { history.push(`/Patients/${patientID}/Editfile`) }}>
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='undo' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editfiles')}
                                     </Dropdown.Item>
                                     <Dropdown.Item onClick={() => { history.push(`/Patientdefines/${patientdefine?.Uuid}/edit`) }}>
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='undo' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Editdefine')}
                                     </Dropdown.Item>
                                     <Dropdown.Header icon='setting' content={t('Pages.Patients.PatientsDetail.Button.Specialtag')} />
@@ -275,7 +275,7 @@ export default function Patientsdetail(props) {
                                             setOpenleft(true)
                                         }}
                                     >
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='sign-out' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Removefromorganization')}
                                     </Dropdown.Item>
                                     <Dropdown.Item
@@ -284,7 +284,7 @@ export default function Patientsdetail(props) {
                                             setOpendead(true)
                                         }}
                                     >
-                                        <Icon name='conversation' className='right floated' />
+                                        <Icon name='sign-in alternate' className='right floated' />
                                         {t('Pages.Patients.PatientsDetail.Button.Enterdead')}
                                     </Dropdown.Item>
                                 </Dropdown.Menu>
