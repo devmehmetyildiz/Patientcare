@@ -123,6 +123,7 @@ export default function PatientsEditcaseModal(props) {
                     {t('Common.Button.Goback')}
                 </Button>
                 <Button
+                    loading={Patients.isLoading}
                     content={t('Common.Button.Update')}
                     labelPosition='right'
                     className='!bg-[#2355a0] !text-white'
@@ -158,7 +159,9 @@ export default function PatientsEditcaseModal(props) {
                             let body = {
                                 PatientID: patient?.Uuid,
                                 CaseID: data?.CaseID,
-                                Ispastdate: isNeedEndDate ? true : false
+                                Ispastdate: isNeedEndDate ? true : false,
+                                Occureddate: new Date(),
+                                Occuredenddate: null
                             }
 
                             if (ispastdatemovement) {
