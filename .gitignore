@@ -46,4 +46,6 @@ Web/.env
 Web/package-lock.json
 release.sh
 release-services.sh
+release_test.sh
+release_test-services.sh
 Ftpserver
