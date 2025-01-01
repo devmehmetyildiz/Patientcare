@@ -44,4 +44,6 @@ Web/node_modules/
 Web/build/
 Web/.env
 Web/package-lock.json
+release.sh
+release-services.sh
 Ftpserver
