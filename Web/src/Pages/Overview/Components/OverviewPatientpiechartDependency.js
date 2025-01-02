@@ -3,9 +3,12 @@ import HighchartsReact from 'highcharts-react-official'
 import React from 'react'
 import { Dimmer, DimmerDimmable, Loader } from 'semantic-ui-react'
 import { DEPENDENCY_OPTION_FULLY, DEPENDENCY_OPTION_NON, DEPENDENCY_OPTION_PARTIAL } from '../../../Utils/Constants'
+import { useHistory } from 'react-router-dom'
 
 export default function OverviewPatientpiechartDependency(props) {
     const { Patients, Patientdefines, Profile } = props
+
+    const history = useHistory()
 
     const t = Profile?.i18n?.t
 
@@ -72,6 +75,13 @@ export default function OverviewPatientpiechartDependency(props) {
                 pie: {
                     dataLabels: {
                         enabled: false,
+                    },
+                    point: {
+                        events: {
+                            click: function () {
+                                history.push(`/Patientfollowup?tab=patientdependency`)
+                            },
+                        },
                     },
                 },
             },

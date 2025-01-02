@@ -1,15 +1,17 @@
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Dimmer, DimmerDimmable, Loader } from 'semantic-ui-react'
 
 export default function OverviewPatientpiechartPatienttype(props) {
     const { Patients, Patienttypes, Patientdefines, Profile } = props
 
+    const history = useHistory()
+
     const t = Profile?.i18n?.t
 
     const isLoading = Patients.isLoading || Patientdefines.isLoading || Patienttypes.isLoading
-
     const patients = (Patients.list || []).filter(u => u.Isactive && u.Ischecked && u.Isapproved && !u.Ispreregistration)
 
     const livepatients = patients.filter(u => u.Isalive && !u.Isleft)
@@ -29,6 +31,7 @@ export default function OverviewPatientpiechartPatienttype(props) {
             const patienttypedata = (Patienttypes.list || []).find(u => u.Uuid === patienttype)
             return {
                 name: patienttypedata?.Name || t('Common.NoDataFound'),
+                value: patienttypedata?.Uuid || null,
                 y: patienttypepatients.length || 0
             }
         })
@@ -46,7 +49,7 @@ export default function OverviewPatientpiechartPatienttype(props) {
         const options = {
             chart: {
                 type: 'pie',
-                className: ' !w-full !h-auto !min-w-0'
+                className: ' !w-full !h-auto !min-w-0',
             },
             title: {
                 text: title[Profile.Language],
@@ -61,19 +64,29 @@ export default function OverviewPatientpiechartPatienttype(props) {
                     fontSize: '12px',
                 },
             },
-            series: {
-                name: legendname[Profile.Language],
-                data: data,
-                showInLegend: true,
-            },
+            series: [
+                {
+                    name: legendname[Profile.Language],
+                    data: data,
+                    showInLegend: true,
+                },
+            ],
             plotOptions: {
                 pie: {
                     dataLabels: {
                         enabled: false,
                     },
+                    point: {
+                        events: {
+                            click: function () {
+                                history.push(`/Patientfollowup?tab=patienttypes`)
+                            },
+                        },
+                    },
                 },
             },
         };
+
 
         return options
     }

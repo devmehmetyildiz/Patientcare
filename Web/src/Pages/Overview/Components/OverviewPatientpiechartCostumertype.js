@@ -1,10 +1,13 @@
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Dimmer, DimmerDimmable, Loader } from 'semantic-ui-react'
 
 export default function OverviewPatientpiechartCostumertype(props) {
     const { Patients, Costumertypes, Patientdefines, Profile } = props
+
+    const history = useHistory()
 
     const t = Profile?.i18n?.t
 
@@ -69,6 +72,13 @@ export default function OverviewPatientpiechartCostumertype(props) {
                 pie: {
                     dataLabels: {
                         enabled: false,
+                    },
+                    point: {
+                        events: {
+                            click: function () {
+                                history.push(`/Patientfollowup?tab=costumertypes`)
+                            },
+                        },
                     },
                 },
             },

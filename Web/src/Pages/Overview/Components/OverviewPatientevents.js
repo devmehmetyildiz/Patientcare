@@ -75,12 +75,13 @@ export default function OverviewPatientevents(props) {
 
             feedList.push({
                 content: <Popup
+                    key={index}
                     on={'click'}
                     hideOnScroll
                     content={content}
                     trigger={<Feed.Event key={index} className='cursor-pointer' >
                         <Feed.Label>
-                            <Icon name='arrow alternate circle right ' color='grey' />
+                            <Icon name='arrow alternate circle right' color='grey' />
                         </Feed.Label>
                         <Feed.Content>
                             {name}

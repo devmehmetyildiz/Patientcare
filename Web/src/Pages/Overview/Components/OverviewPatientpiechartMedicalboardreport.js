@@ -3,9 +3,12 @@ import HighchartsReact from 'highcharts-react-official'
 import React from 'react'
 import { Dimmer, DimmerDimmable, Loader } from 'semantic-ui-react'
 import { MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL } from '../../../Utils/Constants'
+import { useHistory } from 'react-router-dom'
 
 export default function OverviewPatientpiechartMedicalboardreport(props) {
     const { Patients, Patientdefines, Profile } = props
+
+    const history = useHistory()
 
     const t = Profile?.i18n?.t
 
@@ -72,6 +75,13 @@ export default function OverviewPatientpiechartMedicalboardreport(props) {
                 pie: {
                     dataLabels: {
                         enabled: false,
+                    },
+                    point: {
+                        events: {
+                            click: function () {
+                                history.push(`/Patientfollowup?tab=patientmedicalboardreport`)
+                            },
+                        },
                     },
                 },
             },
