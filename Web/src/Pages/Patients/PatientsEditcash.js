@@ -4,7 +4,7 @@ import { Breadcrumb, Grid, Icon, Label, Loader } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Settings, MobileTable, NoDataScreen, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, DataTable } from '../../Components'
-import { CASHYPES } from '../../Utils/Constants'
+import { CASH_TYPE_INCOME, CASH_TYPE_OUTCOME } from '../../Utils/Constants'
 import PatientcashmovementsDelete from '../../Containers/Patientcashmovements/PatientcashmovementsDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 
@@ -185,7 +185,13 @@ export default class PatientsEditcash extends Component {
     }
 
     typeCellhandler = (col) => {
-        return CASHYPES.find(u => u.value === col.value) ? CASHYPES.find(u => u.value === col.value).Name : col.value
+        const { Profile } = this.props
+        const t = Profile?.i18n?.t
+        const CASH_OPTION = [
+            { key: 1, text: t('Option.Cashtypes.Outcome'), value: CASH_TYPE_OUTCOME },
+            { key: 2, text: t('Option.Cashtypes.Income'), value: CASH_TYPE_INCOME }
+        ]
+        return CASH_OPTION.find(u => u.value === col.value)?.text || t('Common.NoDataFound')
     }
 
     cashCellhandler = (col) => {

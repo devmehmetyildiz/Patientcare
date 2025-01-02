@@ -52,6 +52,8 @@
         "Option.Training.TypedetailPatientcontact": "Hasta Yakınları",
         "Option.Patienteventmovement.TypeIndoor": "Kurum İçi Vakalar",
         "Option.Patienteventmovement.TypeOutdoor": "Kurum Dışı Vakalar",
+        "Option.Cashtypes.Outcome": "Çüzdandan Çıkartma",
+        "Option.Cashtypes.Income": "Çüzdana Ekleme",
         "Common.Button.Add": "Ekle",
         "Common.Button.Close": "Kapat",
         "Common.Button.Cancel": "Vazgeç",

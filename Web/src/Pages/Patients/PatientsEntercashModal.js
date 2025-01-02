@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { Button, Form, Label, Modal } from 'semantic-ui-react'
-import { CASHYPES } from '../../Utils/Constants'
+import { CASH_TYPE_INCOME, CASH_TYPE_OUTCOME } from '../../Utils/Constants'
 import { Contentwrapper, FormInput } from '../../Components'
 import { FormContext } from '../../Provider/FormProvider'
 import validator from '../../Utils/Validator'
@@ -48,10 +48,9 @@ export default function PatientsEntercashModal(props) {
     })
     const [integerPart, decimalPart] = patientCash.toFixed(2).split('.')
 
-    const Movementoptions = [
-        { key: CASHYPES[0]?.value, text: CASHYPES[0]?.Name, value: CASHYPES[0]?.value },
-        { key: CASHYPES[1]?.value, text: CASHYPES[1]?.Name, value: CASHYPES[1]?.value },
-        { key: CASHYPES[2]?.value, text: CASHYPES[2]?.Name, value: CASHYPES[2]?.value },
+    const CASH_OPTION = [
+        { key: 1, text: t('Option.Cashtypes.Outcome'), value: CASH_TYPE_OUTCOME },
+        { key: 2, text: t('Option.Cashtypes.Income'), value: CASH_TYPE_INCOME }
     ]
 
     const Patientcashregisteroptions = (Patientcashregisters.list || []).filter(u => u.Isactive).map(register => {
@@ -82,7 +81,7 @@ export default function PatientsEntercashModal(props) {
                             <FormInput page={PAGE_NAME} required placeholder={t('Pages.Patients.PatientsEntercashModal.Label.Register')} name="RegisterID" options={Patientcashregisteroptions} formtype='dropdown' />
                         </Form.Group>
                         <Form.Group widths={'equal'}>
-                            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Patients.PatientsEntercashModal.Label.Movementtype')} name="Movementtype" options={Movementoptions} formtype='dropdown' />
+                            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Patients.PatientsEntercashModal.Label.Movementtype')} name="Movementtype" options={CASH_OPTION} formtype='dropdown' />
                             <FormInput page={PAGE_NAME} required placeholder={t('Pages.Patients.PatientsEntercashModal.Label.Movementvalue')} name="Movementvalue" type='number' min={0} max={999999} step='0.01' />
                         </Form.Group>
                         <Form.Group widths={'equal'}>

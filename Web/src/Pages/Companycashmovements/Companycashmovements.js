@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Loader, Breadcrumb, Grid, GridColumn, Label } from 'semantic-ui-react'
 import CompanycashmovementsDelete from '../../Containers/Companycashmovements/CompanycashmovementsDelete'
-import { CASHYPES } from '../../Utils/Constants'
+import { CASH_TYPE_INCOME, CASH_TYPE_OUTCOME } from '../../Utils/Constants'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 
@@ -107,7 +107,14 @@ export default class Companycashmovements extends Component {
   }
 
   typeCellhandler = (value) => {
-    return CASHYPES.find(u => u.value === value) ? CASHYPES.find(u => u.value === value).Name : value
+    const { Profile } = this.props
+    const t = Profile?.i18n?.t
+    const CASH_OPTION = [
+      { key: 1, text: t('Option.Cashtypes.Outcome'), value: CASH_TYPE_OUTCOME },
+      { key: 2, text: t('Option.Cashtypes.Income'), value: CASH_TYPE_INCOME }
+    ]
+
+    return CASH_OPTION.find(u => u.value === value)?.text || t('Common.NoDataFound')
   }
 
   cashCellhandler = (value) => {

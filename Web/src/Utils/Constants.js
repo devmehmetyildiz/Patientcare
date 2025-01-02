@@ -83,12 +83,6 @@ export const MOVEMENTTYPES = [
     { Name: "STOK EKLEMESİ", value: 1, color: 'orange' },
 ]
 
-export const CASHYPES = [
-    { Name: "CÜZDANDAN ÇIKARTMA", value: -1, color: 'gray' },
-    { Name: "PASİF", value: 0, color: 'green' },
-    { Name: "CÜZDANA EKLEME", value: 1, color: 'orange' },
-]
-
 export const PATIENTMOVEMENTTYPE = [
     { Name: "İŞLEM YOK", value: 0 },
     { Name: "KURUMDA", value: 1 },
@@ -250,3 +244,6 @@ export const STORAGE_KEY_PATIENTCARE_ACCESSTOKEN = 'ELDERCAMP_STORAGE_KEY_1'
 export const STORAGE_KEY_PATIENTCARE_REFRESHTOKEN = 'ELDERCAMP_STORAGE_KEY_2'
 export const STORAGE_KEY_PATIENTCARE_LANGUAGE = 'ELDERCAMP_STORAGE_KEY_3'
 export const STORAGE_KEY_PATIENTCARE_EXPIRETIME = 'ELDERCAMP_STORAGE_KEY_4'
+
+export const CASH_TYPE_OUTCOME = -1
+export const CASH_TYPE_INCOME = 1

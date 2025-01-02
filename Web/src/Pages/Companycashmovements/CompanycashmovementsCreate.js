@@ -4,7 +4,7 @@ import { Form, Breadcrumb, Button } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
-import { CASHYPES } from '../../Utils/Constants'
+import { CASH_TYPE_INCOME, CASH_TYPE_OUTCOME } from '../../Utils/Constants'
 
 export default class CompanycashmovementsCreate extends Component {
 
@@ -19,10 +19,9 @@ export default class CompanycashmovementsCreate extends Component {
 
     const { isLoading } = Companycashmovements
 
-    const Movementoptions = [
-      { key: CASHYPES[0]?.value, text: CASHYPES[0]?.Name, value: CASHYPES[0]?.value },
-      { key: CASHYPES[1]?.value, text: CASHYPES[1]?.Name, value: CASHYPES[1]?.value },
-      { key: CASHYPES[2]?.value, text: CASHYPES[2]?.Name, value: CASHYPES[2]?.value },
+    const CASH_OPTION = [
+      { key: 1, text: t('Option.Cashtypes.Outcome'), value: CASH_TYPE_OUTCOME },
+      { key: 2, text: t('Option.Cashtypes.Income'), value: CASH_TYPE_INCOME }
     ]
 
     return (
@@ -42,12 +41,12 @@ export default class CompanycashmovementsCreate extends Component {
           <Contentwrapper>
             <Form>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Companycashmovements.Column.Movementtype')} name="Movementtype" options={Movementoptions} formtype='dropdown' />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Companycashmovements.Column.Movementvalue')} name="Movementvalue" type='number' step='0.01' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Companycashmovements.Column.Movementtype')} name="Movementtype" options={CASH_OPTION} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME}  placeholder={t('Pages.Companycashmovements.Column.Movementvalue')} name="Movementvalue" type='number' step='0.01' />
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Companycashmovements.Column.Report')} name="ReportID" />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Companycashmovements.Column.Info')} name="Info" />
+                <FormInput page={this.PAGE_NAME}  placeholder={t('Pages.Companycashmovements.Column.Info')} name="Info" />
               </Form.Group>
             </Form>
           </Contentwrapper>

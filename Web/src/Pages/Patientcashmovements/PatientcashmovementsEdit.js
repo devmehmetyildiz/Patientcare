@@ -4,7 +4,7 @@ import { Form, Breadcrumb, Button } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
-import { CASHYPES } from '../../Utils/Constants'
+import { CASH_TYPE_INCOME, CASH_TYPE_OUTCOME } from '../../Utils/Constants'
 
 export default class PatientcashmovementsEdit extends Component {
 
@@ -71,10 +71,9 @@ export default class PatientcashmovementsEdit extends Component {
     const patient = (Patients.list || []).find(u => u.Uuid === patientID)
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
 
-    const Movementoptions = [
-      { key: CASHYPES[0]?.value, text: CASHYPES[0]?.Name, value: CASHYPES[0]?.value },
-      { key: CASHYPES[1]?.value, text: CASHYPES[1]?.Name, value: CASHYPES[1]?.value },
-      { key: CASHYPES[2]?.value, text: CASHYPES[2]?.Name, value: CASHYPES[2]?.value },
+    const CASH_OPTION = [
+      { key: 1, text: t('Option.Cashtypes.Outcome'), value: CASH_TYPE_OUTCOME },
+      { key: 2, text: t('Option.Cashtypes.Income'), value: CASH_TYPE_INCOME }
     ]
 
     return (
@@ -104,7 +103,7 @@ export default class PatientcashmovementsEdit extends Component {
                 <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientcashmovements.Column.Register')} name="RegisterID" options={Patientcashregisteroptions} formtype='dropdown' />
               </Form.Group>
               <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientcashmovements.Column.Movementtype')} name="Movementtype" options={Movementoptions} formtype='dropdown' />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientcashmovements.Column.Movementtype')} name="Movementtype" options={CASH_OPTION} formtype='dropdown' />
                 <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Patientcashmovements.Column.Movementvalue')} name="Movementvalue" type='number' min={0} max={999999} step='0.01' />
               </Form.Group>
               <Form.Group widths={'equal'}>
