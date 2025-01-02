@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Grid, GridColumn, Icon, Label, Tab } from 'semantic-ui-react'
+import { Breadcrumb, Button, Grid, GridColumn, Icon, Label, Tab } from 'semantic-ui-react'
 import { Contentwrapper, Headerwrapper, LoadingPage, NoDataScreen, Pagedivider, Pagewrapper, Profilephoto } from '../../Components'
 
 export default function Placeviews(props) {
@@ -51,15 +51,20 @@ export default function Placeviews(props) {
             </div>,
             meta: bed.Isoccupied ?
                 <Link to={`/Patients/${patient?.Uuid}`}>
-                    <Label
-                        className=' !flex !flex-col !justify-start !items-start !text-left'
-                        color='blue'
-                    >
-                        {`${patientdefine?.Firstname || ''} ${patientdefine?.Lastname || ''}`}
-                        <Label.Detail >
-                            {patientdefine?.CountryID || ''}
-                        </Label.Detail>
-                    </Label>
+                    <Button
+                        className='!bg-[#2355a0] !text-white'
+                        color='red'
+                        icon='magnify'
+                        labelPosition='left'
+                        label={{
+                            color: 'blue', pointing: 'left', content: <div className='flex flex-col justify-start items-start'>
+                                {`${patientdefine?.Firstname || ''} ${patientdefine?.Lastname || ''}`}
+                                <Label.Detail >
+                                    {patientdefine?.CountryID || ''}
+                                </Label.Detail>
+                            </div>
+                        }}
+                    />
                 </Link>
                 : null,
             description: bed.Isoccupied ? <Label size='large' className='!text-white' basic style={{ backgroundColor: cases?.Casecolor }}>{cases?.Name}</Label> : null,
@@ -168,7 +173,7 @@ function Patientcard(props) {
     return (
         <div
             key={key}
-            className='border-2 p-2  rounded-lg m-2  w-[300px] h-[130px] flex flex-col justify-start items-start gap-2'>
+            className='border-2 p-2  rounded-lg m-2  w-[300px] h-[150px] flex flex-col justify-start items-start gap-2'>
             {header && header}
             {meta && <div>{meta}</div>}
             {description && description}
