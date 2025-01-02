@@ -62,42 +62,41 @@ export default function Departments(props) {
   const initialConfig = GetInitialconfig(Profile, metaKey)
 
   return (
-    isLoading ? <LoadingPage /> :
-      <React.Fragment>
-        <Pagewrapper>
-          <Headerwrapper>
-            <Grid columns='2' >
-              <GridColumn width={8}>
-                <Breadcrumb size='big'>
-                  <Link to={"/Departments"}>
-                    <Breadcrumb.Section>{t("Pages.Departments.Page.Header")}</Breadcrumb.Section>
-                  </Link>
-                </Breadcrumb>
-              </GridColumn>
-              <Settings
-                Profile={Profile}
-                Pagecreateheader={t("Pages.Departments.Page.CreateHeader")}
-                Pagecreatelink={"/Departments/Create"}
-                Columns={Columns}
-                list={list}
-                initialConfig={initialConfig}
-                metaKey={metaKey}
-                Showcreatebutton
-                Showcolumnchooser
-                Showexcelexport
-              />
-            </Grid>
-          </Headerwrapper>
-          <Pagedivider />
-          {list.length > 0 ?
-            <div className='w-full mx-auto '>
-              {Profile.Ismobile ?
-                <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-            </div> : <NoDataScreen message={t("Common.NoDataFound")} />
-          }
-        </Pagewrapper>
-        <DepartmentDelete />
-      </React.Fragment>
+    <React.Fragment>
+      <Pagewrapper dimmer isLoading={isLoading}>
+        <Headerwrapper>
+          <Grid columns='2' >
+            <GridColumn width={8}>
+              <Breadcrumb size='big'>
+                <Link to={"/Departments"}>
+                  <Breadcrumb.Section>{t("Pages.Departments.Page.Header")}</Breadcrumb.Section>
+                </Link>
+              </Breadcrumb>
+            </GridColumn>
+            <Settings
+              Profile={Profile}
+              Pagecreateheader={t("Pages.Departments.Page.CreateHeader")}
+              Pagecreatelink={"/Departments/Create"}
+              Columns={Columns}
+              list={list}
+              initialConfig={initialConfig}
+              metaKey={metaKey}
+              Showcreatebutton
+              Showcolumnchooser
+              Showexcelexport
+            />
+          </Grid>
+        </Headerwrapper>
+        <Pagedivider />
+        {list.length > 0 ?
+          <div className='w-full mx-auto '>
+            {Profile.Ismobile ?
+              <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+              <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+          </div> : <NoDataScreen message={t("Common.NoDataFound")} />
+        }
+      </Pagewrapper>
+      <DepartmentDelete />
+    </React.Fragment>
   )
 }

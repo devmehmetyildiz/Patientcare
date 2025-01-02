@@ -100,7 +100,7 @@ export default class Layout extends Component {
                   isMobile={isMobile}
                   hideMobile={hideMobile}
                 />
-                <div className={`mt-[58.61px] p-4 w-full min-w-[0px] contentWrapper`}>
+                <div className={`mt-[58.61px]  w-full min-w-[0px] contentWrapper`}>
                   <div className='w-full '>
                     <Routes Profile={Profile} />
                   </div>

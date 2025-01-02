@@ -711,7 +711,6 @@ export const PatientsSlice = createSlice({
             .addCase(GetPatients.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.list = [];
             })
             .addCase(GetPatients.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -720,6 +719,7 @@ export const PatientsSlice = createSlice({
             .addCase(GetPatients.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
+                state.list = [];
             })
             .addCase(GetPatientByPlace.pending, (state) => {
                 state.isPatientByPlaceLoading = true;

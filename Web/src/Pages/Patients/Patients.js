@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Checkbox, Grid, GridColumn, Icon, List, Loader, Popup, Tab } from 'semantic-ui-react'
+import { Breadcrumb, Button, Checkbox, Dimmer, Grid, GridColumn, Icon, List, Loader, Popup, Tab } from 'semantic-ui-react'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper, Profilephoto } from '../../Components'
 import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT, GENDER_OPTION_MEN } from '../../Utils/Constants'
 import Formatdate from '../../Utils/Formatdate'
@@ -184,75 +184,74 @@ export default function Patients(props) {
   }, [])
 
   return (
-    isLoading ? <LoadingPage /> :
-      <React.Fragment>
-        <Pagewrapper>
-          <Headerwrapper>
-            <Grid columns='2' >
-              <GridColumn width={8}>
-                <Breadcrumb size='big'>
-                  <Link to={"/Patients"}>
-                    <Breadcrumb.Section>{t('Pages.Patients.Page.Header')}</Breadcrumb.Section>
-                  </Link>
-                </Breadcrumb>
-              </GridColumn>
-            </Grid>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Tab
-              onTabChange={(_, { activeIndex }) => {
-                setActiveTab(activeIndex)
-              }}
-              activeIndex={activeTab}
-              className="w-full !bg-transparent"
-              panes={[
-                {
-                  menuItem: `${t('Pages.Patients.Page.Tab.PassHeader')} (${(passList || []).length})`,
-                  pane: {
-                    key: 'pass',
-                    content: <PassPatientList
-                      Profile={Profile}
-                      list={passList}
-                      Columns={Columns}
-                      handleSelectedPatient={handleSelectedPatient}
-                      handleDetailmodal={handleDetailmodal}
-                    />
-                  }
-                },
-                {
-                  menuItem: `${t('Pages.Patients.Page.Tab.DeadHeader')} (${(deadList || []).length})`,
-                  pane: {
-                    key: 'dead',
-                    content: <DeadPatientList
-                      Profile={Profile}
-                      list={deadList}
-                      Columns={Columns}
-                      handleSelectedPatient={handleSelectedPatient}
-                      handleDetailmodal={handleDetailmodal}
-                    />
-                  }
-                },
-                {
-                  menuItem: `${t('Pages.Patients.Page.Tab.LeftHeader')} (${(leftList || []).length})`,
-                  pane: {
-                    key: 'left',
-                    content: <LeftPatientList
-                      Profile={Profile}
-                      list={leftList}
-                      Columns={Columns}
-                      handleSelectedPatient={handleSelectedPatient}
-                      handleDetailmodal={handleDetailmodal}
-                    />
-                  }
-                },
-              ]}
-              renderActiveOnly={false}
-            />
-          </Contentwrapper>
-        </Pagewrapper>
-        <PatientsDetailModal />
-      </React.Fragment >
+    <React.Fragment>
+      <Pagewrapper dimmer isLoading={isLoading}>
+        <Headerwrapper>
+          <Grid columns='2' >
+            <GridColumn width={8}>
+              <Breadcrumb size='big'>
+                <Link to={"/Patients"}>
+                  <Breadcrumb.Section>{t('Pages.Patients.Page.Header')}</Breadcrumb.Section>
+                </Link>
+              </Breadcrumb>
+            </GridColumn>
+          </Grid>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Tab
+            onTabChange={(_, { activeIndex }) => {
+              setActiveTab(activeIndex)
+            }}
+            activeIndex={activeTab}
+            className="w-full !bg-transparent"
+            panes={[
+              {
+                menuItem: `${t('Pages.Patients.Page.Tab.PassHeader')} (${(passList || []).length})`,
+                pane: {
+                  key: 'pass',
+                  content: <PassPatientList
+                    Profile={Profile}
+                    list={passList}
+                    Columns={Columns}
+                    handleSelectedPatient={handleSelectedPatient}
+                    handleDetailmodal={handleDetailmodal}
+                  />
+                }
+              },
+              {
+                menuItem: `${t('Pages.Patients.Page.Tab.DeadHeader')} (${(deadList || []).length})`,
+                pane: {
+                  key: 'dead',
+                  content: <DeadPatientList
+                    Profile={Profile}
+                    list={deadList}
+                    Columns={Columns}
+                    handleSelectedPatient={handleSelectedPatient}
+                    handleDetailmodal={handleDetailmodal}
+                  />
+                }
+              },
+              {
+                menuItem: `${t('Pages.Patients.Page.Tab.LeftHeader')} (${(leftList || []).length})`,
+                pane: {
+                  key: 'left',
+                  content: <LeftPatientList
+                    Profile={Profile}
+                    list={leftList}
+                    Columns={Columns}
+                    handleSelectedPatient={handleSelectedPatient}
+                    handleDetailmodal={handleDetailmodal}
+                  />
+                }
+              },
+            ]}
+            renderActiveOnly={false}
+          />
+        </Contentwrapper>
+      </Pagewrapper>
+      <PatientsDetailModal />
+    </React.Fragment >
   )
 }
 

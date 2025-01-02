@@ -347,6 +347,39 @@ const version1_1_0_13 = {
     ],
 }
 
+const version1_1_0_14 = {
+    version: "1.1.0.14",
+    bugs: [
+        {
+            title: "Arama", commits: [
+                "Navigation kısmında hasta aramada türkçe karakter sorunu giderildi",
+            ],
+        },
+
+    ],
+    changes: [
+        {
+            title: "Genel", commits: [
+                "Çoklu Tablı yapıdaki sayfalarda tab hatırlama fonksiyonu eklendi, kaydetme ve güncelleme sonrası aynı tab'dan devam edilebilecek",
+                "Hastalar Yataklar Departmanlar Roller ve Kullanıcılar Sayfasında hafif tasarım değişiklikleri (Performans)",
+            ],
+        },
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Hasta Yerleşimlerinde tasarım değişikliği",
+                "Kurum Hasta Genel Görünüm ekranında performans düzenlemeleri, hatalı verilerin düzenlenmesi",
+                "Kurum Hasta Genel Görünüm ekranında pasta grafikleri Genel hasta takibi ekranına yönlendirme yapacak",
+                "Gösterge kartlarında hatalı yazıların düzenlenmesi",
+            ],
+        },
+        {
+            title: "Hastalar", commits: [
+                "Hasta Para girişlerinde pasif türü kaldırıldı",
+            ],
+        },
+    ],
+}
+
 export {
     version1_1_0_1,
     version1_1_0_2,
@@ -359,5 +392,6 @@ export {
     version1_1_0_10,
     version1_1_0_11,
     version1_1_0_12,
-    version1_1_0_13
+    version1_1_0_13,
+    version1_1_0_14,
 }

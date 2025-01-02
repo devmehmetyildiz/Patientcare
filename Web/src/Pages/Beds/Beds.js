@@ -119,7 +119,6 @@ export default function Beds(props) {
   }, [])
 
   return (
-    isLoading ? <LoadingPage /> :
       <React.Fragment>
         <Confirm
           cancelButton={t('Common.Button.Giveup')}
@@ -141,7 +140,7 @@ export default function Beds(props) {
             setOpenConfirm(false)
           }}
         />
-        <Pagewrapper>
+        <Pagewrapper dimmer isLoading={isLoading}>
           <Headerwrapper>
             <Grid columns='2' >
               <GridColumn width={8}>

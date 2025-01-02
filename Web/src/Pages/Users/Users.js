@@ -45,77 +45,76 @@ export default function Users(props) {
   const appList = list.filter(u => !u.Isworker)
 
   return (
-    isLoading ? <LoadingPage /> :
-      <React.Fragment>
-        <Pagewrapper>
-          <Headerwrapper>
-            <Grid columns='2' >
-              <GridColumn width={8}>
-                <Breadcrumb size='big'>
-                  <Link to={"/Users"}>
-                    <Breadcrumb.Section>{t('Pages.Users.Page.Header')}</Breadcrumb.Section>
-                  </Link>
-                </Breadcrumb>
-              </GridColumn>
-              <Settings
-                Profile={Profile}
-                Pagecreateheader={t('Pages.Users.Page.CreateHeader')}
-                Pagecreatelink={"/Users/Create"}
-                Showcreatebutton
-              />
-            </Grid>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Tab
-              className="w-full !bg-transparent"
-              panes={[
-                {
-                  menuItem: `${t('Pages.Users.Page.Tab.Worketlist')} (${(workerList || []).length})`,
-                  pane: {
-                    key: 'worker',
-                    content: <UsersWorkerList
-                      Profile={Profile}
-                      Cases={Cases}
-                      Professions={Professions}
-                      list={workerList.filter(u => u.Isworking)}
-                    />
-                  }
-                },
-                {
-                  menuItem: `${t('Pages.Users.Page.Tab.LeftWorketlist')} (${leftList.length})`,
-                  pane: {
-                    key: 'workerleft',
-                    content: <UsersWorkerleftList
-                      Profile={Profile}
-                      Professions={Professions}
-                      list={leftList}
-                    />
-                  }
-                },
-                {
-                  menuItem: `${t('Pages.Users.Page.Tab.Appuserlist')} (${(appList || []).length})`,
-                  pane: {
-                    key: 'app',
-                    content: <UsersAppList
-                      Profile={Profile}
-                      list={appList}
-                    />
-                  }
-                },
-              ]}
-              renderActiveOnly={false}
+    <React.Fragment>
+      <Pagewrapper dimmer isLoading={isLoading}>
+        <Headerwrapper>
+          <Grid columns='2' >
+            <GridColumn width={8}>
+              <Breadcrumb size='big'>
+                <Link to={"/Users"}>
+                  <Breadcrumb.Section>{t('Pages.Users.Page.Header')}</Breadcrumb.Section>
+                </Link>
+              </Breadcrumb>
+            </GridColumn>
+            <Settings
+              Profile={Profile}
+              Pagecreateheader={t('Pages.Users.Page.CreateHeader')}
+              Pagecreatelink={"/Users/Create"}
+              Showcreatebutton
             />
-          </Contentwrapper>
-        </Pagewrapper>
-        <UsersDelete />
-        <UsersLeft
-          record={record}
-          setRecord={setRecord}
-          open={isLeftModalOpen}
-          setOpen={setIsLeftModalOpen}
-        />
-      </React.Fragment>
+          </Grid>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Tab
+            className="w-full !bg-transparent"
+            panes={[
+              {
+                menuItem: `${t('Pages.Users.Page.Tab.Worketlist')} (${(workerList || []).length})`,
+                pane: {
+                  key: 'worker',
+                  content: <UsersWorkerList
+                    Profile={Profile}
+                    Cases={Cases}
+                    Professions={Professions}
+                    list={workerList.filter(u => u.Isworking)}
+                  />
+                }
+              },
+              {
+                menuItem: `${t('Pages.Users.Page.Tab.LeftWorketlist')} (${leftList.length})`,
+                pane: {
+                  key: 'workerleft',
+                  content: <UsersWorkerleftList
+                    Profile={Profile}
+                    Professions={Professions}
+                    list={leftList}
+                  />
+                }
+              },
+              {
+                menuItem: `${t('Pages.Users.Page.Tab.Appuserlist')} (${(appList || []).length})`,
+                pane: {
+                  key: 'app',
+                  content: <UsersAppList
+                    Profile={Profile}
+                    list={appList}
+                  />
+                }
+              },
+            ]}
+            renderActiveOnly={false}
+          />
+        </Contentwrapper>
+      </Pagewrapper>
+      <UsersDelete />
+      <UsersLeft
+        record={record}
+        setRecord={setRecord}
+        open={isLeftModalOpen}
+        setOpen={setIsLeftModalOpen}
+      />
+    </React.Fragment>
   )
 }
 
