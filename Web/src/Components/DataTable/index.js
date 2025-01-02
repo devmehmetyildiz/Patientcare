@@ -6,12 +6,17 @@ import {
 } from "react-table"
 import { Icon, Pagination, Select, Popup, Input, } from 'semantic-ui-react'
 import "./index.css"
+import { useSelector } from 'react-redux'
 
 const TWO_HUNDRED_MS = 200;
 
 
 
-export const DataTable = ({ Columns, Data, Config, renderRowSubComponent, disableGlobalFilter }) => {
+export const DataTable = ({ Columns, Data, Config, renderRowSubComponent, disableGlobalFilter, additionalCountPrefix }) => {
+
+    const Profile = useSelector(state => state.Profile)
+
+    const t = Profile?.i18n?.t
 
     const [selectedRowId, setSelectedRowId] = useState([])
     const columns = useMemo(() => {
@@ -301,7 +306,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent, disabl
                                 />
                             </div>
                             <div className='mr-2'>
-                                <p>{`Toplam ${(Data || []).length} Kayıt`}</p>
+                                <p>{`${t('Components.Datatable.Label.Total')} ${(Data || []).length}${additionalCountPrefix ? ` / ${additionalCountPrefix}` : ''} ${t('Components.Datatable.Label.Total')}`}</p>
                             </div>
                         </div>
                         : null

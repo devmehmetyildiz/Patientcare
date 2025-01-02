@@ -8,6 +8,7 @@ import {
 } from '../../Components'
 import { FormContext } from '../../Provider/FormProvider'
 import { Formatfulldate } from '../../Utils/Formatdate'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 export default function MainteanceplansEdit(props) {
 
@@ -16,6 +17,7 @@ export default function MainteanceplansEdit(props) {
     const { Mainteanceplans, Equipments, Equipmentgroups, Users, Profile, closeModal, history, match, MainteanceplanID } = props
     const { EditMainteanceplans, GetMainteanceplan, GetUsers, fillMainteanceplannotification, GetEquipments, GetEquipmentgroups } = props
 
+    const { calculateRedirectUrl } = usePreviousUrl()
     const context = useContext(FormContext)
 
     const Id = MainteanceplanID || match?.params?.MainteanceplanID
@@ -61,7 +63,7 @@ export default function MainteanceplansEdit(props) {
             EditMainteanceplans({
                 data: { ...Mainteanceplans.selected_record, ...data },
                 history,
-                redirectUrl: "/Mainteanceplans",
+                redirectUrl: calculateRedirectUrl({ url: '/Mainteanceplans', usePrev: true }),
                 closeModal,
             })
         }

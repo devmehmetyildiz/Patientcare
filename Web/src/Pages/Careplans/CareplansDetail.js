@@ -160,7 +160,7 @@ export default function CareplansEdit(props) {
               >
                 {t('Pages.Careplans.Columns.Enddate')}
                 <LabelDetail>
-                  {Formatfulldate(selected_record?.Startdate, true) || t('Common.Enddate')}
+                  {Formatfulldate(selected_record?.Startdate, true) || t('Common.NoDataFound')}
                 </LabelDetail>
               </Label>
             </Form.Group>

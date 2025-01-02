@@ -9,10 +9,11 @@ import { Formatfulldate } from '../../Utils/Formatdate'
 import { CLAIMPAYMENT_TYPE_BHKS, CLAIMPAYMENT_TYPE_KYS, CLAIMPAYMENT_TYPE_PATIENT, CLAIMPAYMENT_TYPE_PERSONEL, COL_PROPS } from '../../Utils/Constants'
 import ClaimpaymentsApprove from '../../Containers/Claimpayments/ClaimpaymentsApprove'
 import ClaimpaymentsDelete from '../../Containers/Claimpayments/ClaimpaymentsDelete'
+import useTabNavigation from '../../Hooks/useTabNavigation'
 
 export default function Claimpayments(props) {
 
-    const { GetClaimpayments, Claimpayments, Profile, handleDeletemodal, handleSelectedClaimpayment, handleApprovemodal, } = props
+    const { GetClaimpayments, Claimpayments, Profile, history } = props
 
     const t = Profile?.i18n?.t
     const { isLoading } = Claimpayments
@@ -138,6 +139,18 @@ export default function Claimpayments(props) {
     const waitingapproveList = list.filter(u => !u.Isapproved && !u.Isonpreview)
     const onpreviewList = list.filter(u => !u.Isapproved && u.Isonpreview)
 
+    const tabOrder = [
+        'approved',
+        'waitingapprove',
+        'onpreview',
+    ]
+
+    const { activeTab, setActiveTab } = useTabNavigation({
+        history,
+        tabOrder,
+        mainRoute: 'Claimpayments'
+    })
+
     useEffect(() => {
         GetClaimpayments()
     }, [])
@@ -172,26 +185,30 @@ export default function Claimpayments(props) {
                     <Pagedivider />
                     <Contentwrapper>
                         <Tab
+                            onTabChange={(_, { activeIndex }) => {
+                                setActiveTab(activeIndex)
+                            }}
+                            activeIndex={activeTab}
                             className="w-full !bg-transparent"
                             panes={[
                                 {
                                     menuItem: `${t('Pages.Claimpayments.Tab.Approved')} (${(approvedList || []).length})`,
                                     pane: {
-                                        key: 'onlyactive',
+                                        key: 'approved',
                                         content: renderView(approvedList, Columns.filter(u => u.key === 'approved' || u.key1 === 'approved' || !u.key), initialConfig)
                                     }
                                 },
                                 {
                                     menuItem: `${t('Pages.Claimpayments.Tab.Waitingapprove')} (${(waitingapproveList || []).length})`,
                                     pane: {
-                                        key: 'onlyactive',
+                                        key: 'waitingapprove',
                                         content: renderView(waitingapproveList, Columns.filter(u => u.key === 'waitingapprove' || u.key1 === 'waitingapprove' || !u.key), initialConfig)
                                     }
                                 },
                                 {
                                     menuItem: `${t('Pages.Claimpayments.Tab.Preview')} (${(onpreviewList || []).length})`,
                                     pane: {
-                                        key: 'onlyactive',
+                                        key: 'onpreview',
                                         content: renderView(onpreviewList, Columns.filter(u => u.key === 'onpreview' || u.key1 === 'onpreview' || !u.key), initialConfig)
                                     }
                                 },

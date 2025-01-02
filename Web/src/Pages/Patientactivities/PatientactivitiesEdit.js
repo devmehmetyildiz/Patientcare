@@ -7,6 +7,7 @@ import {
     Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
 } from '../../Components'
 import { FormContext } from '../../Provider/FormProvider'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 
 export default function PatientactivitiesEdit(props) {
@@ -16,6 +17,7 @@ export default function PatientactivitiesEdit(props) {
     const { Patientactivities, Users, Patients, Patientdefines, Profile, closeModal, history, match, PatientactivityID } = props
     const { GetUsers, GetPatientdefines, GetPatients, EditPatientactivities, GetPatientactivity, fillPatientactivitynotification } = props
 
+    const { calculateRedirectUrl } = usePreviousUrl()
     const context = useContext(FormContext)
 
     const Id = PatientactivityID || match?.params?.PatientactivityID
@@ -65,7 +67,7 @@ export default function PatientactivitiesEdit(props) {
             EditPatientactivities({
                 data: { ...Patientactivities.selected_record, ...data },
                 history,
-                redirectUrl: "/Patientactivities",
+                redirectUrl: calculateRedirectUrl({ url: '/Patientactivities', usePrev: true }),
                 closeModal
             })
         }

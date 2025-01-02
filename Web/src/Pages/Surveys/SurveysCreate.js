@@ -8,6 +8,7 @@ import {
 } from '../../Components'
 import { SURVEY_TYPE_PATIENT, SURVEY_TYPE_PATIENTCONTACT, SURVEY_TYPE_USER } from '../../Utils/Constants'
 import { FormContext } from '../../Provider/FormProvider'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 export default function SurveysCreate(props) {
   const PAGE_NAME = "SurveysCreate"
@@ -15,6 +16,7 @@ export default function SurveysCreate(props) {
   const { Surveys, Users, Profile, closeModal, history } = props
   const { GetUsers, AddSurveys, fillSurveynotification } = props
 
+  const { calculateRedirectUrl } = usePreviousUrl()
   const context = useContext(FormContext)
   const [surveydetails, setSurveydetails] = useState([])
 
@@ -60,7 +62,7 @@ export default function SurveysCreate(props) {
       AddSurveys({
         data: { ...data, Surveydetails: surveydetails },
         history,
-        redirectUrl: "/Surveys",
+        redirectUrl: calculateRedirectUrl({ url: '/Surveys', usePrev: true }),
         closeModal,
       })
     }

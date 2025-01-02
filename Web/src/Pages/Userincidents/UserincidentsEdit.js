@@ -9,6 +9,7 @@ import {
 import { FormContext } from '../../Provider/FormProvider'
 import { Formatfulldate } from '../../Utils/Formatdate'
 import { USER_INCIDENT_BYCONTACT, USER_INCIDENT_PHYSICAL, USER_INCIDENT_TOPERSONELS } from '../../Utils/Constants'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 
 export default function UserincidentsEdit(props) {
@@ -17,6 +18,7 @@ export default function UserincidentsEdit(props) {
   const { Userincidents, Users, Profile, closeModal, history, match, UserincidentID } = props
   const { GetUserincident, GetUsers, EditUserincidents, fillUserincidentnotification } = props
 
+  const { calculateRedirectUrl } = usePreviousUrl()
   const context = useContext(FormContext)
 
   const Id = UserincidentID || match?.params?.UserincidentID
@@ -57,7 +59,7 @@ export default function UserincidentsEdit(props) {
       EditUserincidents({
         data: { ...Userincidents.selected_record, ...data },
         history,
-        redirectUrl: "/Userincidents",
+        redirectUrl: calculateRedirectUrl({ url: '/Userincidents', usePrev: true }),
         closeModal
       })
     }

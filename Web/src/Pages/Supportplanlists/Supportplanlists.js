@@ -130,8 +130,8 @@ export default class Supportplanlists extends Component {
         return itemSupportplanstxt.length - 35 > 20 ?
             (
                 !this.state.supportplanStatus.includes(itemId) ?
-                    [itemSupportplanstxt.slice(0, 35) + ' ...(' + itemSupportplans.length + ')', <Link to='#' className='showMoreOrLess' onClick={() => this.expandSupportplans(itemId)}> ...Daha Fazla Göster</Link>] :
-                    [itemSupportplanstxt, <Link to='#' className='showMoreOrLess' onClick={() => this.shrinkSupportplans(itemId)}> ...Daha Az Göster</Link>]
+                    [itemSupportplanstxt.slice(0, 35) + ' ...(' + itemSupportplans.length + ')', <Link key={itemId} to='#' className='showMoreOrLess' onClick={() => this.expandSupportplans(itemId)}> ...Daha Fazla Göster</Link>] :
+                    [itemSupportplanstxt, <Link key={itemId} to='#' className='showMoreOrLess' onClick={() => this.shrinkSupportplans(itemId)}> ...Daha Az Göster</Link>]
             ) : itemSupportplanstxt
     }
 

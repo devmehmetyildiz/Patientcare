@@ -20,6 +20,7 @@ import './index.css';
 import 'semantic-ui-css/semantic.min.css'
 import './i18n';
 import { STORAGE_KEY_PATIENTCARE_ACCESSTOKEN } from "./Utils/Constants";
+import PreviousUrlProvider from "./Provider/PreviousUrlProvider";
 
 const store = configureStore({
   reducer: rootSlice,
@@ -50,7 +51,9 @@ root.render(<AuthProvider>
     <FormProvider>
       <Provider store={store}>
         <BrowserRouter >
-          <App />
+          <PreviousUrlProvider>
+            <App />
+          </PreviousUrlProvider>
         </BrowserRouter>
       </Provider>
     </FormProvider>

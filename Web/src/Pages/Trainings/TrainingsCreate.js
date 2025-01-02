@@ -10,14 +10,14 @@ import {
 import { TRAINING_TYPE_COMPANY, TRAINING_TYPE_ORGANIZATION, TRAINING_TYPEDETAIL_PATIENT, TRAINING_TYPEDETAIL_PATIENTCONTACT, TRAINING_TYPEDETAIL_USER } from '../../Utils/Constants'
 import Fileupload from '../../Components/Fileupload'
 import TrainingsFastAdd from './TrainingsFastAdd'
-
-
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 export default function TrainingsCreate(props) {
   const PAGE_NAME = "TrainingsCreate"
   const { Trainings, Users, Usagetypes, Professions, Patients, Patientdefines, Profile, history, closeModal, } = props
   const { GetUsers, GetProfessions, GetUsagetypes, GetPatients, GetPatientdefines, fillTrainingnotification, AddTrainings } = props
 
+  const { calculateRedirectUrl } = usePreviousUrl()
   const [selectedFiles, setSelectedFiles] = useState([])
   const [open, setOpen] = useState(false)
   const context = useContext(FormContext)
@@ -138,11 +138,15 @@ export default function TrainingsCreate(props) {
         fillTrainingnotification(error)
       })
     } else {
-      AddTrainings({ data, history, closeModal, files: selectedFiles })
+      AddTrainings({
+        data,
+        history,
+        closeModal,
+        redirectUrl: calculateRedirectUrl({ url: '/Trainings', usePrev: true }),
+        files: selectedFiles
+      })
     }
   }
-
-
 
   useEffect(() => {
     GetUsers()

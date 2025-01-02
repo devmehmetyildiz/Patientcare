@@ -10,6 +10,7 @@ import { fillnotification } from '../../Redux/ProfileSlice'
 import { SURVEY_TYPE_PATIENT, SURVEY_TYPE_PATIENTCONTACT, SURVEY_TYPE_USER } from '../../Utils/Constants'
 import Input from '../../Components/Input'
 import { FormContext } from '../../Provider/FormProvider'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 
 export default function SurveysEdit(props) {
@@ -18,6 +19,7 @@ export default function SurveysEdit(props) {
   const { Surveys, Users, Profile, closeModal, history, match, SurveyID } = props
   const { GetUsers, EditSurveys, GetSurvey, fillSurveynotification } = props
 
+  const { calculateRedirectUrl } = usePreviousUrl()
   const context = useContext(FormContext)
   const [surveydetails, setSurveydetails] = useState([])
 
@@ -64,7 +66,7 @@ export default function SurveysEdit(props) {
       EditSurveys({
         data: { ...data, Surveydetails: surveydetails },
         history,
-        redirectUrl: "/Surveys",
+        redirectUrl: calculateRedirectUrl({ url: '/Surveys', usePrev: true }),
         closeModal
       })
     }

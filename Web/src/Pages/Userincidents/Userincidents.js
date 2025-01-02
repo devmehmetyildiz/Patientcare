@@ -12,10 +12,11 @@ import UserincidentsSavepreview from '../../Containers/Userincidents/Userinciden
 import UserincidentsApprove from '../../Containers/Userincidents/UserincidentsApprove'
 import UserincidentsComplete from '../../Containers/Userincidents/UserincidentsComplete'
 import { Formatfulldate } from '../../Utils/Formatdate'
+import useTabNavigation from '../../Hooks/useTabNavigation'
 
 export default function Userincidents(props) {
 
-    const { Profile, Users, Userincidents, } = props
+    const { Profile, Users, Userincidents, history, location } = props
     const { GetUserincidents, GetUsers, } = props
 
     const t = Profile?.i18n?.t
@@ -24,6 +25,7 @@ export default function Userincidents(props) {
     const [completeOpen, setCompleteOpen] = useState(false)
     const [approveOpen, setApproveOpen] = useState(false)
     const [record, setRecord] = useState(null)
+
 
 
     const userCellhandler = (value) => {
@@ -106,7 +108,7 @@ export default function Userincidents(props) {
     const list = (Userincidents.list || []).filter(u => u.Isactive).map(item => {
         return {
             ...item,
-            edit: <Link to={`/Userincidents/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+            edit: <Link to={`/Userincidents/${item.Uuid}/edit`} state={{ from: location }}><Icon size='large' className='row-edit' name='edit' /></Link>,
             delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
                 setRecord(item)
                 setDeleteOpen(true)
@@ -131,11 +133,23 @@ export default function Userincidents(props) {
     const waitingapproveList = list.filter(u => !u.Iscompleted && !u.Isapproved && !u.Isonpreview)
     const onpreviewList = list.filter(u => !u.Iscompleted && !u.Isapproved && u.Isonpreview)
 
+    const tabOrder = [
+        'completed',
+        'approved',
+        'waitingapprove',
+        'onpreview',
+    ]
+
+    const { activeTab, setActiveTab } = useTabNavigation({
+        history,
+        tabOrder,
+        mainRoute: 'Userincidents'
+    })
+
     useEffect(() => {
         GetUserincidents()
         GetUsers()
     }, [])
-
 
     return (
         Userincidents.isLoading ? <LoadingPage /> :
@@ -166,6 +180,10 @@ export default function Userincidents(props) {
                 <Pagedivider />
                 <Contentwrapper>
                     <Tab
+                        onTabChange={(_, { activeIndex }) => {
+                            setActiveTab(activeIndex)
+                        }}
+                        activeIndex={activeTab}
                         className="w-full !bg-transparent"
                         panes={[
                             {

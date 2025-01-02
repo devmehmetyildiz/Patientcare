@@ -8,6 +8,7 @@ import {
   Headerbredcrump, Headerwrapper, Pagedivider, Pagewrapper, Profilephoto, Submitbutton
 } from '../../Components'
 import { CAREPLANPARAMETER_TYPE_CURRENTSITUATIONRATİNG, CAREPLANPARAMETER_TYPE_HELPSTATU, CAREPLANPARAMETER_TYPE_PLANNEDSITUATIONRATİNG, CAREPLANPARAMETER_TYPE_PRESENTATIONMAKINGTYPE, CAREPLANPARAMETER_TYPE_PRESENTATIONPERIOD, CAREPLANPARAMETER_TYPE_PURPOSETARGET, CAREPLANPARAMETER_TYPE_PURPOSETARGETWORKS, CAREPLANPARAMETER_TYPE_RATING, SUPPORTPLAN_TYPE_CAREPLAN, SUPPORTPLAN_TYPE_PSYCHOSOCIAL, SUPPORTPLAN_TYPE_RATING } from '../../Utils/Constants'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 export default function CareplansCreate(props) {
   const PAGE_NAME = 'CareplansCreate'
@@ -19,7 +20,10 @@ export default function CareplansCreate(props) {
 
   const [isDatafetched, setIsDatafetched] = useState(false)
   const [supportplans, setSupportplans] = useState([])
+
+  const { calculateRedirectUrl } = usePreviousUrl()
   const context = useContext(FormContext)
+
   const t = Profile?.i18n?.t
 
   const isloadingStatus =
@@ -74,7 +78,12 @@ export default function CareplansCreate(props) {
         fillCareplannotification(error)
       })
     } else {
-      AddCareplans({ data: data, history, closeModal })
+      AddCareplans({
+        data,
+        history,
+        redirectUrl: calculateRedirectUrl({ url: '/Careplans', usePrev: true }),
+        closeModal
+      })
     }
   }
 

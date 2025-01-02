@@ -68,7 +68,7 @@ export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, ha
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Formatroomstringstart': e.target.value }) }}
                                 label={t('Pages.Floors.Column.Formatroomstringstart')}
-                                placeholder={t('"Pages.Floors.Column.Formatroomstringstart')}
+                                placeholder={t('Pages.Floors.Column.Formatroomstringstart')}
                             />
                             <Form.Input
                                 onChange={(e) => { setRecord({ ...record, 'Formatroomstringend': e.target.value }) }}

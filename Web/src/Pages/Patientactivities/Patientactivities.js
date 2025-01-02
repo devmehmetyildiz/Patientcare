@@ -10,9 +10,10 @@ import PatientactivitiesApprove from '../../Containers/Patientactivities/Patient
 import PatientactivitiesComplete from '../../Containers/Patientactivities/PatientactivitiesComplete'
 import PatientactivitiesDetail from '../../Containers/Patientactivities/PatientactivitiesDetail'
 import { Formatfulldate } from '../../Utils/Formatdate'
+import useTabNavigation from '../../Hooks/useTabNavigation'
 
 export default function Patientactivities(props) {
-    const { Profile, Users, Patientactivities, Patients, Patientdefines } = props
+    const { Profile, Users, Patientactivities, Patients, Patientdefines, history } = props
     const { GetPatientactivities, GetUsers, GetPatientdefines, GetPatients } = props
 
     const t = Profile?.i18n?.t
@@ -156,6 +157,19 @@ export default function Patientactivities(props) {
     const waitingapproveList = list.filter(u => !u.Iscompleted && !u.Isapproved && !u.Isonpreview)
     const onpreviewList = list.filter(u => !u.Iscompleted && !u.Isapproved && u.Isonpreview)
 
+    const tabOrder = [
+        'completed',
+        'approved',
+        'waitingapprove',
+        'onpreview',
+    ]
+
+    const { activeTab, setActiveTab } = useTabNavigation({
+        history,
+        tabOrder,
+        mainRoute: 'Patientactivities'
+    })
+
     useEffect(() => {
         GetPatientactivities()
         GetUsers()
@@ -193,6 +207,10 @@ export default function Patientactivities(props) {
                 <Pagedivider />
                 <Contentwrapper>
                     <Tab
+                        onTabChange={(_, { activeIndex }) => {
+                            setActiveTab(activeIndex)
+                        }}
+                        activeIndex={activeTab}
                         className="w-full !bg-transparent"
                         panes={[
                             {

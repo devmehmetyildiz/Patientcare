@@ -11,10 +11,11 @@ import MainteanceplansSavepreview from '../../Containers/Mainteanceplans/Maintea
 import MainteanceplansWork from '../../Containers/Mainteanceplans/MainteanceplansWork'
 import MainteanceplansStop from '../../Containers/Mainteanceplans/MainteanceplansStop'
 import MainteanceplansDelete from '../../Containers/Mainteanceplans/MainteanceplansDelete'
+import useTabNavigation from '../../Hooks/useTabNavigation'
 
 export default function Mainteanceplans(props) {
 
-    const { GetMainteanceplans, GetEquipments, GetEquipmentgroups, GetUsers, Users, Mainteanceplans, Equipments, Equipmentgroups, Profile } = props
+    const { GetMainteanceplans, GetEquipments, GetEquipmentgroups, GetUsers, Users, Mainteanceplans, Equipments, Equipmentgroups, Profile, history } = props
 
     const [deleteOpen, setDeleteOpen] = useState(false)
     const [savepreviewOpen, setSavepreviewOpen] = useState(false)
@@ -145,6 +146,19 @@ export default function Mainteanceplans(props) {
     const waitingapproveList = list.filter(u => !u.Iscompleted && !u.Isapproved && !u.Isonpreview)
     const onpreviewList = list.filter(u => !u.Iscompleted && !u.Isapproved && u.Isonpreview)
 
+    const tabOrder = [
+        'completed',
+        'approved',
+        'waitingapprove',
+        'onpreview',
+    ]
+
+    const { activeTab, setActiveTab } = useTabNavigation({
+        history,
+        tabOrder,
+        mainRoute: 'Mainteanceplans'
+    })
+
     useEffect(() => {
         GetMainteanceplans()
         GetEquipmentgroups()
@@ -181,6 +195,10 @@ export default function Mainteanceplans(props) {
                 <Pagedivider />
                 <Contentwrapper>
                     <Tab
+                        onTabChange={(_, { activeIndex }) => {
+                            setActiveTab(activeIndex)
+                        }}
+                        activeIndex={activeTab}
                         className="w-full !bg-transparent"
                         panes={[
                             {

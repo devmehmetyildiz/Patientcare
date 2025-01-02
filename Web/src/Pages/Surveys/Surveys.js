@@ -12,10 +12,11 @@ import SurveysComplete from '../../Containers/Surveys/SurveysComplete'
 import SurveysFill from '../../Containers/Surveys/SurveysFill'
 import validator from '../../Utils/Validator'
 import SurveysDetail from '../../Containers/Surveys/SurveysDetail'
+import useTabNavigation from '../../Hooks/useTabNavigation'
 
 export default function Surveys(props) {
     const { Profile, Users, Surveys, Patients, Patientdefines } = props
-    const { GetSurveys, GetUsers, GetPatientdefines, GetPatients, RemoveSurveyanswer, ClearSurvey } = props
+    const { GetSurveys, GetUsers, GetPatientdefines, GetPatients, RemoveSurveyanswer, ClearSurvey, history } = props
 
     const t = Profile?.i18n?.t
     const [detailOpen, setDetailOpen] = useState(false)
@@ -218,6 +219,19 @@ export default function Surveys(props) {
     const waitingapproveList = list.filter(u => !u.Iscompleted && !u.Isapproved && !u.Isonpreview)
     const onpreviewList = list.filter(u => !u.Iscompleted && !u.Isapproved && u.Isonpreview)
 
+    const tabOrder = [
+        'completed',
+        'approved',
+        'waitingapprove',
+        'onpreview',
+    ]
+
+    const { activeTab, setActiveTab } = useTabNavigation({
+        history,
+        tabOrder,
+        mainRoute: 'Surveys'
+    })
+
     useEffect(() => {
         GetSurveys()
         GetUsers()
@@ -255,6 +269,10 @@ export default function Surveys(props) {
                 <Pagedivider />
                 <Contentwrapper>
                     <Tab
+                        onTabChange={(_, { activeIndex }) => {
+                            setActiveTab(activeIndex)
+                        }}
+                        activeIndex={activeTab}
                         className="w-full !bg-transparent"
                         panes={[
                             {

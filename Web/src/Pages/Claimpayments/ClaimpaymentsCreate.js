@@ -8,6 +8,7 @@ import {
     Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
 } from '../../Components'
 import { CLAIMPAYMENT_TYPE_BHKS, CLAIMPAYMENT_TYPE_KYS, CLAIMPAYMENT_TYPE_PATIENT } from '../../Utils/Constants'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 export default function ClaimpaymentsCreate(props) {
 
@@ -15,6 +16,7 @@ export default function ClaimpaymentsCreate(props) {
 
     const { AddClaimpayments, Claimpayments, history, fillClaimpaymentnotification, Profile, closeModal } = props
 
+    const { calculateRedirectUrl } = usePreviousUrl()
     const context = useContext(FormContext)
 
     const t = Profile?.i18n?.t
@@ -44,7 +46,12 @@ export default function ClaimpaymentsCreate(props) {
                 fillClaimpaymentnotification(error)
             })
         } else {
-            AddClaimpayments({ data, history, closeModal })
+            AddClaimpayments({
+                data,
+                history,
+                redirectUrl: calculateRedirectUrl({ url: '/Claimpayments', usePrev: true }),
+                closeModal
+            })
         }
     }
 

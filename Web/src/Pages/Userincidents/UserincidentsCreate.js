@@ -8,13 +8,15 @@ import {
 } from '../../Components'
 import { FormContext } from '../../Provider/FormProvider'
 import { USER_INCIDENT_BYCONTACT, USER_INCIDENT_PHYSICAL, USER_INCIDENT_TOPERSONELS } from '../../Utils/Constants'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 export default function UserincidentsCreate(props) {
   const PAGE_NAME = "UserincidentsCreate"
 
-  const { Userincidents, Users, Profile, closeModal, history } = props
+  const { Userincidents, Users, Profile, closeModal, history, location, match } = props
   const { GetUsers, AddUserincidents, fillUserincidentnotification } = props
 
+  const { calculateRedirectUrl } = usePreviousUrl()
   const context = useContext(FormContext)
 
   const t = Profile?.i18n?.t
@@ -54,7 +56,7 @@ export default function UserincidentsCreate(props) {
       AddUserincidents({
         data,
         history,
-        redirectUrl: "/Userincidents",
+        redirectUrl: calculateRedirectUrl({ url: '/Userincidents', usePrev: true }),
         closeModal,
       })
     }

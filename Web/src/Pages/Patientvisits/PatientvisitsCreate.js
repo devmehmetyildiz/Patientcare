@@ -7,6 +7,7 @@ import {
   Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
 } from '../../Components'
 import { FormContext } from '../../Provider/FormProvider'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 export default function PatientvisitsCreate(props) {
   const PAGE_NAME = "PatientvisitsCreate"
@@ -14,6 +15,7 @@ export default function PatientvisitsCreate(props) {
   const { Patientvisits, Users, Patients, Patientdefines, Profile, closeModal, history } = props
   const { GetUsers, GetPatients, GetPatientdefines, AddPatientvisits, fillPatientvisitnotification } = props
 
+  const { calculateRedirectUrl } = usePreviousUrl()
   const context = useContext(FormContext)
 
   const t = Profile?.i18n?.t
@@ -58,7 +60,7 @@ export default function PatientvisitsCreate(props) {
       AddPatientvisits({
         data,
         history,
-        redirectUrl: "/Patientvisits",
+        redirectUrl: calculateRedirectUrl({ url: '/Patientvisits', usePrev: true }),
         closeModal,
       })
     }

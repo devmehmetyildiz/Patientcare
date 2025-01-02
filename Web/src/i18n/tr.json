@@ -198,6 +198,8 @@
         "Components.BedSelector.Tab.Onlywomen": "Kadın Katları",
         "Components.BedSelector.Messages.NeedBed": "Yatak Seçilmedi",
         "Components.Filepreview.Page.Header": "Dosya Önizleme",
+        "Components.Datatable.Label.Total": "Toplam",
+        "Components.Datatable.Label.Record": "Kayıt",
         "Pages.Preregistrations.Page.Header": "Ön Kayıtlar",
         "Pages.Preregistrations.Page.CreateHeader": "Oluştur",
         "Pages.Preregistrations.Page.InfoHeader": "Hasta Bilgileri",

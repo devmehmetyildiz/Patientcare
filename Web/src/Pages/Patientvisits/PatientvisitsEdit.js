@@ -8,6 +8,7 @@ import {
 } from '../../Components'
 import { FormContext } from '../../Provider/FormProvider'
 import { Formatfulldate } from '../../Utils/Formatdate'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 
 export default function PatientvisitsEdit(props) {
@@ -16,6 +17,7 @@ export default function PatientvisitsEdit(props) {
   const { Patientvisits, Patients, Patientdefines, Users, Profile, closeModal, history, match, PatientvisitID } = props
   const { GetPatientvisit, GetUsers, GetPatientdefines, GetPatients, EditPatientvisits, fillPatientvisitnotification } = props
 
+  const { calculateRedirectUrl } = usePreviousUrl()
   const context = useContext(FormContext)
 
   const Id = PatientvisitID || match?.params?.PatientvisitID
@@ -61,7 +63,7 @@ export default function PatientvisitsEdit(props) {
       EditPatientvisits({
         data: { ...Patientvisits.selected_record, ...data },
         history,
-        redirectUrl: "/Patientvisits",
+        redirectUrl: calculateRedirectUrl({ url: '/Patientvisits', usePrev: true }),
         closeModal
       })
     }

@@ -9,6 +9,7 @@ import {
 } from '../../Components'
 import { CAREPLANPARAMETER_TYPE_CURRENTSITUATIONRATİNG, CAREPLANPARAMETER_TYPE_HELPSTATU, CAREPLANPARAMETER_TYPE_PLANNEDSITUATIONRATİNG, CAREPLANPARAMETER_TYPE_PRESENTATIONMAKINGTYPE, CAREPLANPARAMETER_TYPE_PRESENTATIONPERIOD, CAREPLANPARAMETER_TYPE_PURPOSETARGET, CAREPLANPARAMETER_TYPE_PURPOSETARGETWORKS, CAREPLANPARAMETER_TYPE_RATING, SUPPORTPLAN_TYPE_CAREPLAN, SUPPORTPLAN_TYPE_PSYCHOSOCIAL, SUPPORTPLAN_TYPE_RATING } from '../../Utils/Constants'
 import Formatdate from '../../Utils/Formatdate'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 export default function CareplansEdit(props) {
   const PAGE_NAME = 'CareplansEdit'
@@ -25,7 +26,10 @@ export default function CareplansEdit(props) {
   const [isDatafetched, setIsDatafetched] = useState(false)
   const [isFetched, setIsFetched] = useState(false)
   const [supportplans, setSupportplans] = useState([])
+
+  const { calculateRedirectUrl } = usePreviousUrl()
   const context = useContext(FormContext)
+
   const t = Profile?.i18n?.t
 
   const isloadingStatus =
@@ -82,7 +86,12 @@ export default function CareplansEdit(props) {
         fillCareplannotification(error)
       })
     } else {
-      EditCareplans({ data: { ...Careplans.selected_record, ...data }, history, closeModal })
+      EditCareplans({
+        data: { ...Careplans.selected_record, ...data },
+        history,
+        redirectUrl: calculateRedirectUrl({ url: '/Careplans', usePrev: true }),
+        closeModal
+      })
     }
   }
 

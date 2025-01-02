@@ -7,6 +7,7 @@ import {
     Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
 } from '../../Components'
 import { FormContext } from '../../Provider/FormProvider'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 export default function MainteanceplansCreate(props) {
 
@@ -15,6 +16,7 @@ export default function MainteanceplansCreate(props) {
     const { Mainteanceplans, Equipments, Equipmentgroups, Users, Profile, closeModal, history } = props
     const { AddMainteanceplans, fillMainteanceplannotification, GetUsers, GetEquipments, GetEquipmentgroups, } = props
 
+    const { calculateRedirectUrl } = usePreviousUrl()
     const context = useContext(FormContext)
 
     const t = Profile?.i18n?.t
@@ -59,7 +61,7 @@ export default function MainteanceplansCreate(props) {
             AddMainteanceplans({
                 data,
                 history,
-                redirectUrl: "/Mainteanceplans",
+                redirectUrl: calculateRedirectUrl({ url: '/Mainteanceplans', usePrev: true }),
                 closeModal,
             })
         }

@@ -17,10 +17,12 @@ import PatientsReducestockModal from '../../Containers/Patients/PatientsReducest
 import PatientsMakeactiveModal from '../../Containers/Patients/PatientsMakeactiveModal'
 import PatientsEntereventModal from '../../Containers/Patients/PatientsEntereventModal'
 import PatientsEnterhealthcaseModal from '../../Containers/Patients/PatientsEnterhealthcaseModal'
+import useTabNavigation from '../../Hooks/useTabNavigation'
 
 export default function Patients(props) {
 
-  const { Patients, Profile, Cases, Patientdefines, Files, Usagetypes, Floors, Rooms, Beds, handleSelectedPatient, handleDetailmodal, fillPatientnotification } = props
+  const { Patients, Profile, Cases, Patientdefines, Files, Usagetypes, Floors, Rooms, Beds, handleSelectedPatient, handleDetailmodal, fillPatientnotification, history } = props
+
   const t = Profile?.i18n?.t || null
 
   const { isLoading } = Patients
@@ -63,29 +65,6 @@ export default function Patients(props) {
   const passList = list.filter(u => (passCaselist || []).includes(u?.CaseID))
   const deadList = list.filter(u => (deadCaselist || []).includes(u?.CaseID))
   const leftList = list.filter(u => (leftCaselist || []).includes(u?.CaseID))
-
-  useEffect(() => {
-    const {
-      GetPatients,
-      GetPatientdefines,
-      GetRooms,
-      GetBeds,
-      GetFloors,
-      GetCases,
-      GetStockdefines,
-      GetUsagetypes,
-      GetFiles
-    } = props
-    GetPatients()
-    GetPatientdefines()
-    GetRooms()
-    GetBeds()
-    GetFloors()
-    GetCases()
-    GetUsagetypes()
-    GetStockdefines()
-    GetFiles()
-  }, [])
 
   const nameCellhandler = (row) => {
     const patient = row
@@ -169,6 +148,40 @@ export default function Patients(props) {
     return null
   }
 
+  const tabOrder = [
+    'pass',
+    'dead',
+    'left',
+  ]
+
+  const { activeTab, setActiveTab } = useTabNavigation({
+    history,
+    tabOrder,
+    mainRoute: 'Patients'
+  })
+
+  useEffect(() => {
+    const {
+      GetPatients,
+      GetPatientdefines,
+      GetRooms,
+      GetBeds,
+      GetFloors,
+      GetCases,
+      GetStockdefines,
+      GetUsagetypes,
+      GetFiles
+    } = props
+    GetPatients()
+    GetPatientdefines()
+    GetRooms()
+    GetBeds()
+    GetFloors()
+    GetCases()
+    GetUsagetypes()
+    GetStockdefines()
+    GetFiles()
+  }, [])
 
   return (
     isLoading ? <LoadingPage /> :
@@ -188,6 +201,10 @@ export default function Patients(props) {
           <Pagedivider />
           <Contentwrapper>
             <Tab
+              onTabChange={(_, { activeIndex }) => {
+                setActiveTab(activeIndex)
+              }}
+              activeIndex={activeTab}
               className="w-full !bg-transparent"
               panes={[
                 {

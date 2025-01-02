@@ -10,6 +10,7 @@ import {
 } from '../../Components'
 import Formatdate, { Formatfulldate } from '../../Utils/Formatdate'
 import { CLAIMPAYMENT_TYPE_BHKS, CLAIMPAYMENT_TYPE_KYS } from '../../Utils/Constants'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 export default function ClaimpaymentsDetail(props) {
 
@@ -22,6 +23,7 @@ export default function ClaimpaymentsDetail(props) {
     const { selected_record, isLoading } = Claimpayments
     const t = Profile?.i18n?.t
 
+    const { calculateRedirectUrl } = usePreviousUrl()
     const context = useContext(FormContext)
     const [detailOpen, setDetailOpen] = useState(false)
 
@@ -51,7 +53,11 @@ export default function ClaimpaymentsDetail(props) {
                 description: t('Pages.Claimpayments.Messages.UnsupportedClaimpaymentID'),
             });
         } else {
-            SavepreviewClaimpayments({ data: selected_record, history })
+            SavepreviewClaimpayments({
+                data: selected_record,
+                history,
+                redirectUrl: calculateRedirectUrl({ url: '/Claimpayments', usePrev: true }),
+            })
         }
     }
 

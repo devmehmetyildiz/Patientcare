@@ -14,6 +14,7 @@ import {
 } from '../../Utils/Constants'
 import { Formatfulldate } from '../../Utils/Formatdate'
 import TrainingsFastAdd from './TrainingsFastAdd'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 
 export default function TrainingsEdit(props) {
@@ -25,6 +26,7 @@ export default function TrainingsEdit(props) {
 
   const t = Profile?.i18n?.t
 
+  const { calculateRedirectUrl } = usePreviousUrl()
   const [selectedFiles, setSelectedFiles] = useState([])
   const [open, setOpen] = useState(false)
   const context = useContext(FormContext)
@@ -43,7 +45,6 @@ export default function TrainingsEdit(props) {
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
     return { key: patient.Uuid, text: `${patientdefine.Firstname} ${patientdefine.Lastname}`, value: patient.Uuid }
   }), [Patients.list, Patientdefines.list])
-
 
   const Patientcontactsoptions = useMemo(() => (Patients.list || [])
     .filter(u => u.Isactive && u.Isalive && !u.Isleft && !u.Ispreregistration)
@@ -137,7 +138,12 @@ export default function TrainingsEdit(props) {
         fillTrainingnotification(error)
       })
     } else {
-      EditTrainings({ data: { ...Trainings.selected_record, ...data }, history, files: selectedFiles })
+      EditTrainings({
+        data: { ...Trainings.selected_record, ...data },
+        history,
+        redirectUrl: calculateRedirectUrl({ url: '/Trainings', usePrev: true }),
+        files: selectedFiles
+      })
     }
   }
 
