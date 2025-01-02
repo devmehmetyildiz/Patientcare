@@ -26,18 +26,18 @@ export class index extends Component {
             const patientdefine = (Patientdefines.list || []).find(define => define?.Uuid === patient?.PatientdefineID)
             const patientdefinetxt = `${patientdefine?.Firstname || ''} ${patientdefine?.Lastname || ''} - ${patientdefine?.CountryID || ''}`
             return { title: patientdefinetxt, url: `/Patients/${patient?.Uuid}`, key: Math.random() }
-        }).filter(u => (u.title || '').toLowerCase().includes(this.state.searchWord.toLowerCase()))
+        }).filter(u => (u.title || '').toLocaleLowerCase('tr').includes(this.state.searchWord.toLocaleLowerCase('tr')))
 
         const users = (Users.listsearch || []).filter(u => u.Isactive).map(user => {
             const usernametxt = `${user?.Name || ''} ${user?.Surname || ''}${user?.CountryID ? ` - ${user?.CountryID}` : ''}`
             return { title: usernametxt, url: `/Users/${user?.Uuid}`, key: Math.random() }
-        }).filter(u => (u.title || '').toLowerCase().includes(this.state.searchWord.toLowerCase()))
+        }).filter(u => (u.title || '').toLocaleLowerCase('tr').includes(this.state.searchWord.toLocaleLowerCase('tr')))
 
         const sidebarRoutes = (getSidebarroutes(Profile) || []).flatMap(section => {
             return section.items.filter(u => u.permission)
         })
 
-        const searchdata = sidebarRoutes.filter(u => (u.subtitle || '').toLowerCase().includes(this.state.searchWord.toLowerCase())).map(u => {
+        const searchdata = sidebarRoutes.filter(u => (u.subtitle || '').toLocaleLowerCase('tr').includes(this.state.searchWord.toLocaleLowerCase('tr'))).map(u => {
             return { title: u.subtitle, url: u.url, key: Math.random() }
         }).concat(patients).concat(users)
 
