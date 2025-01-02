@@ -1,6 +1,7 @@
 import React from 'react'
 import { Contentwrapper, Headerwrapper } from '../../../Components'
 import { Breadcrumb, Dimmer, DimmerDimmable, Feed, Icon, Loader } from 'semantic-ui-react'
+import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT } from '../../../Utils/Constants'
 
 export default function OverviewPatients(props) {
     const { Patients, Patientdefines, Cases, Profile } = props
@@ -28,7 +29,10 @@ export default function OverviewPatients(props) {
 
     const patients = (Patients.list || []).filter(u => u.Isactive && u.Ischecked && u.Isapproved && !u.Ispreregistration)
 
-    const patientcases = [...new Set([...(patients || []).map(u => u.CaseID)])]
+    const deadCaselist = (Cases.list || []).filter(u => u.Patientstatus === CASE_PATIENT_STATUS_DEATH).map(u => u.Uuid)
+    const leftCaselist = (Cases.list || []).filter(u => u.Patientstatus === CASE_PATIENT_STATUS_LEFT).map(u => u.Uuid)
+
+    const patientcases = [...new Set([...(patients || []).map(u => u.CaseID)].filter(u => !deadCaselist.includes(u) && !leftCaselist.includes(u)))]
 
     const livepatients = patients.filter(u => u.Isalive && !u.Isleft)
 

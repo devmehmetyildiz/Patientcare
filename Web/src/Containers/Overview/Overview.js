@@ -20,8 +20,10 @@ import { GetCostumertypes } from '../../Redux/CostumertypeSlice'
 import { GetPatienttypes } from '../../Redux/PatienttypeSlice'
 import { GetTrainings } from '../../Redux/TrainingSlice'
 import { GetDepartments } from '../../Redux/DepartmentSlice'
+import { GetStayedPatientCount, GetPatientIncomeOutcome } from '../../Redux/OverviewcardSlice'
 
 const mapStateToProps = (state) => ({
+    Overviewcards: state.Overviewcards,
     Patients: state.Patients,
     Patientdefines: state.Patientdefines,
     Patienteventdefines: state.Patienteventdefines,
@@ -47,7 +49,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     GetPatients, GetPatientdefines, GetPatienteventdefines, GetFiles, GetUsagetypes, GetUsers, GetProfessions,
     GetCompanycashmovements, GetStocks, GetPurchaseorders, GetStockdefines, GetStockmovements, GetStocktypes,
-    GetStocktypegroups, GetUnits, GetCases, GetCostumertypes, GetPatienttypes, GetTrainings, GetDepartments
+    GetStocktypegroups, GetUnits, GetCases, GetCostumertypes, GetPatienttypes, GetTrainings, GetDepartments,
+    GetStayedPatientCount, GetPatientIncomeOutcome
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Overview)

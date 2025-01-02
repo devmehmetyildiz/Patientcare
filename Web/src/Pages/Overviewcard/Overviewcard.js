@@ -9,10 +9,11 @@ import OverviewcardPatientvisitcount from '../../Containers/Overviewcard/Overvie
 import OverviewcardUserincidentcount from '../../Containers/Overviewcard/OverviewcardUserincidentcount'
 import OverviewcardUserleftcount from '../../Containers/Overviewcard/OverviewcardUserleftcount'
 import OverviewcardCompletedfilecountforpatient from '../../Containers/Overviewcard/OverviewcardCompletedfilecountforpatient'
+import useTabNavigation from '../../Hooks/useTabNavigation'
 
 export default function Overviewcard(props) {
 
-    const { Profile } = props
+    const { Profile, history } = props
 
     const [startDate, setStartDate] = useState(null)
     const [endDate, setEndDate] = useState(null)
@@ -62,6 +63,21 @@ export default function Overviewcard(props) {
         }
         return months
     }, [])
+
+    const tabOrder = [
+        'Trainingusercount',
+        'Trainingpatientcontactcount',
+        'Patientvisitcount',
+        'Userincidentcount',
+        'Userleftcount',
+        'CompletedFileCountForPatients',
+    ]
+
+    const { activeTab, setActiveTab } = useTabNavigation({
+        history,
+        tabOrder,
+        mainRoute: 'Overviewcard'
+    })
 
     useEffect(() => {
         const current = new Date()
@@ -122,6 +138,10 @@ export default function Overviewcard(props) {
             <Pagedivider />
             <Contentwrapper>
                 <Tab
+                    onTabChange={(_, { activeIndex }) => {
+                        setActiveTab(activeIndex)
+                    }}
+                    activeIndex={activeTab}
                     className="w-full !bg-transparent"
                     renderActiveOnly
                     panes={panes}

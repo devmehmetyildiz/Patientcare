@@ -13,37 +13,41 @@ import OverviewPatientpiechartDependency from './Components/OverviewPatientpiech
 
 export default function Overview(props) {
 
-    const { GetPatients, GetPatientdefines, GetPatienteventdefines, GetFiles, GetUsagetypes, GetUsers, GetProfessions,
-        GetCompanycashmovements, GetStocks, GetPurchaseorders, GetStockdefines, GetStockmovements, GetStocktypes,
-        GetStocktypegroups, GetUnits, GetCases, GetCostumertypes, GetPatienttypes, GetTrainings, GetDepartments } = props
+    const { GetPatients, GetPatientdefines, GetPatienteventdefines,
+        GetCases, GetCostumertypes, GetPatienttypes, GetStayedPatientCount, GetPatientIncomeOutcome } = props
 
-    const { Patients, Patientdefines, Patienteventdefines, Files, Usagetypes, Users, Professions, Companycashmovements,
-        Stocks, Stockdefines, Stocktypes, Stocktypegroups, Purchaseorders, Cases, Costumertypes, Patienttypes, Trainings,
-        Units, Departments, Profile, } = props
+    const { Patients, Patientdefines, Patienteventdefines, Overviewcards,
+        Cases, Costumertypes, Patienttypes,
+        Profile, } = props
 
     const t = Profile?.i18n?.t
 
     useEffect(() => {
+        const yearStart = new Date()
+        const yearEnd = new Date()
+        yearStart.setMonth(0)
+        yearStart.setHours(0, 0, 0, 0)
+        yearEnd.setMonth(11)
+        yearEnd.setHours(23, 59, 59, 999);
+
         GetPatients()
         GetPatientdefines()
         GetPatienteventdefines()
-        GetFiles()
-        GetUsagetypes()
-        GetUsers()
-        GetProfessions()
-        GetCompanycashmovements()
-        GetStocks()
-        GetPurchaseorders()
-        GetStockdefines()
-        GetStockmovements()
-        GetStocktypes()
-        GetStocktypegroups()
-        GetUnits()
         GetCases()
         GetCostumertypes()
         GetPatienttypes()
-        GetTrainings()
-        GetDepartments()
+        GetStayedPatientCount({
+            data: {
+                Startdate: yearStart,
+                Enddate: yearEnd,
+            }
+        })
+        GetPatientIncomeOutcome({
+            data: {
+                Startdate: yearStart,
+                Enddate: yearEnd,
+            }
+        })
     }, [])
 
     return (
@@ -71,9 +75,8 @@ export default function Overview(props) {
                                     pane: {
                                         key: 'movements',
                                         content: <OverviewPatientlinechartMovements
-                                            Patients={Patients}
-                                            Patientdefines={Patientdefines}
                                             Profile={Profile}
+                                            Overviewcards={Overviewcards}
                                         />
                                     }
                                 },
@@ -82,9 +85,8 @@ export default function Overview(props) {
                                     pane: {
                                         key: 'totalview',
                                         content: <OverviewPatientlinechartCapasite
-                                            Patients={Patients}
-                                            Patientdefines={Patientdefines}
                                             Profile={Profile}
+                                            Overviewcards={Overviewcards}
                                         />
                                     }
                                 },

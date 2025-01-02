@@ -4,37 +4,9 @@ import React from 'react'
 import { Dimmer, DimmerDimmable, Loader } from 'semantic-ui-react'
 
 export default function OverviewPatientlinechartCapasite(props) {
-    const { Patients, Patientdefines, Profile } = props
+    const { Profile, Overviewcards } = props
 
-    const t = Profile?.i18n?.t
-
-    const current = new Date()
-    current.setDate(1)
-    current.setHours(0)
-    current.setMinutes(0)
-    current.setSeconds(0)
-
-
-    const createMonth = (month) => {
-        const datacurrent = new Date()
-        datacurrent.setMonth(month)
-        datacurrent.setDate(1)
-        datacurrent.setHours(0)
-        datacurrent.setMinutes(0)
-        datacurrent.setSeconds(0)
-        return datacurrent
-    }
-
-    const checkDateIfItsBigger = (_startdate, _enddate) => {
-        const startdate = new Date(_startdate)
-        const enddate = new Date(_enddate)
-
-        if (startdate.getTime() > enddate.getTime()) {
-            return true
-        } else {
-            return false
-        }
-    }
+    const { stayedPatientCount, isStayedPatientCountLoading } = Overviewcards
 
     const categories = {
         en: [
@@ -52,38 +24,8 @@ export default function OverviewPatientlinechartCapasite(props) {
         tr: "Kurumadaki Hastalar"
     }
 
-    const isLoading = Patients.isLoading || Patientdefines.isLoading
-
-    const patients = (Patients.list || []).filter(u => u.Isactive && u.Ischecked && u.Isapproved && !u.Ispreregistration)
-
-    let patientcount = []
-
-    for (let index = 1; index <= current.getMonth() + 1; index++) {
-        const monthstart = createMonth(index - 1)
-        const monthend = createMonth(index)
-
-        const count = patients
-            .filter(u => new Date(u.Approvaldate).getTime() < monthend.getTime() && u.Ischecked && u.Isapproved && !u.Ispreregistration && u.Isactive)
-            .filter(u => {
-                if (!u.Isleft && u.Isalive) {
-                    return true
-                }
-                if (u.Isalive && u.Isleft && new Date(u.Leavedate).getTime() > monthstart.getTime()) {
-                    return true
-                }
-                if (!u.Isleft && !u.Isalive && new Date(u.Deathdate).getTime() > monthstart.getTime()) {
-                    return true
-                }
-            })
-
-
-        patientcount.push(
-            count.length || 0
-        )
-    }
-
-    const max = Math.max(...patientcount);
-    const min = Math.min(...patientcount);
+    const max = Math.max(...stayedPatientCount.map(u => u.value));
+    const min = Math.min(...stayedPatientCount.map(u => u.value));
 
     const createOptions = () => {
 
@@ -120,7 +62,7 @@ export default function OverviewPatientlinechartCapasite(props) {
             series: [
                 {
                     name: patienttitle[Profile.Language],
-                    data: patientcount
+                    data: [...stayedPatientCount.map(u => u.value)]
                 },
 
             ],
@@ -131,7 +73,7 @@ export default function OverviewPatientlinechartCapasite(props) {
 
 
     return (<DimmerDimmable>
-        <Dimmer active={isLoading} inverted>
+        <Dimmer active={isStayedPatientCountLoading} inverted>
             <Loader inline={'centered'} inverted />
         </Dimmer>
         <HighchartsReact highcharts={Highcharts} options={createOptions()} />

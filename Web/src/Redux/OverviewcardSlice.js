@@ -88,9 +88,41 @@ export const GetCompletedFileCountForPatients = createAsyncThunk(
     }
 );
 
+export const GetStayedPatientCount = createAsyncThunk(
+    'Overviewcards/GetStayedPatientCount',
+    async ({ data }, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Business, `${ROUTES.OVERVIEWCARD}/GetStayedPatientCount`, data);
+            return response?.data || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillOverviewcardnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const GetPatientIncomeOutcome = createAsyncThunk(
+    'Overviewcards/GetPatientIncomeOutcome',
+    async ({ data }, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Business, `${ROUTES.OVERVIEWCARD}/GetPatientIncomeOutcome`, data);
+            return response?.data || [];
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillOverviewcardnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const OverviewcardsSlice = createSlice({
     name: 'Overviewcards',
     initialState: {
+        patientIncomeOutcome: [],
+        isPatientIncomeOutcomeLoading: false,
+        stayedPatientCount: [],
+        isStayedPatientCountLoading: false,
         completedFileCountPatient: [],
         isCompletedFileCountPatientLoading: false,
         userLeftCount: [],
@@ -118,6 +150,32 @@ export const OverviewcardsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(GetPatientIncomeOutcome.pending, (state) => {
+                state.isPatientIncomeOutcomeLoading = true;
+                state.errMsg = null;
+                state.patientIncomeOutcome = [];
+            })
+            .addCase(GetPatientIncomeOutcome.fulfilled, (state, action) => {
+                state.isPatientIncomeOutcomeLoading = false;
+                state.patientIncomeOutcome = action.payload;
+            })
+            .addCase(GetPatientIncomeOutcome.rejected, (state, action) => {
+                state.isPatientIncomeOutcomeLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetStayedPatientCount.pending, (state) => {
+                state.isStayedPatientCountLoading = true;
+                state.errMsg = null;
+                state.stayedPatientCount = [];
+            })
+            .addCase(GetStayedPatientCount.fulfilled, (state, action) => {
+                state.isStayedPatientCountLoading = false;
+                state.stayedPatientCount = action.payload;
+            })
+            .addCase(GetStayedPatientCount.rejected, (state, action) => {
+                state.isStayedPatientCountLoading = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(GetTrainingCountPersonel.pending, (state) => {
                 state.isTrainingCountPersonelLoading = true;
                 state.errMsg = null;

@@ -28,8 +28,12 @@ async function GetStayedPatientCount(req, res, next) {
     PermissionHandler(req, next, 'overviewcardscreen')
 }
 
+async function GetPatientIncomeOutcome(req, res, next) {
+    PermissionHandler(req, next, 'overviewcardscreen')
+}
+
 async function GetTrainingCountPatientcontact(req, res, next) {
-    PermissionHandler(req, next, 'GetTrainingCountPatientcontact')
+    PermissionHandler(req, next, 'overviewcardscreen')
 }
 
 module.exports = {
@@ -40,5 +44,6 @@ module.exports = {
     GetPatientEnterCount,
     GetCompletedFileCountForPatients,
     GetStayedPatientCount,
-    GetTrainingCountPatientcontact
+    GetTrainingCountPatientcontact,
+    GetPatientIncomeOutcome
 }

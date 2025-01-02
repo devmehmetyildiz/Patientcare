@@ -604,13 +604,105 @@ async function GetPatientEnterCount(req, res, next) {
     }
 }
 
+async function GetPatientIncomeOutcome(req, res, next) {
+    try {
+        let validationErrors = []
+        const {
+            Startdate,
+            Enddate,
+        } = req.query
+
+        if (!validator.isISODate(Startdate)) {
+            validationErrors.push(req.t('Overviewcards.Error.StartdateRequired'))
+        }
+        if (!validator.isISODate(Enddate)) {
+            validationErrors.push(req.t('Overviewcards.Error.EnddateRequired'))
+        }
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Overviewcards'), req.language))
+        }
+
+        const monthArray = generateMonthArray(Startdate, Enddate);
+        let resArr = []
+
+
+        for (const month of monthArray) {
+
+            const startOfMonth = new Date(month)
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0);
+            const endtOfMonth = new Date(month)
+            endtOfMonth.setMonth(endtOfMonth.getMonth() + 1);
+            endtOfMonth.setDate(0);
+            endtOfMonth.setHours(23, 59, 59, 999);
+
+            const nowEnd = new Date()
+            nowEnd.setMonth(nowEnd.getMonth() + 1)
+            nowEnd.setDate(0)
+            nowEnd.setHours(23, 59, 59, 999)
+
+            let enterCount = null
+            let leftCount = null
+            let deadCount = null
+
+            if (endtOfMonth <= nowEnd) {
+                enterCount = await db.patientModel.count({
+                    where: {
+                        Approvaldate: {
+                            [Sequelize.Op.between]: [startOfMonth, endtOfMonth],
+                        },
+                        Ischecked: true,
+                        Isapproved: true,
+                        Ispreregistration: false,
+                        Isactive: true,
+                    },
+                });
+                leftCount = await db.patientModel.count({
+                    where: {
+                        Leavedate: {
+                            [Sequelize.Op.between]: [startOfMonth, endtOfMonth],
+                        },
+                        Ischecked: true,
+                        Isapproved: true,
+                        Ispreregistration: false,
+                        Isactive: true,
+                    },
+                });
+                deadCount = await db.patientModel.count({
+                    where: {
+                        Deathdate: {
+                            [Sequelize.Op.between]: [startOfMonth, endtOfMonth],
+                        },
+                        Ischecked: true,
+                        Isapproved: true,
+                        Ispreregistration: false,
+                        Isactive: true,
+                    },
+                });
+            }
+
+            const targetDate = startOfMonth.toLocaleDateString('tr')
+            resArr.push({
+                key: targetDate,
+                enterCount,
+                leftCount,
+                deadCount
+            })
+        }
+        res.json(resArr)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
 async function GetStayedPatientCount(req, res, next) {
     try {
         let validationErrors = []
         const {
             Startdate,
             Enddate,
-        } = req.body
+        } = req.query
 
         if (!validator.isISODate(Startdate)) {
             validationErrors.push(req.t('Overviewcards.Error.StartdateRequired'))
@@ -637,38 +729,44 @@ async function GetStayedPatientCount(req, res, next) {
             endtOfMonth.setDate(0);
             endtOfMonth.setHours(23, 59, 59, 999);
 
-
-            const patients = await db.patientModel.count({
-                where: {
-                    Approvaldate: {
-                        [Sequelize.Op.lt]: endtOfMonth,
+            const nowEnd = new Date()
+            nowEnd.setMonth(nowEnd.getMonth() + 1)
+            nowEnd.setDate(0)
+            nowEnd.setHours(23, 59, 59, 999)
+            let patients = null
+            if (endtOfMonth <= nowEnd) {
+                patients = await db.patientModel.count({
+                    where: {
+                        Approvaldate: {
+                            [Sequelize.Op.lt]: endtOfMonth,
+                        },
+                        [Sequelize.Op.or]: [
+                            {
+                                Isleft: false,
+                                Isalive: true,
+                            },
+                            {
+                                Isalive: true,
+                                Isleft: true,
+                                Leavedate: {
+                                    [Sequelize.Op.gt]: startOfMonth,
+                                },
+                            },
+                            {
+                                Isleft: false,
+                                Isalive: false,
+                                Deathdate: {
+                                    [Sequelize.Op.gt]: startOfMonth,
+                                },
+                            },
+                        ],
+                        Ischecked: true,
+                        Isapproved: true,
+                        Ispreregistration: false,
+                        Isactive: true,
                     },
-                    [Sequelize.Op.or]: [
-                        {
-                            Isleft: false,
-                            Isalive: true,
-                        },
-                        {
-                            Isalive: true,
-                            Isleft: true,
-                            Leavedate: {
-                                [Sequelize.Op.gt]: startOfMonth,
-                            },
-                        },
-                        {
-                            Isleft: false,
-                            Isalive: false,
-                            Deathdate: {
-                                [Sequelize.Op.gt]: startOfMonth,
-                            },
-                        },
-                    ],
-                    Ischecked: true,
-                    Isapproved: true,
-                    Ispreregistration: false,
-                    Isactive: true,
-                },
-            });
+                });
+            }
 
             const targetDate = startOfMonth.toLocaleDateString('tr')
 
@@ -850,5 +948,6 @@ module.exports = {
     GetPatientEnterCount,
     GetCompletedFileCountForPatients,
     GetStayedPatientCount,
-    GetTrainingCountPatientcontact
+    GetTrainingCountPatientcontact,
+    GetPatientIncomeOutcome
 }
