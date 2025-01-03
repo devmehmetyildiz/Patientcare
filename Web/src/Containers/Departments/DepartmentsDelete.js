@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import DepartmentsDelete from '../../Pages/Departments/DepartmentsDelete'
-import { DeleteDepartments, handleDeletemodal, handleSelectedDepartment } from "../../Redux/DepartmentSlice"
+import { DeleteDepartments,  } from "../../Redux/DepartmentSlice"
 
 const mapStateToProps = (state) => ({
     Departments: state.Departments,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    DeleteDepartments, handleDeletemodal, handleSelectedDepartment
+    DeleteDepartments, 
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DepartmentsDelete)

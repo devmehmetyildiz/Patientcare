@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Departments from '../../Pages/Departments/Departments'
-import { GetDepartments, DeleteDepartments, fillDepartmentnotification, handleDeletemodal, handleSelectedDepartment } from "../../Redux/DepartmentSlice"
+import { GetDepartments, fillDepartmentnotification, } from "../../Redux/DepartmentSlice"
 
 const mapStateToProps = (state) => ({
     Departments: state.Departments,
@@ -8,8 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetDepartments, DeleteDepartments, fillDepartmentnotification,
-    handleDeletemodal, handleSelectedDepartment
+    GetDepartments, fillDepartmentnotification,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Departments)

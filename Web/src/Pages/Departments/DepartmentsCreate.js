@@ -9,17 +9,19 @@ import {
 } from '../../Components'
 
 export default function DepartmentsCreate(props) {
+  const PAGE_NAME = "DepartmentsCreate"
 
   const { Departments, AddDepartments, history, fillDepartmentnotification, Profile, closeModal } = props
 
-  const PAGE_NAME = "DepartmentsCreate"
   const context = useContext(FormContext)
+
   const t = Profile?.i18n?.t
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
     const data = context.getForm(PAGE_NAME)
+
     data.Ishavepatients = data.Ishavepatients ? data.Ishavepatients : false
     data.Ishavepersonels = data.Ishavepersonels ? data.Ishavepersonels : false
     data.Isdefaultpatientdepartment = data.Isdefaultpatientdepartment ? data.Isdefaultpatientdepartment : false
@@ -39,8 +41,7 @@ export default function DepartmentsCreate(props) {
   }
 
   return (
-    Departments.isLoading ? <LoadingPage /> :
-      <Pagewrapper>
+      <Pagewrapper dimmer isLoading={Departments.isLoading}>
         <Headerwrapper>
           <Headerbredcrump>
             <Link to={"/Departments"}>

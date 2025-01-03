@@ -3,43 +3,22 @@ import { Link } from 'react-router-dom'
 import { Breadcrumb, Grid, GridColumn, Icon } from 'semantic-ui-react'
 import DepartmentDelete from "../../Containers/Departments/DepartmentsDelete"
 import GetInitialconfig from '../../Utils/GetInitialconfig'
-import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
+import { DataTable, Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
+import { COL_PROPS } from '../../Utils/Constants'
 
 export default function Departments(props) {
 
-  const { Departments, Profile, handleSelectedDepartment, handleDeletemodal, GetDepartments } = props
+  const { Departments, Profile, GetDepartments } = props
+
   const t = Profile?.i18n?.t
-
-  const [list, setList] = useState([])
-
-  useEffect(() => {
-    GetDepartments()
-  }, [])
-
-  useEffect(() => {
-    const departmentlist = (Departments.list || []).filter(u => u.Isactive).map(item => {
-      return {
-        ...item,
-        edit: <Link to={`/Departments/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
-          handleSelectedDepartment(item)
-          handleDeletemodal(true)
-        }} />,
-      }
-    })
-    setList(departmentlist)
-  }, [Departments])
-
-  const boolCellhandler = (value) => {
-    return value !== null && (value === 1 ? "EVET" : "HAYIR")
-  }
 
   const { isLoading } = Departments
 
-  const colProps = {
-    sortable: true,
-    canGroupBy: true,
-    canFilter: true
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [record, setRecord] = useState(null)
+
+  const boolCellhandler = (value) => {
+    return value !== null && (value === 1 ? t('Common.Yes') : t('Common.No'))
   }
 
   const Columns = [
@@ -56,10 +35,25 @@ export default function Departments(props) {
     { Header: t("Common.Column.Updatetime"), accessor: 'Updatetime' },
     { Header: t("Common.Column.edit"), accessor: 'edit', disableProps: true },
     { Header: t("Common.Column.delete"), accessor: 'delete', disableProps: true }
-  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+  ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "department"
   const initialConfig = GetInitialconfig(Profile, metaKey)
+
+  const list = (Departments.list || []).filter(u => u.Isactive).map(item => {
+    return {
+      ...item,
+      edit: <Link to={`/Departments/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+      delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+        setRecord(item)
+        setDeleteOpen(true)
+      }} />,
+    }
+  })
+
+  useEffect(() => {
+    GetDepartments()
+  }, [])
 
   return (
     <React.Fragment>
@@ -96,7 +90,12 @@ export default function Departments(props) {
           </div> : <NoDataScreen message={t("Common.NoDataFound")} />
         }
       </Pagewrapper>
-      <DepartmentDelete />
+      <DepartmentDelete
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        record={record}
+        setRecord={setRecord}
+      />
     </React.Fragment>
   )
 }
