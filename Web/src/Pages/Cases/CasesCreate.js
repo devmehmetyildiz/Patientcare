@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import validator from "../../Utils/Validator"
@@ -11,171 +11,22 @@ import {
 import DepartmentsCreate from '../../Containers/Departments/DepartmentsCreate'
 import {
   Contentwrapper, Footerwrapper, FormInput, Gobackbutton,
-  Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton
+  Headerbredcrump, Headerwrapper, Pagedivider, Pagewrapper, Submitbutton
 } from '../../Components'
-export default class CasesCreate extends Component {
 
-  PAGE_NAME = 'CasesCreate'
+export default function CasesCreate(props) {
+  const PAGE_NAME = 'CasesCreate'
 
-  componentDidMount() {
-    const { GetDepartments } = this.props
-    GetDepartments()
-  }
+  const { Cases, Departments, Profile, history, closeModal, GetDepartments, AddCases, fillCasenotification, } = props
 
-  render() {
-    const { Cases, Departments, Profile, history, closeModal } = this.props
+  const t = Profile?.i18n?.t
 
-    const t = Profile?.i18n?.t
+  const context = useContext(FormContext)
 
-    const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
-      return { key: department.Uuid, text: department.Name, value: department.Uuid }
-    })
-
-    const casestatusOption = [
-      {
-        key: 0,
-        text: t('Common.Cases.Type.Deactivate'),
-        value: CASE_STATUS_DEACTIVE,
-      },
-      {
-        key: 1,
-        text: t('Common.Cases.Type.Passive'),
-        value: CASE_STATUS_PASSIVE,
-      },
-      {
-        key: 2,
-        text: t('Common.Cases.Type.Complete'),
-        value: CASE_STATUS_COMPLETE,
-      },
-      {
-        key: 3,
-        text: t('Common.Cases.Type.Start'),
-        value: CASE_STATUS_START,
-      },
-    ]
-
-    const personelstatusOption = [
-      {
-        key: 0,
-        text: t('Common.Cases.Personel.Type.Passive'),
-        value: PERSONEL_CASE_TYPE_PASSIVE,
-      },
-      {
-        key: 1,
-        text: t('Common.Cases.Personel.Type.Start'),
-        value: PERSONEL_CASE_TYPE_START,
-      },
-      {
-        key: 2,
-        text: t('Common.Cases.Personel.Type.Work'),
-        value: PERSONEL_CASE_TYPE_WORK,
-      },
-      {
-        key: 3,
-        text: t('Common.Cases.Personel.Type.Permit'),
-        value: PERSONEL_CASE_TYPE_PERMIT,
-      },
-      {
-        key: 4,
-        text: t('Common.Cases.Personel.Type.Annualpermit'),
-        value: PERSONEL_CASE_TYPE_ANNUALPERMIT,
-      },
-    ]
-
-    const patientcasesOptions = PATIENTMOVEMENTTYPE.map(u => {
-      return {
-        key: u.value,
-        text: u.Name,
-        value: u.value
-      }
-    })
-
-    const ispatientdepartmentselected = (this.context.formstates[`${this.PAGE_NAME}/Departments`] || []).map(id => {
-      let isHave = false
-      const department = (Departments.list || []).find(u => u.Uuid === id)
-      if (department && department.Ishavepatients) {
-        isHave = true
-      }
-      return isHave
-    }).filter(u => u).length > 0
-
-    const ispersoneldepartmentselected = (this.context.formstates[`${this.PAGE_NAME}/Departments`] || []).map(id => {
-      let isHave = false
-      const department = (Departments.list || []).find(u => u.Uuid === id)
-      if (department && department.Ishavepersonels) {
-        isHave = true
-      }
-      return isHave
-    }).filter(u => u).length > 0
-
-
-    return (
-      Cases.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Cases"}>
-                <Breadcrumb.Section>{t('Pages.Cases.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Cases.Page.CreateHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Cases.Label.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Cases.Label.Shortname')} name="Shortname" />
-              </Form.Group>
-              <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Cases.Label.Casecolor')} name="Casecolor" attention="blue,red,green..." />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Cases.Label.CaseStatus')} name="CaseStatus" options={casestatusOption} formtype="dropdown" />
-              </Form.Group>
-              <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Cases.Label.Departments')} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
-              </Form.Group>
-              {ispatientdepartmentselected ?
-                <Form.Group widths='equal'>
-                  <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Cases.Label.Patientstatus')} name="Patientstatus" options={patientcasesOptions} formtype="dropdown" />
-                  <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Cases.Label.Iscalculateprice')} name="Iscalculateprice" formtype="checkbox" />
-                  <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Cases.Label.Isroutinework')} name="Isroutinework" formtype="checkbox" />
-                </Form.Group>
-                : null
-              }
-              {ispersoneldepartmentselected ?
-                <Form.Group widths='equal'>
-                  <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Cases.Label.Personelstatus')} name="Personelstatus" options={personelstatusOption} formtype="dropdown" />
-                </Form.Group>
-                : null
-              }
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Cases"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Cases.isLoading}
-              buttonText={t('Common.Button.Create')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
-    )
-  }
-
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    const { AddCases, history, Departments, fillCasenotification, Profile, closeModal } = this.props
 
-    const t = Profile?.i18n?.t
-
-    const data = this.context.getForm(this.PAGE_NAME)
+    const data = context.getForm(PAGE_NAME)
 
     const ispatientdepartmentselected = data.Departments.map(id => {
       let isHave = false
@@ -186,7 +37,7 @@ export default class CasesCreate extends Component {
       return isHave
     }).filter(u => u).length > 0
 
-    const ispersoneldepartmentselected = (this.context.formstates[`${this.PAGE_NAME}/Departments`] || []).map(id => {
+    const ispersoneldepartmentselected = (context.formstates[`${PAGE_NAME}/Departments`] || []).map(id => {
       let isHave = false
       const department = (Departments.list || []).find(u => u.Uuid === id)
       if (department && department.Ishavepersonels) {
@@ -232,5 +83,146 @@ export default class CasesCreate extends Component {
       AddCases({ data, history, closeModal })
     }
   }
+
+  const Departmentoptions = (Departments.list || []).filter(u => u.Isactive).map(department => {
+    return { key: department.Uuid, text: department.Name, value: department.Uuid }
+  })
+
+  const casestatusOption = [
+    {
+      key: 0,
+      text: t('Common.Cases.Type.Deactivate'),
+      value: CASE_STATUS_DEACTIVE,
+    },
+    {
+      key: 1,
+      text: t('Common.Cases.Type.Passive'),
+      value: CASE_STATUS_PASSIVE,
+    },
+    {
+      key: 2,
+      text: t('Common.Cases.Type.Complete'),
+      value: CASE_STATUS_COMPLETE,
+    },
+    {
+      key: 3,
+      text: t('Common.Cases.Type.Start'),
+      value: CASE_STATUS_START,
+    },
+  ]
+
+  const personelstatusOption = [
+    {
+      key: 0,
+      text: t('Common.Cases.Personel.Type.Passive'),
+      value: PERSONEL_CASE_TYPE_PASSIVE,
+    },
+    {
+      key: 1,
+      text: t('Common.Cases.Personel.Type.Start'),
+      value: PERSONEL_CASE_TYPE_START,
+    },
+    {
+      key: 2,
+      text: t('Common.Cases.Personel.Type.Work'),
+      value: PERSONEL_CASE_TYPE_WORK,
+    },
+    {
+      key: 3,
+      text: t('Common.Cases.Personel.Type.Permit'),
+      value: PERSONEL_CASE_TYPE_PERMIT,
+    },
+    {
+      key: 4,
+      text: t('Common.Cases.Personel.Type.Annualpermit'),
+      value: PERSONEL_CASE_TYPE_ANNUALPERMIT,
+    },
+  ]
+
+  const patientcasesOptions = PATIENTMOVEMENTTYPE.map(u => {
+    return {
+      key: u.value,
+      text: u.Name,
+      value: u.value
+    }
+  })
+
+  const ispatientdepartmentselected = (context.formstates[`${PAGE_NAME}/Departments`] || []).map(id => {
+    let isHave = false
+    const department = (Departments.list || []).find(u => u.Uuid === id)
+    if (department && department.Ishavepatients) {
+      isHave = true
+    }
+    return isHave
+  }).filter(u => u).length > 0
+
+  const ispersoneldepartmentselected = (context.formstates[`${PAGE_NAME}/Departments`] || []).map(id => {
+    let isHave = false
+    const department = (Departments.list || []).find(u => u.Uuid === id)
+    if (department && department.Ishavepersonels) {
+      isHave = true
+    }
+    return isHave
+  }).filter(u => u).length > 0
+
+  useEffect(() => {
+    GetDepartments()
+  }, [])
+
+  return (
+    <Pagewrapper dimmer isLoading={Cases.isLoading}>
+      <Headerwrapper>
+        <Headerbredcrump>
+          <Link to={"/Cases"}>
+            <Breadcrumb.Section>{t('Pages.Cases.Page.Header')}</Breadcrumb.Section>
+          </Link>
+          <Breadcrumb.Divider icon='right chevron' />
+          <Breadcrumb.Section>{t('Pages.Cases.Page.CreateHeader')}</Breadcrumb.Section>
+        </Headerbredcrump>
+        {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
+      </Headerwrapper>
+      <Pagedivider />
+      <Contentwrapper>
+        <Form>
+          <Form.Group widths='equal'>
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Cases.Label.Name')} name="Name" />
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Cases.Label.Shortname')} name="Shortname" />
+          </Form.Group>
+          <Form.Group widths='equal'>
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Cases.Label.Casecolor')} name="Casecolor" attention="blue,red,green..." />
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Cases.Label.CaseStatus')} name="CaseStatus" options={casestatusOption} formtype="dropdown" />
+          </Form.Group>
+          <Form.Group widths='equal'>
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Cases.Label.Departments')} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
+          </Form.Group>
+          {ispatientdepartmentselected ?
+            <Form.Group widths='equal'>
+              <FormInput page={PAGE_NAME} required placeholder={t('Pages.Cases.Label.Patientstatus')} name="Patientstatus" options={patientcasesOptions} formtype="dropdown" />
+              <FormInput page={PAGE_NAME} required placeholder={t('Pages.Cases.Label.Iscalculateprice')} name="Iscalculateprice" formtype="checkbox" />
+              <FormInput page={PAGE_NAME} required placeholder={t('Pages.Cases.Label.Isroutinework')} name="Isroutinework" formtype="checkbox" />
+            </Form.Group>
+            : null
+          }
+          {ispersoneldepartmentselected ?
+            <Form.Group widths='equal'>
+              <FormInput page={PAGE_NAME} required placeholder={t('Pages.Cases.Label.Personelstatus')} name="Personelstatus" options={personelstatusOption} formtype="dropdown" />
+            </Form.Group>
+            : null
+          }
+        </Form>
+      </Contentwrapper>
+      <Footerwrapper>
+        <Gobackbutton
+          history={history}
+          redirectUrl={"/Cases"}
+          buttonText={t('Common.Button.Goback')}
+        />
+        <Submitbutton
+          isLoading={Cases.isLoading}
+          buttonText={t('Common.Button.Create')}
+          submitFunction={handleSubmit}
+        />
+      </Footerwrapper>
+    </Pagewrapper >
+  )
 }
-CasesCreate.contextType = FormContext

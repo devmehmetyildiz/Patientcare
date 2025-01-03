@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Cases from "../../Pages/Cases/Cases"
-import { GetCases, DeleteCases, fillCasenotification, handleDeletemodal, handleSelectedCase } from "../../Redux/CaseSlice"
+import { GetCases, DeleteCases, fillCasenotification, } from "../../Redux/CaseSlice"
 import { GetDepartments } from "../../Redux/DepartmentSlice"
 
 const mapStateToProps = (state) => ({
@@ -10,9 +10,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  GetCases, DeleteCases,
-  fillCasenotification, handleDeletemodal, handleSelectedCase,
-  GetDepartments
+  GetCases, DeleteCases, fillCasenotification, GetDepartments
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cases)

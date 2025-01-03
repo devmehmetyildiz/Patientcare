@@ -185,7 +185,6 @@ export const CasesSlice = createSlice({
             .addCase(GetCases.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.list = [];
             })
             .addCase(GetCases.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -193,6 +192,7 @@ export const CasesSlice = createSlice({
             })
             .addCase(GetCases.rejected, (state, action) => {
                 state.isLoading = false;
+                state.list = [];
                 state.errMsg = action.error.message;
             })
             .addCase(GetCase.pending, (state) => {
