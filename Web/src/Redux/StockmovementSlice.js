@@ -178,6 +178,7 @@ export const ApprovemultipleStockmovements = createAsyncThunk(
     }
 );
 
+
 export const StockmovementsSlice = createSlice({
     name: 'Stockmovements',
     initialState: {
@@ -186,13 +187,8 @@ export const StockmovementsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDeletemodalopen: false,
-        isApprovemodalopen: false
     },
     reducers: {
-        handleSelectedStockmovement: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillStockmovementnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -200,12 +196,6 @@ export const StockmovementsSlice = createSlice({
         },
         removeStockmovementnotification: (state) => {
             state.notifications.splice(0, 1);
-        },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        },
-        handleApprovemodal: (state, action) => {
-            state.isApprovemodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -298,8 +288,6 @@ export const {
     handleSelectedStockmovement,
     fillStockmovementnotification,
     removeStockmovementnotification,
-    handleDeletemodal,
-    handleApprovemodal
 } = StockmovementsSlice.actions;
 
 export default StockmovementsSlice.reducer;

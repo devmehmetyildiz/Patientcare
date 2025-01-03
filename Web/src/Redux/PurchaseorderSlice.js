@@ -288,13 +288,6 @@ export const PurchaseordersSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDetailmodalopen: false,
-        isDeletemodalopen: false,
-        isCheckmodalopen: false,
-        isApprovemodalopen: false,
-        isCompletemodalopen: false,
-        isCheckdeactive: false,
-        isApprovedeactive: false,
     },
     reducers: {
         handleSelectedPurchaseorder: (state, action) => {
@@ -307,25 +300,6 @@ export const PurchaseordersSlice = createSlice({
         },
         removePurchaseordernotification: (state) => {
             state.notifications.splice(0, 1);
-        },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        },
-        handleCheckmodal: (state, action) => {
-            const { modal, deactive } = action.payload
-            state.isCheckmodalopen = modal ? modal : action.payload
-            state.isCheckdeactive = deactive ? deactive : false
-        },
-        handleApprovemodal: (state, action) => {
-            const { modal, deactive } = action.payload
-            state.isApprovemodalopen = modal ? modal : action.payload
-            state.isApprovedeactive = deactive ? deactive : false
-        },
-        handleCompletemodal: (state, action) => {
-            state.isCompletemodalopen = action.payload
-        },
-        handleDetailmodal: (state, action) => {
-            state.isDetailmodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -451,11 +425,6 @@ export const {
     handleSelectedPurchaseorder,
     fillPurchaseordernotification,
     removePurchaseordernotification,
-    handleDeletemodal,
-    handleApprovemodal,
-    handleCheckmodal,
-    handleCompletemodal,
-    handleDetailmodal
 } = PurchaseordersSlice.actions;
 
 export default PurchaseordersSlice.reducer;

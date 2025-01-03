@@ -112,28 +112,6 @@ export const EditProfessions = createAsyncThunk(
 );
 
 
-export const ApproveProfessions = createAsyncThunk(
-    'Professions/ApproveProfessions',
-    async (data, { dispatch, getState }) => {
-        try {
-
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Business, `${ROUTES.PROFESSION}/Approve/${data.Uuid}`);
-            dispatch(fillProfessionnotification({
-                type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.approvedescription[Language],
-            }));
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillProfessionnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
 
 export const DeleteProfessions = createAsyncThunk(
     'Professions/DeleteProfessions',
@@ -166,8 +144,6 @@ export const ProfessionsSlice = createSlice({
         notifications: [],
         isLoading: false,
         isDeletemodalopen: false,
-        isCompletemodalopen: false,
-        isApprovemodalopen: false
     },
     reducers: {
         handleSelectedProfession: (state, action) => {
@@ -183,12 +159,6 @@ export const ProfessionsSlice = createSlice({
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
-        },
-        handleCompletemodal: (state, action) => {
-            state.isCompletemodalopen = action.payload
-        },
-        handleApprovemodal: (state, action) => {
-            state.isApprovemodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -241,17 +211,6 @@ export const ProfessionsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(ApproveProfessions.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(ApproveProfessions.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.list = action.payload;
-            })
-            .addCase(ApproveProfessions.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errMsg = action.error.message;
-            })
             .addCase(DeleteProfessions.pending, (state) => {
                 state.isLoading = true;
             })
@@ -271,8 +230,6 @@ export const {
     fillProfessionnotification,
     removeProfessionnotification,
     handleDeletemodal,
-    handleCompletemodal,
-    handleApprovemodal,
 } = ProfessionsSlice.actions;
 
 export default ProfessionsSlice.reducer;

@@ -160,9 +160,6 @@ export const StocktypegroupsSlice = createSlice({
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
         },
-        handleApprovemodal: (state, action) => {
-            state.isApprovemodalopen = action.payload
-        },
     },
     extraReducers: (builder) => {
         builder
@@ -233,7 +230,6 @@ export const {
     fillStocktypegroupnotification,
     removeStocktypegroupnotification,
     handleDeletemodal,
-    handleApprovemodal
 } = StocktypegroupsSlice.actions;
 
 export default StocktypegroupsSlice.reducer;

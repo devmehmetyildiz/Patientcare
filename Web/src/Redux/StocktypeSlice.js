@@ -139,7 +139,6 @@ export const StocktypesSlice = createSlice({
         notifications: [],
         isLoading: false,
         isDeletemodalopen: false,
-        isApprovemodalopen: false
     },
     reducers: {
         handleSelectedStocktype: (state, action) => {
@@ -155,9 +154,6 @@ export const StocktypesSlice = createSlice({
         },
         handleDeletemodal: (state, action) => {
             state.isDeletemodalopen = action.payload
-        },
-        handleApprovemodal: (state, action) => {
-            state.isApprovemodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -229,7 +225,6 @@ export const {
     fillStocktypenotification,
     removeStocktypenotification,
     handleDeletemodal,
-    handleApprovemodal
 } = StocktypesSlice.actions;
 
 export default StocktypesSlice.reducer;
