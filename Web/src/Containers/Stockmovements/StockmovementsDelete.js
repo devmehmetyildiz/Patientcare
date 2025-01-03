@@ -1,9 +1,6 @@
 import { connect } from 'react-redux'
 import StockmovementsDelete from '../../Pages/Stockmovements/StockmovementsDelete'
-import {
-    DeleteStockmovements, handleDeletemodal, handleSelectedStockmovement
-} from '../../Redux/StockmovementSlice'
-
+import { DeleteStockmovements, } from '../../Redux/StockmovementSlice'
 
 const mapStateToProps = (state) => ({
     Stockmovements: state.Stockmovements,
@@ -13,7 +10,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    DeleteStockmovements, handleDeletemodal, handleSelectedStockmovement
+    DeleteStockmovements, 
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StockmovementsDelete)

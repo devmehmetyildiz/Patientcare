@@ -1,10 +1,9 @@
 import { connect } from 'react-redux'
 import StockmovementsEdit from '../../Pages/Stockmovements/StockmovementsEdit'
-import { EditStockmovements, GetStockmovement, handleSelectedStockmovement, fillStockmovementnotification } from '../../Redux/StockmovementSlice'
+import { EditStockmovements, GetStockmovement, fillStockmovementnotification } from '../../Redux/StockmovementSlice'
 import { GetStocks } from '../../Redux/StockSlice'
 import { GetStockdefines } from '../../Redux/StockdefineSlice'
 import { GetStocktypes } from '../../Redux/StocktypeSlice'
-
 
 const mapStateToProps = (state) => ({
     Stocks: state.Stocks,
@@ -15,7 +14,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    EditStockmovements, GetStockmovement, handleSelectedStockmovement,
+    EditStockmovements, GetStockmovement,
     fillStockmovementnotification, GetStocks,
     GetStockdefines, GetStocktypes
 }
