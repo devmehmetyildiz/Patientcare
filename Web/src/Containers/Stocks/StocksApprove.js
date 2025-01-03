@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import StocksApprove from '../../Pages/Stocks/StocksApprove'
-import { ApproveStocks, handleApprovemodal, handleSelectedStock } from "../../Redux/StockSlice"
+import { ApproveStocks, } from "../../Redux/StockSlice"
 import { GetStockdefines } from "../../Redux/StockdefineSlice"
 
 const mapStateToProps = (state) => ({
@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  ApproveStocks, handleApprovemodal, handleSelectedStock, GetStockdefines
+  ApproveStocks,  GetStockdefines
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StocksApprove)

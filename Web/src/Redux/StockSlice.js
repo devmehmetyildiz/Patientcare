@@ -221,13 +221,8 @@ export const StocksSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDeletemodalopen: false,
-        isApprovemodalopen: false
     },
     reducers: {
-        handleSelectedStock: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillStocknotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -236,12 +231,6 @@ export const StocksSlice = createSlice({
         removeStocknotification: (state) => {
             state.notifications.splice(0, 1);
         },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        },
-        handleApprovemodal: (state, action) => {
-            state.isApprovemodalopen = action.payload
-        }
     },
     extraReducers: (builder) => {
         builder
@@ -341,11 +330,8 @@ export const StocksSlice = createSlice({
 });
 
 export const {
-    handleSelectedStock,
     fillStocknotification,
     removeStocknotification,
-    handleDeletemodal,
-    handleApprovemodal
 } = StocksSlice.actions;
 
 export default StocksSlice.reducer;
