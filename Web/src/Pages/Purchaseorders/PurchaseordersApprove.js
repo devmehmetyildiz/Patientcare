@@ -11,9 +11,6 @@ export default function PurchaseordersApprove(props) {
     Profile,
     Purchaseorders,
     ApprovePurchaseorders,
-    CancelApprovePurchaseorders,
-    handleApprovemodal,
-    handleSelectedPurchaseorder,
     fillPurchaseordernotification,
     GetUsers,
     GetFiles,
@@ -36,12 +33,13 @@ export default function PurchaseordersApprove(props) {
     Patients,
     Patientdefines,
     Cases,
-    Departments
-
+    Departments,
+    open,
+    setOpen,
+    record,
+    setRecord
   } = props
 
-  const { isApprovemodalopen, selected_record, isApprovedeactive } = Purchaseorders
-  const Isdeactive = isApprovedeactive
   const [selectedcase, setSelectedcase] = useState(null)
   const [selectedinfo, setSelectedinfo] = useState(null)
 
@@ -70,10 +68,10 @@ export default function PurchaseordersApprove(props) {
     DeliverywarehouseID,
     Price,
     CaseID,
-  } = selected_record
+  } = record || {}
 
   useEffect(() => {
-    if (isApprovemodalopen && !Users.isLoading) {
+    if (open && !Users.isLoading) {
       GetUsers()
       GetFiles()
       GetStocks()
@@ -86,9 +84,9 @@ export default function PurchaseordersApprove(props) {
       GetCases()
       GetDepartments()
     }
-  }, [isApprovemodalopen])
+  }, [open])
 
-  const stocks = (Stocks.list || []).filter(u => u.WarehouseID === selected_record?.Uuid && u.Isactive).map(element => {
+  const stocks = (Stocks.list || []).filter(u => u.WarehouseID === record?.Uuid && u.Isactive).map(element => {
     return {
       ...element,
       key: Math.random(),
@@ -165,20 +163,19 @@ export default function PurchaseordersApprove(props) {
       onClose={() => {
         setSelectedcase(null)
         setSelectedinfo(null)
-        handleApprovemodal(false)
+        setOpen(false)
+        setRecord(null)
       }}
       onOpen={() => {
         setSelectedcase(null)
         setSelectedinfo(null)
-        handleApprovemodal({ modal: true, deactive: Isdeactive ? Isdeactive : false })
+        setOpen(true)
       }}
-      open={isApprovemodalopen}
+      open={open}
     >
-      <Modal.Header>{!Isdeactive
-        ? t('Pages.Purchaseorder.Page.ApproveHeaderModal')
-        : t('Pages.Purchaseorder.Page.CancelApproveHeaderModal')
-      }</Modal.Header>
+      <Modal.Header> {t('Pages.Purchaseorder.Page.ApproveHeaderModal')}</Modal.Header>
       <PurchaseorderDetailCard
+        record={record}
         Purchaseorders={Purchaseorders}
         Users={Users}
         Files={Files}
@@ -235,14 +232,15 @@ export default function PurchaseordersApprove(props) {
         </Modal.Content>}
       <Modal.Actions>
         <Button color='black' onClick={() => {
-          handleApprovemodal(false)
-          handleSelectedPurchaseorder({})
+          setOpen(false)
+          setRecord(null)
         }}>
           {t('Common.Button.Giveup')}
         </Button>
-        {Isdeactive
-          ? <Button
-            content={t('Common.Button.CancelApprove')}
+        {checkIsvalid().length === 0 && !isLoadingstatus ?
+          <Button
+            loading={Purchaseorders.isLoading}
+            content={t('Common.Button.Approve')}
             labelPosition='right'
             icon='checkmark'
             className=' !bg-[#2355a0] !text-white'
@@ -256,54 +254,24 @@ export default function PurchaseordersApprove(props) {
                   fillPurchaseordernotification(error)
                 })
               } else {
+                
                 const {
                   Uuid,
                   Purchaseno
-                } = selected_record
-                CancelApprovePurchaseorders({
+                } = record || {}
+
+                ApprovePurchaseorders({
                   Uuid,
                   Purchaseno,
                   CaseID: selectedcase,
-                  Cancelapproveinfo: selectedinfo
+                  Approveinfo: selectedinfo
                 })
-                handleApprovemodal(false)
-                handleSelectedPurchaseorder({})
+                setOpen(false)
+                setRecord(null)
               }
             }}
             positive
-          />
-          : checkIsvalid().length === 0 && !isLoadingstatus ?
-            <Button
-              content={t('Common.Button.Approve')}
-              labelPosition='right'
-              icon='checkmark'
-              className=' !bg-[#2355a0] !text-white'
-              onClick={() => {
-                let errors = []
-                if (!validator.isUUID(selectedcase)) {
-                  errors.push({ type: 'Error', code: t('Pages.Purchaseorder.Page.Header'), description: t('Pages.Purchaseorder.Messages.CaseRequired') })
-                }
-                if (errors.length > 0) {
-                  errors.forEach(error => {
-                    fillPurchaseordernotification(error)
-                  })
-                } else {
-                  const {
-                    Uuid,
-                    Purchaseno
-                  } = selected_record
-                  ApprovePurchaseorders({
-                    Uuid,
-                    Purchaseno,
-                    CaseID: selectedcase,
-                    Approveinfo: selectedinfo
-                  })
-                  handleApprovemodal(false)
-                  handleSelectedPurchaseorder({})
-                }
-              }}
-              positive
-            /> : null}
+          /> : null}
       </Modal.Actions>
     </Modal>
   )

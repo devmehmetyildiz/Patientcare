@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PurchaseordersComplete from "../../Pages/Purchaseorders/PurchaseordersComplete"
-import { CompletePurchaseorders, handleCompletemodal, handleSelectedPurchaseorder, fillPurchaseordernotification } from "../../Redux/PurchaseorderSlice"
+import { CompletePurchaseorders, fillPurchaseordernotification } from "../../Redux/PurchaseorderSlice"
 import { GetUsers } from "../../Redux/UserSlice"
 import { GetStocks } from "../../Redux/StockSlice"
 import { GetFiles } from "../../Redux/FileSlice"
@@ -30,8 +30,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    CompletePurchaseorders, handleCompletemodal, handleSelectedPurchaseorder,
-    GetUsers, GetStocks, GetFiles, GetUsagetypes, GetStockdefines, GetUnits,
+    CompletePurchaseorders, GetUsers, GetStocks, GetFiles, GetUsagetypes, GetStockdefines, GetUnits,
     GetWarehouses, GetPatientdefines, GetPatients, GetCases, GetDepartments,
     fillPurchaseordernotification
 }

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PurchaseordersDelete from "../../Pages/Purchaseorders/PurchaseordersDelete"
-import { DeletePurchaseorders, handleDeletemodal, handleSelectedPurchaseorder } from "../../Redux/PurchaseorderSlice"
+import { DeletePurchaseorders } from "../../Redux/PurchaseorderSlice"
 
 const mapStateToProps = (state) => ({
     Purchaseorders: state.Purchaseorders,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    DeletePurchaseorders, handleDeletemodal, handleSelectedPurchaseorder
+    DeletePurchaseorders, 
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PurchaseordersDelete)

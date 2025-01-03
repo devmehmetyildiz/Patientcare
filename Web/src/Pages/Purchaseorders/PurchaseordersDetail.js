@@ -8,8 +8,6 @@ export default function PurchaseordersDetail(props) {
   const {
     Profile,
     Purchaseorders,
-    handleDetailmodal,
-    handleSelectedPurchaseorder,
     fillPurchaseordernotification,
     GetUsers,
     GetFiles,
@@ -32,19 +30,21 @@ export default function PurchaseordersDetail(props) {
     Patients,
     Patientdefines,
     Cases,
-    Departments
+    Departments,
+    open,
+    setOpen,
+    record,
+    setRecord
   } = props
 
   const t = Profile?.i18n?.t
 
-  const { isDetailmodalopen, selected_record } = Purchaseorders
-
   const {
     Uuid,
-  } = selected_record
+  } = record || {}
 
   useEffect(() => {
-    if (isDetailmodalopen && !Users.isLoading) {
+    if (open && !Users.isLoading) {
       GetUsers()
       GetFiles()
       GetStocks()
@@ -57,10 +57,10 @@ export default function PurchaseordersDetail(props) {
       GetCases()
       GetDepartments()
     }
-  }, [isDetailmodalopen])
+  }, [open])
 
 
-  const stocks = (Stocks.list || []).filter(u => u.WarehouseID === selected_record?.Uuid && u.Isactive).map(element => {
+  const stocks = (Stocks.list || []).filter(u => u.WarehouseID === record?.Uuid && u.Isactive).map(element => {
     return {
       ...element,
       key: Math.random(),
@@ -79,12 +79,18 @@ export default function PurchaseordersDetail(props) {
 
   return (
     <Modal
-      onClose={() => handleDetailmodal(false)}
-      onOpen={() => handleDetailmodal(true)}
-      open={isDetailmodalopen}
+      onClose={() => {
+        setOpen(false)
+        setRecord(null)
+      }}
+      onOpen={() => {
+        setOpen(true)
+      }}
+      open={open}
     >
       <Modal.Header>{t('Pages.Purchaseorder.Page.DetailHeaderModal')}</Modal.Header>
       <PurchaseorderDetailCard
+        record={record}
         Purchaseorders={Purchaseorders}
         Users={Users}
         Files={Files}
@@ -104,8 +110,8 @@ export default function PurchaseordersDetail(props) {
       />
       <Modal.Actions>
         <Button color='black' onClick={() => {
-          handleDetailmodal(false)
-          handleSelectedPurchaseorder({})
+          setOpen(false)
+          setRecord(null)
         }}>
           {t('Common.Button.Goback')}
         </Button>

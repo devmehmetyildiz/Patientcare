@@ -47,7 +47,7 @@ async function GetPurchaseorder(req, res, next) {
             return next(createNotFoundError(req.t('Purchaseorders.Error.NotActive'), req.t('Purchaseorders'), req.language))
         }
         res.status(200).json(purchaseorder)
-    } catch (error) {
+    } catch (error) { 
         return next(sequelizeErrorCatcher(error))
     }
 }

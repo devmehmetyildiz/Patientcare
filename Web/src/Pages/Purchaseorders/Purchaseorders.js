@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn, Loader, Tab } from 'semantic-ui-react'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
@@ -9,184 +9,30 @@ import PurchaseordersCheck from '../../Containers/Purchaseorders/PurchaseordersC
 import PurchaseordersApprove from '../../Containers/Purchaseorders/PurchaseordersApprove'
 import PurchaseordersComplete from '../../Containers/Purchaseorders/PurchaseordersComplete'
 import PurchaseordersDetail from '../../Containers/Purchaseorders/PurchaseordersDetail'
-import { t } from 'i18next'
+import { COL_PROPS } from '../../Utils/Constants'
+import useTabNavigation from '../../Hooks/useTabNavigation'
+import PurchaseordersCancelCheck from '../../Containers/Purchaseorders/PurchaseordersCancelCheck'
+import PurchaseordersCancelApprove from '../../Containers/Purchaseorders/PurchaseordersCancelApprove'
 
-export default class Purchaseorders extends Component {
+export default function Purchaseorders(props) {
 
-  componentDidMount() {
-    const { GetPurchaseorders, GetUsers } = this.props
-    GetPurchaseorders()
-    GetUsers()
-  }
+  const { GetPurchaseorders, GetUsers, history } = props
+  const { Purchaseorders, Users, Profile, } = props
 
-  render() {
-    const { Purchaseorders, Profile, handleDeletemodal, handleSelectedPurchaseorder, handleApprovemodal, handleDetailmodal,
-      handleCheckmodal, handleCompletemodal } = this.props
-    const { isLoading } = Purchaseorders
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [checkOpen, setCheckOpen] = useState(false)
+  const [cancelCheckOpen, setCancelCheckOpen] = useState(false)
+  const [approveOpen, setApproveOpen] = useState(false)
+  const [cancelApproveOpen, setCancelApproveOpen] = useState(false)
+  const [completeOpen, setCompleteOpen] = useState(false)
+  const [detailOpen, setDetailOpen] = useState(false)
+  const [record, setRecord] = useState(null)
 
-    const t = Profile?.i18n?.t
+  const { isLoading } = Purchaseorders
 
-    const colProps = {
-      sortable: true,
-      canGroupBy: true,
-      canFilter: true
-    }
+  const t = Profile?.i18n?.t
 
-    const Columns = [
-      { Header: t('Common.Column.Id'), accessor: 'Id' },
-      { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
-      { Header: t('Pages.Purchaseorder.Columns.Purchaseno'), accessor: 'Purchaseno' },
-      { Header: t('Pages.Purchaseorder.Columns.Company'), accessor: 'Company' },
-      { Header: t('Pages.Purchaseorder.Columns.Billno'), accessor: 'Billno' },
-      { Header: t('Pages.Purchaseorder.Columns.Receiveruser'), accessor: row => this.userCellhandler(row?.ReceiveruserID) },
-      { Header: t('Pages.Purchaseorder.Columns.Purchasecreatetime'), accessor: row => this.dateCellhandler(row?.Purchasecreatetime), key: 'created' },
-      { Header: t('Pages.Purchaseorder.Columns.Createduser'), accessor: row => this.userCellhandler(row?.CreateduserID), key: 'created' },
-      { Header: t('Pages.Purchaseorder.Columns.Purchasechecktime'), accessor: row => this.dateCellhandler(row?.Purchasechecktime), key: 'checked' },
-      { Header: t('Pages.Purchaseorder.Columns.Checkeduser'), accessor: row => this.userCellhandler(row?.CheckeduserID), key: 'checked' },
-      { Header: t('Pages.Purchaseorder.Columns.Purchaseapprovetime'), accessor: row => this.dateCellhandler(row?.Purchaseapprovetime), key: 'approved' },
-      { Header: t('Pages.Purchaseorder.Columns.Approveduser'), accessor: row => this.userCellhandler(row?.ApproveduserID), key: 'approved' },
-      { Header: t('Pages.Purchaseorder.Columns.Purchasecompletetime'), accessor: row => this.dateCellhandler(row?.Purchasecompletetime), key: 'completed' },
-      { Header: t('Pages.Purchaseorder.Columns.Completeduser'), accessor: row => this.userCellhandler(row?.CompleteduserID), key: 'completed' },
-      { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
-      { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
-      { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
-      { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
-      { Header: t('Common.Column.check'), accessor: 'check', disableProps: true, key: 'created' },
-      { Header: t('Common.Column.cancelcheck'), accessor: 'cancelcheck', disableProps: true, key: 'checked' },
-      { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, key: 'checked' },
-      { Header: t('Common.Column.cancelapprove'), accessor: 'cancelapprove', disableProps: true, key: 'approved' },
-      { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, key: 'approved' },
-      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, key: 'created' },
-      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, disableOncomplete: true }
-    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
-
-    const list = (Purchaseorders.list || []).filter(u =>u.Isactive).map(item => {
-      return {
-        ...item,
-        edit: <Link to={`/Purchaseorders/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
-        delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
-          handleSelectedPurchaseorder(item)
-          handleDeletemodal(true)
-        }} />,
-        cancelcheck: <Icon link size='large' color='red' name='level down alternate' onClick={() => {
-          handleSelectedPurchaseorder(item)
-          handleCheckmodal({ modal: true, deactive: true })
-        }} />,
-        check: <Icon link size='large' color='blue' name='level up alternate' onClick={() => {
-          handleSelectedPurchaseorder(item)
-          handleCheckmodal(true)
-        }} />,
-        cancelapprove: <Icon link size='large' color='red' name='hand point left' onClick={() => {
-          handleSelectedPurchaseorder(item)
-          handleApprovemodal({ modal: true, deactive: true })
-        }} />,
-        approve: <Icon link size='large' color='blue' name='hand point up ' onClick={() => {
-          handleSelectedPurchaseorder(item)
-          handleApprovemodal(true)
-        }} />,
-        complete: <Icon link size='large' color='blue' name='share' onClick={() => {
-          handleSelectedPurchaseorder(item)
-          handleCompletemodal(true)
-        }} />,
-        detail: <Icon link size='large' color='grey' name='history' onClick={() => {
-          handleSelectedPurchaseorder(item)
-          handleDetailmodal(true)
-        }} />,
-      }
-    })
-
-    const createList = list.filter(u => u.Isopened && !u.Ischecked && !u.Isapproved && !u.Iscompleted)
-    const checkList = list.filter(u => u.Isopened && u.Ischecked && !u.Isapproved && !u.Iscompleted)
-    const approveList = list.filter(u => u.Isopened && u.Ischecked && u.Isapproved && !u.Iscompleted)
-    const completeList = list.filter(u => u.Isopened && u.Ischecked && u.Isapproved && u.Iscompleted)
-
-    return (
-      isLoading ? <LoadingPage /> :
-        <React.Fragment>
-          <Pagewrapper>
-            <Headerwrapper>
-              <Grid columns='2' >
-                <GridColumn width={8}>
-                  <Breadcrumb size='big'>
-                    <Link to={"/Purchaseorders"}>
-                      <Breadcrumb.Section>{t('Pages.Purchaseorder.Page.Header')}</Breadcrumb.Section>
-                    </Link>
-                  </Breadcrumb>
-                </GridColumn>
-                <Settings
-                  Profile={Profile}
-                  Pagecreateheader={t('Pages.Purchaseorder.Page.CreateHeader')}
-                  Pagecreatelink={"/Purchaseorders/Create"}
-                  Showcreatebutton
-                />
-              </Grid>
-            </Headerwrapper>
-            <Pagedivider />
-            <Contentwrapper>
-              <Tab
-                className="w-full !bg-transparent"
-                panes={[
-                  {
-                    menuItem: `${t('Pages.Purchaseorder.Page.Tab.CreateHeader')} (${(createList || []).length})`,
-                    pane: {
-                      key: 'created',
-                      content: <Purchaseorderscreated
-                        Profile={Profile}
-                        list={createList}
-                        Columns={Columns.filter(u => u.key === 'created' || !u.key)}
-                      />
-                    }
-                  },
-                  {
-                    menuItem: `${t('Pages.Purchaseorder.Page.Tab.CheckHeader')} (${(checkList || []).length})`,
-                    pane: {
-                      key: 'checked',
-                      content: <Purchaseorderschecked
-                        Profile={Profile}
-                        list={checkList}
-                        Columns={Columns.filter(u => u.key === 'checked' || !u.key)}
-                      />
-                    }
-                  },
-                  {
-                    menuItem: `${t('Pages.Purchaseorder.Page.Tab.ApproveHeader')} (${(approveList || []).length})`,
-                    pane: {
-                      key: 'approved',
-                      content: <Purchaseordersapproved
-                        Profile={Profile}
-                        list={approveList}
-                        Columns={Columns.filter(u => u.key === 'approved' || !u.key)}
-                      />
-                    }
-                  },
-                  {
-                    menuItem: `${t('Pages.Purchaseorder.Page.Tab.CompleteHeader')} (${(completeList || []).length})`,
-                    pane: {
-                      key: 'completed',
-                      content: <Purchaseorderscompleted
-                        Profile={Profile}
-                        list={completeList}
-                        Columns={Columns.filter(u => (u.key === 'completed' || !u.key) && !u.disableOncomplete)}
-                      />
-                    }
-                  },
-                ]}
-                renderActiveOnly={false}
-              />
-            </Contentwrapper>
-          </Pagewrapper>
-          <PurchaseordersDetail />
-          <PurchaseordersDelete />
-          <PurchaseordersCheck />
-          <PurchaseordersApprove />
-          <PurchaseordersComplete />
-        </React.Fragment>
-    )
-  }
-
-  userCellhandler = (value) => {
-    const { Users } = this.props
+  const userCellhandler = (value) => {
     if (Users.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
@@ -195,7 +41,7 @@ export default class Purchaseorders extends Component {
     }
   }
 
-  dateCellhandler = (value) => {
+  const dateCellhandler = (value) => {
     const date = new Date(value)
     if (value && validator.isISODate(date)) {
 
@@ -211,133 +57,231 @@ export default class Purchaseorders extends Component {
       return value
     }
   }
-}
 
+  const renderView = ({ list, Columns, keys, initialConfig }) => {
 
-function Purchaseorderscreated({ Profile, Columns, list }) {
+    const searchbykey = (data, searchkeys) => {
+      let ok = false
+      searchkeys.forEach(key => {
 
-  const metaKey = "purchaseorder"
-  let initialConfig = GetInitialconfig(Profile, metaKey)
+        if (!ok) {
+          if (data.includes(key)) {
+            ok = true
+          }
+        }
+      });
 
-  return (
-    <>
-      <Headerwrapper>
-        <Grid columns='2' >
-          <GridColumn width={8} />
-          <Settings
-            Profile={Profile}
-            Columns={Columns}
-            list={list}
-            initialConfig={initialConfig}
-            metaKey={metaKey}
-            Showcolumnchooser
-            Showexcelexport
-          />
-        </Grid>
-      </Headerwrapper>
-      {list.length > 0 ?
-        <div className='w-full mx-auto '>
-          {Profile.Ismobile ?
-            <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-            <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
-      }
-    </>
-  )
-}
+      return ok
+    }
 
-function Purchaseorderschecked({ Profile, Columns, list }) {
+    const columns = Columns.filter(u => searchbykey((u?.keys || []), keys) || !(u?.keys))
 
-  const metaKey = "purchaseorder"
-  let initialConfig = GetInitialconfig(Profile, metaKey)
+    return list.length > 0 ?
+      <div className='w-full mx-auto '>
+        {Profile.Ismobile ?
+          <MobileTable Columns={columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+          <DataTable Columns={columns} Data={list} Config={initialConfig} />}
+      </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
+  }
 
-  return (
-    <>
-      <Headerwrapper>
-        <Grid columns='2' >
-          <GridColumn width={8} />
-          <Settings
-            Profile={Profile}
-            Columns={Columns}
-            list={list}
-            initialConfig={initialConfig}
-            metaKey={metaKey}
-            Showcolumnchooser
-            Showexcelexport
-          />
-        </Grid>
-      </Headerwrapper>
-      {list.length > 0 ?
-        <div className='w-full mx-auto '>
-          {Profile.Ismobile ?
-            <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-            <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
-      }
-    </>
-  )
-}
-
-function Purchaseordersapproved({ Profile, Columns, list }) {
+  const Columns = [
+    { Header: t('Common.Column.Id'), accessor: 'Id' },
+    { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+    { Header: t('Pages.Purchaseorder.Columns.Purchaseno'), accessor: 'Purchaseno' },
+    { Header: t('Pages.Purchaseorder.Columns.Company'), accessor: 'Company' },
+    { Header: t('Pages.Purchaseorder.Columns.Billno'), accessor: 'Billno' },
+    { Header: t('Pages.Purchaseorder.Columns.Receiveruser'), accessor: row => userCellhandler(row?.ReceiveruserID) },
+    { Header: t('Pages.Purchaseorder.Columns.Purchasecreatetime'), accessor: row => dateCellhandler(row?.Purchasecreatetime), keys: ['created'] },
+    { Header: t('Pages.Purchaseorder.Columns.Createduser'), accessor: row => userCellhandler(row?.CreateduserID), keys: ['created'] },
+    { Header: t('Pages.Purchaseorder.Columns.Purchasechecktime'), accessor: row => dateCellhandler(row?.Purchasechecktime), keys: ['checked'] },
+    { Header: t('Pages.Purchaseorder.Columns.Checkeduser'), accessor: row => userCellhandler(row?.CheckeduserID), keys: ['checked'] },
+    { Header: t('Pages.Purchaseorder.Columns.Purchaseapprovetime'), accessor: row => dateCellhandler(row?.Purchaseapprovetime), keys: ['approved'] },
+    { Header: t('Pages.Purchaseorder.Columns.Approveduser'), accessor: row => userCellhandler(row?.ApproveduserID), keys: ['approved'] },
+    { Header: t('Pages.Purchaseorder.Columns.Purchasecompletetime'), accessor: row => dateCellhandler(row?.Purchasecompletetime), keys: ['completed'] },
+    { Header: t('Pages.Purchaseorder.Columns.Completeduser'), accessor: row => userCellhandler(row?.CompleteduserID), keys: ['completed'] },
+    { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+    { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+    { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+    { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+    { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
+    { Header: t('Common.Column.check'), accessor: 'check', disableProps: true, keys: ['created'] },
+    { Header: t('Common.Column.cancelcheck'), accessor: 'cancelcheck', disableProps: true, keys: ['checked'] },
+    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['checked'] },
+    { Header: t('Common.Column.cancelapprove'), accessor: 'cancelapprove', disableProps: true, keys: ['approved'] },
+    { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['created'] },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, disableOncomplete: true, keys: ['created', 'chcked', 'approved'] }
+  ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "purchaseorder"
   let initialConfig = GetInitialconfig(Profile, metaKey)
 
+  const list = (Purchaseorders.list || []).filter(u => u.Isactive).map(item => {
+    return {
+      ...item,
+      edit: <Link to={`/Purchaseorders/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
+      delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+        setRecord(item)
+        setDeleteOpen(true)
+      }} />,
+      cancelcheck: <Icon link size='large' color='red' name='level down alternate' onClick={() => {
+        setRecord(item)
+        setCancelCheckOpen(true)
+      }} />,
+      check: <Icon link size='large' color='blue' name='level up alternate' onClick={() => {
+        setRecord(item)
+        setCheckOpen(true)
+      }} />,
+      cancelapprove: <Icon link size='large' color='red' name='hand point left' onClick={() => {
+        setRecord(item)
+        setCancelApproveOpen(true)
+      }} />,
+      approve: <Icon link size='large' color='blue' name='hand point up' onClick={() => {
+        setRecord(item)
+        setApproveOpen(true)
+      }} />,
+      complete: <Icon link size='large' color='blue' name='share' onClick={() => {
+        setRecord(item)
+        setCompleteOpen(true)
+      }} />,
+      detail: <Icon link size='large' color='grey' name='history' onClick={() => {
+        setRecord(item)
+        setDetailOpen(true)
+      }} />,
+    }
+  })
+
+  const createList = list.filter(u => u.Isopened && !u.Ischecked && !u.Isapproved && !u.Iscompleted)
+  const checkList = list.filter(u => u.Isopened && u.Ischecked && !u.Isapproved && !u.Iscompleted)
+  const approveList = list.filter(u => u.Isopened && u.Ischecked && u.Isapproved && !u.Iscompleted)
+  const completeList = list.filter(u => u.Isopened && u.Ischecked && u.Isapproved && u.Iscompleted)
+
+  const tabOrder = [
+    'created',
+    'checked',
+    'approved',
+    'completed',
+  ]
+
+  const { activeTab, setActiveTab } = useTabNavigation({
+    history,
+    tabOrder,
+    mainRoute: 'Purchaseorders'
+  })
+
+  useEffect(() => {
+    GetPurchaseorders()
+    GetUsers()
+  }, [])
+
   return (
-    <>
-      <Headerwrapper>
-        <Grid columns='2' >
-          <GridColumn width={8} />
-          <Settings
-            Profile={Profile}
-            Columns={Columns}
-            list={list}
-            initialConfig={initialConfig}
-            metaKey={metaKey}
-            Showcolumnchooser
-            Showexcelexport
-          />
-        </Grid>
-      </Headerwrapper>
-      {list.length > 0 ?
-        <div className='w-full mx-auto '>
-          {Profile.Ismobile ?
-            <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-            <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
-      }
-    </>
+    isLoading ? <LoadingPage /> :
+      <React.Fragment>
+        <Pagewrapper>
+          <Headerwrapper>
+            <Grid columns='2' >
+              <GridColumn width={8}>
+                <Breadcrumb size='big'>
+                  <Link to={"/Purchaseorders"}>
+                    <Breadcrumb.Section>{t('Pages.Purchaseorder.Page.Header')}</Breadcrumb.Section>
+                  </Link>
+                </Breadcrumb>
+              </GridColumn>
+              <Settings
+                Profile={Profile}
+                Pagecreateheader={t('Pages.Purchaseorder.Page.CreateHeader')}
+                Pagecreatelink={"/Purchaseorders/Create"}
+                Showcreatebutton
+              />
+            </Grid>
+          </Headerwrapper>
+          <Pagedivider />
+          <Contentwrapper>
+            <Tab
+              onTabChange={(_, { activeIndex }) => {
+                setActiveTab(activeIndex)
+              }}
+              activeIndex={activeTab}
+              className="w-full !bg-transparent"
+              panes={[
+                {
+                  menuItem: `${t('Pages.Purchaseorder.Page.Tab.CreateHeader')} (${(createList || []).length})`,
+                  pane: {
+                    key: 'created',
+                    content: renderView({ list: createList, Columns, keys: ['created'], initialConfig })
+                  }
+                },
+                {
+                  menuItem: `${t('Pages.Purchaseorder.Page.Tab.CheckHeader')} (${(checkList || []).length})`,
+                  pane: {
+                    key: 'checked',
+                    content: renderView({ list: checkList, Columns, keys: ['checked'], initialConfig })
+                  }
+                },
+                {
+                  menuItem: `${t('Pages.Purchaseorder.Page.Tab.ApproveHeader')} (${(approveList || []).length})`,
+                  pane: {
+                    key: 'approved',
+                    content: renderView({ list: approveList, Columns, keys: ['approved'], initialConfig })
+                  }
+                },
+                {
+                  menuItem: `${t('Pages.Purchaseorder.Page.Tab.CompleteHeader')} (${(completeList || []).length})`,
+                  pane: {
+                    key: 'completed',
+                    content: renderView({ list: completeList, Columns, keys: ['completed'], initialConfig })
+                  }
+                },
+
+
+              ]}
+              renderActiveOnly={false}
+            />
+          </Contentwrapper>
+        </Pagewrapper>
+        <PurchaseordersDetail
+          open={detailOpen}
+          setOpen={setDetailOpen}
+          record={record}
+          setRecord={setRecord}
+        />
+        <PurchaseordersDelete
+          open={deleteOpen}
+          setOpen={setDeleteOpen}
+          record={record}
+          setRecord={setRecord}
+        />
+        <PurchaseordersCheck
+          open={checkOpen}
+          setOpen={setCheckOpen}
+          record={record}
+          setRecord={setRecord}
+        />
+        <PurchaseordersApprove
+          open={approveOpen}
+          setOpen={setApproveOpen}
+          record={record}
+          setRecord={setRecord}
+        />
+        <PurchaseordersComplete
+          open={completeOpen}
+          setOpen={setCompleteOpen}
+          record={record}
+          setRecord={setRecord}
+        />
+        <PurchaseordersCancelCheck
+          open={cancelCheckOpen}
+          setOpen={setCancelCheckOpen}
+          record={record}
+          setRecord={setRecord}
+        />
+        <PurchaseordersCancelApprove
+          open={cancelApproveOpen}
+          setOpen={setCancelApproveOpen}
+          record={record}
+          setRecord={setRecord}
+        />
+      </React.Fragment>
   )
-}
 
-function Purchaseorderscompleted({ Profile, Columns, list }) {
-
-  const metaKey = "purchaseorder"
-  let initialConfig = GetInitialconfig(Profile, metaKey)
-
-  return (
-    <>
-      <Headerwrapper>
-        <Grid columns='2' >
-          <GridColumn width={8} />
-          <Settings
-            Profile={Profile}
-            Columns={Columns}
-            list={list}
-            initialConfig={initialConfig}
-            metaKey={metaKey}
-            Showcolumnchooser
-            Showexcelexport
-          />
-        </Grid>
-      </Headerwrapper>
-      {list.length > 0 ?
-        <div className='w-full mx-auto '>
-          {Profile.Ismobile ?
-            <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-            <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
-      }
-    </>
-  )
 }

@@ -10,9 +10,6 @@ export default function PurchaseordersCheck(props) {
     Profile,
     Purchaseorders,
     CheckPurchaseorders,
-    CancelCheckPurchaseorders,
-    handleCheckmodal,
-    handleSelectedPurchaseorder,
     fillPurchaseordernotification,
     GetUsers,
     GetFiles,
@@ -35,11 +32,13 @@ export default function PurchaseordersCheck(props) {
     Patients,
     Patientdefines,
     Cases,
-    Departments
+    Departments,
+    open,
+    setOpen,
+    record,
+    setRecord
   } = props
 
-  const { isCheckmodalopen, selected_record, isCheckdeactive } = Purchaseorders
-  const Isdeactive = isCheckdeactive
   const [selectedcase, setSelectedcase] = useState(null)
   const [selectedinfo, setSelectedinfo] = useState(null)
 
@@ -59,7 +58,7 @@ export default function PurchaseordersCheck(props) {
     Departments.isLoading
 
   useEffect(() => {
-    if (isCheckmodalopen && !Users.isLoading) {
+    if (open && !Users.isLoading) {
       GetUsers()
       GetFiles()
       GetStocks()
@@ -72,7 +71,7 @@ export default function PurchaseordersCheck(props) {
       GetCases()
       GetDepartments()
     }
-  }, [isCheckmodalopen])
+  }, [open])
 
   const {
     Uuid,
@@ -84,9 +83,9 @@ export default function PurchaseordersCheck(props) {
     DeliverywarehouseID,
     Price,
     CaseID,
-  } = selected_record
+  } = record || {}
 
-  const stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
+  const stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === record?.Uuid).map(element => {
     return {
       ...element,
       key: Math.random(),
@@ -163,20 +162,15 @@ export default function PurchaseordersCheck(props) {
       onClose={() => {
         setSelectedcase(null)
         setSelectedinfo(null)
-        handleCheckmodal(false)
+        setRecord(null)
+        setOpen(false)
       }}
-      onOpen={() => {
-        setSelectedcase(null)
-        setSelectedinfo(null)
-        handleCheckmodal({ modal: true, deactive: Isdeactive ? Isdeactive : false })
-      }}
-      open={isCheckmodalopen}
+      onOpen={() => setOpen(true)}
+      open={open}
     >
-      <Modal.Header>{!Isdeactive
-        ? t('Pages.Purchaseorder.Page.CheckHeaderModal')
-        : t('Pages.Purchaseorder.Page.CancelCheckHeaderModal')
-      }</Modal.Header>
+      <Modal.Header>{t('Pages.Purchaseorder.Page.CheckHeaderModal')}</Modal.Header>
       <PurchaseorderDetailCard
+        record={record}
         Purchaseorders={Purchaseorders}
         Users={Users}
         Files={Files}
@@ -233,14 +227,15 @@ export default function PurchaseordersCheck(props) {
         </Modal.Content>}
       <Modal.Actions>
         <Button color='black' onClick={() => {
-          handleCheckmodal(false)
-          handleSelectedPurchaseorder({})
+          setOpen(false)
+          setRecord(null)
         }}>
           {t('Common.Button.Giveup')}
         </Button>
-        {Isdeactive
-          ? <Button
-            content={t('Common.Button.CancelCheck')}
+        {checkIsvalid().length === 0 && !isLoadingstatus ?
+          <Button
+            loading={Purchaseorders.isLoading}
+            content={t('Common.Button.Check')}
             labelPosition='right'
             icon='checkmark'
             className=' !bg-[#2355a0] !text-white'
@@ -257,51 +252,19 @@ export default function PurchaseordersCheck(props) {
                 const {
                   Uuid,
                   Purchaseno
-                } = selected_record
-                CancelCheckPurchaseorders({
+                } = record || {}
+                CheckPurchaseorders({
                   Uuid,
                   Purchaseno,
-                  Cancelcheckinfo: selectedinfo,
+                  Checkinfo: selectedinfo,
                   CaseID: selectedcase
                 })
-                handleCheckmodal(false)
-                handleSelectedPurchaseorder({})
+                setOpen(false)
+                setRecord(null)
               }
             }}
             positive
-          />
-          : checkIsvalid().length === 0 && !isLoadingstatus ?
-            <Button
-              content={t('Common.Button.Check')}
-              labelPosition='right'
-              icon='checkmark'
-              className=' !bg-[#2355a0] !text-white'
-              onClick={() => {
-                let errors = []
-                if (!validator.isUUID(selectedcase)) {
-                  errors.push({ type: 'Error', code: t('Pages.Purchaseorder.Page.Header'), description: t('Pages.Purchaseorder.Messages.CaseRequired') })
-                }
-                if (errors.length > 0) {
-                  errors.forEach(error => {
-                    fillPurchaseordernotification(error)
-                  })
-                } else {
-                  const {
-                    Uuid,
-                    Purchaseno
-                  } = selected_record
-                  CheckPurchaseorders({
-                    Uuid,
-                    Purchaseno,
-                    Checkinfo: selectedinfo,
-                    CaseID: selectedcase
-                  })
-                  handleCheckmodal(false)
-                  handleSelectedPurchaseorder({})
-                }
-              }}
-              positive
-            /> : null
+          /> : null
         }
       </Modal.Actions>
     </Modal>

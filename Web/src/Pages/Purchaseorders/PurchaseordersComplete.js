@@ -12,8 +12,6 @@ export default function PurchaseordersComplete(props) {
     Profile,
     Purchaseorders,
     CompletePurchaseorders,
-    handleCompletemodal,
-    handleSelectedPurchaseorder,
     fillPurchaseordernotification,
     GetUsers,
     GetFiles,
@@ -36,10 +34,13 @@ export default function PurchaseordersComplete(props) {
     Patients,
     Patientdefines,
     Cases,
-    Departments
+    Departments,
+    open,
+    setOpen,
+    record,
+    setRecord
   } = props
 
-  const { isCompletemodalopen, selected_record } = Purchaseorders
   const [selectedcase, setSelectedcase] = useState(null)
   const [selectedinfo, setSelectedinfo] = useState(null)
 
@@ -56,7 +57,6 @@ export default function PurchaseordersComplete(props) {
     Cases.isLoading ||
     Departments.isLoading
 
-
   const {
     Uuid,
     Company,
@@ -67,10 +67,10 @@ export default function PurchaseordersComplete(props) {
     DeliverywarehouseID,
     Price,
     CaseID,
-  } = selected_record
+  } = record || {}
 
   useEffect(() => {
-    if (isCompletemodalopen && !Users.isLoading) {
+    if (open && !Users.isLoading) {
       GetUsers()
       GetFiles()
       GetStocks()
@@ -83,9 +83,9 @@ export default function PurchaseordersComplete(props) {
       GetCases()
       GetDepartments()
     }
-  }, [isCompletemodalopen])
+  }, [open])
 
-  const stocks = (Stocks.list || []).filter(u => u.WarehouseID === selected_record?.Uuid && u.Isactive).map(element => {
+  const stocks = (Stocks.list || []).filter(u => u.WarehouseID === record?.Uuid && u.Isactive).map(element => {
     return {
       ...element,
       key: Math.random(),
@@ -161,17 +161,19 @@ export default function PurchaseordersComplete(props) {
       onClose={() => {
         setSelectedcase(null)
         setSelectedinfo(null)
-        handleCompletemodal(false)
+        setOpen(false)
+        setRecord(null)
       }}
       onOpen={() => {
         setSelectedcase(null)
         setSelectedinfo(null)
-        handleCompletemodal(true)
+        setOpen(true)
       }}
-      open={isCompletemodalopen}
+      open={open}
     >
       <Modal.Header>{t('Pages.Purchaseorder.Page.CompleteHeaderModal')}</Modal.Header>
       <PurchaseorderDetailCard
+        record={record}
         Purchaseorders={Purchaseorders}
         Users={Users}
         Files={Files}
@@ -228,13 +230,14 @@ export default function PurchaseordersComplete(props) {
         </Modal.Content>}
       <Modal.Actions>
         <Button color='black' onClick={() => {
-          handleCompletemodal(false)
-          handleSelectedPurchaseorder({})
+          setOpen(false)
+          setRecord(null)
         }}>
           {t('Common.Button.Giveup')}
         </Button>
         {checkIsvalid().length === 0 && !isLoadingstatus ?
           <Button
+            loading={Purchaseorders.isLoading}
             content={t('Common.Button.Complete')}
             labelPosition='right'
             icon='checkmark'
@@ -249,18 +252,20 @@ export default function PurchaseordersComplete(props) {
                   fillPurchaseordernotification(error)
                 })
               } else {
+
                 const {
                   Uuid,
                   Purchaseno
-                } = selected_record
+                } = record || {}
+
                 CompletePurchaseorders({
                   Uuid,
                   Purchaseno,
                   Completeinfo: selectedinfo,
                   CaseID: selectedcase
                 })
-                handleCompletemodal(false)
-                handleSelectedPurchaseorder({})
+                setOpen(false)
+                setRecord(null)
               }
             }}
             positive

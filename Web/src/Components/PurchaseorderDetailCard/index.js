@@ -15,8 +15,8 @@ export default function PurchaseorderDetailCard(props) {
 
     const {
         usecontext,
+        record,
         PAGE_NAME,
-        Purchaseorders,
         Users,
         Files,
         Stocks,
@@ -38,7 +38,7 @@ export default function PurchaseorderDetailCard(props) {
 
     const context = useContext(FormContext)
 
-    const selected_record = usecontext ? context.getForm(PAGE_NAME) : Purchaseorders?.selected_record
+    const selected_record = usecontext ? context.getForm(PAGE_NAME) : record
 
     const [movementsOpen, setMovementsOpen] = useState(false)
     const [selectedfile, setSelectedfile] = useState(null)
@@ -146,8 +146,8 @@ export default function PurchaseorderDetailCard(props) {
                                         <Card.Meta>{`${(files || []).length} ${t('Pages.PurchaseorderDetailCard.Label.Filesprefix')}`}</Card.Meta>
                                         <Card.Description>
                                             <div className='w-full gap-2 justify-start items-start flex flex-col'>
-                                                {files.map(file => {
-                                                    return <div className='cursor-pointer flex flex-row'
+                                                {files.map((file, index) => {
+                                                    return <div key={index} className='cursor-pointer flex flex-row'
                                                         onClick={() => {
                                                             if (!usecontext) {
                                                                 setSelectedfile(file?.Uuid)

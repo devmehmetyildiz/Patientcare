@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
@@ -6,123 +6,31 @@ import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import PurchaseorderPrepare from './PurchaseorderPrepare'
 import { Formatdate } from '../../Utils/Formatdate'
-export default class PurchaseordersEdit extends Component {
 
-  PAGE_NAME = "PurchaseordersEdit"
+export default function PurchaseordersEdit(props) {
+  const PAGE_NAME = "PurchaseordersEdit"
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      isDatafetched: false,
-      selectedFiles: [],
-      selectedStocks: [],
-    }
-  }
+  const { Purchaseorders, Profile, GetPurchaseorder, GetFiles, GetStocks, match, history, PurchaseorderID } = props
+  const { EditPurchaseorders, fillPurchaseordernotification, Stockdefines, Files, Stocks, Stocktypes } = props
 
-  componentDidMount() {
-    const { GetPurchaseorder, GetFiles, GetStocks, match, history, PurchaseorderID } = this.props
-    let Id = PurchaseorderID || match.params.PurchaseorderID
-    if (validator.isUUID(Id)) {
-      GetPurchaseorder(Id)
-      GetFiles()
-      GetStocks()
-    } else {
-      history.push("/Purchaseorder")
-    }
-  }
+  const Id = PurchaseorderID || match?.params?.PurchaseorderID
 
-  componentDidUpdate() {
-    const { Purchaseorders, Files, Stocks } = this.props
-    const { selected_record, isLoading } = Purchaseorders
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0 && !Files.isLoading && !Stocks.isLoading && !isLoading && !this.state.isDatafetched) {
-      var files = (Files.list || []).filter(u => u.Isactive && u.ParentID === selected_record?.Uuid).map(element => {
-        return {
-          ...element,
-          key: Math.random(),
-          Usagetype: (element.Usagetype.split(',') || []).map(u => {
-            return u
-          })
-        }
-      });
-      var stocks = (Stocks.list || []).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
-        return {
-          ...element,
-          key: Math.random()
-        }
-      });
-      this.setState({
-        isDatafetched: true,
-        selectedFiles: [...files] || [],
-        selectedStocks: (stocks || []).map(u => {
-          if (validator.isISODate(u.Skt)) {
-            return { ...u, Skt: Formatdate(u.Skt) }
-          } else {
-            return { ...u }
-          }
-        }),
-      })
+  const t = Profile?.i18n?.t
 
-      this.context.setForm(this.PAGE_NAME, selected_record)
-    }
-  }
+  const context = useContext(FormContext)
 
-  render() {
+  const [fetched, setFetched] = useState(false)
+  const [selectedFiles, setSelectedFiles] = useState([])
+  const [selectedStocks, setSelectedStocks] = useState([])
 
-    const { Purchaseorders, Profile, history } = this.props
+  const { selected_record, isLoading } = Purchaseorders
 
-    const t = Profile?.i18n?.t
-
-    return (
-      Purchaseorders.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Purchaseorders"}>
-                <Breadcrumb.Section >{t('Pages.Purchaseorder.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Purchaseorder.Page.EditHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <PurchaseorderPrepare
-              Preparestatus={2}
-              PAGE_NAME={this.PAGE_NAME}
-              selectedFiles={this.state.selectedFiles}
-              selectedStocks={this.state.selectedStocks}
-              setselectedFiles={this.setselectedFiles}
-              setselectedStocks={this.setselectedStocks}
-              Profile={Profile}
-            />
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Purchaseorders"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Purchaseorders.isLoading}
-              buttonText={t('Common.Button.Update')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
-    )
-  }
-
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
 
-    const { EditPurchaseorders, history, fillPurchaseordernotification, Purchaseorders, Profile, Stockdefines, Stocktypes } = this.props
-
-    const t = Profile?.i18n?.t
-
-    const data = this.context.getForm(this.PAGE_NAME)
+    const data = context.getForm(PAGE_NAME)
     data.Price = validator.isNumber(Number(data.Price)) ? Number(data.Price) : 0
-    data.Stocks = this.state.selectedStocks
+    data.Stocks = selectedStocks
     data.Deliverytype = validator.isNumber(data.Deliverytype) ? data.Deliverytype : null
 
     let errors = []
@@ -170,15 +78,93 @@ export default class PurchaseordersEdit extends Component {
         fillPurchaseordernotification(error)
       })
     } else {
-      EditPurchaseorders({ data: { ...Purchaseorders.selected_record, ...data }, history, files: this.state.selectedFiles })
+      EditPurchaseorders({ data: { ...Purchaseorders.selected_record, ...data }, history, files: selectedFiles })
     }
   }
 
-  setselectedFiles = (files) => {
-    this.setState({ selectedFiles: [...files] })
+  const setselectedFiles = (files) => {
+    setSelectedFiles([...files])
   }
-  setselectedStocks = (stocks) => {
-    this.setState({ selectedStocks: [...stocks] })
+  const setselectedStocks = (stocks) => {
+    setSelectedStocks([...stocks])
   }
+
+  useEffect(() => {
+    if (validator.isUUID(Id)) {
+      GetPurchaseorder(Id)
+      GetFiles()
+      GetStocks()
+    } else {
+      history.push("/Purchaseorder")
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isLoading && validator.isObject(selected_record) && !Files.isLoading && !Stocks.isLoading && !fetched) {
+      var files = (Files.list || []).filter(u => u.Isactive && u.ParentID === selected_record?.Uuid).map(element => {
+        return {
+          ...element,
+          key: Math.random(),
+          Usagetype: (element.Usagetype.split(',') || []).map(u => {
+            return u
+          })
+        }
+      });
+      var stocks = (Stocks.list || []).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
+        return {
+          ...element,
+          key: Math.random()
+        }
+      });
+      setselectedFiles(files)
+      setselectedStocks((stocks || []).map(u => {
+        if (validator.isISODate(u.Skt)) {
+          return { ...u, Skt: Formatdate(u.Skt) }
+        } else {
+          return { ...u }
+        }
+      }))
+      setFetched(true)
+      context.setForm(PAGE_NAME, selected_record)
+    }
+  }, [selected_record, Stocks, Files, fetched])
+
+  return (
+    Purchaseorders.isLoading ? <LoadingPage /> :
+      <Pagewrapper>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Purchaseorders"}>
+              <Breadcrumb.Section >{t('Pages.Purchaseorder.Page.Header')}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{t('Pages.Purchaseorder.Page.EditHeader')}</Breadcrumb.Section>
+          </Headerbredcrump>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <PurchaseorderPrepare
+            Preparestatus={2}
+            PAGE_NAME={PAGE_NAME}
+            selectedFiles={selectedFiles}
+            selectedStocks={selectedStocks}
+            setselectedFiles={setselectedFiles}
+            setselectedStocks={setselectedStocks}
+            Profile={Profile}
+          />
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Purchaseorders"}
+            buttonText={t('Common.Button.Goback')}
+          />
+          <Submitbutton
+            isLoading={Purchaseorders.isLoading}
+            buttonText={t('Common.Button.Update')}
+            submitFunction={handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
+  )
 }
-PurchaseordersEdit.contextType = FormContext
