@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import CareplansSavepreview from '../../Pages/Careplans/CareplansSavepreview'
-import { SavepreviewCareplans, handleSavepreviewmodal, handleSelectedCareplan } from '../../Redux/CareplanSlice'
+import { SavepreviewCareplans, } from '../../Redux/CareplanSlice'
 
 const mapStateToProps = (state) => ({
     Careplans: state.Careplans,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    SavepreviewCareplans, handleSavepreviewmodal, handleSelectedCareplan
+    SavepreviewCareplans,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CareplansSavepreview)

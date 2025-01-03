@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import MainteanceplansEdit from '../../Pages/Mainteanceplans/MainteanceplansEdit'
-import { EditMainteanceplans, GetMainteanceplan, handleSelectedMainteanceplan, fillMainteanceplannotification } from '../../Redux/MainteanceplanSlice'
+import { EditMainteanceplans, GetMainteanceplan, fillMainteanceplannotification } from '../../Redux/MainteanceplanSlice'
 import { GetEquipments } from '../../Redux/EquipmentSlice'
 import { GetEquipmentgroups } from '../../Redux/EquipmentgroupSlice'
 import { GetUsers } from '../../Redux/UserSlice'
@@ -14,7 +14,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    EditMainteanceplans, GetMainteanceplan, handleSelectedMainteanceplan, fillMainteanceplannotification,
+    EditMainteanceplans, GetMainteanceplan, fillMainteanceplannotification,
     GetEquipments, GetEquipmentgroups, GetUsers
 }
 

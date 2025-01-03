@@ -1,46 +1,46 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Button, Modal } from 'semantic-ui-react'
 
-export default class CareplansApprove extends Component {
-  render() {
-    const { Profile, Careplans, ApproveCareplans, handleApprovemodal, handleSelectedCareplan, } = this.props
-    const t = Profile?.i18n?.t
-    const { isApprovemodalopen, selected_record } = Careplans
+export default function CareplansApprove(props) {
+  
+  const { Profile, Careplans, ApproveCareplans, open, setOpen, record, setRecord } = props
 
-    return (
-      <Modal
-        onClose={() => handleApprovemodal(false)}
-        onOpen={() => handleApprovemodal(true)}
-        open={isApprovemodalopen}
-      >
-        <Modal.Header>{t('Pages.Careplans.Page.Header')}</Modal.Header>
-        <Modal.Content image>
-          <Modal.Description>
-            <p>
-              {t('Pages.Careplans.Approve.Label.Check')}
-            </p>
-          </Modal.Description>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color='black' onClick={() => {
-            handleApprovemodal(false)
-            handleSelectedCareplan({})
-          }}>
-            {t('Common.Button.Giveup')}
-          </Button>
-          <Button
-            content={t('Common.Button.Approve')}
-            labelPosition='right'
-            icon='checkmark'
-            onClick={() => {
-              ApproveCareplans(selected_record)
-              handleApprovemodal(false)
-              handleSelectedCareplan({})
-            }}
-            positive
-          />
-        </Modal.Actions>
-      </Modal>
-    )
-  }
+  const t = Profile?.i18n?.t
+
+  return (
+    <Modal
+      onClose={() => setOpen(false)}
+      onOpen={() => setOpen(true)}
+      open={open}
+    >
+      <Modal.Header>{t('Pages.Careplans.Page.Header')}</Modal.Header>
+      <Modal.Content image>
+        <Modal.Description>
+          <p>
+            {t('Pages.Careplans.Approve.Label.Check')}
+          </p>
+        </Modal.Description>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button color='black' onClick={() => {
+          setOpen(false)
+          setRecord(null)
+        }}>
+          {t('Common.Button.Giveup')}
+        </Button>
+        <Button
+          loading={Careplans.isLoading}
+          content={t('Common.Button.Approve')}
+          labelPosition='right'
+          icon='checkmark'
+          onClick={() => {
+            ApproveCareplans(record)
+            setOpen(false)
+            setRecord(null)
+          }}
+          positive
+        />
+      </Modal.Actions>
+    </Modal>
+  )
 }

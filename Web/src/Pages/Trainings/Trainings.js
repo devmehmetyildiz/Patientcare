@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Loader, Tab } from 'semantic-ui-react'
 import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
@@ -15,9 +15,14 @@ import useTabNavigation from '../../Hooks/useTabNavigation'
 
 export default function Trainings(props) {
 
-    const { Profile, Users, Trainings, handleDeletemodal, handleCompletemodal, handleSavepreviewmodal,
-        handleApprovemodal, handleSelectedTraining, history } = props
+    const { Profile, Users, Trainings, history } = props
     const { GetTrainings, GetUsers } = props
+
+    const [completeOpen, setCompleteOpen] = useState(false)
+    const [deleteOpen, setDeleteOpen] = useState(false)
+    const [approveOpen, setApproveOpen] = useState(false)
+    const [savePreviewOpen, setSavePreviewOpen] = useState(false)
+    const [record, setRecord] = useState(null)
 
     const t = Profile?.i18n?.t
     const { isLoading } = Trainings
@@ -122,20 +127,20 @@ export default function Trainings(props) {
             ...item,
             edit: <Link to={`/Trainings/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
             delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
-                handleSelectedTraining(item)
-                handleDeletemodal(true)
+                setRecord(item)
+                setDeleteOpen(true)
             }} />,
             approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
-                handleSelectedTraining(item)
-                handleApprovemodal(true)
+                setRecord(item)
+                setApproveOpen(true)
             }} />,
             complete: <Icon link size='large' color='blue' name='hand point left' onClick={() => {
-                handleSelectedTraining(item)
-                handleCompletemodal(true)
+                setRecord(item)
+                setCompleteOpen(true)
             }} />,
             savepreview: <Icon link size='large' color='green' name='save' onClick={() => {
-                handleSelectedTraining(item)
-                handleSavepreviewmodal(true)
+                setRecord(item)
+                setSavePreviewOpen(true)
             }} />,
         }
     })
@@ -319,10 +324,30 @@ export default function Trainings(props) {
                             renderActiveOnly={false}
                         />
                     </Contentwrapper>
-                    <TrainingsSavepreview />
-                    <TrainingsApprove />
-                    <TrainingsComplete />
-                    <TrainingsDelete />
+                    <TrainingsSavepreview
+                        open={savePreviewOpen}
+                        setOpen={setSavePreviewOpen}
+                        record={record}
+                        setRecord={setRecord}
+                    />
+                    <TrainingsApprove
+                        open={approveOpen}
+                        setOpen={setApproveOpen}
+                        record={record}
+                        setRecord={setRecord}
+                    />
+                    <TrainingsComplete
+                        open={completeOpen}
+                        setOpen={setCompleteOpen}
+                        record={record}
+                        setRecord={setRecord}
+                    />
+                    <TrainingsDelete
+                        open={deleteOpen}
+                        setOpen={setDeleteOpen}
+                        record={record}
+                        setRecord={setRecord}
+                    />
                 </Pagewrapper>
             </React.Fragment>
     )

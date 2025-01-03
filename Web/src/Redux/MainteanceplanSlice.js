@@ -231,9 +231,6 @@ export const MainteanceplansSlice = createSlice({
         isLoading: false,
     },
     reducers: {
-        handleSelectedMainteanceplan: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillMainteanceplannotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -363,7 +360,6 @@ export const MainteanceplansSlice = createSlice({
 });
 
 export const {
-    handleSelectedMainteanceplan,
     fillMainteanceplannotification,
     removeMainteanceplannotification,
 } = MainteanceplansSlice.actions;

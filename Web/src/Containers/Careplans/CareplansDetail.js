@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import CareplansDetail from '../../Pages/Careplans/CareplansDetail'
-import { GetCareplan, handleDetailmodal, fillCareplannotification } from "../../Redux/CareplanSlice"
+import { GetCareplan, fillCareplannotification } from "../../Redux/CareplanSlice"
 import { GetSupportplans } from "../../Redux/SupportplanSlice"
 import { GetSupportplanlists } from "../../Redux/SupportplanlistSlice"
 import { GetPatients } from "../../Redux/PatientSlice"
@@ -24,7 +24,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     GetCareplan,
     GetSupportplanlists, GetSupportplans, GetPatients, GetPatientdefines, GetFiles,
-    GetUsagetypes, GetCareplanparameters, handleDetailmodal, fillCareplannotification
+    GetUsagetypes, GetCareplanparameters, fillCareplannotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CareplansDetail)

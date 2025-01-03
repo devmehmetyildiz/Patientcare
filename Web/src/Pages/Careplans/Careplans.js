@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn, Loader, Tab } from 'semantic-ui-react'
 import CareplansDelete from '../../Containers/Careplans/CareplansDelete'
@@ -18,7 +18,14 @@ import useTabNavigation from '../../Hooks/useTabNavigation'
 export default function Careplans(props) {
   const { GetCareplans, GetPatients, GetPatientdefines } = props
 
-  const { Careplans, Profile, handleSelectedCareplan, Patients, Patientdefines, handleDeletemodal, handleApprovemodal, handleDetailmodal, handleSavepreviewmodal, history } = props
+  const { Careplans, Profile, Patients, Patientdefines, history } = props
+
+  const [detailOpen, setDetailOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [approveOpen, setApproveOpen] = useState(false)
+  const [savePreviewOpen, setSavePreviewOpen] = useState(false)
+  const [record, setRecord] = useState(null)
+
 
   const t = Profile?.i18n?.t
 
@@ -67,9 +74,6 @@ export default function Careplans(props) {
       </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
   }
 
-  const boolCellhandler = (value) => {
-    return value !== null && (value ? t('Common.Yes') : t('Common.No'))
-  }
 
   const typeCellhandler = (value) => {
     const Supportplantypeoptions = [
@@ -110,22 +114,22 @@ export default function Careplans(props) {
       ...item,
       edit: <Link to={`/Careplans/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
       approve: <Icon className='!cursor-pointer' link size='large' color='red' name='hand pointer' onClick={() => {
-        handleSelectedCareplan(item)
-        handleApprovemodal(true)
+        setRecord(item)
+        setApproveOpen(true)
       }}
       />,
       detail: <Icon className='!cursor-pointer' size='large' color='red' name='address book' onClick={() => {
-        handleSelectedCareplan(item)
-        handleDetailmodal(true)
+        setRecord(item)
+        setDetailOpen(true)
       }}
       />,
       delete: <Icon className='!cursor-pointer' link size='large' color='red' name='alternate trash' onClick={() => {
-        handleSelectedCareplan(item)
-        handleDeletemodal(true)
+        setRecord(item)
+        setDeleteOpen(true)
       }} />,
       savepreview: <Icon className='!cursor-pointer' link size='large' color='green' name='save' onClick={() => {
-        handleSelectedCareplan(item)
-        handleSavepreviewmodal(true)
+        setRecord(item)
+        setSavePreviewOpen(true)
       }} />,
     }
   })
@@ -153,73 +157,92 @@ export default function Careplans(props) {
   }, [])
 
   return (
-    isLoading ? <LoadingPage /> :
-      <React.Fragment>
-        <Pagewrapper>
-          <Headerwrapper>
-            <Grid columns='2' >
-              <GridColumn width={8}>
-                <Breadcrumb size='big'>
-                  <Link to={"/Careplans"}>
-                    <Breadcrumb.Section>{t('Pages.Careplans.Page.Header')}</Breadcrumb.Section>
-                  </Link>
-                </Breadcrumb>
-              </GridColumn>
-              <Settings
-                Profile={Profile}
-                Pagecreateheader={t('Pages.Careplans.Page.CreateHeader')}
-                Pagecreatelink={"/Careplans/Create"}
-                Columns={Columns}
-                list={list}
-                initialConfig={initialConfig}
-                metaKey={metaKey}
-                Showcreatebutton
-                Showcolumnchooser
-                Showexcelexport
-              />
-            </Grid>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Tab
-              onTabChange={(_, { activeIndex }) => {
-                setActiveTab(activeIndex)
-              }}
-              activeIndex={activeTab}
-              className="w-full !bg-transparent"
-              panes={[
-                {
-                  menuItem: `${t('Pages.Careplans.Tab.Approved')} (${(approvedList || []).length})`,
-                  pane: {
-                    key: 'approved',
-                    content: renderView({ list: approvedList, Columns, keys: ['approved'], initialConfig })
-                  }
-                },
-                {
-                  menuItem: `${t('Pages.Careplans.Tab.Waitingapprove')} (${(waitingapproveList || []).length})`,
-                  pane: {
-                    key: 'waitingapprove',
-                    content: renderView({ list: waitingapproveList, Columns, keys: ['waitingapprove'], initialConfig })
-                  }
-                },
-                {
-                  menuItem: `${t('Pages.Careplans.Tab.Onpreview')} (${(onpreviewList || []).length})`,
-                  pane: {
-                    key: 'onpreview',
-                    content: renderView({ list: onpreviewList, Columns, keys: ['isonpreview'], initialConfig })
-                  }
-                },
-
-
-              ]}
-              renderActiveOnly={false}
+    <React.Fragment>
+      <Pagewrapper dimmer isLoading={isLoading}>
+        <Headerwrapper>
+          <Grid columns='2' >
+            <GridColumn width={8}>
+              <Breadcrumb size='big'>
+                <Link to={"/Careplans"}>
+                  <Breadcrumb.Section>{t('Pages.Careplans.Page.Header')}</Breadcrumb.Section>
+                </Link>
+              </Breadcrumb>
+            </GridColumn>
+            <Settings
+              Profile={Profile}
+              Pagecreateheader={t('Pages.Careplans.Page.CreateHeader')}
+              Pagecreatelink={"/Careplans/Create"}
+              Columns={Columns}
+              list={list}
+              initialConfig={initialConfig}
+              metaKey={metaKey}
+              Showcreatebutton
+              Showcolumnchooser
+              Showexcelexport
             />
-          </Contentwrapper>
-        </Pagewrapper>
-        <CareplansDelete />
-        <CareplansApprove />
-        <CareplansSavepreview />
-        <CareplansDetail />
-      </React.Fragment >
+          </Grid>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Tab
+            onTabChange={(_, { activeIndex }) => {
+              setActiveTab(activeIndex)
+            }}
+            activeIndex={activeTab}
+            className="w-full !bg-transparent"
+            panes={[
+              {
+                menuItem: `${t('Pages.Careplans.Tab.Approved')} (${(approvedList || []).length})`,
+                pane: {
+                  key: 'approved',
+                  content: renderView({ list: approvedList, Columns, keys: ['approved'], initialConfig })
+                }
+              },
+              {
+                menuItem: `${t('Pages.Careplans.Tab.Waitingapprove')} (${(waitingapproveList || []).length})`,
+                pane: {
+                  key: 'waitingapprove',
+                  content: renderView({ list: waitingapproveList, Columns, keys: ['waitingapprove'], initialConfig })
+                }
+              },
+              {
+                menuItem: `${t('Pages.Careplans.Tab.Onpreview')} (${(onpreviewList || []).length})`,
+                pane: {
+                  key: 'onpreview',
+                  content: renderView({ list: onpreviewList, Columns, keys: ['isonpreview'], initialConfig })
+                }
+              },
+
+
+            ]}
+            renderActiveOnly={false}
+          />
+        </Contentwrapper>
+      </Pagewrapper>
+      <CareplansDelete
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <CareplansApprove
+        open={approveOpen}
+        setOpen={setApproveOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <CareplansSavepreview
+        open={savePreviewOpen}
+        setOpen={setSavePreviewOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <CareplansDetail
+        open={detailOpen}
+        setOpen={setDetailOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+    </React.Fragment >
   )
 }

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import CareplansEdit from '../../Pages/Careplans/CareplansEdit'
-import { EditCareplans, GetCareplan, handleSelectedCareplan, fillCareplannotification } from "../../Redux/CareplanSlice"
+import { EditCareplans, GetCareplan, fillCareplannotification } from "../../Redux/CareplanSlice"
 import { GetSupportplans } from "../../Redux/SupportplanSlice"
 import { GetSupportplanlists } from "../../Redux/SupportplanlistSlice"
 import { GetPatients } from "../../Redux/PatientSlice"
@@ -22,7 +22,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  EditCareplans, GetCareplan, handleSelectedCareplan, fillCareplannotification,
+  EditCareplans, GetCareplan, fillCareplannotification,
   GetSupportplanlists, GetSupportplans, GetPatients, GetPatientdefines, GetFiles,
   GetUsagetypes, GetCareplanparameters
 }

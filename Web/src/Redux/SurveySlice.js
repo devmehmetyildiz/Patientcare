@@ -249,12 +249,8 @@ export const SurveysSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDeletemodalopen: false
     },
     reducers: {
-        handleSelectedSurvey: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillSurveynotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -263,9 +259,6 @@ export const SurveysSlice = createSlice({
         removeSurveynotification: (state) => {
             state.notifications.splice(0, 1);
         },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        }
     },
     extraReducers: (builder) => {
         builder
@@ -391,10 +384,8 @@ export const SurveysSlice = createSlice({
 });
 
 export const {
-    handleSelectedSurvey,
     fillSurveynotification,
     removeSurveynotification,
-    handleDeletemodal
 } = SurveysSlice.actions;
 
 export default SurveysSlice.reducer;

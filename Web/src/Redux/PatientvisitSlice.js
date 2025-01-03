@@ -178,12 +178,8 @@ export const PatientvisitsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDeletemodalopen: false
     },
     reducers: {
-        handleSelectedPatientvisit: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillPatientvisitnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -192,9 +188,6 @@ export const PatientvisitsSlice = createSlice({
         removePatientvisitnotification: (state) => {
             state.notifications.splice(0, 1);
         },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        }
     },
     extraReducers: (builder) => {
         builder
@@ -290,10 +283,8 @@ export const PatientvisitsSlice = createSlice({
 });
 
 export const {
-    handleSelectedPatientvisit,
     fillPatientvisitnotification,
     removePatientvisitnotification,
-    handleDeletemodal
 } = PatientvisitsSlice.actions;
 
 export default PatientvisitsSlice.reducer;

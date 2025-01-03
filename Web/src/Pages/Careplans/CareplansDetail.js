@@ -12,15 +12,13 @@ import Formatdate, { Formatfulldate } from '../../Utils/Formatdate'
 
 export default function CareplansEdit(props) {
   const PAGE_NAME = 'CareplansEdit'
-  const { GetSupportplans, GetSupportplanlists, GetCareplanparameters, handleDetailmodal,
+  const { GetSupportplans, GetSupportplanlists, GetCareplanparameters,  open, setOpen, record, setRecord,
     GetPatients, GetPatientdefines, GetFiles, GetUsagetypes, GetCareplan, match, CareplanID } = props
 
   const { Careplans, Supportplans, Supportplanlists, Files, Patients, Careplanparameters,
     Patientdefines, Usagetypes, Profile, history, closeModal, fillCareplannotification } = props
 
   const Id = match?.params?.CareplanID || CareplanID
-
-  const { selected_record, isDetailmodalopen } = Careplans
 
   const [isDatafetched, setIsDatafetched] = useState(false)
   const [isFetched, setIsFetched] = useState(false)
@@ -60,7 +58,7 @@ export default function CareplansEdit(props) {
   })
 
   useEffect(() => {
-    if (isDetailmodalopen) {
+    if (open) {
       GetSupportplans()
       GetSupportplanlists()
       GetPatients()
@@ -69,7 +67,7 @@ export default function CareplansEdit(props) {
       GetUsagetypes()
       GetCareplanparameters()
     }
-  }, [isDetailmodalopen])
+  }, [open])
 
   useEffect(() => {
     setIsDatafetched(false)
@@ -77,18 +75,18 @@ export default function CareplansEdit(props) {
   }, [typeID, patientID])
 
   useEffect(() => {
-    if (!isFetched && !isloadingStatus && validator.isUUID(selected_record?.Uuid)) {
+    if (!isFetched && !isloadingStatus && validator.isUUID(record?.Uuid)) {
       context.setForm(PAGE_NAME, {
-        ...selected_record,
-        Startdate: Formatdate(selected_record?.Startdate),
-        Enddate: Formatdate(selected_record?.Enddate),
-        Createdate: Formatdate(selected_record?.Createdate),
+        ...record,
+        Startdate: Formatdate(record?.Startdate),
+        Enddate: Formatdate(record?.Enddate),
+        Createdate: Formatdate(record?.Createdate),
       })
       setIsFetched(true)
     }
 
-    if (isValid && !isDatafetched && !isloadingStatus && validator.isUUID(selected_record?.Uuid)) {
-      const plans = (selected_record?.Careplanservices || []).map(plan => {
+    if (isValid && !isDatafetched && !isloadingStatus && validator.isUUID(record?.Uuid)) {
+      const plans = (record?.Careplanservices || []).map(plan => {
         const supportplan = (Supportplans.list || []).find(u => u.Uuid === plan?.SupportplanID)
         return {
           ...plan,
@@ -103,9 +101,9 @@ export default function CareplansEdit(props) {
 
   return (<Modal
     size='fullscreen'
-    onClose={() => handleDetailmodal(false)}
-    onOpen={() => handleDetailmodal(true)}
-    open={isDetailmodalopen}
+    onClose={() => setOpen(false)}
+    onOpen={() => setOpen(true)}
+    open={open}
   >
     <Modal.Header>{t('Pages.Careplans.Page.Header')}</Modal.Header>
     <Modal.Content className='w-full'>
@@ -131,7 +129,7 @@ export default function CareplansEdit(props) {
               >
                 {t('Pages.Careplans.Columns.Type')}
                 <LabelDetail>
-                  {Supportplantypeoptions.find(u => u.value === selected_record?.Type)?.text || t('Common.NoDataFound')}
+                  {Supportplantypeoptions.find(u => u.value === record?.Type)?.text || t('Common.NoDataFound')}
                 </LabelDetail>
               </Label>
               <Label
@@ -151,7 +149,7 @@ export default function CareplansEdit(props) {
               >
                 {t('Pages.Careplans.Columns.Startdate')}
                 <LabelDetail>
-                  {Formatfulldate(selected_record?.Startdate, true) || t('Common.NoDataFound')}
+                  {Formatfulldate(record?.Startdate, true) || t('Common.NoDataFound')}
                 </LabelDetail>
               </Label>
               <Label
@@ -160,7 +158,7 @@ export default function CareplansEdit(props) {
               >
                 {t('Pages.Careplans.Columns.Enddate')}
                 <LabelDetail>
-                  {Formatfulldate(selected_record?.Startdate, true) || t('Common.NoDataFound')}
+                  {Formatfulldate(record?.Startdate, true) || t('Common.NoDataFound')}
                 </LabelDetail>
               </Label>
             </Form.Group>
@@ -171,7 +169,7 @@ export default function CareplansEdit(props) {
               >
                 {t('Pages.Careplans.Columns.Createdate')}
                 <LabelDetail>
-                  {Formatfulldate(selected_record?.Createdate, true) || t('Common.NoDataFound')}
+                  {Formatfulldate(record?.Createdate, true) || t('Common.NoDataFound')}
                 </LabelDetail>
               </Label>
               <Label
@@ -180,7 +178,7 @@ export default function CareplansEdit(props) {
               >
                 {t('Pages.Careplans.Columns.Info')}
                 <LabelDetail>
-                  {selected_record?.Info || t('Common.NoDataFound')}
+                  {record?.Info || t('Common.NoDataFound')}
                 </LabelDetail>
               </Label>
             </Form.Group>
@@ -199,7 +197,7 @@ export default function CareplansEdit(props) {
     </Modal.Content>
     <Modal.Actions>
       <Button color='black' onClick={() => {
-        handleDetailmodal(false)
+        setOpen(false)
       }}>
         {t('Common.Button.Giveup')}
       </Button>

@@ -3,6 +3,7 @@ import PatientactivitiesDetail from '../../Pages/Patientactivities/Patientactivi
 import { GetCostumertypes } from '../../Redux/CostumertypeSlice'
 import { GetPatienttypes } from '../../Redux/PatienttypeSlice'
 import { GetProfessions } from '../../Redux/ProfessionSlice'
+
 const mapStateToProps = (state) => ({
     Patientactivities: state.Patientactivities,
     Patients: state.Patients,

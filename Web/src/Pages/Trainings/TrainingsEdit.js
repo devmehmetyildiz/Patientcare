@@ -43,7 +43,7 @@ export default function TrainingsEdit(props) {
 
   const Patientsoptions = useMemo(() => (Patients?.list || []).filter(u => u.Isactive && u.Isalive && !u.Isleft && !u.Ispreregistration).map(patient => {
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
-    return { key: patient.Uuid, text: `${patientdefine.Firstname} ${patientdefine.Lastname}`, value: patient.Uuid }
+    return { key: patient.Uuid, text: `${patientdefine?.Firstname} ${patientdefine?.Lastname}`, value: patient.Uuid }
   }), [Patients.list, Patientdefines.list])
 
   const Patientcontactsoptions = useMemo(() => (Patients.list || [])

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import CareplansApprove from '../../Pages/Careplans/CareplansApprove'
-import { ApproveCareplans, handleApprovemodal, handleSelectedCareplan } from '../../Redux/CareplanSlice'
+import { ApproveCareplans, } from '../../Redux/CareplanSlice'
 
 const mapStateToProps = (state) => ({
     Careplans: state.Careplans,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    ApproveCareplans, handleApprovemodal, handleSelectedCareplan
+    ApproveCareplans,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CareplansApprove)

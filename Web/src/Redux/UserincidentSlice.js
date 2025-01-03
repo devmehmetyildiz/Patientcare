@@ -181,9 +181,6 @@ export const UserincidentsSlice = createSlice({
         isDeletemodalopen: false
     },
     reducers: {
-        handleSelectedUserincident: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillUserincidentnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -192,9 +189,6 @@ export const UserincidentsSlice = createSlice({
         removeUserincidentnotification: (state) => {
             state.notifications.splice(0, 1);
         },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        }
     },
     extraReducers: (builder) => {
         builder
@@ -290,10 +284,8 @@ export const UserincidentsSlice = createSlice({
 });
 
 export const {
-    handleSelectedUserincident,
     fillUserincidentnotification,
     removeUserincidentnotification,
-    handleDeletemodal
 } = UserincidentsSlice.actions;
 
 export default UserincidentsSlice.reducer;

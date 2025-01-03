@@ -130,72 +130,67 @@ export default function CareplansCreate(props) {
     }
   }, [typeID, patientID, isDatafetched])
 
-  return (<DimmerDimmable>
-    <Pagewrapper>
-      <Dimmer active={isloadingStatus} inverted>
-        <Loader>Yükleniyor</Loader>
-      </Dimmer>
-      <Headerwrapper>
-        <Headerbredcrump>
-          <Link to={"/Careplans"}>
-            <Breadcrumb.Section>{t('Pages.Careplans.Page.Header')}</Breadcrumb.Section>
-          </Link>
-          <Breadcrumb.Divider icon='right chevron' />
-          <Breadcrumb.Section>{t('Pages.Careplans.Page.CreateHeader')}</Breadcrumb.Section>
-        </Headerbredcrump>
-        {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
-      </Headerwrapper>
-      <Pagedivider />
-      <Contentwrapper>
-        <Form>
-          <Form.Group widths='equal'>
-            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Type')} name="Type" formtype='dropdown' options={Supportplantypeoptions} />
-            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Patient')} name="PatientID" options={Patientoptions} formtype='dropdown' />
-          </Form.Group>
-          <Form.Group widths='equal'>
-            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Startdate')} name="Startdate" type="date" />
-            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Enddate')} name="Enddate" type="date" />
-          </Form.Group>
-          <Form.Group widths={'equal'}>
-            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Createdate')} name="Createdate" type="date" />
-          </Form.Group>
-          <Form.Group widths={'equal'}>
-            <FormInput page={PAGE_NAME} placeholder={t('Pages.Careplans.Columns.Info')} name="Info" />
-          </Form.Group>
-        </Form>
-      </Contentwrapper>
-      <CareplansCreatePatientcard
-        isValid={isValid}
-        Files={Files}
-        patient={patient}
-        patientdefine={patientdefine}
-        Usagetypes={Usagetypes}
-        fillnotification={fillCareplannotification}
-        Profile={Profile}
+  return (<Pagewrapper dimmer isLoading={isloadingStatus}>
+    <Headerwrapper>
+      <Headerbredcrump>
+        <Link to={"/Careplans"}>
+          <Breadcrumb.Section>{t('Pages.Careplans.Page.Header')}</Breadcrumb.Section>
+        </Link>
+        <Breadcrumb.Divider icon='right chevron' />
+        <Breadcrumb.Section>{t('Pages.Careplans.Page.CreateHeader')}</Breadcrumb.Section>
+      </Headerbredcrump>
+      {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
+    </Headerwrapper>
+    <Pagedivider />
+    <Contentwrapper>
+      <Form>
+        <Form.Group widths='equal'>
+          <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Type')} name="Type" formtype='dropdown' options={Supportplantypeoptions} />
+          <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Patient')} name="PatientID" options={Patientoptions} formtype='dropdown' />
+        </Form.Group>
+        <Form.Group widths='equal'>
+          <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Startdate')} name="Startdate" type="date" />
+          <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Enddate')} name="Enddate" type="date" />
+        </Form.Group>
+        <Form.Group widths={'equal'}>
+          <FormInput page={PAGE_NAME} required placeholder={t('Pages.Careplans.Columns.Createdate')} name="Createdate" type="date" />
+        </Form.Group>
+        <Form.Group widths={'equal'}>
+          <FormInput page={PAGE_NAME} placeholder={t('Pages.Careplans.Columns.Info')} name="Info" />
+        </Form.Group>
+      </Form>
+    </Contentwrapper>
+    <CareplansCreatePatientcard
+      isValid={isValid}
+      Files={Files}
+      patient={patient}
+      patientdefine={patientdefine}
+      Usagetypes={Usagetypes}
+      fillnotification={fillCareplannotification}
+      Profile={Profile}
+    />
+    <CareplansCreateSupportplans
+      isValid={isValid}
+      type={type}
+      supportplans={supportplans}
+      setSupportplans={setSupportplans}
+      Careplanparameters={Careplanparameters}
+      fillnotification={fillCareplannotification}
+      Profile={Profile}
+    />
+    <Footerwrapper>
+      <Gobackbutton
+        history={history}
+        redirectUrl={"/Careplans"}
+        buttonText={t('Common.Button.Goback')}
       />
-      <CareplansCreateSupportplans
-        isValid={isValid}
-        type={type}
-        supportplans={supportplans}
-        setSupportplans={setSupportplans}
-        Careplanparameters={Careplanparameters}
-        fillnotification={fillCareplannotification}
-        Profile={Profile}
+      <Submitbutton
+        isLoading={Careplans.isLoading}
+        buttonText={t('Common.Button.Create')}
+        submitFunction={handleSubmit}
       />
-      <Footerwrapper>
-        <Gobackbutton
-          history={history}
-          redirectUrl={"/Careplans"}
-          buttonText={t('Common.Button.Goback')}
-        />
-        <Submitbutton
-          isLoading={Careplans.isLoading}
-          buttonText={t('Common.Button.Create')}
-          submitFunction={handleSubmit}
-        />
-      </Footerwrapper>
-    </Pagewrapper>
-  </DimmerDimmable>
+    </Footerwrapper>
+  </Pagewrapper>
   )
 }
 

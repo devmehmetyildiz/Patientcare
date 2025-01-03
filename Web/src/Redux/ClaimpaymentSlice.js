@@ -132,9 +132,6 @@ export const ClaimpaymentsSlice = createSlice({
         isLoading: false,
     },
     reducers: {
-        handleSelectedClaimpayment: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillClaimpaymentnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -220,7 +217,6 @@ export const ClaimpaymentsSlice = createSlice({
 });
 
 export const {
-    handleSelectedClaimpayment,
     fillClaimpaymentnotification,
     removeClaimpaymentnotification,
 } = ClaimpaymentsSlice.actions;
