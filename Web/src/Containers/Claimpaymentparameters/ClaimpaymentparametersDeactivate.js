@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import ClaimpaymentparametersDeactivate from '../../Pages/Claimpaymentparameters/ClaimpaymentparametersDeactivate'
-import { DeactivateClaimpaymentparameters, handleDeactivatemodal, handleSelectedClaimpaymentparameter } from '../../Redux/ClaimpaymentparameterSlice'
+import { DeactivateClaimpaymentparameters } from '../../Redux/ClaimpaymentparameterSlice'
 
 const mapStateToProps = (state) => ({
     Claimpaymentparameters: state.Claimpaymentparameters,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    DeactivateClaimpaymentparameters, handleDeactivatemodal, handleSelectedClaimpaymentparameter
+    DeactivateClaimpaymentparameters
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClaimpaymentparametersDeactivate)

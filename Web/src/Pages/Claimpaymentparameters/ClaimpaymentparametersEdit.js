@@ -26,7 +26,6 @@ export default function ClaimpaymentparametersEdit(props) {
   const handleSubmit = (e) => {
     e.preventDefault()
     const data = context.getForm(PAGE_NAME)
-    console.log('data: ', data);
     let errors = []
     if (!validator.isNumber(data.Type)) {
       errors.push({ type: 'Error', code: t('Pages.Claimpaymentparameters.Page.Header'), description: t('Pages.Claimpaymentparameters.Messages.TypeRequired') })

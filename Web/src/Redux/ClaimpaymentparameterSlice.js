@@ -198,16 +198,8 @@ export const ClaimpaymentparametersSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDeletemodalopen: false,
-        isApprovemodalopen: false,
-        isActivatemodalopen: false,
-        isDeactivatemodalopen: false,
-        isSavepreviewmodalopen: false,
     },
     reducers: {
-        handleSelectedClaimpaymentparameter: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillClaimpaymentparameternotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -215,21 +207,6 @@ export const ClaimpaymentparametersSlice = createSlice({
         },
         removeClaimpaymentparameternotification: (state) => {
             state.notifications.splice(0, 1);
-        },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        },
-        handleApprovemodal: (state, action) => {
-            state.isApprovemodalopen = action.payload
-        },
-        handleActivatemodal: (state, action) => {
-            state.isActivatemodalopen = action.payload
-        },
-        handleDeactivatemodal: (state, action) => {
-            state.isDeactivatemodalopen = action.payload
-        },
-        handleSavepreviewmodal: (state, action) => {
-            state.isSavepreviewmodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -341,14 +318,8 @@ export const ClaimpaymentparametersSlice = createSlice({
 });
 
 export const {
-    handleSelectedClaimpaymentparameter,
     fillClaimpaymentparameternotification,
     removeClaimpaymentparameternotification,
-    handleDeletemodal,
-    handleApprovemodal,
-    handleActivatemodal,
-    handleDeactivatemodal,
-    handleSavepreviewmodal
 } = ClaimpaymentparametersSlice.actions;
 
 export default ClaimpaymentparametersSlice.reducer;

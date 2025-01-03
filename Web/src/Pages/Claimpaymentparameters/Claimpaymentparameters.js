@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Loader, Tab } from 'semantic-ui-react'
 import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
@@ -7,7 +7,6 @@ import ClaimpaymentparametersDelete from '../../Containers/Claimpaymentparameter
 import ClaimpaymentparametersApprove from '../../Containers/Claimpaymentparameters/ClaimpaymentparametersApprove'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { CLAIMPAYMENT_TYPE_BHKS, CLAIMPAYMENT_TYPE_KYS, CLAIMPAYMENT_TYPE_PATIENT, COL_PROPS } from '../../Utils/Constants'
-import validator from '../../Utils/Validator'
 import ClaimpaymentparametersActivate from '../../Containers/Claimpaymentparameters/ClaimpaymentparametersActivate'
 import ClaimpaymentparametersDeactivate from '../../Containers/Claimpaymentparameters/ClaimpaymentparametersDeactivate'
 import ClaimpaymentparametersSavepreview from '../../Containers/Claimpaymentparameters/ClaimpaymentparametersSavepreview'
@@ -16,8 +15,14 @@ import useTabNavigation from '../../Hooks/useTabNavigation'
 export default function Claimpaymentparameters(props) {
 
     const { GetClaimpaymentparameters, GetCostumertypes } = props
-    const { Claimpaymentparameters, Profile, handleDeletemodal, handleSelectedClaimpaymentparameter, history,
-        handleApprovemodal, Costumertypes, handleActivatemodal, handleDeactivatemodal, handleSavepreviewmodal } = props
+    const { Claimpaymentparameters, Profile, history, Costumertypes, } = props
+
+    const [deleteOpen, setDeleteOpen] = useState(false)
+    const [approveOpen, setApproveOpen] = useState(false)
+    const [savepreviewOpen, setSavepreviewOpen] = useState(false)
+    const [deactivateOpen, setDeactivateOpen] = useState(false)
+    const [activateOpen, setActivateOpen] = useState(false)
+    const [record, setRecord] = useState(null)
 
     const t = Profile?.i18n?.t
     const { isLoading } = Claimpaymentparameters
@@ -51,14 +56,6 @@ export default function Claimpaymentparameters(props) {
         return type
     }
 
-    const boolCellhandler = (value) => {
-        return value !== null && validator.isBoolean(value)
-            ? (value
-                ? t('Common.Yes')
-                : t('Common.No'))
-            : t('Common.No')
-    }
-
     const Columns = [
         { Header: t('Common.Column.Id'), accessor: 'Id' },
         { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
@@ -88,24 +85,24 @@ export default function Claimpaymentparameters(props) {
             ...item,
             edit: <Link to={`/Claimpaymentparameters/${item.Uuid}/edit`} ><Icon size='large' className='row-edit' name='edit' /></Link>,
             delete: <Icon link size='large' color='red' name='alternate trash' onClick={() => {
-                handleSelectedClaimpaymentparameter(item)
-                handleDeletemodal(true)
+                setRecord(item)
+                setDeleteOpen(true)
             }} />,
             approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
-                handleSelectedClaimpaymentparameter(item)
-                handleApprovemodal(true)
+                setRecord(item)
+                setApproveOpen(true)
             }} />,
             activate: <Icon link size='large' color='blue' name='hand point left' onClick={() => {
-                handleSelectedClaimpaymentparameter(item)
-                handleActivatemodal(true)
+                setRecord(item)
+                setActivateOpen(true)
             }} />,
             deactivate: <Icon link size='large' color='blue' name='hand point right' onClick={() => {
-                handleSelectedClaimpaymentparameter(item)
-                handleDeactivatemodal(true)
+                setRecord(item)
+                setDeactivateOpen(true)
             }} />,
             savepreview: <Icon link size='large' color='green' name='save' onClick={() => {
-                handleSelectedClaimpaymentparameter(item)
-                handleSavepreviewmodal(true)
+                setRecord(item)
+                setSavepreviewOpen(true)
             }} />,
         }
     })
@@ -202,11 +199,36 @@ export default function Claimpaymentparameters(props) {
                         />
                     </Contentwrapper>
                 </Pagewrapper>
-                <ClaimpaymentparametersDelete />
-                <ClaimpaymentparametersApprove />
-                <ClaimpaymentparametersActivate />
-                <ClaimpaymentparametersDeactivate />
-                <ClaimpaymentparametersSavepreview />
+                <ClaimpaymentparametersDelete
+                    open={deleteOpen}
+                    setOpen={setDeleteOpen}
+                    record={record}
+                    setRecord={setRecord}
+                />
+                <ClaimpaymentparametersApprove
+                    open={approveOpen}
+                    setOpen={setApproveOpen}
+                    record={record}
+                    setRecord={setRecord}
+                />
+                <ClaimpaymentparametersActivate
+                    open={activateOpen}
+                    setOpen={setActivateOpen}
+                    record={record}
+                    setRecord={setRecord}
+                />
+                <ClaimpaymentparametersDeactivate
+                    open={deactivateOpen}
+                    setOpen={setDeactivateOpen}
+                    record={record}
+                    setRecord={setRecord}
+                />
+                <ClaimpaymentparametersSavepreview
+                    open={savepreviewOpen}
+                    setOpen={setSavepreviewOpen}
+                    record={record}
+                    setRecord={setRecord}
+                />
             </React.Fragment>
     )
 }

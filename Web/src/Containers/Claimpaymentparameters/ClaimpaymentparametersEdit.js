@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import ClaimpaymentparametersEdit from '../../Pages/Claimpaymentparameters/ClaimpaymentparametersEdit'
-import { EditClaimpaymentparameters, GetClaimpaymentparameter, handleSelectedClaimpaymentparameter, fillClaimpaymentparameternotification } from '../../Redux/ClaimpaymentparameterSlice'
+import { EditClaimpaymentparameters, GetClaimpaymentparameter, fillClaimpaymentparameternotification } from '../../Redux/ClaimpaymentparameterSlice'
 import { GetCostumertypes } from '../../Redux/CostumertypeSlice'
 
 const mapStateToProps = (state) => ({
@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    EditClaimpaymentparameters, GetClaimpaymentparameter, handleSelectedClaimpaymentparameter, fillClaimpaymentparameternotification, GetCostumertypes
+    EditClaimpaymentparameters, GetClaimpaymentparameter, fillClaimpaymentparameternotification, GetCostumertypes
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClaimpaymentparametersEdit)
